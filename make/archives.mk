@@ -265,8 +265,8 @@ $(ARCHIVE)/luaexpat-$(LUA_EXPAT_VER).tar.gz:
 
 LUACURL_VER=v3
 $(ARCHIVE)/Lua-cURL$(LUACURL_VER).tar.xz:
-	$(WGET) https://slknet.de/bs-micha-download/Lua-cURL$(LUACURL_VER).tar.xz
-	
+	$(WGET) http://neutrino-images.de/neutrino-images/archives/Lua-cURL$(LUACURL_VER).tar.xz
+
 LIBBLURAY_VER=0.9.2
 $(ARCHIVE)/libbluray-$(LIBBLURAY_VER).tar.bz2:
 	$(WGET) ftp://ftp.videolan.org/pub/videolan/libbluray/$(LIBBLURAY_VER)/libbluray-$(LIBBLURAY_VER).tar.bz2
@@ -348,7 +348,7 @@ $(ARCHIVE)/fribidi-$(FRIBIDI_VER).tar.bz2:
 
 MC-VER=4.8.19
 $(ARCHIVE)/mc-$(MC-VER).tar.xz:
-	$(WGET) http://midnight-commander.org/downloads/mc-$(MC-VER).tar.xz
+	$(WGET) http://ftp.midnight-commander.org/mc-$(MC-VER).tar.xz
 
 LIBFFI_VER=3.2.1
 $(ARCHIVE)/libffi-$(LIBFFI_VER).tar.gz:
