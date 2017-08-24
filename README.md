@@ -2,7 +2,7 @@
 
 **Der Bitbucket Account muss einen SSH-Key hinterlegt haben.**
 
-**Für die Einrichtung unter Debian sind folgende Pakete nötig**
+**Für die Einrichtung unter Debian sind folgende Pakete nötig:**
 ```
 #!bash
 apt-get install \
