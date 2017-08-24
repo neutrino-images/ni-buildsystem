@@ -1,3 +1,6 @@
+**Voraussetzung für die Nutzung des Buildsystems ist ein Bitbucket Account und ein funktionierender SSH-Key welcher im Bitbucket Account hinterlegt ist!**
+
+
 **Für die Einrichtung unter Debian sind folgende Pakete nötig**
 ```
 #!bash
