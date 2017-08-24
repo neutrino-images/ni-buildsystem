@@ -30,7 +30,7 @@ ln -s $HOME/src/Archive download
 #!bash
 make local-files
 ```
-config.local auf die eigenen Bedürfnisse anpassen
+config.local auf die eigenen Bedürfnisse anpassen. BOXMODEL **muss** gesetzt werden!
 
 # 4) Toolchain bauen #
 ```
