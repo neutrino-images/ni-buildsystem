@@ -1,0 +1,22 @@
+# FlatTV's Gedankenstütze
+
+nc -u 192.168.99.90 988
+login user pwd
+
+commands 
+[SB4000]commands: login
+[S-4001]commands: exit
+[S-4002]commands: log
+[S-4003]commands: status
+[S-4004]commands: shutdown
+[S-4005]commands: reload
+[S-4006]commands: details
+[S-4007]commands: version
+[S-4008]commands: debug
+[S-4009]commands: getuser
+[S-4010]commands: setuser
+[S-4011]commands: setserver
+[S-4012]commands: commands
+[S-4013]commands: keepalive
+[S-4014]commands: reread
+[SE4015]commands: restart

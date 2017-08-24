@@ -1,0 +1,26 @@
+From 7bd075fdb97349cfcde9a58a9b9003f2b1955d2d Mon Sep 17 00:00:00 2001
+Message-Id: <7bd075fdb97349cfcde9a58a9b9003f2b1955d2d.1391456188.git.striper@gmx.de>
+From: striper <striper@gmx.de>
+Date: Mon, 3 Feb 2014 20:36:16 +0100
+Subject: [PATCH] - fix tun device for coolstream
+
+---
+ src/openvpn/tun.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/openvpn/tun.c b/src/openvpn/tun.c
+index a361233..a6197be 100644
+--- a/src/openvpn/tun.c
++++ b/src/openvpn/tun.c
+@@ -1397,7 +1397,7 @@ open_tun (const char *dev, const char *dev_type, const char *dev_node, struct tu
+        */
+       const char *node = dev_node;
+       if (!node)
+-	node = "/dev/net/tun";
++	node = "/dev/tun";
+ 
+       /*
+        * Open the interface
+-- 
+1.8.5.2
+

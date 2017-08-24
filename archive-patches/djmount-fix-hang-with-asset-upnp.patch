@@ -1,0 +1,27 @@
+From b4ef6638dcd47703079f1d55519dbfdad44b9cee Mon Sep 17 00:00:00 2001
+Message-Id: <b4ef6638dcd47703079f1d55519dbfdad44b9cee.1354462407.git.striper@gmx.de>
+From: Yonathan Yusim <yonathan@boxee.tv>
+Date: Wed, 4 Jan 2012 16:07:07 +0200
+Subject: [PATCH] fix hang with asset upnp
+
+---
+ djmount/device_list.c |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
+
+diff --git a/djmount/device_list.c b/djmount/device_list.c
+index b5c2103..22beb01 100644
+--- a/djmount/device_list.c
++++ b/djmount/device_list.c
+@@ -230,7 +230,9 @@ DeviceList_RemoveDevice (const char* deviceId)
+ 		ListDelNode (&GlobalDeviceList, node, /*freeItem=>*/ 0);
+ 		// Do the notification while the global list is still locked
+ 		NotifyUpdate (E_DEVICE_REMOVED, devnode);
++		ithread_mutex_unlock (&DeviceListMutex);
+ 		talloc_free (devnode);
++		ithread_mutex_lock (&DeviceListMutex);
+ 	} else {
+ 		Log_Printf (LOG_WARNING, "RemoveDevice can't find Id=%s", 
+ 			    NN(deviceId));
+-- 
+1.7.3.4
+

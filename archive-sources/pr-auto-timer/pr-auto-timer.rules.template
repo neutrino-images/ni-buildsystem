@@ -1,0 +1,117 @@
+# pr-auto-timer.rules
+#
+# ----------------------------------------------------------------------------
+#
+# Syntax: CHANNELNAME;DAYOFWEEK[,TIMESPAN];REGEX[,MODIFIER][;FLAGS][;RECDIR]
+#
+# CHANNELNAME	The (exact) channelname e.g. "Das Erste HD" or
+#				a bouquet-nr prefixed with an asterisk e.g. "*1"
+#
+# DAYOFWEEK		The day of week or an asterisk for all days of week e.g.
+#				"Weekday" or "Mon", "Tue", "Wed", "Thu", "Fri"
+#				"Weekend" or "Sat", "Sun"
+#				"*"
+#
+# TIMESPAN		Defines a period in which the timer must start e.g.
+#				"18:45-20:15"
+#				"*" an asterisk for all times
+#				TIMESPAN is optional; default is "*"
+#
+# REGEX			The name of the show as a regular expression e.g.
+#				"Tatort"
+#				"*" find all shows; this is only usefull in conjunction with MODIFIER
+#				NOTE: This regular expression is matched only against the epg title
+#
+# MODIFIER		The modifier can be used to further refine the selection of the show
+#				by searching the entire description for specified words.
+#				Format is as follows: [+~!-]RegEx1 RegEx2 ...
+#				+RegEx1 RegEx2 ...: INCLUDE ALL - All of these regular expressions must match for selecting the show
+#				~RegEx1 RegEx2 ...: INCLUDE ONE - One of these regular expressions must match for selecting the show
+#				!RegEx1 RegEx2 ...: EXCLUDE ALL - All of these regular expressions must match for excluding the show
+#				-RegEx1 RegEx2 ...: EXCLUDE ONE - One of these regular expressions must match for excluding the show
+#				MODIFIER is optional; default is no modifier.
+#				NOTE: When no modifier is given, this regular expression is matched only against the epg title
+#
+# FLAGS			A coma-separated list of the following flags:
+#				- "R": create a record timer [default]
+#				- "Z": create a zap timer
+#				- "I": ignore time additions to timer
+#				- "F": during one run of pr-auto-timer only the first match will be added as a timer
+#				- "O": the same as "F" but additionally deactivates the corresponding rule in the rules-file
+#				- "D": prevent adding duplicate timers for the same show (at different times)
+#				- "W": Always re-add manually removed timers if the show is found again; overrides the global option DEL_TIMER_REFRESH=0
+#				- "M": Allow empty info-fields when using duplicate detection
+#				FLAGS is optional; default is a record timer.
+#
+# RECDIR		An alternative recording directory
+#				NOTE: flag-section can be empty, but MUST be defined! See examples below.
+#				RECDIR is optional; default is the neutrino setting
+#
+# ----------------------------------------------------------------------------
+#
+## Examples (remove leading # to activate):
+#
+## Record all shows containing the word 'Tatort'
+## on channel 'Das Erste HD' on sundays:
+#Das Erste HD;Sun;Tatort
+
+## Record all shows containing the word 'Tagesschau'
+## on channel 'Das Erste HD' on all days in a timespan between 11:55 and 12:05:
+#Das Erste HD;*,11:55-12:05;Tagesschau
+
+## Record all shows containing the word 'Knollenblätterpilz'
+## on channel 'Das Erste HD':
+#Das Erste HD;*;Knollenblätterpilz
+
+## Record all shows containing the sentence 'Rumpsteak schmeckt lecker'
+## on all channels of bouquet 1:
+#*1;*;Rumpsteak schmeckt lecker
+
+## Zap to all shows containing the word 'Affenhaus'
+## on channel 'Das Erste HD':
+#Das Erste HD;*;Affenhaus;Z
+
+## Record first show found containing the word 'Tatort'
+## on channel 'Das Erste HD' on sundays:
+#Das Erste HD;Sun;Tatort;F
+
+## Record first show found containing the word 'Tatort'
+## on channel 'Das Erste HD' on sundays.
+## After creating timer the rule-line will be deactivated:
+#Das Erste HD;Sun;Tatort;O
+
+## Record all shows containing the word 'Tatort'
+## on channel 'Das Erste HD' on weekends.
+## Using '/media/records/tatort' as recording directory
+#Das Erste HD;Weekend;Tatort;R;/media/records/tatort
+## or with empty FLAGS section
+#Das Erste HD;Weekend;Tatort;;/media/records/tatort
+
+## You don't need the special episodes of LOST,
+## if you plan to view this great series in one run. ;)
+#FOX HD;*;LOST,!Special
+
+## Records all Episodes of Traumschiff but not these ones:
+## Oman Bali Malaysia Vegas Savannah Panama Singapur Bintan Perth Spezial
+#ZDF;*,00:00-18:15;Traumschiff,-Oman Bali Malaysia Vegas Savannah Panama Singapur Bintan Perth Spezial
+
+## Records only Episodes of Traumschiff: 
+## Oman Bali Malaysia Vegas Savannah Panama Singapur Bintan Perth Spezial
+#ZDF;*,00:00-18:15;Traumschiff,~Oman Bali Malaysia Vegas Savannah Panama Singapur Bintan Perth Spezial
+
+## Record only Episode "Mord mit der linken Hand" from Columbo once on any channel
+#*;*;Columbo,+Mord mit der linken Hand;O
+
+## Record all episodes of "Unser Kosmos: Die Reise geht weiter" from NatGeo HD
+## Avoid recording repetitions of the same episode.
+#NatGeo HD;*;Unser Kosmos;D
+
+## Record all episodes from "The Big Bang Theory" for Season 7
+## The regular expression excludes all episodes with the string "x. Staffel", where x=1..6.
+#TNT Serie HD;*;The Big Bang Theory,![123456]\\.[[:blank:]]Staffel;D
+
+## Record all episodes from The Walking Dead's season 5
+## The regular expression includes only episodes where the string "5. Staffel" was found in the description
+#Fox HD;*;Walking Dead,+5\\.[[:blank:]]Staffel;D
+
+# Don't forget the the newline after the last entry.

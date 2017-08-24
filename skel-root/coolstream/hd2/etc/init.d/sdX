@@ -1,0 +1,18 @@
+#!/bin/sh
+
+. /etc/init.d/globals
+
+case $1 in
+	stop)
+		for sdX in /dev/sd[a-z]; do
+			test -b $sdX || continue
+			LOGINFO "stopping $sdX"
+			sg_start --stop $sdX
+		done
+	;;
+	*)
+		echo "[${BASENAME}] Usage: $0 {stop}"
+	;;
+esac
+
+exit 0

@@ -1,0 +1,17 @@
+build-generic-pc
+build_tmp
+ccache
+cross
+deps
+download
+host
+internal
+root
+static
+source
+local
+staging
+config.local
+Makefile.local
+.ignore
+*~

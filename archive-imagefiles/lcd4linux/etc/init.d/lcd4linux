@@ -1,0 +1,64 @@
+#!/bin/sh
+
+[ -x /bin/lcd4linux ]		|| exit 1
+[ -e /tmp/.lcd-* ]		|| exit 1
+
+configfile() {
+	read layout < /tmp/lcd/layout
+	test $layout = user && CONF_DIR=/var/etc || CONF_DIR=/etc
+
+	chmod 600 ${CONF_DIR}/lcd4linux.conf
+	chown 0:0 ${CONF_DIR}/lcd4linux.conf
+
+	printf "${CONF_DIR}/lcd4linux.conf"
+}
+
+doStart() {
+	( # do always run in background
+		while [ ! -e /tmp/.lcd4linux ]; do sleep 2; done
+		/bin/lcd4linux -f $(configfile)
+	) &
+}
+
+doStop() {
+	if [ -e /tmp/lcd4linux.pid ]; then
+		# read pid from pidfile
+		read PID < /tmp/lcd4linux.pid
+
+		# kill child processes
+		CHILDS=$(ps -o pid --ppid $PID --no-heading)
+		for CHILD in $CHILDS; do
+			kill -KILL $CHILD
+		done
+		sleep 5
+
+		# terminate main process
+		kill -TERM $PID > /dev/null 2>&1 &
+		sleep 5
+	fi
+}
+
+doOff() {
+	echo "LCD::backlight(0)" | /bin/lcd4linux -i > /dev/null 2>&1
+}
+
+case "$1" in
+	start)
+		doStart
+	;;
+	stop)
+		doStop
+	;;
+	off)
+		doStop
+		doOff
+	;;
+	restart|reload)
+		doStop
+		doStart
+	;;
+	*)
+		echo "[${0##*/}] Usage: $0 {start|stop|off|restart|reload}"
+		exit
+	;;
+esac

@@ -1,0 +1,28 @@
+From b246af4a5eb6fe899c19399a080ad08507d8c9ee Mon Sep 17 00:00:00 2001
+Message-Id: <b246af4a5eb6fe899c19399a080ad08507d8c9ee.1502537821.git.gandharva@gmx.de>
+From: gandharva <gandharva@gmx.de>
+Date: Sat, 12 Aug 2017 13:36:54 +0200
+Subject: [PATCH] - samba: build only what we need
+
+---
+ source3/Makefile.in | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/source3/Makefile.in b/source3/Makefile.in
+index 9e8e03d..0f9d1ae 100644
+--- a/source3/Makefile.in
++++ b/source3/Makefile.in
+@@ -1531,9 +1531,7 @@ SPLIT_TOKENS_OBJ = utils/split_tokens.o \
+ ######################################################################
+ # now the rules...
+ ######################################################################
+-all:: SHOWFLAGS basics libs $(SBIN_PROGS) $(BIN_PROGS) \
+-	$(MODULES) $(NSS_MODULES) $(PAM_MODULES) \
+-	$(EXTRA_ALL_TARGETS)
++all:: SHOWFLAGS basics libs bin/smbd@EXEEXT@ bin/nmbd@EXEEXT@ bin/smbpasswd@EXEEXT@ bin/smbclient@EXEEXT@ bin/testparm@EXEEXT@
+ 
+ basics:: samba3-idl
+ 
+-- 
+2.11.0
+

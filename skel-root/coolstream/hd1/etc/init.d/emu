@@ -1,0 +1,272 @@
+#!/bin/sh
+
+. /etc/init.d/globals
+
+# Emu-Fileflags
+FLAGDIR="/var/etc"
+F_MGCAM=".mgcamd"
+F_NEWCS=".newcs"
+F_OSEMU=".osemu"
+F_DOSCAM=".doscam"
+F_OSCAM=".oscam"
+F_GBOX=".gbox"
+F_CS2GBOX=".cs2gbox"
+
+MGCAM_Action()
+{
+	case $1 in
+		"start" )
+			SHOWINFO "start mgcamd"
+			{ /var/bin/mgcamd; pzapit -rz; }  &
+		;;
+		"stop" )
+			SHOWINFO "stop mgcamd"
+			kill $( cat /tmp/mgcamd.pid )
+			sleep 1
+			rm -rf /tmp/mgstat.info
+			rm -rf /tmp/mgshare.info
+			rm -rf /tmp/ecm.info
+			rm -rf /tmp/pid.info
+			rm -rf /tmp/ca_cache.list
+			rm -rf /tmp/cccam.info
+			rm -rf /tmp/ecm.info
+			rm -rf /tmp/mg.info
+		;;
+		* )
+			MGCAM_Action "stop"
+			sleep 1
+			MGCAM_Action "start"
+		;;
+	esac
+}
+
+NEWCS_Action()
+{
+	case $1 in
+		"start" )
+			SHOWINFO "start newcs"
+			/var/bin/newcs
+			sleep 10
+		;;
+		"stop" )
+			SHOWINFO "stop newcs"
+			kill $( cat /tmp/newcs.pid )
+			sleep 1
+			rm -rf /tmp/cccam.info
+			rm -rf /tmp/ecm.info
+			rm -rf /tmp/pid.info
+		;;
+		* )
+			NEWCS_Action "stop"
+			sleep 1
+			NEWCS_Action "start"
+		;;
+	esac
+}
+
+OSEMU_Action()
+{
+	case $1 in
+		"start" )
+			SHOWINFO "start osemu"
+			if [ -x /var/bin/osemu.sh ]; then
+				/var/bin/osemu.sh &
+			else
+				/var/bin/osemu -a user:password -p 11000 -b
+			fi
+		;;
+		"stop" )
+			SHOWINFO "stop osemu"
+			killall osemu
+			sleep 1
+		;;
+		* )
+			OSEMU_Action "stop"
+			sleep 1
+			OSEMU_Action "start"
+		;;
+	esac
+}
+
+DOSCAM_Action()
+{
+	case $1 in
+		"start" )
+			if [ -e /var/etc/.coredump ]; then
+				ulimit -c unlimited
+			fi
+
+			SHOWINFO "start oscamfix"
+			/etc/init.d/oscamfix start doscam
+			SHOWINFO "start doscam"
+			/var/bin/doscam -b -w0
+			if [ -e $FLAGDIR/$F_MGCAM ]; then
+				sleep 15
+			fi
+		;;
+		"stop" )
+			SHOWINFO "stop oscamfix"
+			/etc/init.d/oscamfix stop doscam
+			SHOWINFO "stop doscam"
+			killall doscam
+			sleep 1
+			rm -rf /tmp/doscam.*
+			rm -rf /tmp/ecm.info
+		;;
+		* )
+			DOSCAM_Action "stop"
+			sleep 1
+			DOSCAM_Action "start"
+		;;
+	esac
+}
+
+OSCAM_Action()
+{
+	case $1 in
+		"start" )
+			SHOWINFO "start oscamfix"
+			/etc/init.d/oscamfix start oscam
+			SHOWINFO "start oscam"
+			/var/bin/oscam -b
+			if [ -e $FLAGDIR/$F_MGCAM ]; then
+				sleep 15
+			fi
+		;;
+		"stop" )
+			SHOWINFO "stop oscamfix"
+			/etc/init.d/oscamfix stop oscam
+			SHOWINFO "stop oscam"
+			killall oscam
+			sleep 1
+			rm -rf /tmp/oscam.*
+			rm -rf /tmp/ecm.info
+		;;
+		* )
+			OSCAM_Action "stop"
+			sleep 1
+			OSCAM_Action "start"
+		;;
+	esac
+}
+
+GBOX_Action()
+{
+	case $1 in
+		"start" )
+			SHOWINFO "start gbox"
+			/var/bin/gbox &
+			sleep 10
+		;;
+		"stop" )
+			SHOWINFO "stop gbox"
+			touch /tmp/gbox.kill
+			sleep 1
+			rm -rf /tmp/pid.info
+			rm -rf /tmp/ecm.info
+			rm -rf /tmp/gbox.pid
+			rm -rf /tmp/gbox.ver
+			rm -rf /tmp/gbox.kill
+		;;
+		* )
+			GBOX_Action "stop"
+			sleep 1
+			GBOX_Action "start"
+		;;
+	esac
+}
+
+CS2GBOX_Action()
+{
+	case $1 in
+		"start" )
+			SHOWINFO "start cs2gbox"
+			/var/bin/cs2gbox &
+			sleep 3
+		;;
+		"stop" )
+			SHOWINFO "stop cs2gbox"
+			killall -9 cs2gbox
+			sleep 1
+			rm -rf /tmp/csonline.txt
+		;;
+		* )
+			CS2GBOX_Action "stop"
+			sleep 1
+			CS2GBOX_Action "start"
+		;;
+	esac
+}
+
+EMU_Action()
+{
+	case $1 in
+		"cs2gbox")
+			CS2GBOX_Action $ACTION
+		;;
+		"gbox")
+			GBOX_Action $ACTION
+		;;
+		"osemu")
+			OSEMU_Action $ACTION
+		;;
+		"doscam")
+			DOSCAM_Action $ACTION
+		;;
+		"oscam")
+			OSCAM_Action $ACTION
+		;;
+		"newcs")
+			NEWCS_Action $ACTION
+		;;
+		"mgcamd")
+			MGCAM_Action $ACTION
+		;;
+		*)
+			if [ -e $FLAGDIR/$F_CS2GBOX ]; then
+				CS2GBOX_Action $ACTION
+			fi
+
+			if [ -e $FLAGDIR/$F_GBOX ]; then
+				GBOX_Action $ACTION
+			fi
+
+			if [ -e $FLAGDIR/$F_OSEMU ]; then
+				OSEMU_Action $ACTION
+			fi
+
+			if [ -e $FLAGDIR/$F_DOSCAM ]; then
+				DOSCAM_Action $ACTION
+			fi
+
+			if [ -e $FLAGDIR/$F_OSCAM ]; then
+				OSCAM_Action $ACTION
+			fi
+
+			if [ -e $FLAGDIR/$F_NEWCS ]; then
+				NEWCS_Action $ACTION
+			fi
+
+			if [ -e $FLAGDIR/$F_MGCAM ]; then
+				MGCAM_Action $ACTION
+			fi
+		;;
+	esac
+}
+
+case $1 in
+	"start")
+		ACTION="start"
+		EMU_Action $2
+	;;
+	"stop")
+		ACTION="stop"
+		EMU_Action $2
+	;;
+	*)
+		ACTION="restart"
+		EMU_Action $2
+	;;
+esac
+
+exit 0

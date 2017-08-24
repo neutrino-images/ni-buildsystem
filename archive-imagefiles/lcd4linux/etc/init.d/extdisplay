@@ -1,0 +1,88 @@
+#!/bin/sh
+
+. /etc/init.d/globals
+
+LSUSB=$(lsusb)
+
+# supported dpf-devices
+DPF="1908:0102"
+DPFbootloader="1908:3318"
+#
+DPF="${DPF} ${DPFbootloader}"
+
+# supported spf-devices
+SPFstorage="04E8:200A 04E8:200E 04E8:200C 04E8:2012 04E8:2016 04E8:2025 04E8:2033 04E8:201C 04E8:2027 04E8:2035 04E8:204F 04E8:2039"
+SPFmonitor="04E8:200B 04E8:200F 04E8:200D 04E8:2013 04E8:2017 04E8:2026 04E8:2034 04E8:201B 04E8:2028 04E8:2036 04E8:2050 04E8:2040"
+# SPFmodel: ^SPF-72H  ^SPF-75H  ^SPF-83H  ^SPF-85H  ^SPF-85P  ^SPF-87H  ^SPF-87H  ^SPF-105P ^SPF-107H ^SPF-107H ^SPF-700T ^SPF-1000P
+# SPFmodel:           ^SPF-76H            ^SPF-86H  ^SPF-86P   old                                     new
+SPF="${SPFstorage} ${SPFmonitor}"
+
+DEVICES="${DPF} ${SPF}"
+for DEVICE in ${DEVICES}; do
+	V=$(echo ${DEVICE:0:4} | sed 's/^[0]*//' | tr [:upper:] [:lower:]) # lower case vendor  w/o leading zeros
+	P=$(echo ${DEVICE:5:4} | sed 's/^[0]*//' | tr [:upper:] [:lower:]) # lower case product w/o leading zeros
+
+	flagLCD=/tmp/.lcd-${V}
+
+	case "$1" in
+		start|add)
+			# LOGINFO "trying to process ${DEVICE} (V:{$V} P:{$P})"
+
+			echo "${LSUSB}" | grep -q -i "${DEVICE}" || continue
+
+			if $(echo "${LSUSB}" | grep -q "${DPFbootloader}"); then
+				LOGINFO "unsupported device (ID ${DEVICE}) found"
+				LOGINFO "${DEVICE} is in bootloader mode"
+				break
+			fi
+
+			LOGINFO "supported device (ID ${DEVICE}) found"
+
+			if $(echo "${DPF} ${SPF}" | grep -q "${DEVICE}"); then
+				LOGINFO "creating flagfile '$flagLCD'"
+				echo "${DEVICE}" > $flagLCD
+
+				if $(echo "${DPF} ${SPFstorage}" | grep -q "${DEVICE}"); then
+					LOGINFO "DPF or SPF in storage mode found"
+					LOGINFO "(re)starting lcd4linux"
+
+					service lcd4linux restart
+				fi
+
+				if $(echo "${SPFmonitor}" | grep -q "${DEVICE}"); then
+					LOGINFO "SPF in monitor mode found"
+					if [ -e /tmp/lcd4linux.pid ]; then
+						LOGINFO "do nothing"
+					else
+						LOGINFO "(re)starting lcd4linux"
+						service lcd4linux restart
+					fi
+				fi
+				break
+			fi
+		;;
+		stop|remove)
+			if [ -e $flagLCD ]; then
+				grep "^${DEVICE}" $flagLCD >/dev/null || continue
+
+				LOGINFO "supported DPF/SPF (ID ${DEVICE}) removed"
+
+				if $(echo "${DPF} ${SPFmonitor}" | grep -q "${DEVICE}"); then
+					LOGINFO "DPF or SPF in monitor mode removed"
+					LOGINFO "stopping lcd4linux"
+
+					service lcd4linux stop
+				fi
+
+				if $(echo "${SPFstorage}" | grep -q "${DEVICE}"); then
+					LOGINFO "SPF in storage mode removed"
+					LOGINFO "do nothing"
+				fi
+
+				LOGINFO "removing flagfile '$flagLCD'"
+				rm -f $flagLCD
+				break
+			fi
+		;;
+	esac
+done

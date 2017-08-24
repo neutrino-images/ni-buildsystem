@@ -1,0 +1,13 @@
+diff --git a/src/main.cpp b/src/main.cpp
+index be569a2..d00c2b9 100644
+--- a/src/main.cpp
++++ b/src/main.cpp
+@@ -43,7 +43,7 @@ int main(int argc,char** argv)
+         if(fp)
+             fclose(fp);
+         else
+-            rc=chdir("/usr/share/xupnpd/");
++            rc=chdir("/share/xupnpd/");
+     }
+ 
+     lua_State* L=lua_open();

@@ -1,0 +1,26 @@
+From de30a06fa707ae5de0ba89e9bb65162c3d470d97 Mon Sep 17 00:00:00 2001
+Message-Id: <de30a06fa707ae5de0ba89e9bb65162c3d470d97.1390525959.git.striper@gmx.de>
+From: striper <striper@gmx.de>
+Date: Fri, 24 Jan 2014 02:12:33 +0100
+Subject: [PATCH] - fix docdir build
+
+---
+ local.mk | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/local.mk b/local.mk
+index 5129c94..7407536 100644
+--- a/local.mk
++++ b/local.mk
+@@ -95,7 +95,7 @@ EXTRA_DIST +=				\
+ 	$(NOTHING_ELSE)
+ 
+ $(dist_doc_DATA): ext/curses/curses.c build-aux/make_lcurses_doc.pl
+-	test -d $(builddir)/doc || mkdir $(builddir)/doc
++	test -d $(builddir)/doc || mkdir -p $(builddir)/doc
+ 	$(PERL) build-aux/make_lcurses_doc.pl
+ if HAVE_LDOC
+ 	$(LDOC) $(srcdir)/ext/posix
+-- 
+1.8.5.2
+

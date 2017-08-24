@@ -1,0 +1,25 @@
+From 1820fedfe68182ea1fcdd8e5242da2fd0860efd3 Mon Sep 17 00:00:00 2001
+From: Cody P Schafer <cschafer@cybexintl.com>
+Date: Tue, 22 Jul 2014 15:30:17 -0400
+Subject: [PATCH] arm/unwind-arm.c: mark __aeabi_unwind_cpp_pr0 WEAK
+
+---
+ libgcc/config/arm/unwind-arm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/libgcc/config/arm/unwind-arm.c b/libgcc/config/arm/unwind-arm.c
+index ee23963..cda3388 100644
+--- a/libgcc/config/arm/unwind-arm.c
++++ b/libgcc/config/arm/unwind-arm.c
+@@ -144,7 +144,7 @@ restore_non_core_regs (phase1_vrs * vrs)
+ 
+ /* ABI defined personality routines.  */
+ extern _Unwind_Reason_Code __aeabi_unwind_cpp_pr0 (_Unwind_State,
+-    _Unwind_Control_Block *, _Unwind_Context *);// __attribute__((weak));
++    _Unwind_Control_Block *, _Unwind_Context *)  __attribute__((weak));
+ extern _Unwind_Reason_Code __aeabi_unwind_cpp_pr1 (_Unwind_State,
+     _Unwind_Control_Block *, _Unwind_Context *) __attribute__((weak));
+ extern _Unwind_Reason_Code __aeabi_unwind_cpp_pr2 (_Unwind_State,
+-- 
+2.0.1
+

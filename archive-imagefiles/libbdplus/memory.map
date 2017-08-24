@@ -1,0 +1,14 @@
+00000000 mem_player_name.bin
+00000200 mem_player_version.bin
+00010000 mem_player_executable.bin
+00100000 mem_area_02.bin
+00200000 mem_area_03.bin
+00290000 mem_area_04.bin
+00290200 mem_area_05.bin
+00300000 mem_area_06.bin
+00304000 mem_area_07.bin
+
+# abuse the way libbdplus scans memory map and provide "fallback"
+# memory region with free memory pattern that will fill in all the gaps
+# http://forum.doom9.org/showthread.php?p=1205462#post1205462
+00000000 mem_free.bin

@@ -1,0 +1,14 @@
+--- libid3tag-0.15.0b/id3tag.pc	1970-01-01 01:00:00.000000000 +0100
++++ libid3tag-0.15.0bnew/id3tag.pc	2003-09-10 17:56:53.000000000 +0200
+@@ -0,0 +1,11 @@
++prefix=
++exec_prefix=${prefix}
++libdir=${exec_prefix}/lib
++includedir=${prefix}/include
++
++Name: id3tag
++Description: ID3 tag reading library
++Requires:
++Version: 0.15.1b
++Libs: -L${libdir} -lid3tag -lz
++Cflags: -I${includedir}

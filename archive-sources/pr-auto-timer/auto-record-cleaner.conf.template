@@ -1,0 +1,9 @@
+# General configuration for the auto-record-cleaner
+
+# Activate the following to change the default path of the rule file
+#RULE_FILE=/var/tuxbox/config/$ME.rules
+
+# Deactivate the logfile (default is ON)
+#LOG_FILE=off
+# Activate the following to change the default location of the log-file
+#LOG_FILE=/tmp/${ME}_$(date +'%F').log

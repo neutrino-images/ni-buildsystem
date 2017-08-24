@@ -1,0 +1,22 @@
+#!/bin/sh
+
+case $1 in
+	start)	
+		if [ -e /var/etc/.djmount ]; then
+			modprobe fuse
+			test -d /media/upnp || mkdir /media/upnp
+			djmount -o iocharset=utf-8 /media/upnp 2>&1 > /dev/null
+		fi
+		;;
+	stop)
+		if [ -e /var/etc/.djmount ]; then
+			fusermount -u /media/upnp
+		fi
+		;;
+	restart)
+		if [ -e /var/etc/.djmount ]; then
+			$0 stop
+			$0 start
+		fi
+		;;
+esac

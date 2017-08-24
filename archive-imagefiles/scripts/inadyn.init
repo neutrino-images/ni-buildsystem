@@ -1,0 +1,18 @@
+#!/bin/sh
+
+case $1 in
+start)
+	if [ -e /var/etc/.inadyn ]; then
+		echo "starte inadyn..."
+		/sbin/inadyn
+	fi
+	;;
+stop)
+	if [ -e /var/run/inadyn.pid ]; then
+		echo "stoppe inadyn..."
+		kill $( cat /var/run/inadyn.pid )
+	fi
+	;;
+esac
+
+exit 0

@@ -1,0 +1,78 @@
+diff --git a/fbshot.c b/fbshot.c
+index ca55499..703eb47 100644
+--- a/fbshot.c
++++ b/fbshot.c
+@@ -44,6 +44,8 @@
+ #include <errno.h>
+ #include <sys/utsname.h>
+ 
++#include <zlib.h>
++
+ #include <sys/vt.h>
+ #include <png.h>
+ #include <linux/fb.h> 
+@@ -71,7 +71,7 @@ struct picture{
+   int xres,yres;
+   char *buffer;
+   struct fb_cmap *colormap;
+-  char bps,gray;
++  char bps,gray,bgr;
+ };
+ 
+ void FatalError(char* err){
+@@ -168,6 +168,12 @@ int read_fb(char *device, int vt_num, struct picture *pict){
+     i=pict->bps>>3;
+   }
+    
++  /* check if framebuffer is bgr instead of rgb */
++  if(pict->bps==32 && fb_varinfo.red.offset==16 && fb_varinfo.blue.offset==0)
++    pict->bgr=1;
++  else
++    pict->bgr=0;
++
+   if(!(pict->buffer=malloc(pict->xres*pict->yres*i)))
+     FatalError("couldnt malloc");
+ 
+@@ -185,6 +191,10 @@ int read_fb(char *device, int vt_num, struct picture *pict){
+   fprintf(stdout, "FIX: card:%s mem:0x%.8X mem_len:%d visual:%i type:%i type_aux:%i line_len:%i accel:%i\n",
+   fb_fixinfo.id,fb_fixinfo.smem_start,fb_fixinfo.smem_len,fb_fixinfo.visual,
+   fb_fixinfo.type,fb_fixinfo.type_aux,fb_fixinfo.line_length,fb_fixinfo.accel);
++  printf("red:	off %2d len %d msb_right %d\n",fb_varinfo.red.offset,fb_varinfo.red.length,fb_varinfo.red.msb_right);
++  printf("blue:	off %2d len %d msb_right %d\n",fb_varinfo.blue.offset,fb_varinfo.blue.length,fb_varinfo.blue.msb_right);
++  printf("green:	off %2d len %d msb_right %d\n",fb_varinfo.green.offset,fb_varinfo.green.length,fb_varinfo.green.msb_right);
++  printf("transp:	off %2d len %d msb_right %d\n",fb_varinfo.transp.offset,fb_varinfo.transp.length,fb_varinfo.transp.msb_right);
+ #endif
+ 
+   fflush(stdout);
+@@ -272,7 +282,10 @@ static int Write_PNG(struct picture * pict, char *filename, int interlace, int g
+     fprintf(stdout, "%i\n",write(i,(void*)pict->buffer,(pict->xres)*(pict->yres)));
+     perror("dupa");
+     fprintf(stdout, "Writing to %s %ix%i %i\n", filename,(pict->xres),(pict->yres),(pict->xres)*(pict->yres));
++if (pict->colormap != NULL)
+     fprintf(stdout, "start: %i, size: %i\n", pict->colormap->start,pict->colormap->len);
++else
++    printf("no pict->colormap!\n");
+     fflush(stdout);
+     close(i);
+ #endif
+@@ -312,7 +325,7 @@ static int Write_PNG(struct picture * pict, char *filename, int interlace, int g
+ 
+   png_init_io(png_ptr, OUTfd);
+     
+-  png_set_compression_level(png_ptr, Z_BEST_COMPRESSION);
++  png_set_compression_level(png_ptr, Z_BEST_SPEED);
+ 
+   row_pointers=(png_bytep*)malloc(sizeof(png_bytep)*pict->yres);
+ 
+@@ -357,7 +370,10 @@ static int Write_PNG(struct picture * pict, char *filename, int interlace, int g
+       color_type=PNG_COLOR_TYPE_RGB_ALPHA;
+       for (i=0; i<(pict->yres); i++)
+         row_pointers[i]=pict->buffer+i*4*(pict->xres);
+-      png_set_invert_alpha(png_ptr);
++      if(pict->bgr)
++        png_set_bgr(png_ptr);
++      else /* i'm not sure if the invert_alpha is related to pict->bgr --seife */
++        png_set_invert_alpha(png_ptr);
+       break;
+     }
+     

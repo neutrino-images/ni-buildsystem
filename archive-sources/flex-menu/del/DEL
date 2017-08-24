@@ -1,0 +1,193 @@
+#! /bin/sh
+# DEL - Liveticker in Messagebox anzeigen
+# by theobald123
+# Version: 2.0 Coolstream HD1
+
+# *************************************************************************************
+# *                      Funktion zur Anzeige der Ergebnisse                          *
+# *-----------------------------------------------------------------------------------*
+# * Übergabeparameter 1: Anzeigedateiname                                             *
+# * Übergabeparameter 2: Fontgröße für Anzeige                                        *
+# *************************************************************************************
+
+Ergebnisse ()
+{
+	#Ergebnisse anzeigen
+	cp $1 /tmp/anzeige_neu.txt
+	if [ $msg_on -eq 0 ]; then
+		if [ $aktu -eq 1 ]; then
+			msgbox title="$Head" size=$2 timeout=-1 popup=/tmp/anzeige_neu.txt &
+		else
+			msgbox title="$Head" size=$2 msg=/tmp/anzeige_neu.txt
+			#TMP-Dateien loeschen
+			rm /tmp/anzeige_*.txt
+			rm /tmp/tabelle.txt
+			rm /tmp/tore.txt
+			rm /tmp/result.txt
+			ende=1
+			wait=0
+		fi
+	fi
+
+	#neue Ergebnisse einblenden
+	if [ $new1 -gt 0 ]; then
+			rm /tmp/.msgbox_hidden
+			killall msgbox
+			msgbox title="$Head" size=$2 timeout=-1 popup=/tmp/anzeige_neu.txt &
+	fi
+
+	#Wartezeit bis zum Refresh
+	if [ $ende -eq 0 ]; then
+		while [ $timer -le $wait ]; do
+			if pidof msgbox > /dev/null; then                                         #Messagebox aktiv?
+				msg_on=1
+			else
+				#TMP-Dateien loeschen
+				rm /tmp/anzeige_*.txt
+				rm /tmp/tabelle.txt
+				rm /tmp/tore.txt
+				rm /tmp/result.txt
+				ende=1
+				wait=0
+			fi
+			if [ -e /tmp/.msgbox_hidden ]; then                                       #Messagebox ausgeblendet
+				if [ $copy -eq 0 ]; then                                                #Alte Daten kopiert?
+					cp /tmp/tore.txt /tmp/anzeige_alt.txt
+					echo Messagebox ausgeblendet
+					copy=1
+				fi
+			else
+				copy=0
+			fi
+			sleep 1
+			timer=`expr "$timer" + 1`
+		done
+	fi
+	timer=0
+}
+
+# *************************************************************************************
+# *                Funktion zum Erstellen der DEL-Ergebnisse                          *
+# *-----------------------------------------------------------------------------------*
+# * Übergabeparameter 1: Internet-Adresse                                             *
+# *************************************************************************************
+
+DEL ()
+{
+Head="aktueller Spieltag"
+ende=0
+while [ $ende -eq 0 ]; do
+	#Spielpaarungen und Ergebnisse auslesen
+	wget -q -O - $1 \
+	| sed -n "/<h3>Livescores<\/h3>/,/daten-dashboard/ p" \
+	| sed -e 's/<span/|<span/g' \
+				-e 's/<[^>]*>//g' \
+				-e 's/\n//g' \
+				-e 's/Ã¤/ä/g' -e 's/&auml;/ä/g' -e 's/&#228;/ä/g' \
+				-e 's/Ã¶/ö/g' -e 's/&ouml;/ö/g' -e 's/&#246;/ö/g' \
+				-e 's/Ã¼/ü/g' -e 's/&uuml;/ü/g' -e 's/&#252;/ü/g' \
+				-e '/^[^0-9a-zA-Z!-\/|]*$/d' \
+				-e '/Livescores/d' > /tmp/tore.txt
+
+	Zeilen=`sed -n -e "$ ="    /tmp/tore.txt`                                     #Anzahl Zeilen
+
+	#Spielpaarungen und Ergebnisse auslesen
+	rm /tmp/result.txt
+	tab1=2; tab2=3; step=3; new1=0
+	while [ $tab2 -le $Zeilen ]; do                                               #Anzahl Spiele schreiben
+ 		a1=`sed -n "$tab1"p /tmp/tore.txt | sed -e 's/|.*$//g'`                     #Heimmannschaft
+ 		a2=`sed -n "$tab1"p /tmp/tore.txt | sed -e 's/^.*|//g'`                     #Heimtore
+ 		a3=`sed -n "$tab2"p /tmp/tore.txt | sed -e 's/|.*$//g'`                     #Gastmannschaft
+ 		a4=`sed -n "$tab2"p /tmp/tore.txt | sed -e 's/^.*|//g'`                     #Gasttore
+ 		a5=" "
+		if [ -e /tmp/anzeige_alt.txt ]; then                                        #Wenn Datei "anzeige_alt.txt" vorhanden
+			b2=`sed -n "$tab1"p /tmp/anzeige_alt.txt | sed -e 's/^.*|//g'`            #Lese alte Heimtore
+			b4=`sed -n "$tab2"p /tmp/anzeige_alt.txt | sed -e 's/^.*|//g'`            #Lese alte Gasttore
+			if [ "$a2" != "$b2" -o "$a4" != "$b4" ]; then                             #Wenn neu ungleich alt
+				a5=~T0870NEU!
+				new1=`expr "$new1" + 1`
+			else
+				a5=~T0870
+			fi
+		fi
+  		echo  "~T0200$a1~T0485-~T0490$a3~T0800$a2 : $a4$a5" >> /tmp/result.txt    #Ergebniszeile ausgeben
+  		tab1=`expr "$tab1" + $step`; tab2=`expr "$tab2" + $step`;
+	done
+	Ergebnisse /tmp/result.txt 22
+done
+}
+
+# *************************************************************************************
+# *                 Funktion zum Erstellen der DEL-Tabelle                            *
+# *-----------------------------------------------------------------------------------*
+# * Übergabeparameter 1: Internet-Adresse                                             *
+# *************************************************************************************
+
+DELTabelle ()
+{
+Head="DEL-Tabelle"
+TABURL=`wget -q -O - $1 | grep Tabelle | grep href | grep statistiken | sed -e 's/^.*href="//g' | sed -e 's/.html.*$/.html/'`
+wget -q -O - $1$TABURL | \
+sed -n "/<h3>Tabelle<\/h3>/,/legende/ p" | \
+sed -e 's/&nbsp;//g' \
+		-e 's/<[^>]*>//g' \
+		-e 's/\n//g' \
+		-e 's/Ã¤/ä/g' -e 's/&auml;/ä/g' -e 's/&#228;/ä/g' \
+		-e 's/Ã¶/ö/g' -e 's/&ouml;/ö/g' -e 's/&#246;/ö/g' \
+		-e 's/Ã¼/ü/g' -e 's/&uuml;/ü/g' -e 's/&#252;/ü/g' \
+		-e '/^[^0-9a-zA-Z!-\/|]*$/d' \
+		-e '/Tabelle/d'      > /tmp/tabelle.txt                                     #HTML-Tags entfernen; Sonderzeichen ersetzen
+Zeilen=`sed -n -e "$ ="    /tmp/tabelle.txt`                                    #Anzahl Zeilen
+tab1=16; tab2=17; tab3=18; tab4=25; tab5=27; tab6=28; step=16
+
+echo ~T0250Platz~T0305Verein~T0550Spiele~T0620Tore~T0710Punkte  > /tmp/result.txt
+while [ $tab6 -le $Zeilen ]; do
+	a1=`sed -n "$tab1"p /tmp/tabelle.txt`                                         #Platz
+	a2=`sed -n "$tab2"p /tmp/tabelle.txt`                                         #Mannschaft
+	a3=`sed -n "$tab3"p /tmp/tabelle.txt`                                         #Spiele
+	a4=`sed -n "$tab4"p /tmp/tabelle.txt`                                         #Punkte
+	a5=`sed -n "$tab5"p /tmp/tabelle.txt`                                         #Tore
+	a6=`sed -n "$tab6"p /tmp/tabelle.txt`                                         #Gegentore
+
+	echo  ~T0250$a1~T0300$a2~T0560$a3~T0610$a5~T0650: $a6~T0720$a4 >> /tmp/result.txt
+	tab1=`expr "$tab1" + $step`; tab2=`expr "$tab2" + $step`; tab3=`expr "$tab3" + $step`; tab4=`expr "$tab4" + $step`; tab5=`expr "$tab5" + $step`; tab6=`expr "$tab6" + $step`
+done
+msgbox title="$Head" size=22 timeout=600 popup=/tmp/result.txt                  #Tabelle anzeigen
+}
+
+auswahl=1
+while true; do
+	new1=0
+	new2=0
+	refresh=1
+	msg_on=0
+	timer=0
+	wait=20
+	copy=0
+	aktu=1                                                                        #Bei 1 ist automatische Aktualisierung ein
+
+	msgbox title="DEL" size=28 order=2 msg="~cBitte ausw~ahlen!" select="Spiele,Tabelle" default=$auswahl
+	auswahl=$?
+
+	case $auswahl	in
+	1)
+		DEL        "http://www.del.org"
+		;;
+
+	2)
+		DELTabelle "http://www.del.org"
+		;;
+
+	*)
+		#TMP-Dateien loeschen
+		rm /tmp/anzeige_*.txt
+		rm /tmp/tabelle.txt
+		rm /tmp/tore.txt
+		rm /tmp/result.txt
+		exit
+		;;
+
+	esac
+done
+
+exit

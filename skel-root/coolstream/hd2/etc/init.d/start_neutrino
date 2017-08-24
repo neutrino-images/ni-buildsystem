@@ -1,0 +1,29 @@
+#!/bin/sh
+
+touch /tmp/norestart
+
+if [ -e /var/etc/.coredump ]; then
+	ulimit -c unlimited
+fi
+
+until neutrino; do
+	RET=$?
+
+	echo "Neutrino exited with exit code $RET"
+	dt -t"NEUTRINO: $RET"
+
+	if [ -e /tmp/.lcd-usbdev?.? ]; then
+		echo "0"		> /tmp/lcd/mode_logo
+		echo "Neutrino"		> /tmp/lcd/service
+		echo "Error: $RET"	> /tmp/lcd/event
+	fi
+
+	while [ -e /tmp/norestart ]; do # for debugging: stop the restart loop
+		sleep 1;
+	done
+done
+
+if [ -e /tmp/.reboot ]; then # gets created by neutrino
+	dt -t" ..REBOOT.."
+	reboot
+fi

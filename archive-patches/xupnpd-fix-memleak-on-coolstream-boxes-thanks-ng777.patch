@@ -1,0 +1,41 @@
+From 56d0cc89150248c5e04daec3f82c02974b7d0ae9 Mon Sep 17 00:00:00 2001
+From: striper <striper@gmx.de>
+Date: Tue, 1 Jul 2014 17:33:18 +0200
+Subject: [PATCH] - xupnpd: fix memleak on coolstream boxes (thanks ng777!)
+
+* add additional collectgarbage() call when playlists reload
+---
+ src/xupnpd_m3u.lua  | 2 ++
+ src/xupnpd_main.lua | 3 +++
+ 2 files changed, 5 insertions(+)
+
+diff --git a/src/xupnpd_m3u.lua b/src/xupnpd_m3u.lua
+index a68c400..c2edd3d 100644
+--- a/src/xupnpd_m3u.lua
++++ b/src/xupnpd_m3u.lua
+@@ -83,6 +83,8 @@ function reload_playlists()
+     playlist_data.objid='0'
+     playlist_data.size=0
+     playlist_data.elements={}
++    
++    collectgarbage()
+ 
+     local plist=clone_table(playlist)
+ 
+diff --git a/src/xupnpd_main.lua b/src/xupnpd_main.lua
+index 94f72c2..1fd51f9 100644
+--- a/src/xupnpd_main.lua
++++ b/src/xupnpd_main.lua
+@@ -2,6 +2,9 @@
+ -- clark15b@gmail.com
+ -- https://tsdemuxer.googlecode.com/svn/trunk/xupnpd
+ 
++-- fix memleak on coolstream boxes by changing collectgarbage() interval from 200 (default) to 50
++collectgarbage('setpause', 50)
++
+ http.sendurl_buffer_size(32768,1);
+ 
+ if cfg.daemon==true then core.detach() end
+-- 
+2.0.0
+

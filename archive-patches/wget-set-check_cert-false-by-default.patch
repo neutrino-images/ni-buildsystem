@@ -1,0 +1,26 @@
+From afb04eb59528b9cc6ff6503ecddb4ff5b5eec7c1 Mon Sep 17 00:00:00 2001
+Message-Id: <afb04eb59528b9cc6ff6503ecddb4ff5b5eec7c1.1449398019.git.gandharva@gmx.de>
+From: gandharva <gandharva@gmx.de>
+Date: Sun, 6 Dec 2015 11:33:35 +0100
+Subject: [PATCH] - wget: set check_cert = CHECK_CERT_OFF by default
+
+---
+ src/init.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/init.c b/src/init.c
+index 67c94b9..b2ce270 100644
+--- a/src/init.c
++++ b/src/init.c
+@@ -425,7 +425,7 @@ defaults (void)
+   opt.retr_symlinks = true;
+ 
+ #ifdef HAVE_SSL
+-  opt.check_cert = CHECK_CERT_ON;
++  opt.check_cert = CHECK_CERT_OFF;
+   opt.ftps_resume_ssl = true;
+   opt.ftps_fallback_to_ftp = false;
+   opt.ftps_implicit = false;
+-- 
+2.6.3
+

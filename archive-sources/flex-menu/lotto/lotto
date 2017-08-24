@@ -1,0 +1,351 @@
+#! /bin/sh
+# Glückszahlen in Messagebox anzeigen
+# by theobald123
+# Version: 3.0 Coolstream
+
+
+# *************************************************************************************
+# *      Datenzeile in einzelne Parameter aufteilen                                   *
+# *-----------------------------------------------------------------------------------*
+# *      Übergabeparameter : Datenzeile                                               *
+# *************************************************************************************
+Parameter ()
+{ pn=$#
+	a1=$1;a2=$2;a3=$3;a4=$4;a5=$5;a6=$6;a7=$7;a8=$8;a9=$9;a10=$10
+	a11=$11;a12=$12;a13=$13;a14=$14;a15=$15;a16=$16;a17=$17;a18=$18;a19=$19;a20=$20; }
+
+
+# *************************************************************************************
+# *      Zeichen ersetzen, HTML-Tags entfernen, Leerzeilen entfernen                  *
+# *-----------------------------------------------------------------------------------*
+# * Bedeutung der einzelnen sed-Zeilen:                                               *
+# * Zeile 1-8:   Umsetzen der Zeichen, für die Snowhead Sonderzeichen hat             *
+# * Zeile 9:     Umsetzen Ziffern 0-9                                                 *
+# * Zeile 10-11: Umsetzen A-Z und a-z                                                 *
+# * Zeile 12:    Umsetzen HTML-Sonderzeichen (bei Bedarf zu ergänzen)                 *
+# * Zeile 13:    HTML-Tags entfernen                                                  *
+# * Zeile 14:    Leerzeilen entfernen                                                 *
+# *************************************************************************************
+Substitution ()
+{
+sed -e 's/Ã¤/ä/g' -e 's/&auml;/ä/g'  -e 's/&#228;/ä/g' \
+	-e 's/Ã¶/ö/g' -e 's/&ouml;/ö/g'  -e 's/&#246;/ö/g' \
+	-e 's/Ã¼/ü/g' -e 's/&uuml;/ü/g'  -e 's/&#252;/ü/g' \
+	-e 's/Ã„/Ä/g' -e 's/&Auml;/Ä/g'  -e 's/&#196;/Ä/g' \
+	-e 's/Ã–/Ö/g' -e 's/&Ouml;/Ö/g'  -e 's/&#214;/Ö/g' \
+	-e 's/Ãœ/Ü/g' -e 's/&Uuml;/Ü/g'  -e 's/&#220;/Ü/g' \
+	-e 's/ÃŸ/ß/g' -e 's/&szlig;/ß/g' -e 's/&#223;/ß/g' \
+                  -e 's/&deg;/°/g'   -e 's/&#176;/°/g' \
+    -e 's/&#48;/0/g' -e 's/&#49;/1/g'  -e 's/&#50;/2/g'  -e 's/&#51;/3/g'  -e 's/&#52;/4/g'  -e 's/&#53;/5/g'  -e 's/&#54;/6/g'  -e 's/&#55;/7/g'  -e 's/&#56;/8/g'  -e 's/&#57;/9/g' \
+    -e 's/&#65;/A/g' -e 's/&#66;/B/g'  -e 's/&#67;/C/g'  -e 's/&#68;/D/g'  -e 's/&#69;/E/g'  -e 's/&#70;/F/g'  -e 's/&#71;/G/g'  -e 's/&#72;/H/g'  -e 's/&#73;/I/g'  -e 's/&#74;/J/g'  -e 's/&#75;/K/g'  -e 's/&#76;/L/g'  -e 's/&#77;/M/g'  -e 's/&#78;/N/g'  -e 's/&#79;/O/g'  -e 's/&#80;/P/g'  -e 's/&#81;/Q/g'  -e 's/&#82;/R/g'  -e 's/&#83;/S/g'  -e 's/&#84;/T/g'  -e 's/&#85;/U/g'  -e 's/&#86;/V/g'  -e 's/&#87;/W/g'  -e 's/&#88;/X/g'  -e 's/&#89;/Y/g'  -e 's/&#90;/Z/g' \
+    -e 's/&#97;/a/g' -e 's/&#98;/b/g'  -e 's/&#99;/c/g'  -e 's/&#100;/d/g' -e 's/&#101;/e/g' -e 's/&#102;/f/g' -e 's/&#103;/g/g' -e 's/&#104;/h/g' -e 's/&#105;/i/g' -e 's/&#106;/j/g' -e 's/&#107;/k/g' -e 's/&#108;/l/g' -e 's/&#109;/m/g' -e 's/&#110;/n/g' -e 's/&#111;/o/g' -e 's/&#112;/p/g' -e 's/&#113;/q/g' -e 's/&#114;/r/g' -e 's/&#115;/s/g' -e 's/&#116;/t/g' -e 's/&#117;/u/g' -e 's/&#118;/v/g' -e 's/&#119;/w/g' -e 's/&#120;/x/g' -e 's/&#121;/y/g' -e 's/&#122;/z/g' \
+    -e 's/&amp;/\&/g' -e 's/&gt;/>/g' -e 's/&lt;/</g' -e 's/&nbsp;/ /g' \
+	-e 's/<[^>]*>//g' \
+	-e '/^[^0-9a-zA-Z!-\/]*$/d' \
+	$1 > $2
+}
+
+# *************************************************************************************
+# *      Lotto                                                                        *
+# *************************************************************************************
+
+Lotto ()
+{
+	curl -k "https://www.lotto-hh.de/infos/zahlen_quoten/zuq_lotto/zahlen_quoten_lotto.jsp"	>	/tmp/lotto.txt
+	sed  -n '/div\ class="logo"/,/div\ class="slct"/p'						/tmp/lotto.txt	>	/tmp/lotto1.txt
+	sed  -e 's/.$//g'														/tmp/lotto1.txt	>	/tmp/lotto2.txt
+	Substitution															/tmp/lotto2.txt		/tmp/lotto3.txt
+	Ziehung=`sed -n 1p /tmp/lotto3.txt | sed -e 's/(.*$//g'`;Ziehung=`echo $Ziehung`
+#
+#   Lottozahlen
+#
+	a1=`sed -n  3p                       /tmp/lotto3.txt`;a1=`echo $a1`
+	a2=`sed -n  4p                       /tmp/lotto3.txt`;a2=`echo $a2`
+	a3=`sed -n  5p                       /tmp/lotto3.txt`;a3=`echo $a3`
+	a4=`sed -n  6p                       /tmp/lotto3.txt`;a4=`echo $a4`
+	a5=`sed -n  7p                       /tmp/lotto3.txt`;a5=`echo $a5`
+	a6=`sed -n  8p                       /tmp/lotto3.txt`;a6=`echo $a6`
+	sz=`sed -n  9p                       /tmp/lotto3.txt`;sz=`echo $sz`
+#
+#   Spiel 77
+#
+	s77=`sed -n 10p                      /tmp/lotto3.txt`;s77=`echo $s77`
+#
+#   Super 6
+#
+	s6=`sed -n 11p                       /tmp/lotto3.txt`;s6=`echo $s6`
+#
+#
+	echo ~T0200Lottozahlen:~T0350$a1~T0390$a2~T0430$a3~T0470$a4~T0510$a5~T0550$a6			>	/tmp/lottop.txt
+	echo ~T0200Superzahl:~T0350$sz															>>	/tmp/lottop.txt
+	echo " "																				>>	/tmp/lottop.txt
+	echo ~T0200Spiel 77:~T0350$s77~T0550Super6:~T0700$s6									>>	/tmp/lottop.txt
+#
+#   Lottoquoten
+#
+	echo " "																				>>	/tmp/lottop.txt
+	echo ~T0200Quoten:																		>>	/tmp/lottop.txt
+#
+	sed -n '/div\ class="lotto"/,/div\ class="jackpot"/p'					/tmp/lotto.txt	>	/tmp/lotto1.txt
+	sed -e '/x/d' 															/tmp/lotto1.txt >	/tmp/lotto2.txt
+	sed -e 's/.$//g' 														/tmp/lotto2.txt >	/tmp/lotto3.txt
+	Substitution															/tmp/lotto3.txt		/tmp/lotto4.txt
+	Quote=`sed -n /Spieleinsatz:\ liegt\ nicht\ vor/p /tmp/lotto4.txt`;Quote=`echo $Quote`
+	if  [ "$Quote" == "Spieleinsatz: liegt nicht vor." ]; then
+		echo '~T0200die Quoten liegen noch nicht vor'										>>	/tmp/lottop.txt
+	else
+		Lottoquoten
+	fi
+	echo ~T0440alle Angaben ohne Gew~ahr													>>	/tmp/lottop.txt
+	msgbox title="Lotto $Ziehung" size=30 timeout=600 popup=/tmp/lottop.txt
+
+#   TMP-Dateien löschen
+	rm /tmp/lotto*.txt
+}
+
+Lottoquoten ()
+{
+	q1=`sed -n 4p /tmp/lotto4.txt`;q1=`echo $q1`
+	q2=`sed -n 5p /tmp/lotto4.txt`;q2=`echo $q2`
+	q3=`sed -n 6p /tmp/lotto4.txt`;q3=`echo $q3`
+	echo ~T0200$q1~T0440$q2~T0700$q3														>>	/tmp/lottop.txt
+	count=1
+	z1=8
+	z2=9
+	z3=10
+	while [ $count -le 9 ]; do
+		q1=`sed -n "$z1"p /tmp/lotto4.txt`;q1=`echo $q1`
+		q2=`sed -n "$z2"p /tmp/lotto4.txt`;q2=`echo $q2`
+		q3=`sed -n "$z3"p /tmp/lotto4.txt`;q3=`echo $q3`
+		z1=`expr "$z1" + 4`
+		z2=`expr "$z2" + 4`
+		z3=`expr "$z3" + 4`
+		echo ~T0200$q1~T0440$q2~T0700$q3													>>	/tmp/lottop.txt
+		count=`expr "$count" + 1`
+	done
+}
+
+# *************************************************************************************
+# *      Keno                                                                         *
+# *************************************************************************************
+
+Keno ()
+{
+	curl -k "https://www.lotto-hh.de/keno/zahlen_quoten_keno/zahlen_quoten_keno.jsp"		>	/tmp/lotto.txt
+	sed -n '/div\ class="logo"/,/div\ class="slct"/p'						/tmp/lotto.txt  >	/tmp/lotto1.txt
+	sed -e 's/.$//g'														/tmp/lotto1.txt >	/tmp/lotto2.txt
+	Substitution															/tmp/lotto2.txt		/tmp/lotto3.txt
+	Ziehung=`sed -n 1p /tmp/lotto3.txt | sed -e 's/(.*$//g'`;Ziehung=`echo $Ziehung`
+#
+#   Keno
+#
+	a1=`sed -n 3p /tmp/lotto3.txt`;a1=`echo $a1`
+	a2=`sed -n 4p /tmp/lotto3.txt`;a2=`echo $a2`
+	a3=`sed -n 5p /tmp/lotto3.txt`;a3=`echo $a3`
+	a4=`sed -n 6p /tmp/lotto3.txt`;a4=`echo $a4`
+	a5=`sed -n 7p /tmp/lotto3.txt`;a5=`echo $a5`
+	a6=`sed -n 8p /tmp/lotto3.txt`;a6=`echo $a6`
+	a7=`sed -n 9p /tmp/lotto3.txt`;a7=`echo $a7`
+	a8=`sed -n 10p /tmp/lotto3.txt`;a8=`echo $a8`
+	a9=`sed -n 11p /tmp/lotto3.txt`;a9=`echo $a9`
+	a10=`sed -n 12p /tmp/lotto3.txt`;a10=`echo $a10`
+	a11=`sed -n 13p /tmp/lotto3.txt`;a11=`echo $a11`
+	a12=`sed -n 14p /tmp/lotto3.txt`;a12=`echo $a12`
+	a13=`sed -n 15p /tmp/lotto3.txt`;a13=`echo $a13`
+	a14=`sed -n 16p /tmp/lotto3.txt`;a14=`echo $a14`
+	a15=`sed -n 17p /tmp/lotto3.txt`;a15=`echo $a15`
+	a16=`sed -n 18p /tmp/lotto3.txt`;a16=`echo $a16`
+	a17=`sed -n 19p /tmp/lotto3.txt`;a17=`echo $a17`
+	a18=`sed -n 20p /tmp/lotto3.txt`;a18=`echo $a18`
+	a19=`sed -n 21p /tmp/lotto3.txt`;a19=`echo $a19`
+	a20=`sed -n 22p /tmp/lotto3.txt`;a20=`echo $a20`
+
+	#
+#   plus 5
+#
+	plus5=`sed -n 23p                       /tmp/lotto3.txt`;plus5=`echo $plus5`
+
+
+	echo ~T0300Keno:~T0400$a1 $a2 $a3 $a4 $a5 $a6 $a7 $a8 $a9 $a10							>	/tmp/lottop.txt
+	echo ~T0400$a11 $a12 $a13 $a14 $a15 $a16 $a17 $a18 $a19 $a20							>>	/tmp/lottop.txt
+	echo " "																				>>	/tmp/lottop.txt
+	echo ~T0300plus 5:~T0400$plus5															>>	/tmp/lottop.txt
+	echo ~T0710alle Angaben ohne Gew~ahr													>>	/tmp/lottop.txt
+	msgbox title="Keno $Ziehung" size=30 timeout=600 popup=/tmp/lottop.txt
+
+#   TMP-Dateien loeschen
+	rm /tmp/lotto*.txt
+}
+
+# *************************************************************************************
+# *      Toto                                                                         *
+# *************************************************************************************
+
+Toto ()
+{
+#
+#   Auswahlwette
+#
+	curl -k "https://www.lotto-hh.de/infos/zahlen_quoten/zuq_toto_auswahlwette/zahlen_quoten_toto_auswahlwette.jsp"		>	/tmp/lotto.txt
+	sed -n '/div\ class="logo"/,/div\ class="slct"/p'													/tmp/lotto.txt  >	/tmp/lotto1.txt
+	sed -e 's/.$//g'																					/tmp/lotto1.txt >	/tmp/lotto2.txt
+	Substitution																						/tmp/lotto2.txt		/tmp/lotto3.txt
+	Ziehung=`sed -n 1p /tmp/lotto3.txt | sed -e 's/(.*$//g'`;Ziehung=`echo $Ziehung`
+
+	a1=`sed  -n  3p                        /tmp/lotto3.txt`;a1=`echo $a1`
+	a2=`sed  -n  4p                        /tmp/lotto3.txt`;a2=`echo $a2`
+	a3=`sed  -n  5p                        /tmp/lotto3.txt`;a3=`echo $a3`
+	a4=`sed  -n  6p                        /tmp/lotto3.txt`;a4=`echo $a4`
+	a5=`sed  -n  7p                        /tmp/lotto3.txt`;a5=`echo $a5`
+	a6=`sed  -n  8p                        /tmp/lotto3.txt`;a6=`echo $a6`
+	az=`sed  -n  9p                        /tmp/lotto3.txt`;az=`echo $az`
+#
+#   Ergebniswette
+#
+	curl -k "https://www.lotto-hh.de/infos/zahlen_quoten/zuq_toto_ergebniswette/zahlen_quoten_toto_ergebniswette.jsp"		>	/tmp/lotto.txt
+	sed -n '/div\ class="logo"/,/div\ class="slct"/p'														/tmp/lotto.txt  >	/tmp/lotto1.txt
+	sed -e 's/.$//g'																						/tmp/lotto1.txt >	/tmp/lotto2.txt
+	Substitution																							/tmp/lotto2.txt		/tmp/lotto3.txt
+
+	e1=`sed  -n  3p                        /tmp/lotto3.txt`;e1=`echo $e1`
+	e2=`sed  -n  4p                        /tmp/lotto3.txt`;e2=`echo $e2`
+	e3=`sed  -n  5p                        /tmp/lotto3.txt`;e3=`echo $e3`
+	e4=`sed  -n  6p                        /tmp/lotto3.txt`;e4=`echo $e4`
+	e5=`sed  -n  7p                        /tmp/lotto3.txt`;e5=`echo $e5`
+	e6=`sed  -n  8p                        /tmp/lotto3.txt`;e6=`echo $e6`
+	e7=`sed  -n  9p                        /tmp/lotto3.txt`;e7=`echo $e7`
+	e8=`sed  -n 10p                        /tmp/lotto3.txt`;e8=`echo $e8`
+	e9=`sed  -n 11p                        /tmp/lotto3.txt`;e9=`echo $e9`
+	e10=`sed -n 12p                        /tmp/lotto3.txt`;e10=`echo $e10`
+	e11=`sed -n 13p                        /tmp/lotto3.txt`;e11=`echo $e11`
+	e12=`sed -n 14p                        /tmp/lotto3.txt`;e12=`echo $e12`
+	e13=`sed -n 15p                        /tmp/lotto3.txt`;e13=`echo $e13`
+
+	echo Auswahlwette:~T0420$a1 " " $a2 " " $a3 " " $a4 " " $a5 " " $a6                                                                   >  /tmp/lottop.txt
+	echo Zusatzspiel:~T0420$az                                                                                                            >> /tmp/lottop.txt
+	echo " "                                                                                                                              >> /tmp/lottop.txt
+	echo Ergebniswette:~T0420$e1 " " $e2 " " $e3 " " $e4 " " $e5 " " $e6 " " $e7 " " $e8 " " $e9 " " $e10 " " $e11 " " $e12 " " $e13 " "  >> /tmp/lottop.txt
+	echo ~T0420alle Angaben ohne Gew~ahr                                                                                                  >> /tmp/lottop.txt
+	msgbox title="TOTO $Ziehung" size=30 timeout=600 popup=/tmp/lottop.txt
+
+#   TMP-Dateien loeschen
+	rm /tmp/lotto*.txt
+}
+
+# *************************************************************************************
+# *      Glücksspirale                                                                *
+# *************************************************************************************
+
+Glueck ()
+{
+	curl -k "https://www.lotto-hh.de/gluecksspirale/zahlen_quoten_gluecksspirale/zahlen_quoten_gluecksspirale.jsp"		>	/tmp/lotto.txt
+	sed -n '/div\ class="logo"/,/div\ class="slct"/p'													/tmp/lotto.txt  >	/tmp/lotto1.txt
+	sed -e 's/.$//g'																					/tmp/lotto1.txt >	/tmp/lotto2.txt
+	Substitution																						/tmp/lotto2.txt		/tmp/lotto3.txt
+	Ziehung=`sed -n 1p /tmp/lotto3.txt | sed -e 's/(.*$//g'`;Ziehung=`echo $Ziehung`
+
+	sed -n '/!--\ GluecksSpirale\ --/,/div\ class="jackpot"/p'											/tmp/lotto.txt  >	/tmp/lotto1.txt
+	sed -e 's/.$//g'																					/tmp/lotto1.txt >	/tmp/lotto2.txt
+	Substitution																						/tmp/lotto2.txt		/tmp/lotto3.txt
+#
+#   Glücksspirale
+#
+	a1=`sed      -n   8p        /tmp/lotto3.txt`;a1=`echo $a1`
+
+	z1=`sed      -n  13p        /tmp/lotto3.txt`;z1=`echo $z1`
+	z2=`sed      -n  14p        /tmp/lotto3.txt`;z2=`echo $z2`
+	a2=`echo $z1$z2`
+
+	z1=`sed      -n  19p        /tmp/lotto3.txt`;z1=`echo $z1`
+	z2=`sed      -n  20p        /tmp/lotto3.txt`;z2=`echo $z2`
+	z3=`sed      -n  21p        /tmp/lotto3.txt`;z3=`echo $z3`
+	a3=`echo $z1$z2$z3`
+
+	z1=`sed      -n  26p        /tmp/lotto3.txt`;z1=`echo $z1`
+	z2=`sed      -n  27p        /tmp/lotto3.txt`;z2=`echo $z2`
+	z3=`sed      -n  28p        /tmp/lotto3.txt`;z3=`echo $z3`
+	z4=`sed      -n  29p        /tmp/lotto3.txt`;z4=`echo $z4`
+	a4=`echo $z1$z2$z3$z4`
+
+	z1=`sed      -n  34p        /tmp/lotto3.txt`;z1=`echo $z1`
+	z2=`sed      -n  35p        /tmp/lotto3.txt`;z2=`echo $z2`
+	z3=`sed      -n  36p        /tmp/lotto3.txt`;z3=`echo $z3`
+	z4=`sed      -n  37p        /tmp/lotto3.txt`;z4=`echo $z4`
+	z5=`sed      -n  38p        /tmp/lotto3.txt`;z5=`echo $z5`
+	a5=`echo $z1$z2$z3$z4$z5`
+
+	z1=`sed      -n  43p        /tmp/lotto3.txt`;z1=`echo $z1`
+	z2=`sed      -n  44p        /tmp/lotto3.txt`;z2=`echo $z2`
+	z3=`sed      -n  45p        /tmp/lotto3.txt`;z3=`echo $z3`
+	z4=`sed      -n  46p        /tmp/lotto3.txt`;z4=`echo $z4`
+	z5=`sed      -n  47p        /tmp/lotto3.txt`;z5=`echo $z5`
+	z6=`sed      -n  48p        /tmp/lotto3.txt`;z6=`echo $z6`
+	a6a=`echo $z1$z2$z3$z4$z5$z6`
+
+	z1=`sed      -n  49p        /tmp/lotto3.txt`;z1=`echo $z1`
+	z2=`sed      -n  50p        /tmp/lotto3.txt`;z2=`echo $z2`
+	z3=`sed      -n  51p        /tmp/lotto3.txt`;z3=`echo $z3`
+	z4=`sed      -n  52p        /tmp/lotto3.txt`;z4=`echo $z4`
+	z5=`sed      -n  53p        /tmp/lotto3.txt`;z5=`echo $z5`
+	z6=`sed      -n  54p        /tmp/lotto3.txt`;z6=`echo $z6`
+	a6b=`echo $z1$z2$z3$z4$z5$z6`
+
+	z1=`sed      -n  59p        /tmp/lotto3.txt`;z1=`echo $z1`
+	z2=`sed      -n  60p        /tmp/lotto3.txt`;z2=`echo $z2`
+	z3=`sed      -n  61p        /tmp/lotto3.txt`;z3=`echo $z3`
+	z4=`sed      -n  62p        /tmp/lotto3.txt`;z4=`echo $z4`
+	z5=`sed      -n  63p        /tmp/lotto3.txt`;z5=`echo $z5`
+	z6=`sed      -n  64p        /tmp/lotto3.txt`;z6=`echo $z6`
+	z7=`sed      -n  65p        /tmp/lotto3.txt`;z7=`echo $z7`
+	a7a=`echo $z1$z2$z3$z4$z5$z6$z7`
+
+	z1=`sed      -n  66p        /tmp/lotto3.txt`;z1=`echo $z1`
+	z2=`sed      -n  67p        /tmp/lotto3.txt`;z2=`echo $z2`
+	z3=`sed      -n  68p        /tmp/lotto3.txt`;z3=`echo $z3`
+	z4=`sed      -n  69p        /tmp/lotto3.txt`;z4=`echo $z4`
+	z5=`sed      -n  70p        /tmp/lotto3.txt`;z5=`echo $z5`
+	z6=`sed      -n  71p        /tmp/lotto3.txt`;z6=`echo $z6`
+	z7=`sed      -n  72p        /tmp/lotto3.txt`;z7=`echo $z7`
+	a7b=`echo $z1$z2$z3$z4$z5$z6$z7`
+
+	echo Klasse~T0400Gewinnzahl           >  /tmp/lottop.txt
+	echo I~T0400$a1                       >> /tmp/lottop.txt
+	echo II~T0400$a2                      >> /tmp/lottop.txt
+	echo III~T0400$a3                     >> /tmp/lottop.txt
+	echo IV~T0400$a4                      >> /tmp/lottop.txt
+	echo V~T0400$a5                       >> /tmp/lottop.txt
+	echo VI~T0400$a6a                     >> /tmp/lottop.txt
+	echo ~T0400$a6b                       >> /tmp/lottop.txt
+	echo VII~T0400$a7a                    >> /tmp/lottop.txt
+	echo ~T0400$a7b                       >> /tmp/lottop.txt
+	echo ~T0400alle Angaben ohne Gew~ahr  >> /tmp/lottop.txt
+	msgbox title="Gl~ucksspirale $Ziehung" size=30 timeout=600 popup=/tmp/lottop.txt
+
+#   TMP-Dateien loeschen
+	rm /tmp/lotto*.txt
+}
+
+auswahl=1
+while [ 1 -eq 1 ]; do
+	msgbox title="Gewinnzahlen" size=30 order=1 msg="~cBitte ausw~ahlen!" select="Lotto,Keno,Toto,Gl~ucksspirale" default=$auswahl
+	auswahl=$?
+	case $auswahl	in
+	1)
+		Lotto
+		;;
+	2)
+		Keno
+		;;
+	3)
+		Toto
+		;;
+	4)
+		Glueck
+		;;
+	*)
+		rm /tmp/lotto*.txt
+		exit
+		;;
+	esac
+done
+exit

@@ -1,0 +1,18 @@
+#!/bin/sh
+
+case $1 in
+start)
+	if [ -e /var/etc/.emmrd ]; then
+		echo "starte NI EMM-Reminder..."
+		/bin/emmrd /var/tuxbox/config/doscam.cfg /var/etc/.card &
+	fi
+	;;
+stop)
+	if [ -e /var/etc/.emmrd ]; then
+		echo "stoppe NI EMM-Reminder..."
+		killall emmrd
+	fi
+	;;
+esac
+
+exit 0

@@ -1,0 +1,28 @@
+From 18690a664744ec73b2756c65fa9c01b89c1e747a Mon Sep 17 00:00:00 2001
+Message-Id: <18690a664744ec73b2756c65fa9c01b89c1e747a.1502635524.git.gandharva@gmx.de>
+From: gandharva <gandharva@gmx.de>
+Date: Sun, 13 Aug 2017 16:45:17 +0200
+Subject: [PATCH] - build only what we need
+
+---
+ source/Makefile.in | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/source/Makefile.in b/source/Makefile.in
+index 8b364e3..930a0b9 100644
+--- a/source/Makefile.in
++++ b/source/Makefile.in
+@@ -1145,9 +1145,7 @@ RPC_OPEN_TCP_OBJ = torture/rpc_open_tcp.o \
+ ######################################################################
+ # now the rules...
+ ######################################################################
+-all:: SHOWFLAGS libs $(SBIN_PROGS) $(BIN_PROGS) $(ROOT_SBIN_PROGS) \
+-	$(MODULES) $(NSS_MODULES) $(PAM_MODULES) @CIFSUPCALL_PROGS@ \
+-	$(EXTRA_ALL_TARGETS)
++all:: SHOWFLAGS libs bin/smbd@EXEEXT@ bin/nmbd@EXEEXT@ bin/smbpasswd@EXEEXT@ bin/smbclient@EXEEXT@ bin/testparm@EXEEXT@
+ 
+ nss_modules:: $(NSS_MODULES)
+ 
+-- 
+2.11.0
+

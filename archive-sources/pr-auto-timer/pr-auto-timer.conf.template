@@ -1,0 +1,96 @@
+# activate the following setting to record all new movies from SKY Cinema
+#SKY_CINEMA="HD"
+# or
+#SKY_CINEMA="SD;Weekend,18:00-00:00;/mnt/rec/sky_cinema"
+
+# The maximum time an EPG might "move" to still be considered the same event
+MAX_DIFF_MINS=10
+
+# How many tuners are available in this box (or how many are you willing to use with the autotimer?)
+# Notes:
+#  * Setting this to more than available might break some recordings if more timers are set in a timespan, than real tuners are available
+#  * If something is to be recorded, but there are already timers blocking this time span, the new timer will not be added.
+#    Hence, make sure, that the more important shows are listed earlier in the rules-file.
+MAX_TUNERS=2
+
+# How many parallel recordings are allowed. The default ist 8, which is also the maximum the CS supports.
+# In case your box is to slow, or you experience some problems when there are many parallel recordings, try reducing this number.
+# Note: This is different from MAX_TUNERS, since multiple recordings on the same transponder require only a single tuner.
+MAX_RECORDS=8
+
+# Automatically generate/update the show history file.
+# When this is set to 1, pr-auto-timer will collect all recorded shows from all paths given in MYRECORDPATHS and update the show history file.
+# More precisely, it will search through these paths for *.xml files from recordings and extract from there the information necessary
+# to detect if the same show was already recorded at some other time. Note that already existing entries in $ME.show_history will *not* be removed.
+# Therefore, you can delete some recordings or add manually shows to this file and they will be kept until you delete them manually or you delete the entire file.
+# With a big collection of recordings it might take some time, when pr-auto-timer first generates this (on the first occurrence of a rule with the D-flag)
+# This time can be avoided by setting the following setting to 0 and calling pr-auto-timer with the command line option "--gen_show_history" before running
+# pr-auto-timer without options. Default is 1, i.e. automatically generate this info.
+AUTOGEN_SHOW_HISTORY=1
+
+# The following setting controls the behavior of pr-auto-timer with respect to records, which went wrong. This only applies if pr-auto-timer automatically
+# generates the show history (i.e. AUTOGEN_SHOW_HISTORY=1). Currently only two types of "broken records" can be handled:
+# - Only the *.xml-file of some event exist and no *.ts file can be found (this could also be used to manually indicate to pr-auto-timer, that you want a event
+#   to be recorded again; to do so, simply delete ONLY the *.ts file, and leave the *.xml file intact.
+# - The *.ts files exists but it's size is under 2k. This is a common situation, when a record goes wrong - a file of ~1k remains there, but contains nothing.
+# Possible options:
+# 0: Feature deactivated - no handling of broken records
+# 1: Detect broken records and remove them from the history index. Hence, they will be recorded again if encountered. [default]
+# 2: Detect and REMOVE broken records. Like 1, but also **DELETE** the broken files (xml and ts) from your disk. (Files will be deleted irreversible.)
+BROKEN_RECORD_HANDLING=1
+
+# Set the following to activate/deactivate saving information about manually deleted timers
+# 0: feature is activated (saves timer info) and manually deleted timers will not be added again
+# 1: feature is activated (saves timer info), but manually deleted timers will be added again
+# 2: feature is deactivated, i.e. timers will not be stored [default]
+DEL_TIMER_REFRESH=2
+
+# The maximum number of timers to remember, in order to not set it again after it has been manually deleted
+# This setting is only relevant if the above DEL_TIMER_REFRESH is 0 or 1
+MAX_TMR2_COUNT=250
+
+# This setting limits the size of your $ME.show_history file. The feature is activated by setting the value to something else than 0, e.g. 1000 [default].
+# pr-auto-timer will then try to remove n entries, so that the maximum entries given in MAX_HISTORY_ENTRIES is not violated. Hereby the oldest
+# entries, determined by the timestamp, will be removed. However, only entries, to which no recorded file exists on your disk will be removed.
+# A setting of MAX_HISTORY_ENTRIES=0 deactivates the size check. If there are more physically available files, than entries allowed, then MAX_HISTORY_ENTRIES
+# will be ignored and a warning is issued in the logfile.
+MAX_HISTORY_ENTRIES=1000
+
+# What should be done, after pr-auto-timer is done?
+#0: Nothing. The box remains in its previous state. [default]
+#1: Put the box in standby.
+#2: Put the box in DeepStandBy
+#3: Power off the box
+#4: Reboot the box
+END_SHUT_DOWN=0
+
+# During which time, the should the above END-action be done?
+#0: Do the SHUT_DOWN only from 00:00 to 06:00. [default]
+#1: Do the SHUT_DOWN at any time.
+SHUT_DOWN_ALSO_DAY=0
+
+# Activate the following to execute an arbitrary script/program before starting
+# Default is no action
+#PRE_ACTION="echo 'Pre-action 1';echo 'Pre-action 2'"
+
+# Activate the following to execute an arbitrary script/program after finishing but before exiting.
+# Default is no action
+#POST_ACTION="echo 'Post-action'"
+
+# Change the following to determine where pr-auto-timer searches for recordings on your disk
+# You can provide more than one path and each path will be searched recursively. Use "std::neutrino" to indicate the standard recording
+# directory from neutrino. If this is not set or invalid, the standard neutrino recording directory is used.
+# Separate multiple paths with a ';', i.e. MYRECORDPATHS="path[;path]... " (Note the quotes!)
+MYRECORDPATHS="std::neutrino"
+
+# Activate the following to change the path of the rule files
+#RULE_FILE=/var/tuxbox/config/$ME.rules
+#RULE_FILE_EXT=/var/tuxbox/config/$ME.rulex
+
+# Activate the following to change the default place for the show history
+#HISTORY_FILE=/var/tuxbox/config/$ME.show_history
+
+# Deactivate the logfile (default is ON)
+#LOG_FILE=off
+# Activate the following to change the default location of the log-file
+#LOG_FILE=/tmp/${ME}_$(date +'%F').log

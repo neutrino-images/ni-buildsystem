@@ -1,0 +1,197 @@
+#! /bin/sh
+# Haltestellenfahrplan anzeigen
+# by theobald123
+# Version: 2.1 Coolstream HD1
+
+# *************************************************************************************
+# *      Datenzeile in einzelne Parameter aufteilen                                   *
+# *-----------------------------------------------------------------------------------*
+# *      ‹bergabeparameter : Datenzeile                                               *
+# *************************************************************************************
+Parameter ()
+{ pn=$#;p1=$1;p2=$2;p3=$3;p4=$4;p5=$5;p6=$6;p7=$7;p8=$8;p9=$9;p10=$10; }
+
+# *************************************************************************************
+# *      Zeichen ersetzen, HTML-Tags entfernen, Leerzeilen entfernen                  *
+# *-----------------------------------------------------------------------------------*
+# *      ‹bergabeparameter : Eingabedatei Ausgabedatei                                *
+# *************************************************************************************
+Substitution ()
+{
+sed -e 's/√§/‰/g'  -e 's/&auml;/‰/g'  -e 's/&#228;/‰/g' -e 's/&#xe4;/‰/g' \
+	-e 's/√∂/ˆ/g'  -e 's/&ouml;/ˆ/g'  -e 's/&#246;/ˆ/g' -e 's/&#xf6;/ˆ/g' \
+	-e 's/√º/¸/g'  -e 's/&uuml;/¸/g'  -e 's/&#252;/¸/g' -e 's/&#xfc;/¸/g' \
+	-e 's/√Ñ/ƒ/g'  -e 's/&Auml;/ƒ/g'  -e 's/&#196;/ƒ/g' -e 's/&#xc4;/ƒ/g' \
+	-e 's/√ñ/÷/g'  -e 's/&Ouml;/÷/g'  -e 's/&#214;/÷/g' -e 's/&#xd6;/÷/g' \
+	-e 's/√ú/‹/g'  -e 's/&Uuml;/‹/g'  -e 's/&#220;/‹/g' -e 's/&#xdc;/‹/g' \
+	-e 's/&#224;/a/g' -e 's/&#225;/a/g' -e 's/&#226;/a/g' -e 's/&#227;/a/g' -e 's/&#229;/a/g' -e 's/&#230;/ae/g' \
+	-e 's/&#xe0;/a/g' -e 's/&#xe1;/a/g' -e 's/&#xe2;/a/g' -e 's/&#xe3;/a/g' -e 's/&#xe5;/a/g' -e 's/&#xe6;/ae/g' \
+	-e 's/&#192;/A/g' -e 's/&#193;/A/g' -e 's/&#194;/A/g' -e 's/&#195;/A/g' -e 's/&#197;/A/g' -e 's/&#198;/AE/g' \
+	-e 's/&#xc0;/A/g' -e 's/&#xc1;/A/g' -e 's/&#xc2;/A/g' -e 's/&#xc3;/A/g' -e 's/&#xc5;/A/g' -e 's/&#xc6;/AE/g' \
+	-e 's/&#xe7;/c/g' -e 's/&#231;/c/g' \
+	-e 's/&#xc7;/C/g' -e 's/&#199;/C/g' \
+	-e 's/&#232;/e/g' -e 's/&#233;/e/g' -e 's/&#234;/e/g' -e 's/&#235;/e/g' \
+	-e 's/&#xe8;/e/g' -e 's/&#xe9;/e/g' -e 's/&#xea;/e/g' -e 's/&#xeb;/e/g' \
+	-e 's/&#200;/E/g' -e 's/&#201;/E/g' -e 's/&#202;/E/g' -e 's/&#203;/E/g' \
+	-e 's/&#xc8;/E/g' -e 's/&#xc9;/E/g' -e 's/&#xca;/E/g' -e 's/&#xcb;/E/g' \
+	-e 's/&#236;/i/g' -e 's/&#237;/i/g' -e 's/&#238;/i/g' -e 's/&#239;/i/g' \
+	-e 's/&#xec;/i/g' -e 's/&#xed;/i/g' -e 's/&#xee;/i/g' -e 's/&#xef;/i/g' \
+	-e 's/&#204;/I/g' -e 's/&#205;/I/g' -e 's/&#206;/I/g' -e 's/&#207;/I/g' \
+	-e 's/&#xcc;/I/g' -e 's/&#xcd;/I/g' -e 's/&#xce;/I/g' -e 's/&#xcf;/I/g' \
+	-e 's/&#xf1;/n/g' -e 's/&#241;/n/g' \
+	-e 's/&#xd1;/N/g' -e 's/&#209;/N/g' \
+	-e 's/&#242;/o/g' -e 's/&#243;/o/g' -e 's/&#244;/o/g' -e 's/&#245;/o/g' -e 's/&#248;/o/g' \
+	-e 's/&#xf2;/o/g' -e 's/&#xf3;/o/g' -e 's/&#xf4;/o/g' -e 's/&#xf5;/o/g' -e 's/&#xf8;/o/g' \
+	-e 's/&#210;/O/g' -e 's/&#211;/O/g' -e 's/&#212;/O/g' -e 's/&#213;/O/g' -e 's/&#216;/O/g' \
+	-e 's/&#xd2;/O/g' -e 's/&#xd3;/O/g' -e 's/&#xd4;/O/g' -e 's/&#xd5;/O/g' -e 's/&#xd7;/O/g' \
+	-e 's/&#249;/u/g' -e 's/&#250;/u/g' -e 's/&#251;/u/g' \
+	-e 's/&#xf9;/u/g' -e 's/&#xfa;/u/g' -e 's/&#xfb;/u/g' \
+	-e 's/&#xfd;/y/g' -e 's/&#253;/y/g' \
+	-e 's/&#217;/U/g' -e 's/&#218;/U/g' -e 's/&#219;/U/g' \
+	-e 's/&#xd8;/U/g' -e 's/&#xd9;/U/g' -e 's/&#xda;/U/g' \
+	-e 's/&#xdc;/Y/g' -e 's/&#221;/Y/g' \
+	-e 's/√ü/ﬂ/g'  -e 's/&szlig;/ﬂ/g' -e 's/&#223;/ﬂ/g' -e 's/&#xdf;/ﬂ/g' \
+	-e 's/ss°/+/g' -e 's/‚Äû//g' -e 's/‚Äú//g' \
+	-e 's/È/e/g'   -e 's/√©/e/g' -e 's/√â/E/g' -e 's/√°/a/g' -e 's/√Æ/i/g' -e 's/√±/n/g' \
+    -e 's/&#48;/0/g' -e 's/&#49;/1/g'  -e 's/&#50;/2/g'  -e 's/&#51;/3/g'  -e 's/&#52;/4/g'  -e 's/&#53;/5/g'  -e 's/&#54;/6/g'  -e 's/&#55;/7/g'  -e 's/&#56;/8/g'  -e 's/&#57;/9/g' \
+    -e 's/&#65;/A/g' -e 's/&#66;/B/g'  -e 's/&#67;/C/g'  -e 's/&#68;/D/g'  -e 's/&#69;/E/g'  -e 's/&#70;/F/g'  -e 's/&#71;/G/g'  -e 's/&#72;/H/g'  -e 's/&#73;/I/g'  -e 's/&#74;/J/g'  -e 's/&#75;/K/g'  -e 's/&#76;/L/g'  -e 's/&#77;/M/g'  -e 's/&#78;/N/g'  -e 's/&#79;/O/g'  -e 's/&#80;/P/g'  -e 's/&#81;/Q/g'  -e 's/&#82;/R/g'  -e 's/&#83;/S/g'  -e 's/&#84;/T/g'  -e 's/&#85;/U/g'  -e 's/&#86;/V/g'  -e 's/&#87;/W/g'  -e 's/&#88;/X/g'  -e 's/&#89;/Y/g'  -e 's/&#90;/Z/g' \
+    -e 's/&#97;/a/g' -e 's/&#98;/b/g'  -e 's/&#99;/c/g'  -e 's/&#100;/d/g' -e 's/&#101;/e/g' -e 's/&#102;/f/g' -e 's/&#103;/g/g' -e 's/&#104;/h/g' -e 's/&#105;/i/g' -e 's/&#106;/j/g' -e 's/&#107;/k/g' -e 's/&#108;/l/g' -e 's/&#109;/m/g' -e 's/&#110;/n/g' -e 's/&#111;/o/g' -e 's/&#112;/p/g' -e 's/&#113;/q/g' -e 's/&#114;/r/g' -e 's/&#115;/s/g' -e 's/&#116;/t/g' -e 's/&#117;/u/g' -e 's/&#118;/v/g' -e 's/&#119;/w/g' -e 's/&#120;/x/g' -e 's/&#121;/y/g' -e 's/&#122;/z/g' \
+    -e 's/&#176;/∞/g' -e 's/&deg;/∞/g' -e 's/¬∞/∞/g' \
+    -e 's/&amp;/\&/g' \
+    -e 's/&quot;/\"/g' -e 's/&bdquo;/\"/g' -e 's/&ldquo;/\"/g' -e "s/'/\"/g" -e 's/&apos;/\"/g' \
+	-e 's/&gt;/>/g'   \
+	-e 's/&lt;/</g'   \
+	-e 's/&nbsp;/ /g' \
+	-e 's/&plusmn;/+\/-/g' \
+	-e 's/&euro;/EUR/g' \
+	-e 's/<br>/ /g'   \
+	-e 's/<[^>]*>//g' \
+	-e '/^[^0-9a-zA-Z!-\/]*$/d' \
+	$1 > $2
+}
+
+# *************************************************************************************
+# *      Einlesen Haltestellenname                                                    *
+# *************************************************************************************
+getStation ()
+{
+	conf=/var/tuxbox/config/Haltestelle.input
+
+	if [ -s $conf ] ; then
+		Station=`cat "$conf"`
+	else
+		Station=" "
+	fi
+	Station=`input l='@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@' t='Haltestelle' d="$Station" c=20 k=1`
+	Station=`echo "$Station"`
+	if [ "$Station" != "" ] ; then
+		echo $Station > $conf
+		echo $Station >    /tmp/Fahrplan.data
+		sed -e 's/ /%20/g' /tmp/Fahrplan.data  >  /tmp/Fahrplan1.data
+		Station=`cat "/tmp/Fahrplan1.data"`
+    else
+		exit
+	fi
+}
+
+# *************************************************************************************
+# *      Haltestelle ermitteln                                                        *
+# *************************************************************************************
+getHaltestelle ()
+{
+	rm /tmp/fahrplan5.data
+	sed -n "/<select/,/<\/select/ p"                  /tmp/Fahrplan.data   >  /tmp/Fahrplan1.data
+	anzahl=`sed -n -e "/<\/select/ ="                 /tmp/Fahrplan1.data`
+	Parameter $anzahl
+	ende=$p1; ende=`expr "$ende" - 1`;
+	sed -n 2,"$ende"p                                 /tmp/Fahrplan1.data  >  /tmp/Fahrplan2.data
+	sed -e 's/^.*="//g' -e 's/  */ /g' -e 's/".*$//g' /tmp/Fahrplan2.data  >  /tmp/Fahrplan3.data
+	Substitution                                      /tmp/Fahrplan3.data     /tmp/Fahrplan4.data
+	Zeilen=`sed -n -e "$ =" /tmp/Fahrplan4.data`;  Zeilen=`expr "$Zeilen"`
+
+# *-----------------------------------------------------------------------------------*
+# *      Aufbau der Datei f¸r Shellexec                                               *
+# *-----------------------------------------------------------------------------------*
+	echo FONT=/share/fonts/neutrino.ttf                           >  /tmp/Fahrplan.conf
+	echo FONTSIZE=22                                              >> /tmp/Fahrplan.conf
+	echo HIGHT=480                                                >> /tmp/Fahrplan.conf
+	echo WIDTH=800                                                >> /tmp/Fahrplan.conf
+	echo LINESPP=10                                               >> /tmp/Fahrplan.conf
+	echo "MENU=Ihre Eingabe ist nicht eindeutig. Bitte w‰hlen:"   >> /tmp/Fahrplan.conf
+	count=1;
+	while [ "$count" -le "$Zeilen" ]; do
+		a1=`sed -n    "$count"p            /tmp/Fahrplan4.data`
+		a2=`sed -n -e "$count s/#.*$// p"  /tmp/Fahrplan4.data`
+	    echo "ACTION='$a2',echo '$a1' > /tmp/Fahrplan5.data"      >> /tmp/Fahrplan.conf
+	    count=`expr "$count" + 1`;
+	done
+	echo "ENDMENU"                                                >> /tmp/Fahrplan.conf
+	shellexec /tmp/Fahrplan.conf
+	if [ -s /tmp/Fahrplan5.data ] ; then
+		a1=`sed -n -e "1 s/#.*$// p"  /tmp/Fahrplan5.data`
+		a2=`sed -n -e "1 s/^.*#// p"  /tmp/Fahrplan5.data`
+	    echo $a1 > $conf
+		wget -q -O /tmp/Fahrplan.data "http://mobile.bahn.de/bin/mobil/bhftafel.exe/dox?si=$a2&bt=dep&p=$v1$v2$v3$v4$v5$v6$v7$v8$v9&max=20&start=yes"
+	else
+		continue
+	fi
+}
+
+# *************************************************************************************
+# *      Haltestellenfahrplan anzeigen                                                *
+# *************************************************************************************
+displayFahrplan ()
+{
+	sed -e 's/<span class="bold"><\/span>/<span class="bold">-<\/span>/g' \
+		-e 's/<[^>]*>//g' \
+		-e 's/&nbsp;//g' -e 's/&#223;/ﬂ/g' -e 's/&#196;/ƒ/g' -e 's/&#214;/÷/g' -e 's/&#220;/‹/g' -e 's/&#228;/‰/g' -e 's/&#246;/ˆ/g' -e 's/&#252;/¸/g' \
+		-e 's/\&.*;//g'                               /tmp/Fahrplan.data  > /tmp/Fahrplan1.data      #HTML-Tags entfernen; Sonderzeichen ersetzen
+	sed -e '/^[^0-9a-zA-Z!+-\/]*$/d' -e '/^Gl./d'     /tmp/Fahrplan1.data > /tmp/Fahrplan2.data      #Leerzeilen und Gleisangaben entfernen
+
+	#Anfang der Daten ermitteln
+	Head=`sed -n /Aktuell/p /tmp/Fahrplan2.data`
+	Start=`sed -n -e "/Fr¸her/ =" /tmp/Fahrplan2.data`
+	Ende=`sed -n -e "/Sp‰ter/ =" /tmp/Fahrplan2.data`
+	Ende=`expr "$Ende" - 1`
+	echo ~T0350Linie~T0450Abfahrt~T0550Richtung > /tmp/Fahrplan3.data
+	step=3; tab1=`expr "$Start" + 1`; tab2=`expr "$Start" + 2`; tab3=`expr "$Start" + 3`; anz=0
+	while [ $tab1 -lt $Ende ]; do
+		a1=`sed -n "$tab1"p /tmp/Fahrplan2.data`                                         #Linie
+		a3=`sed -n "$tab2"p /tmp/Fahrplan2.data`                                         #Abfahrtszeit
+		a2=`sed -n "$tab3"p /tmp/Fahrplan2.data`                                         #Richtung
+		echo  ~T0350$a1~T0450$a2~T0550$a3 >> /tmp/Fahrplan3.data
+		tab1=`expr "$tab1" + $step`; tab2=`expr "$tab2" + $step`; tab3=`expr "$tab3" + $step`; anz=`expr "$anz" + 1`
+		if [ "$anz" = "20" ]; then
+			tab1=$Ende
+		fi
+	done
+	msgbox title="$Head" size=22 timeout=600 popup=/tmp/Fahrplan3.data     #Tabelle anzeigen
+	rm /tmp/Fahrplan*.data
+	exit
+}
+
+
+#   Verkehrsmittel (1=ausw‰hlen, 0=nicht ausw‰hlen)
+v1=1  # ICE
+v2=1  # IC/EC
+v3=1  # IR/D
+v4=1  # RE/RB
+v5=1  # S-Bahn
+v6=1  # Busse
+v7=1  # Schiff
+v8=1  # U-Bahn
+v9=1  # Straﬂenbahn
+
+while [ 1 -eq 1 ]; do
+    getStation
+	wget -q -O /tmp/Fahrplan.data "http://mobile.bahn.de/bin/mobil/bhftafel.exe/dox?input=$Station&bt=dep&p=$v1$v2$v3$v4$v5$v6$v7$v8$v9&max=20&start=yes"
+	eindeutig=`sed -n -e "/Ihre Eingabe ist nicht eindeutig./ =" /tmp/Fahrplan.data`
+	if [ "$eindeutig" = "" ]; then
+    	displayFahrplan
+    else
+    	getHaltestelle
+    	displayFahrplan
+    fi
+done
+exit
+

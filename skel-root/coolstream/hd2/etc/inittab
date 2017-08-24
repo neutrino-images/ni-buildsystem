@@ -1,0 +1,10 @@
+# /etc/inittab: init configuration.
+
+::sysinit:/etc/init.d/rcS
+::once:/etc/init.d/start_neutrino
+
+::askfirst:-/bin/sh
+
+::restart:/sbin/init
+::ctrlaltdel:/sbin/reboot
+::shutdown:/etc/init.d/rcK

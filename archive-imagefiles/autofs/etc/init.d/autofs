@@ -1,0 +1,104 @@
+#!/bin/sh
+#
+# simple autofs init script
+
+uname_r() {
+	read dummy dummy uname dummy < /proc/version
+	echo $uname
+}
+
+# load the module if necessary
+if ! grep -q autofs /proc/filesystems; then # the kernel does not know it
+
+	if [ -e /lib/modules/$(uname_r)/autofs4.ko ]; then
+		MODULE=/lib/modules/$(uname_r)/autofs4.ko # hd1
+	else
+		MODULE=/lib/modules/$(uname_r)/kernel/fs/autofs4/autofs4.ko # hd2
+	fi
+
+	if ! insmod $MODULE > /dev/null 2>&1; then # module loading failed
+		exit 1;
+	fi
+fi
+
+DEVICE="autofs"
+
+# the MAPFILE is the "configfile" for automount
+MAPFILE=/var/etc/auto.master
+if [ ! -e $MAPFILE ]; then
+	# fallback to /etc/auto.master
+	MAPFILE=/etc/auto.master
+fi
+
+# allow stopping the daemon even without a mapfile
+if [ ! -e $MAPFILE -a "x$1" = "xstart" ]; then
+	# no config file => no need to do anything else
+	echo "automount: $MAPFILE does not exist, cannot start"
+	exit 1;
+fi
+
+# allow stopping the daemon even without an entry in mapfile
+ENTRYS=0
+while read line; do
+	test "${line:0:1}" = "#" || ENTRYS=1
+	test $ENTRYS = "1" && break
+done < $MAPFILE
+if [ $ENTRYS = "0" -a "x$1" = "xstart" ]; then
+	# no entrys in config file => no need to do anything else
+	echo "automount: $MAPFILE is empty, cannot start"
+	exit 1;
+fi
+
+PIDFILE=/var/run/automount.pid
+
+#
+# load customized configuation settings
+#
+CUSTOMCONF=/etc/autofs
+if [ -e $CUSTOMCONF ]; then
+	. $CUSTOMCONF
+fi
+
+case $1 in
+	stop)
+		if [ -e $PIDFILE ]; then
+			echo "automount: stop"
+			read PID < $PIDFILE && kill -TERM $PID
+		fi
+		;;
+	start)
+		# Check misc device
+		if [ -n "$USE_MISC_DEVICE" -a "x$USE_MISC_DEVICE" = "xyes" ]; then
+			sleep 1
+			if [ -e "/proc/misc" ]; then
+				MINOR=`awk "/$DEVICE/ {print \\$1}" /proc/misc`
+				if [ -n "$MINOR" -a ! -c "/dev/$DEVICE" ]; then
+					mknod -m 0600 /dev/$DEVICE c 10 $MINOR
+				fi
+			fi
+		else
+			if [ -c /dev/$DEVICE ]; then
+				rm /dev/$DEVICE
+			fi
+		fi
+
+		# automount needs /var/lock or it will exit silently
+		[ -d /var/lock ] || mkdir -p /var/lock
+		echo "automount: start"
+		automount -p $PIDFILE $MAPFILE $OPTIONS
+		;;
+	restart)
+		$0 stop
+		sleep 1
+		$0 start
+		;;
+	reload)
+		if [ -e $PIDFILE ]; then
+			echo "automount: reload"
+			read PID < $PIDFILE && kill -HUP $PID
+		fi
+		;;
+	*)
+		echo "usage: $0 [start|stop|restart|reload]"
+		;;
+esac

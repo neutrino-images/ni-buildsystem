@@ -1,0 +1,521 @@
+#!/bin/sh
+
+# Auto-Record-Cleaner (aurecl) - automatically remove old recorded events
+
+# Copyright (C) 2014 LtCmdrLuke
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110, USA
+
+
+# This is a test-script for automatically handling the oldest records in a
+# specified directory after the directory has reached a certain size. Files
+# which will be deleted next are first moved to a "last-chance" directory
+# before they are finally deleted. In each run, only as much files will be
+# really deleted as needed to limit the maximum allowed size of the directory.
+
+# The main intention of this script is its usage in conjunction with the
+# "channel-crawling"-feature of the Auto-Timer on a neutrino-based set top box.
+# Basic idea:
+#   Record every event of certain channels and delete always the
+#   oldest recordings in the record directory, but give the user a chance
+#   to see what is about to be deleted next. By running this script regularly
+#   you can keep always the latest x days of all events from a certain channel
+#   available for watching anytime, i.e. fully independent of broadcasting
+#   times. (It basically resembles 'Sky Anytime')
+
+# Install & usage:
+# - Copy the script somewhere on your box and make it executable
+# - Edit the following variables to correspond to your environment, e.g.
+#   which directory should be watched and how much space you want to give it
+# - call it regularly, either manually, or in some automated way. When calling
+#   it, provide the command line option "--yes" to confirm, you really want
+#   files to be deleted. Without this command line option, it will perform a
+#   dry run, i.e. just tell you what it would do now.
+
+# Related files:
+#	General Configuration:		/var/tuxbox/config/auto-record-cleaner.conf
+#	Controlled directories:		/var/tuxbox/config/auto-record-cleaner.rules
+
+VERSION=0.2
+
+# Changelog:
+#
+# 0.2
+#	- Added new command line options:
+#		-y|--yes twice to deactivate the 5s safety
+#		-q|--quiet deactivate all console output (and also deactivate the 5s safety)
+#		-h|--help shows the command line options
+#	- Logs now to a logfile (besides the console, if not deactivated with -q)
+#	- Now uses own configuration file under /var/tuxbox/config/auto-record-cleaner.conf
+#	  * Here the default path for the log-file and the rule-file can be changed
+#	  * Provided a template file (auto-record-cleaner.conf.template); default values should be fine.
+#	- Now uses own rules file under /var/tuxbox/config/auto-record-cleaner.rules
+#	  * An arbitrary number of different directories can now be cleaned
+#	  * Provided a template (auto-record-cleaner.rules.template) with examples
+#	  * Basic Syntax is CLEANING_PATH,MAX_SIZE_CP;LAST_CHANCE_PATH,MAX_SIZE_LCP
+#
+# 0.1
+#	- Initial release
+#	- Restrictions:
+#	  * only one controlled directory
+#	  * Configuration directly in the script
+#	  * Shell-only, no information in neutrino
+#	  * No log-file, logs to stdout
+
+# Beyond this point, no user-configurable settings
+###############################################################################
+
+NAME="Auto-Record-Cleaner"
+ME=${0##*/}
+
+CONFIG_FILE=/var/tuxbox/config/$ME.conf
+PID_FILE=/var/run/$ME.pid
+
+EXIT_NORMAL=0
+EXIT_SIGNAL=1
+EXIT_NO_RULE_FILE=2
+EXIT_ALREADY_RUNNING=3
+EXIT_UNKNOWN_COMMAND_OPTION=4
+
+#######################################################################################
+#BEGIN SECTION "Helper functions"
+
+signal_handler() {
+	#Handle INT, TERM signals and clean up.
+	log "Caught signal. Cleaning up."
+	cleanup
+	set +f
+	log "done."
+	log "$ME V${VERSION} exiting now."
+	exit $EXIT_SIGNAL
+}
+
+cleanup() {
+	# Remove the pid-file
+	rm -rf $PID_FILE 2>/dev/null
+}
+
+log() {
+	#Log message to log file
+	#$*: Log message
+	if [ "$LOG_FILE" != "" ]; then
+		echo -e $(date +'%F %H:%M:%S') [$$]: "$*" >> $LOG_FILE
+	fi
+	if [ $quiet == 0 ]; then
+		echo -e "$*"
+	fi
+}
+
+begin_ifs_block() {
+	#Backup IFS (input field separator) to restore it after parsing arguments
+	IFS_SAVE=$IFS
+	set -f
+}
+
+end_ifs_block() {
+	#Restore (input field separator) IFS after parsing arguments
+	IFS=$IFS_SAVE
+	set +f
+}
+
+#END SECTION "Helper functions"
+#######################################################################################
+
+#######################################################################################
+#BEGIN SECTION "Initialization"
+
+init_config() {
+	#Parse config file (default: /var/tuxbox/config/auto-record-cleaner.conf)
+	if [ -e $CONFIG_FILE ]; then
+		source $CONFIG_FILE 2>/dev/null
+	fi
+
+	# Initialize the logfile first, so we can write to it...
+	if [ ! -d "${LOG_FILE%/*}" ]; then
+		case $LOG_FILE in
+			[oO][fF][fF])
+				LOG_FILE=''
+				;;
+			*)
+				LOG_FILE=/tmp/${ME}_$(date +'%F').log
+				;;
+		esac
+	fi
+	echo -e "\n\n========================== $NAME started new log at $(date) ======================================" >> $LOG_FILE
+
+	# Check other settings and reset them to default if unset or invalid
+	if [ ! -e "$RULE_FILE" ]; then
+		RULE_FILE=/var/tuxbox/config/$ME.rules
+		if [ ! -e "$RULE_FILE" ]; then
+			log "ERROR: Rules file '$RULE_FILE' does not exist! Exiting."
+			exit $EXIT_NO_RULE_FILE
+		fi
+	fi
+}
+
+#END SECTION "Initialization"
+#######################################################################################
+
+#######################################################################################
+#BEGIN SECTION "Command line options handling"
+
+parse_options() {
+	#Parse auto-record-cleaner command line arguments
+	local option
+
+	while [ $# -gt 0 ]
+	do
+		option=$1
+		shift
+
+		case "$option" in
+			-y|--yes)
+				dry_run=$((dry_run-1))
+			;;
+			-q|--quiet)
+				quiet=1
+			;;
+			-h|--help)
+				usage
+				exit $EXIT_NORMAL
+			;;
+			*)
+				echo "Unknown command line option '$option'. What did you want to do? Exiting!"
+				usage
+				exit $EXIT_UNKNOWN_COMMAND_OPTION
+			;;
+		esac
+	done
+}
+
+usage() {
+	# Print short usage message on console
+	echo -e "Usage: $ME [options]"
+	echo -e "Valid options are:"
+	echo -e "\t-y|--yes\t\tSwitches safety off and really deletes/moves files. Use twice to deactivate 5s safety interval."
+	echo -e "\t-q|--quiet\t\tDeactivates all output on console. Also deactivates 5s safety interval."
+	echo -e "\t-h|--help\t\tPrint this help and exit."
+}
+
+#END SECTION "Command line options handling"
+#######################################################################################
+
+#######################################################################################
+#BEGIN SECTION "Work functions"
+
+limit_directory() {
+	# Moves or deletes oldest files in a given directory
+	# Parameters:
+	# $1: The directory from which the files should be moved/deleted
+	# $2: the maximum size of the directory in kB
+	# $3: optional: the directory into which files should be moved. If this
+	#     parameter is missing, files will be deleted
+	# Precondition: All provided directories must exist.
+
+	local dir max_dir_size dir_size dest_dir over_limit ts_files ts
+
+	dir="$1"
+	max_dir_size="$2"
+	dir_size=$(du -s -k "$dir" | cut -f1)
+	dest_dir="$3"
+
+	# in case there is a destination folder given, we need to get its size
+	# and subtract this from the current dir size
+	if [ -n "$dest_dir" ]; then
+		dest_dir_size=$(du -s -k "$dest_dir" | cut -f1)
+		dir_size=$((dir_size-dest_dir_size))
+		log "\t\t\tLimiting '$dir' to max size $((max_dir_size/(1024*1024)))GB by moving the oldest files to '$dest_dir' ... "
+	else
+		log "\t\t\tLimiting '$dir' to max size $((max_dir_size/(1024*1024)))GB by deleting the oldest files ..."
+	fi
+
+	if [ $dir_size -gt $max_dir_size ]; then
+		over_limit=$((dir_size-max_dir_size))
+		if [ -z "$dest_dir" ]; then
+			log "\t\t\t\tWe need to delete $((over_limit/(1024*1024)))GB (${over_limit}kB) from '$dir' ..."
+		else
+			log "\t\t\t\tWe need to move $((over_limit/(1024*1024)))GB (${over_limit}kB) from '$dir' to '$dest_dir' ..."
+		fi
+	else
+		log "\t\t\t\tNothing to do in directory '$dir'. Current size has not reached the limit."
+		return 0
+	fi
+
+	# we don't want to use the ls command since its output is not POSIX-standard
+	# therefore, we first find all files and then we use the date command to
+	# determine the modification time
+
+	# first collect all *.ts files
+	ts_files=$(find "$dir" -name "*.ts")
+
+	# now gather additional information, like modification time and size
+	# (we could have got this info from ls in ONE call..)
+	begin_ifs_block
+		IFS=$'\n'
+		for ts in $ts_files; do
+			ts_date=$(date -r "$ts" +%s)
+			ts_size=$(du -k "$ts" | cut -f1)
+			ts_files_ext="${ts_files_ext}${ts}|$ts_date|$ts_size\n"
+			#echo "$ts|$ts_date|$ts_size"
+		done
+	end_ifs_block
+
+	# sort the final list with respect to the modification time
+	sorted_ts_files_ext=$(echo -ne "$ts_files_ext" | sort -t '|' -k2)
+
+	count=0
+	# now (re)move until limit is reached
+	begin_ifs_block
+		IFS=$'\n'
+		for ts_file in $sorted_ts_files_ext; do
+			IFS='|'
+			set -- $ts_file
+			filename=$1
+			filetime=$2
+			filesize=$3
+
+			# skip the file, if it is already in dest_dir
+			if [ "${filename%/*}" == "$dest_dir" ]; then
+				#echo -e "\tSkipping $filename .."
+				continue
+			fi
+
+			xml_file=${filename%".ts"}".xml"
+
+			if [ $dry_run == 0 ]; then
+				if [ -z "$dest_dir" ]; then
+					log "\t\t\t\tDeleting now '$filename' (${filesize}kB).."
+					rm "$filename" 2>/dev/null
+					if [ -f "$xml_file" ];then
+						log "\t\t\t\tDeleting now also the corresponding '$xml_file' ... "
+						rm "$xml_file" 2>/dev/null
+					fi
+				else
+					log "\t\t\t\tMoving '$filename' (${filesize}kB) to '$dest_dir' ..."
+					mv "$filename" "$dest_dir" 2>/dev/null
+					if [ -f "$xml_file" ];then
+						log "\t\t\t\tMoving now also the corresponding '$xml_file' to '$dest_dir' ... "
+						mv "$xml_file" "$dest_dir" 2>/dev/null
+					fi
+				fi
+			else
+				if [ -z "$dest_dir" ]; then
+					log "\t\t\t\tDRY-RUN: Would remove now '$filename' (${filesize}kB).."
+					if [ -f "$xml_file" ];then
+						log "\t\t\t\tDRY-RUN: Would delete now also the corresponding '$xml_file' ... "
+					fi
+				else
+					log "\t\t\t\tDRY-RUN: Would move now '$filename' (${filesize}kB) to '$dest_dir' ..."
+					if [ -f "$xml_file" ];then
+						log "\t\t\t\tDRY-RUN: Would move now also the corresponding '$xml_file' to '$dest_dir' ... "
+					fi
+				fi
+			fi
+
+			over_limit=$((over_limit-filesize))
+			count=$((count+1))
+
+			if [ $over_limit -le 0 ]; then
+				removed=$((dir_size-max_dir_size-over_limit))
+
+				if [ $dry_run == 0 ]; then
+					if [ -z "$dest_dir" ]; then
+						log "\t\t\t\tDone. Removed $((removed/(1024*1024)))GB (${removed}kB) by deleting $count recorded events."
+					else
+						log "\t\t\t\tDone. Moved $((removed/(1024*1024)))GB (${removed}kB) in $count recorded events to directory '$dest_dir'."
+					fi
+				else
+					if [ -z "$dest_dir" ]; then
+						log "\t\t\t\tDRY_RUN: Done. Would have removed $((removed/(1024*1024)))GB (${removed}kB) by deleting $count recorded events."
+					else
+						log "\t\t\t\tDRY_RUN: Done. Would have moved $((removed/(1024*1024)))GB (${removed}kB) in $count recorded events to directory '$dest_dir'."
+					fi
+				fi
+				# we are done, so break from the loop
+				break
+			fi
+		done
+	end_ifs_block
+
+	return 0
+}
+
+#END SECTION "Work functions"
+#######################################################################################
+
+###############################################################################
+#BEGIN Section "Main"
+
+# initialize some more variables
+dry_run=1
+quiet=0
+
+# set the signal handler
+trap signal_handler INT TERM
+
+# First initialize the values from the config, otherwise we cannot log anywhere
+init_config
+
+# Now get command line option, as these might override some values from the config or default variables
+parse_options $@
+
+if [ -e $PID_FILE ]; then
+	log "$ME ist already running. Exiting..."
+	exit $EXIT_ALREADY_RUNNING
+else
+	echo $$ > $PID_FILE
+fi
+
+# We happily started..
+log ""
+log "$ME V$VERSION initialized and starting main operations."
+
+if [ $dry_run == 1 ]; then
+	log "\tThis is a dry run, i.e. no files will be harmed. Use '-y' or '--yes' to deactivate the safety."
+elif [ $dry_run == 0 ] && [ $quiet == 0 ]; then
+	log "\t!!! WARNING!!! This is now the real thing - files WILL BE DELETED. You can still abort within the next 5 seconds. !!! WARNING !!!"
+	echo "Waiting for 5 more seconds.."
+	sleep 1
+	echo "Waiting for 4 more seconds.."
+	sleep 1
+	echo "Waiting for 3 more seconds.."
+	sleep 1
+	echo "Waiting for 2 more seconds.."
+	sleep 1
+	echo "Waiting for 1 more seconds.."
+	sleep 1
+	echo "You have been warned. Proceeding..."
+else
+	log "\t!!! WARNING!!! $ME is armed and targeting your files. !!! WARNING !!!"
+fi
+
+# now process each directory given in the rule-file
+
+rule_line=0
+cat $RULE_FILE | while read line; do
+	rule_line=$((${rule_line}+1))
+	if echo $line | egrep -q '^[[:space:]]*([^#;]+),([0-9]+);?([^;]+)?(,[0-9]+)?$'; then
+
+		log ""
+		log "\tProcessing rule: '$line'"
+
+		# split rule line
+		begin_ifs_block
+			IFS=';'
+			set -- $line
+			record_part=$1
+			last_chance_part=$2
+		end_ifs_block
+
+		# split record_part
+		begin_ifs_block
+			IFS=','
+			set -- $record_part
+			record_dir=$1
+			record_dir_size=$2
+		end_ifs_block
+
+		if [ -n "$last_chance_part" ]; then
+			# split last_chance_part
+			begin_ifs_block
+				IFS=','
+				set -- $last_chance_part
+				last_chance_dir=$1
+				last_chance_dir_size=$2
+			end_ifs_block
+			if [ -z $last_chance_dir_size ]; then
+				last_chance_dir_size=$((record_dir_size / 10))
+			fi
+		else
+			last_chance_dir="last_chance"
+			last_chance_dir_size=$((record_dir_size / 10))
+		fi
+
+		# convert GB into kB
+		record_dir_size_k=$((record_dir_size * 1024 * 1024))
+		last_chance_dir_size_k=$((last_chance_dir_size * 1024 * 1024))
+
+		# print the collected information to the log:
+		log "\t\tCleaning path: '$record_dir', Maximum size: ${record_dir_size}GB (${record_dir_size_k}kB)"
+		log "\t\tLast chance subdirectory: '$last_chance_dir', Maximum size: ${last_chance_dir_size}GB (${last_chance_dir_size_k}kB)"
+
+		# now check if directories exist
+		# if the cleaning directory does not exist, print an error and continue with next rule
+		if [ ! -d "$record_dir" ]; then
+			log "\t\tThe given directory '$record_dir' does not exist. Create it or correct this rule. Skipping this rule."
+			continue
+		fi
+
+		#convert the last_chance relative path to an absolut one
+		last_chance_dir="${record_dir%/}/$last_chance_dir"
+
+		# if the last chance directory does not exist yet, create it.
+		if [ ! -d "$last_chance_dir" ]; then
+
+			if [ $dry_run == 0 ]; then
+				log "\t\tCreating directory '$last_chance_dir' for last chance files, as it does not exist yet."
+				mkdir "$last_chance_dir"
+			else
+				log "\t\tWould now create directory '$last_chance_dir' for last chance files, as it does not exist yet. (dry-run, i.e. NOT performing any action)"
+			fi
+		fi
+
+		# get the current size of the directories (in kB)...
+		current_record_dir_usage_k=$(du -s -k "$record_dir" | cut -f1)
+		current_last_chance_dir_size_k=$(du -s -k "$last_chance_dir" | cut -f1)
+
+		# ... and print them into the log
+		log "\t\tCurrent full size of '$record_dir' (recursively) is $((current_record_dir_usage_k/(1024*1024)))GB (${current_record_dir_usage_k}kB)."
+		log "\t\tCurrent size of '$last_chance_dir' is $((current_last_chance_dir_size_k/(1024*1024)))GB (${current_last_chance_dir_size_k}kB)."
+
+		# perform some initial checks, if we actually need to do something
+		if [ $((current_record_dir_usage_k-current_last_chance_dir_size_k)) -le $((record_dir_size_k-last_chance_dir_size_k)) ] && [ $current_last_chance_dir_size_k -le $last_chance_dir_size_k ] ;then
+			log "\t\tNothing to do for this rule - disk usage is within the given specification."
+			continue
+		fi
+
+		over_limit=0
+		if [ $current_record_dir_usage_k -gt $record_dir_size_k ];then
+			over_limit=$((current_record_dir_usage_k-record_dir_size_k))
+			log "\t\tWe need to remove $((over_limit/(1024*1024)))GB (${over_limit}kB) from directory '$record_dir'."
+		fi
+
+		if [ $((current_record_dir_usage_k-current_last_chance_dir_size_k-over_limit)) -gt $((record_dir_size_k-last_chance_dir_size_k)) ];then
+			move_size=$((current_record_dir_usage_k-current_last_chance_dir_size_k-over_limit-(record_dir_size_k-last_chance_dir_size_k)))
+			log "\t\tWe need to move $((move_size/(1024*1024)))GB (${move_size}kB) from directory '$record_dir' to '$last_chance_dir'."
+		fi
+
+		# first we delete the oldest files from the main directory (including last chance)
+		# if your last_chance is too small, some files will never appear in there
+		limit_directory "$record_dir" "$record_dir_size_k"
+
+		# now fill the last chance directory
+		limit_directory "$record_dir" "$((record_dir_size_k-last_chance_dir_size_k))" "$last_chance_dir"
+
+		# final status
+		new_record_dir_usage_k=$(du -s -k "$record_dir" | cut -f1)
+		new_last_chance_dir_size_k=$(du -s -k "$last_chance_dir" | cut -f1)
+
+		log "\t\tNew full size of '$record_dir' (recursively) is $((new_record_dir_usage_k/(1024*1024)))GB (${new_record_dir_usage_k}kB)."
+		log "\t\tNew size of '$last_chance_dir' is $((new_last_chance_dir_size_k/(1024*1024)))GB (${new_last_chance_dir_size_k}kB)."
+	fi
+done
+
+log ""
+log "$ME V${VERSION} finished rule processing."
+
+cleanup
+log "========================== $NAME finished at $(date) ======================================"
+exit $EXIT_NORMAL;

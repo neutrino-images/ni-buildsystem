@@ -1,0 +1,173 @@
+#!/bin/sh
+
+. /etc/profile
+. /etc/init.d/functions
+. /etc/init.d/globals
+
+SHOWINFO "start"
+
+mount -t proc proc /proc
+
+# update
+if [ -x /etc/init.d/stb_update.sh ]; then
+	/etc/init.d/stb_update.sh
+fi
+
+# init system
+SHOWINFO "creating and mounting system directories..."
+mount -t sysfs sys /sys
+mount -t tmpfs tmp /tmp
+mount -t tmpfs media /media
+mount -t tmpfs mnt /mnt
+for dir in epg movies music pictures streaming autofs plugins; do
+	mkdir -p /mnt/${dir}
+done
+mount -t tmpfs srv /srv
+mkdir -p /dev/pts
+mount -t devpts devpts /dev/pts
+mkdir -p /dev/shm/usb
+
+# mount var-partition
+/etc/init.d/var_mount.sh
+
+# for nfsd
+mkdir -p /var/lib/nfs
+mount -t tmpfs nfs /var/lib/nfs
+
+# for samba
+mkdir -p /var/samba
+mount -t tmpfs samba /var/samba
+
+# for wget
+mkdir -p /tmp/wget
+
+dmesg -n 1
+
+# set dummy time
+date -s "2017-01-01 00:00"
+
+# directory for wireless drivers
+mkdir -p /var/run/wpa_supplicant
+
+# automatic restore
+if [ -e /var/backup_flash.tar.gz ]; then
+	/bin/restore_flash.sh
+fi
+
+# update system
+if [ -x /etc/init.d/sys_update.sh ]; then
+	/etc/init.d/sys_update.sh
+fi
+
+# update var-partition
+if [ -x /etc/init.d/var_update.sh ]; then
+	/etc/init.d/var_update.sh
+fi
+
+service hostname start
+
+# logging as much as possible
+service syslogd start
+
+## mdev coldplug for node permissions
+LOGINFO "mdev coldplug ..."
+echo >/dev/mdev.seq
+echo $(which mdev) > /proc/sys/kernel/hotplug
+mdev -s
+
+# mdev -s does not poke usb devices (beginning with kernel 3.6), so we need to do it here
+LOGINFO "scanning /sys/bus/usb/devices/ to help mdev with usb-coldplug"
+for i in /sys/bus/usb/devices/*; do
+	case "${i##*/}" in
+		*-*:1.0)
+			LOGINFO "usb device $i found"
+			echo add >$i/uevent
+		;;
+	esac
+done
+
+# load modules / create nodes
+load_module extra/lnxplatnativeDrv.ko
+load_module extra/lnxKKALDrv.ko
+load_module extra/lnxnotifyqDrv.ko
+load_module extra/lnxplatDrv.ko
+load_module extra/lnxplatSAR.ko
+load_module extra/lnxscsDrv.ko
+load_module extra/lnxfssDrv.ko
+load_module extra/lnxcssDrv.ko
+load_module extra/lnxtmasDrv.ko
+load_module extra/lnxtmvssDrvGPL.ko
+load_module extra/lnxtmvssDrv.ko
+load_module extra/lnxpvrDrv.ko
+load_module extra/lnxdvbciDrv.ko
+load_module extra/lnxIPfeDrv.ko
+if [ -e /var/etc/.allow_fullhd ]; then
+	load_module extra/framebuffer.ko cnxtfb_standalone=1 cnxtfb_hdwidth=1920 cnxtfb_hdheight=1080 cnxtfb_hdmaxwidth=1920 cnxtfb_hdmaxheight=1080 cnxtfb_autoscale_sd=2
+else
+	load_module extra/framebuffer.ko cnxtfb_standalone=1 cnxtfb_hdwidth=1280 cnxtfb_hdheight=720  cnxtfb_hdmaxwidth=1280 cnxtfb_hdmaxheight=720  cnxtfb_autoscale_sd=2
+fi
+
+if [ -f /opt/.load_3ddrivers ] ; then
+	load_module extra/pvrsrvkm.ko
+	load_module extra/pvrnxpdc.ko
+	load_module extra/pvrvssbc.ko
+fi
+
+load_module extra/control.ko
+load_module extra/frontpanel.ko
+
+create_node "cs_display"
+ln -sf /dev/cs_display /dev/display
+dt -t"LOAD DRIVERS"
+
+load_module kernel/drivers/media/dvb-core/dvb-core.ko
+load_module extra/typhoon.ko
+load_module extra/blazer.ko
+load_module extra/tavor.ko
+load_module extra/a8296.ko
+load_module extra/av201x.ko
+load_module extra/sharp780x.ko
+load_module extra/dvb_api_prop.ko
+load_module extra/avl6761.ko
+load_module extra/mxl603.ko
+load_module extra/avl6211.ko
+load_module extra/dvb_api.ko
+load_module kernel/fs/cifs/cifs.ko
+
+create_node "KAL"
+create_node "notifyq"
+create_node "platform"
+create_node "content"
+create_node "standby"
+create_node "video"
+create_node "audio"
+create_node "pvr"
+create_node "ci"
+create_node "cs_control"
+create_node "cs_ir"
+create_node_dir "fb"
+create_node "FrontEnd"
+create_node "ipfe"
+create_node "pvrsrvkm"
+create_node "vss_bc"
+
+mkdir -p /dev/input
+ln -sf /dev/cs_ir /dev/input/nevis_ir
+ln -sf /dev/cs_ir /dev/input/input0
+
+service networking start
+service ntpdate start
+
+# say hi to everyone
+dt -ls01
+dt -ls02
+dt -c
+dt -t"BOOT NI-IMAGE"
+
+# starting services and daemons in order of the symlink names
+LOGINFO "run initscripts start ..."
+run_initscripts start
+
+service coredump start
+
+SHOWINFO "done"

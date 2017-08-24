@@ -1,0 +1,75 @@
+#!/bin/sh
+#
+# nfs	This shell script takes care of starting and stopping the NFS services
+
+start() {
+	# prepare filesystem
+	mkdir -p /var/lock/subsys
+	mkdir -p /var/lib/nfs/sm
+	mkdir -p /var/lib/nfs/sm.bak
+	touch /var/lib/nfs/etab
+	touch /var/lib/nfs/rmtab
+
+	# /var/lib/nfs should not belong to root
+	chown -R nobody /var/lib/nfs
+
+	# start all needed services
+	pidof rpcbind > /dev/null || rpcbind
+	
+	#printf "Starting NFS statd: "
+	rpc.statd
+	#[ $? = 0 ] && echo "OK" || echo "FAIL"
+	touch /var/lock/subsys/nfslock
+	
+	#printf "Starting NFS services: "
+	exportfs -r
+	#[ $? = 0 ] && echo "OK" || echo "FAIL"
+	
+	#printf "Starting NFS daemon: "
+	rpc.nfsd 2
+	#[ $? = 0 ] && echo "OK" || echo "FAIL"
+	
+	#printf "Starting NFS mountd: "
+	pidof rpc.mountd > /dev/null || rpc.mountd
+	#[ $? = 0 ] && echo "OK" || echo "FAIL"
+	touch /var/lock/subsys/nfs
+}
+
+stop() {
+	# kill all services and cleanup
+	killall -q rpc.mountd
+	rpc.nfsd 0 2> /dev/null
+	exportfs -au
+	rm -f /var/lock/subsys/nfs
+	killall -q rpc.statd
+	killall -q rpcbind
+	rm -f /var/lock/subsys/nfslock
+}
+
+case "$1" in
+	start)
+		if [ -e /var/etc/.nfsd ]; then
+			start
+		fi
+		;;
+	stop)
+		if [ -e /var/etc/.nfsd ]; then
+			stop
+		fi
+		;;
+	restart)
+		if [ -e /var/etc/.nfsd ]; then
+			stop
+			sleep 1
+			start
+		fi
+		;;
+	reload)
+		if [ -e /var/etc/.nfsd ]; then
+			exportfs -r
+			touch /var/lock/subsys/nfs
+		fi
+		;;
+	*)
+		echo "Usage: service nfsd {start|stop|reload}"
+esac

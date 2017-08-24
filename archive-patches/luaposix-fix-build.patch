@@ -1,0 +1,26 @@
+From ee191f0f87af7903c0052c54ad0b9d4057c5708c Mon Sep 17 00:00:00 2001
+Message-Id: <ee191f0f87af7903c0052c54ad0b9d4057c5708c.1390512716.git.striper@gmx.de>
+From: striper <striper@gmx.de>
+Date: Thu, 23 Jan 2014 22:31:51 +0100
+Subject: [PATCH] - fix luaposix build
+
+---
+ ext/curses/curses.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/ext/curses/curses.c b/ext/curses/curses.c
+index 8750b3f..140e980 100644
+--- a/ext/curses/curses.c
++++ b/ext/curses/curses.c
+@@ -44,7 +44,7 @@
+ #else
+ #  error "SysV or X/Open-compatible Curses header file required"
+ #endif
+-#include <term.h>
++#include <ncurses/term.h>
+ 
+ /* The extra indirection to these macros is required so that if the
+    arguments are themselves macros, they will get expanded too.  */
+-- 
+1.8.5.2
+

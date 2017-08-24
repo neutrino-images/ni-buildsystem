@@ -1,0 +1,23 @@
+#!/bin/sh
+
+case $1 in
+	start)	
+		if [ -e /var/etc/.xupnpd ]; then
+			rm -rf /tmp/xupnpd-*
+			rm -f /tmp/xupnpd.pid
+			sleep 10 # FIXME; This is to workaround slow DHCP
+			/bin/xupnpd &
+		fi
+		;;
+	stop)
+		if [ -e /var/etc/.xupnpd ]; then
+			killall xupnpd
+		fi
+		;;
+	restart)
+		if [ -e /var/etc/.xupnpd ]; then
+			$0 stop
+			$0 start
+		fi
+		;;
+esac

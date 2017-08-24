@@ -1,0 +1,26 @@
+From ebb90c54d9af735f9561aefeb1e0959e29d6ea95 Mon Sep 17 00:00:00 2001
+Message-Id: <ebb90c54d9af735f9561aefeb1e0959e29d6ea95.1354465991.git.striper@gmx.de>
+From: striper <striper@gmx.de>
+Date: Sun, 2 Dec 2012 17:33:03 +0100
+Subject: [PATCH] - fix incorrect range when retrieving content via HTTP
+
+---
+ djmount/file_buffer.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/djmount/file_buffer.c b/djmount/file_buffer.c
+index 80a9e34..9d3e8ae 100644
+--- a/djmount/file_buffer.c
++++ b/djmount/file_buffer.c
+@@ -199,7 +199,7 @@ FileBuffer_Read (FileBuffer* file, char* buffer,
+ 		int rc = UpnpOpenHttpGetEx (file->url, &handle,
+ 					    &contentType, &contentLength,
+ 					    &httpStatus,
+-					    offset, offset + size,
++					    offset, offset + size - 1,
+ 					    HTTP_DEFAULT_TIMEOUT
+ 					    );
+ 		if (rc != UPNP_E_SUCCESS) 
+-- 
+1.7.3.4
+

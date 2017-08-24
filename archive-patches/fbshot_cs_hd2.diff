@@ -1,0 +1,38 @@
+--- a/fbshot.c
++++ b/fbshot.c
+@@ -148,6 +148,8 @@
+   pict->bps=fb_varinfo.bits_per_pixel;
+   pict->gray=fb_varinfo.grayscale;
+ 
++  int stride=fb_fixinfo.line_length;
++
+   if(fb_fixinfo.visual==FB_VISUAL_PSEUDOCOLOR){
+     pict->colormap=(struct fb_cmap*)malloc(sizeof(struct fb_cmap));
+     pict->colormap->red=(__u16*)malloc(sizeof(__u16)*(1<<pict->bps));
+@@ -203,8 +205,24 @@
+   if (vt_num!=-1)
+     chvt(vt_num);
+ 
+-  j= (read(fd, pict->buffer, ((pict->xres * pict->yres) * i) )!=
+-  	(pict->xres * pict->yres *i ));
++	/* Workaround for broken osd screenshot with new fb driver
++	   and 1280x720 resolution */
++	if ((pict->xres * i) < stride) {
++		char* toBuf = pict->buffer;
++		int fromRead = 0;
++		int ii;
++		for (ii = 0; ii < pict->yres; ii++) {
++			j = (read(fd, toBuf, pict->xres*i) != (pict->xres *i));
++			fromRead += stride;
++			int seekRet = lseek(fd, fromRead, SEEK_SET);
++			toBuf += pict->xres * i;
++			if (j != 0)
++				break;
++		}
++	}
++	else
++		j = (read(fd, pict->buffer, ((pict->xres * pict->yres) * i) ) != (pict->xres * pict->yres *i ));
++
+ #ifdef DEBUG
+   printf("to read:%i read:%i\n",(pict->xres* pict->yres * i), j);	
+ #endif

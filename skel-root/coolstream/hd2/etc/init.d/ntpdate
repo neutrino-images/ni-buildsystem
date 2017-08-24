@@ -1,0 +1,14 @@
+#!/bin/sh
+
+. /etc/init.d/functions
+. /etc/init.d/globals
+
+case "$1" in
+	start)
+		ntpatboot=$(get_setting network_ntpatboot)
+		ntpserver=$(get_setting network_ntpserver)
+		if [ "$ntpatboot" == "true" ]; then
+			ntpdate	${ntpserver:-0.de.pool.ntp.org}
+		fi
+	;;
+esac

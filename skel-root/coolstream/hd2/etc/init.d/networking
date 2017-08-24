@@ -1,0 +1,22 @@
+#!/bin/sh
+
+# manage network interfaces and configure some networking options
+
+case "$1" in
+	start)
+		echo -n "Configuring network interfaces... "
+		ifup -a
+		echo "done."
+	;;
+	stop)
+		echo -n "Deconfiguring network interfaces... "
+		ifdown -a
+		echo "done."
+	;;
+	force-reload|restart)
+		$0 stop
+		$0 start
+	;;
+esac
+
+exit 0

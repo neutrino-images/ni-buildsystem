@@ -1,0 +1,152 @@
+#! /bin/sh
+# Aktuelle Fahrer-, Team- und Saisontabelle der Formel 1 inkl. Rennkalender anzeigen.
+# based on a idee of rvk and thanks to theobald123 and bazi98 and Don de Deckelwech
+# Version: Beta 0.72 Coolstream
+
+
+# *************************************************************************************
+# * Funktion zum erstellen des Formel 1 - Rennkalender                                *
+# *************************************************************************************
+
+Rennkalender ()
+{
+ 	#Daten ausgeben (Framebuffer)
+	msgbox title="Formel 1 WM Kalender" size=22 timeout=600 popup=/share/tuxbox/neutrino/plugins/f1kalender_data
+
+}
+
+# *************************************************************************************
+# * Funktion zum erstellen der Formel 1 - Fahrerwertung                               *
+# *************************************************************************************
+
+Fahrerwertung ()
+{
+	#Datenmuell entfernen
+	#sed -n -e '/<td/ p' /tmp/formel1mwtab_00.txt > /tmp/formel1mwtab_01.txt
+	sed -n -e '/span class=\"text\"/ p;/span class=\"first-name\"/ p;/td class=\"points\"/ p' /tmp/formel1mwtab_00.txt > /tmp/formel1mwtab_01.txt
+
+	sed -e 's/<[^>]*>//g' -e 's/ä/ae/g' -e 's/ö/oe/g' -e 's/ü/ue/g' -e 's/Ã¼/ue/g' -e 's/ß/ss/g' -e 's/é/e/g' -e 's/Ã©/e/g' -e 's/\&.*;//g' -e 's/^[ \t]*//' /tmp/formel1mwtab_01.txt > /tmp/formel1mwtab_02.txt
+	sed -n -e "1,33 p" /tmp/formel1mwtab_02.txt > /tmp/formel1mwtab_02_01.txt
+	sed -n -e "34,150 p" /tmp/formel1mwtab_02.txt > /tmp/formel1mwtab_02_02.txt
+	
+	
+	#Daten und Ergebnisse auslesen
+	echo ~T0182Platz ~T0244Fahrer ~T0454Punkte ~T0672Platz ~T0734Fahrer ~T0944Punkte > /tmp/formel1mwtab_04.txt
+	echo "~s" >> /tmp/formel1mwtab_04.txt
+	count=1 ; tab1=1; tab2=2 ; tab3=3 ; step=3
+	while [ $count -le 15 ]; do
+		echo ~T0188`sed -n "$tab1"p /tmp/formel1mwtab_02_01.txt` ~T0240`sed -n "$tab2"p /tmp/formel1mwtab_02_01.txt` ~T0460`sed -n "$tab3"p /tmp/formel1mwtab_02_01.txt` ~T0678`sed -n "$tab1"p /tmp/formel1mwtab_02_02.txt` ~T0730`sed -n "$tab2"p /tmp/formel1mwtab_02_02.txt` ~T0950`sed -n "$tab3"p /tmp/formel1mwtab_02_02.txt` >> /tmp/formel1mwtab_04.txt
+
+		count=`expr "$count" + 1` ; tab1=`expr "$tab1" + $step` ; tab2=`expr "$tab2" + $step` ; tab3=`expr "$tab3" + $step`
+
+	done
+
+ 	#Daten ausgeben (Framebuffer)
+	msgbox title="Formel 1 WM Fahrer-Tabelle" size=22 timeout=600 popup=/tmp/formel1mwtab_04.txt
+
+	#TMP-Dateien loeschen
+	rm /tmp/formel1*.txt;
+
+}
+# *************************************************************************************
+# *        Funktion zum erstellen der Formel 1 - Teamwertung                          *
+# *************************************************************************************
+
+Teamwertung()
+{
+	#Datenmuell entfernen
+	#sed -n -e '/<td/ p' /tmp/formel1mwtab_team_00.txt > /tmp/formel1mwtab_team_01.txt
+	sed -n -e '/span class=\"text\"/ p;/td class=\"name\"/ p;/td class=\"points\"/ p' /tmp/formel1mwtab_team_00.txt > /tmp/formel1mwtab_team_01.txt
+	sed -e 's/<[^>]*>//g' -e 's/ä/ae/g' -e 's/ö/oe/g' -e 's/ü/ue/g' -e 's/Ã¼/ue/g' -e 's/ß/ss/g' -e 's/é/e/g' -e 's/Ã©/e/g' -e 's/\&.*;//g' -e 's/^[ \t]*//' /tmp/formel1mwtab_team_01.txt > /tmp/formel1mwtab_team_02.txt
+	
+
+	#Daten und Ergebnisse auslesen
+	echo ~T0400Platz ~T0464Team ~T0714Punkte  > /tmp/formel1mwtab_team_04.txt
+	echo "~s" >> /tmp/formel1mwtab_team_04.txt
+	count=1 ; tab1=1; tab2=2 ; tab3=3 ; step=3
+	while [ $count -le 15 ]; do
+		echo ~T0408`sed -n "$tab1"p /tmp/formel1mwtab_team_02.txt` ~T0460`sed -n "$tab2"p /tmp/formel1mwtab_team_02.txt` ~T0720`sed -n "$tab3"p /tmp/formel1mwtab_team_02.txt`  >> /tmp/formel1mwtab_team_04.txt
+
+		count=`expr "$count" + 1` ; tab1=`expr "$tab1" + $step` ; tab2=`expr "$tab2" + $step` ; tab3=`expr "$tab3" + $step`
+
+	done
+	
+ 	#Daten ausgeben (Framebuffer)
+	msgbox title="Formel 1 WM Teamwertung" size=22 timeout=600 popup=/tmp/formel1mwtab_team_04.txt
+
+	#TMP-Dateien loeschen
+	rm /tmp/formel1*.txt;
+}
+
+# *************************************************************************************
+# *        Funktion zum erstellen der Formel 1 - Saisonwertung                        *
+# *************************************************************************************
+
+Saisonwertung()
+{
+	#Datenmuell entfernen
+	sed -n -e '/<td/ p' /tmp/formel1mwtab_season_00.txt > /tmp/formel1mwtab_season_01.txt
+	sed -e 's/<[^>]*>//g' -e 's/ä/ae/g' -e 's/ö/oe/g' -e 's/ü/ue/g' -e 's/Ã¼/ue/g' -e 's/ß/ss/g' -e 's/é/e/g' -e 's/Ã©/e/g' -e 's/\&.*;//g' /tmp/formel1mwtab_season_01.txt > /tmp/formel1mwtab_season_02.txt
+	
+
+	#Daten und Ergebnisse auslesen
+	echo ~T0124Grand Prix ~T0305Datum ~T0425Gewinner ~T0665Team ~T0864Runden ~T0980Zeit  > /tmp/formel1mwtab_season_04.txt
+	echo "~s" >> /tmp/formel1mwtab_season_04.txt
+	count=1 ; tab1=1; tab2=2 ; tab3=3 ; tab4=4; tab5=5 ; tab6=6 ; step=6
+	while [ $count -le 24 ]; do
+		echo ~T0120`sed -n "$tab1"p /tmp/formel1mwtab_season_02.txt` ~T0280`sed -n "$tab2"p /tmp/formel1mwtab_season_02.txt` ~T0420`sed -n "$tab3"p /tmp/formel1mwtab_season_02.txt` ~T0660`sed -n "$tab4"p /tmp/formel1mwtab_season_02.txt` ~T0880`sed -n "$tab5"p /tmp/formel1mwtab_season_02.txt` ~T0950`sed -n "$tab6"p /tmp/formel1mwtab_season_02.txt` >> /tmp/formel1mwtab_season_04.txt
+
+		count=`expr "$count" + 1` ; tab1=`expr "$tab1" + $step` ; tab2=`expr "$tab2" + $step` ; tab3=`expr "$tab3" + $step` ; tab4=`expr "$tab4" + $step` ; tab5=`expr "$tab5" + $step` ; tab6=`expr "$tab6" + $step`
+
+	done
+
+ 	#Daten ausgeben (Framebuffer)
+	msgbox title="Formel 1 WM Saisonwertung" size=22 timeout=600 popup=/tmp/formel1mwtab_season_04.txt
+
+	#TMP-Dateien loeschen
+	rm /tmp/formel1*.txt;
+}
+
+# *************************************************************************************
+# *        Funktion ausw~ahlen und Daten aus Internet in eine lokale Datei einlesen   *
+# *************************************************************************************
+
+
+while [ 1 -eq 1 ]; do
+	
+	/bin/msgbox title="Formel 1" refresh=3 size=24 order=1 msg="~cBitte eine Funktion ausw~ahlen!" select=" Rennkalender, Fahrerwertung , Teamwertung, Saisonwertung"
+	auswahl=$?
+
+	case $auswahl	in
+
+	1)
+		/bin/msgbox title="Hinweis" popup="Die Formel 1 - Rennkalender wird ausgelesen" timeout=2
+		Rennkalender
+		;;
+
+
+	2)
+		/bin/msgbox title="Hinweis" popup="Die Formel 1 - Fahrerwertung wird ausgelesen" timeout=2
+		wget -O /tmp/formel1mwtab_00.txt  http://www.formula1.com/content/fom-website/en/championship/results/2016-driver-standings.html    #http://www.formula1.com/results/driver/
+		Fahrerwertung
+		;;
+
+	3)
+		/bin/msgbox title="Hinweis" popup="Die Formel 1 - Teamwertung wird ausgelesen" timeout=2
+		wget -O /tmp/formel1mwtab_team_00.txt  http://www.formula1.com/content/fom-website/en/championship/results/2016-constructor-standings.html    #http://www.formula1.com/results/team/
+		Teamwertung
+		;;
+	
+	4)
+		/bin/msgbox title="Hinweis" popup="Die Formel 1 - Saisonwertung wird ausgelesen" timeout=2
+		wget -O /tmp/formel1mwtab_season_00.txt  http://www.formula1.com/results/season/
+		Saisonwertung
+		;;
+
+	*)
+		rm /tmp/formel1*.txt; exit
+		;;
+
+	esac
+done
+

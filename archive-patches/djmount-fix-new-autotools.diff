@@ -1,0 +1,33 @@
+commit e505f2db5ea8f449d413f8a74453a7668a78a156
+Author: Mattia Barbon <mattia.barbon@libero.it>
+Date:   Sat May 21 20:37:45 2011 +0200
+
+    Fixes for new autotools versions.
+
+diff --git a/configure.ac b/configure.ac
+index dd9dbfd..762f0df 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -13,9 +13,7 @@ AC_INIT(djmount, 0.71, r3mi@users.sourceforge.net)
+ 
+ # share auxiliary files with sub-configure in "libupnp"
+ AC_CONFIG_AUX_DIR(libupnp/config.aux)
+-AC_CONFIG_MACRO_DIR(libupnp/m4)
+ AC_CONFIG_MACRO_DIR(m4)
+-AC_CONFIG_MACRO_DIR(gl/m4)
+ 
+ AC_CONFIG_SRCDIR(djmount/djfs.c)
+ 
+diff --git a/libupnp/m4/rt_bool_arg_enable.m4 b/libupnp/m4/rt_bool_arg_enable.m4
+index efed41a..71bd7e8 100644
+--- a/libupnp/m4/rt_bool_arg_enable.m4
++++ b/libupnp/m4/rt_bool_arg_enable.m4
+@@ -34,7 +34,7 @@ AC_DEFUN([RT_BOOL_ARG_ENABLE],[
+ 		               )])
+ 	test "x$enable_[$1]" != [x]m4_if([$2],[yes],[no],[yes]) dnl
+ 		&& enable_[]Name=[$2]
+-	AC_MSG_RESULT($enable_[]Name)dnl
++	AC_MSG_RESULT($enable_[]Name)
+ 	AM_CONDITIONAL([ENABLE_]NAME, test x"$enable_[]Name" = xyes)
+ 	dnl
+ 	m4_popdef([NAME])dnl

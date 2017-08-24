@@ -1,0 +1,18 @@
+#!/bin/sh
+
+case $1 in
+start)
+	if [ -e /var/etc/.fritzcallmonitor ]; then
+		echo "starte NI-FritzCallMonitor..."
+		/bin/FritzCallMonitor &
+	fi
+	;;
+stop)
+	if [ -e /var/etc/.fritzcallmonitor ]; then
+		echo "stoppe NI-FritzCallMonitor..."
+		killall FritzCallMonitor
+	fi
+	;;
+esac
+
+exit 0

@@ -1,0 +1,141 @@
+#!/bin/sh
+# EPG Daten ausfiltern
+# by PauleFoul
+
+select=$1
+Myself="EPGFilter - EPG Daten ausfiltern"
+Version="V003"
+Headline="${Myself}  - - - ${Version}"
+
+echo $Myself $Version $select
+
+
+#Daten aus der Service.xml auslesen und filtern
+services_data ()
+{
+	#Zeilen (hier die t="2" enthalten) in services.xml suchen und kopieren
+	grep -E "$1" /var/tuxbox/config/zapit/services.xml > /tmp/epgtmp1.xml
+	
+	#Text loeschen und umwandeln
+	sed -e 's/<S //' -e 's/ t=".*>//g' -e 's/v=".*"//g' -e 's/*//' -e 's/^[ \t]*//' -e '/^\s*$/d' -e 's/i="//' -e 's/^0*//' -e 's/^/"/' -e 's/n="/name="/' /tmp/epgtmp1.xml | sort -u > /tmp/epgtmp3.xml
+	
+	#Text die ersten 10 Zeichen abschneiden
+	#cut -c 10- "/tmp/epgtmp2.xml" > "/tmp/epgtmp3.xml"
+}
+
+
+bouquets_data ()
+{
+	#Zeilen (hier die <S i=" enthalten) in bouquets.xml suchen und kopieren
+	grep '<S i="'  $1 > /tmp/epgtmp4.xml
+	
+	#Format der Serviceparameter anpassen ( aus i wird z.B. serviceID)
+	sed -e 's/.s=".*"//g' -e 's/.frq=".*"//g' -e 's/<S/<filter/' -e 's/i="/serviceID="/' -e 's/n="/name="/' -e 's/t="/tsid="/' -e 's/on="/onid="/' -e 's/^[ \t]*//' /tmp/epgtmp4.xml | sort -u > /tmp/epgtmp5.xml
+}
+
+
+sender_suchen ()
+{
+
+	#Zeilen/Senderanzahl ermitteln
+	zeilen=`sed -n -e "$=" /tmp/epgtmp3.xml`
+	#zeilen=$(expr $zeilen - 1)
+	
+	tab1=1; step=1
+	
+	Anzeigetext="~c Senderliste erstellen..."; msga
+	while [ "$tab1" -le "$zeilen" ]; do
+			a1=`sed -n -e "$tab1"p /tmp/epgtmp3.xml`
+			a2=`grep -e "$a1" /tmp/epgtmp5.xml`
+			echo -e "$a2" >> /tmp/epgtmp6.xml
+			tab1=`expr "$tab1" + $step`
+	done
+}
+
+
+kopfzeile ()
+{
+	#Dateikopf schreiben
+	echo '<?xml version="1.0" encoding="UTF-8"?>' >> /tmp/epgtmp6.xml
+	echo "<epgfilter is_whitelist=$1 except_current_next=$2>" >> /tmp/epgtmp6.xml
+}
+
+
+rm /tmp/epgtmp*.xml
+
+
+case $select	in 																														#
+	1)																																				#EPG nur TV (Alle)
+		services_data 't="1"|t="19"|t="d3'
+		bouquets_data /var/tuxbox/config/zapit/bouquets.xml
+		kopfzeile '"0"' '"0"'
+		sender_suchen
+		sleep 1;;
+		
+	2)																																				#EPG nur Radio (Alle)
+		services_data 't="2"'
+		bouquets_data /var/tuxbox/config/zapit/bouquets.xml
+		kopfzeile '"1"' '"0"'
+		sender_suchen
+		sleep 1;;	
+		
+	3)																																				#EPG nur TV (Alle) + Now&Next
+		services_data 't="1"|t="19"|t="d3'
+		bouquets_data /var/tuxbox/config/zapit/bouquets.xml
+		kopfzeile '"0"' '"1"'
+		sender_suchen
+		sleep 1;;
+		
+	4)																																				#EPG nur Radio (Alle) + Now&Next
+		services_data 't="2"'
+		bouquets_data /var/tuxbox/config/zapit/bouquets.xml
+		kopfzeile '"1"' '"1"'
+		sender_suchen
+		sleep 1;;
+		
+	5)																																				#EPG nur TV&Radio (Favoriten)
+		bouquets_data /var/tuxbox/config/zapit/ubouquets.xml
+		kopfzeile '"1"' '"0"'
+		cat /tmp/epgtmp5.xml >> /tmp/epgtmp6.xml
+		sleep 1;;
+		
+	6)																																				#EPG nur TV&Radio (Favoriten) + Now&Next
+		bouquets_data /var/tuxbox/config/zapit/ubouquets.xml
+		kopfzeile '"1"' '"1"'
+		cat /tmp/epgtmp5.xml >> /tmp/epgtmp6.xml
+		sleep 1;;
+		
+	7)																																				#EPG nur TV (Favoriten)
+		services_data 't="1"|t="19"|t="d3"'
+		bouquets_data /var/tuxbox/config/zapit/ubouquets.xml
+		kopfzeile '"1"' '"0"'
+		sender_suchen
+		sleep 1;;
+		
+	8)																																				#EPG nur TV (Favoriten) + Now&Next
+		services_data 't="1"|t="19"|t="d3"'
+		bouquets_data /var/tuxbox/config/zapit/ubouquets.xml
+		kopfzeile '"1"' '"1"'
+		sender_suchen
+		sleep 1;;
+				
+	*)																																				#Keine Auswahl
+		exit;;
+	
+esac
+
+
+#Sortieren und doppelte Eintraege loeschen
+cat /tmp/epgtmp6.xml | sort -u > /tmp/epgtmp7.xml
+
+#Dateiende schreiben
+echo '</epgfilter>' >> /tmp/epgtmp7.xml	
+
+sed -e 's/<filter/\t<filter/' -e '/^\s*$/d' /tmp/epgtmp7.xml   > /tmp/epgtmp8.xml
+
+cp /tmp/epgtmp8.xml /var/tuxbox/config/zapit/epgfilter.xml
+
+rm /tmp/epgtmp*.xml
+
+exit
+#########################################################################################

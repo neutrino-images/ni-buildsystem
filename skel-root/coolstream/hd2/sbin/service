@@ -1,0 +1,32 @@
+#!/bin/sh
+
+. /etc/init.d/globals
+
+SERVICE="$1"
+ACTION="$2"
+
+usage() {
+	echo "usage: service <name> <action>"
+	echo "       start or stop a given service (init script)"
+	echo "       action depends on the init script"
+	echo
+	exit 1
+}
+
+test -z "$ACTION" && usage;
+
+for i in /etc/init.d/$SERVICE /var/etc/init.d/$SERVICE; do
+	if [ -x "$i" ]; then
+		LOGINFO "running $i $ACTION"
+		"$i" "$ACTION"
+		exit $?
+	fi
+done
+
+echo "$SERVICE not found in /etc/init.d/ and /var/etc/init.d/"
+SERVICES=$(for i in /etc/init.d/[^SK]* /var/etc/init.d/[^SK]*; do
+		echo "${i##*/}";
+	done | sort -u | grep -v '^\(functions\|globals\|rcK\|rcS\|start\|start_neutrino\|\[\^SK\]\*\)$')
+echo "available services:"
+echo $SERVICES | xargs -n 1 echo "	"
+exit 1

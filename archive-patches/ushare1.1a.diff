@@ -1,0 +1,475 @@
+diff -uNr ushare-1.1a/configure ushare-1.1b/configure
+--- ushare-1.1a/configure	2007-12-09 08:03:36.000000000 -0500
++++ ushare-1.1b/configure	2012-03-25 17:35:07.000000000 -0400
+@@ -42,6 +42,9 @@
+   echo "  --with-libdlna-dir=DIR      check for libdlna installed in DIR"
+   echo ""
+   echo "Advanced options (experts only):"
++  echo "  --disable-sysconf           disable installation of init files"
++  echo "  --enable-developer          enable developer options"
++  echo "  --disable-developer         disable developer options"
+   echo "  --enable-debug              enable debugging symbols"
+   echo "  --disable-debug             disable debugging symbols"
+   echo "  --disable-strip             disable stripping of executables at installation"
+@@ -164,6 +167,11 @@
+     echo "#define $1 \"$2\"" >> $CONFIG_H
+ }
+ 
++check_cmd_exists(){
++	log check_cmd_exists "$@"
++	which "$@" >>$logfile 2>&1
++}
++
+ check_cmd(){
+     log "$@"
+     "$@" >>$logfile 2>&1
+@@ -300,13 +308,15 @@
+ strip="strip"
+ cpu=`uname -m`
+ optimize="yes"
++sysconf="yes"
++developer="no"
+ debug="no"
+ dostrip="yes"
+ extralibs=""
+ installstrip="-s"
+ cross_compile="no"
+ INSTALL="/usr/bin/install -c"
+-VERSION="1.1a"
++VERSION="1.2.0"
+ system_name=`uname -s 2>&1`
+ 
+ #################################################
+@@ -420,6 +430,12 @@
+   ;;
+   --disable-dlna) dlna="no"
+   ;;
++  --disable-sysconf) sysconf="no"
++  ;;
++  --enable-developer) developer="yes"
++  ;;
++  --disable-developer) developer="no"
++  ;;
+   --enable-debug) debug="yes"
+   ;;
+   --disable-debug) debug="no"
+@@ -584,6 +600,25 @@
+ linux && add_cflags -D_GNU_SOURCE
+ 
+ #################################################
++#   check for developer options
++#################################################
++if enabled developer; then
++  add_cflags -Werror
++  add_cflags -DHAVE_DEVELOPER
++  
++  have_ctags='no'
++  if check_cmd_exists 'ctags'; then
++    have_ctags='yes'
++  fi
++
++  have_etags='no'
++  if check_cmd_exists 'etags'; then
++  	have_etags='yes'
++  fi
++
++fi
++
++#################################################
+ #   check for debug symbols
+ #################################################
+ if enabled debug; then
+@@ -684,6 +719,8 @@
+ echolog "  STRIP              $strip"
+ echolog "  make               $make"
+ echolog "  CPU                $cpu ($tune)"
++echolog "  install sysconf    $sysconf"
++echolog "  developer options  $developer"
+ echolog "  debug symbols      $debug"
+ echolog "  strip symbols      $dostrip"
+ echolog "  optimize           $optimize"
+@@ -724,6 +761,10 @@
+ append_config "LDFLAGS=$LDFLAGS"
+ append_config "INSTALL=$INSTALL"
+ 
++append_config "INSTALL_SYSCONF=$sysconf"
++append_config "DEVELOPER=$developer"
++append_config "HAVE_CTAGS=$have_ctags"
++append_config "HAVE_ETAGS=$have_etags"
+ append_config "DEBUG=$debug"
+ 
+ 
+diff -uNr ushare-1.1a/scripts/Makefile ushare-1.1b/scripts/Makefile
+--- ushare-1.1a/scripts/Makefile	2007-12-09 08:03:36.000000000 -0500
++++ ushare-1.1b/scripts/Makefile	2012-03-25 17:35:07.000000000 -0400
+@@ -3,6 +3,11 @@
+ endif
+ include ../config.mak
+ 
++INSTALL_RULES = 
++ifeq ($(INSTALL_SYSCONF),yes)
++  INSTALL_RULES   += install-sysconf
++endif
++
+ CONF_FILE  = "ushare.conf"
+ INITD_FILE = "ushare"
+ 
+@@ -14,7 +19,9 @@
+ 
+ distclean:
+ 
+-install:
++install: $(INSTALL_RULES)
++
++install-sysconf:
+ 	$(INSTALL) -d $(sysconfdir)
+ 	$(INSTALL) -m 644 $(CONF_FILE) $(sysconfdir)
+ 	$(INSTALL) -d $(sysconfdir)/init.d
+diff -uNr ushare-1.1a/src/Makefile ushare-1.1b/src/Makefile
+--- ushare-1.1a/src/Makefile	2007-12-09 08:03:36.000000000 -0500
++++ ushare-1.1b/src/Makefile	2012-03-25 17:35:07.000000000 -0400
+@@ -3,6 +3,15 @@
+ endif
+ include ../config.mak
+ 
++ifeq ($(DEVELOPER),yes)
++  ifeq ($(HAVE_ETAGS),yes)
++    BUILD_RULES   += TAGS
++  endif
++  ifeq ($(HAVE_CTAGS),yes)
++    BUILD_RULES   += tags
++  endif
++endif
++
+ PROG = ushare
+ 
+ EXTRADIST = ushare.1 \
+@@ -50,7 +59,7 @@
+ 
+ .SUFFIXES: .c .o
+ 
+-all: depend $(PROG)
++all: depend $(BUILD_RULES) $(PROG)
+ 
+ .c.o:
+ 	$(CC) -c $(CFLAGS) $(OPTFLAGS) -o $@ $<
+@@ -58,6 +67,14 @@
+ $(PROG): $(OBJS)
+ 	$(CC) $(OBJS) $(LDFLAGS) $(EXTRALIBS) -o $@
+ 
++TAGS:
++	@rm -f $@; \
++	 ( find -name '*.[chS]' -print ) | xargs etags -a
++
++tags:
++	@rm -f $@; \
++	 ( find -name '*.[chS]' -print ) | xargs ctags -a;
++
+ clean:
+ 	-$(RM) -f *.o $(PROG)
+ 	-$(RM) -f .depend
+diff --git a/src/ctrl_telnet.c b/src/ctrl_telnet.c
+index 0849d80..b3e9e8d 100644
+--- a/src/ctrl_telnet.c
++++ b/src/ctrl_telnet.c
+@@ -202,6 +202,7 @@ ctrl_telnet_start (int port)
+ void
+ ctrl_telnet_stop (void)
+ {
++  ssize_t tmp;
+   pthread_mutex_lock (&startstop_lock);
+ 
+   if (!started)
+@@ -211,7 +212,7 @@ ctrl_telnet_stop (void)
+   }
+ 
+   /* yes is int, which is bigger then char, so this should be safe */
+-  write (ttd.killer[1], &yes, sizeof (char));
++  tmp = write (ttd.killer[1], &yes, sizeof (char));
+ 
+   pthread_mutex_unlock (&startstop_lock);
+   pthread_join (ttd.thread, NULL);
+diff --git a/src/mime.c b/src/mime.c
+index 66c48ab..bf0121b 100644
+--- a/src/mime.c
++++ b/src/mime.c
+@@ -144,7 +144,8 @@ char *mime_get_protocol (struct mime_type_t *mime)
+   if (!mime)
+     return NULL;
+ 
+-  sprintf (protocol, mime->mime_protocol);
++  //sprintf (protocol, mime->mime_protocol);
++  strcpy (protocol, mime->mime_protocol);
+   strcat (protocol, "*");
+   return strdup (protocol);
+ }
+diff --git a/src/mime.c b/src/mime.c
+index bf0121b..f38deca 100644
+--- a/src/mime.c
++++ b/src/mime.c
+@@ -53,6 +53,7 @@ const struct mime_type_t MIME_Type_List[] = {
+   { "mpeg2", UPNP_VIDEO, "http-get:*:video/mpeg2:"},
+   { "m4v",   UPNP_VIDEO, "http-get:*:video/mp4:"},
+   { "m4p",   UPNP_VIDEO, "http-get:*:video/mp4:"},
++  { "mp4",   UPNP_VIDEO, "http-get:*:video/mp4:"},
+   { "mp4ps", UPNP_VIDEO, "http-get:*:video/x-nerodigital-ps:"},
+   { "ts",    UPNP_VIDEO, "http-get:*:video/mpeg2:"},
+   { "ogm",   UPNP_VIDEO, "http-get:*:video/mpeg:"},
+@@ -79,7 +80,6 @@ const struct mime_type_t MIME_Type_List[] = {
+   { "mp1",  UPNP_AUDIO, "http-get:*:audio/mp1:"},
+   { "mp2",  UPNP_AUDIO, "http-get:*:audio/mp2:"},
+   { "mp3",  UPNP_AUDIO, "http-get:*:audio/mpeg:"},
+-  { "mp4",  UPNP_AUDIO, "http-get:*:audio/mp4:"},
+   { "m4a",  UPNP_AUDIO, "http-get:*:audio/mp4:"},
+   { "ogg",  UPNP_AUDIO, "http-get:*:audio/x-ogg:"},
+   { "wav",  UPNP_AUDIO, "http-get:*:audio/wav:"},
+diff -wbBur ushare-1.1a/src/http.c ushare-1.1a.my/src/http.c
+--- ushare-1.1a/src/http.c	2007-12-09 13:03:36.000000000 +0000
++++ ushare-1.1a.my/src/http.c	2010-10-29 11:13:07.000000000 +0000
+@@ -77,8 +77,7 @@
+   info->content_type = ixmlCloneDOMString (content_type);
+ }
+ 
+-static int
+-http_get_info (const char *filename, struct File_Info *info)
++int http_get_info (const char *filename, struct File_Info *info)
+ {
+   extern struct ushare_t *ut;
+   struct upnp_entry_t *entry = NULL;
+@@ -197,8 +196,7 @@
+   return ((UpnpWebFileHandle) file);
+ }
+ 
+-static UpnpWebFileHandle
+-http_open (const char *filename, enum UpnpOpenFileMode mode)
++UpnpWebFileHandle http_open (const char *filename, enum UpnpOpenFileMode mode)
+ {
+   extern struct ushare_t *ut;
+   struct upnp_entry_t *entry = NULL;
+@@ -251,8 +249,7 @@
+   return ((UpnpWebFileHandle) file);
+ }
+ 
+-static int
+-http_read (UpnpWebFileHandle fh, char *buf, size_t buflen)
++int http_read (UpnpWebFileHandle fh, char *buf, size_t buflen)
+ {
+   struct web_file_t *file = (struct web_file_t *) fh;
+   ssize_t len = -1;
+@@ -286,8 +283,7 @@
+   return len;
+ }
+ 
+-static int
+-http_write (UpnpWebFileHandle fh __attribute__((unused)),
++int http_write (UpnpWebFileHandle fh __attribute__((unused)),
+             char *buf __attribute__((unused)),
+             size_t buflen __attribute__((unused)))
+ {
+@@ -296,8 +292,7 @@
+   return 0;
+ }
+ 
+-static int
+-http_seek (UpnpWebFileHandle fh, off_t offset, int origin)
++int http_seek (UpnpWebFileHandle fh, off_t offset, int origin)
+ {
+   struct web_file_t *file = (struct web_file_t *) fh;
+   off_t newpos = -1;
+@@ -371,8 +366,7 @@
+   return 0;
+ }
+ 
+-static int
+-http_close (UpnpWebFileHandle fh)
++int http_close (UpnpWebFileHandle fh)
+ {
+   struct web_file_t *file = (struct web_file_t *) fh;
+ 
+@@ -402,13 +396,3 @@
+ 
+   return 0;
+ }
+-
+-struct UpnpVirtualDirCallbacks virtual_dir_callbacks =
+-  {
+-    http_get_info,
+-    http_open,
+-    http_read,
+-    http_write,
+-    http_seek,
+-    http_close
+-  };
+diff -wbBur ushare-1.1a/src/http.h ushare-1.1a.my/src/http.h
+--- ushare-1.1a/src/http.h	2007-12-09 13:03:36.000000000 +0000
++++ ushare-1.1a.my/src/http.h	2010-10-29 11:13:11.000000000 +0000
+@@ -25,6 +25,13 @@
+ #include <upnp/upnp.h>
+ #include <upnp/upnptools.h>
+ 
+-struct UpnpVirtualDirCallbacks virtual_dir_callbacks;
++int http_close (UpnpWebFileHandle fh);
++int http_write (UpnpWebFileHandle fh __attribute__((unused)),
++            char *buf __attribute__((unused)),
++            size_t buflen __attribute__((unused)));
++int http_seek (UpnpWebFileHandle fh, off_t offset, int origin);
++UpnpWebFileHandle http_open (const char *filename, enum UpnpOpenFileMode mode);
++int http_read (UpnpWebFileHandle fh, char *buf, size_t buflen);
++int http_get_info (const char *filename, struct File_Info *info);
+ 
+ #endif /* _HTTP_H_ */
+diff -wbBur ushare-1.1a/src/ushare.c ushare-1.1a.my/src/ushare.c
+--- ushare-1.1a/src/ushare.c	2007-12-09 13:03:36.000000000 +0000
++++ ushare-1.1a.my/src/ushare.c	2010-10-29 11:17:45.000000000 +0000
+@@ -188,7 +188,7 @@
+   if (strcmp (request->DevUDN + 5, ut->udn))
+     return;
+ 
+-  ip = request->CtrlPtIPAddr.s_addr;
++  ip = (*(struct sockaddr_in*)&request->CtrlPtIPAddr).sin_addr.s_addr;
+   ip = ntohl (ip);
+   sprintf (val, "%d.%d.%d.%d",
+            (ip >> 24) & 0xFF, (ip >> 16) & 0xFF, (ip >> 8) & 0xFF, ip & 0xFF);
+@@ -348,7 +348,47 @@
+ 
+   UpnpEnableWebserver (TRUE);
+ 
+-  res = UpnpSetVirtualDirCallbacks (&virtual_dir_callbacks);
++  res = UpnpVirtualDir_set_WriteCallback(http_write);
++  if (res != UPNP_E_SUCCESS)
++  {
++    log_error (_("Cannot set virtual directory callbacks\n"));
++    free (description);
++    return -1;
++  }
++
++  res = UpnpVirtualDir_set_GetInfoCallback(http_get_info);
++  if (res != UPNP_E_SUCCESS)
++  {
++    log_error (_("Cannot set virtual directory callbacks\n"));
++    free (description);
++    return -1;
++  }
++
++  res = UpnpVirtualDir_set_ReadCallback(http_read);
++  if (res != UPNP_E_SUCCESS)
++  {
++    log_error (_("Cannot set virtual directory callbacks\n"));
++    free (description);
++    return -1;
++  }
++
++  res = UpnpVirtualDir_set_OpenCallback(http_open);
++  if (res != UPNP_E_SUCCESS)
++  {
++    log_error (_("Cannot set virtual directory callbacks\n"));
++    free (description);
++    return -1;
++  }
++
++  res = UpnpVirtualDir_set_SeekCallback(http_seek);
++  if (res != UPNP_E_SUCCESS)
++  {
++    log_error (_("Cannot set virtual directory callbacks\n"));
++    free (description);
++    return -1;
++  }
++
++  res = UpnpVirtualDir_set_CloseCallback(http_close);
+   if (res != UPNP_E_SUCCESS)
+   {
+     log_error (_("Cannot set virtual directory callbacks\n"));
+diff -uNr ushare-1.1a.a/src/cds.c ushare-1.1a.b/src/cds.c
+--- ushare-1.1a.a/src/cds.c	2007-12-09 08:03:36.000000000 -0500
++++ ushare-1.1a.b/src/cds.c	2012-05-27 11:28:42.000000000 -0400
+@@ -19,7 +19,9 @@
+  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+  */
+ 
++#include <stdio.h>
+ #include <stdlib.h>
++#include <string.h>
+ #include <upnp/upnp.h>
+ #include <upnp/upnptools.h>
+ 
+diff -uNr ushare-1.1a.a/src/cms.c ushare-1.1a.b/src/cms.c
+--- ushare-1.1a.a/src/cms.c	2007-12-09 08:03:36.000000000 -0500
++++ ushare-1.1a.b/src/cms.c	2012-05-27 11:25:03.000000000 -0400
+@@ -20,6 +20,7 @@
+  */
+ 
+ #include <stdlib.h>
++#include <string.h>
+ #include <upnp/upnp.h>
+ #include <upnp/upnptools.h>
+ 
+diff -uNr ushare-1.1a.a/src/http.c ushare-1.1a.b/src/http.c
+--- ushare-1.1a.a/src/http.c	2012-05-27 11:23:32.000000000 -0400
++++ ushare-1.1a.b/src/http.c	2012-05-27 11:25:13.000000000 -0400
+@@ -25,6 +25,7 @@
+ #include <errno.h>
+ #include <stdio.h>
+ #include <stdlib.h>
++#include <string.h>
+ #include <unistd.h>
+ #include <errno.h>
+ 
+diff -uNr ushare-1.1a.a/src/presentation.c ushare-1.1a.b/src/presentation.c
+--- ushare-1.1a.a/src/presentation.c	2007-12-09 08:03:36.000000000 -0500
++++ ushare-1.1a.b/src/presentation.c	2012-05-27 11:30:08.000000000 -0400
+@@ -18,7 +18,9 @@
+  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+  */
+ 
++#include <stdio.h>
+ #include <stdlib.h>
++#include <string.h>
+ 
+ #if HAVE_LANGINFO_CODESET
+ # include <langinfo.h>
+diff -uNr ushare-1.1a.a/src/services.c ushare-1.1a.b/src/services.c
+--- ushare-1.1a.a/src/services.c	2007-12-09 08:03:36.000000000 -0500
++++ ushare-1.1a.b/src/services.c	2012-05-27 11:25:26.000000000 -0400
+@@ -20,6 +20,7 @@
+  */
+ 
+ #include <stdlib.h>
++#include <string.h>
+ #include <upnp/upnp.h>
+ #include <upnp/upnptools.h>
+ 
+diff -Naur ushare-1.1a/scripts/ushare.conf ushare-1.1a_/scripts/ushare.conf
+--- ushare-1.1a/scripts/ushare.conf	2007-12-09 14:03:36.000000000 +0100
++++ ushare-1.1a_/scripts/ushare.conf	2012-07-05 09:35:00.000000000 +0200
+@@ -2,11 +2,11 @@
+ # Configuration file for uShare
+ 
+ # uShare UPnP Friendly Name (default is 'uShare').
+-USHARE_NAME=
++USHARE_NAME=coolstream
+ 
+ # Interface to listen to (default is eth0).
+ # Ex : USHARE_IFACE=eth1
+-USHARE_IFACE=
++USHARE_IFACE=eth0
+ 
+ # Port to listen to (default is random from IANA Dynamic Ports range)
+ # Ex : USHARE_PORT=49200
+@@ -18,7 +18,7 @@
+ 
+ # Directories to be shared (space or CSV list).
+ # Ex: USHARE_DIR=/dir1,/dir2
+-USHARE_DIR=
++USHARE_DIR=/media/sda1,media/sdb1
+ 
+ # Use to override what happens when iconv fails to parse a file name.
+ # The default uShare behaviour is to not add the entry in the media list
+@@ -28,7 +28,7 @@
+ # as is. (Umlauts for all!)
+ #
+ # Options are TRUE/YES/1 for override and anything else for default behaviour
+-USHARE_OVERRIDE_ICONV_ERR=
++USHARE_OVERRIDE_ICONV_ERR=yes
+ 
+ # Enable Web interface (yes/no)
+ ENABLE_WEB=

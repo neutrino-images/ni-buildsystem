@@ -1,0 +1,114 @@
+From fbe644e0d4abebee4c5d7459efe6791504e0fe18 Mon Sep 17 00:00:00 2001
+Message-Id: <fbe644e0d4abebee4c5d7459efe6791504e0fe18.1354462414.git.striper@gmx.de>
+From: Yonathan Yusim <yonathan@boxee.tv>
+Date: Wed, 31 Aug 2011 18:46:47 +0300
+Subject: [PATCH] support seeking in large > 2gb files
+
+---
+ djmount/file_buffer.h                            |    2 +-
+ djmount/media_file.c                             |    2 +-
+ libupnp/upnp/inc/upnp.h                          |    4 ++--
+ libupnp/upnp/src/api/upnpapi.c                   |    4 ++--
+ libupnp/upnp/src/genlib/net/http/httpreadwrite.c |    6 +++---
+ libupnp/upnp/src/inc/httpreadwrite.h             |    4 ++--
+ 6 files changed, 11 insertions(+), 11 deletions(-)
+
+diff --git a/djmount/file_buffer.h b/djmount/file_buffer.h
+index 215e017..9434efb 100644
+--- a/djmount/file_buffer.h
++++ b/djmount/file_buffer.h
+@@ -60,7 +60,7 @@ typedef struct _FileBuffer FileBuffer;
+  *
+  *****************************************************************************/
+ 
+-#define FILE_BUFFER_MAX_CONTENT_LENGTH		((uintmax_t) INT_MAX)
++#define FILE_BUFFER_MAX_CONTENT_LENGTH		((uintmax_t) ~0ULL)
+ 
+ 
+ /*****************************************************************************
+diff --git a/djmount/media_file.c b/djmount/media_file.c
+index 44b4ffe..761f715 100644
+--- a/djmount/media_file.c
++++ b/djmount/media_file.c
+@@ -284,7 +284,7 @@ MediaFile_GetResSize (const MediaFile* const file)
+ {
+ 	const char* const str = ixmlElement_getAttribute (file->res, "size");
+ 	off_t res;
+-	STRING_TO_INT (str, res, -1);
++	STRING_TO_INT (str, res, 8ULL * 1024 * 1024 * 1024);
+ 	return res;
+ }
+ 
+diff --git a/libupnp/upnp/inc/upnp.h b/libupnp/upnp/inc/upnp.h
+index aac43ee..34cb188 100644
+--- a/libupnp/upnp/inc/upnp.h
++++ b/libupnp/upnp/inc/upnp.h
+@@ -2262,9 +2262,9 @@ int UpnpOpenHttpGetEx(
+ 	IN OUT int *httpStatus,	    /** The status returned on receiving a 
+ 				        response message from the remote 
+ 					server. */
+-	IN int lowRange,            /** An integer value representing the low 
++	IN unsigned long long lowRange,            /** An integer value representing the low 
+ 				        end of a range to retrieve. */
+-	IN int highRange,           /** An integer value representing the high 
++	IN unsigned long long highRange,           /** An integer value representing the high 
+ 				        end of a range to retrieve. */
+ 	IN int timeout	            /** A time out value sent with the request 
+ 				      	during which a response is expected 
+diff --git a/libupnp/upnp/src/api/upnpapi.c b/libupnp/upnp/src/api/upnpapi.c
+index ea5460b..8642060 100644
+--- a/libupnp/upnp/src/api/upnpapi.c
++++ b/libupnp/upnp/src/api/upnpapi.c
+@@ -3117,8 +3117,8 @@ UpnpOpenHttpGetEx( IN const char *url_str,
+                    IN OUT char **contentType,
+                    OUT int *contentLength,
+                    OUT int *httpStatus,
+-                   IN int lowRange,
+-                   IN int highRange,
++                   IN unsigned long long lowRange,
++                   IN unsigned long long highRange,
+                    IN int timeout )
+ {
+     return http_OpenHttpGetEx( url_str,
+diff --git a/libupnp/upnp/src/genlib/net/http/httpreadwrite.c b/libupnp/upnp/src/genlib/net/http/httpreadwrite.c
+index 838b3be..bb03419 100644
+--- a/libupnp/upnp/src/genlib/net/http/httpreadwrite.c
++++ b/libupnp/upnp/src/genlib/net/http/httpreadwrite.c
+@@ -2072,8 +2072,8 @@ http_OpenHttpGetEx( IN const char *url_str,
+                     IN OUT char **contentType,
+                     OUT int *contentLength,
+                     OUT int *httpStatus,
+-                    IN int lowRange,
+-                    IN int highRange,
++                    IN unsigned long long lowRange,
++                    IN unsigned long long highRange,
+                     IN int timeout )
+ {
+     int http_error_code;
+@@ -2107,7 +2107,7 @@ http_OpenHttpGetEx( IN const char *url_str,
+         }
+ 
+         memset( &rangeBuf, 0, sizeof( rangeBuf ) );
+-        sprintf( rangeBuf.RangeHeader, "Range: bytes=%d-%d\r\n",
++	sprintf( rangeBuf.RangeHeader, "Range: bytes=%llu-%llu\r\n",
+                  lowRange, highRange );
+ 
+         membuffer_init( &request );
+diff --git a/libupnp/upnp/src/inc/httpreadwrite.h b/libupnp/upnp/src/inc/httpreadwrite.h
+index a657320..e583858 100644
+--- a/libupnp/upnp/src/inc/httpreadwrite.h
++++ b/libupnp/upnp/src/inc/httpreadwrite.h
+@@ -494,8 +494,8 @@ int http_OpenHttpGetEx(IN const char *url_str,
+ 		     IN OUT char **contentType,
+ 		     OUT int *contentLength,
+ 		     OUT int *httpStatus,
+-			 IN int lowRange,
+-			 IN int highRange,
++			 IN unsigned long long lowRange,
++			 IN unsigned long long highRange,
+ 		     IN int timeout);
+ 
+ /************************************************************************
+-- 
+1.7.3.4
+

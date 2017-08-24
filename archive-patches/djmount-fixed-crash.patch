@@ -1,0 +1,26 @@
+From 5057f1332e02d9c2582b5887ff7bb4ba28060903 Mon Sep 17 00:00:00 2001
+Message-Id: <5057f1332e02d9c2582b5887ff7bb4ba28060903.1354464698.git.striper@gmx.de>
+From: Yonathan Yusim <yonathan@boxee.tv>
+Date: Mon, 4 Jul 2011 17:34:12 +0300
+Subject: [PATCH] fixed crash
+
+---
+ djmount/device_list.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/djmount/device_list.c b/djmount/device_list.c
+index b3cb08f..b5c2103 100644
+--- a/djmount/device_list.c
++++ b/djmount/device_list.c
+@@ -426,7 +426,7 @@ AddDevice (const char* deviceId,
+ 		} else {
+ 			// If SSDP target specified, check that the device
+ 			// matches it.
+-			if (strstr (g_ssdp_target, ":service:")) {
++			if (g_ssdp_target && strstr (g_ssdp_target, ":service:")) {
+ 				const Service* serv = Device_GetServiceFrom 
+ 					(devnode->d, g_ssdp_target, 
+ 					 FROM_SERVICE_TYPE, false);
+-- 
+1.7.3.4
+

@@ -1,0 +1,26 @@
+From 5ee82020984ada3c20c523490f637bba3fc08b79 Mon Sep 17 00:00:00 2001
+Message-Id: <5ee82020984ada3c20c523490f637bba3fc08b79.1354462423.git.striper@gmx.de>
+From: Yonathan Yusim <yonathan@boxee.tv>
+Date: Tue, 23 Aug 2011 17:33:21 +0300
+Subject: [PATCH] fixed crash when using UTF-8 charset
+
+---
+ djmount/charset.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/djmount/charset.c b/djmount/charset.c
+index 993fac0..4c255ca 100644
+--- a/djmount/charset.c
++++ b/djmount/charset.c
+@@ -491,7 +491,7 @@ Charset_Finish()
+ 	for (i = 0; i < NB_CONVERTERS; i++) {
+ 		Converter* const cvt = g_converters + i;
+ 		ithread_mutex_destroy (&cvt->mutex);
+-		if (iconv_close (cvt->cd))
++		if (cvt->cd != (iconv_t)-1 && iconv_close (cvt->cd))
+ 			rc = errno;
+ 		cvt->cd = (iconv_t) -1;
+ 	}
+-- 
+1.7.3.4
+

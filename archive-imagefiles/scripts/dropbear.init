@@ -1,0 +1,31 @@
+#!/bin/sh
+
+test -e /var/etc/.dropbear || exit
+
+ETCDIR=/etc/dropbear
+
+genkeys() {
+	for keytype in dss rsa; do
+	keyfile=$ETCDIR/dropbear_${keytype}_host_key
+	test -e $keyfile && continue
+	/bin/dropbearkey -t $keytype -f $keyfile
+	done
+}
+
+fixperms() {
+	# /root must be owned by root and must not world writable.
+	# fresh from the buildsystem it belongs to the building user...
+	test -L /root -o ! -d /root && return # not a directory
+	chown 0:0 /root
+	chmod go-w /root
+}
+
+case $1 in
+	start)	genkeys
+		fixperms
+		/sbin/dropbear
+		;;
+	stop)	pid=$(cat /var/run/dropbear.pid 2>/dev/null)
+		test -n "$pid" && kill $pid || true
+		;;
+esac

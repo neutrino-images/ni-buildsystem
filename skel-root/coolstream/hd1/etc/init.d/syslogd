@@ -1,0 +1,18 @@
+#!/bin/sh
+# you can set options in /etc/profile.locale, variable SYSLOGD_OPTS
+#
+# without options and without /var/log (!), syslogd will simply
+# log to the console. If /var/log/ exists, it will log to /var/log/messages
+
+case "$1" in
+	start)
+		/sbin/syslogd $SYSLOGD_OPTS
+	;;
+	stop)
+		killall syslogd
+	;;
+	restart)
+		$0 stop
+		$0 start
+	;;
+esac

@@ -1,0 +1,15 @@
+#!/bin/sh
+
+case $1 in
+	start)
+		if [ -e /var/etc/.crond ]; then
+			crond
+		fi
+	;;
+	stop)
+		if [ -e /var/etc/.crond ]; then
+			trap "" INT
+			kill -INT $(pidof crond)
+		fi
+	;;
+esac

@@ -1,0 +1,43 @@
+#!/bin/sh
+
+SMB_CONF=/etc/samba/smb.conf
+
+case "$1" in
+	start)
+		if [ -e /var/etc/.samba ]; then
+			grep -q "%%NETBIOS_NAME%%" $SMB_CONF
+			if [ $? -eq 0 ]; then
+				hwaddr=$(ifconfig eth0 | awk '/HWaddr/ { split($5,v,":"); print v[4] v[5] v[6] }')
+				sed -i "s|%%NETBIOS_NAME%%|NI-${hwaddr}|" $SMB_CONF
+			fi
+			mkdir -p /var/samba/locks
+			for i in smbd nmbd; do
+				printf "starting $i ..."
+				if pidof $i > /dev/null; then
+					echo " already running"
+				else
+					$i
+					echo "done"
+				fi
+			done
+		fi
+		;;
+	stop)
+		if [ -e /var/etc/.samba ]; then
+			for i in nmbd smbd; do
+				printf "stopping $i ..."
+				if pidof $i > /dev/null; then
+					read pid < /var/run/${i}.pid
+					kill $pid && echo "done" || echo "failed!?"
+				else
+					echo "not running"
+				fi
+			done
+		fi
+		;;
+	*)
+		echo "usage: $0 <start|stop>"
+		;;
+esac
+
+exit 0
