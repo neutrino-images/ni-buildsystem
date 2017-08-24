@@ -28,7 +28,7 @@ ln -s $HOME/src/Archive download
 # 3) Buildsystem konfigurieren #
 ```
 #!bash
-make local-files BOXSERIES=hd2
+make local-files
 ```
 config.local auf die eigenen Bedürfnisse anpassen
 

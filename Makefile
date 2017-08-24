@@ -7,7 +7,8 @@ warn:
 	@echo "Refusing to build. Good bye."
 else
 
-local-files:
+# workaround unset variables at first start
+local-files: $(eval BOXMODEL = nevis)
 	@test -e config.local || cp config.example config.local
 	@touch Makefile.local
 	@mkdir -p local/root
