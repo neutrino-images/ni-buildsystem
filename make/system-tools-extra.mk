@@ -234,3 +234,17 @@ $(D)/python: $(ARCHIVE)/Python-$(PYTHON_VER).tgz | $(TARGETPREFIX)
 		chmod +w $(TARGETLIB)/libpython*
 		install -m755 $(BUILD_TMP)/Python-$(PYTHON_VER)/_install/bin/python $(TARGETPREFIX)/bin/
 	$(REMOVE)/Python-$(PYTHON_VER)
+
+$(D)/busybox-hd1: $(ARCHIVE)/busybox-1.20.2.tar.bz2 | $(TARGETPREFIX)
+	$(REMOVE)/busybox-1.20.2
+	$(UNTAR)/busybox-1.20.2.tar.bz2
+	pushd $(BUILD_TMP)/busybox-1.20.2 && \
+		for patch in $(PATCHES)/busybox-1.20.2/*; do \
+			patch -p1 -i $$patch; \
+		done; \
+		cp $(CONFIGS)/busybox-1.20.config .config && \
+		$(MAKE) busybox $(BUSYBOX_MAKE_OPTS) && \
+		make install $(BUSYBOX_MAKE_OPTS)
+	$(REMOVE)/busybox-1.20.2
+	touch $@
+

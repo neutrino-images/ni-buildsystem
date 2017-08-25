@@ -344,8 +344,6 @@ $(D)/minicom: $(D)/libncurses $(ARCHIVE)/minicom-$(MINICOM_VER).tar.gz | $(TARGE
 	$(REMOVE)/minicom-$(MINICOM_VER)
 	touch $@
 
-busybox: busybox-$(BOXSERIES)
-
 # Link against libtirpc so that we can leverage its RPC
 # support for NFS mounting with BusyBox
 BUSYBOX_CFLAGS = $(TARGET_CFLAGS)
@@ -369,7 +367,7 @@ BUSYBOX_MAKE_OPTS = \
 	EXTRA_LDFLAGS="$(TARGET_LDFLAGS)" \
 	CONFIG_PREFIX="$(TARGETPREFIX)"
 
-$(D)/busybox-hd2: $(D)/libtirpc $(ARCHIVE)/busybox-$(BUSYBOX_VER).tar.bz2 | $(TARGETPREFIX)
+$(D)/busybox: $(D)/libtirpc $(ARCHIVE)/busybox-$(BUSYBOX_VER).tar.bz2 | $(TARGETPREFIX)
 	$(REMOVE)/busybox-$(BUSYBOX_VER)
 	$(UNTAR)/busybox-$(BUSYBOX_VER).tar.bz2
 	pushd $(BUILD_TMP)/busybox-$(BUSYBOX_VER) && \
@@ -381,19 +379,6 @@ $(D)/busybox-hd2: $(D)/libtirpc $(ARCHIVE)/busybox-$(BUSYBOX_VER).tar.bz2 | $(TA
 		$(BUSYBOX_MAKE_ENV) $(MAKE) busybox $(BUSYBOX_MAKE_OPTS) && \
 		$(BUSYBOX_MAKE_ENV) $(MAKE) install $(BUSYBOX_MAKE_OPTS)
 	$(REMOVE)/busybox-$(BUSYBOX_VER)
-	touch $@
-
-$(D)/busybox-hd1: $(ARCHIVE)/busybox-1.20.2.tar.bz2 | $(TARGETPREFIX)
-	$(REMOVE)/busybox-1.20.2
-	$(UNTAR)/busybox-1.20.2.tar.bz2
-	pushd $(BUILD_TMP)/busybox-1.20.2 && \
-		for patch in $(PATCHES)/busybox-1.20.2/*; do \
-			patch -p1 -i $$patch; \
-		done; \
-		cp $(CONFIGS)/busybox-1.20.config .config && \
-		$(MAKE) busybox $(BUSYBOX_MAKE_OPTS) && \
-		make install $(BUSYBOX_MAKE_OPTS)
-	$(REMOVE)/busybox-1.20.2
 	touch $@
 
 $(D)/bash: $(ARCHIVE)/bash-$(BASH_VER).tar.gz | $(TARGETPREFIX)
