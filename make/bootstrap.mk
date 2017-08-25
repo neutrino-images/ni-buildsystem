@@ -141,6 +141,7 @@ $(HOSTPREFIX)/bin/mkimage: $(ARCHIVE)/u-boot-2015.01.tar.bz2 | $(HOSTPREFIX)/bin
 	$(UNTAR)/u-boot-2015.01.tar.bz2
 	pushd $(BUILD_TMP)/u-boot-2015.01 && \
 		$(PATCH)/u-boot-fix-build-error-under-gcc6.patch && \
+		$(PATCH)/u-boot-support-gcc5.patch && \
 		$(PATCH)/u-boot-rsa-Fix-build-with-OpenSSL-1.1.x.patch && \
 		$(MAKE) defconfig && \
 		$(MAKE) silentoldconfig && \
