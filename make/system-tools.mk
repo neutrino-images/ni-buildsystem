@@ -507,7 +507,7 @@ $(D)/samba-hd1: $(D)/zlib $(ARCHIVE)/samba-$(SAMBA33_VER).tar.gz | $(TARGETPREFI
 	$(PATCH)/samba33-configure.in-make-getgrouplist_ok-test-cross-compile.patch
 	cd $(BUILD_TMP)/samba-$(SAMBA33_VER)/source && \
 	export CONFIG_SITE=$(CONFIGS)/samba33-config.site && \
-		autoreconf -fi && \
+		autoreconf -fi \
 		$(CONFIGURE) \
 			--prefix=/ \
 			--datadir=/var/samba \
@@ -572,7 +572,7 @@ $(D)/samba-hd2: $(D)/zlib $(ARCHIVE)/samba-$(SAMBA36_VER).tar.gz | $(TARGETPREFI
 	patch -p0 -i $(BASE_DIR)/archive-patches/samba36-CVE-2017-7494-v3-6.patch
 	cd $(BUILD_TMP)/samba-$(SAMBA36_VER)/source3 && \
 	export CONFIG_SITE=$(CONFIGS)/samba36-config.site && \
-		autoreconf -fi && \
+		autoreconf -fi \
 		$(CONFIGURE) \
 			--prefix=/ \
 			--datadir=/var/samba \
