@@ -1,11 +1,14 @@
 # config.local
 
+# Change it to your name.
 #MAINTAINER = NI-Team
 
+# Choose one (1) of the following BOXMODELs. O n e !
 #BOXMODEL = nevis
 #BOXMODEL = apollo
 #BOXMODEL = shiner
 #BOXMODEL = kronos
 #BOXMODEL = kronos_v2
 
+# Create debug-image. Not useful in real life.
 #DEBUG = yes
