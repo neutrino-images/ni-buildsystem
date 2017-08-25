@@ -180,14 +180,14 @@ case "$1" in
 	"stop")
 		umount_netfs
 
-		SHOWINFO "unmount all sysfs, tmpfs, devpts and usbfs mounts"
-		umount -a -t sysfs, tmpfs, devpts, usbfs
+		#SHOWINFO "unmount all sysfs, tmpfs, devpts and usbfs mounts"
+		#umount -a -t sysfs, tmpfs, devpts, usbfs
 
-		SHOWINFO "disable all swaps"
-		swapoff -a
+		#SHOWINFO "disable all swaps"
+		#swapoff -a
 
-		SHOWINFO "detach jffs2 filesystems"
-		umount -l -t jffs2
+		#SHOWINFO "detach jffs2 filesystems"
+		#umount -l -t jffs2
 	;;
 	*)
 		echo "[$BASENAME] Usage: $0 {start|start_netfs|stop_netfs|stop}"
