@@ -8,6 +8,4 @@
 #BOXMODEL = kronos
 #BOXMODEL = kronos_v2
 
-#NI_NEUTRINO_BRANCH = ni/mp/tuxbox
-
 #DEBUG = yes
