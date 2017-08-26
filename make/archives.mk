@@ -221,7 +221,7 @@ GDB_VER=7.12.1
 $(ARCHIVE)/gdb-$(GDB_VER).tar.xz:
 	$(WGET) http://ftp.gnu.org/gnu/gdb/gdb-$(GDB_VER).tar.xz
 
-NANO_VER=2.8.0
+NANO_VER=2.8.6
 NANO_VER_MAJ=2.8
 $(ARCHIVE)/nano-$(NANO_VER).tar.gz:
 	$(WGET) http://www.nano-editor.org/dist/v$(NANO_VER_MAJ)/nano-$(NANO_VER).tar.gz
