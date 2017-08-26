@@ -339,6 +339,7 @@ $(LIBPLUG)/tuxwetter.so: $(D)/freetype $(D)/libcurl $(D)/giflib $(D)/libjpeg $(L
 	install -m644 tuxwetter.png $(VARCONF)/tuxwetter/ && \
 	install -m644 convert.list $(VARCONF)/tuxwetter/ && \
 	install -m644 tuxwetter.cfg $(LIBPLUG)/ && \
+	install -m644 tuxwetter_hint.png $(LIBPLUG)/ && \
 	ln -sf /lib/tuxbox/plugins/tuxwetter.so $(BIN)/tuxwetter
 
 #cooliTSclimax
