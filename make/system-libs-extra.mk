@@ -1,31 +1,5 @@
 # makefile to build system libs (currently unused in ni-image)
 
-$(ARCHIVE)/libxslt-git-snapshot.tar.gz:
-	$(WGET) ftp://xmlsoft.org/libxml2/libxslt-git-snapshot.tar.gz
-
-$(D)/libxslt: $(D)/libxml2 $(ARCHIVE)/libxslt-git-snapshot.tar.gz | $(TARGETPREFIX)
-	$(UNTAR)/libxslt-git-snapshot.tar.gz
-	pushd $(BUILD_TMP)/libxslt-1.1.28 && \
-		$(CONFIGURE) \
-			--prefix= \
-			--enable-shared \
-			--disable-static \
-			--datarootdir=/.remove \
-			--without-crypto \
-			--without-python && \
-		$(MAKE) && \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
-	mv $(TARGETPREFIX)/bin/xslt-config $(HOSTPREFIX)/bin
-	$(REWRITE_LIBTOOL)/libexslt.la
-	$(REWRITE_LIBTOOL)/libxslt.la
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libexslt.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libxslt.pc
-	$(REWRITE_PKGCONF) $(HOSTPREFIX)/bin/xslt-config
-	rm -rf $(TARGETLIB)/libxslt-plugins/
-	rm -rf $(TARGETLIB)/xsltConf.sh
-	$(REMOVE)/libxslt-1.1.28
-	touch $@
-
 LIBID3TAG_VER=0.15.1b
 $(ARCHIVE)/libid3tag-$(LIBID3TAG_VER).tar.gz:
 	$(WGET) http://downloads.sourceforge.net/project/mad/libid3tag/$(LIBID3TAG_VER)/libid3tag-$(LIBID3TAG_VER).tar.gz
