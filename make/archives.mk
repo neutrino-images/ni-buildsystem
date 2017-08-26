@@ -158,7 +158,7 @@ LIBICONV_VER=1.15
 ibiconv-$(LIBICONV_VER).tar.gz:
 	$(WGET) http://ftp.gnu.org/gnu/libiconv/libiconv-$(LIBICONV_VER).tar.gz
 
-LIBJPEG-TURBO_VER=1.5.1
+LIBJPEG-TURBO_VER=1.5.2
 $(ARCHIVE)/libjpeg-turbo-$(LIBJPEG-TURBO_VER).tar.gz:
 	$(WGET) https://sourceforge.net/projects/libjpeg-turbo/files/$(LIBJPEG-TURBO_VER)/libjpeg-turbo-$(LIBJPEG-TURBO_VER).tar.gz
 
