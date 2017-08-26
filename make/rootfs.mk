@@ -19,7 +19,7 @@ $(TARGETPREFIX)/.version:
 	COMMIT=`cd $(N_HD_SOURCE); git fetch origin; git show origin/$(NI_NEUTRINO_BRANCH) --stat | grep ^commit | cut -d' ' -f2 | cut -c1-7`; \
 	echo "commit="$$COMMIT					>> $@
 	echo "builddate="`date`					>> $@
-	echo "creator=NI-Team"					>> $@
+	echo "creator=$(MAINTAINER)"				>> $@
 	echo "imagename=NI-Neutrino-HD"				>> $@
 	echo "homepage=www.neutrino-images.de"			>> $@
 
