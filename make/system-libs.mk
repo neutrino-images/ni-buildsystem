@@ -823,21 +823,6 @@ $(D)/pugixml: $(ARCHIVE)/pugixml-$(PUGIXML_VER).tar.gz | $(TARGETPREFIX)
 	$(REMOVE)/pugixml-$(PUGIXML_VER)
 	touch $@
 
-$(D)/libroxml: $(ARCHIVE)/libroxml-$(LIBROXML_VER).tar.gz | $(TARGETPREFIX)
-	$(UNTAR)/libroxml-$(LIBROXML_VER).tar.gz
-	set -e; cd $(BUILD_TMP)/libroxml-$(LIBROXML_VER); \
-		$(CONFIGURE) \
-			--prefix= \
-			--disable-xml-read-write \
-			--enable-xml-small-input-file \
-			--disable-xml-commit-xml-tree \
-			--disable-xml-xpath-engine \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
-		$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libroxml.pc
-	$(REMOVE)/libroxml-$(LIBROXML_VER)
-	touch $@
-
 $(D)/librtmp: $(D)/zlib $(D)/openssl | $(TARGETPREFIX)
 	$(REMOVE)/rtmpdump
 	git clone https://bitbucket.org/neutrino-images/ni-rtmpdump.git $(BUILD_TMP)/rtmpdump

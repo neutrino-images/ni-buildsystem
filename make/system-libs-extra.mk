@@ -43,3 +43,22 @@ $(D)/libFLAC: $(ARCHIVE)/flac-$(LIBFLAC_VER).tar.xz | $(TARGETPREFIX)
 	rm -rf $(TARGETPREFIX)/bin/metaflac
 	$(REMOVE)/flac-$(LIBFLAC_VER)
 	touch $@
+
+LIBROXML_VER=2.3.0
+$(ARCHIVE)/libroxml-$(LIBROXML_VER).tar.gz:
+	$(WGET) http://download.libroxml.net/pool/v2.x/libroxml-$(LIBROXML_VER).tar.gz
+
+$(D)/libroxml: $(ARCHIVE)/libroxml-$(LIBROXML_VER).tar.gz | $(TARGETPREFIX)
+	$(UNTAR)/libroxml-$(LIBROXML_VER).tar.gz
+	set -e; cd $(BUILD_TMP)/libroxml-$(LIBROXML_VER); \
+		$(CONFIGURE) \
+			--prefix= \
+			--disable-xml-read-write \
+			--enable-xml-small-input-file \
+			--disable-xml-commit-xml-tree \
+			--disable-xml-xpath-engine \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libroxml.pc
+	$(REMOVE)/libroxml-$(LIBROXML_VER)
+	touch $@

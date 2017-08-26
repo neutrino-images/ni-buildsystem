@@ -20,10 +20,6 @@ PUGIXML_VER=1.8
 $(ARCHIVE)/pugixml-$(PUGIXML_VER).tar.gz:
 	$(WGET) http://github.com/zeux/pugixml/releases/download/v$(PUGIXML_VER)/pugixml-$(PUGIXML_VER).tar.gz
 
-LIBROXML_VER=2.3.0
-$(ARCHIVE)/libroxml-$(LIBROXML_VER).tar.gz:
-	$(WGET) http://download.libroxml.net/pool/v2.x/libroxml-$(LIBROXML_VER).tar.gz
-
 LIBXML2_VER=2.9.4
 $(ARCHIVE)/libxml2-$(LIBXML2_VER).tar.gz:
 	$(WGET) ftp://xmlsoft.org/libxml2/libxml2-$(LIBXML2_VER).tar.gz
