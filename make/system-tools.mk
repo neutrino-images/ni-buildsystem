@@ -413,7 +413,6 @@ $(D)/e2fsprogs: $(ARCHIVE)/e2fsprogs-$(E2FSPROGS_VER).tar.gz | $(TARGETPREFIX)
 			--disable-testio-debug \
 			--disable-defrag \
 			--enable-elf-shlibs \
-			--enable-htree \
 			--enable-fsck \
 			--enable-symlink-install \
 			--enable-symlink-build \
