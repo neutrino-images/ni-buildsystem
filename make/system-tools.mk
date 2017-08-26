@@ -199,7 +199,9 @@ $(D)/ntp: $(ARCHIVE)/ntp-$(NTP_VER).tar.gz $(D)/openssl | $(TARGETPREFIX)
 			--prefix= \
 			--target=$(TARGET) \
 			--with-shared \
-			--with-yielding-select=yes && \
+			--with-crypto \
+			--with-yielding-select=yes \
+			--without-ntpsnmpd && \
 		$(MAKE)
 	mv -v $(BUILD_TMP)/ntp-$(NTP_VER)/ntpdate/ntpdate $(TARGETPREFIX)/sbin/
 	$(REMOVE)/ntp-$(NTP_VER)
