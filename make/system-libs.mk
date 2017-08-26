@@ -238,6 +238,7 @@ FFMPEG_CONFIGURE_GENERIC = \
 			--disable-ffmpeg \
 			--disable-ffplay \
 			--disable-ffserver \
+			--disable-ffprobe \
 			\
 			--disable-altivec \
 			--disable-mmx \
@@ -356,7 +357,6 @@ ifeq ($(BOXSERIES), hd2)
 			--extra-cflags="-Wno-deprecated-declarations -I$(TARGETINCLUDE) -mfpu=vfpv3-d16 -mfloat-abi=hard"
 else
   FFMPEG_CONFIGURE = \
-			--disable-ffprobe \
 			--enable-small \
 			--cpu=armv6 \
 			--extra-cflags="-Wno-deprecated-declarations -I$(TARGETINCLUDE)"
