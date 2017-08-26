@@ -166,7 +166,7 @@ GIFLIB_VER=5.1.4
 $(ARCHIVE)/giflib-$(GIFLIB_VER).tar.bz2:
 	$(WGET) http://sourceforge.net/projects/giflib/files/giflib-$(GIFLIB_VER).tar.bz2
 
-LIBCURL_VER=7.54.0
+LIBCURL_VER=7.55.1
 $(ARCHIVE)/curl-$(LIBCURL_VER).tar.bz2:
 	$(WGET) http://curl.haxx.se/download/curl-$(LIBCURL_VER).tar.bz2
 
