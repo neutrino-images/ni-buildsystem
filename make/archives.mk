@@ -24,7 +24,6 @@ LIBROXML_VER=2.3.0
 $(ARCHIVE)/libroxml-$(LIBROXML_VER).tar.gz:
 	$(WGET) http://download.libroxml.net/pool/v2.x/libroxml-$(LIBROXML_VER).tar.gz
 
-# atm only used for xmllint
 LIBXML2_VER=2.9.4
 $(ARCHIVE)/libxml2-$(LIBXML2_VER).tar.gz:
 	$(WGET) ftp://xmlsoft.org/libxml2/libxml2-$(LIBXML2_VER).tar.gz
@@ -52,14 +51,17 @@ IPERF_VER=3.1.3
 $(ARCHIVE)/iperf-$(IPERF_VER)-source.tar.gz:
 	$(WGET) https://iperf.fr/download/source/iperf-$(IPERF_VER)-source.tar.gz
 
-$(ARCHIVE)/hd-idle-1.04.tgz:
-	$(WGET) http://downloads.sourceforge.net/project/hd-idle/hd-idle-1.04.tgz
+HDIDLE_VER=1.04
+$(ARCHIVE)/hd-idle-$(HDIDLE_VER).tgz:
+	$(WGET) http://downloads.sourceforge.net/project/hd-idle/hd-idle-$(HDIDLE_VER).tgz
 
-$(ARCHIVE)/ntp-4.2.8.tar.gz:
-	$(WGET) http://www.eecis.udel.edu/~ntp/ntp_spool/ntp4/ntp-4.2/ntp-4.2.8.tar.gz
+NTP_VER=4.2.8
+$(ARCHIVE)/ntp-$(NTP_VER).tar.gz:
+	$(WGET) http://www.eecis.udel.edu/~ntp/ntp_spool/ntp4/ntp-4.2/ntp-$(NTP_VER).tar.gz
 
-$(ARCHIVE)/ushare-1.1a.tar.bz2:
-	$(WGET) http://ushare.geexbox.org/releases/ushare-1.1a.tar.bz2
+USHARE_VER=1.1a
+$(ARCHIVE)/ushare-$(USHARE_VER).tar.bz2:
+	$(WGET) http://ushare.geexbox.org/releases/ushare-$(USHARE_VER).tar.bz2
 
 HDPARM_VER=9.50
 $(ARCHIVE)/hdparm-$(HDPARM_VER).tar.gz:
@@ -69,15 +71,17 @@ LIBUPNP_VER=1.6.21
 $(ARCHIVE)/libupnp-$(LIBUPNP_VER).tar.bz2:
 	$(WGET) http://sourceforge.net/projects/pupnp/files/pupnp/libUPnP%20$(LIBUPNP_VER)/libupnp-$(LIBUPNP_VER).tar.bz2
 
-$(ARCHIVE)/wpa_supplicant-0.7.3.tar.gz:
-	$(WGET) http://hostap.epitest.fi/releases/wpa_supplicant-0.7.3.tar.gz
+WPA_SUPP_VER=0.7.3
+$(ARCHIVE)/wpa_supplicant-$(WPA_SUPP_VER).tar.gz:
+	$(WGET) http://hostap.epitest.fi/releases/wpa_supplicant-$(WPA_SUPP_VER).tar.gz
 
 LIBGD_VER=2.2.4
 $(ARCHIVE)/libgd-$(LIBGD_VER).tar.xz:
 	$(WGET) https://github.com/libgd/libgd/releases/download/gd-$(LIBGD_VER)/libgd-$(LIBGD_VER).tar.xz
 
-$(ARCHIVE)/djmount-0.71.tar.gz:
-	$(WGET) http://sourceforge.net/projects/djmount/files/djmount/0.71/djmount-0.71.tar.gz
+DJMOUNT_VER=0.71
+$(ARCHIVE)/djmount-$(DJMOUNT_VER).tar.gz:
+	$(WGET) http://sourceforge.net/projects/djmount/files/djmount/$(DJMOUNT_VER)/djmount-$(DJMOUNT_VER).tar.gz
 
 FUSE_VER=2.9.7
 $(ARCHIVE)/fuse-$(FUSE_VER).tar.gz:
@@ -109,16 +113,19 @@ SG3-UTILS_VER=1.42
 $(ARCHIVE)/sg3_utils-$(SG3-UTILS_VER).tar.xz:
 	$(WGET) http://sg.danny.cz/sg/p/sg3_utils-$(SG3-UTILS_VER).tar.xz
 
-$(ARCHIVE)/libusb-compat-0.1.5.tar.bz2:
-	$(WGET) http://downloads.sourceforge.net/project/libusb/libusb-compat-0.1/libusb-compat-0.1.5/libusb-compat-0.1.5.tar.bz2
+LIBUSB_COMPAT_VER=0.1.5
+LIBUSB_COMPAT_MAJ=0.1
+$(ARCHIVE)/libusb-compat-$(LIBUSB_COMPAT_VER).tar.bz2:
+	$(WGET) http://downloads.sourceforge.net/project/libusb/libusb-compat-$(LIBUSB_COMPAT_MAJ)/libusb-compat-$(LIBUSB_COMPAT_VER)/libusb-compat-$(LIBUSB_COMPAT_VER).tar.bz2
 
 LIBUSB_VER=1.0.21
 LIBUSB_MAJ=1.0
 $(ARCHIVE)/libusb-$(LIBUSB_VER).tar.bz2:
 	$(WGET) http://sourceforge.net/projects/libusb/files/libusb-$(LIBUSB_MAJ)/libusb-$(LIBUSB_VER)/libusb-$(LIBUSB_VER).tar.bz2
 
-$(ARCHIVE)/vsftpd-3.0.3.tar.gz:
-	$(WGET) https://security.appspot.com/downloads/vsftpd-3.0.3.tar.gz
+VSFTPD_VER=3.0.3
+$(ARCHIVE)/vsftpd-$(VSFTPD_VER).tar.gz:
+	$(WGET) https://security.appspot.com/downloads/vsftpd-$(VSFTPD_VER).tar.gz
 
 AUTOFS5_MAJOR=5
 AUTOFS5_MINOR=1
@@ -167,8 +174,9 @@ DROPBEAR_VER=2017.75
 $(ARCHIVE)/dropbear-$(DROPBEAR_VER).tar.bz2:
 	$(WGET) http://matt.ucc.asn.au/dropbear/releases/dropbear-$(DROPBEAR_VER).tar.bz2
 
-$(ARCHIVE)/fbshot-0.3.tar.gz:
-	$(WGET) http://distro.ibiblio.org/amigolinux/download/Utils/fbshot/fbshot-0.3.tar.gz
+FBSHOT_VER=0.3
+$(ARCHIVE)/fbshot-$(FBSHOT_VER).tar.gz:
+	$(WGET) http://distro.ibiblio.org/amigolinux/download/Utils/fbshot/fbshot-$(FBSHOT_VER).tar.gz
 
 FREETYPE_VER=2.8
 $(ARCHIVE)/freetype-$(FREETYPE_VER).tar.bz2:
@@ -196,9 +204,6 @@ BUSYBOX_MICRO=2
 BUSYBOX_VER=$(BUSYBOX_MAJOR).$(BUSYBOX_MINOR).$(BUSYBOX_MICRO)
 $(ARCHIVE)/busybox-$(BUSYBOX_VER).tar.bz2:
 	$(WGET) http://busybox.net/downloads/busybox-$(BUSYBOX_VER).tar.bz2
-
-$(ARCHIVE)/busybox-1.20.2.tar.bz2:
-	$(WGET) http://busybox.net/downloads/busybox-1.20.2.tar.bz2
 
 SAMBA33_VER=3.3.16
 $(ARCHIVE)/samba-$(SAMBA33_VER).tar.gz:
@@ -233,11 +238,13 @@ LZO_VER=2.10
 $(ARCHIVE)/lzo-$(LZO_VER).tar.gz:
 	$(WGET) https://fossies.org/linux/misc/lzo-$(LZO_VER).tar.gz
 
-$(ARCHIVE)/gnulib-20140202-stable.tar.gz:
-	$(WGET) http://erislabs.net/ianb/projects/gnulib/gnulib-20140202-stable.tar.gz
+GNULIB_VER=20140202
+$(ARCHIVE)/gnulib-$(GNULIB_VER)-stable.tar.gz:
+	$(WGET) http://erislabs.net/ianb/projects/gnulib/gnulib-$(GNULIB_VER)-stable.tar.gz
 
-$(ARCHIVE)/v6.tar.gz:
-	$(WGET) https://github.com/gvvaughan/slingshot/archive/v6.tar.gz
+SLINGSHOT_VER=6
+$(ARCHIVE)/v$(SLINGSHOT_VER).tar.gz:
+	$(WGET) https://github.com/gvvaughan/slingshot/archive/v$(SLINGSHOT_VER).tar.gz
 
 LIBSIGCPP_MAJOR=2
 LIBSIGCPP_MINOR=4
@@ -287,8 +294,9 @@ LIBAACS_VER=0.8.1
 $(ARCHIVE)/libaacs-$(LIBAACS_VER).tar.bz2:
 	$(WGET) ftp://ftp.videolan.org/pub/videolan/libaacs/$(LIBAACS_VER)/libaacs-$(LIBAACS_VER).tar.bz2
 
-$(ARCHIVE)/bc-1.06.tar.gz:
-	$(WGET) ftp://ftp.gnu.org/gnu/bc/bc-1.06.tar.gz
+BC_VER=1.06
+$(ARCHIVE)/bc-$(BC_VER).tar.gz:
+	$(WGET) ftp://ftp.gnu.org/gnu/bc/bc-$(BC_VER).tar.gz
 
 BASH_MAJOR=4
 BASH_MINOR=4
@@ -308,11 +316,14 @@ CORTEX-STRINGS_VER=48fd30c346ff2ab14ca574b770b5c1bcbefadba8
 $(ARCHIVE)/cortex-strings-$(CORTEX-STRINGS_VER).tar.bz2:
 	get-git-archive.sh http://git.linaro.org/git-ro/toolchain/cortex-strings.git $(CORTEX-STRINGS_VER) $(notdir $@) $(ARCHIVE)
 
-$(ARCHIVE)/u-boot-2015.01.tar.bz2:
-	$(WGET) ftp://ftp.denx.de/pub/u-boot/u-boot-2015.01.tar.bz2
+U_BOOT_VER=2015.01
+$(ARCHIVE)/u-boot-$(U_BOOT_VER).tar.bz2:
+	$(WGET) ftp://ftp.denx.de/pub/u-boot/u-boot-$(U_BOOT_VER).tar.bz2
 
-$(ARCHIVE)/usbutils-007.tar.xz:
-	$(WGET) https://www.kernel.org/pub/linux/utils/usb/usbutils/usbutils-007.tar.xz
+# usbutils-008 needs udev
+USB_UTILS_VER=007
+$(ARCHIVE)/usbutils-$(USB_UTILS_VER).tar.xz:
+	$(WGET) https://www.kernel.org/pub/linux/utils/usb/usbutils/usbutils-$(USB_UTILS_VER).tar.xz
 
 DOSFSTOOLS_VER=4.1
 $(ARCHIVE)/dosfstools-$(DOSFSTOOLS_VER).tar.xz:
@@ -368,4 +379,3 @@ $(ARCHIVE)/gettext-$(GETTEXT_VERSION).tar.xz:
 WGET_VER=1.19.1
 $(ARCHIVE)/wget-$(WGET_VER).tar.gz:
 	$(WGET) http://ftp.gnu.org/gnu/wget/wget-$(WGET_VER).tar.gz
-

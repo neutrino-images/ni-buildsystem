@@ -68,6 +68,34 @@ $(D)/xmllint: $(ARCHIVE)/libxml2-$(LIBXML2_VER).tar.gz | $(TARGETPREFIX)
 
 #################################
 
+$(D)/openvpn-hd1: $(D)/kernel-cst-hd1 $(D)/lzo $(D)/openssl $(ARCHIVE)/openvpn-$(OPENVPN_VER).tar.xz | $(TARGETPREFIX)
+	$(UNTAR)/openvpn-$(OPENVPN_VER).tar.xz
+	cd $(BUILD_TMP)/openvpn-$(OPENVPN_VER) && \
+	$(PATCH)/openvpn-fix-tun-device-for-coolstream.patch && \
+	$(BUILDENV) ./configure \
+		--build=$(BUILD) \
+		--host=$(TARGET) \
+		--prefix= \
+		--mandir=/.remove \
+		--docdir=/.remove \
+		--infodir=/.remove \
+		--enable-shared \
+		--disable-static \
+		--enable-small \
+		--enable-password-save \
+		--enable-management \
+		--disable-socks \
+		--disable-debug \
+		--disable-selinux \
+		--disable-plugins \
+		--disable-pkcs11 && \
+	$(MAKE) && \
+	$(MAKE) install DESTDIR=$(TARGETPREFIX)
+	cp -a $(MODULESDIR)/kernel/drivers/net/tun.ko $(TARGET_MODULE)
+	$(TARGET)-strip $(TARGETPREFIX)/sbin/openvpn
+	$(REMOVE)/openvpn-$(OPENVPN_VER)
+	touch $@
+
 BINUTILS_VER=2.25
 $(ARCHIVE)/binutils-$(BINUTILS_VER).tar.bz2:
 	$(WGET) https://ftp.gnu.org/gnu/binutils/binutils-$(BINUTILS_VER).tar.bz2
@@ -111,34 +139,6 @@ $(D)/util-linux: $(D)/libncurses $(ARCHIVE)/util-linux-$(UTIL-LINUX_VER).tar.xz 
 	$(REMOVE)/util-linux-$(UTIL-LINUX_VER)
 	touch $@
 
-$(D)/openvpn-hd1: $(D)/kernel-cst-hd1 $(D)/lzo $(D)/openssl $(ARCHIVE)/openvpn-$(OPENVPN_VER).tar.xz | $(TARGETPREFIX)
-	$(UNTAR)/openvpn-$(OPENVPN_VER).tar.xz
-	cd $(BUILD_TMP)/openvpn-$(OPENVPN_VER) && \
-	$(PATCH)/openvpn-fix-tun-device-for-coolstream.patch && \
-	$(BUILDENV) ./configure \
-		--build=$(BUILD) \
-		--host=$(TARGET) \
-		--prefix= \
-		--mandir=/.remove \
-		--docdir=/.remove \
-		--infodir=/.remove \
-		--enable-shared \
-		--disable-static \
-		--enable-small \
-		--enable-password-save \
-		--enable-management \
-		--disable-socks \
-		--disable-debug \
-		--disable-selinux \
-		--disable-plugins \
-		--disable-pkcs11 && \
-	$(MAKE) && \
-	$(MAKE) install DESTDIR=$(TARGETPREFIX)
-	cp -a $(MODULESDIR)/kernel/drivers/net/tun.ko $(TARGET_MODULE)
-	$(TARGET)-strip $(TARGETPREFIX)/sbin/openvpn
-	$(REMOVE)/openvpn-$(OPENVPN_VER)
-	touch $@
-
 IPTABLES_VER = 1.4.21
 $(ARCHIVE)/iptables-$(IPTABLES_VER).tar.bz2:
 	$(WGET) http://www.netfilter.org/projects/iptables/files/iptables-$(IPTABLES_VER).tar.bz2
@@ -162,12 +162,13 @@ $(D)/iptables: $(ARCHIVE)/iptables-$(IPTABLES_VER).tar.bz2 | $(TARGETPREFIX)
 	$(REMOVE)/iptables-$(IPTABLES_VER)
 	touch $@
 
-$(ARCHIVE)/lighttpd-1.4.31.tar.gz:
-	$(WGET) http://download.lighttpd.net/lighttpd/releases-1.4.x/lighttpd-1.4.31.tar.gz
+LIGHTTPD_VER=1.4.31
+$(ARCHIVE)/lighttpd-$(LIGHTTPD_VER).tar.gz:
+	$(WGET) http://download.lighttpd.net/lighttpd/releases-1.4.x/lighttpd-$(LIGHTTPD_VER).tar.gz
 
-$(D)/lighttpd: $(D)/zlib $(ARCHIVE)/lighttpd-1.4.31.tar.gz | $(TARGETPREFIX)
-	$(UNTAR)/lighttpd-1.4.31.tar.gz
-	cd $(BUILD_TMP)/lighttpd-1.4.31 && \
+$(D)/lighttpd: $(D)/zlib $(ARCHIVE)/lighttpd-$(LIGHTTPD_VER).tar.gz | $(TARGETPREFIX)
+	$(UNTAR)/lighttpd-$(LIGHTTPD_VER).tar.gz
+	cd $(BUILD_TMP)/lighttpd-$(LIGHTTPD_VER) && \
 	$(BUILDENV) ./configure \
 		--build=$(BUILD) \
 		--host=$(TARGET) \
@@ -181,7 +182,7 @@ $(D)/lighttpd: $(D)/zlib $(ARCHIVE)/lighttpd-1.4.31.tar.gz | $(TARGETPREFIX)
 		--without-bzip2 && \
 	$(MAKE) && \
 	$(MAKE) install DESTDIR=$(TARGETPREFIX)
-	$(REMOVE)/lighttpd-1.4.31
+	$(REMOVE)/lighttpd-$(LIGHTTPD_VER)
 	touch $@
 
 PYTHON_VER=2.7.11
@@ -234,17 +235,3 @@ $(D)/python: $(ARCHIVE)/Python-$(PYTHON_VER).tgz | $(TARGETPREFIX)
 		chmod +w $(TARGETLIB)/libpython*
 		install -m755 $(BUILD_TMP)/Python-$(PYTHON_VER)/_install/bin/python $(TARGETPREFIX)/bin/
 	$(REMOVE)/Python-$(PYTHON_VER)
-
-$(D)/busybox-hd1: $(ARCHIVE)/busybox-1.20.2.tar.bz2 | $(TARGETPREFIX)
-	$(REMOVE)/busybox-1.20.2
-	$(UNTAR)/busybox-1.20.2.tar.bz2
-	pushd $(BUILD_TMP)/busybox-1.20.2 && \
-		for patch in $(PATCHES)/busybox-1.20.2/*; do \
-			patch -p1 -i $$patch; \
-		done; \
-		cp $(CONFIGS)/busybox-1.20.config .config && \
-		$(MAKE) busybox $(BUSYBOX_MAKE_OPTS) && \
-		make install $(BUSYBOX_MAKE_OPTS)
-	$(REMOVE)/busybox-1.20.2
-	touch $@
-

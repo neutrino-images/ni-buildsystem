@@ -150,8 +150,8 @@ $(D)/hdparm: $(ARCHIVE)/hdparm-$(HDPARM_VER).tar.gz | $(TARGETPREFIX)
 	$(REMOVE)/hdparm-$(HDPARM_VER)
 	touch $@
 
-$(D)/hd-idle: $(ARCHIVE)/hd-idle-1.04.tgz | $(TARGETPREFIX)
-	$(UNTAR)/hd-idle-1.04.tgz
+$(D)/hd-idle: $(ARCHIVE)/hd-idle-$(HDIDLE_VER).tgz | $(TARGETPREFIX)
+	$(UNTAR)/hd-idle-$(HDIDLE_VER).tgz
 	pushd $(BUILD_TMP)/hd-idle && \
 		$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) -o hd-idle hd-idle.c && \
 	install -m755 hd-idle $(BIN)/
@@ -192,22 +192,22 @@ $(D)/less: $(D)/libncurses $(ARCHIVE)/less-$(LESS_VER).tar.gz | $(TARGETPREFIX)
 	$(REMOVE)/less-$(LESS_VER)
 	touch $@
 
-$(D)/ntp: $(ARCHIVE)/ntp-4.2.8.tar.gz $(D)/openssl | $(TARGETPREFIX)
-	$(UNTAR)/ntp-4.2.8.tar.gz
-	pushd $(BUILD_TMP)/ntp-4.2.8 && \
+$(D)/ntp: $(ARCHIVE)/ntp-$(NTP_VER).tar.gz $(D)/openssl | $(TARGETPREFIX)
+	$(UNTAR)/ntp-$(NTP_VER).tar.gz
+	pushd $(BUILD_TMP)/ntp-$(NTP_VER) && \
 		$(CONFIGURE) \
 			--prefix= \
 			--target=$(TARGET) \
 			--with-shared \
 			--with-yielding-select=yes && \
 		$(MAKE)
-	mv -v $(BUILD_TMP)/ntp-4.2.8/ntpdate/ntpdate $(TARGETPREFIX)/sbin/
-	$(REMOVE)/ntp-4.2.8
+	mv -v $(BUILD_TMP)/ntp-$(NTP_VER)/ntpdate/ntpdate $(TARGETPREFIX)/sbin/
+	$(REMOVE)/ntp-$(NTP_VER)
 	touch $@
 
-$(D)/djmount: $(ARCHIVE)/djmount-0.71.tar.gz $(D)/libfuse | $(TARGETPREFIX)
-	$(UNTAR)/djmount-0.71.tar.gz
-	pushd $(BUILD_TMP)/djmount-0.71 && \
+$(D)/djmount: $(ARCHIVE)/djmount-$(DJMOUNT_VER).tar.gz $(D)/libfuse | $(TARGETPREFIX)
+	$(UNTAR)/djmount-$(DJMOUNT_VER).tar.gz
+	pushd $(BUILD_TMP)/djmount-$(DJMOUNT_VER) && \
 		$(PATCH)/djmount-fix-hang-with-asset-upnp.patch && \
 		$(PATCH)/djmount-fix-incorrect-range-when-retrieving-content-via-HTTP.patch && \
 		$(PATCH)/djmount-fix-new-autotools.diff && \
@@ -225,13 +225,13 @@ $(D)/djmount: $(ARCHIVE)/djmount-0.71.tar.gz $(D)/libfuse | $(TARGETPREFIX)
 	install -D -m 755 $(IMAGEFILES)/scripts/djmount.init $(TARGETPREFIX)/etc/init.d/djmount
 	ln -sf djmount $(TARGETPREFIX)/etc/init.d/S99djmount
 	ln -sf djmount $(TARGETPREFIX)/etc/init.d/K01djmount
-	$(REMOVE)/djmount-0.71
+	$(REMOVE)/djmount-$(DJMOUNT_VER)
 	touch $@
 
-$(D)/ushare: $(ARCHIVE)/ushare-1.1a.tar.bz2 $(D)/libupnp | $(TARGETPREFIX)
-	$(UNTAR)/ushare-1.1a.tar.bz2
-	pushd $(BUILD_TMP)/ushare-1.1a && \
-		$(PATCH)/ushare1.1a.diff && \
+$(D)/ushare: $(ARCHIVE)/ushare-$(USHARE_VER).tar.bz2 $(D)/libupnp | $(TARGETPREFIX)
+	$(UNTAR)/ushare-$(USHARE_VER).tar.bz2
+	pushd $(BUILD_TMP)/ushare-$(USHARE_VER) && \
+		$(PATCH)/ushare.diff && \
 		$(BUILDENV_RPATH) \
 		./configure \
 			--prefix=$(TARGETPREFIX) \
@@ -248,7 +248,7 @@ $(D)/ushare: $(ARCHIVE)/ushare-1.1a.tar.bz2 $(D)/libupnp | $(TARGETPREFIX)
 		install -D -m 0755 $(IMAGEFILES)/scripts/ushare.init $(TARGETPREFIX)/etc/init.d/ushare
 		ln -sf ushare $(TARGETPREFIX)/etc/init.d/S99ushare
 		ln -sf ushare $(TARGETPREFIX)/etc/init.d/K01ushare
-	$(REMOVE)/ushare-1.1a
+	$(REMOVE)/ushare-$(USHARE_VER)
 	touch $@
 
 $(D)/smartmontools: $(ARCHIVE)/smartmontools-$(SMARTMON_VER).tar.gz | $(TARGETPREFIX)
@@ -285,9 +285,9 @@ $(D)/inadyn: $(D)/openssl $(D)/confuse $(D)/libite $(ARCHIVE)/inadyn-$(INADYN_VE
 	$(REMOVE)/inadyn-$(INADYN_VER)
 	touch $@
 
-$(D)/vsftpd: $(D)/openssl $(ARCHIVE)/vsftpd-3.0.3.tar.gz | $(TARGETPREFIX)
-	$(UNTAR)/vsftpd-3.0.3.tar.gz
-	cd $(BUILD_TMP)/vsftpd-3.0.3 && \
+$(D)/vsftpd: $(D)/openssl $(ARCHIVE)/vsftpd-$(VSFTPD_VER).tar.gz | $(TARGETPREFIX)
+	$(UNTAR)/vsftpd-$(VSFTPD_VER).tar.gz
+	cd $(BUILD_TMP)/vsftpd-$(VSFTPD_VER) && \
 		$(PATCH)/vsftpd-fix-CVE-2015-1419.patch && \
 		$(PATCH)/vsftpd-disable-capabilities.patch && \
 		$(PATCH)/vsftpd-musl-compatibility.patch && \
@@ -296,13 +296,13 @@ $(D)/vsftpd: $(D)/openssl $(ARCHIVE)/vsftpd-3.0.3.tar.gz | $(TARGETPREFIX)
 		make clean && \
 		TARGETPREFIX=$(TARGETPREFIX) make CC=$(TARGET)-gcc LIBS="-lcrypt -lcrypto -lssl" CFLAGS="$(TARGET_CFLAGS)" LDFLAGS="$(TARGET_LDFLAGS_RPATH)"
 	install -d $(TARGETPREFIX)/share/empty
-	install -D -m 755 $(BUILD_TMP)/vsftpd-3.0.3/vsftpd $(TARGETPREFIX)/sbin/vsftpd
+	install -D -m 755 $(BUILD_TMP)/vsftpd-$(VSFTPD_VER)/vsftpd $(TARGETPREFIX)/sbin/vsftpd
 	install -D -m 644 $(IMAGEFILES)/scripts/vsftpd.conf $(TARGETPREFIX)/etc/vsftpd.conf
 	install -D -m 644 $(IMAGEFILES)/scripts/vsftpd.chroot_list $(TARGETPREFIX)/etc/vsftpd.chroot_list
 	install -D -m 755 $(IMAGEFILES)/scripts/vsftpd.init $(TARGETPREFIX)/etc/init.d/vsftpd
 	ln -sf vsftpd $(TARGETPREFIX)/etc/init.d/S53vsftpd
 	ln -sf vsftpd $(TARGETPREFIX)/etc/init.d/K80vsftpd
-	$(REMOVE)/vsftpd-3.0.3
+	$(REMOVE)/vsftpd-$(VSFTPD_VER)
 	touch $@
 
 $(D)/procps-ng: $(D)/libncurses $(ARCHIVE)/procps-ng-$(PROCPS-NG_VER).tar.xz | $(TARGETPREFIX)
@@ -644,14 +644,14 @@ $(D)/sg3-utils: $(ARCHIVE)/sg3_utils-$(SG3-UTILS_VER).tar.xz | $(TARGETPREFIX)
 	touch $@
 
 fbshot: $(TARGETPREFIX)/bin/fbshot
-$(TARGETPREFIX)/bin/fbshot: $(D)/libpng $(ARCHIVE)/fbshot-0.3.tar.gz | $(TARGETPREFIX)
-	$(REMOVE)/fbshot-0.3
-	$(UNTAR)/fbshot-0.3.tar.gz
-	cd $(BUILD_TMP)/fbshot-0.3; \
-		$(PATCH)/fbshot-0.3-32bit_cs_fb.diff; \
+$(TARGETPREFIX)/bin/fbshot: $(D)/libpng $(ARCHIVE)/fbshot-$(FBSHOT_VER).tar.gz | $(TARGETPREFIX)
+	$(REMOVE)/fbshot-$(FBSHOT_VER)
+	$(UNTAR)/fbshot-$(FBSHOT_VER).tar.gz
+	cd $(BUILD_TMP)/fbshot-$(FBSHOT_VER); \
+		$(PATCH)/fbshot-32bit_cs_fb.diff; \
 		$(PATCH)/fbshot_cs_hd2.diff; \
 		$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) fbshot.c -lpng -lz -o $@
-	$(REMOVE)/fbshot-0.3
+	$(REMOVE)/fbshot-$(FBSHOT_VER)
 
 $(D)/lcd4linux: $(D)/libncurses $(D)/libgd2 $(D)/libdpf | $(TARGETPREFIX)
 	$(REMOVE)/lcd4linux
@@ -675,16 +675,16 @@ $(D)/lcd4linux: $(D)/libncurses $(D)/libgd2 $(D)/libdpf | $(TARGETPREFIX)
 	$(REMOVE)/lcd4linux
 	touch $@
 
-$(D)/wpa_supplicant: $(D)/openssl $(ARCHIVE)/wpa_supplicant-0.7.3.tar.gz | $(TARGETPREFIX)
-	$(UNTAR)/wpa_supplicant-0.7.3.tar.gz
-	pushd $(BUILD_TMP)/wpa_supplicant-0.7.3/wpa_supplicant && \
+$(D)/wpa_supplicant: $(D)/openssl $(ARCHIVE)/wpa_supplicant-$(WPA_SUPP_VER).tar.gz | $(TARGETPREFIX)
+	$(UNTAR)/wpa_supplicant-$(WPA_SUPP_VER).tar.gz
+	pushd $(BUILD_TMP)/wpa_supplicant-$(WPA_SUPP_VER)/wpa_supplicant && \
 		cp $(CONFIGS)/wpa_supplicant.config .config && \
 		CC=$(TARGET)-gcc CFLAGS="$(TARGET_CFLAGS)" CXXFLAGS="$(TARGET_CXXFLAGS)" LDFLAGS="$(TARGET_LDFLAGS)" \
 		$(MAKE)
-	cp -f $(BUILD_TMP)/wpa_supplicant-0.7.3/wpa_supplicant/wpa_cli $(TARGETPREFIX)/sbin/wpa_cli
-	cp -f $(BUILD_TMP)/wpa_supplicant-0.7.3/wpa_supplicant/wpa_passphrase $(TARGETPREFIX)/sbin/wpa_passphrase
-	cp -f $(BUILD_TMP)/wpa_supplicant-0.7.3/wpa_supplicant/wpa_supplicant $(TARGETPREFIX)/sbin/wpa_supplicant
-	$(REMOVE)/wpa_supplicant-0.7.3
+	cp -f $(BUILD_TMP)/wpa_supplicant-$(WPA_SUPP_VER)/wpa_supplicant/wpa_cli $(TARGETPREFIX)/sbin/wpa_cli
+	cp -f $(BUILD_TMP)/wpa_supplicant-$(WPA_SUPP_VER)/wpa_supplicant/wpa_passphrase $(TARGETPREFIX)/sbin/wpa_passphrase
+	cp -f $(BUILD_TMP)/wpa_supplicant-$(WPA_SUPP_VER)/wpa_supplicant/wpa_supplicant $(TARGETPREFIX)/sbin/wpa_supplicant
+	$(REMOVE)/wpa_supplicant-$(WPA_SUPP_VER)
 	touch $@
 
 $(D)/xupnpd: $(D)/lua $(D)/openssl | $(TARGETPREFIX)
@@ -717,9 +717,9 @@ $(D)/xupnpd: $(D)/lua $(D)/openssl | $(TARGETPREFIX)
 	$(REMOVE)/xupnpd
 	touch $@
 
-$(D)/bc: $(ARCHIVE)/bc-1.06.tar.gz | $(TARGETPREFIX)
-	$(UNTAR)/bc-1.06.tar.gz
-	cd $(BUILD_TMP)/bc-1.06 && \
+$(D)/bc: $(ARCHIVE)/bc-$(BC_VER).tar.gz | $(TARGETPREFIX)
+	$(UNTAR)/bc-$(BC_VER).tar.gz
+	cd $(BUILD_TMP)/bc-$(BC_VER) && \
 		autoreconf -fi && \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
@@ -728,13 +728,12 @@ $(D)/bc: $(ARCHIVE)/bc-1.06.tar.gz | $(TARGETPREFIX)
 			--infodir=/.remove && \
 		$(MAKE) && \
 		$(MAKE) install DESTDIR=$(TARGETPREFIX)
-	$(REMOVE)/bc-1.06
+	$(REMOVE)/bc-$(BC_VER)
 	touch $@
 
-# usbutils-008 needs udev...
-$(D)/usbutils: $(D)/libusb_compat $(ARCHIVE)/usbutils-007.tar.xz | $(TARGETPREFIX)
-	$(UNTAR)/usbutils-007.tar.xz
-	cd $(BUILD_TMP)/usbutils-007 && \
+$(D)/usbutils: $(D)/libusb_compat $(ARCHIVE)/usbutils-$(USB_UTILS_VER).tar.xz | $(TARGETPREFIX)
+	$(UNTAR)/usbutils-$(USB_UTILS_VER).tar.xz
+	cd $(BUILD_TMP)/usbutils-$(USB_UTILS_VER) && \
 	$(PATCH)/usbutils-avoid-dependency-on-bash.patch && \
 	$(PATCH)/usbutils-fix-null-pointer-crash.patch && \
 		$(CONFIGURE) \
@@ -749,7 +748,7 @@ $(D)/usbutils: $(D)/libusb_compat $(ARCHIVE)/usbutils-007.tar.xz | $(TARGETPREFI
 	rm -rf $(TARGETPREFIX)/sbin/update-usbids.sh
 	rm -rf $(TARGETPREFIX)/share/pkgconfig
 	rm -rf $(TARGETPREFIX)/share/usb.ids.gz
-	$(REMOVE)/usbutils-007
+	$(REMOVE)/usbutils-$(USB_UTILS_VER)
 	touch $@
 
 DOSFSTOOLS_CFLAGS = $(TARGET_CFLAGS) -D_GNU_SOURCE -fomit-frame-pointer -D_FILE_OFFSET_BITS=64

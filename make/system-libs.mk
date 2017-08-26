@@ -458,14 +458,14 @@ $(D)/libusb: $(ARCHIVE)/libusb-$(LIBUSB_VER).tar.bz2 | $(TARGETPREFIX)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libusb-$(LIBUSB_MAJ).pc
 	touch $@
 
-$(D)/libusb_compat: $(ARCHIVE)/libusb-compat-0.1.5.tar.bz2 $(D)/libusb | $(TARGETPREFIX)
-	$(UNTAR)/libusb-compat-0.1.5.tar.bz2
-	pushd $(BUILD_TMP)/libusb-compat-0.1.5 && \
+$(D)/libusb_compat: $(ARCHIVE)/libusb-compat-$(LIBUSB_COMPAT_VER).tar.bz2 $(D)/libusb | $(TARGETPREFIX)
+	$(UNTAR)/libusb-compat-$(LIBUSB_COMPAT_VER).tar.bz2
+	pushd $(BUILD_TMP)/libusb-compat-$(LIBUSB_COMPAT_VER) && \
 		$(CONFIGURE) \
 			--prefix= && \
 		$(MAKE) && \
 		make install DESTDIR=$(TARGETPREFIX) && \
-	$(REMOVE)/libusb-compat-0.1.5
+	$(REMOVE)/libusb-compat-$(LIBUSB_COMPAT_VER)
 	mv $(TARGETPREFIX)/bin/libusb-config $(HOSTPREFIX)/bin
 	$(REWRITE_PKGCONF) $(HOSTPREFIX)/bin/libusb-config
 	$(REWRITE_LIBTOOL)/libusb.la
@@ -587,10 +587,10 @@ $(D)/luacurl: $(D)/libcurl $(D)/lua $(ARCHIVE)/Lua-cURL$(LUACURL_VER).tar.xz | $
 	$(REMOVE)/Lua-cURL$(LUACURL_VER)
 	touch $@
 
-$(D)/luaposix: $(HOSTPREFIX)/bin/lua-$(LUA_VER) $(D)/lua $(D)/luaexpat $(ARCHIVE)/v$(LUAPOSIX_VER).tar.gz $(ARCHIVE)/v6.tar.gz $(ARCHIVE)/gnulib-20140202-stable.tar.gz | $(TARGETPREFIX)
+$(D)/luaposix: $(HOSTPREFIX)/bin/lua-$(LUA_VER) $(D)/lua $(D)/luaexpat $(ARCHIVE)/v$(LUAPOSIX_VER).tar.gz $(ARCHIVE)/v$(SLINGSHOT_VER).tar.gz $(ARCHIVE)/gnulib-$(GNULIB_VER)-stable.tar.gz | $(TARGETPREFIX)
 	$(UNTAR)/v$(LUAPOSIX_VER).tar.gz
-	tar -C $(BUILD_TMP)/luaposix-$(LUAPOSIX_VER)/slingshot --strip=1 -xf $(ARCHIVE)/v6.tar.gz
-	tar -C $(BUILD_TMP)/luaposix-$(LUAPOSIX_VER)/gnulib --strip=1 -xf $(ARCHIVE)/gnulib-20140202-stable.tar.gz
+	tar -C $(BUILD_TMP)/luaposix-$(LUAPOSIX_VER)/slingshot --strip=1 -xf $(ARCHIVE)/v$(SLINGSHOT_VER).tar.gz
+	tar -C $(BUILD_TMP)/luaposix-$(LUAPOSIX_VER)/gnulib --strip=1 -xf $(ARCHIVE)/gnulib-$(GNULIB_VER)-stable.tar.gz
 	set -e; cd $(BUILD_TMP)/luaposix-$(LUAPOSIX_VER); \
 		$(PATCH)/luaposix-fix-build.patch; \
 		$(PATCH)/luaposix-fix-docdir-build.patch; \

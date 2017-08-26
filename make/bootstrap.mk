@@ -137,17 +137,17 @@ $(HOSTPREFIX)/bin/sumtool: | $(HOSTPREFIX)/bin
 	$(REMOVE)/mtd-utils
 
 mkimage: $(HOSTPREFIX)/bin/mkimage
-$(HOSTPREFIX)/bin/mkimage: $(ARCHIVE)/u-boot-2015.01.tar.bz2 | $(HOSTPREFIX)/bin
-	$(UNTAR)/u-boot-2015.01.tar.bz2
-	pushd $(BUILD_TMP)/u-boot-2015.01 && \
+$(HOSTPREFIX)/bin/mkimage: $(ARCHIVE)/u-boot-$(U_BOOT_VER).tar.bz2 | $(HOSTPREFIX)/bin
+	$(UNTAR)/u-boot-$(U_BOOT_VER).tar.bz2
+	pushd $(BUILD_TMP)/u-boot-$(U_BOOT_VER) && \
 		$(PATCH)/u-boot-fix-build-error-under-gcc6.patch && \
 		$(PATCH)/u-boot-support-gcc5.patch && \
 		$(PATCH)/u-boot-rsa-Fix-build-with-OpenSSL-1.1.x.patch && \
 		$(MAKE) defconfig && \
 		$(MAKE) silentoldconfig && \
 		$(MAKE) tools-only
-	install -D -m 0755 $(BUILD_TMP)/u-boot-2015.01/tools/mkimage $(HOSTPREFIX)/bin/
-	$(REMOVE)/u-boot-2015.01
+	install -D -m 0755 $(BUILD_TMP)/u-boot-$(U_BOOT_VER)/tools/mkimage $(HOSTPREFIX)/bin/
+	$(REMOVE)/u-boot-$(U_BOOT_VER)
 
 zic: $(HOSTPREFIX)/bin/zic
 $(HOSTPREFIX)/bin/zic: $(ARCHIVE)/tzdata$(TZDATA_VER).tar.gz $(ARCHIVE)/tzcode$(TZCODE_VER).tar.gz | $(HOSTPREFIX)/bin
