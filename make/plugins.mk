@@ -79,18 +79,7 @@ plugins-hd2: channellogos
 ### neutrino additions ###
 ##########################
 
-neutrino-additions: iconsets webtv_auto
-
-iconsets: $(SHAREICONS)
-	# create icon packages
-	i=0; \
-	for subdir in Material-Design 3D-Alfredo01 3D-FlatTV 3D-rvk; do \
-		cd $(IMAGEFILES)/icons/$${subdir}; \
-		tar -czf $(SHAREICONS)/iconsPKG$${i}.tar.gz *.png; \
-		i=$$((i+1)); \
-	done;
-	# install our default full infoviewer iconset
-	cp -af $(IMAGEFILES)/icons/Material-Design/* $(SHAREICONS)
+neutrino-additions: webtv_auto
 
 webtv_auto: $(SHAREWEBTV)
 	install -m644 $(IMAGEFILES)/$@/*.xml $(SHAREWEBTV)/
