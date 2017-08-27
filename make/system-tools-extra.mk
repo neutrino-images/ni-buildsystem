@@ -125,7 +125,6 @@ $(ARCHIVE)/util-linux-$(UTIL-LINUX_VER).tar.xz:
 $(D)/util-linux: $(D)/libncurses $(ARCHIVE)/util-linux-$(UTIL-LINUX_VER).tar.xz | $(TARGETPREFIX)
 	$(UNTAR)/util-linux-$(UTIL-LINUX_VER).tar.xz
 	cd $(BUILD_TMP)/util-linux-$(UTIL-LINUX_VER) && \
-		$(PATCH)/util-linux-define-mkostemp-for-older-version-of-uClibc.patch && \
 		autoreconf -fi && \
 		$(CONFIGURE) \
 			--prefix= \
