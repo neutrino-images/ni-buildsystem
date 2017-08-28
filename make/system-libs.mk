@@ -220,7 +220,17 @@ $(D)/openssl: $(ARCHIVE)/openssl-$(OPENSSL_VER).tar.gz | $(TARGETPREFIX)
 	chmod 0755 $(TARGETLIB)/libcrypto.so.* $(TARGETLIB)/libssl.so.*
 	touch $@
 
-FFMPEG_DEPS = $(D)/openssl $(D)/librtmp $(D)/libxml2 $(D)/libbluray $(D)/libass
+FFMPEG_DEPS = $(D)/openssl $(D)/librtmp $(D)/libbluray $(D)/libass
+FFMPEG_CONFIGURE_VER =
+
+ifeq ($(NI_FFMPEG_BRANCH), ni/ffmpeg/master)
+	FFMPEG_DEPS +=  $(D)/libxml2
+	FFMPEG_CONFIGURE_VER =	\
+			--enable-demuxer=dash \
+			--enable-libxml2
+else
+	FFMPEG_DEPS += $(D)/libroxml
+endif
 
 FFMPEG_CONFIGURE_GENERIC = \
 			--prefix=/ \
@@ -289,7 +299,6 @@ FFMPEG_CONFIGURE_GENERIC = \
 				--enable-demuxer=ass \
 				--enable-demuxer=ac3 \
 				--enable-demuxer=avi \
-				--enable-demuxer=dash \
 				--enable-demuxer=dts \
 				--enable-demuxer=flac \
 				--enable-demuxer=flv \
@@ -324,15 +333,9 @@ FFMPEG_CONFIGURE_GENERIC = \
 			--disable-swscale \
 			\
 			--enable-bsfs \
-				--disable-bsf=hevc_mp4toannexb \
-				--disable-bsf=vp9_raw_reorder \
-				--disable-bsf=vp9_superframe \
-				--disable-bsf=vp9_superframe_split \
-			\
 			--enable-libass \
 			--enable-libbluray \
 			--enable-librtmp \
-			--enable-libxml2 \
 			--enable-network \
 			--enable-nonfree \
 			--enable-openssl \
@@ -370,7 +373,8 @@ $(D)/ffmpeg: $(FFMPEG_DEPS) | $(TARGETPREFIX)
 	cd $(BUILD_TMP)/$(NI_FFMPEG) && \
 		./configure \
 			$(FFMPEG_CONFIGURE_GENERIC) \
-			$(FFMPEG_CONFIGURE); \
+			$(FFMPEG_CONFIGURE) \
+			$(FFMPEG_CONFIGURE_VER); \
 		$(MAKE); \
 		make install DESTDIR=$(TARGETPREFIX)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libavcodec.pc
