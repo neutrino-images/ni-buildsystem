@@ -43,7 +43,8 @@ update-tuxbox-git:
 update-ni-force:
 	#rm -rf $(SOURCE_DIR)/$(NI_LINUX-KERNEL)
 	rm -rf $(SOURCE_DIR)/$(NI_FFMPEG)
-	make preqs
+	make ni-git
+	make update-ni-git
 
 update-ni-git:
 	cd $(BUILD-GENERIC-PC) && git pull
