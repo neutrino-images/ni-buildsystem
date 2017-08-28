@@ -69,7 +69,6 @@ plugins-all: \
 	oscammon \
 	flex-menu \
 	lcd4linux-all \
-	hinticons \
 	doscam-webif-skin \
 	playlists
 
@@ -95,10 +94,6 @@ channellogos: $(SOURCE_DIR)/$(NI_LOGO_STUFF) $(SHAREICONS)
 	install -m644 $(SOURCE_DIR)/$(NI_LOGO_STUFF)/logos/* $(SHAREICONS)/logo
 	pushd $(SOURCE_DIR)/$(NI_LOGO_STUFF)/ && \
 	./logo_linker.sh complete.db $(SHAREICONS)/logo
-
-hinticons: $(LIBPLUG)
-	# install our plugin hint icons
-	cp -af $(IMAGEFILES)/icons/hinticons/* $(LIBPLUG)
 
 lcd4linux-all: $(D)/lcd4linux | $(TARGETPREFIX)
 	cp -a $(IMAGEFILES)/lcd4linux/* $(TARGETPREFIX)/
@@ -242,18 +237,20 @@ $(BIN)/input: $(D)/freetype $(BIN)
 logomask: $(SOURCE_DIR)/$(TUXBOX_PLUGINS) $(BIN)/logomask $(LIBPLUG)/logoset.so $(LIBPLUG)/logomask.so
 $(BIN)/logomask: $(BIN)
 	pushd $(SOURCE_DIR)/$(TUXBOX_PLUGINS)/logomask && \
-	$(TARGET)-gcc $(TARGET_CFLAGS) -o $@ logomask.c gfx.c
+	$(TARGET)-gcc $(TARGET_CFLAGS) -o $@ logomask.c gfx.c && \
+	install -m755 logomask.sh $(BIN)/
  
 $(LIBPLUG)/logoset.so: $(D)/freetype $(LIBPLUG)
 	pushd $(SOURCE_DIR)/$(TUXBOX_PLUGINS)/logomask && \
 	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS_RPATH) -I$(TARGETINCLUDE)/freetype2 -lfreetype -lz $(CORTEX-STRINGS) -o $@ logoset.c gfx.c io.c text.c && \
 	install -m644 logoset.cfg $(LIBPLUG)/
+	install -m644 $(IMAGEFILES)/icons/hinticons/logoset_hint.png $(LIBPLUG)/
 
 $(LIBPLUG)/logomask.so: $(LIBPLUG) $(BIN)
 	pushd $(SOURCE_DIR)/$(TUXBOX_PLUGINS)/logomask && \
 	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) -I$(N_HD_SOURCE)/src -o $@ starter_logomask.c && \
 	install -m644 logomask.cfg $(LIBPLUG)/ && \
-	install -m755 logomask.sh $(BIN)/
+	install -m644 $(IMAGEFILES)/icons/hinticons/logomask_hint.png $(LIBPLUG)/
 
 #msgbox
 msgbox: $(SOURCE_DIR)/$(TUXBOX_PLUGINS) $(BIN)/msgbox
@@ -278,6 +275,7 @@ $(LIBPLUG)/tuxcal.so: $(LIBPLUG)
 	pushd $(SOURCE_DIR)/$(TUXBOX_PLUGINS)/tuxcal && \
 	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS_RPATH) -I$(TARGETINCLUDE)/freetype2 -lfreetype -lz $(CORTEX-STRINGS) -o $@ tuxcal.c && \
 	install -m644 tuxcal.cfg $(LIBPLUG)/
+	install -m644 $(IMAGEFILES)/icons/hinticons/tuxcal_hint.png $(LIBPLUG)/
 
 #tuxcom
 tuxcom: $(SOURCE_DIR)/$(TUXBOX_PLUGINS) $(LIBPLUG)/tuxcom.so
@@ -285,6 +283,7 @@ $(LIBPLUG)/tuxcom.so: $(D)/freetype $(LIBPLUG)
 	pushd $(SOURCE_DIR)/$(TUXBOX_PLUGINS)/tuxcom && \
 	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS_RPATH) -I$(TARGETINCLUDE)/freetype2 -lfreetype -lz $(CORTEX-STRINGS) -o $@ tuxcom.c && \
 	install -m644 tuxcom.cfg $(LIBPLUG)/
+	install -m644 $(IMAGEFILES)/icons/hinticons/tuxcom_hint.png $(LIBPLUG)/
 
 #tuxmail
 tuxmail: $(SOURCE_DIR)/$(TUXBOX_PLUGINS) $(BIN)/tuxmaild $(LIBPLUG)/tuxmail.so
@@ -305,6 +304,7 @@ $(LIBPLUG)/tuxmail.so: $(LIBPLUG)
 	pushd $(SOURCE_DIR)/$(TUXBOX_PLUGINS)/tuxmail && \
 	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS_RPATH) -I$(TARGETINCLUDE)/freetype2 -lfreetype -lz $(CORTEX-STRINGS) -o $@ tuxmail.c && \
 	install -m644 tuxmail.cfg $(LIBPLUG)/
+	install -m644 $(IMAGEFILES)/icons/hinticons/tuxmail_hint.png $(LIBPLUG)/
 
 #tuxwetter
 tuxwetter: $(SOURCE_DIR)/$(NI_TUXWETTER) $(LIBPLUG)/tuxwetter.so
@@ -370,6 +370,7 @@ $(LIBPLUG)/shellexec.so: $(D)/freetype $(LIBPLUG) $(SHAREFLEX) $(VARCONF) $(BIN)
 	mv -f $(LIBPLUG)/shellexec.cfg $(LIBPLUG)/00_shellexec.cfg
 	ln -sf /lib/tuxbox/plugins/00_shellexec.so $(BIN)/shellexec
 	install -m644 $(SOURCES)/flex-menu/flex*.conf $(SHAREFLEX)/
+	install -m644 $(IMAGEFILES)/icons/hinticons/00_shellexec_hint.png $(LIBPLUG)/
 
 ###################
 ###  flex-menu  ###
