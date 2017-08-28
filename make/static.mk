@@ -1,5 +1,7 @@
 # makefile to build static libraries
 
+static: cortex-strings
+
 cortex-strings: $(STATICLIB)/libcortex-strings.la
 $(STATICLIB)/libcortex-strings.la: $(ARCHIVE)/cortex-strings-$(CORTEX-STRINGS_VER).tar.bz2 | $(TARGETPREFIX)
 	$(UNTAR)/cortex-strings-$(CORTEX-STRINGS_VER).tar.bz2

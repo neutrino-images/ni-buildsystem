@@ -93,9 +93,6 @@ ccache: find-ccache $(CCACHE) $(HOSTPREFIX)/bin
 	@ln -sf $(CCACHE) $(HOSTPREFIX)/bin/$(TARGET)-gcc
 	@ln -sf $(CCACHE) $(HOSTPREFIX)/bin/$(TARGET)-g++
 
-# build some static librarys
-static: cortex-strings
-
 # build all needed host-binaries
 host-preqs: pkg-config mkfs.jffs2 sumtool mkimage zic ccache
 
