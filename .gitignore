@@ -1,17 +1,25 @@
-build-generic-pc
-build_tmp
-ccache
-cross
-deps
-download
-host
-internal
-root
-static
-source
-local
-staging
-config.local
-Makefile.local
-.ignore
+#
+# exclude directories explicitly
+#
+/build-generic-pc
+/build_tmp
+/cross
+/deps
+/download
+/host
+/internal
+/local
+/root
+/source
+/staging
+/static
+#
+# exclude files explicitly
+#
+/config.local
+/Makefile.local
+#
+# exclude filemasks
+#
 *~
+.ignore
