@@ -127,7 +127,7 @@ check-image-size:
 ifdef IMAGE_TO_CHECK
 	@IMAGE_SIZE=$(shell wc -c < $(IMAGE_TO_CHECK)); \
 	if [ $$IMAGE_SIZE -ge $(ROOTFS_SIZE) ]; then \
-		echo -e "\033[40;1;31m$(IMAGE_TO_CHECK) is too big\033[0m"; \
+		echo -e "$(TERM_RED_BOLD)$(IMAGE_TO_CHECK) is too big$(TERM_NORMAL)"; \
 		false; \
 	fi
 endif

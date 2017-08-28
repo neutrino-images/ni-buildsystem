@@ -44,9 +44,9 @@ cleanup: $(BOX)
 	rm -rf $(BOX)/lib/sigc++*
 	find $(BOX) \( -name .gitignore -o -name .gitkeep \) -type f -print0 | xargs --no-run-if-empty -0 rm -f
 	find $(BOX)/lib \( -name '*.a' -o -name '*.la' \) -print0 | xargs --no-run-if-empty -0 rm -f
-	@echo -e "\033[40;0;33m"
+	@echo -e "$(TERM_YELLOW)"
 	@du -sh $(BOX)
-	@echo -e "\033[0m"
+	@echo -e "$(TERM_NORMAL)"
 
 # strip bins and libs in filesystem
 strip: $(BOX)
@@ -60,9 +60,9 @@ ifeq ($(DEBUG), no)
 ifeq ($(BOXSERIES), hd2)
 	find $(BOX)/lib/modules/$(KVERSION_FULL)/kernel -type f -name '*.ko' | xargs -n 1 $(TARGET)-objcopy --strip-unneeded
 endif
-	@echo -e "\033[40;0;33m"
+	@echo -e "$(TERM_YELLOW)"
 	@du -sh $(BOX)
-	@echo -e "\033[0m"
+	@echo -e "$(TERM_NORMAL)"
 endif
 ifeq ($(DEBUG), yes)
 	@echo "*******************************************************"
@@ -83,9 +83,9 @@ ifeq ($(DEBUG), yes)
 	$(TARGET)-strip $(TARGETPREFIX)/lib/libtalloc.so.1
 	$(TARGET)-strip $(TARGETPREFIX)/lib/libwbclient.so.0
 	find $(BOX)/lib/samba -type f -print0 | xargs -0 $(TARGET)-strip || true
-	@echo -e "\033[40;0;33m"
+	@echo -e "$(TERM_YELLOW)"
 	@du -sh $(BOX)
-	@echo -e "\033[0m"
+	@echo -e "$(TERM_NORMAL)"
 endif
 
 # create softlinks in filesystem

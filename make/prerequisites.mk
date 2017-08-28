@@ -123,14 +123,14 @@ archives-info: archives-list
 			fi; \
 		done; \
 		if [ "$$found" = "false" ]; then \
-			echo -e "[\033[40;0;31m !! \033[0m] $$target"; \
+			echo -e "[$(TERM_RED) !! $(TERM_NORMAL)] $$target"; \
 		fi; \
 	done;
 	@echo "[ ** ] Unused archives"
 	@find $(ARCHIVE)/ -type f | \
 	while read archive; do \
 		if ! grep -q $$archive $(BUILD_TMP)/archives-list; then \
-			echo -e "[\033[40;0;33m rm \033[0m] $$archive"; \
+			echo -e "[$(TERM_YELLOW) rm $(TERM_NORMAL)] $$archive"; \
 			if [ "$(DOCLEANUP)" = "yes" ]; then \
 				rm $$archive; \
 			fi; \
@@ -140,10 +140,10 @@ archives-info: archives-list
 	@cat $(BUILD_TMP)/archives-list | \
 	while read archive; do \
 		if [ -e $$archive ]; then \
-			#echo -e "[\033[40;0;32m ok \033[0m] $$archive"; \
+			#echo -e "[$(TERM_GREEN) ok $(TERM_NORMAL)] $$archive"; \
 			true; \
 		else \
-			echo -e "[\033[40;0;33m -- \033[0m] $$archive"; \
+			echo -e "[$(TERM_YELLOW) -- $(TERM_NORMAL)] $$archive"; \
 			if [ "$(GETMISSING)" = "yes" ]; then \
 				make $$archive; \
 			fi; \
@@ -169,7 +169,7 @@ patches-info:
 			fi; \
 		done; \
 		if [ "$$found" = "false" ]; then \
-			echo -e "[\033[40;0;31m !! \033[0m] $$patch"; \
+			echo -e "[$(TERM_RED) !! $(TERM_NORMAL)] $$patch"; \
 		fi; \
 	done;
 

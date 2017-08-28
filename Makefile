@@ -70,7 +70,7 @@ help:
 
 done:
 	@echo "*************"
-	@echo -e "*** \033[40;0;32mDone!\033[0m ***"
+	@echo -e "*** $(TERM_GREEN)Done!$(TERM_NORMAL) ***"
 	@echo "*************"
 
 include make/archives.mk

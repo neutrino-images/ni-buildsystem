@@ -11,7 +11,7 @@ PLAT_INCS  = $(TARGETLIB)/firmware
 PLAT_LIBS  = $(TARGETLIB) $(STATICLIB)
 
 bootstrap: $(BOOTSTRAP)
-	@echo -e "\033[40;0;33mBootstrapped for $(shell echo $(BOXMODEL) | sed 's/.*/\u&/')\033[0m"
+	@echo -e "$(TERM_YELLOW)Bootstrapped for $(shell echo $(BOXMODEL) | sed 's/.*/\u&/')$(TERM_NORMAL)"
 
 skeleton: | $(TARGETPREFIX)
 	cp --remove-destination -a $(SKEL_ROOT)/* $(TARGETPREFIX)/
