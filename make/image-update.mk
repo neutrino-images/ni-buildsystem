@@ -34,9 +34,6 @@ UPDATE_MD5FILE-BOXMODEL	= update-$(BOXTYPE_SC)-$(BOXMODEL).txt
 CHANLIST_URL	= $(NI-SERVER)/channellists
 CHANLIST_MD5FILE= lists.txt
 
-
-u-all: u-clean-all u-EPGscan u-pr-auto-timer u-FritzCallMonitor u-FritzInfoMonitor u-yweb u-neutrino u-oscammon
-
 channellists: matze-19 matze-19-13 pathauf_HD-19
 
 u-FritzCallMonitor:
