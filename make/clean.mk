@@ -9,7 +9,7 @@ staging-clean:
 	-rm -rf $(STAGING_DIR)
 
 static-clean:
-	-rm -rf $(STATICLIB)
+	-rm -rf $(STATIC_DIR)
 
 all-clean: rebuild-clean staging-clean static-clean
 	@echo -e "\n\033[40;0;33mAny other key then CTRL-C will now remove CROSS_BASE and HOSTPREFIX\033[0m"
