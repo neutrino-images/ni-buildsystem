@@ -95,7 +95,7 @@ $(ARCHIVE)/gcc-linaro-$(GCC_VER).tar.xz:
 
 OPENSSH_VER=7.5p1
 $(ARCHIVE)/openssh-$(OPENSSH_VER).tar.gz:
-	$(WGET) ftp://ftp.eu.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-$(OPENSSH_VER).tar.gz
+	$(WGET) https://ftp.fau.de/pub/OpenBSD/OpenSSH/portable/openssh-$(OPENSSH_VER).tar.gz
 
 INADYN_VER=2.1
 $(ARCHIVE)/inadyn-$(INADYN_VER).tar.xz:
