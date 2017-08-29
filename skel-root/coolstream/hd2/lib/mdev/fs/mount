@@ -2,8 +2,7 @@
 
 # based on script from http://gitorious.org/neutrino-hd/buildsystem-cs
 
-. /lib/mdev/common/log
-
+. /etc/init.d/globals
 
 MOUNTBASE=/media
 MOUNTPOINT="$MOUNTBASE/$MDEV"
@@ -11,8 +10,9 @@ ROOTDEV=$(readlink /dev/root)
 
 # do not add or remove root device again...
 [ "$ROOTDEV" = "$MDEV" ] && exit 0
+
 if [ -e /tmp/.nomdevmount ]; then
-	log_info "no action on $MDEV -- /tmp/.nomdevmount exists"
+	LOGINFO "no action on $MDEV -- /tmp/.nomdevmount exists"
 	exit 0
 fi
 
@@ -65,20 +65,20 @@ case "$ACTION" in
 		if [ ${#MDEV} = 3 ]; then # sda, sdb, sdc => whole drive
 			PARTS=$(sed -n "/ ${MDEV}[0-9]$/{s/ *[0-9]* *[0-9]* * [0-9]* //;p}" /proc/partitions)
 			if [ -n "$PARTS" ]; then
-				log_info "drive has partitions $PARTS, not trying to mount $MDEV"
+				LOGINFO "drive has partitions $PARTS, not trying to mount $MDEV"
 				exit 0
 			fi
 		fi
 		if grep -q "/dev/$MDEV" /proc/mounts; then
-			log_info "/dev/$MDEV already mounted - not mounting again"
+			LOGINFO "/dev/$MDEV already mounted - not mounting again"
 			exit 0
 		fi
-		log_info "[$ACTION] mounting /dev/$MDEV to $MOUNTPOINT"
+		LOGINFO "[$ACTION] mounting /dev/$MDEV to $MOUNTPOINT"
 		# remove old mountpoint symlinks we might have for this device
 		rm -f $MOUNTPOINT
 		mkdir -p $MOUNTPOINT
 		for i in 1 2 3 4 5 6 7 8 9; do # retry 9 times for slow devices
-			# log_info "mounting /dev/$MDEV to $MOUNTPOINT try $i"
+			# LOGINFO "mounting /dev/$MDEV to $MOUNTPOINT try $i"
 			OUT1=$(mount -t auto /dev/$MDEV $MOUNTPOINT 2>&1 >/dev/null)
 			RET1=$?
 			[ $RET1 = 0 ] && break
@@ -87,8 +87,8 @@ case "$ACTION" in
 		if [ $RET1 = 0 ]; then
 			create_symlinks
 		else
-			log_warn "mount   /dev/$MDEV $MOUNTPOINT failed with $RET1"
-			log_warn "        $OUT1"
+			LOGWARN "mount   /dev/$MDEV $MOUNTPOINT failed with $RET1"
+			LOGWARN "        $OUT1"
 			rmdir $MOUNTPOINT
 		fi
 		if [ -x /bin/mdev_helper ]; then
@@ -96,7 +96,7 @@ case "$ACTION" in
 		fi
 		;;
 	remove)
-		log_info "[$ACTION] unmounting $MOUNTBASE/$MDEV"
+		LOGINFO "[$ACTION] unmounting $MOUNTBASE/$MDEV"
 		grep -q "^/dev/$MDEV " /proc/mounts || exit 0 # not mounted...
 		umount -lf $MOUNTBASE/$MDEV
 		RET=$?
@@ -104,7 +104,7 @@ case "$ACTION" in
 			rmdir $MOUNTPOINT
 			remove_symlinks
 		else
-			log_warn "umount $MOUNTBASE/$MDEV failed with $RET"
+			LOGWARN "umount $MOUNTBASE/$MDEV failed with $RET"
 		fi
 		if [ -x /bin/mdev_helper ]; then
 			/bin/mdev_helper

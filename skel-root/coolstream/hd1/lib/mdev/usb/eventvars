@@ -1,5 +1,4 @@
 #!/bin/false
-# vim: se ft=sh:
 
 for path in $(find /sys/devices -name "$MDEV" 2>/dev/null); do
 	DEVPATH=${path#/sys}
@@ -23,7 +22,7 @@ INTERFACE=$(echo $MODALIAS | parse_interface)
 
 for var in DEVPATH MODALIAS TYPE PRODUCT INTERFACE; do
 	if [ -z "$(eval "echo \$${var}")" ]; then
-		logerror "Could not set uevent environment variable $var"
+		LOGERROR "Could not set uevent environment variable $var"
 		exit 1
 	fi
 done

@@ -2,8 +2,9 @@
 
 [ "$ACTION" = remove ] && action='-r -a'
 
-. /lib/mdev/common/log
+. /etc/init.d/globals
+
 for module in "$@"; do
 	modprobe $action $module &&
-		log_info "${ACTION:-scan} module $module succeed"
+		LOGINFO "${ACTION:-scan} module $module succeed"
 done
