@@ -811,6 +811,9 @@ $(D)/rpcbind: $(D)/libtirpc $(ARCHIVE)/rpcbind-$(RPCBIND_VER).tar.bz2 | $(TARGET
 			--mandir=/.remove && \
 		$(MAKE) && \
 		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+ifeq ($(BOXSERIES), hd1)
+		sed -i -e '/^\(udp\|tcp\)6/ d' $(TARGETPREFIX)/etc/netconfig
+endif
 	rm -rf $(TARGETPREFIX)/bin/rpcgen
 	$(REMOVE)/rpcbind-$(RPCBIND_VER)
 	touch $@
