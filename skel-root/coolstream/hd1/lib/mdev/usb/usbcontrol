@@ -6,7 +6,7 @@
 [ -z "$ACTION" ] && . /lib/mdev/usb/eventvars
 
 # get proper product and manufacturer description (only works for ACTION=add)
-[ -z "$DEVPATH" ] && logerror 'uevent environment variable DEVPATH is unset' && exit 1
+[ -z "$DEVPATH" ] && LOGERROR 'uevent environment variable DEVPATH is unset' && exit 1
 if [ -d /sys${DEVPATH} ]; then
 	cd /sys${DEVPATH}/..
 	for f in product manufacturer id[PV]*; do
