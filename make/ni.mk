@@ -73,7 +73,6 @@ ifeq ($(BOXSERIES), hd2)
 	make -j$(NUM_CPUS) bash
 	make -j$(NUM_CPUS) iperf
 	make -j$(NUM_CPUS) minicom
-	make -j$(NUM_CPUS) usbutils
 	make -j$(NUM_CPUS) mc
   endif
   ifeq ($(DEBUG), yes)
