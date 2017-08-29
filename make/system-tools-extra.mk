@@ -25,11 +25,15 @@ make special-tools:
 $(D)/iconv: $(ARCHIVE)/libiconv-$(LIBICONV_VER).tar.gz | $(TARGETPREFIX)
 	$(UNTAR)/libiconv-$(LIBICONV_VER).tar.gz
 	pushd $(BUILD_TMP)/libiconv-$(LIBICONV_VER) && \
+	$(PATCH)/iconv-disable_transliterations.patch && \
+	$(PATCH)/iconv-strip_charsets.patch && \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
 			--prefix= \
 			--enable-static \
 			--disable-shared \
+			--enable-relocatable \
+			--disable-rpath \
 			--datarootdir=/.remove && \
 		$(MAKE) && \
 		$(MAKE) install DESTDIR=$(TARGETPREFIX)

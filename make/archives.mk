@@ -150,8 +150,8 @@ LIBMAD_VER=0.15.1b
 $(ARCHIVE)/libmad-$(LIBMAD_VER).tar.gz:
 	$(WGET) http://downloads.sourceforge.net/project/mad/libmad/$(LIBMAD_VER)/libmad-$(LIBMAD_VER).tar.gz
 
-LIBICONV_VER=1.15
-ibiconv-$(LIBICONV_VER).tar.gz:
+LIBICONV_VER=1.13.1
+$(ARCHIVE)/libiconv-$(LIBICONV_VER).tar.gz:
 	$(WGET) http://ftp.gnu.org/gnu/libiconv/libiconv-$(LIBICONV_VER).tar.gz
 
 LIBJPEG-TURBO_VER=1.5.2
