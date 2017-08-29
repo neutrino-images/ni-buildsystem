@@ -107,12 +107,6 @@ else
 	load_module extra/framebuffer.ko cnxtfb_standalone=1 cnxtfb_hdwidth=1280 cnxtfb_hdheight=720  cnxtfb_hdmaxwidth=1280 cnxtfb_hdmaxheight=720  cnxtfb_autoscale_sd=2
 fi
 
-if [ -f /opt/.load_3ddrivers ] ; then
-	load_module extra/pvrsrvkm.ko
-	load_module extra/pvrnxpdc.ko
-	load_module extra/pvrvssbc.ko
-fi
-
 load_module extra/control.ko
 load_module extra/frontpanel.ko
 
