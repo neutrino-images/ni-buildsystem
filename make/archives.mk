@@ -316,11 +316,6 @@ U_BOOT_VER=2015.01
 $(ARCHIVE)/u-boot-$(U_BOOT_VER).tar.bz2:
 	$(WGET) ftp://ftp.denx.de/pub/u-boot/u-boot-$(U_BOOT_VER).tar.bz2
 
-# usbutils-008 needs udev
-USB_UTILS_VER=007
-$(ARCHIVE)/usbutils-$(USB_UTILS_VER).tar.xz:
-	$(WGET) https://www.kernel.org/pub/linux/utils/usb/usbutils/usbutils-$(USB_UTILS_VER).tar.xz
-
 DOSFSTOOLS_VER=4.1
 $(ARCHIVE)/dosfstools-$(DOSFSTOOLS_VER).tar.xz:
 	$(WGET) https://github.com/dosfstools/dosfstools/releases/download/v$(DOSFSTOOLS_VER)/dosfstools-$(DOSFSTOOLS_VER).tar.xz

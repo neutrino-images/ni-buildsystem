@@ -96,6 +96,31 @@ $(D)/openvpn-hd1: $(D)/kernel-cst-hd1 $(D)/lzo $(D)/openssl $(ARCHIVE)/openvpn-$
 	$(REMOVE)/openvpn-$(OPENVPN_VER)
 	touch $@
 
+# usbutils-008 needs udev
+USB_UTILS_VER=007
+$(ARCHIVE)/usbutils-$(USB_UTILS_VER).tar.xz:
+	$(WGET) https://www.kernel.org/pub/linux/utils/usb/usbutils/usbutils-$(USB_UTILS_VER).tar.xz
+
+$(D)/usbutils: $(D)/libusb_compat $(ARCHIVE)/usbutils-$(USB_UTILS_VER).tar.xz | $(TARGETPREFIX)
+	$(UNTAR)/usbutils-$(USB_UTILS_VER).tar.xz
+	cd $(BUILD_TMP)/usbutils-$(USB_UTILS_VER) && \
+	$(PATCH)/usbutils-avoid-dependency-on-bash.patch && \
+	$(PATCH)/usbutils-fix-null-pointer-crash.patch && \
+		$(CONFIGURE) \
+			--target=$(TARGET) \
+			--prefix= \
+			--mandir=/.remove \
+			--infodir=/.remove && \
+		$(MAKE) && \
+		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+	rm -rf $(TARGETPREFIX)/bin/lsusb.py
+	rm -rf $(TARGETPREFIX)/bin/usbhid-dump
+	rm -rf $(TARGETPREFIX)/sbin/update-usbids.sh
+	rm -rf $(TARGETPREFIX)/share/pkgconfig
+	rm -rf $(TARGETPREFIX)/share/usb.ids.gz
+	$(REMOVE)/usbutils-$(USB_UTILS_VER)
+	touch $@
+
 BINUTILS_VER=2.25
 $(ARCHIVE)/binutils-$(BINUTILS_VER).tar.bz2:
 	$(WGET) https://ftp.gnu.org/gnu/binutils/binutils-$(BINUTILS_VER).tar.bz2

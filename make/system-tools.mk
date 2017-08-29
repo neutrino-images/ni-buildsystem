@@ -732,26 +732,6 @@ $(D)/bc: $(ARCHIVE)/bc-$(BC_VER).tar.gz | $(TARGETPREFIX)
 	$(REMOVE)/bc-$(BC_VER)
 	touch $@
 
-$(D)/usbutils: $(D)/libusb_compat $(ARCHIVE)/usbutils-$(USB_UTILS_VER).tar.xz | $(TARGETPREFIX)
-	$(UNTAR)/usbutils-$(USB_UTILS_VER).tar.xz
-	cd $(BUILD_TMP)/usbutils-$(USB_UTILS_VER) && \
-	$(PATCH)/usbutils-avoid-dependency-on-bash.patch && \
-	$(PATCH)/usbutils-fix-null-pointer-crash.patch && \
-		$(CONFIGURE) \
-			--target=$(TARGET) \
-			--prefix= \
-			--mandir=/.remove \
-			--infodir=/.remove && \
-		$(MAKE) && \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
-	rm -rf $(TARGETPREFIX)/bin/lsusb.py
-	rm -rf $(TARGETPREFIX)/bin/usbhid-dump
-	rm -rf $(TARGETPREFIX)/sbin/update-usbids.sh
-	rm -rf $(TARGETPREFIX)/share/pkgconfig
-	rm -rf $(TARGETPREFIX)/share/usb.ids.gz
-	$(REMOVE)/usbutils-$(USB_UTILS_VER)
-	touch $@
-
 DOSFSTOOLS_CFLAGS = $(TARGET_CFLAGS) -D_GNU_SOURCE -fomit-frame-pointer -D_FILE_OFFSET_BITS=64
 
 $(D)/dosfstools: $(DOSFSTOOLS_DEPS) $(ARCHIVE)/dosfstools-$(DOSFSTOOLS_VER).tar.xz | $(TARGETPREFIX)
