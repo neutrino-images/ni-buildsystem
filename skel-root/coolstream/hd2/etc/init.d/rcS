@@ -75,7 +75,7 @@ echo >/dev/mdev.seq
 echo $(which mdev) > /proc/sys/kernel/hotplug
 mdev -s
 
-# mdev -s does not poke usb devices (beginning with kernel 3.6), so we need to do it here
+# mdev -s does not poke usb devices, so we need to do it here.
 LOGINFO "scanning /sys/bus/usb/devices/ to help mdev with usb-coldplug"
 for i in /sys/bus/usb/devices/*; do
 	case "${i##*/}" in
