@@ -10,7 +10,6 @@ log_error () {
 log_info () {
 	logger -t "${0##*/}[$$]" -p local0.info "$@"
 }
-
 log_warn () {
 	logger -t "${0##*/}[$$]" -p local0.warn "$@"
 }
