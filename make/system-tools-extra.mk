@@ -1,33 +1,5 @@
 # makefile to build extra system tools (mostly unused)
 
-$(D)/openvpn-hd1: $(D)/kernel-cst-hd1 $(D)/lzo $(D)/openssl $(ARCHIVE)/openvpn-$(OPENVPN_VER).tar.xz | $(TARGETPREFIX)
-	$(UNTAR)/openvpn-$(OPENVPN_VER).tar.xz
-	cd $(BUILD_TMP)/openvpn-$(OPENVPN_VER) && \
-	$(PATCH)/openvpn-fix-tun-device-for-coolstream.patch && \
-	$(BUILDENV) ./configure \
-		--build=$(BUILD) \
-		--host=$(TARGET) \
-		--prefix= \
-		--mandir=/.remove \
-		--docdir=/.remove \
-		--infodir=/.remove \
-		--enable-shared \
-		--disable-static \
-		--enable-small \
-		--enable-password-save \
-		--enable-management \
-		--disable-socks \
-		--disable-debug \
-		--disable-selinux \
-		--disable-plugins \
-		--disable-pkcs11 && \
-	$(MAKE) && \
-	$(MAKE) install DESTDIR=$(TARGETPREFIX)
-	cp -a $(MODULESDIR)/kernel/drivers/net/tun.ko $(TARGET_MODULE)
-	$(TARGET)-strip $(TARGETPREFIX)/sbin/openvpn
-	$(REMOVE)/openvpn-$(OPENVPN_VER)
-	touch $@
-
 # usbutils-008 needs udev
 USB_UTILS_VER=007
 $(ARCHIVE)/usbutils-$(USB_UTILS_VER).tar.xz:
