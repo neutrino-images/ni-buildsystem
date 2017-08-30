@@ -110,8 +110,8 @@ softlinks: $(BOX)
 	ln -sf crond K55crond && \
 	ln -sf inetd S53inetd && \
 	ln -sf inetd K80inetd && \
-	ln -sf emu S99NI99emu && \
-	ln -sf emu K01NI01emu
+	ln -sf emu S99emu && \
+	ln -sf emu K01emu
 	pushd $(BOX)/lib && \
 	ln -sf libcrypto.so.1.0.0 libcrypto.so.0.9.8 && \
 	ln -sf libssl.so.1.0.0 libssl.so.0.9.8 && \

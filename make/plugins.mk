@@ -106,8 +106,8 @@ $(BIN)/emmrd: $(BIN) $(VARCONF) $(ETCINIT)
 	install -m755 emmrd.init $(ETCINIT)/emmrd && \
 	install -m644 hint_emmrd.png $(SHAREICONS)/
 	cd $(ETCINIT) && \
-	ln -sf emmrd S99NI99emmrd && \
-	ln -sf emmrd K01NI01emmrd
+	ln -sf emmrd S99emmrd && \
+	ln -sf emmrd K01emmrd
 
 FritzCallMonitor: $(SHAREICONS) $(BIN)/FritzCallMonitor
 $(BIN)/FritzCallMonitor: $(D)/openssl $(D)/libcurl $(BIN) $(VARCONF) $(ETCINIT)
@@ -118,8 +118,8 @@ $(BIN)/FritzCallMonitor: $(D)/openssl $(D)/libcurl $(BIN) $(VARCONF) $(ETCINIT)
 	install -m755 fritzcallmonitor.init $(ETCINIT)/fritzcallmonitor && \
 	install -m644 hint_FritzCallMonitor.png $(SHAREICONS)/
 	cd $(ETCINIT) && \
-	ln -sf fritzcallmonitor S99NI99fritzcallmonitor && \
-	ln -sf fritzcallmonitor K01NI01fritzcallmonitor
+	ln -sf fritzcallmonitor S99fritzcallmonitor && \
+	ln -sf fritzcallmonitor K01fritzcallmonitor
 
 FritzInfoMonitor: $(LIBPLUG)/FritzInfoMonitor.so
 $(LIBPLUG)/FritzInfoMonitor.so: $(D)/freetype $(D)/openssl $(D)/libcurl $(LIBPLUG)
