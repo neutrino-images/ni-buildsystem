@@ -62,6 +62,7 @@ ni-image:
 	make -j$(NUM_CPUS) wpa_supplicant
 	make -j$(NUM_CPUS) mtd-utils
 	make -j$(NUM_CPUS) wget
+	make -j$(NUM_CPUS) iconv
 ifeq ($(BOXSERIES), hd2)
 	make plugins-hd2
 	make -j$(NUM_CPUS) less

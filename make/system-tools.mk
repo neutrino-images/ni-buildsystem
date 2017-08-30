@@ -948,3 +948,26 @@ $(D)/wget: $(D)/openssl $(ARCHIVE)/wget-$(WGET_VER).tar.gz | $(TARGETPREFIX)
 		$(MAKE) install DESTDIR=$(TARGETPREFIX)
 	$(REMOVE)/wget-$(WGET_VER)
 	touch $@
+
+# only used for smarthomeinfo plugin (stripped version)
+$(D)/iconv: $(ARCHIVE)/libiconv-$(LIBICONV_VER).tar.gz | $(TARGETPREFIX)
+	$(UNTAR)/libiconv-$(LIBICONV_VER).tar.gz
+	pushd $(BUILD_TMP)/libiconv-$(LIBICONV_VER) && \
+	$(PATCH)/iconv-disable_transliterations.patch && \
+	$(PATCH)/iconv-strip_charsets.patch && \
+		$(CONFIGURE) \
+			--target=$(TARGET) \
+			--prefix= \
+			--enable-static \
+			--disable-shared \
+			--enable-relocatable \
+			--disable-rpath \
+			--datarootdir=/.remove && \
+		$(MAKE) && \
+		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+	rm -rf $(TARGETLIB)/preloadable_libiconv.so
+	rm -rf $(TARGETLIB)/charset.alias
+	$(REMOVE)/libiconv-$(LIBICONV_VER)
+	$(REWRITE_LIBTOOL)/libiconv.la
+	$(REWRITE_LIBTOOL)/libcharset.la
+	touch $@
