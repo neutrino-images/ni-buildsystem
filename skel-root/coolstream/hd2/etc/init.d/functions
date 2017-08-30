@@ -35,7 +35,7 @@ create_node()
 	major=`awk "\\$2==\"$device\" {print \\$1}" /proc/devices`
 
 	if [ ${major} ]; then
-		LOGINFO "Creating device node for $1"
+		LOGINFO "Creating device node $1"
 		mknod /dev/${device} c $major 0
 	fi
 }
@@ -50,7 +50,7 @@ create_node_dir()
 	major=`awk "\\$2==\"$device\" {print \\$1}" /proc/devices`
 
 	if [ ${major} ]; then
-		LOGINFO "Creating device node for $1"
+		LOGINFO "Creating device node dir $1"
 		mknod /dev/${device}/0 c $major 0
 	fi
 }
