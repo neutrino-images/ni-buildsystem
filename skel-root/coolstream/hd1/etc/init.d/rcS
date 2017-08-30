@@ -114,6 +114,7 @@ insmod cifs.ko
 insmod fuse.ko
 insmod usbserial.ko
 insmod ftdi_sio.ko
+insmod tun.ko
 insmod pl2303.ko
 insmod stv6110.ko verbose=0
 insmod stv090x.ko verbose=0
