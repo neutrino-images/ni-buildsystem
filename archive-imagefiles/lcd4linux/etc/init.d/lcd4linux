@@ -3,6 +3,8 @@
 [ -x /bin/lcd4linux ]		|| exit 1
 [ -e /tmp/.lcd-* ]		|| exit 1
 
+. /etc/init.d/globals
+
 configfile() {
 	read layout < /tmp/lcd/layout
 	test $layout = user && CONF_DIR=/var/etc || CONF_DIR=/etc
@@ -58,7 +60,6 @@ case "$1" in
 		doStart
 	;;
 	*)
-		echo "[${0##*/}] Usage: $0 {start|stop|off|restart|reload}"
-		exit
+		echo "[${BASENAME}] Usage: $0 {start|stop|off|restart|reload}"
 	;;
 esac

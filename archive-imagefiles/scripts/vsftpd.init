@@ -1,12 +1,18 @@
 #!/bin/sh
+
+. /etc/init.d/globals
+
 CONF=/etc/vsftpd.conf
 
 case $1 in
 	start)
 		chown 0:0 $CONF
 		vsftpd $CONF
-		;;
+	;;
 	stop)
 		killall vsftpd
-		;;
+	;;
+	*)
+		echo "[$BASENAME] Usage: $0 {start|stop}"
+	;;
 esac

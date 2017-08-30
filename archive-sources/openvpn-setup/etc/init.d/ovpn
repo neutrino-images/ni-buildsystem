@@ -1,5 +1,7 @@
 #!/bin/sh
 
+. /etc/init.d/globals
+
 ip_forwarding() {
 	v=${1:-0}
 	echo ${v} > /proc/sys/net/ipv4/ip_forward
@@ -17,7 +19,7 @@ case "$1" in
 			mode=${mode:-client}
 
 			if [ ! -e /var/etc/openvpn/${mode}.conf ]; then
-				echo "[OpenVPN] /var/etc/openvpn/${mode}.conf not found."
+				SHOWINFO "/var/etc/openvpn/${mode}.conf not found."
 				exit 1
 			fi
 
@@ -38,5 +40,8 @@ case "$1" in
 	restart)
 		$0 stop
 		$0 start
+	;;
+	*)
+		echo "[${BASENAME}] Usage: $0 {start|restart|stop}"
 	;;
 esac

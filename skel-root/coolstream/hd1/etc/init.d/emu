@@ -268,5 +268,3 @@ case $1 in
 		EMU_Action $2
 	;;
 esac
-
-exit 0

@@ -11,4 +11,7 @@ case "$1" in
 			ntpdate	${ntpserver:-0.de.pool.ntp.org}
 		fi
 	;;
+	*)
+		echo "[$BASENAME] Usage: $0 {start}"
+	;;
 esac

@@ -1,30 +1,29 @@
 #!/bin/sh
 
-# manage network interfaces and configure some networking options
+. /etc/init.d/globals
 
 case "$1" in
 	start)
-		echo -n "Configuring network interfaces... "
+		SHOWINFO "Configuring network ..."
 		ifup -a
 		if type ifplugd >/dev/null 2>&1; then
-			echo -n "Starting ifplugd... "
+			SHOWINFO "Starting ifplugd ..."
 			ifplugd -F -p -q
 		fi
-		echo "done."
 	;;
 	stop)
-		echo -n "Deconfiguring network interfaces... "
+		SHOWINFO "Deconfiguring network ..."
 		ifdown -a
 		if type ifplugd >/dev/null 2>&1; then
-			echo -n "Killing ifplugd... "
+			SHOWINFO "Killing ifplugd ..."
 			ifplugd -k
 		fi
-		echo "done."
 	;;
 	force-reload|restart)
 		$0 stop
 		$0 start
 	;;
+	*)
+		echo "[$BASENAME] Usage: $0 {start|restart|force-reload|stop}"
+	;;
 esac
-
-exit 0

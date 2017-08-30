@@ -84,5 +84,8 @@ for DEVICE in ${DEVICES}; do
 				break
 			fi
 		;;
+		*)
+			echo "[${BASENAME}] Usage: $0 {start|stop}"
+		;;
 	esac
 done

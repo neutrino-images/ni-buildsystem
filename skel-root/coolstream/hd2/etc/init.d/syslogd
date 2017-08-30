@@ -4,6 +4,8 @@
 # without options and without /var/log (!), syslogd will simply
 # log to the console. If /var/log/ exists, it will log to /var/log/messages
 
+. /etc/init.d/globals
+
 case "$1" in
 	start)
 		/sbin/syslogd $SYSLOGD_OPTS
@@ -14,5 +16,8 @@ case "$1" in
 	restart)
 		$0 stop
 		$0 start
+	;;
+	*)
+		echo "[$BASENAME] Usage: $0 {start|restart|stop}"
 	;;
 esac

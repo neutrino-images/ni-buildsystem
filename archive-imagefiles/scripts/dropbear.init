@@ -1,14 +1,14 @@
 #!/bin/sh
 
-test -e /var/etc/.dropbear || exit
+. /etc/init.d/globals
 
 ETCDIR=/etc/dropbear
 
 genkeys() {
 	for keytype in dss rsa; do
-	keyfile=$ETCDIR/dropbear_${keytype}_host_key
-	test -e $keyfile && continue
-	/bin/dropbearkey -t $keytype -f $keyfile
+		keyfile=$ETCDIR/dropbear_${keytype}_host_key
+		test -e $keyfile && continue
+		/bin/dropbearkey -t $keytype -f $keyfile
 	done
 }
 
@@ -21,11 +21,18 @@ fixperms() {
 }
 
 case $1 in
-	start)	genkeys
-		fixperms
-		/sbin/dropbear
-		;;
-	stop)	pid=$(cat /var/run/dropbear.pid 2>/dev/null)
+	start)
+		if [ -e /var/etc/.dropbear ]; then
+			genkeys
+			fixperms
+			/sbin/dropbear
+		fi
+	;;
+	stop)
+		pid=$(cat /var/run/dropbear.pid 2>/dev/null)
 		test -n "$pid" && kill $pid || true
-		;;
+	;;
+	*)
+		echo "[${BASENAME}] Usage: $0 {start|stop}"
+	;;
 esac

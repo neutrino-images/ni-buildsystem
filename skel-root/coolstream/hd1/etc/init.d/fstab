@@ -193,5 +193,3 @@ case "$1" in
 		echo "[$BASENAME] Usage: $0 {start|start_netfs|stop_netfs|stop}"
 	;;
 esac
-
-exit 0

@@ -1,6 +1,6 @@
 #!/bin/sh
-#
-# nfs	This shell script takes care of starting and stopping the NFS services
+
+. /etc/init.d/globals
 
 start() {
 	# prepare filesystem
@@ -53,9 +53,7 @@ case "$1" in
 		fi
 		;;
 	stop)
-		if [ -e /var/etc/.nfsd ]; then
-			stop
-		fi
+		stop
 		;;
 	restart)
 		if [ -e /var/etc/.nfsd ]; then
@@ -71,5 +69,6 @@ case "$1" in
 		fi
 		;;
 	*)
-		echo "Usage: service nfsd {start|stop|reload}"
+		echo "[$BASENAME] Usage: $0 {start|restart|reload|stop}"
+	;;
 esac

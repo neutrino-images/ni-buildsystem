@@ -2,9 +2,11 @@
 #
 # simplest possible ifplugd script ;-)
 #
-LOG="logger -t ${0##*/}"
+
+. /et/init.d/globals
+
 case $2 in
-	up)	ifup	$1 | $LOG ;;
-	down)	ifdown	$1 | $LOG ;;
+	up)	ifup	$1 | LOGINFO ;;
+	down)	ifdown	$1 | LOGINFO ;;
 esac
 true

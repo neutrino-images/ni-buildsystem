@@ -14,5 +14,3 @@ case $1 in
 		echo "[${BASENAME}] Usage: $0 {stop}"
 	;;
 esac
-
-exit 0

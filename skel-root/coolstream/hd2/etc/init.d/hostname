@@ -1,5 +1,7 @@
 #!/bin/sh
 
+. /etc/init.d/globals
+
 case $1 in
 	start)
 		if [ ! -f /etc/hostname ]; then
@@ -8,5 +10,8 @@ case $1 in
 		fi
 
 		hostname -F /etc/hostname
+	;;
+	*)
+		echo "[$BASENAME] Usage: $0 {start}"
 	;;
 esac

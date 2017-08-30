@@ -1,5 +1,7 @@
 #!/bin/sh
 
+. /etc/init.d/globals
+
 case $1 in
 	start)	
 		if [ -e /var/etc/.xupnpd ]; then
@@ -8,16 +10,17 @@ case $1 in
 			sleep 10 # FIXME; This is to workaround slow DHCP
 			/bin/xupnpd &
 		fi
-		;;
+	;;
 	stop)
-		if [ -e /var/etc/.xupnpd ]; then
-			killall xupnpd
-		fi
-		;;
+		killall xupnpd
+	;;
 	restart)
 		if [ -e /var/etc/.xupnpd ]; then
 			$0 stop
 			$0 start
 		fi
-		;;
+	;;
+	*)
+		echo "[$BASENAME] Usage: $0 {start|restart|stop}"
+	;;
 esac

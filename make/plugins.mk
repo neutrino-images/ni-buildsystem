@@ -268,7 +268,7 @@ tuxcal: $(SOURCE_DIR)/$(TUXBOX_PLUGINS) $(BIN)/tuxcald $(LIBPLUG)/tuxcal.so
 $(BIN)/tuxcald: $(D)/freetype $(BIN) $(ETCINIT) $(VARCONF)
 	pushd $(SOURCE_DIR)/$(TUXBOX_PLUGINS)/tuxcal/daemon && \
 	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS_RPATH) -I$(TARGETINCLUDE)/freetype2 -lpthread -lfreetype -lz $(CORTEX-STRINGS) -o $@ tuxcald.c && \
-	install -m755 tuxcald $(ETCINIT)/tuxcald && \
+	install -m755 $(IMAGEFILES)/scripts/tuxcald.init $(ETCINIT)/tuxcald && \
 	cd $(ETCINIT) && \
 	ln -sf tuxcald S99tuxcald && \
 	ln -sf tuxcald K01tuxcald && \
@@ -295,7 +295,7 @@ tuxmail: $(SOURCE_DIR)/$(TUXBOX_PLUGINS) $(BIN)/tuxmaild $(LIBPLUG)/tuxmail.so
 $(BIN)/tuxmaild: $(D)/freetype $(D)/openssl $(BIN) $(ETCINIT) $(VARCONF)
 	pushd $(SOURCE_DIR)/$(TUXBOX_PLUGINS)/tuxmail/daemon && \
 	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS_RPATH) -I$(TARGETINCLUDE)/freetype2 -lssl -lcrypto -lpthread -lfreetype -lz $(CORTEX-STRINGS) -o $@ tuxmaild.c && \
-	install -m755 tuxmaild $(ETCINIT)/tuxmaild && \
+	install -m755 $(IMAGEFILES)/scripts/tuxmaild.init $(ETCINIT)/tuxmaild && \
 	cd $(ETCINIT) && \
 	ln -sf tuxmaild S99tuxmaild && \
 	ln -sf tuxmaild K01tuxmaild && \

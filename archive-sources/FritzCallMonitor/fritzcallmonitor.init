@@ -1,18 +1,19 @@
 #!/bin/sh
 
+. /etc/init.d/globals
+
 case $1 in
-start)
-	if [ -e /var/etc/.fritzcallmonitor ]; then
-		echo "starte NI-FritzCallMonitor..."
-		/bin/FritzCallMonitor &
-	fi
+	start)
+		if [ -e /var/etc/.fritzcallmonitor ]; then
+			SHOWINFO "starting ..."
+			/bin/FritzCallMonitor &
+		fi
 	;;
-stop)
-	if [ -e /var/etc/.fritzcallmonitor ]; then
-		echo "stoppe NI-FritzCallMonitor..."
+	stop)
+		SHOWINFO "stopping ..."
 		killall FritzCallMonitor
-	fi
+	;;
+	*)
+		echo "[${BASENAME}] Usage: $0 {start|stop}"
 	;;
 esac
-
-exit 0

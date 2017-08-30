@@ -71,6 +71,6 @@ case "$1" in
 		test -e $FLAGFILE && touch $FLAGFILE
 	;;
 	*)
+		echo "[$BASENAME] Usage: $0 {start|stop}"
 	;;
 esac
-true

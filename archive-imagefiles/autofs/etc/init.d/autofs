@@ -2,6 +2,8 @@
 #
 # simple autofs init script
 
+. /etc/init.d/globals
+
 uname_r() {
 	read dummy dummy uname dummy < /proc/version
 	echo $uname
@@ -33,7 +35,7 @@ fi
 # allow stopping the daemon even without a mapfile
 if [ ! -e $MAPFILE -a "x$1" = "xstart" ]; then
 	# no config file => no need to do anything else
-	echo "automount: $MAPFILE does not exist, cannot start"
+	SHOWINFO "automount: $MAPFILE does not exist, cannot start"
 	exit 1;
 fi
 
@@ -45,7 +47,7 @@ while read line; do
 done < $MAPFILE
 if [ $ENTRYS = "0" -a "x$1" = "xstart" ]; then
 	# no entrys in config file => no need to do anything else
-	echo "automount: $MAPFILE is empty, cannot start"
+	SHOWINFO "automount: $MAPFILE is empty, cannot start"
 	exit 1;
 fi
 
@@ -62,7 +64,7 @@ fi
 case $1 in
 	stop)
 		if [ -e $PIDFILE ]; then
-			echo "automount: stop"
+			SHOWINFO "stopping"
 			read PID < $PIDFILE && kill -TERM $PID
 		fi
 		;;
@@ -84,7 +86,7 @@ case $1 in
 
 		# automount needs /var/lock or it will exit silently
 		[ -d /var/lock ] || mkdir -p /var/lock
-		echo "automount: start"
+		SHOWINFO "starting"
 		automount -p $PIDFILE $MAPFILE $OPTIONS
 		;;
 	restart)
@@ -94,11 +96,11 @@ case $1 in
 		;;
 	reload)
 		if [ -e $PIDFILE ]; then
-			echo "automount: reload"
+			SHOWINFO "reloading"
 			read PID < $PIDFILE && kill -HUP $PID
 		fi
 		;;
 	*)
-		echo "usage: $0 [start|stop|restart|reload]"
+		echo "[$BASENAME] Usage: $0 {start|restart|reload|stop}"
 		;;
 esac

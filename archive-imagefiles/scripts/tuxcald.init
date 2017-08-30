@@ -1,0 +1,20 @@
+#!/bin/sh
+
+. /etc/init.d/globals
+
+case $1 in
+	start)
+		if [ -e /var/etc/.tuxcald ]; then
+			SHOWINFO "starting ..."
+			/bin/tuxcald
+		fi
+	;;
+	stop)
+		SHOWINFO "stopping ..."
+		pid=$(cat /var/run/tuxcald.pid 2>/dev/null)
+		test -n "$pid" && kill $pid || true
+	;;
+	*)
+		echo "[$BASENAME] Usage: $0 {start|stop}"
+	;;
+esac
