@@ -290,3 +290,4 @@ TUXBOX_TUXWETTER	= plugin-tuxwetter
 
 # various
 NI_LOGO_STUFF		= ni-logo-stuff
+NI_SMARTHOMEINFO	= ni-neutrino-plugin-smarthomeinfo

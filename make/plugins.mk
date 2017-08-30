@@ -54,6 +54,7 @@ plugins-all: \
 	EPGscan \
 	pr-auto-timer \
 	logo-addon \
+	smarthomeinfo \
 	mountpointmanagement \
 	EPGfilter \
 	netzkino \
@@ -171,6 +172,10 @@ logo-addon: $(SOURCE_DIR)/$(NI_LOGO_STUFF) $(LIBPLUG)
 	install -m755 $(SOURCE_DIR)/$(NI_LOGO_STUFF)/logo-addon/*.sh $(LIBPLUG)/
 	install -m644 $(SOURCE_DIR)/$(NI_LOGO_STUFF)/logo-addon/*.cfg $(LIBPLUG)/
 	install -m644 $(SOURCE_DIR)/$(NI_LOGO_STUFF)/logo-addon/*.png $(LIBPLUG)/
+
+smarthomeinfo: $(SOURCE_DIR)/$(NI_SMARTHOMEINFO) $(LIBPLUG) $(VARCONF)
+	cp -a $(SOURCE_DIR)/$(NI_SMARTHOMEINFO)/plugin/tuxbox/plugins/* $(LIBPLUG)/
+	cp -a $(SOURCE_DIR)/$(NI_SMARTHOMEINFO)/plugin/tuxbox/config/* $(VARCONF)/
 
 doscam-webif-skin: $(VARCONF)
 	mkdir -p $(TARGETPREFIX)/share/doscam/tpl/
