@@ -3,7 +3,7 @@
 . /etc/init.d/globals
 
 # setup environment for coldplug events
-[ -z "$ACTION" ] && . /lib/mdev/usb/eventvars
+[ -z "$ACTION" ] && . /lib/mdev/usb/coldplug-setenv
 
 # get proper product and manufacturer description (only works for ACTION=add)
 [ -z "$DEVPATH" ] && LOGERROR 'uevent environment variable DEVPATH is unset' && exit 1
@@ -116,4 +116,4 @@ case $TYPE in
 		;;
 esac
 
-/lib/mdev/common/mdevprobe $MODALIAS
+/lib/mdev/common/mdev-modprobe $MODALIAS
