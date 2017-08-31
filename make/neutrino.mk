@@ -88,10 +88,11 @@ endif
 			--with-boxtype=$(BOXTYPE) \
 			--with-boxmodel=$(BOXSERIES)
 
+NEUTRINO_INST_DIR ?= $(TARGETPREFIX)
 $(D)/neutrino: $(N_OBJDIR)/config.status
 	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
 	$(MAKE) -C $(N_OBJDIR) all     DESTDIR=$(TARGETPREFIX)
-	$(MAKE) -C $(N_OBJDIR) install DESTDIR=$(TARGETPREFIX)
+	$(MAKE) -C $(N_OBJDIR) install DESTDIR=$(NEUTRINO_INST_DIR)
 	make $(TARGETPREFIX)/.version
 	touch $@
 
