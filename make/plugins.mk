@@ -75,16 +75,6 @@ plugins-all: \
 
 plugins-hd2: channellogos
 
-##########################
-### neutrino additions ###
-##########################
-
-neutrino-additions: webtv_auto
-
-webtv_auto: $(SHAREWEBTV)
-	install -m644 $(IMAGEFILES)/$@/*.xml $(SHAREWEBTV)/
-	install -m755 $(IMAGEFILES)/$@/*.lua $(SHAREWEBTV)/
-
 ################
 ### plugins  ###
 ################

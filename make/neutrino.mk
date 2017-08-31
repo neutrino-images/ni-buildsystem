@@ -92,8 +92,6 @@ $(D)/neutrino: $(N_OBJDIR)/config.status
 	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
 	$(MAKE) -C $(N_OBJDIR) all     DESTDIR=$(TARGETPREFIX)
 	$(MAKE) -C $(N_OBJDIR) install DESTDIR=$(TARGETPREFIX)
-	@# neutrino-additions (plugins.mk)
-	make neutrino-additions        DESTDIR=$(TARGETPREFIX)
 	make $(TARGETPREFIX)/.version
 	touch $@
 
