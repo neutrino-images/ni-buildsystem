@@ -69,7 +69,7 @@ $(ARCHIVE)/libupnp-$(LIBUPNP_VER).tar.bz2:
 
 WPA_SUPP_VER=0.7.3
 $(ARCHIVE)/wpa_supplicant-$(WPA_SUPP_VER).tar.gz:
-	$(WGET) http://hostap.epitest.fi/releases/wpa_supplicant-$(WPA_SUPP_VER).tar.gz
+	$(WGET) https://ftp.osuosl.org/pub/blfs/conglomeration/wpa_supplicant/wpa_supplicant-$(WPA_SUPP_VER).tar.gz
 
 LIBGD_VER=2.2.4
 $(ARCHIVE)/libgd-$(LIBGD_VER).tar.xz:
