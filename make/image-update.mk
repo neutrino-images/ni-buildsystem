@@ -110,18 +110,31 @@ u-pr-auto-timer:
 			UPDATE_VERSION_STRING=0.40
 
 u-neutrino: neutrino-clean
-	make -j$(NUM_CPUS) neutrino
-ifeq ($(DEBUG), no)
-	$(TARGET)-strip $(TARGETPREFIX)/bin/neutrino
-endif
 	$(MAKE) u-init
 	echo "killall start_neutrino neutrino; sleep 5"	>> $(PREINSTALL_SH)
 	echo "sync; /bin/busybox reboot"		>> $(POSTINSTALL_SH)
-	cp -f $(TARGETPREFIX)/.version $(UPDATE_INST_DIR)/
-	mkdir -pv $(UPDATE_INST_DIR)/bin
-	cp -f $(TARGETPREFIX)/bin/neutrino $(UPDATE_INST_DIR)/bin/
-	mkdir -pv $(UPDATE_INST_DIR)/share/tuxbox/neutrino/locale
-	cp -fa $(TARGETPREFIX)/share/tuxbox/neutrino/locale/* $(UPDATE_INST_DIR)/share/tuxbox/neutrino/locale/
+	$(MAKE) neutrino
+	install -D -m 0644 $(TARGETPREFIX)/.version $(UPDATE_INST_DIR)/.version
+	install -D -m 0755 $(TARGETPREFIX)/etc/init.d/start_neutrino $(UPDATE_INST_DIR)/etc/init.d/start_neutrino
+	install -D -m 0755 $(TARGETPREFIX)/bin/neutrino $(UPDATE_INST_DIR)/bin/neutrino
+	install -D -m 0644 $(TARGETPREFIX)/share/tuxbox/neutrino/locale/deutsch.locale $(UPDATE_INST_DIR)/share/tuxbox/neutrino/locale/deutsch.locale
+	install -D -m 0644 $(TARGETPREFIX)/share/tuxbox/neutrino/locale/english.locale $(UPDATE_INST_DIR)/share/tuxbox/neutrino/locale/english.locale
+ifeq ($(DEBUG), no)
+	find $(UPDATE_INST_DIR)/bin -type f ! -name *.sh -print0 | xargs -0 $(TARGET)-strip || true
+endif
+	$(MAKE) u-update-bin \
+			UPDATE_MD5FILE=$(UPDATE_MD5FILE-BOXSERIES)
+
+u-neutrino-full: neutrino-clean
+	$(MAKE) u-init
+	echo "killall start_neutrino neutrino; sleep 5"	>> $(PREINSTALL_SH)
+	echo "sync; /bin/busybox reboot"		>> $(POSTINSTALL_SH)
+	$(MAKE) neutrino NEUTRINO_INST_DIR=$(UPDATE_INST_DIR)
+	install -D -m 0644 $(TARGETPREFIX)/.version $(UPDATE_INST_DIR)/.version
+	install -D -m 0755 $(TARGETPREFIX)/etc/init.d/start_neutrino $(UPDATE_INST_DIR)/etc/init.d/start_neutrino
+ifeq ($(DEBUG), no)
+	find $(UPDATE_INST_DIR)/bin -type f ! -name *.sh -print0 | xargs -0 $(TARGET)-strip || true
+endif
 	$(MAKE) u-update-bin \
 			UPDATE_MD5FILE=$(UPDATE_MD5FILE-BOXSERIES)
 
