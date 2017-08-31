@@ -110,7 +110,6 @@ u-pr-auto-timer:
 			UPDATE_VERSION_STRING=0.40
 
 u-neutrino: neutrino-clean
-	make u-neutrino-pre
 	make -j$(NUM_CPUS) neutrino
 ifeq ($(DEBUG), no)
 	$(TARGET)-strip $(TARGETPREFIX)/bin/neutrino
@@ -123,15 +122,8 @@ endif
 	cp -f $(TARGETPREFIX)/bin/neutrino $(UPDATE_INST_DIR)/bin/
 	mkdir -pv $(UPDATE_INST_DIR)/share/tuxbox/neutrino/locale
 	cp -fa $(TARGETPREFIX)/share/tuxbox/neutrino/locale/* $(UPDATE_INST_DIR)/share/tuxbox/neutrino/locale/
-	make u-neutrino-post
 	$(MAKE) u-update-bin \
 			UPDATE_MD5FILE=$(UPDATE_MD5FILE-BOXSERIES)
-
-u-neutrino-pre:
-	# add some temporary stuff to 'make u-neutrino'. cleanup after release!
-
-u-neutrino-post:
-	# add some temporary stuff to 'make u-neutrino'. cleanup after release!
 
 u-openvpn-setup:
 	$(MAKE) u-init
