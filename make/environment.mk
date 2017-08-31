@@ -136,7 +136,6 @@ D            = $(BASE_DIR)/deps
 DEPDIR       = $(D)
 HOSTPREFIX   = $(BASE_DIR)/host
 TARGETPREFIX ?= $(BASE_DIR)/root
-PKGPREFIX    = $(BUILD_TMP)/pkg
 SOURCE_DIR   = $(BASE_DIR)/source
 MAKE_DIR     = $(BASE_DIR)/make
 STAGING_DIR  = $(BASE_DIR)/staging

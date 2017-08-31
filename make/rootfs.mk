@@ -4,7 +4,6 @@
 rootfs: .version update.urls $(BOX) cleanup strip softlinks
 
 .version: $(TARGETPREFIX)/.version
-$(PKGPREFIX)/.version \
 $(TARGETPREFIX)/.version:
 	echo "version="$(IMAGE_TYPE)$(IMAGE_VERSION)$(IMAGE_DATE) > $@
 	# determinate last NI-release-tag an use this to git describe
