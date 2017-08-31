@@ -109,7 +109,6 @@ u-pr-auto-timer:
 			UPDATE_DESC="Auto-Timer" \
 			UPDATE_VERSION_STRING=0.40
 
-ADD_ICONS = no
 u-neutrino: neutrino-clean
 	make u-neutrino-pre
 	make -j$(NUM_CPUS) neutrino
@@ -124,10 +123,6 @@ endif
 	cp -f $(TARGETPREFIX)/bin/neutrino $(UPDATE_INST_DIR)/bin/
 	mkdir -pv $(UPDATE_INST_DIR)/share/tuxbox/neutrino/locale
 	cp -fa $(TARGETPREFIX)/share/tuxbox/neutrino/locale/* $(UPDATE_INST_DIR)/share/tuxbox/neutrino/locale/
-ifeq ($(ADD_ICONS), yes)
-	mkdir -pv $(UPDATE_INST_DIR)/share/tuxbox/neutrino/icons
-	cp -fa $(TARGETPREFIX)/share/tuxbox/neutrino/icons/* $(UPDATE_INST_DIR)/share/tuxbox/neutrino/icons/
-endif
 	make u-neutrino-post
 	$(MAKE) u-update-bin \
 			UPDATE_MD5FILE=$(UPDATE_MD5FILE-BOXSERIES)
