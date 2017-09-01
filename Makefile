@@ -11,7 +11,7 @@ else
 local-files: $(eval BOXMODEL = nevis)
 	@test -e config.local || cp config.example config.local
 	@touch Makefile.local
-	@mkdir -p local/root
+	@mkdir -p local/{root,scripts}
 
 -include config.local
 include make/environment.mk

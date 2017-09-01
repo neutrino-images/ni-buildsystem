@@ -139,6 +139,7 @@ TARGETPREFIX ?= $(BASE_DIR)/root
 SOURCE_DIR   = $(BASE_DIR)/source
 MAKE_DIR     = $(BASE_DIR)/make
 STAGING_DIR  = $(BASE_DIR)/staging
+LOCAL_DIR    = $(BASE_DIR)/local
 IMAGE_DIR    = $(STAGING_DIR)/images
 UPDATE_DIR   = $(STAGING_DIR)/updates
 STATIC_DIR   = $(BASE_DIR)/static/$(BOXARCH)/$(BOXSERIES)
@@ -290,3 +291,8 @@ TUXBOX_TUXWETTER	= plugin-tuxwetter
 # various
 NI_LOGO_STUFF		= ni-logo-stuff
 NI_SMARTHOMEINFO	= ni-neutrino-plugin-smarthomeinfo
+
+# execute local scripts
+define local-script
+	@$(LOCAL_DIR)/scripts/$(1) $(2) $(TARGETPREFIX) $(BUILD_TMP) 2>/dev/null || true
+endef
