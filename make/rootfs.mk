@@ -181,11 +181,11 @@ get-update-info-hd1:
 	@echo " ============================================================================== "
 
 personalize: | $(TARGETPREFIX)
-	$(call local-script,$(shell basename $@),start)
+	$(call local-script,$(notdir $@),start)
 	@LOCAL_ROOT=$(LOCAL_DIR)/root; \
 	if [ $$(ls -A $$LOCAL_ROOT) ]; then \
 		cp -a -v $$LOCAL_ROOT/* $(TARGETPREFIX)/; \
 	fi
-	$(call local-script,$(shell basename $@),stop)
+	$(call local-script,$(notdir $@),stop)
 
 PHONY += $(TARGETPREFIX)/.version $(TARGETPREFIX)/var/etc/update.urls $(BOX)

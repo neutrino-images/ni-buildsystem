@@ -42,24 +42,24 @@ $(BUILD-GENERIC-PC):
 
 $(SOURCE_DIR)/$(TUXBOX_BOOTLOADER):
 	cd $(SOURCE_DIR) && \
-		git clone $(TUXBOX_GIT)/$(shell basename $@).git
+		git clone $(TUXBOX_GIT)/$(notdir $@).git
 	cd $@ && \
 		git checkout coolstream_hdx
 
 $(SOURCE_DIR)/$(TUXBOX_PLUGINS):
 	cd $(SOURCE_DIR) && \
-		git clone --recursive $(TUXBOX_GIT)/$(shell basename $@).git
+		git clone --recursive $(TUXBOX_GIT)/$(notdir $@).git
 
 $(SOURCE_DIR)/$(NI_TUXWETTER):
 	cd $(SOURCE_DIR) && \
-		git clone $(NI_GIT)/$(shell basename $@).git
+		git clone $(NI_GIT)/$(notdir $@).git
 	cd $@ && \
 		git remote add $(TUXBOX_REMOTE_REPO) $(TUXBOX_GIT)/$(TUXBOX_TUXWETTER).git && \
 		git fetch $(TUXBOX_REMOTE_REPO)
 
 $(SOURCE_DIR)/$(NI_LIBSTB-HAL):
 	cd $(SOURCE_DIR) && \
-		git clone $(NI_GIT)/$(shell basename $@).git
+		git clone $(NI_GIT)/$(notdir $@).git
 	cd $@ && \
 		git remote add $(TUXBOX_REMOTE_REPO) $(TUXBOX_GIT)/$(TUXBOX_LIBSTB-HAL).git && \
 		git fetch $(TUXBOX_REMOTE_REPO)
@@ -67,7 +67,7 @@ $(SOURCE_DIR)/$(NI_LIBSTB-HAL):
 $(SOURCE_DIR)/$(NI_LIBCOOLSTREAM):
 ifeq ($(HAS_LIBCS), yes)
 	cd $(SOURCE_DIR) && \
-		git clone $(NI_GIT)/$(shell basename $@).git
+		git clone $(NI_GIT)/$(notdir $@).git
 	cd $@ && \
 		git checkout $(NI_LIBCOOLSTREAM_BRANCH)
 endif
@@ -75,7 +75,7 @@ endif
 # upstream for rebase
 $(SOURCE_DIR)/$(NI_FFMPEG):
 	cd $(SOURCE_DIR) && \
-		git clone $(NI_GIT)/$(shell basename $@).git
+		git clone $(NI_GIT)/$(notdir $@).git
 	cd $@ && \
 		git remote add upstream https://git.ffmpeg.org/ffmpeg.git && \
 		git fetch --all
@@ -84,7 +84,7 @@ $(SOURCE_DIR)/$(NI_FFMPEG):
 # torvalds for cherry-picking
 $(SOURCE_DIR)/$(NI_LINUX-KERNEL):
 	cd $(SOURCE_DIR) && \
-		git clone $(NI_GIT)/$(shell basename $@).git
+		git clone $(NI_GIT)/$(notdir $@).git
 	cd $@ && \
 		git remote add upstream https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git && \
 		git remote add torvalds https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git && \
@@ -96,7 +96,7 @@ $(SOURCE_DIR)/$(NI_SMARTHOMEINFO) \
 $(SOURCE_DIR)/$(NI_STREAMRIPPER) \
 $(SOURCE_DIR)/$(NI_OPENTHREADS):
 	cd $(SOURCE_DIR) && \
-		git clone $(NI_GIT)/$(shell basename $@).git
+		git clone $(NI_GIT)/$(notdir $@).git
 
 archives-list:
 	@rm -f $(BUILD_TMP)/$@
