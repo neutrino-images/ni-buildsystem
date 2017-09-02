@@ -17,7 +17,7 @@ crosstools-renew:
 	make bootstrap
 	make clean
 
-crosstool-arm-hd1: $(SOURCE_DIR)/$(NI_LINUX-KERNEL)
+crosstool-arm-hd1: CROSS_DIR-check $(SOURCE_DIR)/$(NI_LINUX-KERNEL)
 	make $(BUILD_TMP)
 	$(REMOVE)/crosstool-ng
 	cd $(BUILD_TMP) && \
@@ -49,7 +49,7 @@ crosstool-arm-hd1: $(SOURCE_DIR)/$(NI_LINUX-KERNEL)
 	$(REMOVE)/crosstool-ng
 
 UCLIBC_VER=1.0.24
-crosstool-arm-hd2: $(ARCHIVE)/gcc-linaro-$(GCC_VER).tar.xz $(SOURCE_DIR)/$(NI_LINUX-KERNEL)
+crosstool-arm-hd2: CROSS_DIR-check $(ARCHIVE)/gcc-linaro-$(GCC_VER).tar.xz $(SOURCE_DIR)/$(NI_LINUX-KERNEL)
 	make $(BUILD_TMP)
 	$(REMOVE)/crosstool-ng
 	cd $(BUILD_TMP) && \
@@ -83,3 +83,14 @@ crosstool-arm-hd2: $(ARCHIVE)/gcc-linaro-$(GCC_VER).tar.xz $(SOURCE_DIR)/$(NI_LI
 	$(REMOVE)/crosstool-ng
 
 PHONY += crosstool $(CROSS_DIR)
+
+CROSS_DIR-check:
+ifneq ($(wildcard $(CROSS_DIR)),)
+	@echo
+	@echo "Crosstool directory already present:"
+	@echo "===================================="
+	@echo "You need to remove the directory $(CROSS_DIR)"
+	@echo "if you really want to build a new crosstool."
+	@echo
+	@false
+endif
