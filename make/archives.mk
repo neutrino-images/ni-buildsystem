@@ -320,10 +320,6 @@ DOSFSTOOLS_VER=4.1
 $(ARCHIVE)/dosfstools-$(DOSFSTOOLS_VER).tar.xz:
 	$(WGET) https://github.com/dosfstools/dosfstools/releases/download/v$(DOSFSTOOLS_VER)/dosfstools-$(DOSFSTOOLS_VER).tar.xz
 
-GIT_VER=a3b75b3ccbc0f8128937d3b393837c2a74f2b662
-$(ARCHIVE)/git-$(GIT_VER).tar.bz2:
-	get-git-archive.sh $(GITHUB)/git/git $(GIT_VER) $(notdir $@) $(ARCHIVE)
-
 LESS_VER=487
 $(ARCHIVE)/less-$(LESS_VER).tar.gz:
 	$(WGET) http://www.greenwoodsoftware.com/less/less-$(LESS_VER).tar.gz

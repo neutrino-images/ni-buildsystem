@@ -79,26 +79,6 @@ $(D)/gdb: $(ARCHIVE)/gdb-$(GDB_VER).tar.xz $(D)/zlib $(D)/libncurses | $(TARGETP
 	$(REMOVE)/gdb-$(GDB_VER)
 	touch $@
 
-# git requires libexpat-dev
-$(D)/git: $(D)/zlib $(ARCHIVE)/git-$(GIT_VER).tar.bz2 | $(TARGETPREFIX)
-	$(REMOVE)/git-$(GIT_VER)
-	$(UNTAR)/git-$(GIT_VER).tar.bz2
-	cd $(BUILD_TMP)/git-$(GIT_VER); \
-		$(MAKE) configure && \
-		$(CONFIGURE) \
-			ac_cv_fread_reads_directories=no \
-			ac_cv_snprintf_returns_bogus=no \
-			--target=$(TARGET) \
-			--prefix= \
-			--without-tcltk \
-			&& \
-		$(MAKE) && \
-		$(MAKE) install DESTDIR=$(BUILD_TMP)/git-install
-	cp -a $(BUILD_TMP)/git-install/bin/git $(TARGETPREFIX)/bin
-	cp -a $(BUILD_TMP)/git-install/share/git-core/ $(TARGETPREFIX)/share
-	$(REMOVE)/git-*
-	touch $@
-
 devel-tools: $(D)/gdb $(D)/strace
 
 PHONY += devel-tools
