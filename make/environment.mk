@@ -294,5 +294,7 @@ NI_SMARTHOMEINFO	= ni-neutrino-plugin-smarthomeinfo
 
 # execute local scripts
 define local-script
-	@$(LOCAL_DIR)/scripts/$(1) $(2) $(TARGETPREFIX) $(BUILD_TMP) 2>/dev/null || true
+	@if [ -x $(LOCAL_DIR)/scripts/$(1) ]; then \
+		$(LOCAL_DIR)/scripts/$(1) $(2) $(TARGETPREFIX) $(BUILD_TMP); \
+	fi
 endef
