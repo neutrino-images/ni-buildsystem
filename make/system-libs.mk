@@ -193,24 +193,40 @@ $(D)/libjpeg: $(ARCHIVE)/libjpeg-turbo-$(LIBJPEG-TURBO_VER).tar.gz | $(TARGETPRE
 	$(REMOVE)/libjpeg-turbo-$(LIBJPEG-TURBO_VER)
 	touch $@
 
-OPENSSLFLAGS = CC=$(TARGET)-gcc LD=$(TARGET)-ld AR="$(TARGET)-ar r" RANLIB=$(TARGET)-ranlib MAKEDEPPROG=$(TARGET)-gcc PROCESSOR=ARM
-$(D)/openssl: $(ARCHIVE)/openssl-$(OPENSSL_VER).tar.gz | $(TARGETPREFIX)
+OPENSSLFLAGS = CC=$(TARGET)-gcc \
+		LD=$(TARGET)-ld \
+		AR="$(TARGET)-ar r" \
+		RANLIB=$(TARGET)-ranlib \
+		MAKEDEPPROG=$(TARGET)-gcc \
+		NI_OPTIMIZATION_FLAGS="$(TARGET_CFLAGS)" \
+		PROCESSOR=ARM
+
+OPENSSL_NI_FLAVOR = linux-armv4-ni -march=armv7-a -mcpu=cortex-a9 -mtune=cortex-a9 -mfpu=vfpv3-d16 -mfloat-abi=hard -mlittle-endian
+ifeq ($(BOXSERIES), hd1)
+	OPENSSL_NI_FLAVOR = linux-armv4-ni -march=armv6 -mfloat-abi=soft -mlittle-endian
+endif
+
+$(D)/openssl: $(D)/zlib $(ARCHIVE)/openssl-$(OPENSSL_VER).tar.gz | $(TARGETPREFIX)
 	$(UNTAR)/openssl-$(OPENSSL_VER).tar.gz
 	pushd $(BUILD_TMP)/openssl-$(OPENSSL_VER) && \
-		$(OPENSSLFLAGS) \
+	$(PATCH)/openssl-add-ni-specific-target.patch && \
 		./Configure \
-			linux-armv4 \
+			$(OPENSSL_NI_FLAVOR) \
 			shared \
+			zlib \
+			threads \
 			no-hw \
 			no-engine \
 			no-sse2 \
+			no-perlasm \
+			$(TARGET_CPPFLAGS) \
+			$(TARGET_LDFLAGS) \
 			-DOPENSSL_SMALL_FOOTPRINT \
 			--prefix=/ \
 			--openssldir=/.remove && \
-		make depend $(OPENSSLFLAGS) && \
-		sed -i "s#-O[0-9]#$(TARGET_CFLAGS)#" Makefile && \
+		make $(OPENSSLFLAGS) depend && \
 		sed -i "s# build_tests##" Makefile && \
-		make all $(OPENSSLFLAGS) && \
+		make $(OPENSSLFLAGS) all && \
 		make install_sw INSTALL_PREFIX=$(TARGETPREFIX)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/openssl.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libcrypto.pc
