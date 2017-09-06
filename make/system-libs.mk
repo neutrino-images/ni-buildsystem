@@ -206,14 +206,13 @@ ifeq ($(BOXSERIES), hd1)
 	OPENSSL_NI_FLAVOR = linux-armv4-ni -march=armv6 -mfloat-abi=soft -mlittle-endian
 endif
 
-$(D)/openssl: $(D)/zlib $(ARCHIVE)/openssl-$(OPENSSL_VER).tar.gz | $(TARGETPREFIX)
+$(D)/openssl: $(ARCHIVE)/openssl-$(OPENSSL_VER).tar.gz | $(TARGETPREFIX)
 	$(UNTAR)/openssl-$(OPENSSL_VER).tar.gz
 	pushd $(BUILD_TMP)/openssl-$(OPENSSL_VER) && \
 	$(PATCH)/openssl-add-ni-specific-target.patch && \
 		./Configure \
 			$(OPENSSL_NI_FLAVOR) \
 			shared \
-			zlib \
 			threads \
 			no-hw \
 			no-engine \
