@@ -96,7 +96,7 @@ end
 function get_icon(locale)
 	local icon = "dummy"
 	if file_exists(icons_dir .. "/" .. locale .. ".png") then
-		icon = icons_dir .. "/" .. locale .. ".png"
+		icon = locale
 	end
 	return icon
 end
@@ -125,7 +125,7 @@ end
 
 function hide_infobox()
 	if infobox ~= nil then
-		infobox:hide{no_restore=true}
+		infobox:hide()
 		infobox = nil
 	end
 end
@@ -215,7 +215,7 @@ function w_chooser(locale)
 		end
 	until msg == RC.home or msg == RC.setup;
 
-	chooser:hide{no_restore=true}
+	chooser:hide()
 	chooser = nil
 
 	if msg == RC.setup then
