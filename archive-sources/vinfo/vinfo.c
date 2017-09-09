@@ -49,6 +49,7 @@ void Usage()
 	printf("   GBOX.NET\n");
 	printf("   OSEMU\n");
 	printf("   OSCAM\n");
+	printf("   NCAM\n");
 	printf("   DOSCAM\n");
 	printf("   CS2GBOX\n");
 }
@@ -317,6 +318,8 @@ int main(int argc, char **argv)
 				strcpy(version, "n/a");
 			else if (strstr(argv[1], "OSCAM"))
 				Emu(argv[2], searchstring, OSCAM_VERSION);
+			else if (strstr(argv[1], "NCAM"))
+				Emu(argv[2], searchstring, OSCAM_VERSION_NEW);
 			else if (strstr(argv[1], "CS2GBOX"))
 				md5emuHandling(argv[2], searchstring);
 			else if (strstr(argv[1], "GBOX.NET"))
