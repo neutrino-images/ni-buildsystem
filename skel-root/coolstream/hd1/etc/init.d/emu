@@ -9,6 +9,7 @@ F_NEWCS=".newcs"
 F_OSEMU=".osemu"
 F_DOSCAM=".doscam"
 F_OSCAM=".oscam"
+F_NCAM=".ncam"
 F_GBOX=".gbox"
 F_CS2GBOX=".cs2gbox"
 
@@ -150,6 +151,35 @@ OSCAM_Action()
 	esac
 }
 
+NCAM_Action()
+{
+	case $1 in
+		"start" )
+			SHOWINFO "start oscamfix"
+			/etc/init.d/oscamfix start ncam
+			SHOWINFO "start ncam"
+			/var/bin/ncam -b
+			if [ -e $FLAGDIR/$F_MGCAM ]; then
+				sleep 15
+			fi
+		;;
+		"stop" )
+			SHOWINFO "stop oscamfix"
+			/etc/init.d/oscamfix stop ncam
+			SHOWINFO "stop ncam"
+			killall ncam
+			sleep 1
+			rm -rf /tmp/ncam.*
+			rm -rf /tmp/ecm.info
+		;;
+		* )
+			NCAM_Action "stop"
+			sleep 1
+			NCAM_Action "start"
+		;;
+	esac
+}
+
 GBOX_Action()
 {
 	case $1 in
@@ -216,6 +246,9 @@ EMU_Action()
 		"oscam")
 			OSCAM_Action $ACTION
 		;;
+		"ncam")
+			NCAM_Action $ACTION
+		;;
 		"newcs")
 			NEWCS_Action $ACTION
 		;;
@@ -241,6 +274,10 @@ EMU_Action()
 
 			if [ -e $FLAGDIR/$F_OSCAM ]; then
 				OSCAM_Action $ACTION
+			fi
+
+			if [ -e $FLAGDIR/$F_NCAM ]; then
+				NCAM_Action $ACTION
 			fi
 
 			if [ -e $FLAGDIR/$F_NEWCS ]; then
