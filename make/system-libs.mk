@@ -1003,8 +1003,16 @@ $(D)/libffi: $(ARCHIVE)/libffi-$(LIBFFI_VER).tar.gz
 	$(REMOVE)/libffi-$(LIBFFI_VER)
 	touch $@
 
+# glibc provides a stub
+# gettext implementation,
+# so we only build it for hd2
+LIBGLIB_DEPS = $(D)/gettext
+ifeq ($(BOXSERIES), hd1)
+	LIBGLIB_DEPS =
+endif
+
 # why does a shared build fail?
-$(D)/libglib: $(ARCHIVE)/glib-$(GLIB_VER).tar.xz $(D)/zlib $(D)/gettext $(D)/libffi | $(TARGETPREFIX)
+$(D)/libglib: $(ARCHIVE)/glib-$(GLIB_VER).tar.xz $(D)/zlib $(LIBGLIB_DEPS) $(D)/libffi | $(TARGETPREFIX)
 	$(UNTAR)/glib-$(GLIB_VER).tar.xz
 	pushd $(BUILD_TMP)/glib-$(GLIB_VER); \
 		echo "ac_cv_type_long_long=yes"		 > arm-linux.cache; \

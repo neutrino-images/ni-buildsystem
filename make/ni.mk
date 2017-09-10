@@ -63,13 +63,13 @@ ni-image:
 	make -j$(NUM_CPUS) mtd-utils
 	make -j$(NUM_CPUS) wget
 	make -j$(NUM_CPUS) iconv
+	make -j$(NUM_CPUS) streamripper
 ifeq ($(BOXSERIES), hd2)
 	make plugins-hd2
 	make -j$(NUM_CPUS) less
 	make -j$(NUM_CPUS) parted
 	make -j$(NUM_CPUS) openvpn
 	make -j$(NUM_CPUS) openssh
-	make -j$(NUM_CPUS) streamripper
   ifneq ($(BOXMODEL), kronos_v2)
 	make -j$(NUM_CPUS) bash
 	make -j$(NUM_CPUS) iperf
