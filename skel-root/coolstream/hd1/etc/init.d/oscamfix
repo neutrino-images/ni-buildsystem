@@ -5,7 +5,6 @@
 
 . /etc/init.d/globals
 
-BNAME=${0##*/}
 BINARY="/var/bin/$2"
 FLAGFILE="/var/etc/.$2"
 
