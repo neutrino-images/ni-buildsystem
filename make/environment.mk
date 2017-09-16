@@ -208,6 +208,16 @@ CONFIGURE_OPTS = \
 	--build=$(BUILD) --host=$(TARGET)
 
 BUILDENV = \
+	CC=$(TARGET)-gcc \
+	CXX=$(TARGET)-g++ \
+	LD=$(TARGET)-ld \
+	NM=$(TARGET)-nm \
+	AR=$(TARGET)-ar \
+	AS=$(TARGET)-as \
+	RANLIB=$(TARGET)-ranlib \
+	STRIP=$(TARGET)-strip \
+	OBJCOPY=$(TARGET)-objcopy \
+	OBJDUMP=$(TARGET)-objdump \
 	CFLAGS="$(TARGET_CFLAGS)" \
 	CPPFLAGS="$(TARGET_CPPFLAGS)" \
 	CXXFLAGS="$(TARGET_CXXFLAGS)" \
