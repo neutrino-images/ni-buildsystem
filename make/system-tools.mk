@@ -326,9 +326,11 @@ $(D)/procps-ng: $(D)/libncurses $(ARCHIVE)/procps-ng-$(PROCPS-NG_VER).tar.xz | $
 $(D)/nano: $(D)/libncurses $(ARCHIVE)/nano-$(NANO_VER).tar.gz | $(TARGETPREFIX)
 	$(UNTAR)/nano-$(NANO_VER).tar.gz
 	cd $(BUILD_TMP)/nano-$(NANO_VER) && \
-		$(CONFIGURE) --target=$(TARGET) \
+		export ac_cv_prog_NCURSESW_CONFIG=false && \
+		$(CONFIGURE) \
+			--target=$(TARGET) \
 			--prefix= && \
-		$(MAKE) CPPFLAGS+="-I$(TARGETINCLUDE)/ncurses" && \
+		$(MAKE) CURSES_LIB="-lncurses" && \
 		install -m755 src/nano $(TARGETPREFIX)/bin
 	$(REMOVE)/nano-$(NANO_VER)
 	touch $@
