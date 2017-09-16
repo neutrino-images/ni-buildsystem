@@ -214,6 +214,7 @@ BUILDENV = \
 	NM=$(TARGET)-nm \
 	AR=$(TARGET)-ar \
 	AS=$(TARGET)-as \
+	LDD=$(TARGET)-ldd \
 	RANLIB=$(TARGET)-ranlib \
 	STRIP=$(TARGET)-strip \
 	OBJCOPY=$(TARGET)-objcopy \

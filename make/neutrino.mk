@@ -22,8 +22,6 @@ else
 	N_CFLAGS += $(TARGET_CFLAGS)
 endif
 
-N_CPPFLAGS += -I$(TARGETINCLUDE)
-
 N_LDFLAGS = -lcrypto -ldl -lz $(CORTEX-STRINGS) -L$(TARGETLIB)
 ifeq ($(DEBUG), yes)
 	N_LDFLAGS += -Wl,-rpath-link,$(TARGETLIB)
@@ -57,7 +55,22 @@ endif
 		test -e version.h || touch version.h && \
 		export PKG_CONFIG=$(PKG_CONFIG) && \
 		export PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) && \
-		CC=$(TARGET)-gcc CFLAGS="$(N_CFLAGS)" CXXFLAGS="$(N_CFLAGS)" CPPFLAGS="$(N_CPPFLAGS)" LDFLAGS="$(N_LDFLAGS)" \
+		CC=$(TARGET)-gcc \
+		CXX=$(TARGET)-g++ \
+		LD=$(TARGET)-ld \
+		NM=$(TARGET)-nm \
+		AR=$(TARGET)-ar \
+		AS=$(TARGET)-as \
+		LDD=$(TARGET)-ldd \
+		RANLIB=$(TARGET)-ranlib \
+		STRIP=$(TARGET)-strip \
+		OBJCOPY=$(TARGET)-objcopy \
+		OBJDUMP=$(TARGET)-objdump \
+		READELF=$(TARGET)-readelf \
+		CFLAGS="$(N_CFLAGS)" \
+		CPPFLAGS="$(TARGET_CPPFLAGS)" \
+		CXXFLAGS="$(TARGET_CXXFLAGS)" \
+		LDFLAGS="$(N_LDFLAGS)" \
 		$(N_HD_SOURCE)/configure \
 			--host=$(TARGET) \
 			--build=$(BUILD) \
