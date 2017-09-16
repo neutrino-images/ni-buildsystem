@@ -168,15 +168,18 @@ endif
 STATICLIB             = $(STATIC_DIR)/lib
 TARGETLIB             = $(TARGETPREFIX)/lib
 TARGETINCLUDE         = $(TARGETPREFIX)/include
-TARGET_CFLAG_O        = -O2 -fdata-sections -ffunction-sections
+TARGET_CFLAG_O        = -O2
+TARGET_LDFLAGS_ADD    =
 ifeq ($(BOXMODEL), $(filter $(BOXMODEL), nevis kronos_v2))
-  TARGET_CFLAG_O      = -Os -fdata-sections -ffunction-sections
+  TARGET_CFLAG_O      += -fdata-sections -ffunction-sections
+  TARGET_LDFLAGS_ADD  = -Wl,--gc-sections
 endif
+
 TARGET_CFLAGS         = -pipe $(TARGET_CFLAG_O) -g -I$(TARGETINCLUDE)
 TARGET_CPPFLAGS       = $(TARGET_CFLAGS)
 TARGET_CXXFLAGS       = $(TARGET_CFLAGS)
-TARGET_LDFLAGS        = $(CORTEX-STRINGS) -Wl,-O1 -Wl,--gc-sections -L$(TARGETLIB)
-TARGET_LDFLAGS_RPATH  = $(CORTEX-STRINGS) -Wl,-O1 -Wl,--gc-sections -L$(TARGETLIB) -Wl,-rpath-link,$(TARGETLIB)
+TARGET_LDFLAGS        = $(CORTEX-STRINGS) -Wl,-O1 $(TARGET_LDFLAGS_ADD) -L$(TARGETLIB)
+TARGET_LDFLAGS_RPATH  = $(CORTEX-STRINGS) -Wl,-O1 $(TARGET_LDFLAGS_ADD) -L$(TARGETLIB) -Wl,-rpath-link,$(TARGETLIB)
 
 VPATH = $(D)
 
