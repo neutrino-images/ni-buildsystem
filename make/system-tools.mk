@@ -120,7 +120,7 @@ $(D)/parted: $(D)/e2fsprogs $(ARCHIVE)/parted-$(PARTED_VER).tar.xz | $(TARGETPRE
 	$(UNTAR)/parted-$(PARTED_VER).tar.xz
 	cd $(BUILD_TMP)/parted-$(PARTED_VER) && \
 		$(PATCH)/parted-3.2-devmapper-1.patch && \
-		$(CONFIGURE_RPATH) \
+		$(CONFIGURE) \
 			--prefix= \
 			--target=$(TARGET) \
 			--mandir=/.remove \
@@ -219,7 +219,7 @@ $(D)/djmount: $(ARCHIVE)/djmount-$(DJMOUNT_VER).tar.gz $(D)/libfuse | $(TARGETPR
 		$(PATCH)/djmount-support-seeking-in-large-2gb-files.patch && \
 		touch libupnp/config.aux/config.rpath && \
 		autoreconf -fi && \
-		$(CONFIGURE_RPATH) -C \
+		$(CONFIGURE) -C \
 			--prefix= \
 			--disable-debug && \
 		make && \
@@ -234,7 +234,7 @@ $(D)/ushare: $(ARCHIVE)/ushare-$(USHARE_VER).tar.bz2 $(D)/libupnp | $(TARGETPREF
 	$(UNTAR)/ushare-$(USHARE_VER).tar.bz2
 	pushd $(BUILD_TMP)/ushare-$(USHARE_VER) && \
 		$(PATCH)/ushare.diff && \
-		$(BUILDENV_RPATH) \
+		$(BUILDENV) \
 		./configure \
 			--prefix=$(TARGETPREFIX) \
 			--disable-dlna \
@@ -244,7 +244,7 @@ $(D)/ushare: $(ARCHIVE)/ushare-$(USHARE_VER).tar.bz2 $(D)/libupnp | $(TARGETPREF
 		sed -i config.h  -e 's@SYSCONFDIR.*@SYSCONFDIR "/etc"@' && \
 		sed -i config.h  -e 's@LOCALEDIR.*@LOCALEDIR "/share"@' && \
 		ln -sf ../config.h src/ && \
-		$(MAKE) $(USHARE_LDFLAGS) && \
+		$(MAKE) && \
 		$(MAKE) install && \
 		install -D -m 0644 $(IMAGEFILES)/scripts/ushare.conf $(TARGETPREFIX)/etc/ushare.conf
 		install -D -m 0755 $(IMAGEFILES)/scripts/ushare.init $(TARGETPREFIX)/etc/init.d/ushare
@@ -296,7 +296,7 @@ $(D)/vsftpd: $(D)/openssl $(ARCHIVE)/vsftpd-$(VSFTPD_VER).tar.gz | $(TARGETPREFI
 		sed -i -e 's/.*VSF_BUILD_PAM/#undef VSF_BUILD_PAM/' builddefs.h && \
 		sed -i -e 's/.*VSF_BUILD_SSL/#define VSF_BUILD_SSL/' builddefs.h && \
 		make clean && \
-		TARGETPREFIX=$(TARGETPREFIX) make CC=$(TARGET)-gcc LIBS="-lcrypt -lcrypto -lssl" CFLAGS="$(TARGET_CFLAGS)" LDFLAGS="$(TARGET_LDFLAGS_RPATH)"
+		TARGETPREFIX=$(TARGETPREFIX) make CC=$(TARGET)-gcc LIBS="-lcrypt -lcrypto -lssl" CFLAGS="$(TARGET_CFLAGS)" LDFLAGS="$(TARGET_LDFLAGS)"
 	install -d $(TARGETPREFIX)/share/empty
 	install -D -m 755 $(BUILD_TMP)/vsftpd-$(VSFTPD_VER)/vsftpd $(TARGETPREFIX)/sbin/vsftpd
 	install -D -m 644 $(IMAGEFILES)/scripts/vsftpd.conf $(TARGETPREFIX)/etc/vsftpd.conf
@@ -432,9 +432,7 @@ $(D)/e2fsprogs: $(ARCHIVE)/e2fsprogs-$(E2FSPROGS_VER).tar.gz | $(TARGETPREFIX)
 $(D)/ntfs-3g: $(ARCHIVE)/ntfs-3g_ntfsprogs-$(NTFS3G_VER).tgz | $(TARGETPREFIX)
 	$(UNTAR)/ntfs-3g_ntfsprogs-$(NTFS3G_VER).tgz
 	cd $(BUILD_TMP)/ntfs-3g_ntfsprogs-$(NTFS3G_VER) && \
-		CFLAGS="-pipe $(TARGET_CFLAG_O) -g" ./configure \
-			--build=$(BUILD) \
-			--host=$(TARGET) \
+		$(CONFIGURE) \
 			--prefix= \
 			--mandir=/.remove \
 			--docdir=/.remove \
@@ -823,7 +821,7 @@ $(D)/fuse-exfat: $(ARCHIVE)/fuse-exfat-$(FUSE_EXFAT_VER).tar.gz $(D)/libfuse | $
 	$(UNTAR)/fuse-exfat-$(FUSE_EXFAT_VER).tar.gz
 	pushd $(BUILD_TMP)/fuse-exfat-$(FUSE_EXFAT_VER); \
 		autoreconf -fi; \
-		$(CONFIGURE_RPATH) \
+		$(CONFIGURE) \
 			--prefix= \
 			--docdir=/.remove \
 			--mandir=/.remove \

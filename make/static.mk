@@ -6,7 +6,13 @@ cortex-strings: $(STATICLIB)/libcortex-strings.la
 $(STATICLIB)/libcortex-strings.la: $(ARCHIVE)/cortex-strings-$(CORTEX-STRINGS_VER).tar.bz2 | $(TARGETPREFIX)
 	$(UNTAR)/cortex-strings-$(CORTEX-STRINGS_VER).tar.bz2
 	pushd $(BUILD_TMP)/cortex-strings-$(CORTEX-STRINGS_VER) && \
-		$(CONFIGURE_NON_CORTEX) \
+		./autogen.sh && \
+		CFLAGS="-pipe -O2 -g -I$(TARGETINCLUDE)" \
+		CPPFLAGS="-pipe -O2 -g -I$(TARGETINCLUDE)" \
+		CXXFLAGS="-pipe -O2 -g -I$(TARGETINCLUDE)" \
+		LDFLAGS="-Wl,-O1 -L$(TARGETLIB)" \
+		PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
+		./configure $(CONFIGURE_OPTS) \
 			--prefix= \
 			--disable-shared \
 			--enable-static \

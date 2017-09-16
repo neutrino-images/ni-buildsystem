@@ -9,33 +9,26 @@ endif
 # uncomment next line to build neutrino without --enable-ffmpegdec
 #NEUTRINO_DEPS += libvorbisidec libid3tag libmad libFLAC
 
-N_CFLAG_O   = -O2
-ifeq ($(BOXSERIES), hd1)
-  N_CFLAG_O = -Os
-endif
-
 N_CFLAGS = -Wall -W -Wshadow -D__KERNEL_STRICT_NAMES -D__STDC_CONSTANT_MACROS -DENABLE_FREESATEPG
 ifeq ($(BOXSERIES), hd1)
 	N_CFLAGS += -DCPU_FREQ
-	N_CFLAGS += -march=armv6 -mfloat-abi=soft -mlittle-endian
 endif
 ifeq ($(BOXSERIES), hd2)
 	N_CFLAGS += -DFB_HW_ACCELERATION
-	N_CFLAGS += -march=armv7-a -mcpu=cortex-a9 -mtune=cortex-a9 -mfpu=vfpv3-d16 -mfloat-abi=hard -mlittle-endian
 endif
 ifeq ($(DEBUG), yes)
 	N_CFLAGS += -ggdb3 -rdynamic
 else
-	N_CFLAGS += -g $(N_CFLAG_O)
+	N_CFLAGS += $(TARGET_CFLAGS)
 endif
 
 N_CPPFLAGS += -I$(TARGETINCLUDE)
 
-N_LDFLAGS = -L$(TARGETLIB) -lcrypto -ldl -lz $(CORTEX-STRINGS)
+N_LDFLAGS = -lcrypto -ldl -lz $(CORTEX-STRINGS) -L$(TARGETLIB)
 ifeq ($(DEBUG), yes)
 	N_LDFLAGS += -Wl,-rpath-link,$(TARGETLIB)
 else
-	N_LDFLAGS += -Wl,-O1,-rpath-link,$(TARGETLIB)
+	N_LDFLAGS += -Wl,-O1 $(TARGET_EXTRA_LDFLAGS) -Wl,-rpath-link,$(TARGETLIB)
 endif
 
 N_CONFIGURE_DEBUG =

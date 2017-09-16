@@ -69,10 +69,10 @@ $(BIN)/logoview: $(BIN)
 blockads: $(SOURCE_DIR)/$(TUXBOX_PLUGINS) $(BIN)/blockad $(LIBPLUG)/blockads.so
 $(BIN)/blockad: $(D)/freetype $(BIN) $(VARCONF)
 	pushd $(SOURCE_DIR)/$(TUXBOX_PLUGINS)/blockads && \
-	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS_RPATH) -I$(TARGETINCLUDE)/freetype2 -lfreetype -lz $(CORTEX-STRINGS) -o $@ blockad.c globals.c http.c && \
+	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) -I$(TARGETINCLUDE)/freetype2 -lfreetype -lz $(CORTEX-STRINGS) -o $@ blockad.c globals.c http.c && \
 	install -m644 blockads.conf $(VARCONF)/
 
 $(LIBPLUG)/blockads.so: $(LIBPLUG)
 	pushd $(SOURCE_DIR)/$(TUXBOX_PLUGINS)/blockads && \
-	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS_RPATH) -I$(TARGETINCLUDE)/freetype2 -lfreetype -lz $(CORTEX-STRINGS) -o $@ blockads.c gfx.c io.c text.c globals.c http.c && \
+	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) -I$(TARGETINCLUDE)/freetype2 -lfreetype -lz $(CORTEX-STRINGS) -o $@ blockads.c gfx.c io.c text.c globals.c http.c && \
 	install -m644 blockads.cfg $(LIBPLUG)/

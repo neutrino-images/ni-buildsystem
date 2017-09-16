@@ -98,88 +98,80 @@ ifndef BOXMODEL
   $(error BOXMODEL not set)
 endif
 
-MAINTAINER  ?= NI-Team
-FLAVOUR     ?= ni-neutrino-hd
-
-TARGET       = arm-cx2450x-linux-gnueabi
-ifeq ($(BOXSERIES), hd2)
-  TARGET     = arm-cortex-linux-uclibcgnueabi
-endif
-
-DRIVERS_DIR  = nevis
-KVERSION     = 2.6.34.13
-KBRANCH      = ni/2.6.34.x
-KTECHSTR     =
-ifeq ($(BOXSERIES), hd2)
-  KVERSION   = 3.10.93
-  KBRANCH    = ni/3.10.x
-  ifeq ($(BOXFAMILY), apollo)
-    DRIVERS_DIR = apollo-3.x
-    KTECHSTR = hd849x
-  endif
-  ifeq ($(BOXFAMILY), kronos)
-    DRIVERS_DIR = kronos-3.x
-    KTECHSTR = en75x1
-  endif
-endif
-KSTRING      = NI $(shell echo $(BOXMODEL) | sed 's/.*/\u&/') Kernel
-
-KVERSION_FULL = $(KVERSION)
-ifeq ($(BOXMODEL), nevis)
-  KVERSION_FULL := $(KVERSION_FULL)-$(BOXMODEL)
-endif
-
+MAINTAINER   ?= NI-Team
+FLAVOUR      ?= ni-neutrino-hd
+KSTRING       = NI $(shell echo $(BOXMODEL) | sed 's/.*/\u&/') Kernel
 WHOAMI       := $(shell id -un)
-ARCHIVE      = $(BASE_DIR)/download
-BUILD_TMP    = $(BASE_DIR)/build_tmp
-D            = $(BASE_DIR)/deps
-DEPDIR       = $(D)
-HOSTPREFIX   = $(BASE_DIR)/host
+ARCHIVE       = $(BASE_DIR)/download
+BUILD_TMP     = $(BASE_DIR)/build_tmp
+D             = $(BASE_DIR)/deps
+DEPDIR        = $(D)
+HOSTPREFIX    = $(BASE_DIR)/host
 TARGETPREFIX ?= $(BASE_DIR)/root
-SOURCE_DIR   = $(BASE_DIR)/source
-MAKE_DIR     = $(BASE_DIR)/make
-STAGING_DIR  = $(BASE_DIR)/staging
-LOCAL_DIR    = $(BASE_DIR)/local
-IMAGE_DIR    = $(STAGING_DIR)/images
-UPDATE_DIR   = $(STAGING_DIR)/updates
-STATIC_DIR   = $(BASE_DIR)/static/$(BOXARCH)/$(BOXSERIES)
-HELPERS_DIR  = $(BASE_DIR)/helpers
-CROSS_BASE   = $(BASE_DIR)/cross/$(BOXARCH)/$(BOXSERIES)
-CROSS_DIR   ?= $(CROSS_BASE)
-BUILD       ?= $(shell /usr/share/libtool/config.guess 2>/dev/null || /usr/share/libtool/config/config.guess 2>/dev/null || /usr/share/misc/config.guess)
-CCACHE       = /usr/bin/ccache
-
-CONFIGS      = $(BASE_DIR)/archive-configs
-PATCHES      = $(BASE_DIR)/archive-patches
-IMAGEFILES   = $(BASE_DIR)/archive-imagefiles
-SOURCES      = $(BASE_DIR)/archive-sources
-
-SKEL_ROOT    = $(BASE_DIR)/skel-root/$(BOXTYPE)/$(BOXSERIES)
+SOURCE_DIR    = $(BASE_DIR)/source
+MAKE_DIR      = $(BASE_DIR)/make
+STAGING_DIR   = $(BASE_DIR)/staging
+LOCAL_DIR     = $(BASE_DIR)/local
+IMAGE_DIR     = $(STAGING_DIR)/images
+UPDATE_DIR    = $(STAGING_DIR)/updates
+STATIC_DIR    = $(BASE_DIR)/static/$(BOXARCH)/$(BOXSERIES)
+HELPERS_DIR   = $(BASE_DIR)/helpers
+CROSS_BASE    = $(BASE_DIR)/cross/$(BOXARCH)/$(BOXSERIES)
+CROSS_DIR    ?= $(CROSS_BASE)
+CONFIGS       = $(BASE_DIR)/archive-configs
+PATCHES       = $(BASE_DIR)/archive-patches
+IMAGEFILES    = $(BASE_DIR)/archive-imagefiles
+SOURCES       = $(BASE_DIR)/archive-sources
+SKEL_ROOT     = $(BASE_DIR)/skel-root/$(BOXTYPE)/$(BOXSERIES)
+STATICLIB     = $(STATIC_DIR)/lib
+TARGETLIB     = $(TARGETPREFIX)/lib
+TARGETINCLUDE = $(TARGETPREFIX)/include
+BUILD        ?= $(shell /usr/share/libtool/config.guess 2>/dev/null || /usr/share/libtool/config/config.guess 2>/dev/null || /usr/share/misc/config.guess)
+CCACHE        = /usr/bin/ccache
 
 # create debug image
 DEBUG ?= no
 
-# cortex-strings optimization
-CORTEX-STRINGS =
+ifeq ($(BOXSERIES), hd1)
+  KVERSION               = 2.6.34.13
+  KVERSION_FULL          := $(KVERSION_FULL)-$(BOXMODEL)
+  KBRANCH                = ni/2.6.34.x
+  DRIVERS_DIR            = nevis
+  KTECHSTR               =
+  CORTEX-STRINGS         =
+  TARGET                 = arm-cx2450x-linux-gnueabi
+  TARGET_MARCH_CFLAGS    = -Os -march=armv6 -mfloat-abi=soft -mlittle-endian
+  TARGET_EXTRA_CFLAGS    = -fdata-sections -ffunction-sections
+  TARGET_EXTRA_LDFLAGS   = -Wl,--gc-sections
+endif
+
 ifeq ($(BOXSERIES), hd2)
-  CORTEX-STRINGS = -lcortex-strings
+  KVERSION               = 3.10.93
+  KVERSION_FULL          = $(KVERSION)
+  KBRANCH                = ni/3.10.x
+  ifeq ($(BOXFAMILY), apollo)
+    DRIVERS_DIR          = apollo-3.x
+    KTECHSTR             = hd849x
+  endif
+  ifeq ($(BOXFAMILY), kronos)
+    DRIVERS_DIR          = kronos-3.x
+    KTECHSTR             = en75x1
+  endif
+  CORTEX-STRINGS         = -lcortex-strings
+  TARGET                 = arm-cortex-linux-uclibcgnueabi
+  TARGET_MARCH_CFLAGS    = -O2 -march=armv7-a -mcpu=cortex-a9 -mtune=cortex-a9 -mfpu=vfpv3-d16 -mfloat-abi=hard -mlittle-endian
+  TARGET_EXTRA_CFLAGS    =
+  TARGET_EXTRA_LDFLAGS   =
+  ifeq ($(BOXMODEL), kronos_v2)
+    TARGET_EXTRA_CFLAGS  = -fdata-sections -ffunction-sections
+    TARGET_EXTRA_LDFLAGS = -Wl,--gc-sections
+  endif
 endif
 
-STATICLIB             = $(STATIC_DIR)/lib
-TARGETLIB             = $(TARGETPREFIX)/lib
-TARGETINCLUDE         = $(TARGETPREFIX)/include
-TARGET_CFLAG_O        = -O2
-TARGET_LDFLAGS_ADD    =
-ifeq ($(BOXMODEL), $(filter $(BOXMODEL), nevis kronos_v2))
-  TARGET_CFLAG_O      += -Os -fdata-sections -ffunction-sections
-  TARGET_LDFLAGS_ADD  = -Wl,--gc-sections
-endif
-
-TARGET_CFLAGS         = -pipe $(TARGET_CFLAG_O) -g -I$(TARGETINCLUDE)
-TARGET_CPPFLAGS       = $(TARGET_CFLAGS)
-TARGET_CXXFLAGS       = $(TARGET_CFLAGS)
-TARGET_LDFLAGS        = $(CORTEX-STRINGS) -Wl,-O1 $(TARGET_LDFLAGS_ADD) -L$(TARGETLIB)
-TARGET_LDFLAGS_RPATH  = $(CORTEX-STRINGS) -Wl,-O1 $(TARGET_LDFLAGS_ADD) -L$(TARGETLIB) -Wl,-rpath-link,$(TARGETLIB)
+TARGET_CFLAGS   = -pipe $(TARGET_MARCH_CFLAGS) $(TARGET_EXTRA_CFLAGS) -g -I$(TARGETINCLUDE)
+TARGET_CPPFLAGS = $(TARGET_CFLAGS)
+TARGET_CXXFLAGS = $(TARGET_CFLAGS)
+TARGET_LDFLAGS  = $(CORTEX-STRINGS) -Wl,-O1 $(TARGET_EXTRA_LDFLAGS) -L$(TARGETLIB) -Wl,-rpath-link,$(TARGETLIB)
 
 VPATH = $(D)
 
@@ -222,33 +214,9 @@ BUILDENV = \
 	LDFLAGS="$(TARGET_LDFLAGS)" \
 	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH)
 
-BUILDENV_NON_CORTEX = \
-	CFLAGS="$(TARGET_CFLAGS)" \
-	CPPFLAGS="$(TARGET_CPPFLAGS)" \
-	CXXFLAGS="$(TARGET_CXXFLAGS)" \
-	LDFLAGS="-Wl,-O1 -L$(TARGETLIB)" \
-	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH)
-
-BUILDENV_RPATH = \
-	CFLAGS="$(TARGET_CFLAGS)" \
-	CPPFLAGS="$(TARGET_CPPFLAGS)" \
-	CXXFLAGS="$(TARGET_CXXFLAGS)" \
-	LDFLAGS="$(TARGET_LDFLAGS_RPATH)" \
-	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH)
-
 CONFIGURE = \
 	test -f ./configure || ./autogen.sh && \
 	$(BUILDENV) \
-	./configure $(CONFIGURE_OPTS)
-
-CONFIGURE_NON_CORTEX = \
-	test -f ./configure || ./autogen.sh && \
-	$(BUILDENV_NON_CORTEX) \
-	./configure $(CONFIGURE_OPTS)
-
-CONFIGURE_RPATH = \
-	test -f ./configure || ./autogen.sh && \
-	$(BUILDENV_RPATH) \
 	./configure $(CONFIGURE_OPTS)
 
 GITHUB			= https://github.com

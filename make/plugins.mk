@@ -102,7 +102,7 @@ $(BIN)/emmrd: $(BIN) $(VARCONF) $(ETCINIT)
 FritzCallMonitor: $(SHAREICONS) $(BIN)/FritzCallMonitor
 $(BIN)/FritzCallMonitor: $(D)/openssl $(D)/libcurl $(BIN) $(VARCONF) $(ETCINIT)
 	pushd $(SOURCES)/FritzCallMonitor && \
-	$(TARGET)-gcc -Wall $(TARGET_CFLAGS) $(TARGET_LDFLAGS_RPATH) -lstdc++ -lcrypto -pthread -lcurl $(CORTEX-STRINGS) -o $@ FritzCallMonitor.cpp connect.cpp  && \
+	$(TARGET)-gcc -Wall $(TARGET_CFLAGS) $(TARGET_LDFLAGS) -lstdc++ -lcrypto -pthread -lcurl $(CORTEX-STRINGS) -o $@ FritzCallMonitor.cpp connect.cpp  && \
 	install -m644 FritzCallMonitor.addr $(VARCONF)/ && \
 	install -m644 FritzCallMonitor.cfg $(VARCONF)/ && \
 	install -m755 fritzcallmonitor.init $(ETCINIT)/fritzcallmonitor && \
@@ -114,7 +114,7 @@ $(BIN)/FritzCallMonitor: $(D)/openssl $(D)/libcurl $(BIN) $(VARCONF) $(ETCINIT)
 FritzInfoMonitor: $(LIBPLUG)/FritzInfoMonitor.so
 $(LIBPLUG)/FritzInfoMonitor.so: $(D)/freetype $(D)/openssl $(D)/libcurl $(LIBPLUG)
 	pushd $(SOURCES)/FritzCallMonitor/FritzInfoMonitor && \
-	$(TARGET)-gcc -Wall $(TARGET_CFLAGS) $(TARGET_LDFLAGS_RPATH) -I$(TARGETINCLUDE)/freetype2 -lfreetype -lz -lstdc++ -lcrypto -lcurl $(CORTEX-STRINGS) -o $@ \
+	$(TARGET)-gcc -Wall $(TARGET_CFLAGS) $(TARGET_LDFLAGS) -I$(TARGETINCLUDE)/freetype2 -lfreetype -lz -lstdc++ -lcrypto -lcurl $(CORTEX-STRINGS) -o $@ \
 		parser.cpp \
 		connect.cpp \
 		framebuffer.cpp \
@@ -226,7 +226,7 @@ $(BIN)/getrc: $(BIN)
 input: $(SOURCE_DIR)/$(TUXBOX_PLUGINS) $(BIN)/input
 $(BIN)/input: $(D)/freetype $(BIN)
 	pushd $(SOURCE_DIR)/$(TUXBOX_PLUGINS)/input && \
-	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS_RPATH) -I$(TARGETINCLUDE)/freetype2 -lfreetype -lz -lpng $(CORTEX-STRINGS) -o $@ input.c inputd.c gfx.c io.c text.c fb_display.c resize.c pngw.cpp png_helper.cpp
+	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) -I$(TARGETINCLUDE)/freetype2 -lfreetype -lz -lpng $(CORTEX-STRINGS) -o $@ input.c inputd.c gfx.c io.c text.c fb_display.c resize.c pngw.cpp png_helper.cpp
 
 #logomask
 logomask: $(SOURCE_DIR)/$(TUXBOX_PLUGINS) $(BIN)/logomask $(LIBPLUG)/logoset.so $(LIBPLUG)/logomask.so
@@ -237,7 +237,7 @@ $(BIN)/logomask: $(BIN)
  
 $(LIBPLUG)/logoset.so: $(D)/freetype $(LIBPLUG)
 	pushd $(SOURCE_DIR)/$(TUXBOX_PLUGINS)/logomask && \
-	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS_RPATH) -I$(TARGETINCLUDE)/freetype2 -lfreetype -lz $(CORTEX-STRINGS) -o $@ logoset.c gfx.c io.c text.c && \
+	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) -I$(TARGETINCLUDE)/freetype2 -lfreetype -lz $(CORTEX-STRINGS) -o $@ logoset.c gfx.c io.c text.c && \
 	install -m644 logoset.cfg $(LIBPLUG)/
 	install -m644 $(IMAGEFILES)/icons/hinticons/logoset_hint.png $(LIBPLUG)/
 
@@ -251,13 +251,13 @@ $(LIBPLUG)/logomask.so: $(LIBPLUG) $(BIN)
 msgbox: $(SOURCE_DIR)/$(TUXBOX_PLUGINS) $(BIN)/msgbox
 $(BIN)/msgbox: $(D)/freetype $(BIN)
 	pushd $(SOURCE_DIR)/$(TUXBOX_PLUGINS)/msgbox && \
-	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS_RPATH) -I$(TARGETINCLUDE)/freetype2 -lfreetype -lz -lpng $(CORTEX-STRINGS) -o $@ msgbox.c gfx.c io.c text.c txtform.c fb_display.c resize.c pngw.cpp png_helper.cpp
+	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) -I$(TARGETINCLUDE)/freetype2 -lfreetype -lz -lpng $(CORTEX-STRINGS) -o $@ msgbox.c gfx.c io.c text.c txtform.c fb_display.c resize.c pngw.cpp png_helper.cpp
 
 #tuxcal
 tuxcal: $(SOURCE_DIR)/$(TUXBOX_PLUGINS) $(BIN)/tuxcald $(LIBPLUG)/tuxcal.so
 $(BIN)/tuxcald: $(D)/freetype $(BIN) $(ETCINIT) $(VARCONF)
 	pushd $(SOURCE_DIR)/$(TUXBOX_PLUGINS)/tuxcal/daemon && \
-	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS_RPATH) -I$(TARGETINCLUDE)/freetype2 -lpthread -lfreetype -lz $(CORTEX-STRINGS) -o $@ tuxcald.c && \
+	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) -I$(TARGETINCLUDE)/freetype2 -lpthread -lfreetype -lz $(CORTEX-STRINGS) -o $@ tuxcald.c && \
 	install -m755 $(IMAGEFILES)/scripts/tuxcald.init $(ETCINIT)/tuxcald && \
 	cd $(ETCINIT) && \
 	ln -sf tuxcald S99tuxcald && \
@@ -268,7 +268,7 @@ $(BIN)/tuxcald: $(D)/freetype $(BIN) $(ETCINIT) $(VARCONF)
 
 $(LIBPLUG)/tuxcal.so: $(LIBPLUG)
 	pushd $(SOURCE_DIR)/$(TUXBOX_PLUGINS)/tuxcal && \
-	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS_RPATH) -I$(TARGETINCLUDE)/freetype2 -lfreetype -lz $(CORTEX-STRINGS) -o $@ tuxcal.c && \
+	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) -I$(TARGETINCLUDE)/freetype2 -lfreetype -lz $(CORTEX-STRINGS) -o $@ tuxcal.c && \
 	install -m644 tuxcal.cfg $(LIBPLUG)/
 	install -m644 $(IMAGEFILES)/icons/hinticons/tuxcal_hint.png $(LIBPLUG)/
 
@@ -276,7 +276,7 @@ $(LIBPLUG)/tuxcal.so: $(LIBPLUG)
 tuxcom: $(SOURCE_DIR)/$(TUXBOX_PLUGINS) $(LIBPLUG)/tuxcom.so
 $(LIBPLUG)/tuxcom.so: $(D)/freetype $(LIBPLUG)
 	pushd $(SOURCE_DIR)/$(TUXBOX_PLUGINS)/tuxcom && \
-	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS_RPATH) -I$(TARGETINCLUDE)/freetype2 -lfreetype -lz $(CORTEX-STRINGS) -o $@ tuxcom.c && \
+	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) -I$(TARGETINCLUDE)/freetype2 -lfreetype -lz $(CORTEX-STRINGS) -o $@ tuxcom.c && \
 	install -m644 tuxcom.cfg $(LIBPLUG)/
 	install -m644 $(IMAGEFILES)/icons/hinticons/tuxcom_hint.png $(LIBPLUG)/
 
@@ -284,7 +284,7 @@ $(LIBPLUG)/tuxcom.so: $(D)/freetype $(LIBPLUG)
 tuxmail: $(SOURCE_DIR)/$(TUXBOX_PLUGINS) $(BIN)/tuxmaild $(LIBPLUG)/tuxmail.so
 $(BIN)/tuxmaild: $(D)/freetype $(D)/openssl $(BIN) $(ETCINIT) $(VARCONF)
 	pushd $(SOURCE_DIR)/$(TUXBOX_PLUGINS)/tuxmail/daemon && \
-	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS_RPATH) -I$(TARGETINCLUDE)/freetype2 -lssl -lcrypto -lpthread -lfreetype -lz $(CORTEX-STRINGS) -o $@ tuxmaild.c && \
+	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) -I$(TARGETINCLUDE)/freetype2 -lssl -lcrypto -lpthread -lfreetype -lz $(CORTEX-STRINGS) -o $@ tuxmaild.c && \
 	install -m755 $(IMAGEFILES)/scripts/tuxmaild.init $(ETCINIT)/tuxmaild && \
 	cd $(ETCINIT) && \
 	ln -sf tuxmaild S99tuxmaild && \
@@ -297,7 +297,7 @@ $(BIN)/tuxmaild: $(D)/freetype $(D)/openssl $(BIN) $(ETCINIT) $(VARCONF)
 
 $(LIBPLUG)/tuxmail.so: $(LIBPLUG)
 	pushd $(SOURCE_DIR)/$(TUXBOX_PLUGINS)/tuxmail && \
-	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS_RPATH) -I$(TARGETINCLUDE)/freetype2 -lfreetype -lz $(CORTEX-STRINGS) -o $@ tuxmail.c && \
+	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) -I$(TARGETINCLUDE)/freetype2 -lfreetype -lz $(CORTEX-STRINGS) -o $@ tuxmail.c && \
 	install -m644 tuxmail.cfg $(LIBPLUG)/
 	install -m644 $(IMAGEFILES)/icons/hinticons/tuxmail_hint.png $(LIBPLUG)/
 
@@ -305,7 +305,7 @@ $(LIBPLUG)/tuxmail.so: $(LIBPLUG)
 tuxwetter: $(SOURCE_DIR)/$(NI_TUXWETTER) $(LIBPLUG)/tuxwetter.so
 $(LIBPLUG)/tuxwetter.so: $(D)/freetype $(D)/libcurl $(D)/giflib $(D)/libjpeg $(LIBPLUG) $(VARCONF)
 	pushd $(SOURCE_DIR)/$(NI_TUXWETTER) && \
-	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS_RPATH) -I$(TARGETINCLUDE)/freetype2 \
+	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) -I$(TARGETINCLUDE)/freetype2 \
 		-lfreetype -lcrypto -lssl -lz -lcurl -ljpeg -lpng -lgif \
 		\
 		-DWWEATHER \
@@ -341,13 +341,13 @@ $(LIBPLUG)/tuxwetter.so: $(D)/freetype $(D)/libcurl $(D)/giflib $(D)/libjpeg $(L
 cooliTSclimax: $(SOURCE_DIR)/$(TUXBOX_PLUGINS) $(BIN)/cooliTSclimax
 $(BIN)/cooliTSclimax: $(D)/ffmpeg $(BIN)
 	pushd $(SOURCE_DIR)/$(TUXBOX_PLUGINS)/cooliTSclimax && \
-	$(TARGET)-g++ $(TARGET_CFLAGS) -D__STDC_CONSTANT_MACROS $(TARGET_LDFLAGS_RPATH) -lpthread -lavformat -lavcodec -lavutil $(CORTEX-STRINGS) -o $@ cooliTSclimax.cpp
+	$(TARGET)-g++ $(TARGET_CFLAGS) -D__STDC_CONSTANT_MACROS $(TARGET_LDFLAGS) -lpthread -lavformat -lavcodec -lavutil $(CORTEX-STRINGS) -o $@ cooliTSclimax.cpp
 
 # oscammon
 oscammon: $(D)/zlib $(D)/freetype $(D)/openssl $(LIBPLUG)/oscammon.so
 $(LIBPLUG)/oscammon.so: $(LIBPLUG) $(VARCONF)
 	pushd $(SOURCES)/oscammon && \
-	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS_RPATH) -I$(TARGETINCLUDE)/freetype2 -lfreetype -lz -lcrypto -o $@ oscammon.c && \
+	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) -I$(TARGETINCLUDE)/freetype2 -lfreetype -lz -lcrypto -o $@ oscammon.c && \
 	cp -f oscammon.conf $(VARCONF)/ && \
 	cp -f oscammon.cfg $(LIBPLUG)/ && \
 	cp -f oscammon_hint.png $(LIBPLUG)/
@@ -356,7 +356,7 @@ $(LIBPLUG)/oscammon.so: $(LIBPLUG) $(VARCONF)
 shellexec: $(SOURCE_DIR)/$(TUXBOX_PLUGINS) $(LIBPLUG)/shellexec.so
 $(LIBPLUG)/shellexec.so: $(D)/freetype $(LIBPLUG) $(SHAREFLEX) $(VARCONF) $(BIN)
 	pushd $(SOURCE_DIR)/$(TUXBOX_PLUGINS)/shellexec; \
-		$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS_RPATH) -I$(TARGETINCLUDE)/freetype2 -lfreetype -lz -lpng $(CORTEX-STRINGS) -o $@ shellexec.c gfx.c io.c text.c fb_display.c resize.c pngw.cpp png_helper.cpp; \
+		$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) -I$(TARGETINCLUDE)/freetype2 -lfreetype -lz -lpng $(CORTEX-STRINGS) -o $@ shellexec.c gfx.c io.c text.c fb_display.c resize.c pngw.cpp png_helper.cpp; \
 		install -m644 shellexec.conf $(VARCONF)/; \
 		install -m644 shellexec.cfg $(LIBPLUG)/
 	sed -i 's|FONT=|#FONT=|' $(VARCONF)/shellexec.conf

@@ -25,7 +25,7 @@ $(D)/zlib: $(ARCHIVE)/zlib-$(ZLIB_VER).tar.gz | $(TARGETPREFIX)
 $(D)/libfuse: $(ARCHIVE)/fuse-$(FUSE_VER).tar.gz | $(TARGETPREFIX)
 	$(UNTAR)/fuse-$(FUSE_VER).tar.gz
 	pushd $(BUILD_TMP)/fuse-$(FUSE_VER) && \
-		$(CONFIGURE_RPATH) \
+		$(CONFIGURE) \
 			--prefix= \
 			--datarootdir=/.remove \
 			--disable-static \
@@ -99,7 +99,7 @@ $(D)/giflib: $(ARCHIVE)/giflib-$(GIFLIB_VER).tar.bz2 | $(TARGETPREFIX)
 $(D)/libcurl: $(D)/zlib $(D)/openssl $(ARCHIVE)/curl-$(LIBCURL_VER).tar.bz2 | $(TARGETPREFIX)
 	$(UNTAR)/curl-$(LIBCURL_VER).tar.bz2
 	pushd $(BUILD_TMP)/curl-$(LIBCURL_VER) && \
-		$(CONFIGURE_RPATH) \
+		$(CONFIGURE) \
 			--prefix=  \
 			--mandir=/.remove \
 			--disable-manual \
@@ -201,17 +201,12 @@ OPENSSLFLAGS = CC=$(TARGET)-gcc \
 		NI_OPTIMIZATION_FLAGS="$(TARGET_CFLAGS)" \
 		PROCESSOR=ARM
 
-OPENSSL_NI_FLAVOR = linux-armv4-ni -march=armv7-a -mcpu=cortex-a9 -mtune=cortex-a9 -mfpu=vfpv3-d16 -mfloat-abi=hard -mlittle-endian
-ifeq ($(BOXSERIES), hd1)
-	OPENSSL_NI_FLAVOR = linux-armv4-ni -march=armv6 -mfloat-abi=soft -mlittle-endian
-endif
-
 $(D)/openssl: $(ARCHIVE)/openssl-$(OPENSSL_VER).tar.gz | $(TARGETPREFIX)
 	$(UNTAR)/openssl-$(OPENSSL_VER).tar.gz
 	pushd $(BUILD_TMP)/openssl-$(OPENSSL_VER) && \
 	$(PATCH)/openssl-add-ni-specific-target.patch && \
 		./Configure \
-			$(OPENSSL_NI_FLAVOR) \
+			linux-armv4-ni $(MARCH_FLAGS) \
 			shared \
 			threads \
 			no-hw \
@@ -364,7 +359,7 @@ FFMPEG_CONFIGURE_GENERIC = \
 			\
 			--target-os=linux \
 			--arch=arm \
-			--extra-ldflags="$(TARGET_LDFLAGS_RPATH)"
+			--extra-ldflags="$(TARGET_LDFLAGS)"
 
 ifeq ($(BOXSERIES), hd2)
   FFMPEG_CONFIGURE = \
@@ -434,27 +429,25 @@ $(D)/libncurses: $(ARCHIVE)/ncurses-$(LIBNCURSES_VER).tar.gz | $(TARGETPREFIX)
 	$(REMOVE)/ncurses-$(LIBNCURSES_VER)
 	touch $@
 
-ifeq ($(BOXSERIES), hd2)
-  OPENTHREADS_CONFIGURE= -march=armv7-a -mcpu=cortex-a9 -mtune=cortex-a9 -mfpu=vfpv3-d16 -mfloat-abi=hard -mlittle-endian
-else
-  OPENTHREADS_CONFIGURE= -march=armv6 -mfloat-abi=soft -mlittle-endian
-endif
 $(D)/openthreads: $(SOURCE_DIR)/$(NI_OPENTHREADS) | $(TARGETPREFIX)
 	$(REMOVE)/$(NI_OPENTHREADS)
 	tar -C $(SOURCE_DIR) -cp $(NI_OPENTHREADS) --exclude-vcs | tar -C $(BUILD_TMP) -x
 	cd $(BUILD_TMP)/$(NI_OPENTHREADS)/ && \
-		cmake . -DCMAKE_BUILD_TYPE="None" \
+		rm -f CMakeCache.txt && \
+			cmake \
+			-DCMAKE_BUILD_TYPE="None" \
 			-DCMAKE_SYSTEM_NAME="Linux" \
 			-DCMAKE_SYSTEM_PROCESSOR="arm" \
-			-DCMAKE_CXX_FLAGS="$(TARGET_CFLAG_O) -DNDEBUG $(OPENTHREADS_CONFIGURE)" \
+			-DCMAKE_CXX_FLAGS="$(TARGET_MARCH_CFLAGS) -DNDEBUG" \
 			-DCMAKE_INSTALL_PREFIX="" \
 			-DCMAKE_C_COMPILER="$(TARGET)-gcc" \
 			-DCMAKE_CXX_COMPILER="$(TARGET)-g++" \
-			-DCMAKE_RANLIB="$(TARGET)-ranlib" \
-			-DCMAKE_AR="$(TARGET)-ar" \
-			-DCMAKE_NM="$(TARGET)-nm" \
-			-DCMAKE_OBJDUMP="$(TARGET)-objdump" \
-			-DCMAKE_STRIP="$(TARGET)-strip" \
+			-DCMAKE_LINKER="$(CROSS_BASE)/bin/$(TARGET)-ld" \
+			-DCMAKE_RANLIB="$(CROSS_BASE)/bin/$(TARGET)-ranlib" \
+			-DCMAKE_AR="$(CROSS_BASE)/bin/$(TARGET)-ar" \
+			-DCMAKE_NM="$(CROSS_BASE)/bin/$(TARGET)-nm" \
+			-DCMAKE_OBJDUMP="$(CROSS_BASE)/bin/$(TARGET)-objdump" \
+			-DCMAKE_STRIP="$(CROSS_BASE)/bin/$(TARGET)-strip" \
 			-DCMAKE_SUPPRESS_DEVELOPER_WARNINGS="1" \
 			-D_OPENTHREADS_ATOMIC_USE_GCC_BUILTINS_EXITCODE="0" && \
 		$(MAKE) && \
@@ -495,7 +488,7 @@ $(D)/libgd2: $(D)/zlib $(D)/libpng $(D)/libjpeg $(D)/freetype $(ARCHIVE)/libgd-$
 	$(UNTAR)/libgd-$(LIBGD_VER).tar.xz
 	pushd $(BUILD_TMP)/libgd-$(LIBGD_VER) && \
 		./bootstrap.sh && \
-		$(CONFIGURE_RPATH) \
+		$(CONFIGURE) \
 			--prefix= \
 			--bindir=/.remove \
 			--without-fontconfig \
@@ -762,7 +755,7 @@ $(D)/libaacs: $(ARCHIVE)/libaacs-$(LIBAACS_VER).tar.bz2 $(D)/libgcrypt | $(TARGE
 	$(UNTAR)/libaacs-$(LIBAACS_VER).tar.bz2
 	pushd $(BUILD_TMP)/libaacs-$(LIBAACS_VER) && \
 		./bootstrap && \
-		$(CONFIGURE_RPATH) \
+		$(CONFIGURE) \
 			--prefix= \
 			--enable-maintainer-mode \
 			--enable-silent-rules \
@@ -828,16 +821,26 @@ $(D)/pugixml: $(ARCHIVE)/pugixml-$(PUGIXML_VER).tar.gz | $(TARGETPREFIX)
 	$(REMOVE)/pugixml-$(PUGIXML_VER)
 	$(UNTAR)/pugixml-$(PUGIXML_VER).tar.gz
 	set -e; cd $(BUILD_TMP)/pugixml-$(PUGIXML_VER); \
+	rm -f CMakeCache.txt && \
 		cmake \
 		--no-warn-unused-cli \
-		-DCMAKE_INSTALL_PREFIX=$(TARGETPREFIX) \
-		-DBUILD_SHARED_LIBS=ON \
-		-DCMAKE_BUILD_TYPE=Linux \
-		-DCMAKE_C_COMPILER=$(TARGET)-gcc \
-		-DCMAKE_CXX_COMPILER=$(TARGET)-g++ \
+		-DBUILD_SHARED_LIBS="ON" \
+		-DCMAKE_CXX_FLAGS="$(TARGET_MARCH_CFLAGS) -DNDEBUG" \
+		-DCMAKE_INSTALL_PREFIX="" \
+		-DCMAKE_BUILD_TYPE="None" \
+		-DCMAKE_SYSTEM_NAME="Linux" \
+		-DCMAKE_SYSTEM_PROCESSOR="arm" \
+		-DCMAKE_C_COMPILER="$(TARGET)-gcc" \
+		-DCMAKE_CXX_COMPILER="$(TARGET)-g++" \
+		-DCMAKE_LINKER="$(CROSS_BASE)/bin/$(TARGET)-ld" \
+		-DCMAKE_RANLIB="$(CROSS_BASE)/bin/$(TARGET)-ranlib" \
+		-DCMAKE_AR="$(CROSS_BASE)/bin/$(TARGET)-ar" \
+		-DCMAKE_NM="$(CROSS_BASE)/bin/$(TARGET)-nm" \
+		-DCMAKE_OBJDUMP="$(CROSS_BASE)/bin/$(TARGET)-objdump" \
+		-DCMAKE_STRIP="$(CROSS_BASE)/bin/$(TARGET)-strip" \
 		; \
 		$(MAKE); \
-		make install
+		make install DESTDIR=$(TARGETPREFIX)
 	rm -rf $(TARGETPREFIX)/lib/cmake
 	$(REMOVE)/pugixml-$(PUGIXML_VER)
 	touch $@
@@ -873,7 +876,7 @@ $(D)/libtirpc: $(ARCHIVE)/libtirpc-$(LIBTIRPC_VER).tar.bz2 | $(TARGETPREFIX)
 			--disable-gssapi \
 			--enable-silent-rules \
 			--mandir=/.remove && \
-		$(MAKE) CFLAGS="$(TARGET_CFLAGS) -DGQ" && \
+		$(MAKE) && \
 		$(MAKE) install DESTDIR=$(TARGETPREFIX)
 	$(REWRITE_LIBTOOL)/libtirpc.la
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libtirpc.pc
