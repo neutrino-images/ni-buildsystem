@@ -171,7 +171,7 @@ TARGETINCLUDE         = $(TARGETPREFIX)/include
 TARGET_CFLAG_O        = -O2
 TARGET_LDFLAGS_ADD    =
 ifeq ($(BOXMODEL), $(filter $(BOXMODEL), nevis kronos_v2))
-  TARGET_CFLAG_O      += -fdata-sections -ffunction-sections
+  TARGET_CFLAG_O      += -Os -fdata-sections -ffunction-sections
   TARGET_LDFLAGS_ADD  = -Wl,--gc-sections
 endif
 
