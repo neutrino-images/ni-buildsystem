@@ -22,6 +22,8 @@ else
 	N_CFLAGS += $(TARGET_CFLAGS)
 endif
 
+N_CPPFLAGS += -I$(TARGETINCLUDE)
+
 N_LDFLAGS = -lcrypto -ldl -lz $(CORTEX-STRINGS) -L$(TARGETLIB)
 ifeq ($(DEBUG), yes)
 	N_LDFLAGS += -Wl,-rpath-link,$(TARGETLIB)
@@ -68,8 +70,8 @@ endif
 		OBJDUMP=$(TARGET)-objdump \
 		READELF=$(TARGET)-readelf \
 		CFLAGS="$(N_CFLAGS)" \
-		CPPFLAGS="$(TARGET_CPPFLAGS)" \
-		CXXFLAGS="$(TARGET_CXXFLAGS)" \
+		CPPFLAGS="$(N_CPPFLAGS)" \
+		CXXFLAGS="$(N_CFLAGS)" \
 		LDFLAGS="$(N_LDFLAGS)" \
 		$(N_HD_SOURCE)/configure \
 			--host=$(TARGET) \
