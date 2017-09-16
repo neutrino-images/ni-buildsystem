@@ -59,11 +59,9 @@ endif
 		export PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) && \
 		CC=$(TARGET)-gcc \
 		CXX=$(TARGET)-g++ \
-		LD=$(TARGET)-ld \
 		NM=$(TARGET)-nm \
 		AR=$(TARGET)-ar \
 		AS=$(TARGET)-as \
-		LDD=$(TARGET)-ldd \
 		RANLIB=$(TARGET)-ranlib \
 		STRIP=$(TARGET)-strip \
 		OBJCOPY=$(TARGET)-objcopy \
