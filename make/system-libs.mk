@@ -135,17 +135,17 @@ $(D)/libcurl: $(D)/zlib $(D)/openssl $(ARCHIVE)/curl-$(LIBCURL_VER).tar.bz2 | $(
 $(D)/libpng: $(ARCHIVE)/libpng-$(LIBPNG_VER).tar.xz $(D)/zlib | $(TARGETPREFIX)
 	$(UNTAR)/libpng-$(LIBPNG_VER).tar.xz
 	pushd $(BUILD_TMP)/libpng-$(LIBPNG_VER) && \
+		$(PATCH)/libpng-Disable-pngfix-and-png-fix-itxt.patch && \
 		$(CONFIGURE) \
 			--prefix=$(TARGETPREFIX) \
 			--bindir=$(HOSTPREFIX)/bin \
 			--mandir=$(BUILD_TMP)/.remove \
 			--enable-silent-rules \
+			--disable-arm-neon \
 			--disable-static && \
 		ECHO=echo $(MAKE) all && \
 		make install
 	$(REMOVE)/libpng-$(LIBPNG_VER)
-	rm -rf $(HOSTPREFIX)/bin/png-fix-itxt
-	rm -rf $(HOSTPREFIX)/bin/pngfix
 	touch $@
 
 $(D)/freetype: $(D)/zlib $(D)/libpng $(ARCHIVE)/freetype-$(FREETYPE_VER).tar.bz2 | $(TARGETPREFIX)
