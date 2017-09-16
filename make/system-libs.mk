@@ -206,7 +206,7 @@ $(D)/openssl: $(ARCHIVE)/openssl-$(OPENSSL_VER).tar.gz | $(TARGETPREFIX)
 	pushd $(BUILD_TMP)/openssl-$(OPENSSL_VER) && \
 	$(PATCH)/openssl-add-ni-specific-target.patch && \
 		./Configure \
-			linux-armv4-ni $(TARGET_MARCH_CFLAGS) \
+			linux-armv4-ni \
 			shared \
 			threads \
 			no-hw \
