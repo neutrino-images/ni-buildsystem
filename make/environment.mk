@@ -134,7 +134,7 @@ DEBUG ?= no
 
 ifeq ($(BOXSERIES), hd1)
   KVERSION               = 2.6.34.13
-  KVERSION_FULL          := $(KVERSION_FULL)-$(BOXMODEL)
+  KVERSION_FULL          = $(KVERSION)-$(BOXMODEL)
   KBRANCH                = ni/2.6.34.x
   DRIVERS_DIR            = nevis
   KTECHSTR               =
