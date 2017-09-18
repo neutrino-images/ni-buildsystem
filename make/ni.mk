@@ -3,20 +3,32 @@
 ni-init \
 init: preqs crosstools bootstrap
 
+# -- wrapper-targets for Neutrino-Updates -------------------------------------
+
 BOXSERIES_UPDATE = hd2
 ifneq ($(DEBUG), yes)
 	BOXSERIES_UPDATE += hd1
 endif
+
+ni-neutrino-update:
+	make u-neutrino
+
 ni-neutrino-updates:
 	for boxseries in $(BOXSERIES_UPDATE); do \
 		$(MAKE) BOXSERIES=$${boxseries} clean ni-neutrino-update || exit; \
 	done;
 	make clean
 
-ni-neutrino-update:
-	@echo "starting 'make $@' build with "$(NUM_CPUS)" threads!"
-	make u-neutrino
-	@make done
+ni-neutrino-full-update:
+	make u-neutrino-full
+
+ni-neutrino-full-updates:
+	for boxseries in $(BOXSERIES_UPDATE); do \
+		$(MAKE) BOXSERIES=$${boxseries} clean ni-neutrino-full-update || exit; \
+	done;
+	make clean
+
+# -----------------------------------------------------------------------------
 
 BOXMODEL_IMAGE = apollo kronos kronos_v2
 ifneq ($(DEBUG), yes)
