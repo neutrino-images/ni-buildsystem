@@ -31,7 +31,6 @@ $(D)/libfuse: $(ARCHIVE)/fuse-$(FUSE_VER).tar.gz | $(TARGETPREFIX)
 			--disable-static \
 			--disable-example \
 			--disable-mtab \
-			--disable-rpath \
 			--with-gnu-ld \
 			--enable-util \
 			--enable-lib \

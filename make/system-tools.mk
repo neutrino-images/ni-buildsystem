@@ -29,13 +29,16 @@ $(D)/openssh: $(D)/openssl $(D)/zlib $(ARCHIVE)/openssh-$(OPENSSH_VER).tar.gz | 
 	$(UNTAR)/openssh-$(OPENSSH_VER).tar.gz
 	cd $(BUILD_TMP)/openssh-$(OPENSSH_VER) && \
 	export ac_cv_search_dlopen=no && \
-	$(CONFIGURE) \
+	./configure \
+		$(CONFIGURE_OPTS) \
 		--prefix= \
 		--mandir=/.remove \
 		--docdir=/.remove \
 		--infodir=/.remove \
 		--with-pid-dir=/tmp \
 		--with-privsep-path=/var/empty \
+		--with-cppflags="-pipe $(TARGET_O_CFLAGS) $(TARGET_MARCH_CFLAGS) -g -I$(TARGETINCLUDE)" \
+		--with-ldflags="-L$(TARGETLIB)" \
 		--libexecdir=/bin \
 		--disable-strip \
 		--disable-lastlog \
@@ -878,7 +881,6 @@ $(D)/gettext: $(ARCHIVE)/gettext-$(GETTEXT_VERSION).tar.xz | $(TARGETPREFIX)
 			--disable-libasprintf \
 			--disable-acl \
 			--disable-openmp \
-			--disable-rpath \
 			--disable-java \
 			--disable-native-java \
 			--disable-csharp \
@@ -941,7 +943,6 @@ $(D)/wget: $(D)/openssl $(ARCHIVE)/wget-$(WGET_VER).tar.gz | $(TARGETPREFIX)
 			--mandir=/.remove \
 			--with-gnu-ld \
 			--with-ssl=openssl \
-			--disable-rpath \
 			--disable-debug \
 			&& \
 		$(MAKE) && \
@@ -962,7 +963,6 @@ $(D)/iconv: $(ARCHIVE)/libiconv-$(LIBICONV_VER).tar.gz | $(TARGETPREFIX)
 			--enable-static \
 			--disable-shared \
 			--enable-relocatable \
-			--disable-rpath \
 			--datarootdir=/.remove && \
 		$(MAKE) && \
 	$(MAKE) install DESTDIR=$(BUILD_TMP)/libiconv-$(LIBICONV_VER)/tmp
