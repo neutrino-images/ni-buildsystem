@@ -140,7 +140,8 @@ ifeq ($(BOXSERIES), hd1)
   KTECHSTR               =
   CORTEX-STRINGS         =
   TARGET                 = arm-cx2450x-linux-gnueabi
-  TARGET_MARCH_CFLAGS    = -Os -march=armv6 -mfloat-abi=soft -mlittle-endian
+  TARGET_O_CFLAGS        = -Os
+  TARGET_MARCH_CFLAGS    = -march=armv6 -mfloat-abi=soft -mlittle-endian
   TARGET_EXTRA_CFLAGS    = -fdata-sections -ffunction-sections
   TARGET_EXTRA_LDFLAGS   = -Wl,--gc-sections
 endif
@@ -159,16 +160,18 @@ ifeq ($(BOXSERIES), hd2)
   endif
   CORTEX-STRINGS         = -lcortex-strings
   TARGET                 = arm-cortex-linux-uclibcgnueabi
-  TARGET_MARCH_CFLAGS    = -O2 -march=armv7-a -mcpu=cortex-a9 -mtune=cortex-a9 -mfpu=vfpv3-d16 -mfloat-abi=hard -mlittle-endian
+  TARGET_O_CFLAGS        = -O2
+  TARGET_MARCH_CFLAGS    = -march=armv7-a -mcpu=cortex-a9 -mtune=cortex-a9 -mfpu=vfpv3-d16 -mfloat-abi=hard -mlittle-endian
   TARGET_EXTRA_CFLAGS    =
   TARGET_EXTRA_LDFLAGS   =
   ifeq ($(BOXMODEL), kronos_v2)
+    TARGET_O_CFLAGS      = -Os
     TARGET_EXTRA_CFLAGS  = -fdata-sections -ffunction-sections
     TARGET_EXTRA_LDFLAGS = -Wl,--gc-sections
   endif
 endif
 
-TARGET_CFLAGS   = -pipe $(TARGET_MARCH_CFLAGS) $(TARGET_EXTRA_CFLAGS) -g -I$(TARGETINCLUDE)
+TARGET_CFLAGS   = -pipe $(TARGET_O_CFLAGS) $(TARGET_MARCH_CFLAGS) $(TARGET_EXTRA_CFLAGS) -g -I$(TARGETINCLUDE)
 TARGET_CPPFLAGS = $(TARGET_CFLAGS)
 TARGET_CXXFLAGS = $(TARGET_CFLAGS)
 TARGET_LDFLAGS  = $(CORTEX-STRINGS) -Wl,-O1 $(TARGET_EXTRA_LDFLAGS) -L$(TARGETLIB) -Wl,-rpath-link,$(TARGETLIB)
