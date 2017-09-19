@@ -9,7 +9,7 @@ endif
 # uncomment next line to build neutrino without --enable-ffmpegdec
 #NEUTRINO_DEPS += libvorbisidec libid3tag libmad libFLAC
 
-N_CFLAGS = -Wall -W -Wshadow -D__KERNEL_STRICT_NAMES -D__STDC_CONSTANT_MACROS -DENABLE_FREESATEPG
+N_CFLAGS = -Wall -W -Wshadow -D__STDC_CONSTANT_MACROS -DENABLE_FREESATEPG
 ifeq ($(BOXSERIES), hd1)
 	N_CFLAGS += -DCPU_FREQ
 endif
@@ -17,18 +17,16 @@ ifeq ($(BOXSERIES), hd2)
 	N_CFLAGS += -DFB_HW_ACCELERATION
 endif
 ifeq ($(DEBUG), yes)
-	N_CFLAGS += -ggdb3 -rdynamic
+	N_CFLAGS += -ggdb3 -rdynamic -I$(TARGETINCLUDE)
 else
 	N_CFLAGS += $(TARGET_CFLAGS)
 endif
-
-N_CPPFLAGS += -I$(TARGETINCLUDE)
 
 N_LDFLAGS = -lcrypto -ldl -lz $(CORTEX-STRINGS) -L$(TARGETLIB)
 ifeq ($(DEBUG), yes)
 	N_LDFLAGS += -Wl,-rpath-link,$(TARGETLIB)
 else
-	N_LDFLAGS += -Wl,-O1 $(TARGET_EXTRA_LDFLAGS) -Wl,-rpath-link,$(TARGETLIB)
+	N_LDFLAGS += -Wl,-O1 -Wl,-rpath-link,$(TARGETLIB) $(TARGET_EXTRA_LDFLAGS)
 endif
 
 N_CONFIGURE_DEBUG =
@@ -59,16 +57,18 @@ endif
 		export PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) && \
 		CC=$(TARGET)-gcc \
 		CXX=$(TARGET)-g++ \
+		LD=$(TARGET)-ld \
 		NM=$(TARGET)-nm \
 		AR=$(TARGET)-ar \
 		AS=$(TARGET)-as \
+		LDD=$(TARGET)-ldd \
 		RANLIB=$(TARGET)-ranlib \
 		STRIP=$(TARGET)-strip \
 		OBJCOPY=$(TARGET)-objcopy \
 		OBJDUMP=$(TARGET)-objdump \
 		READELF=$(TARGET)-readelf \
 		CFLAGS="$(N_CFLAGS)" \
-		CPPFLAGS="$(N_CPPFLAGS)" \
+		CPPFLAGS="$(N_CFLAGS)" \
 		CXXFLAGS="$(N_CFLAGS)" \
 		LDFLAGS="$(N_LDFLAGS)" \
 		$(N_HD_SOURCE)/configure \
