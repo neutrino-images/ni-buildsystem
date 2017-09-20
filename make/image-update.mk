@@ -135,6 +135,10 @@ u-neutrino-full: neutrino-clean
 ifeq ($(DEBUG), no)
 	find $(UPDATE_INST_DIR)/bin -type f ! -name *.sh -print0 | xargs -0 $(TARGET)-strip || true
 endif
+ifeq ($(BOXSERIES), hd2)
+	# avoid overrides in user's var-partition
+	mv $(UPDATE_INST_DIR)/var $(UPDATE_INST_DIR)/var_init
+endif
 	$(MAKE) u-update-bin \
 			UPDATE_MD5FILE=$(UPDATE_MD5FILE-BOXSERIES)
 
