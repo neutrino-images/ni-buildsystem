@@ -21,8 +21,8 @@ cd ni-buildsystem
 # 2) Archivverzeichnis erstellen #
 ```
 #!bash
-mkdir -p $HOME/src/Archive
-ln -s $HOME/src/Archive download
+mkdir -p $HOME/archives
+ln -s $HOME/archives download
 ```
 
 # 3) Buildsystem konfigurieren #
