@@ -989,7 +989,7 @@ $(D)/libfribidi: $(ARCHIVE)/fribidi-$(FRIBIDI_VER).tar.bz2 | $(TARGETPREFIX)
 $(D)/libffi: $(ARCHIVE)/libffi-$(LIBFFI_VER).tar.gz
 	$(UNTAR)/libffi-$(LIBFFI_VER).tar.gz
 	set -e; cd $(BUILD_TMP)/libffi-$(LIBFFI_VER); \
-		autoreconf -fi; \
+	$(PATCH)/libffi-install_headers.patch; \
 		$(CONFIGURE) \
 			--prefix= \
 			--datarootdir=/.remove \
@@ -998,8 +998,6 @@ $(D)/libffi: $(ARCHIVE)/libffi-$(LIBFFI_VER).tar.gz
 		; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGETPREFIX)
-	mv $(TARGETLIB)/libffi-$(LIBFFI_VER)/include/*.h $(TARGETINCLUDE)
-	rm -rf $(TARGETLIB)/libffi-$(LIBFFI_VER)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libffi.pc
 	$(REWRITE_LIBTOOL)/libffi.la
 	$(REMOVE)/libffi-$(LIBFFI_VER)
