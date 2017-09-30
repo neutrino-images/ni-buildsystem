@@ -65,7 +65,7 @@ ifeq ($(BOXFAMILY), apollo)
 endif
 	touch $@
 
-$(D)/kernel-cst-install-hd2: $(D)/kernel-cst-hd2
+kernel-cst-install-hd2: $(D)/kernel-cst-hd2
 	cp -af $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-vmlinux.ub.gz $(KDESTDIR)/vmlinux.ub.gz
 
 $(D)/kernel-cst-hd1: $(D)/uboot-cst-hd1 $(SOURCE_DIR)/$(NI_LINUX-KERNEL) | $(TARGETPREFIX)
@@ -87,7 +87,7 @@ $(D)/kernel-cst-hd1: $(D)/uboot-cst-hd1 $(SOURCE_DIR)/$(NI_LINUX-KERNEL) | $(TAR
 		mkimage -A arm -O linux -T kernel -C none -a 0x48000 -e 0x48000 -n "$(KSTRING)" -d $(ZIMAGE) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-zImage.img
 	touch $@
 
-$(D)/kernel-cst-install-hd1: $(D)/kernel-cst-hd1
+kernel-cst-install-hd1: $(D)/kernel-cst-hd1
 	cp -af $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-zImage.img $(KDESTDIR)/zImage
 
 $(D)/uboot-cst-hd1: $(SOURCE_DIR)/$(TUXBOX_BOOTLOADER) | $(TARGETPREFIX)
@@ -101,7 +101,7 @@ $(D)/uboot-cst-hd1: $(SOURCE_DIR)/$(TUXBOX_BOOTLOADER) | $(TARGETPREFIX)
 
 kernel-cst-modules: kernel-cst-modules-$(BOXSERIES)
 
-$(D)/kernel-cst-modules-hd1: kernel-cst
+kernel-cst-modules-hd1: kernel-cst
 	$(TARGET)-objcopy --strip-unneeded $(MODULES_DIR)/kernel/drivers/mtd/devices/mtdram.ko
 	cp -af $(MODULES_DIR)/kernel/drivers/mtd/devices/mtdram.ko $(TARGETMODULES)
 	$(TARGET)-objcopy --strip-unneeded $(MODULES_DIR)/kernel/drivers/mtd/devices/block2mtd.ko
@@ -125,7 +125,7 @@ $(D)/kernel-cst-modules-hd1: kernel-cst
 	rm -rf $(TARGETMODULES)/usb-storage.ko # builtin already
 	make depmod-hd1
 
-$(D)/kernel-cst-modules-hd2: kernel-cst
+kernel-cst-modules-hd2: kernel-cst
 	rm -rf $(TARGETMODULES)/kernel # nuke cst kernel-drivers but leave cst extra-drivers
 	cp -a $(MODULES_DIR)/kernel $(TARGETMODULES) # copy own kernel-drivers
 	cp -a $(MODULES_DIR)/modules.builtin $(TARGETMODULES)
