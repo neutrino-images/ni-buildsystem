@@ -98,6 +98,8 @@ ifndef BOXMODEL
   $(error BOXMODEL not set)
 endif
 
+MAKEFLAGS += --no-print-directory
+
 MAINTAINER   ?= NI-Team
 FLAVOUR      ?= ni-neutrino-hd
 KSTRING       = NI $(shell echo $(BOXMODEL) | sed 's/.*/\u&/') Kernel
