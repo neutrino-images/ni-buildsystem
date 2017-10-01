@@ -1011,7 +1011,6 @@ ifeq ($(BOXSERIES), hd1)
 	LIBGLIB_DEPS =
 endif
 
-# why does a shared build fail?
 $(D)/libglib: $(ARCHIVE)/glib-$(GLIB_VER).tar.xz $(D)/zlib $(LIBGLIB_DEPS) $(D)/libffi | $(TARGETPREFIX)
 	$(UNTAR)/glib-$(GLIB_VER).tar.xz
 	pushd $(BUILD_TMP)/glib-$(GLIB_VER); \
@@ -1035,9 +1034,6 @@ $(D)/libglib: $(ARCHIVE)/glib-$(GLIB_VER).tar.xz $(D)/zlib $(LIBGLIB_DEPS) $(D)/
 			; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGETPREFIX)
-	mv $(TARGETLIB)/glib-2.0/include/*.h $(TARGETINCLUDE)
-	rm -rf $(TARGETLIB)/glib-2.0
-	rm -rf $(TARGETLIB)/gio
 	rm -rf $(TARGETPREFIX)/bin/gapplication
 	rm -rf $(TARGETPREFIX)/bin/gdbus*
 	rm -rf $(TARGETPREFIX)/bin/gio*
@@ -1059,5 +1055,10 @@ $(D)/libglib: $(ARCHIVE)/glib-$(GLIB_VER).tar.xz $(D)/zlib $(LIBGLIB_DEPS) $(D)/
 	$(REWRITE_LIBTOOL)/libgmodule-2.0.la
 	$(REWRITE_LIBTOOL)/libgobject-2.0.la
 	$(REWRITE_LIBTOOL)/libgthread-2.0.la
+	$(REWRITE_LIBTOOLDEP)/libgio-2.0.la
+	$(REWRITE_LIBTOOLDEP)/libglib-2.0.la
+	$(REWRITE_LIBTOOLDEP)/libgmodule-2.0.la
+	$(REWRITE_LIBTOOLDEP)/libgobject-2.0.la
+	$(REWRITE_LIBTOOLDEP)/libgthread-2.0.la
 	$(REMOVE)/glib-$(GLIB_VER)
 	touch $@
