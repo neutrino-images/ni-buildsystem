@@ -7,8 +7,9 @@ crosstools:
 	make crosstool-arm-hd2 BOXSERIES=hd2
 
 crosstools-renew:
-	ccache -cCz
+	make ccache-clean BOXSERIES=hd1
 	rm -rf $(BASE_DIR)/cross/$(BOXARCH)/hd1
+	make ccache-clean BOXSERIES=hd2
 	rm -rf $(BASE_DIR)/cross/$(BOXARCH)/hd2
 	rm -rf $(HOSTPREFIX)/bin/arm-*
 	rm -rf $(HOSTPREFIX)/bin/pkg-config

@@ -130,6 +130,8 @@ TARGETLIB     = $(TARGETPREFIX)/lib
 TARGETINCLUDE = $(TARGETPREFIX)/include
 BUILD        ?= $(shell /usr/share/libtool/config.guess 2>/dev/null || /usr/share/libtool/config/config.guess 2>/dev/null || /usr/share/misc/config.guess)
 CCACHE        = /usr/bin/ccache
+CCACHE_DIR    = $(HOME)/.ccache-ni-buildsystem-$(BOXARCH)-$(BOXSERIES)
+export CCACHE_DIR
 
 # create debug image
 DEBUG ?= no

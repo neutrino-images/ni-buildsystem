@@ -28,4 +28,8 @@ clean-all:
 	make staging-clean
 	make clean
 
+ccache-clean:
+	@echo "Clearing $$CCACHE_DIR"
+	@$(CCACHE) -C
+
 PHONY += rebuild-clean all-clean pkg-clean
