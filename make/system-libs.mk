@@ -800,10 +800,11 @@ $(D)/libxml2: $(ARCHIVE)/libxml2-$(LIBXML2_VER).tar.gz | $(TARGETPREFIX)
 			--datarootdir=/.remove \
 			--without-python \
 			--without-debug \
-			--without-sax1 \
+			--without-c14n \
 			--without-legacy \
 			--without-catalog \
 			--without-docbook \
+			--without-mem-debug \
 			--without-lzma \
 			--without-schematron && \
 		$(MAKE) && \
