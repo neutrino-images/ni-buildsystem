@@ -986,6 +986,11 @@ $(D)/libfribidi: $(ARCHIVE)/fribidi-$(FRIBIDI_VER).tar.bz2 | $(TARGETPREFIX)
 	$(REMOVE)/fribidi-$(FRIBIDI_VER)
 	touch $@
 
+LIBFFI_CONF =
+ifeq ($(BOXSERIES), hd1)
+	LIBFFI_CONF = --enable-static --disable-shared
+endif
+
 $(D)/libffi: $(ARCHIVE)/libffi-$(LIBFFI_VER).tar.gz
 	$(UNTAR)/libffi-$(LIBFFI_VER).tar.gz
 	set -e; cd $(BUILD_TMP)/libffi-$(LIBFFI_VER); \
@@ -993,8 +998,7 @@ $(D)/libffi: $(ARCHIVE)/libffi-$(LIBFFI_VER).tar.gz
 		$(CONFIGURE) \
 			--prefix= \
 			--datarootdir=/.remove \
-			--enable-static \
-			--disable-shared \
+			$(LIBFFI_CONF) \
 		; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGETPREFIX)
@@ -1007,8 +1011,10 @@ $(D)/libffi: $(ARCHIVE)/libffi-$(LIBFFI_VER).tar.gz
 # gettext implementation,
 # so we only build it for hd2
 LIBGLIB_DEPS = $(D)/gettext
+LIBGLIB_CONF =
 ifeq ($(BOXSERIES), hd1)
 	LIBGLIB_DEPS =
+	LIBGLIB_CONF = --enable-static --disable-shared
 endif
 
 $(D)/libglib: $(ARCHIVE)/glib-$(GLIB_VER).tar.xz $(D)/zlib $(LIBGLIB_DEPS) $(D)/libffi | $(TARGETPREFIX)
@@ -1023,14 +1029,13 @@ $(D)/libglib: $(ARCHIVE)/glib-$(GLIB_VER).tar.xz $(D)/zlib $(LIBGLIB_DEPS) $(D)/
 		$(CONFIGURE) \
 			--prefix= \
 			--datarootdir=/.remove \
-			--enable-static \
-			--disable-shared \
 			--cache-file=arm-linux.cache \
 			--enable-debug=no \
 			--disable-selinux \
 			--enable-libmount=no \
 			--disable-fam \
 			--with-pcre=internal \
+			$(LIBGLIB_CONF) \
 			; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGETPREFIX)

@@ -876,8 +876,6 @@ $(D)/gettext: $(ARCHIVE)/gettext-$(GETTEXT_VERSION).tar.xz | $(TARGETPREFIX)
 		$(CONFIGURE) \
 			--prefix= \
 			--datarootdir=/.remove \
-			--enable-static \
-			--disable-shared \
 			--disable-libasprintf \
 			--disable-acl \
 			--disable-openmp \
@@ -907,8 +905,6 @@ $(D)/mc: $(ARCHIVE)/mc-$(MC-VER).tar.xz $(D)/libglib $(D)/libncurses | $(TARGETP
 			--mandir=/.remove \
 			--enable-maintainer-mode \
 			--enable-silent-rules \
-			--enable-static \
-			--disable-shared \
 			\
 			--disable-charset \
 			--disable-nls \
