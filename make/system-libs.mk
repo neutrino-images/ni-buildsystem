@@ -1011,10 +1011,13 @@ $(D)/libffi: $(ARCHIVE)/libffi-$(LIBFFI_VER).tar.gz
 # glibc provides a stub
 # gettext implementation,
 # so we only build it for hd2
-LIBGLIB_DEPS = $(D)/gettext
+LIBGLIB_DEPS =
+ifeq ($(BOXSERIES), hd2)
+	LIBGLIB_DEPS = $(D)/gettext
+endif
+
 LIBGLIB_CONF =
 ifeq ($(BOXSERIES), hd1)
-	LIBGLIB_DEPS =
 	LIBGLIB_CONF = --enable-static --disable-shared
 endif
 
