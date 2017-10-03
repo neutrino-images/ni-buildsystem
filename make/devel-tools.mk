@@ -45,9 +45,9 @@ $(D)/valgrind-hd1:
 
 # strace 4.9 needs newer kernel or at least a kernel-patch
 # https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=79b5dc0c64d88cda3da23b2e22a5cec0964372ac
-$(D)/strace: $(ARCHIVE)/strace-4.8.tar.xz | $(TARGETPREFIX)
-	$(UNTAR)/strace-4.8.tar.xz
-	cd $(BUILD_TMP)/strace-4.8 && \
+$(D)/strace: $(ARCHIVE)/strace-$(STRACE_VER).tar.xz | $(TARGETPREFIX)
+	$(UNTAR)/strace-$(STRACE_VER).tar.xz
+	cd $(BUILD_TMP)/strace-$(STRACE_VER) && \
 		$(CONFIGURE) \
 			--prefix= \
 			--mandir=$(BUILD_TMP)/.remove \
@@ -56,7 +56,7 @@ $(D)/strace: $(ARCHIVE)/strace-4.8.tar.xz | $(TARGETPREFIX)
 		make install prefix=$(TARGETPREFIX)
 	rm $(TARGETPREFIX)/bin/strace-graph
 	rm $(TARGETPREFIX)/bin/strace-log-merge
-	$(REMOVE)/strace-4.8
+	$(REMOVE)/strace-$(STRACE_VER)
 	touch $@
 
 $(D)/gdb: $(ARCHIVE)/gdb-$(GDB_VER).tar.xz $(D)/zlib $(D)/libncurses | $(TARGETPREFIX)

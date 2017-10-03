@@ -106,7 +106,8 @@ pkg-config: $(HOSTPREFIX)/bin/pkg-config
 $(HOSTPREFIX)/bin/pkg-config: $(ARCHIVE)/pkg-config-$(PKGCONF_VER).tar.gz | $(HOSTPREFIX)/bin pkg-config-preqs
 	$(UNTAR)/pkg-config-$(PKGCONF_VER).tar.gz
 	set -e; cd $(BUILD_TMP)/pkg-config-$(PKGCONF_VER); \
-		./configure --with-pc_path=$(PKG_CONFIG_PATH); \
+		./configure \
+			--with-pc_path=$(PKG_CONFIG_PATH); \
 		$(MAKE); \
 		cp -a pkg-config $(HOSTPREFIX)/bin; \
 	ln -sf pkg-config $(HOSTPREFIX)/bin/arm-cx2450x-linux-gnueabi-pkg-config
@@ -116,10 +117,9 @@ $(HOSTPREFIX)/bin/pkg-config: $(ARCHIVE)/pkg-config-$(PKGCONF_VER).tar.gz | $(HO
 mkfs.jffs2: $(HOSTPREFIX)/bin/mkfs.jffs2
 sumtool: $(HOSTPREFIX)/bin/sumtool
 $(HOSTPREFIX)/bin/mkfs.jffs2 \
-$(HOSTPREFIX)/bin/sumtool: | $(HOSTPREFIX)/bin
-	git clone git://git.infradead.org/mtd-utils.git $(BUILD_TMP)/mtd-utils && \
-	pushd $(BUILD_TMP)/mtd-utils && \
-		./autogen.sh -fi && \
+$(HOSTPREFIX)/bin/sumtool: $(ARCHIVE)/mtd-utils-$(MTD-UTILS_VER).tar.bz2 | $(HOSTPREFIX)/bin
+	$(UNTAR)/mtd-utils-$(MTD-UTILS_VER).tar.bz2
+	pushd $(BUILD_TMP)/mtd-utils-$(MTD-UTILS_VER) && \
 		./configure \
 			ZLIB_CFLAGS=" " \
 			ZLIB_LIBS="-lz" \
@@ -127,19 +127,17 @@ $(HOSTPREFIX)/bin/sumtool: | $(HOSTPREFIX)/bin
 			UUID_LIBS="-luuid" \
 			--enable-silent-rules \
 			--without-ubifs \
+			--without-xattr \
 			--disable-tests && \
-		$(MAKE) WITHOUT_XATTR=1
-	install -D -m 0755 $(BUILD_TMP)/mtd-utils/sumtool $(HOSTPREFIX)/bin/
-	install -D -m 0755 $(BUILD_TMP)/mtd-utils/mkfs.jffs2 $(HOSTPREFIX)/bin/
-	$(REMOVE)/mtd-utils
+		$(MAKE)
+	install -D -m 0755 $(BUILD_TMP)/mtd-utils-$(MTD-UTILS_VER)/sumtool $(HOSTPREFIX)/bin/
+	install -D -m 0755 $(BUILD_TMP)/mtd-utils-$(MTD-UTILS_VER)/mkfs.jffs2 $(HOSTPREFIX)/bin/
+	$(REMOVE)/mtd-utils-$(MTD-UTILS_VER)
 
 mkimage: $(HOSTPREFIX)/bin/mkimage
 $(HOSTPREFIX)/bin/mkimage: $(ARCHIVE)/u-boot-$(U_BOOT_VER).tar.bz2 | $(HOSTPREFIX)/bin
 	$(UNTAR)/u-boot-$(U_BOOT_VER).tar.bz2
 	pushd $(BUILD_TMP)/u-boot-$(U_BOOT_VER) && \
-		$(PATCH)/u-boot-fix-build-error-under-gcc6.patch && \
-		$(PATCH)/u-boot-support-gcc5.patch && \
-		$(PATCH)/u-boot-rsa-Fix-build-with-OpenSSL-1.1.x.patch && \
 		$(MAKE) defconfig && \
 		$(MAKE) silentoldconfig && \
 		$(MAKE) tools-only

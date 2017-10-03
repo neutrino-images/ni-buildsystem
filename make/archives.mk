@@ -36,8 +36,13 @@ LIBTIRPC_VER=1.0.1
 $(ARCHIVE)/libtirpc-$(LIBTIRPC_VER).tar.bz2:
 	$(WGET) http://sourceforge.net/projects/libtirpc/files/libtirpc/$(LIBTIRPC_VER)/libtirpc-$(LIBTIRPC_VER).tar.bz2
 
-$(ARCHIVE)/strace-4.8.tar.xz:
-	$(WGET) http://sourceforge.net/projects/strace/files/strace/4.8/strace-4.8.tar.xz
+STRACE_VER=4.8
+$(ARCHIVE)/strace-$(STRACE_VER).tar.xz:
+	$(WGET) http://sourceforge.net/projects/strace/files/strace/$(STRACE_VER)/strace-$(STRACE_VER).tar.xz
+
+MTD-UTILS_VER=2.0.1
+$(ARCHIVE)/mtd-utils-$(MTD-UTILS_VER).tar.bz2:
+	$(WGET) ftp://ftp.infradead.org/pub/mtd-utils/mtd-utils-$(MTD-UTILS_VER).tar.bz2
 
 PARTED_VER=3.2
 $(ARCHIVE)/parted-$(PARTED_VER).tar.xz:
@@ -226,7 +231,7 @@ NANO_VER_MAJ=2.8
 $(ARCHIVE)/nano-$(NANO_VER).tar.gz:
 	$(WGET) http://www.nano-editor.org/dist/v$(NANO_VER_MAJ)/nano-$(NANO_VER).tar.gz
 
-MINICOM_VER=2.7
+MINICOM_VER=2.7.1
 $(ARCHIVE)/minicom-$(MINICOM_VER).tar.gz:
 	$(WGET) http://fossies.org/linux/misc/minicom-$(MINICOM_VER).tar.gz
 
@@ -312,7 +317,7 @@ CORTEX-STRINGS_VER=48fd30c346ff2ab14ca574b770b5c1bcbefadba8
 $(ARCHIVE)/cortex-strings-$(CORTEX-STRINGS_VER).tar.bz2:
 	get-git-archive.sh http://git.linaro.org/git-ro/toolchain/cortex-strings.git $(CORTEX-STRINGS_VER) $(notdir $@) $(ARCHIVE)
 
-U_BOOT_VER=2015.01
+U_BOOT_VER=2017.09
 $(ARCHIVE)/u-boot-$(U_BOOT_VER).tar.bz2:
 	$(WGET) ftp://ftp.denx.de/pub/u-boot/u-boot-$(U_BOOT_VER).tar.bz2
 

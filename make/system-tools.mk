@@ -84,26 +84,27 @@ $(D)/timezone: $(ARCHIVE)/tzdata$(TZDATA_VER).tar.gz | $(TARGETPREFIX)
 	$(REMOVE)/timezone
 	touch $@
 
-$(D)/mtd-utils: $(D)/zlib $(D)/lzo $(D)/e2fsprogs | $(TARGETPREFIX)
-	git clone git://git.infradead.org/mtd-utils.git $(BUILD_TMP)/mtd-utils && \
-	pushd $(BUILD_TMP)/mtd-utils && \
+$(D)/mtd-utils: $(D)/zlib $(D)/lzo $(D)/e2fsprogs $(ARCHIVE)/mtd-utils-$(MTD-UTILS_VER).tar.bz2 | $(TARGETPREFIX)
+	$(UNTAR)/mtd-utils-$(MTD-UTILS_VER).tar.bz2
+	pushd $(BUILD_TMP)/mtd-utils-$(MTD-UTILS_VER) && \
 		$(CONFIGURE) \
 			--prefix= \
 			--target=$(TARGET) \
 			--mandir=/.remove \
 			--enable-silent-rules \
 			--disable-tests \
+			--without-xattr \
 			&& \
-		$(MAKE) WITHOUT_XATTR=1
+		$(MAKE)
 ifeq ($(BOXSERIES), hd2)
-		install -D -m 0755 $(BUILD_TMP)/mtd-utils/nanddump $(TARGETPREFIX)/sbin
-		install -D -m 0755 $(BUILD_TMP)/mtd-utils/nandtest $(TARGETPREFIX)/sbin
-		install -D -m 0755 $(BUILD_TMP)/mtd-utils/nandwrite $(TARGETPREFIX)/sbin
-		install -D -m 0755 $(BUILD_TMP)/mtd-utils/mtd_debug $(TARGETPREFIX)/sbin
-		install -D -m 0755 $(BUILD_TMP)/mtd-utils/mkfs.jffs2 $(TARGETPREFIX)/sbin
+		install -D -m 0755 $(BUILD_TMP)/mtd-utils-$(MTD-UTILS_VER)/nanddump $(TARGETPREFIX)/sbin
+		install -D -m 0755 $(BUILD_TMP)/mtd-utils-$(MTD-UTILS_VER)/nandtest $(TARGETPREFIX)/sbin
+		install -D -m 0755 $(BUILD_TMP)/mtd-utils-$(MTD-UTILS_VER)/nandwrite $(TARGETPREFIX)/sbin
+		install -D -m 0755 $(BUILD_TMP)/mtd-utils-$(MTD-UTILS_VER)/mtd_debug $(TARGETPREFIX)/sbin
+		install -D -m 0755 $(BUILD_TMP)/mtd-utils-$(MTD-UTILS_VER)/mkfs.jffs2 $(TARGETPREFIX)/sbin
 endif
-		install -D -m 0755 $(BUILD_TMP)/mtd-utils/flash_erase $(TARGETPREFIX)/sbin
-		$(REMOVE)/mtd-utils
+		install -D -m 0755 $(BUILD_TMP)/mtd-utils-$(MTD-UTILS_VER)/flash_erase $(TARGETPREFIX)/sbin
+		$(REMOVE)/mtd-utils-$(MTD-UTILS_VER)
 		touch $@
 
 $(D)/iperf: $(ARCHIVE)/iperf-$(IPERF_VER)-source.tar.gz | $(TARGETPREFIX)
