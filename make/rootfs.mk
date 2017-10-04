@@ -98,8 +98,6 @@ softlinks: $(BOX)
 	pushd $(BOX)/var && \
 	ln -sf /tmp run && \
 	ln -sf /tmp tmp && \
-	pushd $(BOX)/lib/firmware && \
-	ln -sf rt2870.bin rt3070.bin && \
 	pushd $(BOX)/etc/init.d && \
 	ln -sf fstab K99fstab && \
 	ln -sf fstab S01fstab && \
@@ -123,6 +121,8 @@ softlinks: $(BOX)
 ifeq ($(BOXSERIES), hd1)
 	pushd $(BOX)/lib && \
 	ln -sf libnxp.so libconexant.so
+	pushd $(BOX)/lib/firmware && \
+	ln -sf rt2870.bin rt3070.bin
 endif
 ifeq ($(BOXSERIES), hd2)
 	pushd $(BOX)/etc && \
