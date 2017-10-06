@@ -2,7 +2,7 @@
 
 . /etc/init.d/globals
 
-MOUNTBASE=/media
+MOUNTBASE=/mnt
 MOUNTPOINT="$MOUNTBASE/$MDEV"
 ROOTDEV=$(readlink /dev/root)
 
@@ -16,9 +16,33 @@ fi
 
 case "$ACTION" in
 	add)
-		LOGINFO "[$ACTION] do nothing on /dev/$MDEV"
+		# TODO: check for partitions
+
+		if grep -q "/dev/$MDEV" /proc/mounts; then
+			LOGINFO "/dev/$MDEV already mounted - not mounting again"
+			exit 0
+		fi
+		LOGINFO "[$ACTION] mounting /dev/$MDEV to $MOUNTPOINT"
+		# remove old mountpoint symlinks we might have for this device
+		rm -f $MOUNTPOINT
+		mkdir -p $MOUNTPOINT
+		mount -t auto /dev/$MDEV $MOUNTPOINT 2>&1 >/dev/null
+		RET=$?
+		if [ $RET != 0 ]; then
+			LOGWARN "mount   /dev/$MDEV $MOUNTPOINT failed with $RET"
+			LOGWARN "        $OUT1"
+			rmdir $MOUNTPOINT
+		fi
 		;;
 	remove)
-		LOGINFO "[$ACTION] do nothing on $MOUNTBASE/$MDEV"
+		LOGINFO "[$ACTION] unmounting $MOUNTBASE/$MDEV"
+		grep -q "^/dev/$MDEV " /proc/mounts || exit 0 # not mounted...
+		umount -lf $MOUNTBASE/$MDEV
+		RET=$?
+		if [ $RET = 0 ]; then
+			rmdir $MOUNTPOINT
+		else
+			LOGWARN "umount $MOUNTBASE/$MDEV failed with $RET"
+		fi
 		;;
 esac
