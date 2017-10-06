@@ -13,12 +13,8 @@ SHELL := /bin/bash
 BASE_DIR    := $(shell pwd)
 
 # assign box environment
-BOXTYPE   ?= coolstream
-BOXSERIES ?=
-BOXFAMILY ?=
-BOXMODEL  ?=
 
-ifeq ($(BOXTYPE), coolstream)
+# - Coolstream ----------------------------------------------------------------
 
 # BOXTYPE                   coolstream
 #                          /          \
@@ -28,17 +24,32 @@ ifeq ($(BOXTYPE), coolstream)
 #                      /        /     | |     \
 # BOXMODEL          nevis apollo shiner kronos kronos_v2
 
-BOXTYPE_SC = cst
-BOXARCH = arm
+# - AX Technologies -----------------------------------------------------------
+
+# BOXTYPE                     axtech
+#                               |
+# BOXSERIES                    ax
+#                               |
+# BOXFAMILY                    ax
+#                               |
+# BOXMODEL                    hd51
+
+# -----------------------------------------------------------------------------
 
 # assign by given BOXSERIES
 ifneq ($(BOXSERIES),)
   ifeq ($(BOXSERIES), hd1)
+    BOXTYPE = coolstream
     BOXFAMILY = nevis
     BOXMODEL = nevis
   else ifeq ($(BOXSERIES), hd2)
+    BOXTYPE = coolstream
     BOXFAMILY = apollo
     BOXMODEL = apollo
+  else ifeq ($(BOXSERIES), ax)
+    BOXTYPE = axtech
+    BOXFAMILY = ax
+    BOXMODEL = hd51
   else
     $(error $(BOXTYPE) BOXSERIES $(BOXSERIES) not supported)
   endif
@@ -46,14 +57,21 @@ ifneq ($(BOXSERIES),)
 # assign by given BOXFAMILY
 else ifneq ($(BOXFAMILY),)
   ifeq ($(BOXFAMILY), nevis)
+    BOXTYPE = coolstream
     BOXSERIES = hd1
     BOXMODEL = nevis
   else ifeq ($(BOXFAMILY), apollo)
+    BOXTYPE = coolstream
     BOXSERIES = hd2
     BOXMODEL = apollo
   else ifeq ($(BOXFAMILY), kronos)
+    BOXTYPE = coolstream
     BOXSERIES = hd2
     BOXMODEL = kronos
+  else ifeq ($(BOXFAMILY), ax)
+    BOXTYPE = axtech
+    BOXSERIES = ax
+    BOXMODEL = hd51
   else
     $(error $(BOXTYPE) BOXFAMILY $(BOXFAMILY) not supported)
   endif
@@ -61,22 +79,33 @@ else ifneq ($(BOXFAMILY),)
 # assign by given BOXMODEL
 else ifneq ($(BOXMODEL),)
   ifeq ($(BOXMODEL), nevis)
+    BOXTYPE = coolstream
     BOXSERIES = hd1
     BOXFAMILY = nevis
   else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), apollo shiner))
+    BOXTYPE = coolstream
     BOXSERIES = hd2
     BOXFAMILY = apollo
   else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), kronos kronos_v2))
+    BOXTYPE = coolstream
     BOXSERIES = hd2
     BOXFAMILY = kronos
+  else ifeq ($(BOXMODEL), hd51)
+    BOXTYPE = axtech
+    BOXSERIES = ax
+    BOXFAMILY = ax
   else
     $(error $(BOXTYPE) BOXMODEL $(BOXMODEL) not supported)
   endif
 
 endif
 
-else
-  $(error BOXTYPE $(BOXTYPE) not supported)
+ifeq ($(BOXTYPE), coolstream)
+  BOXTYPE_SC = cst
+  BOXARCH = arm
+else ifeq ($(BOXTYPE), axtech)
+  BOXTYPE_SC = axt
+  BOXARCH = arm
 endif
 
 ifndef BOXTYPE
@@ -175,6 +204,19 @@ ifeq ($(BOXSERIES), hd2)
   endif
 endif
 
+ifeq ($(BOXSERIES), ax)
+  KVERSION               = 4.10.12
+  KVERSION_FULL          = $(KVERSION)
+  KBRANCH                = ni/4.10.x
+  DRIVERS_DIR            = hd51
+  CORTEX-STRINGS         = -lcortex-strings
+  TARGET                 = arm-cortex-linux-gnueabihf
+  TARGET_O_CFLAGS        = -O2
+  TARGET_MARCH_CFLAGS    = -march=armv7ve -mcpu=cortex-a15 -mtune=cortex-a15 -mfpu=neon-vfpv4 -mfloat-abi=hard
+  TARGET_EXTRA_CFLAGS    = -Wno-deprecated-declarations
+  TARGET_EXTRA_LDFLAGS   =
+endif
+
 TARGET_CFLAGS   = -pipe $(TARGET_O_CFLAGS) $(TARGET_MARCH_CFLAGS) $(TARGET_EXTRA_CFLAGS) -g -I$(TARGETINCLUDE)
 TARGET_CPPFLAGS = $(TARGET_CFLAGS)
 TARGET_CXXFLAGS = $(TARGET_CFLAGS)
@@ -191,6 +233,10 @@ TERM_YELLOW_BOLD= \033[40;1;33m
 TERM_NORMAL	= \033[0m
 
 N_HD_SOURCE ?= $(SOURCE_DIR)/$(FLAVOUR)
+USE_LIBSTB-HAL = no
+ifneq ($(BOXTYPE), coolstream)
+  USE_LIBSTB-HAL = yes
+endif
 
 PATH := $(HOSTPREFIX)/bin:$(CROSS_DIR)/bin:$(HELPERS_DIR):$(PATH)
 
@@ -246,6 +292,9 @@ BITBUCKET_SSH		= git@bitbucket.org
 NI_GIT			= $(BITBUCKET_SSH):neutrino-images
 NI_NEUTRINO		= ni-neutrino-hd
 NI_NEUTRINO_BRANCH	?= ni/tuxbox
+ifeq ($(USE_LIBSTB-HAL), yes)
+  NI_NEUTRINO_BRANCH	:= ni/mp/tuxbox
+endif
 
 BUILD-GENERIC-PC	= build-generic-pc
 NI_BUILD-GENERIC-PC	= ni-build-generic-pc

@@ -4,11 +4,15 @@
 #MAINTAINER = NI-Team
 
 # Choose one (1) of the following BOXMODELs. O n e !
+# Coolstream
 #BOXMODEL = nevis
 #BOXMODEL = apollo
 #BOXMODEL = shiner
 #BOXMODEL = kronos
 #BOXMODEL = kronos_v2
+
+# AX Technologies
+#BOXMODEL = hd51
 
 # Create debug-image. Not useful in real life.
 #DEBUG = yes

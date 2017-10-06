@@ -1,0 +1,10 @@
+#!/bin/sh
+
+[ "$ACTION" = remove ] && action='-r -a'
+
+. /etc/init.d/globals
+
+for module in "$@"; do
+	modprobe $action $module &&
+		LOGINFO "${ACTION:-scan} module $module succeed"
+done

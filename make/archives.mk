@@ -371,3 +371,7 @@ $(ARCHIVE)/gettext-$(GETTEXT_VERSION).tar.xz:
 WGET_VER=1.19.1
 $(ARCHIVE)/wget-$(WGET_VER).tar.gz:
 	$(WGET) http://ftp.gnu.org/gnu/wget/wget-$(WGET_VER).tar.gz
+
+MTOOLS_VER=4.0.18
+$(ARCHIVE)/mtools-$(MTOOLS_VER).tar.gz:
+	$(WGET) ftp://ftp.gnu.org/gnu/mtools/mtools-$(MTOOLS_VER).tar.gz

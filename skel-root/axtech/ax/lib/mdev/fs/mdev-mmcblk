@@ -1,0 +1,24 @@
+#!/bin/sh
+
+. /etc/init.d/globals
+
+MOUNTBASE=/media
+MOUNTPOINT="$MOUNTBASE/$MDEV"
+ROOTDEV=$(readlink /dev/root)
+
+# do not add or remove root device again...
+[ "$ROOTDEV" = "$MDEV" ] && exit 0
+
+if [ -e /tmp/.nomdevmount ]; then
+	LOGINFO "no action on $MDEV -- /tmp/.nomdevmount exists"
+	exit 0
+fi
+
+case "$ACTION" in
+	add)
+		LOGINFO "[$ACTION] do nothing on /dev/$MDEV"
+		;;
+	remove)
+		LOGINFO "[$ACTION] do nothing on $MOUNTBASE/$MDEV"
+		;;
+esac

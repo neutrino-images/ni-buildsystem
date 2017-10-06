@@ -1,0 +1,43 @@
+--- a/gst/subparse/gstsubparse.c
++++ b/gst/subparse/gstsubparse.c
+@@ -443,6 +443,9 @@
+   const gchar *encoding;
+   GError *err = NULL;
+   gchar *ret = NULL;
++  gsize nuls = 0;
++  gsize valid_utf8_len;
++  const gchar *invalid_utf8_start;
+ 
+   *consumed = 0;
+ 
+@@ -463,11 +466,27 @@
+ 
+   /* Otherwise check if it's UTF8 */
+   if (self->valid_utf8) {
+-    if (g_utf8_validate (str, len, NULL)) {
++    /* Trim NUL terminator(s) if present */
++    while (len > 0 && str[len - 1] == '\0') {
++      len--;
++      nuls++;
++    }
++
++    /* Consume whole byte run if all valid UTF-8 */
++    if (g_utf8_validate (str, len, &invalid_utf8_start)) {
+       GST_LOG_OBJECT (self, "valid UTF-8, no conversion needed");
+-      *consumed = len;
++      *consumed = len + nuls;
+       return g_strndup (str, len);
+     }
++
++    /* Consume initial data as far as we have at least 1 valid code point */
++    valid_utf8_len = invalid_utf8_start - str;
++    if (valid_utf8_len) {
++      GST_WARNING_OBJECT (self, "At least some of the data was invalid UTF-8");
++      *consumed = valid_utf8_len;
++      return g_strndup (str, valid_utf8_len);
++    }
++
+     GST_INFO_OBJECT (self, "invalid UTF-8!");
+     self->valid_utf8 = FALSE;
+   }
+

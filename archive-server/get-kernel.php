@@ -33,6 +33,11 @@ if ($boxtype == "coolstream" || $boxtype == "cst")
 		$kernel_name = "vmlinux.ub.gz";
 	}
 }
+elseif ($boxtype == "axtech" || $boxtype == "axt")
+{
+	# AX Tech
+	$boxtype_sc = "axt";
+}
 
 # release/kernel-cst-kronos-vmlinux.ub.gz
 $directory = $image_type;

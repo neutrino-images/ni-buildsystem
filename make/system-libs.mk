@@ -131,6 +131,11 @@ $(D)/libcurl: $(D)/zlib $(D)/openssl $(ARCHIVE)/curl-$(LIBCURL_VER).tar.bz2 | $(
 	$(REMOVE)/curl-$(LIBCURL_VER)
 	touch $@
 
+LIBPNG_CONF =
+ifneq ($(BOXSERIES), ax)
+	LIBPNG_CONF = --disable-arm-neon
+endif
+
 $(D)/libpng: $(ARCHIVE)/libpng-$(LIBPNG_VER).tar.xz $(D)/zlib | $(TARGETPREFIX)
 	$(UNTAR)/libpng-$(LIBPNG_VER).tar.xz
 	pushd $(BUILD_TMP)/libpng-$(LIBPNG_VER) && \
@@ -140,7 +145,7 @@ $(D)/libpng: $(ARCHIVE)/libpng-$(LIBPNG_VER).tar.xz $(D)/zlib | $(TARGETPREFIX)
 			--bindir=$(HOSTPREFIX)/bin \
 			--mandir=$(BUILD_TMP)/.remove \
 			--enable-silent-rules \
-			--disable-arm-neon \
+			$(LIBPNG_CONF) \
 			--disable-static && \
 		ECHO=echo $(MAKE) all && \
 		make install
@@ -261,7 +266,6 @@ FFMPEG_CONFIGURE_GENERIC = \
 			\
 			--disable-altivec \
 			--disable-mmx \
-			--disable-neon \
 			\
 			--disable-parsers \
 				--enable-parser=aac \
@@ -357,21 +361,34 @@ FFMPEG_CONFIGURE_GENERIC = \
 			--enable-shared \
 			\
 			--target-os=linux \
-			--arch=arm \
+			--arch=$(BOXARCH) \
 			--extra-ldflags="$(TARGET_LDFLAGS)"
 
 ifeq ($(BOXSERIES), hd2)
   FFMPEG_CONFIGURE = \
+			--disable-neon \
 			--enable-decoder=h264 \
 			--enable-decoder=vc1 \
 			--enable-hardcoded-tables \
 			--cpu=cortex-a9 \
 			--extra-cflags="-Wno-deprecated-declarations -I$(TARGETINCLUDE) -mfpu=vfpv3-d16 -mfloat-abi=hard"
-else
+endif
+
+ifeq ($(BOXSERIES), hd1)
   FFMPEG_CONFIGURE = \
+			--disable-neon \
 			--enable-small \
 			--cpu=armv6 \
 			--extra-cflags="-Wno-deprecated-declarations -I$(TARGETINCLUDE)"
+endif
+
+ifeq ($(BOXSERIES), ax)
+  FFMPEG_CONFIGURE = \
+			--enable-decoder=h264 \
+			--enable-decoder=vc1 \
+			--enable-hardcoded-tables \
+			--cpu=cortex-a15 \
+			--extra-cflags="-Wno-deprecated-declarations -I$(TARGETINCLUDE) -mfpu=neon-vfpv4 -mfloat-abi=hard"
 endif
 
 $(D)/ffmpeg: $(FFMPEG_DEPS) | $(TARGETPREFIX)
@@ -814,6 +831,7 @@ $(D)/libxml2: $(ARCHIVE)/libxml2-$(LIBXML2_VER).tar.gz | $(TARGETPREFIX)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libxml-2.0.pc
 	$(REWRITE_PKGCONF) $(HOSTPREFIX)/bin/xml2-config
 	rm -rf $(TARGETLIB)/xml2Conf.sh
+	rm -rf $(TARGETLIB)/cmake
 	$(REMOVE)/libxml2-$(LIBXML2_VER)
 	touch $@
 

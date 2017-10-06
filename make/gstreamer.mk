@@ -1,0 +1,758 @@
+# makefile to build gstreamer and all it's dependencies
+
+#
+# gstreamer
+#
+GSTREAMER_VER = 1.11.1
+GSTREAMER_SOURCE = gstreamer-$(GSTREAMER_VER).tar.xz
+
+$(ARCHIVE)/$(GSTREAMER_SOURCE):
+	$(WGET) https://gstreamer.freedesktop.org/src/gstreamer/$(GSTREAMER_SOURCE)
+
+$(D)/gstreamer: $(D)/libglib $(D)/libxml2 $(D)/glib_networking $(ARCHIVE)/$(GSTREAMER_SOURCE)
+	$(UNTAR)/$(GSTREAMER_SOURCE)
+	set -e; cd $(BUILD_TMP)/gstreamer-$(GSTREAMER_VER); \
+		$(PATCH)/gstreamer-$(GSTREAMER_VER)-fix-crash-with-gst-inspect.patch; \
+		$(PATCH)/gstreamer-$(GSTREAMER_VER)-revert-use-new-gst-adapter-get-buffer.patch; \
+		./autogen.sh --noconfigure; \
+		$(CONFIGURE) \
+			--prefix= \
+			--libexecdir=/lib \
+			--datarootdir=/.remove \
+			--enable-silent-rules \
+			--disable-dependency-tracking \
+			--disable-check \
+			--disable-gst-debug \
+			--disable-examples \
+			--disable-benchmarks \
+			--disable-tests \
+			--disable-debug \
+			--disable-gtk-doc \
+			--disable-gtk-doc-html \
+			--disable-gtk-doc-pdf \
+			--enable-introspection=no \
+			ac_cv_header_valgrind_valgrind_h=no \
+			ac_cv_header_sys_poll_h=no \
+		; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-1.0.pc
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-base-1.0.pc
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-controller-1.0.pc
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-net-1.0.pc
+	$(REWRITE_LIBTOOL)/libgstreamer-1.0.la
+	$(REWRITE_LIBTOOL)/libgstbase-1.0.la
+	$(REWRITE_LIBTOOL)/libgstcontroller-1.0.la
+	$(REWRITE_LIBTOOL)/libgstnet-1.0.la
+	$(REWRITE_LIBTOOLDEP)/libgstbase-1.0.la
+	$(REWRITE_LIBTOOLDEP)/libgstcontroller-1.0.la
+	$(REWRITE_LIBTOOLDEP)/libgstnet-1.0.la
+	$(REMOVE)/gstreamer-$(GSTREAMER_VER)
+	touch $@
+
+#
+# gst_plugins_base
+#
+GST_PLUGINS_BASE_VER = $(GSTREAMER_VER)
+GST_PLUGINS_BASE_SOURCE = gst-plugins-base-$(GST_PLUGINS_BASE_VER).tar.xz
+
+$(ARCHIVE)/$(GST_PLUGINS_BASE_SOURCE):
+	$(WGET) https://gstreamer.freedesktop.org/src/gst-plugins-base/$(GST_PLUGINS_BASE_SOURCE)
+
+$(D)/gst_plugins_base: $(D)/libglib $(D)/orc $(D)/gstreamer $(D)/alsa_lib $(D)/libogg $(D)/libvorbisidec $(ARCHIVE)/$(GST_PLUGINS_BASE_SOURCE)
+	$(UNTAR)/$(GST_PLUGINS_BASE_SOURCE)
+	set -e; cd $(BUILD_TMP)/gst-plugins-base-$(GST_PLUGINS_BASE_VER); \
+		$(PATCH)/gst-plugins-base-$(GST_PLUGINS_BASE_VER)-riff-media-added-fourcc-to-all-mpeg4-video-caps.patch; \
+		$(PATCH)/gst-plugins-base-$(GST_PLUGINS_BASE_VER)-riff-media-added-fourcc-to-all-ffmpeg-mpeg4-video-ca.patch; \
+		$(PATCH)/gst-plugins-base-$(GST_PLUGINS_BASE_VER)-subparse-avoid-false-negatives-dealing-with-UTF-8.patch; \
+		$(PATCH)/gst-plugins-base-$(GST_PLUGINS_BASE_VER)-taglist-not-send-to-down-stream-if-all-the-frame-cor.patch; \
+		./autogen.sh --noconfigure; \
+		$(CONFIGURE) \
+			--prefix= \
+			--datarootdir=/.remove \
+			--enable-silent-rules \
+			--disable-libvisual \
+			--disable-valgrind \
+			--disable-debug \
+			--disable-examples \
+			--disable-debug \
+			--disable-gtk-doc \
+			--disable-gtk-doc-html \
+			--disable-gtk-doc-pdf \
+		; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+	for i in `cd $(TARGETPREFIX)/lib/gstreamer-1.0; echo *.la`; do \
+		$(REWRITE_LIBTOOL)/gstreamer-1.0/$$i; done
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-allocators-1.0.pc
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-app-1.0.pc
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-audio-1.0.pc
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-fft-1.0.pc
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-pbutils-1.0.pc
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-riff-1.0.pc
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-rtp-1.0.pc
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-rtsp-1.0.pc
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-sdp-1.0.pc
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-tag-1.0.pc
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-video-1.0.pc
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-plugins-base-1.0.pc
+	$(REWRITE_LIBTOOL)/libgstallocators-1.0.la
+	$(REWRITE_LIBTOOL)/libgstapp-1.0.la
+	$(REWRITE_LIBTOOL)/libgstaudio-1.0.la
+	$(REWRITE_LIBTOOL)/libgstfft-1.0.la
+	$(REWRITE_LIBTOOL)/libgstpbutils-1.0.la
+	$(REWRITE_LIBTOOL)/libgstriff-1.0.la
+	$(REWRITE_LIBTOOL)/libgstrtp-1.0.la
+	$(REWRITE_LIBTOOL)/libgstrtsp-1.0.la
+	$(REWRITE_LIBTOOL)/libgstsdp-1.0.la
+	$(REWRITE_LIBTOOL)/libgsttag-1.0.la
+	$(REWRITE_LIBTOOL)/libgstvideo-1.0.la
+	$(REWRITE_LIBTOOLDEP)/libgstallocators-1.0.la
+	$(REWRITE_LIBTOOLDEP)/libgstapp-1.0.la
+	$(REWRITE_LIBTOOLDEP)/libgstaudio-1.0.la
+	$(REWRITE_LIBTOOLDEP)/libgstfft-1.0.la
+	$(REWRITE_LIBTOOLDEP)/libgstpbutils-1.0.la
+	$(REWRITE_LIBTOOLDEP)/libgstriff-1.0.la
+	$(REWRITE_LIBTOOLDEP)/libgstrtp-1.0.la
+	$(REWRITE_LIBTOOLDEP)/libgstrtsp-1.0.la
+	$(REWRITE_LIBTOOLDEP)/libgstsdp-1.0.la
+	$(REWRITE_LIBTOOLDEP)/libgsttag-1.0.la
+	$(REWRITE_LIBTOOLDEP)/libgstvideo-1.0.la
+	$(REMOVE)/gst-plugins-base-$(GST_PLUGINS_BASE_VER)
+	touch $@
+
+#
+# gst_plugins_good
+#
+GST_PLUGINS_GOOD_VER = $(GSTREAMER_VER)
+GST_PLUGINS_GOOD_SOURCE = gst-plugins-good-$(GST_PLUGINS_GOOD_VER).tar.xz
+
+$(ARCHIVE)/$(GST_PLUGINS_GOOD_SOURCE):
+	$(WGET) https://gstreamer.freedesktop.org/src/gst-plugins-good/$(GST_PLUGINS_GOOD_SOURCE)
+
+$(D)/gst_plugins_good: $(D)/gstreamer $(D)/gst_plugins_base $(D)/libsoup $(D)/libFLAC $(ARCHIVE)/$(GST_PLUGINS_GOOD_SOURCE)
+	$(UNTAR)/$(GST_PLUGINS_GOOD_SOURCE)
+	set -e; cd $(BUILD_TMP)/gst-plugins-good-$(GST_PLUGINS_GOOD_VER); \
+		./autogen.sh --noconfigure; \
+		$(CONFIGURE) \
+			--prefix= \
+			--datarootdir=/.remove \
+			--enable-silent-rules \
+			--enable-oss \
+			--enable-gst_v4l2 \
+			--without-libv4l2 \
+			--disable-examples \
+			--disable-debug \
+			--disable-gtk-doc \
+			--disable-gtk-doc-html \
+			--disable-gtk-doc-pdf \
+		; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+	for i in `cd $(TARGETPREFIX)/lib/gstreamer-1.0; echo *.la`; do \
+		$(REWRITE_LIBTOOL)/gstreamer-1.0/$$i; done
+	$(REMOVE)/gst-plugins-good-$(GST_PLUGINS_GOOD_VER)
+	touch $@
+
+#
+# gst_plugins_bad
+#
+GST_PLUGINS_BAD_VER = $(GSTREAMER_VER)
+GST_PLUGINS_BAD_SOURCE = gst-plugins-bad-$(GST_PLUGINS_BAD_VER).tar.xz
+
+$(ARCHIVE)/$(GST_PLUGINS_BAD_SOURCE):
+	$(WGET) https://gstreamer.freedesktop.org/src/gst-plugins-bad/$(GST_PLUGINS_BAD_SOURCE)
+
+$(D)/gst_plugins_bad: $(D)/gstreamer $(D)/gst_plugins_base $(ARCHIVE)/$(GST_PLUGINS_BAD_SOURCE)
+	$(UNTAR)/$(GST_PLUGINS_BAD_SOURCE)
+	set -e; cd $(BUILD_TMP)/gst-plugins-bad-$(GST_PLUGINS_BAD_VER); \
+		$(PATCH)/gst-plugins-bad-$(GST_PLUGINS_BAD_VER)-hls-use-max-playlist-quality.patch; \
+		$(PATCH)/gst-plugins-bad-$(GST_PLUGINS_BAD_VER)-rtmp-fix-seeking-and-potential-segfault.patch; \
+		$(PATCH)/gst-plugins-bad-$(GST_PLUGINS_BAD_VER)-mpegtsdemux-only-wait-for-PCR-when-PCR-pid.patch; \
+		$(PATCH)/gst-plugins-bad-$(GST_PLUGINS_BAD_VER)-dvbapi5-fix-old-kernel.patch; \
+		./autogen.sh --noconfigure; \
+		$(CONFIGURE) \
+			--build=$(BUILD) \
+			--host=$(TARGET) \
+			--prefix= \
+			--datarootdir=/.remove \
+			--enable-silent-rules \
+			--disable-gtk-doc \
+			--disable-gtk-doc-html \
+			--disable-gtk-doc-pdf \
+			--disable-fatal-warnings \
+			--enable-dvb \
+			--enable-shm \
+			--enable-fbdev \
+			--enable-decklink \
+			--enable-dts \
+			--enable-mpegdemux \
+			--disable-acm \
+			--disable-android_media \
+			--disable-apple_media \
+			--disable-avc \
+			--disable-chromaprint \
+			--disable-cocoa \
+			--disable-daala \
+			--disable-dc1394 \
+			--disable-direct3d \
+			--disable-directsound \
+			--disable-gme \
+			--disable-gsm \
+			--disable-kate \
+			--disable-ladspa \
+			--disable-lv2 \
+			--disable-mplex \
+			--disable-musepack \
+			--disable-ofa \
+			--disable-openjpeg \
+			--disable-opensles \
+			--disable-resindvd \
+			--disable-soundtouch \
+			--disable-spandsp \
+			--disable-spc \
+			--disable-srtp \
+			--disable-teletextdec \
+			--disable-vcd \
+			--disable-vdpau \
+			--disable-voaacenc \
+			--disable-voamrwbenc \
+			--disable-wasapi \
+			--disable-wayland \
+			--disable-wildmidi \
+			--disable-winscreencap \
+			--disable-x265 \
+			--disable-zbar \
+			--disable-examples \
+			--disable-debug \
+			--enable-orc \
+		; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+	for i in `cd $(TARGETPREFIX)/lib/gstreamer-1.0; echo *.la`; do \
+		$(REWRITE_LIBTOOL)/gstreamer-1.0/$$i; done
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-codecparsers-1.0.pc
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-bad-audio-1.0.pc
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-bad-base-1.0.pc
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-bad-video-1.0.pc
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-insertbin-1.0.pc
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-mpegts-1.0.pc
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-player-1.0.pc
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-plugins-bad-1.0.pc
+	$(REWRITE_LIBTOOL)/libgstbasecamerabinsrc-1.0.la
+	$(REWRITE_LIBTOOL)/libgstcodecparsers-1.0.la
+	$(REWRITE_LIBTOOL)/libgstphotography-1.0.la
+	$(REWRITE_LIBTOOL)/libgstadaptivedemux-1.0.la
+	$(REWRITE_LIBTOOL)/libgstbadbase-1.0.la
+	$(REWRITE_LIBTOOL)/libgstbadaudio-1.0.la
+	$(REWRITE_LIBTOOL)/libgstbadvideo-1.0.la
+	$(REWRITE_LIBTOOL)/libgstinsertbin-1.0.la
+	$(REWRITE_LIBTOOL)/libgstmpegts-1.0.la
+	$(REWRITE_LIBTOOL)/libgstplayer-1.0.la
+	$(REWRITE_LIBTOOL)/libgsturidownloader-1.0.la
+	$(REWRITE_LIBTOOLDEP)/libgstbadaudio-1.0.la
+	$(REWRITE_LIBTOOLDEP)/libgstadaptivedemux-1.0.la
+	$(REWRITE_LIBTOOLDEP)/libgstbadvideo-1.0.la
+	$(REMOVE)/gst-plugins-bad-$(GST_PLUGINS_BAD_VER)
+	touch $@
+
+#
+# gst_plugins_ugly
+#
+GST_PLUGINS_UGLY_VER = $(GSTREAMER_VER)
+GST_PLUGINS_UGLY_SOURCE = gst-plugins-ugly-$(GST_PLUGINS_UGLY_VER).tar.xz
+
+$(ARCHIVE)/$(GST_PLUGINS_UGLY_SOURCE):
+	$(WGET) https://gstreamer.freedesktop.org/src/gst-plugins-ugly/$(GST_PLUGINS_UGLY_SOURCE)
+
+$(D)/gst_plugins_ugly: $(D)/gstreamer $(D)/gst_plugins_base $(ARCHIVE)/$(GST_PLUGINS_UGLY_SOURCE)
+	$(UNTAR)/$(GST_PLUGINS_UGLY_SOURCE)
+	set -e; cd $(BUILD_TMP)/gst-plugins-ugly-$(GST_PLUGINS_UGLY_VER); \
+		./autogen.sh --noconfigure; \
+		$(CONFIGURE) \
+			--prefix= \
+			--datarootdir=/.remove \
+			--enable-silent-rules \
+			--disable-fatal-warnings \
+			--disable-amrnb \
+			--disable-amrwb \
+			--disable-sidplay \
+			--disable-twolame \
+			--disable-debug \
+			--disable-gtk-doc \
+			--disable-gtk-doc-html \
+			--disable-gtk-doc-pdf \
+			--enable-orc \
+		; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+	for i in `cd $(TARGETPREFIX)/lib/gstreamer-1.0; echo *.la`; do \
+		$(REWRITE_LIBTOOL)/gstreamer-1.0/$$i; done
+	$(REMOVE)/gst-plugins-ugly-$(GST_PLUGINS_UGLY_VER)
+	touch $@
+
+#
+# gst_libav
+#
+GST_LIBAV_VER = $(GSTREAMER_VER)
+GST_LIBAV_SOURCE = gst-libav-$(GST_LIBAV_VER).tar.xz
+
+$(ARCHIVE)/$(GST_LIBAV_SOURCE):
+	$(WGET) https://gstreamer.freedesktop.org/src/gst-libav/$(GST_LIBAV_SOURCE)
+
+$(D)/gst_libav: $(D)/gstreamer $(D)/gst_plugins_base $(ARCHIVE)/$(GST_LIBAV_SOURCE)
+	$(UNTAR)/$(GST_LIBAV_SOURCE)
+	set -e; cd $(BUILD_TMP)/gst-libav-$(GST_LIBAV_VER); \
+		$(PATCH)/gst-libav-$(GST_LIBAV_VER)-disable-yasm-for-libav-when-disable-yasm.patch; \
+		./autogen.sh --noconfigure; \
+		$(CONFIGURE) \
+			--prefix= \
+			--enable-silent-rules \
+			--disable-fatal-warnings \
+			\
+			--with-libav-extra-configure=" \
+			--enable-gpl \
+			--enable-static \
+			--enable-pic \
+			--disable-protocols \
+			--disable-devices \
+			--disable-network \
+			--disable-hwaccels \
+			--disable-filters \
+			--disable-doc \
+			--enable-optimizations \
+			--enable-cross-compile \
+			--target-os=linux \
+			--arch=$(BOXARCH) \
+			--cross-prefix=$(TARGET)- \
+			\
+			--disable-muxers \
+			--disable-encoders \
+			--disable-decoders \
+			--enable-decoder=ogg \
+			--enable-decoder=vorbis \
+			--enable-decoder=flac \
+			\
+			--disable-demuxers \
+			--enable-demuxer=ogg \
+			--enable-demuxer=vorbis \
+			--enable-demuxer=flac \
+			--enable-demuxer=mpegts \
+			\
+			--disable-debug \
+			--disable-bsfs \
+			--enable-pthreads \
+			--enable-bzlib" \
+		; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+	$(REMOVE)/gst-libav-$(GST_LIBAV_VER)
+	touch $@
+
+#
+# gst_plugins_fluendo
+#
+GST_PLUGINS_FLUENDO_VER = 0.10.71
+GST_PLUGINS_FLUENDO_SOURCE = gst-fluendo-mpegdemux-$(GST_PLUGINS_FLUENDO_VER).tar.gz
+
+$(ARCHIVE)/$(GST_PLUGINS_FLUENDO_SOURCE):
+	$(WGET) http://core.fluendo.com/gstreamer/src/gst-fluendo-mpegdemux/$(GST_PLUGINS_FLUENDO_SOURCE)
+
+$(D)/gst_plugins_fluendo: $(D)/gstreamer $(D)/gst_plugins_base $(ARCHIVE)/$(GST_PLUGINS_FLUENDO_SOURCE)
+	$(UNTAR)/$(GST_PLUGINS_FLUENDO_SOURCE)
+	set -e; cd $(BUILD_TMP)/gst-fluendo-mpegdemux-$(GST_PLUGINS_FLUENDO_VER); \
+		$(PATCH)/gst-plugins-fluendo-$(GST_PLUGINS_FLUENDO_VER)-mpegdemux.patch; \
+		./autogen.sh --noconfigure; \
+		$(CONFIGURE) \
+			--prefix= \
+			--enable-silent-rules \
+			--with-check=no \
+		; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+	$(REMOVE)/gst-fluendo-mpegdemux-$(GST_PLUGINS_FLUENDO_VER)
+	touch $@
+
+#
+# gmediarender
+#
+GST_GMEDIARENDER_VER = 0.0.6
+GST_GMEDIARENDER_SOURCE = gmediarender-$(GST_GMEDIARENDER_VER).tar.bz2
+
+$(ARCHIVE)/$(GST_GMEDIARENDER_SOURCE):
+	$(WGET) http://savannah.nongnu.org/download/gmrender/$(GST_GMEDIARENDER_SOURCE)
+
+$(D)/gst_gmediarender: $(D)/gst_plugins_dvbmediasink $(D)/libupnp $(ARCHIVE)/$(GST_GMEDIARENDER_SOURCE)
+	$(UNTAR)/$(GST_GMEDIARENDER_SOURCE)
+	set -e; cd $(BUILD_TMP)/gmediarender-$(GST_GMEDIARENDER_VER); \
+		$(PATCH)/gst-gmediarender-$(GST_GMEDIARENDER_VER).patch; \
+		./autogen.sh --noconfigure; \
+		$(CONFIGURE) \
+			--prefix= \
+			--enable-silent-rules \
+			--with-libupnp=$(TARGETPREFIX) \
+		; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+	$(REMOVE)/gmediarender-$(GST_GMEDIARENDER_VER)
+	touch $@
+
+#
+# orc
+#
+ORC_VER = 0.4.24
+ORC_SOURCE = orc-$(ORC_VER).tar.xz
+
+$(ARCHIVE)/$(ORC_SOURCE):
+	$(WGET) https://gstreamer.freedesktop.org/src/orc/$(ORC_SOURCE)
+
+$(D)/orc: $(ARCHIVE)/$(ORC_SOURCE)
+	$(UNTAR)/$(ORC_SOURCE)
+	set -e; cd $(BUILD_TMP)/orc-$(ORC_VER); \
+		$(CONFIGURE) \
+			--datarootdir=/.remove \
+			--prefix= \
+		; \
+		$(MAKE) all; \
+		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/orc-0.4.pc
+	$(REWRITE_LIBTOOL)/liborc-0.4.la
+	$(REWRITE_LIBTOOL)/liborc-test-0.4.la
+	$(REWRITE_LIBTOOLDEP)/liborc-test-0.4.la
+	rm -f $(addprefix $(TARGETPREFIX)/bin/,orc-bugreport orcc)
+	$(REMOVE)/orc-$(ORC_VER)
+	touch $@
+
+#
+# libdca
+#
+LIBDCA_VER = 0.0.5
+LIBDCA_SOURCE = libdca-$(LIBDCA_VER).tar.bz2
+
+$(ARCHIVE)/$(LIBDCA_SOURCE):
+	$(WGET) http://download.videolan.org/pub/videolan/libdca/$(LIBDCA_VER)/$(LIBDCA_SOURCE)
+
+$(D)/libdca: $(ARCHIVE)/$(LIBDCA_SOURCE)
+	$(UNTAR)/$(LIBDCA_SOURCE)
+	set -e; cd $(BUILD_TMP)/libdca-$(LIBDCA_VER); \
+		$(CONFIGURE) \
+			--prefix= \
+			--mandir=/.remove \
+		; \
+		$(MAKE) all; \
+		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libdca.pc
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libdts.pc
+	$(REWRITE_LIBTOOL)/libdca.la
+	rm -f $(addprefix $(TARGETPREFIX)/bin/,extract_dca extract_dts)
+	$(REMOVE)/libdca-$(LIBDCA_VER)
+	touch $@
+
+#
+# gst_plugin_subsink
+#
+GST_PLUGIN_SUBSINK_VER = 1.0
+
+$(D)/gst_plugin_subsink: $(D)/gstreamer $(D)/gst_plugins_base $(D)/gst_plugins_good $(D)/gst_plugins_bad $(D)/gst_plugins_ugly
+	set -e; if [ -d $(ARCHIVE)/gstreamer$(GST_PLUGIN_SUBSINK_VER)-plugin-subsink.git ]; \
+		then cd $(ARCHIVE)/gstreamer$(GST_PLUGIN_SUBSINK_VER)-plugin-subsink.git; git pull; \
+		else cd $(ARCHIVE); git clone git://github.com/christophecvr/gstreamer$(GST_PLUGIN_SUBSINK_VER)-plugin-subsink.git gstreamer$(GST_PLUGIN_SUBSINK_VER)-plugin-subsink.git; \
+		fi
+	cp -ra $(ARCHIVE)/gstreamer$(GST_PLUGIN_SUBSINK_VER)-plugin-subsink.git $(BUILD_TMP)/gstreamer$(GST_PLUGIN_SUBSINK_VER)-plugin-subsink
+	set -e; cd $(BUILD_TMP)/gstreamer$(GST_PLUGIN_SUBSINK_VER)-plugin-subsink; \
+		aclocal --force -I m4; \
+		libtoolize --copy --ltdl --force; \
+		autoconf --force; \
+		autoheader --force; \
+		automake --add-missing --copy --force-missing --foreign; \
+		$(CONFIGURE) \
+			--prefix= \
+			--enable-silent-rules \
+		; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+	for i in `cd $(TARGETPREFIX)/lib/gstreamer-1.0; echo *.la`; do \
+		$(REWRITE_LIBTOOL)/gstreamer-1.0/$$i; done
+	$(REMOVE)/gstreamer$(GST_PLUGIN_SUBSINK_VER)-plugin-subsink
+	touch $@
+
+#
+# gst_plugins_dvbmediasink
+#
+GST_PLUGINS_MULTIBOX_DVBMEDIASINK_VER = 1.0
+
+$(D)/gst_plugins_multibox_dvbmediasink: $(D)/gstreamer $(D)/gst_plugins_base $(D)/gst_plugins_good $(D)/gst_plugins_bad $(D)/gst_plugins_ugly $(D)/gst_plugin_subsink $(D)/libdca
+	set -e; if [ -d $(ARCHIVE)/gstreamer$(GST_PLUGINS_MULTIBOX_DVBMEDIASINK_VER)-plugin-multibox-dvbmediasink.git ]; \
+		then cd $(ARCHIVE)/gstreamer$(GST_PLUGINS_MULTIBOX_DVBMEDIASINK_VER)-plugin-multibox-dvbmediasink.git; git pull; \
+		else cd $(ARCHIVE); git clone -b experimental git://github.com/christophecvr/gstreamer$(GST_PLUGINS_MULTIBOX_DVBMEDIASINK_VER)-plugin-multibox-dvbmediasink.git gstreamer$(GST_PLUGINS_MULTIBOX_DVBMEDIASINK_VER)-plugin-multibox-dvbmediasink.git; \
+		fi
+	cp -ra $(ARCHIVE)/gstreamer$(GST_PLUGINS_MULTIBOX_DVBMEDIASINK_VER)-plugin-multibox-dvbmediasink.git $(BUILD_TMP)/gstreamer$(GST_PLUGINS_MULTIBOX_DVBMEDIASINK_VER)-plugin-multibox-dvbmediasink
+	set -e; cd $(BUILD_TMP)/gstreamer$(GST_PLUGINS_MULTIBOX_DVBMEDIASINK_VER)-plugin-multibox-dvbmediasink; \
+		aclocal --force -I m4; \
+		libtoolize --copy --ltdl --force; \
+		autoconf --force; \
+		autoheader --force; \
+		automake --add-missing --copy --force-missing --foreign; \
+		$(CONFIGURE) \
+			--prefix= \
+			--enable-silent-rules \
+			--with-wma \
+			--with-wmv \
+			--with-pcm \
+			--with-eac3 \
+			--with-dtsdownmix \
+			--with-mpeg4v2 \
+			--with-gstversion=1.0 \
+		; \
+		$(MAKE) all; \
+		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+	for i in `cd $(TARGETPREFIX)/lib/gstreamer-1.0; echo *.la`; do \
+		$(REWRITE_LIBTOOL)/gstreamer-1.0/$$i; done
+	$(REMOVE)/gstreamer$(GST_PLUGINS_MULTIBOX_DVBMEDIASINK_VER)-plugin-multibox-dvbmediasink
+	touch $@
+
+#
+# gst_plugins_dvbmediasink
+#
+GST_PLUGINS_DVBMEDIASINK_VER = 1.0
+
+$(D)/gst_plugins_dvbmediasink: $(D)/gstreamer $(D)/gst_plugins_base $(D)/gst_plugins_good $(D)/gst_plugins_bad $(D)/gst_plugins_ugly $(D)/gst_plugin_subsink $(D)/libdca
+	set -e; if [ -d $(ARCHIVE)/gstreamer$(GST_PLUGINS_DVBMEDIASINK_VER)-plugin-dvbmediasink.git ]; \
+		then cd $(ARCHIVE)/gstreamer$(GST_PLUGINS_DVBMEDIASINK_VER)-plugin-dvbmediasink.git; git pull; \
+		else cd $(ARCHIVE); git clone -b gst-1.0 https://github.com/OpenPLi/gst-plugin-dvbmediasink.git gstreamer$(GST_PLUGINS_DVBMEDIASINK_VER)-plugin-dvbmediasink.git; \
+		fi
+	cp -ra $(ARCHIVE)/gstreamer$(GST_PLUGINS_DVBMEDIASINK_VER)-plugin-dvbmediasink.git $(BUILD_TMP)/gstreamer$(GST_PLUGINS_DVBMEDIASINK_VER)-plugin-dvbmediasink
+	set -e; cd $(BUILD_TMP)/gstreamer$(GST_PLUGINS_DVBMEDIASINK_VER)-plugin-dvbmediasink; \
+		aclocal --force -I m4; \
+		libtoolize --copy --ltdl --force; \
+		autoconf --force; \
+		autoheader --force; \
+		automake --add-missing --copy --force-missing --foreign; \
+		$(CONFIGURE) \
+			--prefix= \
+			--enable-silent-rules \
+			--with-h265 \
+			--with-vb8 \
+			--with-vb9 \
+			--with-opus \
+			--with-dts \
+			--with-wma \
+			--with-wmv \
+			--with-pcm \
+			--with-eac3 \
+			--with-dtsdownmix \
+			--with-mpeg4v2 \
+			--with-gstversion=1.0 \
+		; \
+		$(MAKE) all; \
+		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+	for i in `cd $(TARGETPREFIX)/lib/gstreamer-1.0; echo *.la`; do \
+		$(REWRITE_LIBTOOL)/gstreamer-1.0/$$i; done
+	$(REMOVE)/gstreamer$(GST_PLUGINS_DVBMEDIASINK_VER)-plugin-dvbmediasink
+	touch $@
+
+##########################################################################################################
+
+#
+# nettle
+#
+NETTLE_VER = 3.1
+NETTLE_SOURCE = nettle-$(NETTLE_VER).tar.gz
+
+$(ARCHIVE)/$(NETTLE_SOURCE):
+	$(WGET) https://ftp.gnu.org/gnu/nettle/$(NETTLE_SOURCE)
+
+$(D)/nettle: $(D)/gmp $(ARCHIVE)/$(NETTLE_SOURCE)
+	$(UNTAR)/$(NETTLE_SOURCE)
+	set -e; cd $(BUILD_TMP)/nettle-$(NETTLE_VER); \
+		$(PATCH)/nettle-$(NETTLE_VER).patch; \
+		$(CONFIGURE) \
+			--prefix= \
+			--disable-documentation \
+		; \
+		$(MAKE) all; \
+		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/hogweed.pc
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/nettle.pc
+	rm -f $(addprefix $(TARGETPREFIX)/bin/,sexp-conv nettle-hash nettle-pbkdf2 nettle-lfib-stream pkcs1-conv)
+	$(REMOVE)/nettle-$(NETTLE_VER)
+	touch $@
+
+#
+# gmp
+#
+GMP_VER_MAJOR = 6.0.0
+GMP_VER_MINOR = a
+GMP_VER = $(GMP_VER_MAJOR)$(GMP_VER_MINOR)
+GMP_SOURCE = gmp-$(GMP_VER).tar.xz
+
+$(ARCHIVE)/$(GMP_SOURCE):
+	$(WGET) ftp://ftp.gmplib.org/pub/gmp-$(GMP_VER_MAJOR)/$(GMP_SOURCE)
+
+$(D)/gmp: $(ARCHIVE)/$(GMP_SOURCE)
+	$(UNTAR)/$(GMP_SOURCE)
+	set -e; cd $(BUILD_TMP)/gmp-$(GMP_VER_MAJOR); \
+		$(CONFIGURE) \
+			--prefix= \
+			--infodir=/.remove \
+		; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+	$(REWRITE_LIBTOOL)/libgmp.la
+	$(REMOVE)/gmp-$(GMP_VER_MAJOR)
+	touch $@
+
+#
+# gnutls
+#
+GNUTLS_VER_MAJOR = 3.4
+GNUTLS_VER_MINOR = 3
+GNUTLS_VER = $(GNUTLS_VER_MAJOR).$(GNUTLS_VER_MINOR)
+GNUTLS_SOURCE = gnutls-$(GNUTLS_VER).tar.xz
+
+$(ARCHIVE)/$(GNUTLS_SOURCE):
+	$(WGET) ftp://ftp.gnutls.org/gcrypt/gnutls/v$(GNUTLS_VER_MAJOR)/$(GNUTLS_SOURCE)
+
+$(D)/gnutls: $(D)/nettle $(ARCHIVE)/$(GNUTLS_SOURCE)
+	$(UNTAR)/$(GNUTLS_SOURCE)
+	set -e; cd $(BUILD_TMP)/gnutls-$(GNUTLS_VER); \
+		$(CONFIGURE) \
+			--prefix= \
+			--mandir=/.remove \
+			--infodir=/.remove \
+			--datarootdir=/.remove \
+			--disable-rpath \
+			--with-included-libtasn1 \
+			--enable-local-libopts \
+			--with-libpthread-prefix=$(TARGETPREFIX) \
+			--with-libz-prefix=$(TARGETPREFIX) \
+			--disable-guile \
+			--disable-crywrap \
+			--without-p11-kit \
+		; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gnutls.pc
+	$(REWRITE_LIBTOOL)/libgnutls.la
+	$(REWRITE_LIBTOOL)/libgnutlsxx.la
+	$(REWRITE_LIBTOOLDEP)/libgnutlsxx.la
+	rm -f $(addprefix $(TARGETPREFIX)/bin/,psktool gnutls-cli-debug certtool srptool ocsptool gnutls-serv gnutls-cli)
+	$(REMOVE)/gnutls-$(GNUTLS_VER)
+	touch $@
+
+#
+# glib-networking
+#
+GLIB_NETWORKING_VER_MAJOR = 2.54
+GLIB_NETWORKING_VER_MINOR = 0
+GLIB_NETWORKING_VER = $(GLIB_NETWORKING_VER_MAJOR).$(GLIB_NETWORKING_VER_MINOR)
+GLIB_NETWORKING_SOURCE = glib-networking-$(GLIB_NETWORKING_VER).tar.xz
+
+$(ARCHIVE)/$(GLIB_NETWORKING_SOURCE):
+	$(WGET) https://ftp.acc.umu.se/pub/GNOME/sources/glib-networking/$(GLIB_NETWORKING_VER_MAJOR)/$(GLIB_NETWORKING_SOURCE)
+
+$(D)/glib_networking: $(D)/gnutls $(D)/libglib $(ARCHIVE)/$(GLIB_NETWORKING_SOURCE)
+	$(UNTAR)/$(GLIB_NETWORKING_SOURCE)
+	set -e; cd $(BUILD_TMP)/glib-networking-$(GLIB_NETWORKING_VER); \
+		$(CONFIGURE) \
+			--prefix= \
+			--datadir=/.remove \
+			--datarootdir=/.remove \
+			--localedir=/.remove \
+		; \
+		$(MAKE); \
+		$(MAKE) install prefix=$(TARGETPREFIX)
+	$(REMOVE)/glib-networking-$(GLIB_NETWORKING_VER)
+	touch $@
+
+#
+# alsa_lib
+#
+ALSA_LIB_VER = 1.1.4.1
+ALSA_LIB_SOURCE = alsa-lib-$(ALSA_LIB_VER).tar.bz2
+
+$(ARCHIVE)/$(ALSA_LIB_SOURCE):
+	$(WGET) ftp://ftp.alsa-project.org/pub/lib/$(ALSA_LIB_SOURCE)
+
+$(D)/alsa_lib: $(ARCHIVE)/$(ALSA_LIB_SOURCE)
+	$(UNTAR)/$(ALSA_LIB_SOURCE)
+	set -e; cd $(BUILD_TMP)/alsa-lib-$(ALSA_LIB_VER); \
+		$(PATCH)/alsa-lib-$(ALSA_LIB_VER)-link_fix.patch; \
+		$(PATCH)/alsa-lib-$(ALSA_LIB_VER).patch; \
+		$(CONFIGURE) \
+			--prefix= \
+			--datarootdir=/.remove \
+			--with-alsa-devdir=/dev/snd/ \
+			--with-plugindir=/lib/alsa \
+			--without-debug \
+			--with-debug=no \
+			--with-versioned=no \
+			--enable-symbolic-functions \
+			--disable-aload \
+			--disable-rawmidi \
+			--disable-resmgr \
+			--disable-old-symbols \
+			--disable-alisp \
+			--disable-hwdep \
+			--disable-python \
+		; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/alsa.pc
+	$(REWRITE_LIBTOOL)/libasound.la
+	$(REMOVE)/alsa-lib-$(ALSA_LIB_VER)
+	touch $@
+
+#
+# libsoup
+#
+LIBSOUP_VER_MAJOR = 2.50
+LIBSOUP_VER_MINOR = 0
+LIBSOUP_VER = $(LIBSOUP_VER_MAJOR).$(LIBSOUP_VER_MINOR)
+LIBSOUP_SOURCE = libsoup-$(LIBSOUP_VER).tar.xz
+
+$(ARCHIVE)/$(LIBSOUP_SOURCE):
+	$(WGET) https://download.gnome.org/sources/libsoup/$(LIBSOUP_VER_MAJOR)/$(LIBSOUP_SOURCE)
+
+$(D)/libsoup: $(D)/sqlite $(D)/libxml2 $(D)/libglib $(ARCHIVE)/$(LIBSOUP_SOURCE)
+	$(UNTAR)/$(LIBSOUP_SOURCE)
+	set -e; cd $(BUILD_TMP)/libsoup-$(LIBSOUP_VER); \
+		$(CONFIGURE) \
+			--prefix= \
+			--datarootdir=/.remove \
+			--disable-more-warnings \
+			--without-gnome \
+			--disable-gtk-doc \
+			--disable-gtk-doc-html \
+			--disable-gtk-doc-pdf \
+		; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGETPREFIX) itlocaledir=$$(TARGETPREFIX)/.remove
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libsoup-2.4.pc
+	$(REWRITE_LIBTOOL)/libsoup-2.4.la
+	$(REMOVE)/libsoup-$(LIBSOUP_VER)
+	touch $@
+
+#
+# sqlite
+#
+SQLITE_VER = 3160100
+SQLITE_SOURCE = sqlite-autoconf-$(SQLITE_VER).tar.gz
+
+$(ARCHIVE)/$(SQLITE_SOURCE):
+	$(WGET) http://www.sqlite.org/2017/$(SQLITE_SOURCE)
+
+$(D)/sqlite: $(ARCHIVE)/$(SQLITE_SOURCE)
+	$(UNTAR)/$(SQLITE_SOURCE)
+	set -e; cd $(BUILD_TMP)/sqlite-autoconf-$(SQLITE_VER); \
+		$(CONFIGURE) \
+			--prefix= \
+			--mandir=/.remove \
+		; \
+		$(MAKE) all; \
+		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/sqlite3.pc
+	$(REWRITE_LIBTOOL)/libsqlite3.la
+	rm -f $(addprefix $(TARGETPREFIX)/bin/,sqlite3)
+	$(REMOVE)/sqlite-autoconf-$(SQLITE_VER)
+	touch $@

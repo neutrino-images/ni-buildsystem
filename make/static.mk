@@ -2,6 +2,11 @@
 
 static: cortex-strings
 
+CORTEX-STRINGS_CONF =
+ifneq ($(BOXSERIES), ax)
+	CORTEX-STRINGS_CONF = --without-neon
+endif
+
 cortex-strings: $(STATICLIB)/libcortex-strings.la
 $(STATICLIB)/libcortex-strings.la: $(ARCHIVE)/cortex-strings-$(CORTEX-STRINGS_VER).tar.bz2 | $(TARGETPREFIX)
 	$(UNTAR)/cortex-strings-$(CORTEX-STRINGS_VER).tar.bz2
@@ -16,7 +21,7 @@ $(STATICLIB)/libcortex-strings.la: $(ARCHIVE)/cortex-strings-$(CORTEX-STRINGS_VE
 			--prefix= \
 			--disable-shared \
 			--enable-static \
-			--without-neon && \
+			$(CORTEX-STRINGS_CONF) && \
 		$(MAKE) && \
 		$(MAKE) install DESTDIR=$(STATIC_DIR) && \
 	$(REWRITE_LIBTOOL_STATIC)/libcortex-strings.la

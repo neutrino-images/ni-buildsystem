@@ -30,7 +30,7 @@ ni-neutrino-full-updates:
 
 # -----------------------------------------------------------------------------
 
-BOXMODEL_IMAGE = apollo kronos kronos_v2
+BOXMODEL_IMAGE = apollo kronos kronos_v2 hd51
 ifneq ($(DEBUG), yes)
 	BOXMODEL_IMAGE += nevis
 endif
@@ -76,8 +76,8 @@ ni-image:
 	make -j$(NUM_CPUS) wget
 	make -j$(NUM_CPUS) iconv
 	make -j$(NUM_CPUS) streamripper
-ifeq ($(BOXSERIES), hd2)
-	make plugins-hd2
+ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 ax))
+	make plugins-add
 	make -j$(NUM_CPUS) less
 	make -j$(NUM_CPUS) parted
 	make -j$(NUM_CPUS) openvpn
@@ -88,13 +88,16 @@ ifeq ($(BOXSERIES), hd2)
 	make -j$(NUM_CPUS) minicom
 	make -j$(NUM_CPUS) mc
   endif
+  ifeq ($(BOXSERIES), ax)
+	make -j$(NUM_CPUS) ofgwrite
+  endif
   ifeq ($(DEBUG), yes)
 	make -j$(NUM_CPUS) strace
 	make -j$(NUM_CPUS) valgrind
 	make -j$(NUM_CPUS) gdb
   endif
 endif
-	make -j$(NUM_CPUS) kernel-cst-modules
+	make -j$(NUM_CPUS) kernel-$(BOXTYPE_SC)-modules
 	make autofs5
 ifeq ($(PERSONALIZE), yes)
 	make personalize

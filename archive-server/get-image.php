@@ -34,6 +34,11 @@ if ($boxtype == "coolstream" || $boxtype == "cst")
 	# CST
 	$boxtype_sc = "cst";
 }
+elseif ($boxtype == "axtech" || $boxtype == "axt")
+{
+	# AX Tech
+	$boxtype_sc = "axt";
+}
 
 # release/ni320-YYYYMMDDHHMM-cst-kronos.img
 $directory = $image_type;

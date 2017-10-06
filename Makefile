@@ -79,7 +79,7 @@ include make/crosstool.mk
 include make/bootstrap.mk
 include make/clean.mk
 include make/update.mk
-include make/kernel-cst.mk
+include make/kernel-$(BOXTYPE_SC).mk
 include make/static.mk
 include make/system-libs.mk
 include make/system-libs-extra.mk
@@ -92,6 +92,7 @@ include make/plugins-extra.mk
 include make/images.mk
 include make/image-update.mk
 include make/rootfs.mk
+include make/gstreamer.mk
 
 include make/ni.mk
 

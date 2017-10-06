@@ -547,6 +547,7 @@ $(D)/samba-hd1: $(D)/zlib $(ARCHIVE)/samba-$(SAMBA33_VER).tar.gz | $(TARGETPREFI
 	$(REMOVE)/samba-$(SAMBA33_VER)
 	touch $@
 
+$(D)/samba-ax \
 $(D)/samba-hd2: $(D)/zlib $(ARCHIVE)/samba-$(SAMBA36_VER).tar.gz | $(TARGETPREFIX)
 	$(UNTAR)/samba-$(SAMBA36_VER).tar.gz
 	cd $(BUILD_TMP)/samba-$(SAMBA36_VER) && \
@@ -965,4 +966,17 @@ $(D)/iconv: $(ARCHIVE)/libiconv-$(LIBICONV_VER).tar.gz | $(TARGETPREFIX)
 	$(MAKE) install DESTDIR=$(BUILD_TMP)/libiconv-$(LIBICONV_VER)/tmp
 	cp -a $(BUILD_TMP)/libiconv-$(LIBICONV_VER)/tmp/bin/iconv $(TARGETPREFIX)/bin
 	$(REMOVE)/libiconv-$(LIBICONV_VER)
+	touch $@
+
+$(D)/ofgwrite: | $(TARGETPREFIX)
+	$(REMOVE)/ofgwrite
+	cd $(BUILD_TMP); \
+	git clone git://github.com/oe-alliance/ofgwrite.git ofgwrite; \
+	cd ofgwrite; \
+		$(BUILDENV) \
+		$(MAKE) && \
+	install -m 755 $(BUILD_TMP)/ofgwrite/ofgwrite_bin $(TARGETPREFIX)/bin
+	install -m 755 $(BUILD_TMP)/ofgwrite/ofgwrite $(TARGETPREFIX)/bin
+	sed -i "s,/usr/bin/,/bin/," $(TARGETPREFIX)/bin/ofgwrite
+	$(REMOVE)/ofgwrite
 	touch $@

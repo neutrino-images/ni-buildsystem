@@ -3,7 +3,7 @@
 BOOTSTRAP  = targetprefix $(D) $(BUILD_TMP) $(CROSS_DIR) $(STAGING_DIR) $(IMAGE_DIR) $(UPDATE_DIR) $(HOSTPREFIX)/bin includes-and-libs modules host-preqs
 BOOTSTRAP += $(TARGETLIB)/libc.so.6
 
-ifeq ($(BOXSERIES), hd2)
+ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 ax))
   BOOTSTRAP += static blobs
 endif
 
@@ -11,7 +11,7 @@ PLAT_INCS  = $(TARGETLIB)/firmware
 PLAT_LIBS  = $(TARGETLIB) $(STATICLIB)
 
 bootstrap: $(BOOTSTRAP)
-	@echo -e "$(TERM_YELLOW)Bootstrapped for $(shell echo $(BOXMODEL) | sed 's/.*/\u&/')$(TERM_NORMAL)"
+	@echo -e "$(TERM_YELLOW)Bootstrapped for $(shell echo $(BOXTYPE) | sed 's/.*/\u&/') $(BOXMODEL)$(TERM_NORMAL)"
 
 skeleton: | $(TARGETPREFIX)
 	cp --remove-destination -a $(SKEL_ROOT)/* $(TARGETPREFIX)/
@@ -52,12 +52,16 @@ $(STATICLIB):
 	mkdir -p $@
 
 $(TARGETLIB)/firmware: | $(TARGETPREFIX)
+ifeq ($(BOXTYPE), coolstream)
 	mkdir -p $@
 	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(DRIVERS_DIR)/firmware/* $@/
+endif
 
 $(TARGETLIB): | $(TARGETPREFIX)
 	mkdir -p $@
+ifeq ($(BOXTYPE), coolstream)
 	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(DRIVERS_DIR)/libs/* $@
+endif
 
 $(TARGETLIB)/modules: | $(TARGETPREFIX)
 	mkdir -p $@
@@ -72,11 +76,13 @@ $(TARGETLIB)/libc.so.6: | $(TARGETPREFIX)
 
 $(TARGETPREFIX)/var/update: | $(TARGETPREFIX)
 	mkdir -p $@
+ifeq ($(BOXTYPE), coolstream)
 	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(DRIVERS_DIR)/uldr.bin $@/
 ifeq ($(BOXMODEL), kronos_v2)
 	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(DRIVERS_DIR)/u-boot.bin.link $@/u-boot.bin
 else
 	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(DRIVERS_DIR)/u-boot.bin $@/
+endif
 endif
 
 includes-and-libs: $(PLAT_INCS) $(PLAT_LIBS)
@@ -94,7 +100,7 @@ ccache: find-ccache $(CCACHE) $(HOSTPREFIX)/bin
 	@ln -sf $(CCACHE) $(HOSTPREFIX)/bin/$(TARGET)-g++
 
 # build all needed host-binaries
-host-preqs: pkg-config mkfs.jffs2 sumtool mkimage zic ccache
+host-preqs: pkg-config mkfs.jffs2 mkfs.fat sumtool mkimage zic parted_host mtools resize2fs ccache
 
 pkg-config-preqs:
 	@PATH=$(subst $(HOSTPREFIX)/bin:,,$(PATH)); \
@@ -112,6 +118,7 @@ $(HOSTPREFIX)/bin/pkg-config: $(ARCHIVE)/pkg-config-$(PKGCONF_VER).tar.gz | $(HO
 		cp -a pkg-config $(HOSTPREFIX)/bin; \
 	ln -sf pkg-config $(HOSTPREFIX)/bin/arm-cx2450x-linux-gnueabi-pkg-config
 	ln -sf pkg-config $(HOSTPREFIX)/bin/arm-cortex-linux-uclibcgnueabi-pkg-config
+	ln -sf pkg-config $(HOSTPREFIX)/bin/arm-cortex-linux-gnueabihf-pkg-config
 	$(REMOVE)/pkg-config-$(PKGCONF_VER)
 
 mkfs.jffs2: $(HOSTPREFIX)/bin/mkfs.jffs2
@@ -153,6 +160,64 @@ $(HOSTPREFIX)/bin/zic: $(ARCHIVE)/tzdata$(TZDATA_VER).tar.gz $(ARCHIVE)/tzcode$(
 		$(MAKE) zic
 	install -D -m 0755 $(BUILD_TMP)/tzcode/zic $(HOSTPREFIX)/bin/
 	$(REMOVE)/tzcode
+
+parted_host: $(HOSTPREFIX)/bin/parted
+$(HOSTPREFIX)/bin/parted: $(ARCHIVE)/parted-$(PARTED_VER).tar.xz | $(HOSTPREFIX)/bin
+	$(UNTAR)/parted-$(PARTED_VER).tar.xz
+	cd $(BUILD_TMP)/parted-$(PARTED_VER) && \
+		$(PATCH)/parted-3.2-devmapper-1.patch && \
+		./configure \
+			--enable-silent-rules \
+			--enable-static \
+			--disable-shared \
+			--disable-device-mapper \
+			--without-readline && \
+		$(MAKE)
+	install -D -m 0755 $(BUILD_TMP)/parted-$(PARTED_VER)/parted/parted $(HOSTPREFIX)/bin/
+	$(REMOVE)/parted-$(PARTED_VER)
+
+mkfs.fat: $(HOSTPREFIX)/bin/mkfs.fat
+$(HOSTPREFIX)/bin/mkfs.fat: $(ARCHIVE)/dosfstools-$(DOSFSTOOLS_VER).tar.xz | $(HOSTPREFIX)/bin
+	$(UNTAR)/dosfstools-$(DOSFSTOOLS_VER).tar.xz
+	set -e; cd $(BUILD_TMP)/dosfstools-$(DOSFSTOOLS_VER); \
+		./configure \
+			--without-udev \
+		; \
+		$(MAKE)
+	install -D -m 0755 $(BUILD_TMP)/dosfstools-$(DOSFSTOOLS_VER)/src/mkfs.fat $(HOSTPREFIX)/bin/
+	ln -sf mkfs.fat $(HOSTPREFIX)/bin/mkfs.vfat
+	ln -sf mkfs.fat $(HOSTPREFIX)/bin/mkfs.msdos
+	ln -sf mkfs.fat $(HOSTPREFIX)/bin/mkdosfs
+	$(REMOVE)/dosfstools-$(DOSFSTOOLS_VER)
+
+mtools: $(HOSTPREFIX)/bin/mtools
+$(HOSTPREFIX)/bin/mtools: $(ARCHIVE)/mtools-$(MTOOLS_VER).tar.gz | $(HOSTPREFIX)/bin
+	$(UNTAR)/mtools-$(MTOOLS_VER).tar.gz
+	set -e; cd $(BUILD_TMP)/mtools-$(MTOOLS_VER); \
+		./configure; \
+		$(MAKE)
+	install -D -m 0755 $(BUILD_TMP)/mtools-$(MTOOLS_VER)/mtools $(HOSTPREFIX)/bin/
+	ln -sf mtools $(HOSTPREFIX)/bin/mcopy
+	$(REMOVE)/mtools-$(MTOOLS_VER)
+
+resize2fs: $(HOSTPREFIX)/bin/resize2fs
+$(HOSTPREFIX)/bin/resize2fs: $(ARCHIVE)/e2fsprogs-$(E2FSPROGS_VER).tar.gz | $(HOSTPREFIX)/bin
+	$(UNTAR)/e2fsprogs-$(E2FSPROGS_VER).tar.gz
+	cd $(BUILD_TMP)/e2fsprogs-$(E2FSPROGS_VER) && \
+		./configure; \
+		$(MAKE)
+	install -D -m 0755 $(BUILD_TMP)/e2fsprogs-$(E2FSPROGS_VER)/resize/resize2fs $(HOSTPREFIX)/bin/
+	install -D -m 0755 $(BUILD_TMP)/e2fsprogs-$(E2FSPROGS_VER)/misc/mke2fs $(HOSTPREFIX)/bin/
+	ln -sf mke2fs $(HOSTPREFIX)/bin/mkfs.ext2
+	ln -sf mke2fs $(HOSTPREFIX)/bin/mkfs.ext3
+	ln -sf mke2fs $(HOSTPREFIX)/bin/mkfs.ext4
+	ln -sf mke2fs $(HOSTPREFIX)/bin/mkfs.ext4dev
+	install -D -m 0755 $(BUILD_TMP)/e2fsprogs-$(E2FSPROGS_VER)/e2fsck/e2fsck $(HOSTPREFIX)/bin/
+	ln -sf e2fsck $(HOSTPREFIX)/bin/fsck.ext2
+	ln -sf e2fsck $(HOSTPREFIX)/bin/fsck.ext3
+	ln -sf e2fsck $(HOSTPREFIX)/bin/fsck.ext4
+	ln -sf e2fsck $(HOSTPREFIX)/bin/fsck.ext4dev
+	$(REMOVE)/e2fsprogs-$(E2FSPROGS_VER)
 
 # hack to make sure they are always copied
 PHONY += $(TARGETLIB)/firmware

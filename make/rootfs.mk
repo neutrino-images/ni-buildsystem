@@ -19,7 +19,11 @@ $(TARGETPREFIX)/.version:
 	echo "commit="$$COMMIT					>> $@
 	echo "builddate="`date`					>> $@
 	echo "creator=$(MAINTAINER)"				>> $@
+ifeq ($(USE_LIBSTB-HAL), yes)
+	echo "imagename=NI-Neutrino-MP"				>> $@
+else
 	echo "imagename=NI-Neutrino-HD"				>> $@
+endif
 	echo "homepage=www.neutrino-images.de"			>> $@
 
 update.urls: $(TARGETPREFIX)/var/etc/update.urls
@@ -41,6 +45,7 @@ cleanup: $(BOX)
 	rm -rf $(BOX)/lib/pkgconfig
 	rm -f $(BOX)/lib/libvorbisenc*
 	rm -rf $(BOX)/lib/sigc++*
+	rm -rf $(BOX)/lib/glib-2.0
 	find $(BOX) \( -name .gitignore -o -name .gitkeep \) -type f -print0 | xargs --no-run-if-empty -0 rm -f
 	find $(BOX)/lib \( -name '*.a' -o -name '*.la' \) -print0 | xargs --no-run-if-empty -0 rm -f
 	@echo -e "$(TERM_YELLOW)"

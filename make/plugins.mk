@@ -73,7 +73,7 @@ plugins-all: \
 	doscam-webif-skin \
 	playlists
 
-plugins-hd2: channellogos
+plugins-add: channellogos
 
 ################
 ### plugins  ###

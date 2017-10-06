@@ -1,0 +1,12 @@
+--- a/gst/mpegtsdemux/tsdemux.c
++++ b/gst/mpegtsdemux/tsdemux.c
+@@ -1678,7 +1678,7 @@
+     stream->first_pts = GST_CLOCK_TIME_NONE;
+     stream->raw_pts = -1;
+     stream->raw_dts = -1;
+-    stream->pending_ts = TRUE;
++    stream->pending_ts = program->pcr_pid < 0x1fff;
+     stream->nb_out_buffers = 0;
+     stream->gap_ref_buffers = 0;
+     stream->gap_ref_pts = GST_CLOCK_TIME_NONE;
+

@@ -8,7 +8,8 @@
 apt-get install \
 git subversion cvs automake build-essential ccache cmake patch bison flex texinfo autopoint \
 libtool libtool-bin python curl gawk gzip bzip2 lzma gperf gettext help2man bc \
-libglib2.0-dev libncurses5-dev libncursesw5-dev liblzo2-dev uuid-dev libssl-dev libcurl4-openssl-dev
+libglib2.0-dev libncurses5-dev libncursesw5-dev liblzo2-dev uuid-dev libssl-dev libcurl4-openssl-dev intltool
+
 ```
 
 # 1) Buildsystem initialisieren #

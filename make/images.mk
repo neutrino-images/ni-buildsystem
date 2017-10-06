@@ -94,6 +94,9 @@ endif
 ifeq ($(BOXMODEL), kronos_v2)
 	make flash-image ERASE_SIZE=0x20000 BOXNAME="Link, Trinity Duo"
 endif
+ifeq ($(BOXMODEL), hd51)
+	make flash-image-axt
+endif
 
 flash-image: IMAGE_NAME=$(IMAGE_PREFIX)-$(IMAGE_SUFFIX)
 flash-image: IMAGE_DESC="$(BOXNAME) [$(IMAGE_SUFFIX)][$(BOXSERIES)] $(shell echo $(IMAGE_TYPE_STRING) | sed 's/.*/\u&/')"
@@ -131,3 +134,60 @@ ifdef IMAGE_TO_CHECK
 		false; \
 	fi
 endif
+
+### AX-TECH
+
+# general
+AX_IMAGE_NAME = disc
+AX_BOOT_IMAGE = boot.img
+AX_IMAGE_LINK = $(AX_IMAGE_NAME).ext4
+AX_IMAGE_ROOTFS_SIZE = 294912
+
+# emmc image
+EMMC_IMAGE_SIZE = 3817472
+EMMC_IMAGE = $(BUILD_TMP)/$(AX_IMAGE_NAME).img
+
+# partition sizes
+GPT_OFFSET = 0
+GPT_SIZE = 1024
+BOOT_PARTITION_OFFSET = $(shell expr $(GPT_OFFSET) \+ $(GPT_SIZE))
+BOOT_PARTITION_SIZE = 3072
+KERNEL_PARTITION_OFFSET = $(shell expr $(BOOT_PARTITION_OFFSET) \+ $(BOOT_PARTITION_SIZE))
+KERNEL_PARTITION_SIZE = 8192
+ROOTFS_PARTITION_OFFSET = $(shell expr $(KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))
+ROOTFS_PARTITION_SIZE = 1048576
+STORAGE_PARTITION_OFFSET = $(shell expr $(ROOTFS_PARTITION_OFFSET) \+ $(ROOTFS_PARTITION_SIZE))
+
+flash-image-axt:
+	# Create a sparse image block
+	dd if=/dev/zero of=$(BUILD_TMP)/$(AX_IMAGE_LINK) seek=$(AX_IMAGE_ROOTFS_SIZE) count=0 bs=1024
+	mkfs.ext4 -F $(BUILD_TMP)/$(AX_IMAGE_LINK) -d $(BOX)
+	# Error codes 0-3 indicate successfull operation of fsck (no errors or errors corrected)
+	fsck.ext4 -pvfD $(BUILD_TMP)/$(AX_IMAGE_LINK) || [ $? -le 3 ]
+	dd if=/dev/zero of=$(EMMC_IMAGE) bs=1024 count=0 seek=$(EMMC_IMAGE_SIZE)
+	parted -s $(EMMC_IMAGE) mklabel gpt
+	parted -s $(EMMC_IMAGE) unit KiB mkpart boot fat16 $(BOOT_PARTITION_OFFSET) $(shell expr $(BOOT_PARTITION_OFFSET) \+ $(BOOT_PARTITION_SIZE))
+	parted -s $(EMMC_IMAGE) unit KiB mkpart kernel1 $(KERNEL_PARTITION_OFFSET) $(shell expr $(KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))
+	parted -s $(EMMC_IMAGE) unit KiB mkpart rootfs1 ext2 $(ROOTFS_PARTITION_OFFSET) $(shell expr $(ROOTFS_PARTITION_OFFSET) \+ $(ROOTFS_PARTITION_SIZE))
+	parted -s $(EMMC_IMAGE) unit KiB mkpart storage ext2 $(STORAGE_PARTITION_OFFSET) $(shell expr $(EMMC_IMAGE_SIZE) \- 1024)
+	dd if=/dev/zero of=$(BUILD_TMP)/$(AX_BOOT_IMAGE) bs=1024 count=$(BOOT_PARTITION_SIZE)
+	mkfs.msdos -S 512 $(BUILD_TMP)/$(AX_BOOT_IMAGE)
+	echo "boot emmcflash0.kernel1 'root=/dev/mmcblk0p2 rw rootwait $(BOXMODEL)_4.boxmode=12'" > $(BUILD_TMP)/STARTUP_1
+	mcopy -i $(BUILD_TMP)/$(AX_BOOT_IMAGE) -v $(BUILD_TMP)/STARTUP_1 ::
+	dd conv=notrunc if=$(BUILD_TMP)/$(AX_BOOT_IMAGE) of=$(EMMC_IMAGE) bs=1024 seek=$(BOOT_PARTITION_OFFSET)
+	dd conv=notrunc if=$(ZIMAGE_DTB) of=$(EMMC_IMAGE) bs=1024 seek=$(KERNEL_PARTITION_OFFSET)
+	resize2fs $(BUILD_TMP)/$(AX_IMAGE_LINK) $(ROOTFS_PARTITION_SIZE)k
+	# Truncate on purpose
+	dd if=$(BUILD_TMP)/$(AX_IMAGE_LINK) of=$(EMMC_IMAGE) bs=1024 seek=$(ROOTFS_PARTITION_OFFSET) count=$(AX_IMAGE_ROOTFS_SIZE)
+	# Create final USB-image
+	mkdir -p $(IMAGE_DIR)/$(BOXMODEL)
+	cp $(ZIMAGE_DTB) $(IMAGE_DIR)/$(BOXMODEL)/kernel.bin
+	cp $(EMMC_IMAGE) $(IMAGE_DIR)/$(BOXMODEL)
+	cd $(BOX); \
+	tar -cvf $(IMAGE_DIR)/$(BOXMODEL)/rootfs.tar -C $(BOX) .  > /dev/null 2>&1; \
+	bzip2 $(IMAGE_DIR)/$(BOXMODEL)/rootfs.tar
+	echo $(IMAGE_VERSION) > $(IMAGE_DIR)/$(BOXMODEL)/imageversion
+	cd $(IMAGE_DIR); \
+	zip -r $(IMAGE_PREFIX)-$(IMAGE_SUFFIX)_usb.zip $(BOXMODEL)/*
+	# cleanup
+	rm -rf $(IMAGE_DIR)/$(BOXMODEL)
