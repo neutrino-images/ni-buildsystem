@@ -5,7 +5,7 @@ init: preqs crosstools bootstrap
 
 # -- wrapper-targets for Neutrino-Updates -------------------------------------
 
-BOXSERIES_UPDATE = hd2
+BOXSERIES_UPDATE = hd2 ax
 ifneq ($(DEBUG), yes)
 	BOXSERIES_UPDATE += hd1
 endif
