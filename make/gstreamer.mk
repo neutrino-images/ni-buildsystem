@@ -531,6 +531,7 @@ $(D)/gst_plugins_dvbmediasink: $(D)/gstreamer $(D)/gst_plugins_base $(D)/gst_plu
 		$(CONFIGURE) \
 			--prefix= \
 			--enable-silent-rules \
+			--with-spark \
 			--with-h265 \
 			--with-vb8 \
 			--with-vb9 \
