@@ -398,57 +398,6 @@ $(D)/gst_gmediarender: $(D)/gst_plugins_dvbmediasink $(D)/libupnp $(ARCHIVE)/$(G
 	touch $@
 
 #
-# orc
-#
-ORC_VER = 0.4.24
-ORC_SOURCE = orc-$(ORC_VER).tar.xz
-
-$(ARCHIVE)/$(ORC_SOURCE):
-	$(WGET) https://gstreamer.freedesktop.org/src/orc/$(ORC_SOURCE)
-
-$(D)/orc: $(ARCHIVE)/$(ORC_SOURCE)
-	$(UNTAR)/$(ORC_SOURCE)
-	set -e; cd $(BUILD_TMP)/orc-$(ORC_VER); \
-		$(CONFIGURE) \
-			--datarootdir=/.remove \
-			--prefix= \
-		; \
-		$(MAKE) all; \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/orc-0.4.pc
-	$(REWRITE_LIBTOOL)/liborc-0.4.la
-	$(REWRITE_LIBTOOL)/liborc-test-0.4.la
-	$(REWRITE_LIBTOOLDEP)/liborc-test-0.4.la
-	rm -f $(addprefix $(TARGETPREFIX)/bin/,orc-bugreport orcc)
-	$(REMOVE)/orc-$(ORC_VER)
-	touch $@
-
-#
-# libdca
-#
-LIBDCA_VER = 0.0.5
-LIBDCA_SOURCE = libdca-$(LIBDCA_VER).tar.bz2
-
-$(ARCHIVE)/$(LIBDCA_SOURCE):
-	$(WGET) http://download.videolan.org/pub/videolan/libdca/$(LIBDCA_VER)/$(LIBDCA_SOURCE)
-
-$(D)/libdca: $(ARCHIVE)/$(LIBDCA_SOURCE)
-	$(UNTAR)/$(LIBDCA_SOURCE)
-	set -e; cd $(BUILD_TMP)/libdca-$(LIBDCA_VER); \
-		$(CONFIGURE) \
-			--prefix= \
-			--mandir=/.remove \
-		; \
-		$(MAKE) all; \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libdca.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libdts.pc
-	$(REWRITE_LIBTOOL)/libdca.la
-	rm -f $(addprefix $(TARGETPREFIX)/bin/,extract_dca extract_dts)
-	$(REMOVE)/libdca-$(LIBDCA_VER)
-	touch $@
-
-#
 # gst_plugin_subsink
 #
 GST_PLUGIN_SUBSINK_VER = 1.0
@@ -552,6 +501,57 @@ $(D)/gst_plugins_dvbmediasink: $(D)/gstreamer $(D)/gst_plugins_base $(D)/gst_plu
 	touch $@
 
 ##########################################################################################################
+
+#
+# orc
+#
+ORC_VER = 0.4.24
+ORC_SOURCE = orc-$(ORC_VER).tar.xz
+
+$(ARCHIVE)/$(ORC_SOURCE):
+	$(WGET) https://gstreamer.freedesktop.org/src/orc/$(ORC_SOURCE)
+
+$(D)/orc: $(ARCHIVE)/$(ORC_SOURCE)
+	$(UNTAR)/$(ORC_SOURCE)
+	set -e; cd $(BUILD_TMP)/orc-$(ORC_VER); \
+		$(CONFIGURE) \
+			--datarootdir=/.remove \
+			--prefix= \
+		; \
+		$(MAKE) all; \
+		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/orc-0.4.pc
+	$(REWRITE_LIBTOOL)/liborc-0.4.la
+	$(REWRITE_LIBTOOL)/liborc-test-0.4.la
+	$(REWRITE_LIBTOOLDEP)/liborc-test-0.4.la
+	rm -f $(addprefix $(TARGETPREFIX)/bin/,orc-bugreport orcc)
+	$(REMOVE)/orc-$(ORC_VER)
+	touch $@
+
+#
+# libdca
+#
+LIBDCA_VER = 0.0.5
+LIBDCA_SOURCE = libdca-$(LIBDCA_VER).tar.bz2
+
+$(ARCHIVE)/$(LIBDCA_SOURCE):
+	$(WGET) http://download.videolan.org/pub/videolan/libdca/$(LIBDCA_VER)/$(LIBDCA_SOURCE)
+
+$(D)/libdca: $(ARCHIVE)/$(LIBDCA_SOURCE)
+	$(UNTAR)/$(LIBDCA_SOURCE)
+	set -e; cd $(BUILD_TMP)/libdca-$(LIBDCA_VER); \
+		$(CONFIGURE) \
+			--prefix= \
+			--mandir=/.remove \
+		; \
+		$(MAKE) all; \
+		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libdca.pc
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libdts.pc
+	$(REWRITE_LIBTOOL)/libdca.la
+	rm -f $(addprefix $(TARGETPREFIX)/bin/,extract_dca extract_dts)
+	$(REMOVE)/libdca-$(LIBDCA_VER)
+	touch $@
 
 #
 # nettle
