@@ -507,6 +507,7 @@ $(D)/samba-hd1: $(D)/zlib $(ARCHIVE)/samba-$(SAMBA33_VER).tar.gz | $(TARGETPREFI
 			--with-configdir=/etc/samba \
 			--with-privatedir=/etc/samba \
 			--with-modulesdir=/.remove \
+			--with-sys-quotas=no \
 			--with-piddir=/tmp \
 			--enable-static \
 			--disable-shared \
@@ -574,6 +575,7 @@ $(D)/samba-hd2: $(D)/zlib $(ARCHIVE)/samba-$(SAMBA36_VER).tar.gz | $(TARGETPREFI
 			--with-privatedir=/etc/samba \
 			--with-modulesdir=/.remove \
 			--with-piddir=/tmp \
+			--with-sys-quotas=no \
 			--enable-static \
 			--disable-shared \
 			--without-acl-support \
