@@ -535,7 +535,6 @@ $(D)/gst_plugins_dvbmediasink: $(D)/gstreamer $(D)/gst_plugins_base $(D)/gst_plu
 			--with-h265 \
 			--with-vb8 \
 			--with-vb9 \
-			--with-opus \
 			--with-dts \
 			--with-wma \
 			--with-wmv \
