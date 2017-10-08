@@ -146,7 +146,7 @@ $(LH_OBJDIR)/config.status: $(NEUTRINO_DEPS)
 			--enable-shared=no \
 			\
 			--with-target=cdk \
-			--with-boxtype=armbox
+			--with-boxtype=hd51
 
 NEUTRINO_INST_DIR ?= $(TARGETPREFIX)
 $(D)/neutrino: $(N_OBJDIR)/config.status
