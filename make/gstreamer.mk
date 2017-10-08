@@ -505,7 +505,7 @@ $(D)/gst_plugins_dvbmediasink: $(D)/gstreamer $(D)/gst_plugins_base $(D)/gst_plu
 #
 # orc
 #
-ORC_VER = 0.4.24
+ORC_VER = 0.4.27
 ORC_SOURCE = orc-$(ORC_VER).tar.xz
 
 $(ARCHIVE)/$(ORC_SOURCE):
@@ -556,7 +556,7 @@ $(D)/libdca: $(ARCHIVE)/$(LIBDCA_SOURCE)
 #
 # nettle
 #
-NETTLE_VER = 3.1
+NETTLE_VER = 3.3
 NETTLE_SOURCE = nettle-$(NETTLE_VER).tar.gz
 
 $(ARCHIVE)/$(NETTLE_SOURCE):
@@ -581,8 +581,8 @@ $(D)/nettle: $(D)/gmp $(ARCHIVE)/$(NETTLE_SOURCE)
 #
 # gmp
 #
-GMP_VER_MAJOR = 6.0.0
-GMP_VER_MINOR = a
+GMP_VER_MAJOR = 6.1.2
+GMP_VER_MINOR =
 GMP_VER = $(GMP_VER_MAJOR)$(GMP_VER_MINOR)
 GMP_SOURCE = gmp-$(GMP_VER).tar.xz
 
@@ -605,8 +605,8 @@ $(D)/gmp: $(ARCHIVE)/$(GMP_SOURCE)
 #
 # gnutls
 #
-GNUTLS_VER_MAJOR = 3.4
-GNUTLS_VER_MINOR = 3
+GNUTLS_VER_MAJOR = 3.6
+GNUTLS_VER_MINOR = 0
 GNUTLS_VER = $(GNUTLS_VER_MAJOR).$(GNUTLS_VER_MINOR)
 GNUTLS_SOURCE = gnutls-$(GNUTLS_VER).tar.xz
 
@@ -621,13 +621,11 @@ $(D)/gnutls: $(D)/nettle $(ARCHIVE)/$(GNUTLS_SOURCE)
 			--mandir=/.remove \
 			--infodir=/.remove \
 			--datarootdir=/.remove \
-			--disable-rpath \
 			--with-included-libtasn1 \
 			--enable-local-libopts \
 			--with-libpthread-prefix=$(TARGETPREFIX) \
-			--with-libz-prefix=$(TARGETPREFIX) \
+			--with-included-unistring \
 			--disable-guile \
-			--disable-crywrap \
 			--without-p11-kit \
 		; \
 		$(MAKE); \
@@ -706,7 +704,7 @@ $(D)/alsa_lib: $(ARCHIVE)/$(ALSA_LIB_SOURCE)
 #
 # libsoup
 #
-LIBSOUP_VER_MAJOR = 2.50
+LIBSOUP_VER_MAJOR = 2.60
 LIBSOUP_VER_MINOR = 0
 LIBSOUP_VER = $(LIBSOUP_VER_MAJOR).$(LIBSOUP_VER_MINOR)
 LIBSOUP_SOURCE = libsoup-$(LIBSOUP_VER).tar.xz
@@ -736,7 +734,7 @@ $(D)/libsoup: $(D)/sqlite $(D)/libxml2 $(D)/libglib $(ARCHIVE)/$(LIBSOUP_SOURCE)
 #
 # sqlite
 #
-SQLITE_VER = 3160100
+SQLITE_VER = 3200100
 SQLITE_SOURCE = sqlite-autoconf-$(SQLITE_VER).tar.gz
 
 $(ARCHIVE)/$(SQLITE_SOURCE):
