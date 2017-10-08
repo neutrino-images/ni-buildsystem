@@ -12,7 +12,7 @@
 #define CONFIGFILE "/var/tuxbox/config/FritzCallMonitor.cfg"
 
 #define BASENAME "FIM"
-#define VERSION "V4.3"
+#define VERSION "V4.4"
 #define COPYR "2011 (c) FlatTV"
 
 /* rc codes */

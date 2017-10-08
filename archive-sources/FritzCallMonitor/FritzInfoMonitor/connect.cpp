@@ -581,7 +581,7 @@ int CConnect::get_query_logic(const char *sid, int logic)
 	log(1,"%s()\n", __FUNCTION__);
 
 	url	<< cpars->getFritzAdr() << "/query.lua?sid=" << sid
-		<< "&ver=logic:status/nspver";
+		<< "&ver=uimodlogic:status/nspver"; //Firmware > 06.9
 
 	string s = post2fritz(url.str().c_str(), "");
 	string res = cpars->parseString("ver", s);
@@ -593,9 +593,25 @@ int CConnect::get_query_logic(const char *sid, int logic)
 		query_logic = 3;
 		return (query_logic);
 	}
-	else {
-		return (get_OLDquery_logic(sid, logic));
+	else
+	{
+		url.str("");
+		url	<< cpars->getFritzAdr() << "/query.lua?sid=" << sid
+		<< "&ver=logic:status/nspver"; //Firmware < 06.9
+
+		s = post2fritz(url.str().c_str(), "");
+		res = cpars->parseString("ver", s);
+
+		if(!res.empty() && (pos = res.find('.')) != string::npos)
+		{
+			log(0,"Firmwareversion (%s)\n", res.c_str());
+			cpars->setNspver(res);
+			query_logic = 3;
+			return (query_logic);
+		}
 	}
+
+	return (get_OLDquery_logic(sid, logic));
 }
 
 int CConnect::get_OLDquery_logic(const char *sid, int logic)
