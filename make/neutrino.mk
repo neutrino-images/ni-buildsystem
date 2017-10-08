@@ -9,10 +9,8 @@ ifeq ($(USE_LIBSTB-HAL), yes)
 	NEUTRINO_DEPS += libstb-hal
 endif
 
-# todo: check which sink-plugin works best
 ifeq ($(BOXSERIES), ax)
 	NEUTRINO_DEPS += $(D)/gst_plugins_dvbmediasink
-	#NEUTRINO_DEPS += $(D)/gst_plugins_multibox_dvbmediasink
 endif
 
 # uncomment next line to build neutrino without --enable-ffmpegdec
