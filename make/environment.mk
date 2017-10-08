@@ -194,7 +194,7 @@ ifeq ($(BOXSERIES), hd2)
   CORTEX-STRINGS         = -lcortex-strings
   TARGET                 = arm-cortex-linux-uclibcgnueabi
   TARGET_O_CFLAGS        = -O2
-  TARGET_MARCH_CFLAGS    = -march=armv7-a -mcpu=cortex-a9 -mtune=cortex-a9 -mfpu=vfpv3-d16 -mfloat-abi=hard -mlittle-endian
+  TARGET_MARCH_CFLAGS    = -march=armv7-a -mtune=cortex-a9 -mfpu=vfpv3-d16 -mfloat-abi=hard -mlittle-endian
   TARGET_EXTRA_CFLAGS    =
   TARGET_EXTRA_LDFLAGS   =
   ifeq ($(BOXMODEL), kronos_v2)
@@ -212,8 +212,8 @@ ifeq ($(BOXSERIES), ax)
   CORTEX-STRINGS         = -lcortex-strings
   TARGET                 = arm-cortex-linux-gnueabihf
   TARGET_O_CFLAGS        = -O2
-  TARGET_MARCH_CFLAGS    = -march=armv7ve -mcpu=cortex-a15 -mtune=cortex-a15 -mfpu=neon-vfpv4 -mfloat-abi=hard
-  TARGET_EXTRA_CFLAGS    = -Wno-deprecated-declarations
+  TARGET_MARCH_CFLAGS    = -march=armv7ve -mtune=cortex-a15 -mfpu=neon-vfpv4 -mfloat-abi=hard
+  TARGET_EXTRA_CFLAGS    =
   TARGET_EXTRA_LDFLAGS   =
 endif
 
