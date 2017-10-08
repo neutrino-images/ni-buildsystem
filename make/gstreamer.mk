@@ -3,7 +3,7 @@
 #
 # gstreamer
 #
-GSTREAMER_VER = 1.11.1
+GSTREAMER_VER = 1.12.3
 GSTREAMER_SOURCE = gstreamer-$(GSTREAMER_VER).tar.xz
 
 $(ARCHIVE)/$(GSTREAMER_SOURCE):
@@ -12,7 +12,6 @@ $(ARCHIVE)/$(GSTREAMER_SOURCE):
 $(D)/gstreamer: $(D)/libglib $(D)/libxml2 $(D)/glib_networking $(ARCHIVE)/$(GSTREAMER_SOURCE)
 	$(UNTAR)/$(GSTREAMER_SOURCE)
 	set -e; cd $(BUILD_TMP)/gstreamer-$(GSTREAMER_VER); \
-		$(PATCH)/gstreamer-$(GSTREAMER_VER)-fix-crash-with-gst-inspect.patch; \
 		$(PATCH)/gstreamer-$(GSTREAMER_VER)-revert-use-new-gst-adapter-get-buffer.patch; \
 		./autogen.sh --noconfigure; \
 		$(CONFIGURE) \
@@ -62,10 +61,11 @@ $(ARCHIVE)/$(GST_PLUGINS_BASE_SOURCE):
 $(D)/gst_plugins_base: $(D)/libglib $(D)/orc $(D)/gstreamer $(D)/alsa_lib $(D)/libogg $(D)/libvorbisidec $(ARCHIVE)/$(GST_PLUGINS_BASE_SOURCE)
 	$(UNTAR)/$(GST_PLUGINS_BASE_SOURCE)
 	set -e; cd $(BUILD_TMP)/gst-plugins-base-$(GST_PLUGINS_BASE_VER); \
-		$(PATCH)/gst-plugins-base-$(GST_PLUGINS_BASE_VER)-riff-media-added-fourcc-to-all-mpeg4-video-caps.patch; \
-		$(PATCH)/gst-plugins-base-$(GST_PLUGINS_BASE_VER)-riff-media-added-fourcc-to-all-ffmpeg-mpeg4-video-ca.patch; \
-		$(PATCH)/gst-plugins-base-$(GST_PLUGINS_BASE_VER)-subparse-avoid-false-negatives-dealing-with-UTF-8.patch; \
-		$(PATCH)/gst-plugins-base-$(GST_PLUGINS_BASE_VER)-taglist-not-send-to-down-stream-if-all-the-frame-cor.patch; \
+		$(PATCH)/gst-plugins-base-$(GSTREAMER_VER)-Makefile.am-don-t-hardcode-libtool-name-when-running.patch; \
+		$(PATCH)/gst-plugins-base-$(GSTREAMER_VER)-Makefile.am-prefix-calls-to-pkg-config-with-PKG_CONF.patch; \
+		$(PATCH)/gst-plugins-base-$(GSTREAMER_VER)-riff-media-added-fourcc-to-all-ffmpeg-mpeg4-video-caps.patch; \
+		$(PATCH)/gst-plugins-base-$(GSTREAMER_VER)-rtsp-drop-incorrect-reference-to-gstreamer-sdp-in-Ma.patch; \
+		$(PATCH)/gst-plugins-base-$(GSTREAMER_VER)-subparse-avoid-false-negatives-dealing-with-UTF-8.patch; \
 		./autogen.sh --noconfigure; \
 		$(CONFIGURE) \
 			--prefix= \
@@ -133,6 +133,7 @@ $(ARCHIVE)/$(GST_PLUGINS_GOOD_SOURCE):
 $(D)/gst_plugins_good: $(D)/gstreamer $(D)/gst_plugins_base $(D)/libsoup $(D)/libFLAC $(ARCHIVE)/$(GST_PLUGINS_GOOD_SOURCE)
 	$(UNTAR)/$(GST_PLUGINS_GOOD_SOURCE)
 	set -e; cd $(BUILD_TMP)/gst-plugins-good-$(GST_PLUGINS_GOOD_VER); \
+		$(PATCH)/gst-plugins-good-$(GSTREAMER_VER)-gstrtpmp4gpay-set-dafault-value-for-MPEG4-without-co.patch; \
 		./autogen.sh --noconfigure; \
 		$(CONFIGURE) \
 			--prefix= \
@@ -166,10 +167,13 @@ $(ARCHIVE)/$(GST_PLUGINS_BAD_SOURCE):
 $(D)/gst_plugins_bad: $(D)/gstreamer $(D)/gst_plugins_base $(ARCHIVE)/$(GST_PLUGINS_BAD_SOURCE)
 	$(UNTAR)/$(GST_PLUGINS_BAD_SOURCE)
 	set -e; cd $(BUILD_TMP)/gst-plugins-bad-$(GST_PLUGINS_BAD_VER); \
-		$(PATCH)/gst-plugins-bad-$(GST_PLUGINS_BAD_VER)-hls-use-max-playlist-quality.patch; \
-		$(PATCH)/gst-plugins-bad-$(GST_PLUGINS_BAD_VER)-rtmp-fix-seeking-and-potential-segfault.patch; \
-		$(PATCH)/gst-plugins-bad-$(GST_PLUGINS_BAD_VER)-mpegtsdemux-only-wait-for-PCR-when-PCR-pid.patch; \
-		$(PATCH)/gst-plugins-bad-$(GST_PLUGINS_BAD_VER)-dvbapi5-fix-old-kernel.patch; \
+		$(PATCH)/gst-plugins-bad-$(GSTREAMER_VER)-Makefile.am-don-t-hardcode-libtool-name-when-running-pbad.patch; \
+		$(PATCH)/gst-plugins-bad-$(GSTREAMER_VER)-rtmp-fix-seeking-and-potential-segfault.patch; \
+		$(PATCH)/gst-plugins-bad-$(GSTREAMER_VER)-rtmp-hls-tsdemux-fix.patch; \
+		$(PATCH)/gst-plugins-bad-$(GSTREAMER_VER)-configure-allow-to-disable-libssh2.patch; \
+		$(PATCH)/gst-plugins-bad-$(GSTREAMER_VER)-dvbapi5-fix-old-kernel.patch; \
+		$(PATCH)/gst-plugins-bad-$(GSTREAMER_VER)-fix-maybe-uninitialized-warnings-when-compiling-with-Os.patch; \
+		$(PATCH)/gst-plugins-bad-$(GSTREAMER_VER)-hls-main-thread-block.patch; \
 		./autogen.sh --noconfigure; \
 		$(CONFIGURE) \
 			--build=$(BUILD) \
@@ -292,7 +296,7 @@ $(D)/gst_plugins_ugly: $(D)/gstreamer $(D)/gst_plugins_base $(ARCHIVE)/$(GST_PLU
 	touch $@
 
 #
-# gst_libav
+# gst_libav (currently unsued)
 #
 GST_LIBAV_VER = $(GSTREAMER_VER)
 GST_LIBAV_SOURCE = gst-libav-$(GST_LIBAV_VER).tar.xz
@@ -329,72 +333,21 @@ $(D)/gst_libav: $(D)/gstreamer $(D)/gst_plugins_base $(ARCHIVE)/$(GST_LIBAV_SOUR
 			--disable-muxers \
 			--disable-encoders \
 			--disable-decoders \
-			--enable-decoder=ogg \
 			--enable-decoder=vorbis \
 			--enable-decoder=flac \
 			\
 			--disable-demuxers \
 			--enable-demuxer=ogg \
-			--enable-demuxer=vorbis \
 			--enable-demuxer=flac \
 			--enable-demuxer=mpegts \
 			\
 			--disable-debug \
 			--disable-bsfs \
-			--enable-pthreads \
-			--enable-bzlib" \
+			--enable-pthreads" \
 		; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGETPREFIX)
 	$(REMOVE)/gst-libav-$(GST_LIBAV_VER)
-	touch $@
-
-#
-# gst_plugins_fluendo
-#
-GST_PLUGINS_FLUENDO_VER = 0.10.71
-GST_PLUGINS_FLUENDO_SOURCE = gst-fluendo-mpegdemux-$(GST_PLUGINS_FLUENDO_VER).tar.gz
-
-$(ARCHIVE)/$(GST_PLUGINS_FLUENDO_SOURCE):
-	$(WGET) http://core.fluendo.com/gstreamer/src/gst-fluendo-mpegdemux/$(GST_PLUGINS_FLUENDO_SOURCE)
-
-$(D)/gst_plugins_fluendo: $(D)/gstreamer $(D)/gst_plugins_base $(ARCHIVE)/$(GST_PLUGINS_FLUENDO_SOURCE)
-	$(UNTAR)/$(GST_PLUGINS_FLUENDO_SOURCE)
-	set -e; cd $(BUILD_TMP)/gst-fluendo-mpegdemux-$(GST_PLUGINS_FLUENDO_VER); \
-		$(PATCH)/gst-plugins-fluendo-$(GST_PLUGINS_FLUENDO_VER)-mpegdemux.patch; \
-		./autogen.sh --noconfigure; \
-		$(CONFIGURE) \
-			--prefix= \
-			--enable-silent-rules \
-			--with-check=no \
-		; \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
-	$(REMOVE)/gst-fluendo-mpegdemux-$(GST_PLUGINS_FLUENDO_VER)
-	touch $@
-
-#
-# gmediarender
-#
-GST_GMEDIARENDER_VER = 0.0.6
-GST_GMEDIARENDER_SOURCE = gmediarender-$(GST_GMEDIARENDER_VER).tar.bz2
-
-$(ARCHIVE)/$(GST_GMEDIARENDER_SOURCE):
-	$(WGET) http://savannah.nongnu.org/download/gmrender/$(GST_GMEDIARENDER_SOURCE)
-
-$(D)/gst_gmediarender: $(D)/gst_plugins_dvbmediasink $(D)/libupnp $(ARCHIVE)/$(GST_GMEDIARENDER_SOURCE)
-	$(UNTAR)/$(GST_GMEDIARENDER_SOURCE)
-	set -e; cd $(BUILD_TMP)/gmediarender-$(GST_GMEDIARENDER_VER); \
-		$(PATCH)/gst-gmediarender-$(GST_GMEDIARENDER_VER).patch; \
-		./autogen.sh --noconfigure; \
-		$(CONFIGURE) \
-			--prefix= \
-			--enable-silent-rules \
-			--with-libupnp=$(TARGETPREFIX) \
-		; \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
-	$(REMOVE)/gmediarender-$(GST_GMEDIARENDER_VER)
 	touch $@
 
 #
