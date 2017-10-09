@@ -96,7 +96,7 @@ ifeq ($(BOXMODEL), kronos_v2)
 endif
 ifeq ($(BOXMODEL), hd51)
 	make flash-image-axt-single
-	make flash-image-axt-multi
+	#make flash-image-axt-multi
 endif
 
 flash-image: IMAGE_NAME=$(IMAGE_PREFIX)-$(IMAGE_SUFFIX)
