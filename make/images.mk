@@ -139,7 +139,7 @@ endif
 ### AX-TECH
 
 # general
-AX_IMAGE_NAME = disc
+AX_IMAGE_NAME = disk
 AX_BOOT_IMAGE = boot.img
 AX_IMAGE_LINK = $(AX_IMAGE_NAME).ext4
 AX_IMAGE_ROOTFS_SIZE = 294912
