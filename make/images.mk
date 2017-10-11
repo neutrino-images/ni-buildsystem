@@ -95,8 +95,8 @@ ifeq ($(BOXMODEL), kronos_v2)
 	make flash-image ERASE_SIZE=0x20000 BOXNAME="Link, Trinity Duo"
 endif
 ifeq ($(BOXMODEL), hd51)
-	make flash-image-axt-single
-	#make flash-image-axt-multi
+	#make flash-image-axt-single
+	make flash-image-axt-multi
 endif
 
 flash-image: IMAGE_NAME=$(IMAGE_PREFIX)-$(IMAGE_SUFFIX)
@@ -150,22 +150,22 @@ EMMC_IMAGE_SIZE = 3817472
 EMMC_IMAGE = $(AX_BUILD_TMP)/$(AX_IMAGE_NAME).img
 
 # partition sizes
-GPT_OFFSET = 0
-GPT_SIZE = 1024
-BOOT_PARTITION_OFFSET = $(shell expr $(GPT_OFFSET) \+ $(GPT_SIZE))
+BLOCK_SIZE = 512
+BLOCK_SECTOR = 2
+IMAGE_ROOTFS_ALIGNMENT = 1024
 BOOT_PARTITION_SIZE = 3072
-KERNEL_PARTITION_OFFSET = $(shell expr $(BOOT_PARTITION_OFFSET) \+ $(BOOT_PARTITION_SIZE))
+KERNEL_PARTITION_OFFSET = $(shell expr $(IMAGE_ROOTFS_ALIGNMENT) \+ $(BOOT_PARTITION_SIZE))
 KERNEL_PARTITION_SIZE = 8192
+ROOTFS_PARTITION_OFFSET = $(shell expr $(KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))
 
 # partition sizes single
-ROOTFS_PARTITION_OFFSET_SINGLE = $(shell expr $(KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))
 ROOTFS_PARTITION_SIZE_SINGLE = 1048576
-STORAGE_PARTITION_OFFSET_SINGLE = $(shell expr $(ROOTFS_PARTITION_OFFSET_SINGLE) \+ $(ROOTFS_PARTITION_SIZE_SINGLE))
+STORAGE_PARTITION_OFFSET_SINGLE = $(shell expr $(ROOTFS_PARTITION_OFFSET) \+ $(ROOTFS_PARTITION_SIZE_SINGLE))
 
 # partition sizes multi
-ROOTFS_PARTITION_OFFSET_MULTI = $(shell expr $(KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))
 ROOTFS_PARTITION_SIZE_MULTI = 819200
-SECOND_KERNEL_PARTITION_OFFSET = $(shell expr $(ROOTFS_PARTITION_OFFSET_MULTI) \+ $(ROOTFS_PARTITION_SIZE_MULTI))
+SECOND_KERNEL_PARTITION_OFFSET = $(shell expr $(ROOTFS_PARTITION_OFFSET) \+ $(ROOTFS_PARTITION_SIZE_MULTI))
+
 SECOND_ROOTFS_PARTITION_OFFSET = $(shell expr $(SECOND_KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))
 THRID_KERNEL_PARTITION_OFFSET = $(shell expr $(SECOND_ROOTFS_PARTITION_OFFSET) \+ $(ROOTFS_PARTITION_SIZE_MULTI))
 THRID_ROOTFS_PARTITION_OFFSET = $(shell expr $(THRID_KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))
@@ -176,25 +176,25 @@ SWAP_PARTITION_OFFSET = $(shell expr $(FOURTH_ROOTFS_PARTITION_OFFSET) \+ $(ROOT
 flash-image-axt-single:
 	mkdir -p $(AX_BUILD_TMP)
 	# Create a sparse image block
-	dd if=/dev/zero of=$(AX_BUILD_TMP)/$(AX_IMAGE_LINK) seek=$(AX_IMAGE_ROOTFS_SIZE) count=0 bs=1024
+	dd if=/dev/zero of=$(AX_BUILD_TMP)/$(AX_IMAGE_LINK) seek=$(shell expr $(AX_IMAGE_ROOTFS_SIZE) \* $(BLOCK_SECTOR)) count=0 bs=$(BLOCK_SIZE)
 	mkfs.ext4 -F $(AX_BUILD_TMP)/$(AX_IMAGE_LINK) -d $(BOX)
 	# Error codes 0-3 indicate successfull operation of fsck (no errors or errors corrected)
 	fsck.ext4 -pvfD $(AX_BUILD_TMP)/$(AX_IMAGE_LINK) || [ $? -le 3 ]
-	dd if=/dev/zero of=$(EMMC_IMAGE) bs=1024 count=0 seek=$(EMMC_IMAGE_SIZE)
+	dd if=/dev/zero of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) count=0 seek=$(shell expr $(EMMC_IMAGE_SIZE) \* $(BLOCK_SECTOR))
 	parted -s $(EMMC_IMAGE) mklabel gpt
-	parted -s $(EMMC_IMAGE) unit KiB mkpart boot fat16 $(BOOT_PARTITION_OFFSET) $(shell expr $(BOOT_PARTITION_OFFSET) \+ $(BOOT_PARTITION_SIZE))
+	parted -s $(EMMC_IMAGE) unit KiB mkpart boot fat16 $(IMAGE_ROOTFS_ALIGNMENT) $(shell expr $(IMAGE_ROOTFS_ALIGNMENT) \+ $(BOOT_PARTITION_SIZE))
 	parted -s $(EMMC_IMAGE) unit KiB mkpart kernel1 $(KERNEL_PARTITION_OFFSET) $(shell expr $(KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))
-	parted -s $(EMMC_IMAGE) unit KiB mkpart rootfs1 ext2 $(ROOTFS_PARTITION_OFFSET_SINGLE) $(shell expr $(ROOTFS_PARTITION_OFFSET_SINGLE) \+ $(ROOTFS_PARTITION_SIZE_SINGLE))
-	parted -s $(EMMC_IMAGE) unit KiB mkpart storage ext2 $(STORAGE_PARTITION_OFFSET_SINGLE) $(shell expr $(EMMC_IMAGE_SIZE) \- 1024)
-	dd if=/dev/zero of=$(AX_BUILD_TMP)/$(AX_BOOT_IMAGE) bs=1024 count=$(BOOT_PARTITION_SIZE)
+	parted -s $(EMMC_IMAGE) unit KiB mkpart rootfs1 ext4 $(ROOTFS_PARTITION_OFFSET) $(shell expr $(ROOTFS_PARTITION_OFFSET) \+ $(ROOTFS_PARTITION_SIZE_SINGLE))
+	parted -s $(EMMC_IMAGE) unit KiB mkpart storage ext4 $(STORAGE_PARTITION_OFFSET_SINGLE) $(shell expr $(EMMC_IMAGE_SIZE) \- 1024)
+	dd if=/dev/zero of=$(AX_BUILD_TMP)/$(AX_BOOT_IMAGE) bs=$(BLOCK_SIZE) count=$(shell expr $(BOOT_PARTITION_SIZE) \* $(BLOCK_SECTOR))
 	mkfs.msdos -S 512 $(AX_BUILD_TMP)/$(AX_BOOT_IMAGE)
 	echo "boot emmcflash0.kernel1 'root=/dev/mmcblk0p2 rw rootwait $(BOXMODEL)_4.boxmode=12'" > $(AX_BUILD_TMP)/STARTUP_1
 	mcopy -i $(AX_BUILD_TMP)/$(AX_BOOT_IMAGE) -v $(AX_BUILD_TMP)/STARTUP_1 ::
-	dd conv=notrunc if=$(AX_BUILD_TMP)/$(AX_BOOT_IMAGE) of=$(EMMC_IMAGE) bs=1024 seek=$(BOOT_PARTITION_OFFSET)
-	dd conv=notrunc if=$(ZIMAGE_DTB) of=$(EMMC_IMAGE) bs=1024 seek=$(KERNEL_PARTITION_OFFSET)
+	dd conv=notrunc if=$(AX_BUILD_TMP)/$(AX_BOOT_IMAGE) of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) seek=$(shell expr $(IMAGE_ROOTFS_ALIGNMENT) \* $(BLOCK_SECTOR))
+	dd conv=notrunc if=$(ZIMAGE_DTB) of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) seek=$(shell expr $(KERNEL_PARTITION_OFFSET) \* $(BLOCK_SECTOR))
 	resize2fs $(AX_BUILD_TMP)/$(AX_IMAGE_LINK) $(ROOTFS_PARTITION_SIZE_SINGLE)k
 	# Truncate on purpose
-	dd if=$(AX_BUILD_TMP)/$(AX_IMAGE_LINK) of=$(EMMC_IMAGE) bs=1024 seek=$(ROOTFS_PARTITION_OFFSET_SINGLE) count=$(AX_IMAGE_ROOTFS_SIZE)
+	dd if=$(AX_BUILD_TMP)/$(AX_IMAGE_LINK) of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) seek=$(shell expr $(ROOTFS_PARTITION_OFFSET) \* $(BLOCK_SECTOR)) count=$(shell expr $(AX_IMAGE_ROOTFS_SIZE) \* $(BLOCK_SECTOR))
 	# Create final USB-image
 	mkdir -p $(IMAGE_DIR)/$(BOXMODEL)
 	cp $(ZIMAGE_DTB) $(IMAGE_DIR)/$(BOXMODEL)/kernel.bin
@@ -212,23 +212,23 @@ flash-image-axt-single:
 flash-image-axt-multi:
 	mkdir -p $(AX_BUILD_TMP)
 	# Create a sparse image block
-	dd if=/dev/zero of=$(AX_BUILD_TMP)/$(AX_IMAGE_LINK) seek=$(AX_IMAGE_ROOTFS_SIZE) count=0 bs=1024
+	dd if=/dev/zero of=$(AX_BUILD_TMP)/$(AX_IMAGE_LINK) seek=$(shell expr $(AX_IMAGE_ROOTFS_SIZE) \* $(BLOCK_SECTOR)) count=0 bs=$(BLOCK_SIZE)
 	mkfs.ext4 -F $(AX_BUILD_TMP)/$(AX_IMAGE_LINK) -d $(BOX)
 	# Error codes 0-3 indicate successfull operation of fsck (no errors or errors corrected)
 	fsck.ext4 -pvfD $(AX_BUILD_TMP)/$(AX_IMAGE_LINK) || [ $? -le 3 ]
-	dd if=/dev/zero of=$(EMMC_IMAGE) bs=1024 count=0 seek=$(EMMC_IMAGE_SIZE)
+	dd if=/dev/zero of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) count=0 seek=$(shell expr $(EMMC_IMAGE_SIZE) \* $(BLOCK_SECTOR))
 	parted -s $(EMMC_IMAGE) mklabel gpt
-	parted -s $(EMMC_IMAGE) unit KiB mkpart boot fat16 $(BOOT_PARTITION_OFFSET) $(shell expr $(BOOT_PARTITION_OFFSET) \+ $(BOOT_PARTITION_SIZE))
+	parted -s $(EMMC_IMAGE) unit KiB mkpart boot fat16 $(IMAGE_ROOTFS_ALIGNMENT) $(shell expr $(IMAGE_ROOTFS_ALIGNMENT) \+ $(BOOT_PARTITION_SIZE))
 	parted -s $(EMMC_IMAGE) unit KiB mkpart kernel1 $(KERNEL_PARTITION_OFFSET) $(shell expr $(KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))
-	parted -s $(EMMC_IMAGE) unit KiB mkpart rootfs1 ext2 $(ROOTFS_PARTITION_OFFSET_MULTI) $(shell expr $(ROOTFS_PARTITION_OFFSET_MULTI) \+ $(ROOTFS_PARTITION_SIZE_MULTI))
+	parted -s $(EMMC_IMAGE) unit KiB mkpart rootfs1 ext4 $(ROOTFS_PARTITION_OFFSET) $(shell expr $(ROOTFS_PARTITION_OFFSET) \+ $(ROOTFS_PARTITION_SIZE_MULTI))
 	parted -s $(EMMC_IMAGE) unit KiB mkpart kernel2 $(SECOND_KERNEL_PARTITION_OFFSET) $(shell expr $(SECOND_KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))
-	parted -s $(EMMC_IMAGE) unit KiB mkpart rootfs2 ext2 $(SECOND_ROOTFS_PARTITION_OFFSET) $(shell expr $(SECOND_ROOTFS_PARTITION_OFFSET) \+ $(ROOTFS_PARTITION_SIZE_MULTI))
+	parted -s $(EMMC_IMAGE) unit KiB mkpart rootfs2 ext4 $(SECOND_ROOTFS_PARTITION_OFFSET) $(shell expr $(SECOND_ROOTFS_PARTITION_OFFSET) \+ $(ROOTFS_PARTITION_SIZE_MULTI))
 	parted -s $(EMMC_IMAGE) unit KiB mkpart kernel3 $(THRID_KERNEL_PARTITION_OFFSET) $(shell expr $(THRID_KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))
-	parted -s $(EMMC_IMAGE) unit KiB mkpart rootfs3 ext2 $(THRID_ROOTFS_PARTITION_OFFSET) $(shell expr $(THRID_ROOTFS_PARTITION_OFFSET) \+ $(ROOTFS_PARTITION_SIZE_MULTI))
+	parted -s $(EMMC_IMAGE) unit KiB mkpart rootfs3 ext4 $(THRID_ROOTFS_PARTITION_OFFSET) $(shell expr $(THRID_ROOTFS_PARTITION_OFFSET) \+ $(ROOTFS_PARTITION_SIZE_MULTI))
 	parted -s $(EMMC_IMAGE) unit KiB mkpart kernel4 $(FOURTH_KERNEL_PARTITION_OFFSET) $(shell expr $(FOURTH_KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))
-	parted -s $(EMMC_IMAGE) unit KiB mkpart rootfs4 ext2 $(FOURTH_ROOTFS_PARTITION_OFFSET) $(shell expr $(FOURTH_ROOTFS_PARTITION_OFFSET) \+ $(ROOTFS_PARTITION_SIZE_MULTI))
+	parted -s $(EMMC_IMAGE) unit KiB mkpart rootfs4 ext4 $(FOURTH_ROOTFS_PARTITION_OFFSET) $(shell expr $(FOURTH_ROOTFS_PARTITION_OFFSET) \+ $(ROOTFS_PARTITION_SIZE_MULTI))
 	parted -s $(EMMC_IMAGE) unit KiB mkpart swap linux-swap $(SWAP_PARTITION_OFFSET) $(shell expr $(EMMC_IMAGE_SIZE) \- 1024)
-	dd if=/dev/zero of=$(AX_BUILD_TMP)/$(AX_BOOT_IMAGE) bs=1024 count=$(BOOT_PARTITION_SIZE)
+	dd if=/dev/zero of=$(AX_BUILD_TMP)/$(AX_BOOT_IMAGE) bs=$(BLOCK_SIZE) count=$(shell expr $(BOOT_PARTITION_SIZE) \* $(BLOCK_SECTOR))
 	mkfs.msdos -S 512 $(AX_BUILD_TMP)/$(AX_BOOT_IMAGE)
 	echo "boot emmcflash0.kernel1 'brcm_cma=440M@328M brcm_cma=192M@768M root=/dev/mmcblk0p3 rw rootwait $(BOXMODEL)_4.boxmode=1'" > $(AX_BUILD_TMP)/STARTUP
 	echo "boot emmcflash0.kernel1 'brcm_cma=440M@328M brcm_cma=192M@768M root=/dev/mmcblk0p3 rw rootwait $(BOXMODEL)_4.boxmode=1'" > $(AX_BUILD_TMP)/STARTUP_1
@@ -240,11 +240,11 @@ flash-image-axt-multi:
 	mcopy -i $(AX_BUILD_TMP)/$(AX_BOOT_IMAGE) -v $(AX_BUILD_TMP)/STARTUP_2 ::
 	mcopy -i $(AX_BUILD_TMP)/$(AX_BOOT_IMAGE) -v $(AX_BUILD_TMP)/STARTUP_3 ::
 	mcopy -i $(AX_BUILD_TMP)/$(AX_BOOT_IMAGE) -v $(AX_BUILD_TMP)/STARTUP_4 ::
-	dd conv=notrunc if=$(AX_BUILD_TMP)/$(AX_BOOT_IMAGE) of=$(EMMC_IMAGE) bs=1024 seek=$(BOOT_PARTITION_OFFSET)
-	dd conv=notrunc if=$(ZIMAGE_DTB) of=$(EMMC_IMAGE) bs=1024 seek=$(KERNEL_PARTITION_OFFSET)
+	dd conv=notrunc if=$(AX_BUILD_TMP)/$(AX_BOOT_IMAGE) of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) seek=$(shell expr $(IMAGE_ROOTFS_ALIGNMENT) \* $(BLOCK_SECTOR))
+	dd conv=notrunc if=$(ZIMAGE_DTB) of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) seek=$(shell expr $(KERNEL_PARTITION_OFFSET) \* $(BLOCK_SECTOR))
 	resize2fs $(AX_BUILD_TMP)/$(AX_IMAGE_LINK) $(ROOTFS_PARTITION_SIZE_MULTI)k
 	# Truncate on purpose
-	dd if=$(AX_BUILD_TMP)/$(AX_IMAGE_LINK) of=$(EMMC_IMAGE) bs=1024 seek=$(ROOTFS_PARTITION_OFFSET_MULTI) count=$(AX_IMAGE_ROOTFS_SIZE)
+	dd if=$(AX_BUILD_TMP)/$(AX_IMAGE_LINK) of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) seek=$(shell expr $(ROOTFS_PARTITION_OFFSET) \* $(BLOCK_SECTOR)) count=$(shell expr $(AX_IMAGE_ROOTFS_SIZE) \* $(BLOCK_SECTOR))
 	# Create final USB-image
 	mkdir -p $(IMAGE_DIR)/$(BOXMODEL)
 	cp $(ZIMAGE_DTB) $(IMAGE_DIR)/$(BOXMODEL)/kernel.bin
