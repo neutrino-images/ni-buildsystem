@@ -75,7 +75,6 @@ for i in /sys/bus/usb/devices/*; do
 	esac
 done
 
-# FIXME?
 # load modules / create nodes
 load_module extra/hd51_1.ko
 load_module extra/hd51_2.ko
@@ -86,10 +85,7 @@ service networking start
 service ntpdate start
 
 # say hi to everyone
-dt -ls01
-dt -ls02
-dt -c
-dt -t"BOOT NI-IMAGE"
+"BOOT NI-IMAGE" > /dev/dbox/oled0
 
 # starting services and daemons in order of the symlink names
 LOGINFO "run initscripts start ..."
