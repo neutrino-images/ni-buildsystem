@@ -99,10 +99,17 @@ $(BIN)/emmrd: $(BIN) $(VARCONF) $(ETCINIT)
 	ln -sf emmrd S99emmrd && \
 	ln -sf emmrd K01emmrd
 
-FritzCallMonitor: $(SHAREICONS) $(BIN)/FritzCallMonitor
-$(BIN)/FritzCallMonitor: $(D)/openssl $(D)/libcurl $(BIN) $(VARCONF) $(ETCINIT)
-	pushd $(SOURCES)/FritzCallMonitor && \
-	$(TARGET)-gcc -Wall $(TARGET_CFLAGS) $(TARGET_LDFLAGS) -lstdc++ -lcrypto -pthread -lcurl $(CORTEX-STRINGS) -o $@ FritzCallMonitor.cpp connect.cpp  && \
+FritzCallMonitor: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(BIN)/FritzCallMonitor
+$(BIN)/FritzCallMonitor: $(D)/openssl $(D)/libcurl $(BIN) $(VARCONF) $(ETCINIT) $(SHAREICONS)
+	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/FritzCallMonitor && \
+	$(TARGET)-gcc -Wall $(TARGET_CFLAGS) $(TARGET_LDFLAGS) \
+		\
+		-lstdc++ -lcrypto -pthread -lcurl \
+		\
+		connect.cpp \
+		FritzCallMonitor.cpp \
+		\
+		-o $@ && \
 	install -m644 FritzCallMonitor.addr $(VARCONF)/ && \
 	install -m644 FritzCallMonitor.cfg $(VARCONF)/ && \
 	install -m755 fritzcallmonitor.init $(ETCINIT)/fritzcallmonitor && \
@@ -111,25 +118,32 @@ $(BIN)/FritzCallMonitor: $(D)/openssl $(D)/libcurl $(BIN) $(VARCONF) $(ETCINIT)
 	ln -sf fritzcallmonitor S99fritzcallmonitor && \
 	ln -sf fritzcallmonitor K01fritzcallmonitor
 
-FritzInfoMonitor: $(LIBPLUG)/FritzInfoMonitor.so
+FritzInfoMonitor: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(LIBPLUG)/FritzInfoMonitor.so
 $(LIBPLUG)/FritzInfoMonitor.so: $(D)/freetype $(D)/openssl $(D)/libcurl $(LIBPLUG)
-	pushd $(SOURCES)/FritzCallMonitor/FritzInfoMonitor && \
-	$(TARGET)-gcc -Wall $(TARGET_CFLAGS) $(TARGET_LDFLAGS) -I$(TARGETINCLUDE)/freetype2 -lfreetype -lz -lstdc++ -lcrypto -lcurl $(CORTEX-STRINGS) -o $@ \
-		parser.cpp \
+	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/FritzInfoMonitor && \
+	$(TARGET)-gcc -Wall $(TARGET_CFLAGS) $(TARGET_LDFLAGS) \
+		-I$(N_OBJDIR) -I$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/include \
+		-I$(TARGETINCLUDE)/freetype2 \
+		\
+		-lfreetype -lz -lstdc++ -lcrypto -lcurl \
+		\
 		connect.cpp \
 		framebuffer.cpp \
-		rc.cpp \
+		FritzInfoMonitor.cpp \
 		icons.cpp \
-		submenu.cpp \
+		parser.cpp \
 		phonebook.cpp \
-		FritzInfoMonitor.cpp && \
+		rc.cpp \
+		submenu.cpp \
+		\
+		-o $@ && \
 	install -m644 FritzInfoMonitor.cfg $(LIBPLUG)/ && \
 	install -m644 FritzInfoMonitor_hint.png $(LIBPLUG)/
 
-FritzInfoMonitor_setup: $(LIBPLUG)
-	install -m755 $(SOURCES)/FritzCallMonitor/FritzInfoMonitor_setup.lua $(LIBPLUG)/
-	install -m644 $(SOURCES)/FritzCallMonitor/FritzInfoMonitor_setup.cfg $(LIBPLUG)/
-	install -m644 $(SOURCES)/FritzCallMonitor/FritzInfoMonitor_setup_hint.png $(LIBPLUG)/
+FritzInfoMonitor_setup: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(LIBPLUG)
+	install -m755 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/FritzInfoMonitor/FritzInfoMonitor_setup.lua $(LIBPLUG)/
+	install -m644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/FritzInfoMonitor/FritzInfoMonitor_setup.cfg $(LIBPLUG)/
+	install -m644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/FritzInfoMonitor/FritzInfoMonitor_setup_hint.png $(LIBPLUG)/
 
 vinfo: $(BIN)/vinfo
 $(BIN)/vinfo: $(BIN)
