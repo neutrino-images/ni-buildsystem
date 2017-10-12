@@ -202,7 +202,7 @@ flash-image-axt-single:
 	cd $(BOX); \
 	tar -cvf $(IMAGE_DIR)/$(BOXMODEL)/rootfs.tar -C $(BOX) .  > /dev/null 2>&1; \
 	bzip2 $(IMAGE_DIR)/$(BOXMODEL)/rootfs.tar
-	echo $(IMAGE_VERSION) > $(IMAGE_DIR)/$(BOXMODEL)/imageversion
+	echo $(IMAGE_PREFIX) > $(IMAGE_DIR)/$(BOXMODEL)/imageversion
 	cd $(IMAGE_DIR); \
 	zip -r $(IMAGE_PREFIX)-$(IMAGE_SUFFIX)_single_usb.zip $(BOXMODEL)/*
 	# cleanup
@@ -252,7 +252,7 @@ flash-image-axt-multi:
 	cd $(BOX); \
 	tar -cvf $(IMAGE_DIR)/$(BOXMODEL)/rootfs.tar -C $(BOX) .  > /dev/null 2>&1; \
 	bzip2 $(IMAGE_DIR)/$(BOXMODEL)/rootfs.tar
-	echo $(IMAGE_VERSION) > $(IMAGE_DIR)/$(BOXMODEL)/imageversion
+	echo $(IMAGE_PREFIX) > $(IMAGE_DIR)/$(BOXMODEL)/imageversion
 	cd $(IMAGE_DIR); \
 	zip -r $(IMAGE_PREFIX)-$(IMAGE_SUFFIX)_multi_usb.zip $(BOXMODEL)/*
 	# cleanup
