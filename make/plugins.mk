@@ -36,7 +36,7 @@ $(VARPLUG) \
 $(VARCONF) : | $(TARGETPREFIX)
 	mkdir -p $@
 
-plugins-all: \
+plugins-all: $(D)/neutrino \
 	getrc \
 	input \
 	logomask \
@@ -163,9 +163,9 @@ logo-addon: $(SOURCE_DIR)/$(NI_LOGO_STUFF) $(LIBPLUG)
 	install -m644 $(SOURCE_DIR)/$(NI_LOGO_STUFF)/logo-addon/*.cfg $(LIBPLUG)/
 	install -m644 $(SOURCE_DIR)/$(NI_LOGO_STUFF)/logo-addon/*.png $(LIBPLUG)/
 
-smarthomeinfo: $(SOURCE_DIR)/$(NI_SMARTHOMEINFO) $(LIBPLUG) $(VARCONF)
-	cp -a $(SOURCE_DIR)/$(NI_SMARTHOMEINFO)/plugin/tuxbox/plugins/* $(LIBPLUG)/
-	cp -a $(SOURCE_DIR)/$(NI_SMARTHOMEINFO)/plugin/tuxbox/config/* $(VARCONF)/
+smarthomeinfo: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(LIBPLUG) $(VARCONF)
+	cp -a $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/$@/plugin/tuxbox/plugins/* $(LIBPLUG)/
+	cp -a $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/$@/plugin/tuxbox/config/* $(VARCONF)/
 
 doscam-webif-skin: $(VARCONF)
 	mkdir -p $(TARGETPREFIX)/share/doscam/tpl/
@@ -206,107 +206,206 @@ coolithek: $(LIBPLUG)
 	cp -rf share* $(TARGETPREFIX)/
 	$(REMOVE)/coolithek
 
-############################
-### plugins from cst-git ###
-############################
-
 #scripts-lua
 netzkino \
 mtv \
-favorites2bin: $(LIBPLUG)
-	install -m755 $(SOURCE_DIR)/$(TUXBOX_PLUGINS)/scripts-lua/plugins/$@/* $(LIBPLUG)/
+favorites2bin: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(LIBPLUG)
+	install -m755 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/$@/* $(LIBPLUG)/
 
 #getrc
-getrc: $(SOURCE_DIR)/$(TUXBOX_PLUGINS) $(BIN)/getrc
+getrc: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(BIN)/getrc
 $(BIN)/getrc: $(BIN)
-	pushd $(SOURCE_DIR)/$(TUXBOX_PLUGINS)/getrc && \
-	$(TARGET)-gcc $(TARGET_CFLAGS) -o $@ getrc.c io.c
+	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/getrc && \
+	$(TARGET)-gcc $(TARGET_CFLAGS) \
+		-I$(N_OBJDIR) -I$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/include \
+		\
+		getrc.c \
+		io.c \
+		\
+		-o $@
 
 #input
-input: $(SOURCE_DIR)/$(TUXBOX_PLUGINS) $(BIN)/input
+input: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(BIN)/input
 $(BIN)/input: $(D)/freetype $(BIN)
-	pushd $(SOURCE_DIR)/$(TUXBOX_PLUGINS)/input && \
-	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) -I$(TARGETINCLUDE)/freetype2 -lfreetype -lz -lpng $(CORTEX-STRINGS) -o $@ input.c inputd.c gfx.c io.c text.c fb_display.c resize.c pngw.cpp png_helper.cpp
+	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/input && \
+	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) \
+		-I$(N_OBJDIR) -I$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/include \
+		-I$(TARGETINCLUDE)/freetype2 \
+		\
+		-lfreetype -lz -lpng \
+		\
+		fb_display.c \
+		gfx.c \
+		input.c \
+		inputd.c \
+		io.c \
+		png_helper.cpp \
+		pngw.cpp \
+		resize.c \
+		text.c \
+		\
+		-o $@
 
 #logomask
-logomask: $(SOURCE_DIR)/$(TUXBOX_PLUGINS) $(BIN)/logomask $(LIBPLUG)/logoset.so $(LIBPLUG)/logomask.so
+logomask: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(BIN)/logomask $(LIBPLUG)/logoset.so $(LIBPLUG)/logomask.so
 $(BIN)/logomask: $(BIN)
-	pushd $(SOURCE_DIR)/$(TUXBOX_PLUGINS)/logomask && \
-	$(TARGET)-gcc $(TARGET_CFLAGS) -o $@ logomask.c gfx.c && \
+	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/logomask && \
+	$(TARGET)-gcc $(TARGET_CFLAGS) \
+		-I$(N_OBJDIR) -I$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/include \
+		\
+		gfx.c \
+		logomask.c \
+		\
+		-o $@ && \
 	install -m755 logomask.sh $(BIN)/
  
 $(LIBPLUG)/logoset.so: $(D)/freetype $(LIBPLUG)
-	pushd $(SOURCE_DIR)/$(TUXBOX_PLUGINS)/logomask && \
-	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) -I$(TARGETINCLUDE)/freetype2 -lfreetype -lz $(CORTEX-STRINGS) -o $@ logoset.c gfx.c io.c text.c && \
+	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/logomask && \
+	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) \
+		-I$(N_OBJDIR) -I$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/include \
+		-I$(TARGETINCLUDE)/freetype2 \
+		\
+		-lfreetype -lz \
+		\
+		gfx.c \
+		io.c \
+		logoset.c \
+		text.c \
+		\
+		-o $@ && \
 	install -m644 logoset.cfg $(LIBPLUG)/
 	install -m644 $(IMAGEFILES)/icons/hinticons/logoset_hint.png $(LIBPLUG)/
 
 $(LIBPLUG)/logomask.so: $(LIBPLUG) $(BIN)
-	pushd $(SOURCE_DIR)/$(TUXBOX_PLUGINS)/logomask && \
-	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) -I$(N_HD_SOURCE)/src -o $@ starter_logomask.c && \
+	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/logomask && \
+	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) \
+		-I$(N_OBJDIR) -I$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/include \
+		\
+		starter_logomask.c \
+		\
+		-o $@ && \
 	install -m644 logomask.cfg $(LIBPLUG)/ && \
 	install -m644 $(IMAGEFILES)/icons/hinticons/logomask_hint.png $(LIBPLUG)/
 
 #msgbox
-msgbox: $(SOURCE_DIR)/$(TUXBOX_PLUGINS) $(BIN)/msgbox
+msgbox: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(BIN)/msgbox
 $(BIN)/msgbox: $(D)/freetype $(BIN)
-	pushd $(SOURCE_DIR)/$(TUXBOX_PLUGINS)/msgbox && \
-	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) -I$(TARGETINCLUDE)/freetype2 -lfreetype -lz -lpng $(CORTEX-STRINGS) -o $@ msgbox.c gfx.c io.c text.c txtform.c fb_display.c resize.c pngw.cpp png_helper.cpp
+	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/msgbox && \
+	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) \
+		-I$(N_OBJDIR) -I$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/include \
+		-I$(TARGETINCLUDE)/freetype2 \
+		\
+		-lfreetype -lz -lpng \
+		\
+		fb_display.c \
+		gfx.c \
+		io.c \
+		msgbox.c \
+		png_helper.cpp \
+		pngw.cpp \
+		resize.c \
+		text.c \
+		txtform.c \
+		\
+		-o $@
 
 #tuxcal
-tuxcal: $(SOURCE_DIR)/$(TUXBOX_PLUGINS) $(BIN)/tuxcald $(LIBPLUG)/tuxcal.so
+tuxcal: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(BIN)/tuxcald $(LIBPLUG)/tuxcal.so
 $(BIN)/tuxcald: $(D)/freetype $(BIN) $(ETCINIT) $(VARCONF)
-	pushd $(SOURCE_DIR)/$(TUXBOX_PLUGINS)/tuxcal/daemon && \
-	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) -I$(TARGETINCLUDE)/freetype2 -lpthread -lfreetype -lz $(CORTEX-STRINGS) -o $@ tuxcald.c && \
+	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/tuxcal/daemon && \
+	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) \
+		-I$(N_OBJDIR) -I$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/include \
+		-I$(TARGETINCLUDE)/freetype2 \
+		\
+		-lfreetype -lz -lpthread \
+		\
+		tuxcald.c \
+		\
+		-o $@ && \
 	install -m755 $(IMAGEFILES)/scripts/tuxcald.init $(ETCINIT)/tuxcald && \
 	cd $(ETCINIT) && \
 	ln -sf tuxcald S99tuxcald && \
 	ln -sf tuxcald K01tuxcald && \
-	pushd $(SOURCE_DIR)/$(TUXBOX_PLUGINS)/tuxcal && \
+	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/tuxcal && \
 	mkdir -p $(VARCONF)/tuxcal && \
 	install -m644 tuxcal.conf $(VARCONF)/tuxcal/
 
 $(LIBPLUG)/tuxcal.so: $(LIBPLUG)
-	pushd $(SOURCE_DIR)/$(TUXBOX_PLUGINS)/tuxcal && \
-	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) -I$(TARGETINCLUDE)/freetype2 -lfreetype -lz $(CORTEX-STRINGS) -o $@ tuxcal.c && \
+	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/tuxcal && \
+	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) \
+		-I$(N_OBJDIR) -I$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/include \
+		-I$(TARGETINCLUDE)/freetype2 \
+		\
+		-lfreetype -lz \
+		\
+		tuxcal.c \
+		\
+		-o $@ && \
 	install -m644 tuxcal.cfg $(LIBPLUG)/
 	install -m644 $(IMAGEFILES)/icons/hinticons/tuxcal_hint.png $(LIBPLUG)/
 
 #tuxcom
-tuxcom: $(SOURCE_DIR)/$(TUXBOX_PLUGINS) $(LIBPLUG)/tuxcom.so
+tuxcom: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(LIBPLUG)/tuxcom.so
 $(LIBPLUG)/tuxcom.so: $(D)/freetype $(LIBPLUG)
-	pushd $(SOURCE_DIR)/$(TUXBOX_PLUGINS)/tuxcom && \
-	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) -I$(TARGETINCLUDE)/freetype2 -lfreetype -lz $(CORTEX-STRINGS) -o $@ tuxcom.c && \
+	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/tuxcom && \
+	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) \
+		-I$(N_OBJDIR) -I$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/include \
+		-I$(TARGETINCLUDE)/freetype2 \
+		\
+		-lfreetype -lz \
+		\
+		tuxcom.c \
+		\
+		-o $@ && \
 	install -m644 tuxcom.cfg $(LIBPLUG)/
 	install -m644 $(IMAGEFILES)/icons/hinticons/tuxcom_hint.png $(LIBPLUG)/
 
 #tuxmail
-tuxmail: $(SOURCE_DIR)/$(TUXBOX_PLUGINS) $(BIN)/tuxmaild $(LIBPLUG)/tuxmail.so
+tuxmail: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(BIN)/tuxmaild $(LIBPLUG)/tuxmail.so
 $(BIN)/tuxmaild: $(D)/freetype $(D)/openssl $(BIN) $(ETCINIT) $(VARCONF)
-	pushd $(SOURCE_DIR)/$(TUXBOX_PLUGINS)/tuxmail/daemon && \
-	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) -I$(TARGETINCLUDE)/freetype2 -lssl -lcrypto -lpthread -lfreetype -lz $(CORTEX-STRINGS) -o $@ tuxmaild.c && \
+	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/tuxmail/daemon && \
+	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) \
+		-I$(N_OBJDIR) -I$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/include \
+		-I$(TARGETINCLUDE)/freetype2 \
+		\
+		-lfreetype -lz -lcrypto -lssl -lpthread \
+		\
+		tuxmaild.c \
+		\
+		-o $@ && \
 	install -m755 $(IMAGEFILES)/scripts/tuxmaild.init $(ETCINIT)/tuxmaild && \
 	cd $(ETCINIT) && \
 	ln -sf tuxmaild S99tuxmaild && \
 	ln -sf tuxmaild K01tuxmaild && \
-	pushd $(SOURCE_DIR)/$(TUXBOX_PLUGINS)/tuxmail && \
+	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/tuxmail && \
 	mkdir -p $(VARCONF)/tuxmail && \
 	install -m644 tuxmail.conf $(VARCONF)/tuxmail/ && \
 	pushd $(IMAGEFILES)/scripts && \
 	install -m755 tuxmail.onreadmail $(VARCONF)/tuxmail/
 
 $(LIBPLUG)/tuxmail.so: $(LIBPLUG)
-	pushd $(SOURCE_DIR)/$(TUXBOX_PLUGINS)/tuxmail && \
-	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) -I$(TARGETINCLUDE)/freetype2 -lfreetype -lz $(CORTEX-STRINGS) -o $@ tuxmail.c && \
+	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/tuxmail && \
+	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) \
+		-I$(N_OBJDIR) -I$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/include \
+		-I$(TARGETINCLUDE)/freetype2 \
+		\
+		-lfreetype -lz \
+		\
+		tuxmail.c \
+		\
+		-o $@ && \
 	install -m644 tuxmail.cfg $(LIBPLUG)/
 	install -m644 $(IMAGEFILES)/icons/hinticons/tuxmail_hint.png $(LIBPLUG)/
 
 #tuxwetter
-tuxwetter: $(SOURCE_DIR)/$(NI_TUXWETTER) $(LIBPLUG)/tuxwetter.so
+tuxwetter: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(LIBPLUG)/tuxwetter.so
 $(LIBPLUG)/tuxwetter.so: $(D)/freetype $(D)/libcurl $(D)/giflib $(D)/libjpeg $(LIBPLUG) $(VARCONF)
-	pushd $(SOURCE_DIR)/$(NI_TUXWETTER) && \
-	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) -I$(TARGETINCLUDE)/freetype2 \
-		-lfreetype -lcrypto -lssl -lz -lcurl -ljpeg -lpng -lgif \
+	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/tuxwetter && \
+	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) \
+		-I$(N_OBJDIR) -I$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/include \
+		-I$(TARGETINCLUDE)/freetype2 \
+		\
+		-lfreetype -lz -lcrypto -lssl -lcurl -ljpeg -lpng -lgif \
 		\
 		-DWWEATHER \
 		\
@@ -338,9 +437,9 @@ $(LIBPLUG)/tuxwetter.so: $(D)/freetype $(D)/libcurl $(D)/giflib $(D)/libjpeg $(L
 	ln -sf /lib/tuxbox/plugins/tuxwetter.so $(BIN)/tuxwetter
 
 #cooliTSclimax
-cooliTSclimax: $(SOURCE_DIR)/$(TUXBOX_PLUGINS) $(BIN)/cooliTSclimax
+cooliTSclimax: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(BIN)/cooliTSclimax
 $(BIN)/cooliTSclimax: $(D)/ffmpeg $(BIN)
-	pushd $(SOURCE_DIR)/$(TUXBOX_PLUGINS)/cooliTSclimax && \
+	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/cooliTSclimax && \
 	$(TARGET)-g++ $(TARGET_CFLAGS) -D__STDC_CONSTANT_MACROS $(TARGET_LDFLAGS) -lpthread -lavformat -lavcodec -lavutil $(CORTEX-STRINGS) -o $@ cooliTSclimax.cpp
 
 # oscammon
@@ -353,12 +452,27 @@ $(LIBPLUG)/oscammon.so: $(LIBPLUG) $(VARCONF)
 	cp -f oscammon_hint.png $(LIBPLUG)/
 
 # shellexec
-shellexec: $(SOURCE_DIR)/$(TUXBOX_PLUGINS) $(LIBPLUG)/shellexec.so
+shellexec: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(LIBPLUG)/shellexec.so
 $(LIBPLUG)/shellexec.so: $(D)/freetype $(LIBPLUG) $(SHAREFLEX) $(VARCONF) $(BIN)
-	pushd $(SOURCE_DIR)/$(TUXBOX_PLUGINS)/shellexec; \
-		$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) -I$(TARGETINCLUDE)/freetype2 -lfreetype -lz -lpng $(CORTEX-STRINGS) -o $@ shellexec.c gfx.c io.c text.c fb_display.c resize.c pngw.cpp png_helper.cpp; \
-		install -m644 shellexec.conf $(VARCONF)/; \
-		install -m644 shellexec.cfg $(LIBPLUG)/
+	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/shellexec; \
+	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) \
+		-I$(N_OBJDIR) -I$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/include \
+		-I$(TARGETINCLUDE)/freetype2 \
+		\
+		-lfreetype -lz -lpng \
+		\
+		fb_display.c \
+		gfx.c \
+		io.c \
+		png_helper.cpp \
+		pngw.cpp \
+		resize.c \
+		shellexec.c \
+		text.c \
+		\
+		-o $@ && \
+	install -m644 shellexec.conf $(VARCONF)/; \
+	install -m644 shellexec.cfg $(LIBPLUG)/
 	sed -i 's|FONT=|#FONT=|' $(VARCONF)/shellexec.conf
 	sed -i 's|/var/tuxbox/config/flex|/share/tuxbox/neutrino/flex|' $(VARCONF)/shellexec.conf
 	mv -f $(LIBPLUG)/shellexec.so  $(LIBPLUG)/00_shellexec.so

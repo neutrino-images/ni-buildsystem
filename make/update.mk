@@ -24,19 +24,13 @@ ifneq ($(NO_REMOTE_REPO), true)
 	cd $(SOURCE_DIR)/$(NI_LIBSTB-HAL) && \
 		git checkout master && \
 		git pull $(TUXBOX_REMOTE_REPO) master && \
-		git fetch $(TUXBOX_REMOTE_REPO); \
-	cd $(SOURCE_DIR)/$(NI_TUXWETTER) && \
-		git checkout master && \
-		git pull $(TUXBOX_REMOTE_REPO) master && \
 		git fetch $(TUXBOX_REMOTE_REPO)
+	cd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) && \
+		make update-tuxbox-remotes
 endif
 
 update-tuxbox-git:
 	cd $(SOURCE_DIR)/$(TUXBOX_BOOTLOADER) && git pull
-	cd $(SOURCE_DIR)/$(TUXBOX_PLUGINS) && \
-		git pull && \
-		git submodule foreach 'git checkout master; git pull origin master' && \
-		git submodule update
 
 # rebase of ffmpeg/kernel repos forces us to force push into git repo
 # use this target once if such force push was done
@@ -53,11 +47,10 @@ update-ni-git:
 ifeq ($(HAS_LIBCS), yes)
 	cd $(SOURCE_DIR)/$(NI_LIBCOOLSTREAM) && git pull --all && git checkout $(NI_LIBCOOLSTREAM_BRANCH)
 endif
+	cd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) && git pull
 	cd $(SOURCE_DIR)/$(NI_LIBSTB-HAL) && git pull
 	cd $(SOURCE_DIR)/$(NI_FFMPEG) && git pull --all && git checkout $(NI_FFMPEG_BRANCH)
-	cd $(SOURCE_DIR)/$(NI_TUXWETTER) && git checkout master && git pull origin master
 	cd $(SOURCE_DIR)/$(NI_LOGO_STUFF) && git pull
-	cd $(SOURCE_DIR)/$(NI_SMARTHOMEINFO) && git pull
 	cd $(SOURCE_DIR)/$(NI_STREAMRIPPER) && git pull
 	cd $(SOURCE_DIR)/$(NI_OPENTHREADS) && git pull
 
@@ -84,10 +77,9 @@ endif
 ifeq ($(HAS_LIBCS), yes)
 	cd $(SOURCE_DIR)/$(NI_LIBCOOLSTREAM) && git push --all
 endif
+	cd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) && git push
 	cd $(SOURCE_DIR)/$(NI_LIBSTB-HAL) && git push
 	cd $(SOURCE_DIR)/$(NI_FFMPEG) && git push
-	cd $(SOURCE_DIR)/$(NI_TUXWETTER) && git push
 	cd $(SOURCE_DIR)/$(NI_LOGO_STUFF) && git push
-	cd $(SOURCE_DIR)/$(NI_SMARTHOMEINFO) && git push
 	cd $(SOURCE_DIR)/$(NI_STREAMRIPPER) && git push
 	cd $(SOURCE_DIR)/$(NI_OPENTHREADS) && git push

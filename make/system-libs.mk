@@ -647,8 +647,8 @@ $(HOSTPREFIX)/bin/lua-$(LUA_VER): $(ARCHIVE)/lua-$(LUA_VER).tar.gz | $(TARGETPRE
 	install -m 0755 -D $(BUILD_TMP)/lua-$(LUA_VER)/src/lua $@
 	$(REMOVE)/lua-$(LUA_VER) $(TARGETPREFIX)/.remove
 
-lua-libs: $(SOURCE_DIR)/$(TUXBOX_PLUGINS) | $(TARGETPREFIX)
-	cp -a $(SOURCE_DIR)/$(TUXBOX_PLUGINS)/scripts-lua/share/lua/5.2/* $(TARGETPREFIX)/share/lua/$(LUA_ABIVER)/
+lua-libs: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) | $(TARGETPREFIX)
+	cp -a $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/share/lua/5.2/* $(TARGETPREFIX)/share/lua/$(LUA_ABIVER)/
 
 $(D)/lua: $(D)/libncurses $(ARCHIVE)/lua-$(LUA_VER).tar.gz | $(TARGETPREFIX)
 	$(UNTAR)/lua-$(LUA_VER).tar.gz

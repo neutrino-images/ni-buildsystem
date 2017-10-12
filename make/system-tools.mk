@@ -714,10 +714,10 @@ $(D)/xupnpd: $(D)/lua $(D)/openssl | $(TARGETPREFIX)
 		cp -a $$object $(TARGETPREFIX)/share/xupnpd/; \
 	done;
 	rm $(TARGETPREFIX)/share/xupnpd/plugins/staff/xupnpd_18plus.lua
-	install -D -m 644 $(SOURCE_DIR)/$(TUXBOX_PLUGINS)/scripts-lua/xupnpd/xupnpd_18plus.lua $(TARGETPREFIX)/share/xupnpd/plugins/
-	install -D -m 644 $(SOURCE_DIR)/$(TUXBOX_PLUGINS)/scripts-lua/xupnpd/xupnpd_youtube.lua $(TARGETPREFIX)/share/xupnpd/plugins/
-	install -D -m 644 $(SOURCE_DIR)/$(TUXBOX_PLUGINS)/scripts-lua/xupnpd/xupnpd_coolstream.lua $(TARGETPREFIX)/share/xupnpd/plugins/
-	install -D -m 644 $(SOURCE_DIR)/$(TUXBOX_PLUGINS)/scripts-lua/xupnpd/xupnpd_cczwei.lua $(TARGETPREFIX)/share/xupnpd/plugins/
+	install -D -m 644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/xupnpd/xupnpd_18plus.lua $(TARGETPREFIX)/share/xupnpd/plugins/
+	install -D -m 644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/xupnpd/xupnpd_youtube.lua $(TARGETPREFIX)/share/xupnpd/plugins/
+	install -D -m 644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/xupnpd/xupnpd_coolstream.lua $(TARGETPREFIX)/share/xupnpd/plugins/
+	install -D -m 644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/xupnpd/xupnpd_cczwei.lua $(TARGETPREFIX)/share/xupnpd/plugins/
 	mkdir -p $(TARGETPREFIX)/etc/init.d/
 		install -D -m 0755 $(IMAGEFILES)/scripts/xupnpd.init $(TARGETPREFIX)/etc/init.d/xupnpd
 		ln -sf xupnpd $(TARGETPREFIX)/etc/init.d/S99xupnpd

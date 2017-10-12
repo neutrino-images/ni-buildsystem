@@ -296,6 +296,7 @@ ifeq ($(USE_LIBSTB-HAL), yes)
   NI_NEUTRINO_BRANCH	:= ni/mp/tuxbox
 endif
 
+NI_NEUTRINO-PLUGINS	= ni-neutrino-plugins
 BUILD-GENERIC-PC	= build-generic-pc
 NI_BUILD-GENERIC-PC	= ni-build-generic-pc
 
@@ -320,17 +321,11 @@ TUXBOX_NEUTRINO_BRANCH	?= master
 TUXBOX_LIBSTB-HAL	= library-stb-hal
 
 TUXBOX_BOOTLOADER	= bootloader-uboot-cst
-TUXBOX_PLUGINS		= plugins
 
 TUXBOX_REMOTE_REPO	= tuxbox
 
-# plugins with remote repo
-NI_TUXWETTER		= ni-neutrino-plugin-tuxwetter
-TUXBOX_TUXWETTER	= plugin-tuxwetter
-
 # various
 NI_LOGO_STUFF		= ni-logo-stuff
-NI_SMARTHOMEINFO	= ni-neutrino-plugin-smarthomeinfo
 
 # execute local scripts
 define local-script

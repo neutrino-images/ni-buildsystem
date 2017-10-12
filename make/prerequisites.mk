@@ -46,17 +46,6 @@ $(SOURCE_DIR)/$(TUXBOX_BOOTLOADER):
 	cd $@ && \
 		git checkout coolstream_hdx
 
-$(SOURCE_DIR)/$(TUXBOX_PLUGINS):
-	cd $(SOURCE_DIR) && \
-		git clone --recursive $(TUXBOX_GIT)/$(notdir $@).git
-
-$(SOURCE_DIR)/$(NI_TUXWETTER):
-	cd $(SOURCE_DIR) && \
-		git clone $(NI_GIT)/$(notdir $@).git
-	cd $@ && \
-		git remote add $(TUXBOX_REMOTE_REPO) $(TUXBOX_GIT)/$(TUXBOX_TUXWETTER).git && \
-		git fetch $(TUXBOX_REMOTE_REPO)
-
 $(SOURCE_DIR)/$(NI_LIBSTB-HAL):
 	cd $(SOURCE_DIR) && \
 		git clone $(NI_GIT)/$(notdir $@).git
@@ -90,9 +79,9 @@ $(SOURCE_DIR)/$(NI_LINUX-KERNEL):
 		git remote add torvalds https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git && \
 		git fetch --all
 
+$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) \
 $(SOURCE_DIR)/$(NI_DRIVERS-BIN) \
 $(SOURCE_DIR)/$(NI_LOGO_STUFF) \
-$(SOURCE_DIR)/$(NI_SMARTHOMEINFO) \
 $(SOURCE_DIR)/$(NI_STREAMRIPPER) \
 $(SOURCE_DIR)/$(NI_OPENTHREADS):
 	cd $(SOURCE_DIR) && \
@@ -185,18 +174,16 @@ toolcheck: $(TOOLCHECK)
 neutrino-hd-source: $(N_HD_SOURCE)
 
 tuxbox-git: \
-	$(SOURCE_DIR)/$(TUXBOX_BOOTLOADER) \
-	$(SOURCE_DIR)/$(TUXBOX_PLUGINS)
+	$(SOURCE_DIR)/$(TUXBOX_BOOTLOADER)
 
 ni-git: \
 	$(BUILD-GENERIC-PC) \
-	$(SOURCE_DIR)/$(NI_TUXWETTER) \
+	$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) \
 	$(SOURCE_DIR)/$(NI_LIBSTB-HAL) \
 	$(SOURCE_DIR)/$(NI_LIBCOOLSTREAM) \
 	$(SOURCE_DIR)/$(NI_DRIVERS-BIN) \
 	$(SOURCE_DIR)/$(NI_FFMPEG) \
 	$(SOURCE_DIR)/$(NI_LINUX-KERNEL) \
 	$(SOURCE_DIR)/$(NI_LOGO_STUFF) \
-	$(SOURCE_DIR)/$(NI_SMARTHOMEINFO) \
 	$(SOURCE_DIR)/$(NI_STREAMRIPPER) \
 	$(SOURCE_DIR)/$(NI_OPENTHREADS)
