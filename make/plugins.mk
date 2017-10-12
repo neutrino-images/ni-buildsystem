@@ -440,13 +440,28 @@ $(LIBPLUG)/tuxwetter.so: $(D)/freetype $(D)/libcurl $(D)/giflib $(D)/libjpeg $(L
 cooliTSclimax: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(BIN)/cooliTSclimax
 $(BIN)/cooliTSclimax: $(D)/ffmpeg $(BIN)
 	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/cooliTSclimax && \
-	$(TARGET)-g++ $(TARGET_CFLAGS) -D__STDC_CONSTANT_MACROS $(TARGET_LDFLAGS) -lpthread -lavformat -lavcodec -lavutil $(CORTEX-STRINGS) -o $@ cooliTSclimax.cpp
+	$(TARGET)-g++ $(TARGET_CFLAGS) $(TARGET_LDFLAGS) \
+		-lpthread -lavformat -lavcodec -lavutil \
+		\
+		-D__STDC_CONSTANT_MACROS \
+		\
+		cooliTSclimax.cpp \
+		\
+		-o $@
 
 # oscammon
-oscammon: $(D)/zlib $(D)/freetype $(D)/openssl $(LIBPLUG)/oscammon.so
+oscammon: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(D)/zlib $(D)/freetype $(D)/openssl $(LIBPLUG)/oscammon.so
 $(LIBPLUG)/oscammon.so: $(LIBPLUG) $(VARCONF)
-	pushd $(SOURCES)/oscammon && \
-	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) -I$(TARGETINCLUDE)/freetype2 -lfreetype -lz -lcrypto -o $@ oscammon.c && \
+	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/oscammon && \
+	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) \
+		-I$(N_OBJDIR) -I$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/include \
+		-I$(TARGETINCLUDE)/freetype2 \
+		\
+		-lfreetype -lz -lcrypto \
+		\
+		oscammon.c \
+		\
+		-o $@ && \
 	cp -f oscammon.conf $(VARCONF)/ && \
 	cp -f oscammon.cfg $(LIBPLUG)/ && \
 	cp -f oscammon_hint.png $(LIBPLUG)/
