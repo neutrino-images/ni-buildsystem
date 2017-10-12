@@ -216,7 +216,7 @@ favorites2bin: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(LIBPLUG)
 getrc: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(BIN)/getrc
 $(BIN)/getrc: $(BIN)
 	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/getrc && \
-	$(TARGET)-gcc $(TARGET_CFLAGS) $(CORTEX-STRINGS) \
+	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) \
 		-I$(N_OBJDIR) -I$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/include \
 		\
 		getrc.c \
@@ -250,7 +250,7 @@ $(BIN)/input: $(D)/freetype $(BIN)
 logomask: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(BIN)/logomask $(LIBPLUG)/logoset.so $(LIBPLUG)/logomask.so
 $(BIN)/logomask: $(BIN)
 	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/logomask && \
-	$(TARGET)-gcc $(TARGET_CFLAGS) $(CORTEX-STRINGS) \
+	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) \
 		-I$(N_OBJDIR) -I$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/include \
 		\
 		gfx.c \
