@@ -15,7 +15,7 @@ update-neutrino:
 		git fetch
 
 update-$(TUXBOX_REMOTE_REPO):
-ifneq ($(NO_REMOTE_REPO), true)
+ifeq ($(NI_ADMIN), true)
 	export GIT_MERGE_AUTOEDIT=no && \
 	cd $(N_HD_SOURCE) && \
 		git checkout $(NI_NEUTRINO_BRANCH) && \
