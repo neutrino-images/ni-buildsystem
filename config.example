@@ -16,3 +16,6 @@
 
 # Create debug-image. Not useful in real life.
 #DEBUG = yes
+
+# NI DEV-mode. Do not touch!
+#NI_ADMIN = true
