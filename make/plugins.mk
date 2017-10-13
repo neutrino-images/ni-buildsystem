@@ -64,7 +64,7 @@ plugins-all: $(D)/neutrino \
 	userbouquets \
 	add-locale \
 	favorites2bin \
-	LocalTV \
+	localtv \
 	coolithek \
 	openvpn-setup \
 	oscammon \
@@ -203,13 +203,9 @@ EPGfilter: $(LIBPLUG)
 dropbox_uploader: $(USRBIN)
 	install -m755 $(SOURCES)/$@/*.sh $(USRBIN)/
 
-openvpn-setup: $(LIBPLUG) $(ETCINIT)
-	cp -a $(SOURCES)/$@/* $(TARGETPREFIX)/
-
-userbouquets \
-LocalTV \
-add-locale: $(LIBPLUG)
-	install -m755 $(SOURCES)/$@/* $(LIBPLUG)/
+openvpn-setup: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(LIBPLUG) $(ETCINIT)
+	cp -a $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/$@/$@* $(LIBPLUG)/
+	install -m755 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/$@/ovpn.init $(ETCINIT)/ovpn
 
 coolithek: $(LIBPLUG)
 	git clone https://git.tuxcode.de/mediathek-luaV2.git $(BUILD_TMP)/coolithek && \
@@ -219,6 +215,9 @@ coolithek: $(LIBPLUG)
 	$(REMOVE)/coolithek
 
 #scripts-lua
+add-locale \
+localtv \
+userbouquets \
 stb-startup \
 netzkino \
 mtv \
