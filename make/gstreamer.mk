@@ -235,61 +235,6 @@ $(D)/gst_plugins_ugly: $(D)/gstreamer $(D)/gst_plugins_base $(ARCHIVE)/$(GST_PLU
 	touch $@
 
 #
-# gst_libav (currently unsued)
-#
-GST_LIBAV_VER = $(GSTREAMER_VER)
-GST_LIBAV_SOURCE = gst-libav-$(GST_LIBAV_VER).tar.xz
-
-$(ARCHIVE)/$(GST_LIBAV_SOURCE):
-	$(WGET) https://gstreamer.freedesktop.org/src/gst-libav/$(GST_LIBAV_SOURCE)
-
-$(D)/gst_libav: $(D)/gstreamer $(D)/gst_plugins_base $(ARCHIVE)/$(GST_LIBAV_SOURCE)
-	$(UNTAR)/$(GST_LIBAV_SOURCE)
-	set -e; cd $(BUILD_TMP)/gst-libav-$(GST_LIBAV_VER); \
-		$(PATCH)/gst-libav-$(GST_LIBAV_VER)-disable-yasm-for-libav-when-disable-yasm.patch; \
-		./autogen.sh --noconfigure; \
-		$(CONFIGURE) \
-			--prefix= \
-			--enable-silent-rules \
-			--disable-fatal-warnings \
-			\
-			--with-libav-extra-configure=" \
-			--enable-gpl \
-			--enable-static \
-			--enable-pic \
-			--disable-protocols \
-			--disable-devices \
-			--disable-network \
-			--disable-hwaccels \
-			--disable-filters \
-			--disable-doc \
-			--enable-optimizations \
-			--enable-cross-compile \
-			--target-os=linux \
-			--arch=$(BOXARCH) \
-			--cross-prefix=$(TARGET)- \
-			\
-			--disable-muxers \
-			--disable-encoders \
-			--disable-decoders \
-			--enable-decoder=vorbis \
-			--enable-decoder=flac \
-			\
-			--disable-demuxers \
-			--enable-demuxer=ogg \
-			--enable-demuxer=flac \
-			--enable-demuxer=mpegts \
-			\
-			--disable-debug \
-			--disable-bsfs \
-			--enable-pthreads" \
-		; \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
-	$(REMOVE)/gst-libav-$(GST_LIBAV_VER)
-	touch $@
-
-#
 # gst_plugin_subsink
 #
 GST_PLUGIN_SUBSINK_VER = 1.0
