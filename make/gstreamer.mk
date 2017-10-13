@@ -222,16 +222,10 @@ $(D)/gst_plugins_ugly: $(D)/gstreamer $(D)/gst_plugins_base $(ARCHIVE)/$(GST_PLU
 			--prefix= \
 			--datarootdir=/.remove \
 			--enable-silent-rules \
-			--disable-fatal-warnings \
-			--disable-amrnb \
-			--disable-amrwb \
-			--disable-sidplay \
-			--disable-twolame \
+			--disable-valgrind \
 			--disable-debug \
-			--disable-gtk-doc \
+			--disable-examples \
 			--disable-gtk-doc-html \
-			--disable-gtk-doc-pdf \
-			--enable-orc \
 		; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGETPREFIX)
