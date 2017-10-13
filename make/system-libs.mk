@@ -101,6 +101,7 @@ $(D)/libcurl: $(D)/zlib $(D)/openssl $(ARCHIVE)/curl-$(LIBCURL_VER).tar.bz2 | $(
 		$(CONFIGURE) \
 			--prefix=  \
 			--mandir=/.remove \
+			--datarootdir=/.remove \
 			--disable-manual \
 			--disable-file \
 			--disable-rtsp \
