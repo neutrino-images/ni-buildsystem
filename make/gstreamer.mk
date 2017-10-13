@@ -154,7 +154,7 @@ GST_PLUGINS_BAD_SOURCE = gst-plugins-bad-$(GST_PLUGINS_BAD_VER).tar.xz
 $(ARCHIVE)/$(GST_PLUGINS_BAD_SOURCE):
 	$(WGET) https://gstreamer.freedesktop.org/src/gst-plugins-bad/$(GST_PLUGINS_BAD_SOURCE)
 
-$(D)/gst_plugins_bad: $(D)/gstreamer $(D)/gst_plugins_base $(ARCHIVE)/$(GST_PLUGINS_BAD_SOURCE)
+$(D)/gst_plugins_bad: $(D)/libass $(D)/libcurl $(D)/libxml2 $(D)/openssl $(D)/librtmp $(D)/gstreamer $(D)/gst_plugins_base $(ARCHIVE)/$(GST_PLUGINS_BAD_SOURCE)
 	$(UNTAR)/$(GST_PLUGINS_BAD_SOURCE)
 	set -e; cd $(BUILD_TMP)/gst-plugins-bad-$(GST_PLUGINS_BAD_VER); \
 		$(PATCH)/gst-plugins-bad-$(GSTREAMER_VER)-Makefile.am-don-t-hardcode-libtool-name-when-running-pbad.patch; \
@@ -171,55 +171,10 @@ $(D)/gst_plugins_bad: $(D)/gstreamer $(D)/gst_plugins_base $(ARCHIVE)/$(GST_PLUG
 			--prefix= \
 			--datarootdir=/.remove \
 			--enable-silent-rules \
-			--disable-gtk-doc \
-			--disable-gtk-doc-html \
-			--disable-gtk-doc-pdf \
-			--disable-fatal-warnings \
-			--enable-dvb \
-			--enable-shm \
-			--enable-fbdev \
-			--enable-decklink \
-			--enable-dts \
-			--enable-mpegdemux \
-			--disable-acm \
-			--disable-android_media \
-			--disable-apple_media \
-			--disable-avc \
-			--disable-chromaprint \
-			--disable-cocoa \
-			--disable-daala \
-			--disable-dc1394 \
-			--disable-direct3d \
-			--disable-directsound \
-			--disable-gme \
-			--disable-gsm \
-			--disable-kate \
-			--disable-ladspa \
-			--disable-lv2 \
-			--disable-mplex \
-			--disable-musepack \
-			--disable-ofa \
-			--disable-openjpeg \
-			--disable-opensles \
-			--disable-resindvd \
-			--disable-soundtouch \
-			--disable-spandsp \
-			--disable-spc \
-			--disable-srtp \
-			--disable-teletextdec \
-			--disable-vcd \
-			--disable-vdpau \
-			--disable-voaacenc \
-			--disable-voamrwbenc \
-			--disable-wasapi \
-			--disable-wayland \
-			--disable-wildmidi \
-			--disable-winscreencap \
-			--disable-x265 \
-			--disable-zbar \
-			--disable-examples \
+			--disable-valgrind \
 			--disable-debug \
-			--enable-orc \
+			--disable-examples \
+			--disable-gtk-doc-html \
 		; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGETPREFIX)
