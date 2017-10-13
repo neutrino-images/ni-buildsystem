@@ -60,7 +60,13 @@ ifeq ($(DEBUG), no)
 	@echo "*******************************************************"
 	find $(BOX)/bin -type f -print0 | xargs -0 $(TARGET)-strip || true
 	find $(BOX)/sbin -type f -print0 | xargs -0 $(TARGET)-strip || true
-	find $(BOX)/lib -path $(BOX)/lib/modules -prune -o -type f -print0 | xargs -0 $(TARGET)-strip || true
+	find $(BOX)/lib \( \
+			-path $(BOX)/lib/libnexus.so -o \
+			-path $(BOX)/lib/libnxpl.so -o \
+			-path $(BOX)/lib/libv3ddriver.so -o \
+			\
+			-path $(BOX)/lib/modules \) -prune -o \
+	-type f -print0 | xargs -0 $(TARGET)-strip || true
 ifeq ($(BOXSERIES), hd2)
 	find $(BOX)/lib/modules/$(KVERSION_FULL)/kernel -type f -name '*.ko' | xargs -n 1 $(TARGET)-objcopy --strip-unneeded
 endif
