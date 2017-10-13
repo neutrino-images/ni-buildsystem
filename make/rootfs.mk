@@ -135,11 +135,6 @@ ifeq ($(BOXSERIES), hd1)
 	pushd $(BOX)/lib/firmware && \
 	ln -sf rt2870.bin rt3070.bin
 endif
-ifeq ($(BOXSERIES), ax)
-	pushd $(BOX)/lib && \
-	ln -sf libv3ddriver.so libEGL.so && \
-	ln -sf libv3ddriver.so libGLESv2.so
-endif
 ifeq ($(BOXSERIES), hd2)
 	pushd $(BOX)/etc && \
 	ln -sf /var/etc/exports exports && \
