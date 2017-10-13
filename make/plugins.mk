@@ -286,8 +286,8 @@ $(LIBPLUG)/logoset.so: $(D)/freetype $(LIBPLUG)
 		text.c \
 		\
 		-o $@ && \
-	install -m644 logoset.cfg $(LIBPLUG)/
-	install -m644 $(IMAGEFILES)/icons/hinticons/logoset_hint.png $(LIBPLUG)/
+	install -m644 logoset.cfg $(LIBPLUG)/ && \
+	install -m644 logoset_hint.png $(LIBPLUG)/
 
 $(LIBPLUG)/logomask.so: $(LIBPLUG) $(BIN)
 	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/logomask && \
@@ -298,7 +298,7 @@ $(LIBPLUG)/logomask.so: $(LIBPLUG) $(BIN)
 		\
 		-o $@ && \
 	install -m644 logomask.cfg $(LIBPLUG)/ && \
-	install -m644 $(IMAGEFILES)/icons/hinticons/logomask_hint.png $(LIBPLUG)/
+	install -m644 logomask_hint.png $(LIBPLUG)/
 
 #msgbox
 msgbox: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(BIN)/msgbox
@@ -354,8 +354,8 @@ $(LIBPLUG)/tuxcal.so: $(LIBPLUG)
 		tuxcal.c \
 		\
 		-o $@ && \
-	install -m644 tuxcal.cfg $(LIBPLUG)/
-	install -m644 $(IMAGEFILES)/icons/hinticons/tuxcal_hint.png $(LIBPLUG)/
+	install -m644 tuxcal.cfg $(LIBPLUG)/ && \
+	install -m644 tuxcal_hint.png $(LIBPLUG)/
 
 #tuxcom
 tuxcom: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(LIBPLUG)/tuxcom.so
@@ -370,8 +370,8 @@ $(LIBPLUG)/tuxcom.so: $(D)/freetype $(LIBPLUG)
 		tuxcom.c \
 		\
 		-o $@ && \
-	install -m644 tuxcom.cfg $(LIBPLUG)/
-	install -m644 $(IMAGEFILES)/icons/hinticons/tuxcom_hint.png $(LIBPLUG)/
+	install -m644 tuxcom.cfg $(LIBPLUG)/ && \
+	install -m644 tuxcom_hint.png $(LIBPLUG)/
 
 #tuxmail
 tuxmail: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(BIN)/tuxmaild $(LIBPLUG)/tuxmail.so
@@ -407,8 +407,8 @@ $(LIBPLUG)/tuxmail.so: $(LIBPLUG)
 		tuxmail.c \
 		\
 		-o $@ && \
-	install -m644 tuxmail.cfg $(LIBPLUG)/
-	install -m644 $(IMAGEFILES)/icons/hinticons/tuxmail_hint.png $(LIBPLUG)/
+	install -m644 tuxmail.cfg $(LIBPLUG)/ && \
+	install -m644 tuxmail_hint.png $(LIBPLUG)/
 
 #tuxwetter
 tuxwetter: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(LIBPLUG)/tuxwetter.so
@@ -499,15 +499,16 @@ $(LIBPLUG)/shellexec.so: $(D)/freetype $(LIBPLUG) $(SHAREFLEX) $(VARCONF) $(BIN)
 		text.c \
 		\
 		-o $@ && \
-	install -m644 shellexec.conf $(VARCONF)/; \
-	install -m644 shellexec.cfg $(LIBPLUG)/
+	install -m644 shellexec.conf $(VARCONF)/ && \
+	install -m644 shellexec.cfg $(LIBPLUG)/ && \
+	install -m644 shellexec_hint.png $(LIBPLUG)/
 	sed -i 's|FONT=|#FONT=|' $(VARCONF)/shellexec.conf
 	sed -i 's|/var/tuxbox/config/flex|/share/tuxbox/neutrino/flex|' $(VARCONF)/shellexec.conf
 	mv -f $(LIBPLUG)/shellexec.so  $(LIBPLUG)/00_shellexec.so
 	mv -f $(LIBPLUG)/shellexec.cfg $(LIBPLUG)/00_shellexec.cfg
+	mv -f $(LIBPLUG)/shellexec_hint.png $(LIBPLUG)/00_shellexec_hint.png
 	ln -sf /lib/tuxbox/plugins/00_shellexec.so $(BIN)/shellexec
 	install -m644 $(SOURCES)/flex-menu/flex*.conf $(SHAREFLEX)/
-	install -m644 $(IMAGEFILES)/icons/hinticons/00_shellexec_hint.png $(LIBPLUG)/
 
 ###################
 ###  flex-menu  ###
