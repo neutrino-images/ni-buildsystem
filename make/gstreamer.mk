@@ -19,19 +19,19 @@ $(D)/gstreamer: $(D)/libglib $(D)/libxml2 $(D)/glib_networking $(ARCHIVE)/$(GSTR
 			--libexecdir=/lib \
 			--datarootdir=/.remove \
 			--enable-silent-rules \
+			--disable-debug \
+			--disable-tests \
+			--disable-valgrind \
+			--disable-gst-tracer-hooks \
+			--without-unwind \
 			--disable-dependency-tracking \
+			--disable-examples \
+			\
 			--disable-check \
 			--disable-gst-debug \
-			--disable-examples \
 			--disable-benchmarks \
-			--disable-tests \
-			--disable-debug \
-			--disable-gtk-doc \
 			--disable-gtk-doc-html \
-			--disable-gtk-doc-pdf \
-			--enable-introspection=no \
 			ac_cv_header_valgrind_valgrind_h=no \
-			ac_cv_header_sys_poll_h=no \
 		; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGETPREFIX)
