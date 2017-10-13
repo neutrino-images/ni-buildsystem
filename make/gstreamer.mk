@@ -124,7 +124,7 @@ GST_PLUGINS_GOOD_SOURCE = gst-plugins-good-$(GST_PLUGINS_GOOD_VER).tar.xz
 $(ARCHIVE)/$(GST_PLUGINS_GOOD_SOURCE):
 	$(WGET) https://gstreamer.freedesktop.org/src/gst-plugins-good/$(GST_PLUGINS_GOOD_SOURCE)
 
-$(D)/gst_plugins_good: $(D)/gstreamer $(D)/gst_plugins_base $(D)/libsoup $(D)/libFLAC $(ARCHIVE)/$(GST_PLUGINS_GOOD_SOURCE)
+$(D)/gst_plugins_good: $(D)/libpng $(D)/libjpeg $(D)/gstreamer $(D)/gst_plugins_base $(D)/libsoup $(D)/libFLAC $(ARCHIVE)/$(GST_PLUGINS_GOOD_SOURCE)
 	$(UNTAR)/$(GST_PLUGINS_GOOD_SOURCE)
 	set -e; cd $(BUILD_TMP)/gst-plugins-good-$(GST_PLUGINS_GOOD_VER); \
 		$(PATCH)/gst-plugins-good-$(GSTREAMER_VER)-gstrtpmp4gpay-set-dafault-value-for-MPEG4-without-co.patch; \
@@ -133,14 +133,10 @@ $(D)/gst_plugins_good: $(D)/gstreamer $(D)/gst_plugins_base $(D)/libsoup $(D)/li
 			--prefix= \
 			--datarootdir=/.remove \
 			--enable-silent-rules \
-			--enable-oss \
-			--enable-gst_v4l2 \
-			--without-libv4l2 \
-			--disable-examples \
+			--disable-valgrind \
 			--disable-debug \
-			--disable-gtk-doc \
+			--disable-examples \
 			--disable-gtk-doc-html \
-			--disable-gtk-doc-pdf \
 		; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGETPREFIX)
