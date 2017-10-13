@@ -59,9 +59,7 @@ endif
 
 $(TARGETLIB): | $(TARGETPREFIX)
 	mkdir -p $@
-ifeq ($(BOXTYPE), coolstream)
 	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(DRIVERS_DIR)/libs/* $@
-endif
 
 $(TARGETLIB)/modules: | $(TARGETPREFIX)
 	mkdir -p $@
