@@ -77,7 +77,7 @@ ni-image:
 	make -j$(NUM_CPUS) iconv
 	make -j$(NUM_CPUS) streamripper
 ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 ax))
-	make plugins-add
+	make channellogos
 	make -j$(NUM_CPUS) less
 	make -j$(NUM_CPUS) parted
 	make -j$(NUM_CPUS) openvpn
@@ -90,6 +90,7 @@ ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 ax))
   endif
   ifeq ($(BOXSERIES), ax)
 	make -j$(NUM_CPUS) ofgwrite
+	make stb-startup
   endif
   ifeq ($(DEBUG), yes)
 	make -j$(NUM_CPUS) strace

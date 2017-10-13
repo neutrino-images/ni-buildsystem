@@ -73,8 +73,6 @@ plugins-all: $(D)/neutrino \
 	doscam-webif-skin \
 	playlists
 
-plugins-add: channellogos
-
 ################
 ### plugins  ###
 ################
@@ -221,6 +219,7 @@ coolithek: $(LIBPLUG)
 	$(REMOVE)/coolithek
 
 #scripts-lua
+stb-startup \
 netzkino \
 mtv \
 favorites2bin: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(LIBPLUG)
