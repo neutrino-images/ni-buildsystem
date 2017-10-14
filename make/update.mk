@@ -56,16 +56,12 @@ endif
 	cd $(SOURCE_DIR)/$(NI_OFGWRITE) && git pull
 	cd $(SOURCE_DIR)/$(NI_OPENTHREADS) && git pull
 
-ni-update:
+update-ni:
 	make update-self
 	make update-neutrino
 	make update-ni-git
 
-foreign-update:
-	make update-remotes
-	make update-tuxbox-git
-
-update-all: ni-update foreign-update
+update-all: update-ni update-remotes
 
 push:
 	git push
