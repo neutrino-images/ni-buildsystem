@@ -971,17 +971,15 @@ $(D)/iconv: $(ARCHIVE)/libiconv-$(LIBICONV_VER).tar.gz | $(TARGETPREFIX)
 	$(REMOVE)/libiconv-$(LIBICONV_VER)
 	touch $@
 
-$(D)/ofgwrite: | $(TARGETPREFIX)
-	$(REMOVE)/ofgwrite
-	cd $(BUILD_TMP); \
-	git clone git://github.com/oe-alliance/ofgwrite.git ofgwrite; \
-	cd ofgwrite; \
+$(D)/ofgwrite: $(SOURCE_DIR)/$(NI_OFGWRITE) | $(TARGETPREFIX)
+	$(REMOVE)/$(NI_OFGWRITE)
+	tar -C $(SOURCE_DIR) -cp $(NI_OFGWRITE) --exclude-vcs | tar -C $(BUILD_TMP) -x
+	cd $(BUILD_TMP)/$(NI_OFGWRITE); \
 		$(BUILDENV) \
 		$(MAKE) && \
-	install -m 755 $(BUILD_TMP)/ofgwrite/ofgwrite_bin $(TARGETPREFIX)/bin
-	install -m 755 $(BUILD_TMP)/ofgwrite/ofgwrite $(TARGETPREFIX)/bin
-	sed -i "s,/usr/bin/,/bin/," $(TARGETPREFIX)/bin/ofgwrite
-	$(REMOVE)/ofgwrite
+	install -m 755 $(BUILD_TMP)/$(NI_OFGWRITE)/ofgwrite_bin $(TARGETPREFIX)/bin
+	install -m 755 $(BUILD_TMP)/$(NI_OFGWRITE)/ofgwrite $(TARGETPREFIX)/bin
+	$(REMOVE)/$(NI_OFGWRITE)
 	touch $@
 
 $(D)/aio-grab: $(D)/zlib $(D)/libpng $(D)/libjpeg | $(TARGETPREFIX)

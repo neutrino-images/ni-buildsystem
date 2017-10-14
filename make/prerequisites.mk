@@ -79,6 +79,14 @@ $(SOURCE_DIR)/$(NI_LINUX-KERNEL):
 		git remote add torvalds https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git && \
 		git fetch --all
 
+# upstream for rebase
+$(SOURCE_DIR)/$(NI_OFGWRITE):
+	cd $(SOURCE_DIR) && \
+		git clone $(NI_GIT)/$(notdir $@).git
+	cd $@ && \
+		git remote add upstream https://github.com/oe-alliance/ofgwrite.git && \
+		git fetch --all
+
 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) \
 $(SOURCE_DIR)/$(NI_DRIVERS-BIN) \
 $(SOURCE_DIR)/$(NI_LOGO_STUFF) \
@@ -186,4 +194,5 @@ ni-git: \
 	$(SOURCE_DIR)/$(NI_LINUX-KERNEL) \
 	$(SOURCE_DIR)/$(NI_LOGO_STUFF) \
 	$(SOURCE_DIR)/$(NI_STREAMRIPPER) \
+	$(SOURCE_DIR)/$(NI_OFGWRITE) \
 	$(SOURCE_DIR)/$(NI_OPENTHREADS)

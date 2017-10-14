@@ -52,6 +52,7 @@ endif
 	cd $(SOURCE_DIR)/$(NI_FFMPEG) && git pull --all && git checkout $(NI_FFMPEG_BRANCH)
 	cd $(SOURCE_DIR)/$(NI_LOGO_STUFF) && git pull
 	cd $(SOURCE_DIR)/$(NI_STREAMRIPPER) && git pull
+	cd $(SOURCE_DIR)/$(NI_OFGWRITE) && git pull
 	cd $(SOURCE_DIR)/$(NI_OPENTHREADS) && git pull
 
 ni-update:
@@ -82,4 +83,5 @@ endif
 	cd $(SOURCE_DIR)/$(NI_FFMPEG) && git push
 	cd $(SOURCE_DIR)/$(NI_LOGO_STUFF) && git push
 	cd $(SOURCE_DIR)/$(NI_STREAMRIPPER) && git push
+	cd $(SOURCE_DIR)/$(NI_OFGWRITE) && git push
 	cd $(SOURCE_DIR)/$(NI_OPENTHREADS) && git push

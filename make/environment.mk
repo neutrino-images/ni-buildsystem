@@ -302,6 +302,7 @@ NI_BUILD-GENERIC-PC	= ni-build-generic-pc
 
 NI_LIBSTB-HAL		= ni-libstb-hal
 NI_STREAMRIPPER		= ni-streamripper
+NI_OFGWRITE		= ni-ofgwrite
 
 NI_LINUX-KERNEL		= ni-linux-kernel
 NI_DRIVERS-BIN		= ni-drivers-bin
