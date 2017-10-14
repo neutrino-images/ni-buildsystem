@@ -10,7 +10,7 @@ until neutrino; do
 	RET=$?
 
 	echo "Neutrino exited with exit code $RET"
-	dt -t"NEUTRINO: $RET"
+	echo "Neutrino: $RET" > /dev/dbox/oled0
 
 	if [ -e /tmp/.lcd-usbdev?.? ]; then
 		echo "0"		> /tmp/lcd/mode_logo
@@ -24,6 +24,6 @@ until neutrino; do
 done
 
 if [ -e /tmp/.reboot ]; then # gets created by neutrino
-	dt -t" ..REBOOT.."
+	echo "Reboot ..." > /dev/dbox/oled0
 	reboot
 fi
