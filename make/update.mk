@@ -33,9 +33,6 @@ ifeq ($(NI_ADMIN), true)
 		make update-tuxbox-remotes
 endif
 
-update-tuxbox-git:
-	cd $(SOURCE_DIR)/$(TUXBOX_BOOTLOADER) && git pull
-
 # rebase of ffmpeg/kernel repos forces us to force push into git repo
 # use this target once if such force push was done
 update-ni-force:

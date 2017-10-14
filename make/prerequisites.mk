@@ -6,7 +6,7 @@ TOOLCHECK += find-yacc find-flex find-tic find-pkg-config find-help2man
 TOOLCHECK += find-cmake find-ccache find-autopoint find-python find-curl
 TOOLCHECK += find-lzma find-gperf find-gettext find-bc
 
-preqs: download neutrino-hd-source ni-git tuxbox-git
+preqs: download neutrino-hd-source ni-git
 
 $(CCACHE):
 	@echo
@@ -39,12 +39,6 @@ $(N_HD_SOURCE):
 
 $(BUILD-GENERIC-PC):
 	git clone $(NI_GIT)/$(NI_BUILD-GENERIC-PC).git $(BUILD-GENERIC-PC)
-
-$(SOURCE_DIR)/$(TUXBOX_BOOTLOADER):
-	cd $(SOURCE_DIR) && \
-		git clone $(TUXBOX_GIT)/$(notdir $@).git
-	cd $@ && \
-		git checkout coolstream_hdx
 
 $(SOURCE_DIR)/$(NI_LIBSTB-HAL):
 	cd $(SOURCE_DIR) && \
@@ -180,9 +174,6 @@ toolcheck: $(TOOLCHECK)
 	@echo "All required tools seem to be installed."
 
 neutrino-hd-source: $(N_HD_SOURCE)
-
-tuxbox-git: \
-	$(SOURCE_DIR)/$(TUXBOX_BOOTLOADER)
 
 ni-git: \
 	$(BUILD-GENERIC-PC) \

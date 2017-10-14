@@ -321,8 +321,6 @@ TUXBOX_NEUTRINO_BRANCH	?= master
 
 TUXBOX_LIBSTB-HAL	= library-stb-hal
 
-TUXBOX_BOOTLOADER	= bootloader-uboot-cst
-
 TUXBOX_REMOTE_REPO	= tuxbox
 
 # various

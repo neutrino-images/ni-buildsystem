@@ -68,7 +68,7 @@ endif
 kernel-cst-install-hd2: $(D)/kernel-cst-hd2
 	cp -af $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-vmlinux.ub.gz $(KDESTDIR)/vmlinux.ub.gz
 
-$(D)/kernel-cst-hd1: $(D)/uboot-cst-hd1 $(SOURCE_DIR)/$(NI_LINUX-KERNEL) | $(TARGETPREFIX)
+$(D)/kernel-cst-hd1: $(SOURCE_DIR)/$(NI_LINUX-KERNEL) | $(TARGETPREFIX)
 	cd $(SOURCE_DIR)/$(NI_LINUX-KERNEL) && \
 		git checkout $(KBRANCH) && \
 	tar -C $(SOURCE_DIR) -cp $(NI_LINUX-KERNEL) --exclude-vcs | tar -C $(BUILD_TMP) -x
@@ -89,15 +89,6 @@ $(D)/kernel-cst-hd1: $(D)/uboot-cst-hd1 $(SOURCE_DIR)/$(NI_LINUX-KERNEL) | $(TAR
 
 kernel-cst-install-hd1: $(D)/kernel-cst-hd1
 	cp -af $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-zImage.img $(KDESTDIR)/zImage
-
-$(D)/uboot-cst-hd1: $(SOURCE_DIR)/$(TUXBOX_BOOTLOADER) | $(TARGETPREFIX)
-	cd $(SOURCE_DIR)/$(TUXBOX_BOOTLOADER) && git checkout coolstream_hdx
-	tar -C $(SOURCE_DIR) -cp $(TUXBOX_BOOTLOADER) --exclude-vcs | tar -C $(BUILD_TMP) -x
-	cd $(BUILD_TMP)/$(TUXBOX_BOOTLOADER) && \
-		make coolstream_hdx_config && \
-		$(MAKE)
-	cp $(BUILD_TMP)/$(TUXBOX_BOOTLOADER)/u-boot.bin $(BUILD_TMP)/u-boot.bin
-	touch $@
 
 kernel-cst-modules: kernel-cst-modules-$(BOXSERIES)
 
