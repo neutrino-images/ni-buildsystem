@@ -164,6 +164,7 @@ $(HOSTPREFIX)/bin/parted: $(ARCHIVE)/parted-$(PARTED_VER).tar.xz | $(HOSTPREFIX)
 	$(UNTAR)/parted-$(PARTED_VER).tar.xz
 	cd $(BUILD_TMP)/parted-$(PARTED_VER) && \
 		$(PATCH)/parted-3.2-devmapper-1.patch && \
+		$(PATCH)/parted-3.2-sysmacros.patch && \
 		./configure \
 			--enable-silent-rules \
 			--enable-static \
