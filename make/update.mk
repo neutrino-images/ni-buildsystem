@@ -82,3 +82,7 @@ endif
 	cd $(SOURCE_DIR)/$(NI_STREAMRIPPER) && git push
 	cd $(SOURCE_DIR)/$(NI_OFGWRITE) && git push
 	cd $(SOURCE_DIR)/$(NI_OPENTHREADS) && git push
+
+PHONY += update-self update-neutrino
+PHONY += update-ni-git update-remotes
+PHONY += push

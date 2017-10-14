@@ -219,8 +219,8 @@ $(HOSTPREFIX)/bin/resize2fs: $(ARCHIVE)/e2fsprogs-$(E2FSPROGS_VER).tar.gz | $(HO
 	$(REMOVE)/e2fsprogs-$(E2FSPROGS_VER)
 
 # hack to make sure they are always copied
-PHONY += $(TARGETLIB)/firmware
 PHONY += $(TARGETLIB)
+PHONY += $(TARGETLIB)/firmware
 PHONY += $(TARGETLIB)/modules
 PHONY += $(TARGETPREFIX)/var/update
 PHONY += ccache includes-and-libs modules targetprefix bootstrap blobs

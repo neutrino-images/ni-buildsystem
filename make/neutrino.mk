@@ -185,4 +185,4 @@ neutrino-clean:
 neutrino-clean-all: neutrino-clean
 	-rm -r $(N_OBJDIR)
 
-PHONY += neutrino-clean
+PHONY += neutrino-clean neutrino-clean-all

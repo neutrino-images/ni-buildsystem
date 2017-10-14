@@ -111,8 +111,6 @@ everything: $(shell sed -n 's/^\$$.D.\/\(.*\):.*/\1/p' make/*.mk)
 
 PHONY += everything
 PHONY += all printenv .print-phony
-PHONY += update-tuxbox-git copy-tuxbox-git
-PHONY += update-neutrino update-$(TUXBOX_REMOTE_REPO) update-self
 .PHONY: $(PHONY)
 
 # this makes sure we do not build top-level dependencies in parallel
