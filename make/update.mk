@@ -14,17 +14,21 @@ update-neutrino:
 		git pull origin $(NI_NEUTRINO_BRANCH) && \
 		git fetch
 
-update-$(TUXBOX_REMOTE_REPO):
+update-remotes:
 ifeq ($(NI_ADMIN), true)
 	export GIT_MERGE_AUTOEDIT=no && \
 	cd $(N_HD_SOURCE) && \
 		git checkout $(NI_NEUTRINO_BRANCH) && \
 		git pull $(TUXBOX_REMOTE_REPO) $(TUXBOX_NEUTRINO_BRANCH) && \
-		git fetch $(TUXBOX_REMOTE_REPO); \
+		git fetch $(TUXBOX_REMOTE_REPO)
 	cd $(SOURCE_DIR)/$(NI_LIBSTB-HAL) && \
 		git checkout master && \
 		git pull $(TUXBOX_REMOTE_REPO) master && \
 		git fetch $(TUXBOX_REMOTE_REPO)
+	cd $(SOURCE_DIR)/$(NI_OFGWRITE) && \
+		git checkout master && \
+		git pull upstream master && \
+		git fetch upstream
 	cd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) && \
 		make update-tuxbox-remotes
 endif
@@ -60,11 +64,11 @@ ni-update:
 	make update-neutrino
 	make update-ni-git
 
-tuxbox-update:
-	make update-$(TUXBOX_REMOTE_REPO)
+foreign-update:
+	make update-remotes
 	make update-tuxbox-git
 
-update-all: ni-update tuxbox-update
+update-all: ni-update foreign-update
 
 push:
 	git push
