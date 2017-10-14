@@ -983,3 +983,22 @@ $(D)/ofgwrite: | $(TARGETPREFIX)
 	sed -i "s,/usr/bin/,/bin/," $(TARGETPREFIX)/bin/ofgwrite
 	$(REMOVE)/ofgwrite
 	touch $@
+
+$(D)/aio-grab: $(D)/zlib $(D)/libpng $(D)/libjpeg | $(TARGETPREFIX)
+	$(REMOVE)/aio-grab
+	cd $(BUILD_TMP); \
+	git clone git://github.com/oe-alliance/aio-grab.git aio-grab; \
+	cd aio-grab; \
+		aclocal --force -I m4; \
+		libtoolize --copy --ltdl --force; \
+		autoconf --force; \
+		automake --add-missing --copy --force-missing --foreign; \
+		$(CONFIGURE) \
+			--target=$(TARGET) \
+			--prefix= \
+			--enable-silent-rules \
+		; \
+		$(MAKE) all; \
+		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+	$(REMOVE)/aio-grab
+	touch $@
