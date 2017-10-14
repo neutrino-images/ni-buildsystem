@@ -27,6 +27,7 @@ mkdir -p /dev/shm/usb
 
 # mount var-partition
 # FIXME
+mount -t tmpfs tmpfs /var/volatile
 
 # for nfsd
 mkdir -p /var/lib/nfs
