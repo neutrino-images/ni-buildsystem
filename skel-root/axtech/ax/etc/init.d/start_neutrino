@@ -9,6 +9,12 @@ fi
 until neutrino; do
 	RET=$?
 
+	# shutdown
+	if [ $RET -eq 1 ]; then
+		touch /tmp/.halt
+		break
+	fi
+
 	echo "Neutrino exited with exit code $RET"
 	echo "Neutrino: $RET" > /dev/dbox/oled0
 
@@ -26,4 +32,7 @@ done
 if [ -e /tmp/.reboot ]; then # gets created by neutrino
 	echo "Reboot ..." > /dev/dbox/oled0
 	reboot
+elif [ -e /tmp/.halt ]; then
+	echo "Shutdown ..." > /dev/dbox/oled0
+	poweroff
 fi
