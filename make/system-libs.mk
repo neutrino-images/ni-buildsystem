@@ -260,7 +260,6 @@ FFMPEG_CONFIGURE_GENERIC = \
 			--disable-podpages \
 			--disable-txtpages \
 			\
-			--disable-ffmpeg \
 			--disable-ffplay \
 			--disable-ffserver \
 			--disable-ffprobe \
@@ -367,6 +366,7 @@ FFMPEG_CONFIGURE_GENERIC = \
 
 ifeq ($(BOXSERIES), hd2)
   FFMPEG_CONFIGURE = \
+			--disable-ffmpeg \
 			--disable-neon \
 			--enable-decoder=h264 \
 			--enable-decoder=vc1 \
@@ -377,6 +377,7 @@ endif
 
 ifeq ($(BOXSERIES), hd1)
   FFMPEG_CONFIGURE = \
+			--disable-ffmpeg \
 			--disable-neon \
 			--enable-small \
 			--cpu=armv6 \
