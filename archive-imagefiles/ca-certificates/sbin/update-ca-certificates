@@ -107,6 +107,7 @@ remove() {
   fi
 }
 
+mkdir -p "$ETCCERTSDIR"
 cd "$ETCCERTSDIR"
 if [ "$fresh" = 1 ]; then
   echo "Clearing symlinks in $ETCCERTSDIR..."
