@@ -386,8 +386,7 @@ endif
 
 ifeq ($(BOXSERIES), ax)
   FFMPEG_CONFIGURE = \
-			--enable-decoder=h264 \
-			--enable-decoder=vc1 \
+			--enable-encoder=mjpeg \
 			--enable-hardcoded-tables \
 			--cpu=cortex-a15 \
 			--extra-cflags="-Wno-deprecated-declarations -I$(TARGETINCLUDE) -mfpu=neon-vfpv4 -mfloat-abi=hard"
