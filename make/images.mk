@@ -97,6 +97,7 @@ endif
 ifeq ($(BOXMODEL), hd51)
 	#make flash-image-axt-single
 	make flash-image-axt-multi
+	make flash-image-axt-minimal
 endif
 
 flash-image: IMAGE_NAME=$(IMAGE_PREFIX)-$(IMAGE_SUFFIX)
@@ -258,3 +259,14 @@ flash-image-axt-multi:
 	# cleanup
 	rm -rf $(IMAGE_DIR)/$(BOXMODEL)
 	rm -rf $(AX_BUILD_TMP)
+
+flash-image-axt-minimal:
+	mkdir -p $(IMAGE_DIR)/$(BOXMODEL)
+	cp $(ZIMAGE_DTB) $(IMAGE_DIR)/$(BOXMODEL)/kernel.bin
+	cd $(BOX); \
+	tar -cvf $(IMAGE_DIR)/$(BOXMODEL)/rootfs.tar -C $(BOX) .  > /dev/null 2>&1; \
+	bzip2 $(IMAGE_DIR)/$(BOXMODEL)/rootfs.tar
+	# Create minimal image
+	cd $(IMAGE_DIR); \
+	tar -czf $(IMAGE_PREFIX)-$(IMAGE_SUFFIX).tgz $(BOXMODEL)/kernel.bin $(BOXMODEL)/rootfs.tar.bz2
+	rm -rf $(IMAGE_DIR)/$(BOXMODEL)
