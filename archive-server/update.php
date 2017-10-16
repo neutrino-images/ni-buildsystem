@@ -13,7 +13,14 @@ $image_type = trim($_GET["image_type"]);
 $revision = trim($_GET["revision"]);
 $chip_type = trim($_GET["chip_type"]);
 
-if ($revision == 6 || $revision == 7 || $revision == 8 || $revision == 10)
+if ($revision == 1) //FIXME
+{
+	# AX-Technologies
+	$boxtype_sc = "axt";
+	$boxseries = "ax";
+	$boxmodel = "hd51";
+}
+elseif ($revision == 6 || $revision == 7 || $revision == 8 || $revision == 10)
 {
 	# CST - HD1, BSE, Neo, Neo², Zee
 	$boxtype_sc = "cst";

@@ -85,7 +85,7 @@ service networking start
 service ntpdate start
 
 # say hi to everyone
-echo "BOOT NI-IMAGE" > /dev/dbox/oled0
+echo "Booting... NI" > /dev/dbox/oled0
 
 # starting services and daemons in order of the symlink names
 LOGINFO "run initscripts start ..."
