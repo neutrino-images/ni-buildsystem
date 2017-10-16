@@ -343,7 +343,6 @@ FFMPEG_CONFIGURE_GENERIC = \
 			\
 			--disable-extra-warnings \
 			--disable-postproc \
-			--disable-swscale \
 			\
 			--enable-bsfs \
 			--enable-libass \
@@ -366,6 +365,7 @@ FFMPEG_CONFIGURE_GENERIC = \
 
 ifeq ($(BOXSERIES), hd2)
   FFMPEG_CONFIGURE = \
+			--disable-swscale \
 			--disable-ffmpeg \
 			--disable-neon \
 			--enable-decoder=h264 \
@@ -377,6 +377,7 @@ endif
 
 ifeq ($(BOXSERIES), hd1)
   FFMPEG_CONFIGURE = \
+			--disable-swscale \
 			--disable-ffmpeg \
 			--disable-neon \
 			--enable-small \
@@ -386,7 +387,9 @@ endif
 
 ifeq ($(BOXSERIES), ax)
   FFMPEG_CONFIGURE = \
-			--enable-encoder=mjpeg \
+			--enable-encoder=mpeg2video \
+			--enable-muxer=mpeg2video \
+			--enable-filter=scale \
 			--enable-hardcoded-tables \
 			--cpu=cortex-a15 \
 			--extra-cflags="-Wno-deprecated-declarations -I$(TARGETINCLUDE) -mfpu=neon-vfpv4 -mfloat-abi=hard"
