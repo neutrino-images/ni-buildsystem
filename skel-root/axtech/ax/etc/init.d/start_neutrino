@@ -6,6 +6,8 @@ if [ -e /var/etc/.coredump ]; then
 	ulimit -c unlimited
 fi
 
+#GST_DEBUG=dtsdownmix:4,dvbaudiosink:4,dvbvideosink:4
+
 until neutrino; do
 	RET=$?
 
