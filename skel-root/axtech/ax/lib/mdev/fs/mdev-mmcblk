@@ -16,8 +16,14 @@ fi
 
 case "$ACTION" in
 	add)
+		# do not mount kernel partitions
+		for i in 2 4 6 8; do
+			if [ ${MDEV:$((${#MDEV}-1)):1} -eq $i ]; then
+				LOGINFO "[$ACTION] /dev/$MDEV is a kernel partition - not mounting."
+				exit 0
+			fi
+		done
 		# TODO: check for partitions
-
 		if grep -q "/dev/$MDEV" /proc/mounts; then
 			LOGINFO "/dev/$MDEV already mounted - not mounting again"
 			exit 0
