@@ -43,18 +43,19 @@ update-ni-force:
 
 update-ni-git:
 	cd $(BUILD-GENERIC-PC) && git pull
-	cd $(SOURCE_DIR)/$(NI_LINUX-KERNEL) && git pull --all && git checkout $(KBRANCH)
 	cd $(SOURCE_DIR)/$(NI_DRIVERS-BIN) && git pull
+	cd $(SOURCE_DIR)/$(NI_FFMPEG) && git pull --all && git checkout $(NI_FFMPEG_BRANCH)
 ifeq ($(HAS_LIBCS), yes)
 	cd $(SOURCE_DIR)/$(NI_LIBCOOLSTREAM) && git pull --all && git checkout $(NI_LIBCOOLSTREAM_BRANCH)
 endif
-	cd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) && git pull
 	cd $(SOURCE_DIR)/$(NI_LIBSTB-HAL) && git pull
-	cd $(SOURCE_DIR)/$(NI_FFMPEG) && git pull --all && git checkout $(NI_FFMPEG_BRANCH)
-	cd $(SOURCE_DIR)/$(NI_LOGO_STUFF) && git pull
-	cd $(SOURCE_DIR)/$(NI_STREAMRIPPER) && git pull
+	cd $(SOURCE_DIR)/$(NI_LINUX-KERNEL) && git pull --all && git checkout $(KBRANCH)
+	cd $(SOURCE_DIR)/$(NI_LOGO-STUFF) && git pull
+	cd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) && git pull
 	cd $(SOURCE_DIR)/$(NI_OFGWRITE) && git pull
 	cd $(SOURCE_DIR)/$(NI_OPENTHREADS) && git pull
+	cd $(SOURCE_DIR)/$(NI_STREAMRIPPER) && git pull
+
 
 update-ni:
 	make update-self
@@ -70,18 +71,18 @@ ifeq ($(HAS_INTERNALS), yes)
 endif
 	cd $(N_HD_SOURCE) && git push
 	cd $(BUILD-GENERIC-PC) && git push
-	cd $(SOURCE_DIR)/$(NI_LINUX-KERNEL) && git push --all
 	cd $(SOURCE_DIR)/$(NI_DRIVERS-BIN) && git push
+	cd $(SOURCE_DIR)/$(NI_FFMPEG) && git push
 ifeq ($(HAS_LIBCS), yes)
 	cd $(SOURCE_DIR)/$(NI_LIBCOOLSTREAM) && git push --all
 endif
-	cd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) && git push
 	cd $(SOURCE_DIR)/$(NI_LIBSTB-HAL) && git push
-	cd $(SOURCE_DIR)/$(NI_FFMPEG) && git push
-	cd $(SOURCE_DIR)/$(NI_LOGO_STUFF) && git push
-	cd $(SOURCE_DIR)/$(NI_STREAMRIPPER) && git push
+	cd $(SOURCE_DIR)/$(NI_LINUX-KERNEL) && git push --all
+	cd $(SOURCE_DIR)/$(NI_LOGO-STUFF) && git push
+	cd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) && git push
 	cd $(SOURCE_DIR)/$(NI_OFGWRITE) && git push
 	cd $(SOURCE_DIR)/$(NI_OPENTHREADS) && git push
+	cd $(SOURCE_DIR)/$(NI_STREAMRIPPER) && git push
 
 PHONY += update-self update-neutrino
 PHONY += update-ni-git update-remotes

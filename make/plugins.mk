@@ -77,11 +77,11 @@ plugins-all: $(D)/neutrino \
 ### plugins  ###
 ################
 
-channellogos: $(SOURCE_DIR)/$(NI_LOGO_STUFF) $(SHAREICONS)
+channellogos: $(SOURCE_DIR)/$(NI_LOGO-STUFF) $(SHAREICONS)
 	rm -rf $(SHAREICONS)/logo
 	mkdir -p $(SHAREICONS)/logo
-	install -m644 $(SOURCE_DIR)/$(NI_LOGO_STUFF)/logos/* $(SHAREICONS)/logo
-	pushd $(SOURCE_DIR)/$(NI_LOGO_STUFF)/ && \
+	install -m644 $(SOURCE_DIR)/$(NI_LOGO-STUFF)/logos/* $(SHAREICONS)/logo
+	pushd $(SOURCE_DIR)/$(NI_LOGO-STUFF)/ && \
 	./logo_linker.sh complete.db $(SHAREICONS)/logo
 
 lcd4linux-all: $(D)/lcd4linux | $(TARGETPREFIX)
@@ -170,10 +170,10 @@ autoreboot: $(LIBPLUG)
 	install -m755 $(SOURCES)/$@/*.sh $(LIBPLUG)/
 	install -m644 $(SOURCES)/$@/*.cfg $(LIBPLUG)/
 
-logo-addon: $(SOURCE_DIR)/$(NI_LOGO_STUFF) $(LIBPLUG)
-	install -m755 $(SOURCE_DIR)/$(NI_LOGO_STUFF)/logo-addon/*.sh $(LIBPLUG)/
-	install -m644 $(SOURCE_DIR)/$(NI_LOGO_STUFF)/logo-addon/*.cfg $(LIBPLUG)/
-	install -m644 $(SOURCE_DIR)/$(NI_LOGO_STUFF)/logo-addon/*.png $(LIBPLUG)/
+logo-addon: $(SOURCE_DIR)/$(NI_LOGO-STUFF) $(LIBPLUG)
+	install -m755 $(SOURCE_DIR)/$(NI_LOGO-STUFF)/logo-addon/*.sh $(LIBPLUG)/
+	install -m644 $(SOURCE_DIR)/$(NI_LOGO-STUFF)/logo-addon/*.cfg $(LIBPLUG)/
+	install -m644 $(SOURCE_DIR)/$(NI_LOGO-STUFF)/logo-addon/*.png $(LIBPLUG)/
 
 smarthomeinfo: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(LIBPLUG) $(VARCONF)
 	cp -a $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/$@/plugin/tuxbox/plugins/* $(LIBPLUG)/

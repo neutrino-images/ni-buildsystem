@@ -295,17 +295,17 @@ NI_NEUTRINO_BRANCH	?= ni/tuxbox
 ifeq ($(USE_LIBSTB-HAL), yes)
   NI_NEUTRINO_BRANCH	:= ni/mp/tuxbox
 endif
-
 NI_NEUTRINO-PLUGINS	= ni-neutrino-plugins
+
 BUILD-GENERIC-PC	= build-generic-pc
 NI_BUILD-GENERIC-PC	= ni-build-generic-pc
-
-NI_LIBSTB-HAL		= ni-libstb-hal
-NI_STREAMRIPPER		= ni-streamripper
-NI_OFGWRITE		= ni-ofgwrite
-
-NI_LINUX-KERNEL		= ni-linux-kernel
 NI_DRIVERS-BIN		= ni-drivers-bin
+NI_LIBSTB-HAL		= ni-libstb-hal
+NI_LINUX-KERNEL		= ni-linux-kernel
+NI_LOGO-STUFF		= ni-logo-stuff
+NI_OFGWRITE		= ni-ofgwrite
+NI_OPENTHREADS		= ni-openthreads
+NI_STREAMRIPPER		= ni-streamripper
 
 # ffmpeg/master is currently not mature enough for daily use
 # if you want to help testing you can enable it here
@@ -313,18 +313,11 @@ NI_FFMPEG		= ni-ffmpeg
 NI_FFMPEG_BRANCH	= ni/ffmpeg/2.8
 #NI_FFMPEG_BRANCH	= ni/ffmpeg/master
 
-NI_OPENTHREADS		= ni-openthreads
-
 TUXBOX_GIT		= $(GITHUB)/tuxbox-neutrino
 TUXBOX_NEUTRINO		= gui-neutrino
 TUXBOX_NEUTRINO_BRANCH	?= master
-
 TUXBOX_LIBSTB-HAL	= library-stb-hal
-
 TUXBOX_REMOTE_REPO	= tuxbox
-
-# various
-NI_LOGO_STUFF		= ni-logo-stuff
 
 # execute local scripts
 define local-script
