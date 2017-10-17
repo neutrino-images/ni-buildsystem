@@ -131,7 +131,6 @@ MAKEFLAGS += --no-print-directory
 
 MAINTAINER   ?= NI-Team
 FLAVOUR      ?= ni-neutrino-hd
-KSTRING       = NI $(shell echo $(BOXMODEL) | sed 's/.*/\u&/') Kernel
 WHOAMI       := $(shell id -un)
 ARCHIVE       = $(BASE_DIR)/download
 BUILD_TMP     = $(BASE_DIR)/build_tmp
@@ -165,12 +164,14 @@ export CCACHE_DIR
 # create debug image
 DEBUG ?= no
 
+KERNEL_NAME = NI $(shell echo $(BOXMODEL) | sed 's/.*/\u&/') Kernel
+
 ifeq ($(BOXSERIES), hd1)
-  KVERSION               = 2.6.34.13
-  KVERSION_FULL          = $(KVERSION)-$(BOXMODEL)
-  KBRANCH                = ni/2.6.34.x
+  KERNEL_VERSION         = 2.6.34.13
+  KERNEL_VERSION_FULL    = $(KERNEL_VERSION)-$(BOXMODEL)
+  KERNEL_BRANCH          = ni/2.6.34.x
+  KERNEL_DTB             =
   DRIVERS_DIR            = nevis
-  KTECHSTR               =
   CORTEX-STRINGS         =
   TARGET                 = arm-cx2450x-linux-gnueabi
   TARGET_O_CFLAGS        = -Os
@@ -180,16 +181,16 @@ ifeq ($(BOXSERIES), hd1)
 endif
 
 ifeq ($(BOXSERIES), hd2)
-  KVERSION               = 3.10.93
-  KVERSION_FULL          = $(KVERSION)
-  KBRANCH                = ni/3.10.x
+  KERNEL_VERSION         = 3.10.93
+  KERNEL_VERSION_FULL    = $(KERNEL_VERSION)
+  KERNEL_BRANCH          = ni/3.10.x
   ifeq ($(BOXFAMILY), apollo)
+    KERNEL_DTB           = hd849x
     DRIVERS_DIR          = apollo-3.x
-    KTECHSTR             = hd849x
   endif
   ifeq ($(BOXFAMILY), kronos)
+    KERNEL_DTB           = en75x1
     DRIVERS_DIR          = kronos-3.x
-    KTECHSTR             = en75x1
   endif
   CORTEX-STRINGS         = -lcortex-strings
   TARGET                 = arm-cortex-linux-uclibcgnueabi
@@ -205,9 +206,10 @@ ifeq ($(BOXSERIES), hd2)
 endif
 
 ifeq ($(BOXSERIES), ax)
-  KVERSION               = 4.10.12
-  KVERSION_FULL          = $(KVERSION)
-  KBRANCH                = ni/4.10.x
+  KERNEL_VERSION         = 4.10.12
+  KERNEL_VERSION_FULL    = $(KERNEL_VERSION)
+  KERNEL_BRANCH          = ni/4.10.x
+  KERNEL_DTB             = bcm7445-bcm97445svmb
   DRIVERS_DIR            = hd51
   CORTEX-STRINGS         = -lcortex-strings
   TARGET                 = arm-cortex-linux-gnueabihf

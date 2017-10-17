@@ -68,7 +68,7 @@ ifeq ($(DEBUG), no)
 			-path $(BOX)/lib/modules \) -prune -o \
 	-type f -print0 | xargs -0 $(TARGET)-strip || true
 ifeq ($(BOXSERIES), hd2)
-	find $(BOX)/lib/modules/$(KVERSION_FULL)/kernel -type f -name '*.ko' | xargs -n 1 $(TARGET)-objcopy --strip-unneeded
+	find $(BOX)/lib/modules/$(KERNEL_VERSION_FULL)/kernel -type f -name '*.ko' | xargs -n 1 $(TARGET)-objcopy --strip-unneeded
 endif
 	@echo -e "$(TERM_YELLOW)"
 	@du -sh $(BOX)

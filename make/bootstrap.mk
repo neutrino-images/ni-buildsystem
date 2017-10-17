@@ -63,7 +63,7 @@ $(TARGETLIB): | $(TARGETPREFIX)
 
 $(TARGETLIB)/modules: | $(TARGETPREFIX)
 	mkdir -p $@
-	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(DRIVERS_DIR)/drivers/$(KVERSION_FULL) $@/
+	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(DRIVERS_DIR)/drivers/$(KERNEL_VERSION_FULL) $@/
 
 $(TARGETLIB)/libc.so.6: | $(TARGETPREFIX)
 	if test -e $(CROSS_DIR)/$(TARGET)/sys-root/lib; then \

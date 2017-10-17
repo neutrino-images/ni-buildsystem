@@ -32,15 +32,15 @@ crosstool-arm-hd1: CROSS_DIR-check $(SOURCE_DIR)/$(NI_LINUX-KERNEL)
 	cd $(BUILD_TMP)/crosstool-ng && \
 		mkdir -p $(BUILD_TMP)/crosstool-ng/targets/src/ && \
 			pushd $(SOURCE_DIR)/$(NI_LINUX-KERNEL) && \
-				git checkout $(KBRANCH) && \
+				git checkout $(KERNEL_BRANCH) && \
 			popd && \
-		tar cf linux-$(KVERSION).tar --exclude-vcs -C $(SOURCE_DIR)/$(NI_LINUX-KERNEL) . && \
-		mv linux-$(KVERSION).tar $(BUILD_TMP)/crosstool-ng/targets/src/ && \
+		tar cf linux-$(KERNEL_VERSION).tar --exclude-vcs -C $(SOURCE_DIR)/$(NI_LINUX-KERNEL) . && \
+		mv linux-$(KERNEL_VERSION).tar $(BUILD_TMP)/crosstool-ng/targets/src/ && \
 		cp -a $(CONFIGS)/ct-ng-coolstream_hd1.config .config && \
 		sed -i "s@^CT_PARALLEL_JOBS=.*@CT_PARALLEL_JOBS=$(NUM_CPUS)@" .config && \
 		export NI_BASE_DIR=$(BASE_DIR) && \
-		export NI_CUSTOM_KERNEL=$(BUILD_TMP)/crosstool-ng/targets/src/linux-$(KVERSION).tar && \
-		export NI_CUSTOM_KERNEL_VER=$(KVERSION) && \
+		export NI_CUSTOM_KERNEL=$(BUILD_TMP)/crosstool-ng/targets/src/linux-$(KERNEL_VERSION).tar && \
+		export NI_CUSTOM_KERNEL_VERSION=$(KERNEL_VERSION) && \
 		export LD_LIBRARY_PATH= && \
 		test -f ./configure || ./bootstrap && \
 		./configure --enable-local; MAKELEVEL=0 make; chmod 0755 ct-ng && \
@@ -65,15 +65,15 @@ crosstool-arm-hd2: CROSS_DIR-check $(ARCHIVE)/gcc-linaro-$(GCC_VER).tar.xz $(SOU
 	cd $(BUILD_TMP)/crosstool-ng && \
 		mkdir -p $(BUILD_TMP)/crosstool-ng/targets/src/ && \
 			pushd $(SOURCE_DIR)/$(NI_LINUX-KERNEL) && \
-				git checkout $(KBRANCH) && \
+				git checkout $(KERNEL_BRANCH) && \
 			popd && \
-		tar cf linux-$(KVERSION).tar --exclude-vcs -C $(SOURCE_DIR)/$(NI_LINUX-KERNEL) . && \
-		mv linux-$(KVERSION).tar $(BUILD_TMP)/crosstool-ng/targets/src/ && \
+		tar cf linux-$(KERNEL_VERSION).tar --exclude-vcs -C $(SOURCE_DIR)/$(NI_LINUX-KERNEL) . && \
+		mv linux-$(KERNEL_VERSION).tar $(BUILD_TMP)/crosstool-ng/targets/src/ && \
 		cp -a $(CONFIGS)/ct-ng-coolstream_hd2.config .config && \
 		sed -i "s@^CT_PARALLEL_JOBS=.*@CT_PARALLEL_JOBS=$(NUM_CPUS)@" .config && \
 		export NI_BASE_DIR=$(BASE_DIR) && \
-		export NI_CUSTOM_KERNEL=$(BUILD_TMP)/crosstool-ng/targets/src/linux-$(KVERSION).tar && \
-		export NI_CUSTOM_KERNEL_VER=$(KVERSION) && \
+		export NI_CUSTOM_KERNEL=$(BUILD_TMP)/crosstool-ng/targets/src/linux-$(KERNEL_VERSION).tar && \
+		export NI_CUSTOM_KERNEL_VERSION=$(KERNEL_VERSION) && \
 		export NI_UCLIBC_CONFIG=$(CONFIGS)/ct-ng-uClibc-$(UCLIBC_VER).config && \
 		export LD_LIBRARY_PATH= && \
 		test -f ./configure || ./bootstrap && \

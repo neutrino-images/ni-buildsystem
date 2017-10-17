@@ -49,7 +49,7 @@ ifeq ($(HAS_LIBCS), yes)
 	cd $(SOURCE_DIR)/$(NI_LIBCOOLSTREAM) && git pull --all && git checkout $(NI_LIBCOOLSTREAM_BRANCH)
 endif
 	cd $(SOURCE_DIR)/$(NI_LIBSTB-HAL) && git pull
-	cd $(SOURCE_DIR)/$(NI_LINUX-KERNEL) && git pull --all && git checkout $(KBRANCH)
+	cd $(SOURCE_DIR)/$(NI_LINUX-KERNEL) && git pull --all && git checkout $(KERNEL_BRANCH)
 	cd $(SOURCE_DIR)/$(NI_LOGO-STUFF) && git pull
 	cd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) && git pull
 	cd $(SOURCE_DIR)/$(NI_OFGWRITE) && git pull
