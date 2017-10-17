@@ -48,7 +48,9 @@ date -s "2017-01-01 00:00"
 mkdir -p /var/run/wpa_supplicant
 
 # automatic restore
-# FIXME
+if [ -e /var/backup_flash.tar.gz ]; then
+	/bin/restore_flash.sh
+fi
 
 # update system
 # FIXME
