@@ -5,6 +5,12 @@ touch /tmp/norestart
 until neutrino; do
 	RET=$?
 
+	# shutdown
+	if [ $RET -eq 1 ]; then
+		touch /tmp/.halt
+		break
+	fi
+
 	echo "Neutrino exited with exit code $RET"
 	dt -t"NEUTRINO: $RET"
 
@@ -22,4 +28,7 @@ done
 if [ -e /tmp/.reboot ]; then # gets created by neutrino
 	dt -t" ..REBOOT.."
 	reboot
+elif [ -e /tmp/.halt ]; then
+	dt -t"SHUTDOWN"
+	poweroff
 fi
