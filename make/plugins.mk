@@ -73,6 +73,12 @@ plugins-all: $(D)/neutrino \
 	doscam-webif-skin \
 	playlists
 
+plugins-hd1: # nothing to do
+plugins-hd2: # nothing to do
+
+plugins-ax: \
+	showiframe
+
 ################
 ### plugins  ###
 ################
@@ -477,6 +483,16 @@ $(LIBPLUG)/oscammon.so: $(LIBPLUG) $(VARCONF)
 	cp -f oscammon.conf $(VARCONF)/ && \
 	cp -f oscammon.cfg $(LIBPLUG)/ && \
 	cp -f oscammon_hint.png $(LIBPLUG)/
+
+# showiframe
+showiframe: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(BIN)/showiframe
+$(BIN)/showiframe: $(BIN)
+	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/showiframe && \
+	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) \
+		\
+		showiframe.c \
+		\
+		-o $@
 
 # shellexec
 shellexec: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(LIBPLUG)/shellexec.so

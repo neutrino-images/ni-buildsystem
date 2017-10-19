@@ -47,6 +47,7 @@ ni-image:
 	@echo "starting 'make $@' build with "$(NUM_CPUS)" threads!"
 	make -j$(NUM_CPUS) neutrino
 	make plugins-all
+	make plugins-$(BOXSERIES)
 	make fbshot
 	make -j$(NUM_CPUS) luacurl
 	make -j$(NUM_CPUS) timezone

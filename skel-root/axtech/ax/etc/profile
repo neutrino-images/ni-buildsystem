@@ -13,5 +13,5 @@ alias mc='mc -a'
 alias sc='setconsole'
 alias sr='setconsole -r'
 
-# Add your own modifications to /var/etc/profile.local!
-test -e /var/etc/profile.local && . /var/etc/profile.local
+# Add your own modifications to /etc/profile.local!
+test -e /etc/profile.local && . /etc/profile.local
