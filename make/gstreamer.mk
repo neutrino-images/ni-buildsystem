@@ -1,7 +1,7 @@
 # makefile to build gstreamer and all it's dependencies
 
 # change to activate debug
-GSTREAMER_DEBUG = no
+GSTREAMER_DEBUG = yes
 
 GST_MAIN_CONFIG_DEBUG = --disable-gst-debug
 GST_PLUGIN_CONFIG_DEBUG = --disable-debug
