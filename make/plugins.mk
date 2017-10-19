@@ -478,6 +478,16 @@ $(LIBPLUG)/oscammon.so: $(LIBPLUG) $(VARCONF)
 	cp -f oscammon.cfg $(LIBPLUG)/ && \
 	cp -f oscammon_hint.png $(LIBPLUG)/
 
+# showiframe
+showiframe: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(BIN)/showiframe
+$(BIN)/showiframe: $(BIN)
+	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/showiframe && \
+	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) \
+		\
+		showiframe.c \
+		\
+		-o $@
+
 # shellexec
 shellexec: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(LIBPLUG)/shellexec.so
 $(LIBPLUG)/shellexec.so: $(D)/freetype $(LIBPLUG) $(SHAREFLEX) $(VARCONF) $(BIN)
