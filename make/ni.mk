@@ -30,7 +30,7 @@ ni-neutrino-full-updates:
 
 # -----------------------------------------------------------------------------
 
-BOXMODEL_IMAGE = apollo kronos kronos_v2
+BOXMODEL_IMAGE = apollo kronos kronos_v2 hd51
 ifneq ($(DEBUG), yes)
 	BOXMODEL_IMAGE += nevis
 endif
