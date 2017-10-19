@@ -70,7 +70,8 @@ plugins-all: $(D)/neutrino \
 	oscammon \
 	lcd4linux-all \
 	doscam-webif-skin \
-	playlists
+	playlists \
+	shellexec
 
 plugins-hd1: # nothing to do
 plugins-hd2: # nothing to do
