@@ -68,7 +68,6 @@ plugins-all: $(D)/neutrino \
 	coolithek \
 	openvpn-setup \
 	oscammon \
-	flex-menu \
 	lcd4linux-all \
 	doscam-webif-skin \
 	playlists
@@ -523,41 +522,3 @@ $(LIBPLUG)/shellexec.so: $(D)/freetype $(LIBPLUG) $(SHAREFLEX) $(VARCONF) $(BIN)
 	mv -f $(LIBPLUG)/shellexec.cfg $(LIBPLUG)/00_shellexec.cfg
 	mv -f $(LIBPLUG)/shellexec_hint.png $(LIBPLUG)/00_shellexec_hint.png
 	ln -sf /lib/tuxbox/plugins/00_shellexec.so $(BIN)/shellexec
-	install -m644 $(SOURCES)/flex-menu/flex*.conf $(SHAREFLEX)/
-
-###################
-###  flex-menu  ###
-###################
-
-flex-menu: shellexec flex-content disable-FONT
-
-flex-content: \
-	boerse \
-	del \
-	fahrplan \
-	formel1info \
-	formel1wmtab \
-	handball \
-	liga_nat \
-	lotto \
-	rssnews \
-	tanken
-
-boerse \
-del \
-fahrplan \
-formel1info \
-formel1wmtab \
-handball \
-liga_nat \
-lotto \
-rssnews \
-tanken : $(SHAREPLUG)
-	find $(SOURCES)/flex-menu/$@/ ! -name flex_entry.conf -type f -print0 | xargs -0 \
-		install -m755 -t $(SHAREPLUG)/
-	cat $(SOURCES)/flex-menu/$@/flex_entry.conf >> $(SHAREFLEX)/flex_plugins.conf
-
-disable-FONT:
-	for f in $(SHAREPLUG)/*; \
-		do sed -i 's|FONT=|#FONT=|' $$f; \
-	done
