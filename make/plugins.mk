@@ -73,6 +73,12 @@ plugins-all: $(D)/neutrino \
 	doscam-webif-skin \
 	playlists
 
+plugins-hd1: # nothing to do
+plugins-hd2: # nothing to do
+
+plugins-ax: \
+	showiframe
+
 ################
 ### plugins  ###
 ################
