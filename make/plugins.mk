@@ -516,9 +516,9 @@ $(LIBPLUG)/shellexec.so: $(D)/freetype $(LIBPLUG) $(SHAREFLEX) $(VARCONF) $(BIN)
 		-o $@ && \
 	install -m644 shellexec.conf $(VARCONF)/ && \
 	install -m644 shellexec.cfg $(LIBPLUG)/ && \
-	install -m644 shellexec_hint.png $(LIBPLUG)/
-	sed -i 's|FONT=|#FONT=|' $(VARCONF)/shellexec.conf
-	sed -i 's|/var/tuxbox/config/flex|/share/tuxbox/neutrino/flex|' $(VARCONF)/shellexec.conf
+	install -m644 shellexec_hint.png $(LIBPLUG)/ && \
+	install -m644 flex_plugins.conf $(SHAREFLEX)/ && \
+	install -m644 flex_user.conf $(SHAREFLEX)/
 	mv -f $(LIBPLUG)/shellexec.so  $(LIBPLUG)/00_shellexec.so
 	mv -f $(LIBPLUG)/shellexec.cfg $(LIBPLUG)/00_shellexec.cfg
 	mv -f $(LIBPLUG)/shellexec_hint.png $(LIBPLUG)/00_shellexec_hint.png
