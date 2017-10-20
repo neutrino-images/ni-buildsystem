@@ -267,6 +267,6 @@ flash-image-axt-minimal:
 	tar -cvf $(IMAGE_DIR)/$(BOXMODEL)/rootfs.tar -C $(BOX) .  > /dev/null 2>&1; \
 	bzip2 $(IMAGE_DIR)/$(BOXMODEL)/rootfs.tar
 	# Create minimal image
-	cd $(IMAGE_DIR); \
-	tar -czf $(IMAGE_PREFIX)-$(IMAGE_SUFFIX).tgz $(BOXMODEL)/kernel.bin $(BOXMODEL)/rootfs.tar.bz2
+	cd $(IMAGE_DIR)/$(BOXMODEL); \
+	tar -czf $(IMAGE_DIR)/$(IMAGE_PREFIX)-$(IMAGE_SUFFIX).tgz kernel.bin rootfs.tar.bz2
 	rm -rf $(IMAGE_DIR)/$(BOXMODEL)
