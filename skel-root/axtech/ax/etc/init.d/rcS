@@ -83,6 +83,9 @@ load_module extra/hd51_2.ko
 load_module extra/hd51_3.ko
 load_module extra/hd51_4.ko
 
+# show bootlogo
+showiframe /share/tuxbox/neutrino/icons/bootlogo.m2v
+
 service networking start
 service ntpdate start
 
