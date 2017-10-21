@@ -34,5 +34,16 @@ if [ -e /tmp/.reboot ]; then # gets created by neutrino
 	reboot
 elif [ -e /tmp/.halt ]; then
 	dt -t"SHUTDOWN"
+
+	TIMER="/tmp/.timer"
+	if [ -e $TIMER ]; then
+		# custom poweroff binary
+		if type shutdown_helper > /dev/null; then
+			PARAM=`cat $TIMER`
+			echo "calling 'shutdown_helper "$PARAM"'"
+			shutdown_helper $PARAM
+		fi
+	fi
+
 	poweroff
 fi
