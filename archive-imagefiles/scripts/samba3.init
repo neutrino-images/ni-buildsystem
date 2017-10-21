@@ -25,15 +25,17 @@ case "$1" in
 		fi
 	;;
 	stop)
-		for i in nmbd smbd; do
-			printf "stopping $i ..."
-			if pidof $i > /dev/null; then
-				read pid < /var/run/${i}.pid
-				kill $pid && echo "done" || echo "failed!?"
-			else
-				echo "not running"
-			fi
-		done
+		if [ -e /var/etc/.samba ]; then
+			for i in nmbd smbd; do
+				printf "stopping $i ..."
+				if pidof $i > /dev/null; then
+					read pid < /var/run/${i}.pid
+					kill $pid && echo "done" || echo "failed!?"
+				else
+					echo "not running"
+				fi
+			done
+		fi
 	;;
 	*)
 		echo "[$BASENAME] Usage: $0 {start|stop}"

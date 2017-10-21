@@ -10,9 +10,11 @@ case $1 in
 		fi
 	;;
 	stop)
-		SHOWINFO "stopping ..."
-		pid=$(cat /var/run/tuxcald.pid 2>/dev/null)
-		test -n "$pid" && kill $pid || true
+		if [ -e /var/etc/.tuxcald ]; then
+			SHOWINFO "stopping ..."
+			pid=$(cat /var/run/tuxcald.pid 2>/dev/null)
+			test -n "$pid" && kill $pid || true
+		fi
 	;;
 	*)
 		echo "[$BASENAME] Usage: $0 {start|stop}"

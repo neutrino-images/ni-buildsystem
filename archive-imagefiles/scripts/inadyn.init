@@ -9,8 +9,10 @@ case $1 in
 		fi
 	;;
 	stop)
-		pid=$(cat /var/run/inadyn.pid 2>/dev/null)
-		test -n "$pid" && kill $pid || true
+		if [ -e /var/etc/.inadyn ]; then
+			pid=$(cat /var/run/inadyn.pid 2>/dev/null)
+			test -n "$pid" && kill $pid || true
+		fi
 	;;
 	*)
 		echo "[${BASENAME}] Usage: $0 {start|restart|stop}"

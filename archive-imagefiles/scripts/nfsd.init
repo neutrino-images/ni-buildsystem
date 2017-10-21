@@ -53,7 +53,9 @@ case "$1" in
 		fi
 		;;
 	stop)
-		stop
+		if [ -e /var/etc/.nfsd ]; then
+			stop
+		fi
 		;;
 	restart)
 		if [ -e /var/etc/.nfsd ]; then

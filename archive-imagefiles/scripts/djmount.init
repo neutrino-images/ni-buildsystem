@@ -11,7 +11,9 @@ case $1 in
 		fi
 	;;
 	stop)
-		fusermount -u /media/upnp
+		if [ -e /var/etc/.djmount ]; then
+			fusermount -u /media/upnp
+		fi
 	;;
 	restart)
 		if [ -e /var/etc/.djmount ]; then

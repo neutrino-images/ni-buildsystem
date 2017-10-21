@@ -12,7 +12,9 @@ case $1 in
 		fi
 	;;
 	stop)
-		killall xupnpd
+		if [ -e /var/etc/.xupnpd ]; then
+			killall xupnpd
+		fi
 	;;
 	restart)
 		if [ -e /var/etc/.xupnpd ]; then
