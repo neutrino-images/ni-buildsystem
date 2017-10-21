@@ -978,6 +978,7 @@ $(D)/ofgwrite: $(SOURCE_DIR)/$(NI_OFGWRITE) | $(TARGETPREFIX)
 		$(BUILDENV) \
 		$(MAKE) && \
 	install -m 755 $(BUILD_TMP)/$(NI_OFGWRITE)/ofgwrite_bin $(TARGETPREFIX)/bin
+	install -m 755 $(BUILD_TMP)/$(NI_OFGWRITE)/ofgwrite_tgz $(TARGETPREFIX)/bin
 	install -m 755 $(BUILD_TMP)/$(NI_OFGWRITE)/ofgwrite $(TARGETPREFIX)/bin
 	$(REMOVE)/$(NI_OFGWRITE)
 	touch $@
