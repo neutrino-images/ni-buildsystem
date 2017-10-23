@@ -15,9 +15,9 @@ $chip_type = trim($_GET["chip_type"]);
 
 if ($revision == 1) //FIXME
 {
-	# AX-Technologies
-	$boxtype_sc = "axt";
-	$boxseries = "ax";
+	# AX/Mutant
+	$boxtype_sc = "arm";
+	$boxseries = "hd51";
 	$boxmodel = "hd51";
 }
 elseif ($revision == 6 || $revision == 7 || $revision == 8 || $revision == 10)
