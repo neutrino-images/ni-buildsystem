@@ -85,7 +85,7 @@ N_BUILDENV = \
 
 # finally we can build outside of the source directory
 N_OBJDIR = $(BUILD_TMP)/$(FLAVOUR)
-LH_OBJDIR = $(BUILD_TMP)/libstb-hal
+LH_OBJDIR = $(BUILD_TMP)/$(NI_LIBSTB-HAL-NEXT)
 
 $(N_OBJDIR)/config.status: $(NEUTRINO_DEPS) $(MAKE_DIR)/neutrino.mk
 	test -d $(N_OBJDIR) || mkdir -p $(N_OBJDIR)
@@ -128,9 +128,8 @@ endif
 			--with-boxmodel=$(BOXSERIES)
 
 $(LH_OBJDIR)/config.status: $(NEUTRINO_DEPS)
-	# let's use tango's libstb-hal until we have ported the relevant stuff
 	rm -rf $(LH_OBJDIR)
-	git clone https://github.com/TangoCash/libstb-hal-cst-next.git $(LH_OBJDIR)
+	tar -C $(SOURCE_DIR) -cp $(NI_LIBSTB-HAL-NEXT) --exclude-vcs | tar -C $(BUILD_TMP) -x
 	pushd $(LH_OBJDIR) && \
 		./autogen.sh && \
 		\

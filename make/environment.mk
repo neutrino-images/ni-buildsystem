@@ -303,6 +303,7 @@ BUILD-GENERIC-PC	= build-generic-pc
 NI_BUILD-GENERIC-PC	= ni-build-generic-pc
 NI_DRIVERS-BIN		= ni-drivers-bin
 NI_LIBSTB-HAL		= ni-libstb-hal
+NI_LIBSTB-HAL-NEXT	= ni-libstb-hal-next
 NI_LINUX-KERNEL		= ni-linux-kernel
 NI_LOGO-STUFF		= ni-logo-stuff
 NI_OFGWRITE		= ni-ofgwrite
@@ -320,6 +321,8 @@ TUXBOX_NEUTRINO		= gui-neutrino
 TUXBOX_NEUTRINO_BRANCH	?= master
 TUXBOX_LIBSTB-HAL	= library-stb-hal
 TUXBOX_REMOTE_REPO	= tuxbox
+
+TANGO_REMOTE_REPO	= tango
 
 # execute local scripts
 define local-script

@@ -47,6 +47,13 @@ $(SOURCE_DIR)/$(NI_LIBSTB-HAL):
 		git remote add $(TUXBOX_REMOTE_REPO) $(TUXBOX_GIT)/$(TUXBOX_LIBSTB-HAL).git && \
 		git fetch $(TUXBOX_REMOTE_REPO)
 
+$(SOURCE_DIR)/$(NI_LIBSTB-HAL-NEXT):
+	cd $(SOURCE_DIR) && \
+		git clone $(NI_GIT)/$(notdir $@).git
+	cd $@ && \
+		git remote add $(TANGO_REMOTE_REPO) https://github.com/TangoCash/libstb-hal-cst-next.git && \
+		git fetch $(TANGO_REMOTE_REPO)
+
 $(SOURCE_DIR)/$(NI_LIBCOOLSTREAM):
 ifeq ($(HAS_LIBCS), yes)
 	cd $(SOURCE_DIR) && \
@@ -181,6 +188,7 @@ ni-git: \
 	$(SOURCE_DIR)/$(NI_FFMPEG) \
 	$(SOURCE_DIR)/$(NI_LIBCOOLSTREAM) \
 	$(SOURCE_DIR)/$(NI_LIBSTB-HAL) \
+	$(SOURCE_DIR)/$(NI_LIBSTB-HAL-NEXT) \
 	$(SOURCE_DIR)/$(NI_LINUX-KERNEL) \
 	$(SOURCE_DIR)/$(NI_LOGO-STUFF) \
 	$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) \
