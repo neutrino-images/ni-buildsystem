@@ -262,7 +262,7 @@ flash-image-arm-multi:
 
 flash-image-arm: BOXNAME="AX/Mut@nt"
 flash-image-arm: IMAGE_NAME=$(IMAGE_PREFIX)-$(IMAGE_SUFFIX)
-flash-image-arm: IMAGE_DESC="$(BOXNAME) [$(IMAGE_SUFFIX)][$(BOXSERIES)] $(shell echo $(IMAGE_TYPE_STRING) | sed 's/.*/\u&/')"
+flash-image-arm: IMAGE_DESC="$(BOXNAME) [$(IMAGE_SUFFIX)] $(shell echo $(IMAGE_TYPE_STRING) | sed 's/.*/\u&/')"
 flash-image-arm: IMAGE_MD5FILE=$(IMAGE_TYPE_STRING)-$(IMAGE_SUFFIX).txt
 flash-image-arm: IMAGE_DATE=$(shell cat $(BOX)/.version | grep "^version=" | cut -d= -f2 | cut -c 5-)
 flash-image-arm:
