@@ -240,7 +240,10 @@ $(D)/openssl: $(ARCHIVE)/openssl-$(OPENSSL_VER).tar.gz | $(TARGETPREFIX)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/openssl.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libcrypto.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libssl.pc
-	rm -rf $(TARGETPREFIX)/bin/openssl $(TARGETPREFIX)/bin/c_rehash $(TARGETLIB)/engines
+	rm -rf $(TARGETPREFIX)/bin/c_rehash $(TARGETLIB)/engines
+ifneq ($(BOXSERIES), hd51)
+	rm -rf $(TARGETPREFIX)/bin/openssl
+endif
 	$(REMOVE)/openssl-$(OPENSSL_VER)
 	chmod 0755 $(TARGETLIB)/libcrypto.so.* $(TARGETLIB)/libssl.so.*
 	touch $@
