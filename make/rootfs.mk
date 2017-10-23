@@ -121,6 +121,8 @@ softlinks: $(BOX)
 	ln -sf emu S99emu && \
 	ln -sf emu K01emu
 	pushd $(BOX)/lib && \
+	ln -sf libcrypto.so.1.0.0 libcrypto.so.1.0.2 && \
+	ln -sf libssl.so.1.0.0 libssl.so.1.0.2 && \
 	ln -sf libcrypto.so.1.0.0 libcrypto.so.0.9.8 && \
 	ln -sf libssl.so.1.0.0 libssl.so.0.9.8 && \
 	ln -sf libcrypto.so.1.0.0 libcrypto.so.0.9.7 && \
