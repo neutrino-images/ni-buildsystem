@@ -133,7 +133,7 @@ $(D)/libcurl: $(D)/zlib $(D)/openssl $(ARCHIVE)/curl-$(LIBCURL_VER).tar.bz2 | $(
 	touch $@
 
 LIBPNG_CONF =
-ifneq ($(BOXSERIES), ax)
+ifneq ($(BOXSERIES), hd51)
 	LIBPNG_CONF = --disable-arm-neon
 endif
 
@@ -385,7 +385,7 @@ ifeq ($(BOXSERIES), hd1)
 			--extra-cflags="-Wno-deprecated-declarations -I$(TARGETINCLUDE)"
 endif
 
-ifeq ($(BOXSERIES), ax)
+ifeq ($(BOXSERIES), hd51)
   FFMPEG_CONFIGURE = \
 			--enable-encoder=mpeg2video \
 			--enable-muxer=mpeg2video \

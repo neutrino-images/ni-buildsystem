@@ -3,7 +3,7 @@
 BOOTSTRAP  = targetprefix $(D) $(BUILD_TMP) $(CROSS_DIR) $(STAGING_DIR) $(IMAGE_DIR) $(UPDATE_DIR) $(HOSTPREFIX)/bin includes-and-libs modules host-preqs
 BOOTSTRAP += $(TARGETLIB)/libc.so.6
 
-ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 ax))
+ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd51))
   BOOTSTRAP += static blobs
 endif
 

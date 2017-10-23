@@ -9,7 +9,7 @@ ifeq ($(USE_LIBSTB-HAL), yes)
 	NEUTRINO_DEPS += libstb-hal
 endif
 
-ifeq ($(BOXSERIES), ax)
+ifeq ($(BOXSERIES), hd51)
 	NEUTRINO_DEPS += $(D)/gst_plugins_dvbmediasink
 endif
 
@@ -23,7 +23,7 @@ endif
 ifeq ($(BOXSERIES), hd2)
 	N_CFLAGS += -DFB_HW_ACCELERATION
 endif
-ifeq ($(BOXSERIES), ax)
+ifeq ($(BOXSERIES), hd51)
 	N_CFLAGS += $(shell $(PKG_CONFIG) --cflags --libs gstreamer-1.0)
 	N_CFLAGS += $(shell $(PKG_CONFIG) --cflags --libs gstreamer-audio-1.0)
 	N_CFLAGS += $(shell $(PKG_CONFIG) --cflags --libs gstreamer-video-1.0)
@@ -60,7 +60,7 @@ ifeq ($(USE_LIBSTB-HAL), yes)
 endif
 
 N_CONFIGURE_ADDITIONS =
-ifeq ($(BOXSERIES), ax)
+ifeq ($(BOXSERIES), hd51)
 	N_CONFIGURE_ADDITIONS += \
 		--enable-reschange
 endif

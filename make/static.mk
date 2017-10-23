@@ -3,7 +3,7 @@
 static: cortex-strings
 
 CORTEX-STRINGS_CONF =
-ifneq ($(BOXSERIES), ax)
+ifneq ($(BOXSERIES), hd51)
 	CORTEX-STRINGS_CONF = --without-neon
 endif
 

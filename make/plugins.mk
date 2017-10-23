@@ -76,7 +76,7 @@ plugins-all: $(D)/neutrino \
 plugins-hd1: # nothing to do
 plugins-hd2: # nothing to do
 
-plugins-ax: \
+plugins-hd51: \
 	showiframe
 
 ################

@@ -1,4 +1,4 @@
-# makefile to build axtech kernel
+# makefile to build armbox kernel
 
 DTB		= $(BUILD_TMP)/linux-$(KERNEL_VERSION)/arch/arm/boot/dts/$(KERNEL_DTB).dtb
 ZIMAGE		= $(BUILD_TMP)/linux-$(KERNEL_VERSION)/arch/arm/boot/zImage
@@ -7,7 +7,7 @@ MODULES_DIR	= $(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules/lib/modules/$(KERNEL_
 
 TARGETMODULES	= $(TARGETLIB)/modules/$(KERNEL_VERSION_FULL)
 
-$(D)/kernel-axt: $(SOURCE_DIR)/$(NI_LINUX-KERNEL) | $(TARGETPREFIX)
+$(D)/kernel-arm: $(SOURCE_DIR)/$(NI_LINUX-KERNEL) | $(TARGETPREFIX)
 	cd $(SOURCE_DIR)/$(NI_LINUX-KERNEL) && \
 		git checkout $(KERNEL_BRANCH) && \
 	tar -C $(SOURCE_DIR) -cp $(NI_LINUX-KERNEL) --exclude-vcs | tar -C $(BUILD_TMP) -x
@@ -25,11 +25,11 @@ $(D)/kernel-axt: $(SOURCE_DIR)/$(NI_LINUX-KERNEL) | $(TARGETPREFIX)
 		$(MAKE) ARCH=arm CROSS_COMPILE=$(TARGET)- INSTALL_MOD_PATH=$(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules modules_install && \
 	touch $@
 
-kernel-axt-modules: $(D)/kernel-axt
+kernel-arm-modules: $(D)/kernel-arm
 	cp -a $(MODULES_DIR)/kernel $(TARGETMODULES)
 	cp -a $(MODULES_DIR)/modules.builtin $(TARGETMODULES)
 	cp -a $(MODULES_DIR)/modules.order $(TARGETMODULES)
-	make depmod-axt
+	make depmod-arm
 
-depmod-axt:
+depmod-arm:
 	PATH=$(PATH):/sbin:/usr/sbin depmod -b $(TARGETPREFIX) $(KERNEL_VERSION_FULL)

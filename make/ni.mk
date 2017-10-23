@@ -5,7 +5,7 @@ init: preqs crosstools bootstrap
 
 # -- wrapper-targets for Neutrino-Updates -------------------------------------
 
-BOXSERIES_UPDATE = hd2 ax
+BOXSERIES_UPDATE = hd2 hd51
 ifneq ($(DEBUG), yes)
 	BOXSERIES_UPDATE += hd1
 endif
@@ -77,7 +77,7 @@ ni-image:
 	make -j$(NUM_CPUS) wget
 	make -j$(NUM_CPUS) iconv
 	make -j$(NUM_CPUS) streamripper
-ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 ax))
+ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd51))
 	make channellogos
 	make -j$(NUM_CPUS) less
 	make -j$(NUM_CPUS) parted
@@ -89,7 +89,7 @@ ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 ax))
 	make -j$(NUM_CPUS) minicom
 	make -j$(NUM_CPUS) mc
   endif
-  ifeq ($(BOXSERIES), ax)
+  ifeq ($(BOXSERIES), hd51)
 	make -j$(NUM_CPUS) ofgwrite
 	make -j$(NUM_CPUS) aio-grab
 	make stb-startup
