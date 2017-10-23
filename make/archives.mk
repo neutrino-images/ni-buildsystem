@@ -375,3 +375,8 @@ $(ARCHIVE)/wget-$(WGET_VER).tar.gz:
 MTOOLS_VER=4.0.18
 $(ARCHIVE)/mtools-$(MTOOLS_VER).tar.gz:
 	$(WGET) ftp://ftp.gnu.org/gnu/mtools/mtools-$(MTOOLS_VER).tar.gz
+
+$(ARCHIVE)/curl-ca-bundle.crt:
+	cd $(ARCHIVE); \
+		wget https://curl.haxx.se/ca/cacert.pem; \
+		mv cacert.pem curl-ca-bundle.crt

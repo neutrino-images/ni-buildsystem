@@ -95,7 +95,12 @@ $(D)/giflib: $(ARCHIVE)/giflib-$(GIFLIB_VER).tar.bz2 | $(TARGETPREFIX)
 	$(REMOVE)/giflib-$(GIFLIB_VER)
 	touch $@
 
-$(D)/libcurl: $(D)/zlib $(D)/openssl $(ARCHIVE)/curl-$(LIBCURL_VER).tar.bz2 | $(TARGETPREFIX)
+CURL_IPV6="--enable-ipv6"
+ifeq ($(BOXSERIES), hd1)
+	CURL_IPV6="--disable-ipv6"
+endif
+
+$(D)/libcurl: $(D)/zlib $(D)/openssl $(D)/librtmp $(ARCHIVE)/curl-ca-bundle.crt $(ARCHIVE)/curl-$(LIBCURL_VER).tar.bz2 | $(TARGETPREFIX)
 	$(UNTAR)/curl-$(LIBCURL_VER).tar.bz2
 	pushd $(BUILD_TMP)/curl-$(LIBCURL_VER) && \
 		$(CONFIGURE) \
@@ -118,12 +123,17 @@ $(D)/libcurl: $(D)/zlib $(D)/openssl $(ARCHIVE)/curl-$(LIBCURL_VER).tar.bz2 | $(
 			--disable-ntlm-wb \
 			--disable-ares \
 			--without-libidn \
+			--with-ca-bundle=/share/curl/curl-ca-bundle.crt \
 			--with-random=/dev/urandom \
 			--with-ssl=$(TARGETPREFIX) \
+			--with-librtmp=$(TARGETPREFIX)/lib \
+			$(CURL_IPV6) \
 			--enable-optimize && \
 		$(MAKE) all && \
 		mkdir -p $(HOSTPREFIX)/bin && \
 		sed -e "s,^prefix=,prefix=$(TARGETPREFIX)," < curl-config > $(HOSTPREFIX)/bin/curl-config && \
+		mkdir -p $(TARGETPREFIX)/share/curl && \
+		cp -a $(ARCHIVE)/curl-ca-bundle.crt $(TARGETPREFIX)/share/curl && \
 		chmod 755 $(HOSTPREFIX)/bin/curl-config && \
 		make install DESTDIR=$(TARGETPREFIX)
 	rm -rf $(TARGETPREFIX)/bin/curl-config $(TARGETPREFIX)/share/zsh
