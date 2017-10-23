@@ -549,7 +549,7 @@ $(D)/samba-hd1: $(D)/zlib $(ARCHIVE)/samba-$(SAMBA33_VER).tar.gz | $(TARGETPREFI
 	$(REMOVE)/samba-$(SAMBA33_VER)
 	touch $@
 
-$(D)/samba-ax \
+$(D)/samba-hd51 \
 $(D)/samba-hd2: $(D)/zlib $(ARCHIVE)/samba-$(SAMBA36_VER).tar.gz | $(TARGETPREFIX)
 	$(UNTAR)/samba-$(SAMBA36_VER).tar.gz
 	cd $(BUILD_TMP)/samba-$(SAMBA36_VER) && \

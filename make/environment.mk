@@ -24,15 +24,15 @@ BASE_DIR    := $(shell pwd)
 #                      /        /     | |     \
 # BOXMODEL          nevis apollo shiner kronos kronos_v2
 
-# - AX Technologies -----------------------------------------------------------
+# - AX Technologies / Mutant --------------------------------------------------
 
-# BOXTYPE                     axtech
+# BOXTYPE                     armbox
 #                               |
-# BOXSERIES                    ax
+# BOXSERIES                    hd51
 #                               |
-# BOXFAMILY                    ax
+# BOXFAMILY                  bcm7251s
 #                               |
-# BOXMODEL                    hd51
+# BOXMODEL                     hd51
 
 # -----------------------------------------------------------------------------
 
@@ -46,9 +46,9 @@ ifneq ($(BOXSERIES),)
     BOXTYPE = coolstream
     BOXFAMILY = apollo
     BOXMODEL = apollo
-  else ifeq ($(BOXSERIES), ax)
-    BOXTYPE = axtech
-    BOXFAMILY = ax
+  else ifeq ($(BOXSERIES), hd51)
+    BOXTYPE = armbox
+    BOXFAMILY = bcm7251s
     BOXMODEL = hd51
   else
     $(error $(BOXTYPE) BOXSERIES $(BOXSERIES) not supported)
@@ -68,9 +68,9 @@ else ifneq ($(BOXFAMILY),)
     BOXTYPE = coolstream
     BOXSERIES = hd2
     BOXMODEL = kronos
-  else ifeq ($(BOXFAMILY), ax)
-    BOXTYPE = axtech
-    BOXSERIES = ax
+  else ifeq ($(BOXFAMILY), bcm7251s)
+    BOXTYPE = armbox
+    BOXSERIES = hd51
     BOXMODEL = hd51
   else
     $(error $(BOXTYPE) BOXFAMILY $(BOXFAMILY) not supported)
@@ -91,9 +91,9 @@ else ifneq ($(BOXMODEL),)
     BOXSERIES = hd2
     BOXFAMILY = kronos
   else ifeq ($(BOXMODEL), hd51)
-    BOXTYPE = axtech
-    BOXSERIES = ax
-    BOXFAMILY = ax
+    BOXTYPE = armbox
+    BOXSERIES = hd51
+    BOXFAMILY = bcm7251s
   else
     $(error $(BOXTYPE) BOXMODEL $(BOXMODEL) not supported)
   endif
@@ -103,8 +103,8 @@ endif
 ifeq ($(BOXTYPE), coolstream)
   BOXTYPE_SC = cst
   BOXARCH = arm
-else ifeq ($(BOXTYPE), axtech)
-  BOXTYPE_SC = axt
+else ifeq ($(BOXTYPE), armbox)
+  BOXTYPE_SC = arm
   BOXARCH = arm
 endif
 
@@ -205,7 +205,7 @@ ifeq ($(BOXSERIES), hd2)
   endif
 endif
 
-ifeq ($(BOXSERIES), ax)
+ifeq ($(BOXSERIES), hd51)
   KERNEL_VERSION         = 4.10.12
   KERNEL_VERSION_FULL    = $(KERNEL_VERSION)
   KERNEL_BRANCH          = ni/4.10.x

@@ -34,10 +34,10 @@ if ($boxtype == "coolstream" || $boxtype == "cst")
 	# CST
 	$boxtype_sc = "cst";
 }
-elseif ($boxtype == "axtech" || $boxtype == "axt")
+elseif ($boxtype == "armbox" || $boxtype == "arm")
 {
 	# AX Tech
-	$boxtype_sc = "axt";
+	$boxtype_sc = "arm";
 }
 
 # release/ni320-YYYYMMDDHHMM-cst-kronos.img

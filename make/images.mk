@@ -82,29 +82,29 @@ devtable-remove:
 
 images:
 ifeq ($(BOXMODEL), nevis)
-	make flash-image ERASE_SIZE=0x20000 BOXNAME="HD1, BSE, Neo, Neo², Zee"
+	make flash-image-cst ERASE_SIZE=0x20000 BOXNAME="HD1, BSE, Neo, Neo², Zee"
 endif
 ifeq ($(BOXFAMILY), apollo)
-	make flash-image ERASE_SIZE=0x40000 BOXNAME="Tank"    IMAGE_SUFFIX=$(BOXTYPE_SC)-apollo
-	make flash-image ERASE_SIZE=0x20000 BOXNAME="Trinity" IMAGE_SUFFIX=$(BOXTYPE_SC)-shiner
+	make flash-image-cst ERASE_SIZE=0x40000 BOXNAME="Tank"    IMAGE_SUFFIX=$(BOXTYPE_SC)-apollo
+	make flash-image-cst ERASE_SIZE=0x20000 BOXNAME="Trinity" IMAGE_SUFFIX=$(BOXTYPE_SC)-shiner
 endif
 ifeq ($(BOXMODEL), kronos)
-	make flash-image ERASE_SIZE=0x20000 BOXNAME="Zee², Trinity V2"
+	make flash-image-cst ERASE_SIZE=0x20000 BOXNAME="Zee², Trinity V2"
 endif
 ifeq ($(BOXMODEL), kronos_v2)
-	make flash-image ERASE_SIZE=0x20000 BOXNAME="Link, Trinity Duo"
+	make flash-image-cst ERASE_SIZE=0x20000 BOXNAME="Link, Trinity Duo"
 endif
 ifeq ($(BOXMODEL), hd51)
-	#make flash-image-axt-single
-	make flash-image-axt-multi
-	make flash-image-axt-minimal
+	make flash-image-arm
+	#make flash-image-arm-single
+	make flash-image-arm-multi
 endif
 
-flash-image: IMAGE_NAME=$(IMAGE_PREFIX)-$(IMAGE_SUFFIX)
-flash-image: IMAGE_DESC="$(BOXNAME) [$(IMAGE_SUFFIX)][$(BOXSERIES)] $(shell echo $(IMAGE_TYPE_STRING) | sed 's/.*/\u&/')"
-flash-image: IMAGE_MD5FILE=$(IMAGE_TYPE_STRING)-$(IMAGE_SUFFIX).txt
-flash-image: IMAGE_DATE=$(shell cat $(BOX)/.version | grep "^version=" | cut -d= -f2 | cut -c 5-)
-flash-image:
+flash-image-cst: IMAGE_NAME=$(IMAGE_PREFIX)-$(IMAGE_SUFFIX)
+flash-image-cst: IMAGE_DESC="$(BOXNAME) [$(IMAGE_SUFFIX)][$(BOXSERIES)] $(shell echo $(IMAGE_TYPE_STRING) | sed 's/.*/\u&/')"
+flash-image-cst: IMAGE_MD5FILE=$(IMAGE_TYPE_STRING)-$(IMAGE_SUFFIX).txt
+flash-image-cst: IMAGE_DATE=$(shell cat $(BOX)/.version | grep "^version=" | cut -d= -f2 | cut -c 5-)
+flash-image-cst:
 	make devtable
 	mkfs.jffs2 -e $(ERASE_SIZE) $(MKFSFLAGS) -o $(IMAGE_DIR)/$(IMAGE_NAME).img
 	make devtable-remove
@@ -137,18 +137,18 @@ ifdef IMAGE_TO_CHECK
 	fi
 endif
 
-### AX-TECH
+### armbox hd51
 
 # general
-AX_IMAGE_NAME = disk
-AX_BOOT_IMAGE = boot.img
-AX_IMAGE_LINK = $(AX_IMAGE_NAME).ext4
-AX_IMAGE_ROOTFS_SIZE = 294912
-AX_BUILD_TMP = $(BUILD_TMP)/tmp
+HD51_IMAGE_NAME = disk
+HD51_BOOT_IMAGE = boot.img
+HD51_IMAGE_LINK = $(HD51_IMAGE_NAME).ext4
+HD51_IMAGE_ROOTFS_SIZE = 294912
+HD51_BUILD_TMP = $(BUILD_TMP)/tmp
 
 # emmc image
 EMMC_IMAGE_SIZE = 3817472
-EMMC_IMAGE = $(AX_BUILD_TMP)/$(AX_IMAGE_NAME).img
+EMMC_IMAGE = $(HD51_BUILD_TMP)/$(HD51_IMAGE_NAME).img
 
 # partition sizes
 BLOCK_SIZE = 512
@@ -174,28 +174,28 @@ FOURTH_KERNEL_PARTITION_OFFSET = $(shell expr $(THRID_ROOTFS_PARTITION_OFFSET) \
 FOURTH_ROOTFS_PARTITION_OFFSET = $(shell expr $(FOURTH_KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))
 SWAP_PARTITION_OFFSET = $(shell expr $(FOURTH_ROOTFS_PARTITION_OFFSET) \+ $(ROOTFS_PARTITION_SIZE_MULTI))
 
-flash-image-axt-single:
-	mkdir -p $(AX_BUILD_TMP)
+flash-image-arm-single:
+	mkdir -p $(HD51_BUILD_TMP)
 	# Create a sparse image block
-	dd if=/dev/zero of=$(AX_BUILD_TMP)/$(AX_IMAGE_LINK) seek=$(shell expr $(AX_IMAGE_ROOTFS_SIZE) \* $(BLOCK_SECTOR)) count=0 bs=$(BLOCK_SIZE)
-	mkfs.ext4 -F $(AX_BUILD_TMP)/$(AX_IMAGE_LINK) -d $(BOX)
+	dd if=/dev/zero of=$(HD51_BUILD_TMP)/$(HD51_IMAGE_LINK) seek=$(shell expr $(HD51_IMAGE_ROOTFS_SIZE) \* $(BLOCK_SECTOR)) count=0 bs=$(BLOCK_SIZE)
+	mkfs.ext4 -F $(HD51_BUILD_TMP)/$(HD51_IMAGE_LINK) -d $(BOX)
 	# Error codes 0-3 indicate successfull operation of fsck (no errors or errors corrected)
-	fsck.ext4 -pvfD $(AX_BUILD_TMP)/$(AX_IMAGE_LINK) || [ $? -le 3 ]
+	fsck.ext4 -pvfD $(HD51_BUILD_TMP)/$(HD51_IMAGE_LINK) || [ $? -le 3 ]
 	dd if=/dev/zero of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) count=0 seek=$(shell expr $(EMMC_IMAGE_SIZE) \* $(BLOCK_SECTOR))
 	parted -s $(EMMC_IMAGE) mklabel gpt
 	parted -s $(EMMC_IMAGE) unit KiB mkpart boot fat16 $(IMAGE_ROOTFS_ALIGNMENT) $(shell expr $(IMAGE_ROOTFS_ALIGNMENT) \+ $(BOOT_PARTITION_SIZE))
 	parted -s $(EMMC_IMAGE) unit KiB mkpart kernel1 $(KERNEL_PARTITION_OFFSET) $(shell expr $(KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))
 	parted -s $(EMMC_IMAGE) unit KiB mkpart rootfs1 ext4 $(ROOTFS_PARTITION_OFFSET) $(shell expr $(ROOTFS_PARTITION_OFFSET) \+ $(ROOTFS_PARTITION_SIZE_SINGLE))
 	parted -s $(EMMC_IMAGE) unit KiB mkpart storage ext4 $(STORAGE_PARTITION_OFFSET_SINGLE) $(shell expr $(EMMC_IMAGE_SIZE) \- 1024)
-	dd if=/dev/zero of=$(AX_BUILD_TMP)/$(AX_BOOT_IMAGE) bs=$(BLOCK_SIZE) count=$(shell expr $(BOOT_PARTITION_SIZE) \* $(BLOCK_SECTOR))
-	mkfs.msdos -S 512 $(AX_BUILD_TMP)/$(AX_BOOT_IMAGE)
-	echo "boot emmcflash0.kernel1 'root=/dev/mmcblk0p2 rw rootwait $(BOXMODEL)_4.boxmode=12'" > $(AX_BUILD_TMP)/STARTUP_1
-	mcopy -i $(AX_BUILD_TMP)/$(AX_BOOT_IMAGE) -v $(AX_BUILD_TMP)/STARTUP_1 ::
-	dd conv=notrunc if=$(AX_BUILD_TMP)/$(AX_BOOT_IMAGE) of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) seek=$(shell expr $(IMAGE_ROOTFS_ALIGNMENT) \* $(BLOCK_SECTOR))
+	dd if=/dev/zero of=$(HD51_BUILD_TMP)/$(HD51_BOOT_IMAGE) bs=$(BLOCK_SIZE) count=$(shell expr $(BOOT_PARTITION_SIZE) \* $(BLOCK_SECTOR))
+	mkfs.msdos -S 512 $(HD51_BUILD_TMP)/$(HD51_BOOT_IMAGE)
+	echo "boot emmcflash0.kernel1 'root=/dev/mmcblk0p2 rw rootwait $(BOXMODEL)_4.boxmode=12'" > $(HD51_BUILD_TMP)/STARTUP_1
+	mcopy -i $(HD51_BUILD_TMP)/$(HD51_BOOT_IMAGE) -v $(HD51_BUILD_TMP)/STARTUP_1 ::
+	dd conv=notrunc if=$(HD51_BUILD_TMP)/$(HD51_BOOT_IMAGE) of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) seek=$(shell expr $(IMAGE_ROOTFS_ALIGNMENT) \* $(BLOCK_SECTOR))
 	dd conv=notrunc if=$(ZIMAGE_DTB) of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) seek=$(shell expr $(KERNEL_PARTITION_OFFSET) \* $(BLOCK_SECTOR))
-	resize2fs $(AX_BUILD_TMP)/$(AX_IMAGE_LINK) $(ROOTFS_PARTITION_SIZE_SINGLE)k
+	resize2fs $(HD51_BUILD_TMP)/$(HD51_IMAGE_LINK) $(ROOTFS_PARTITION_SIZE_SINGLE)k
 	# Truncate on purpose
-	dd if=$(AX_BUILD_TMP)/$(AX_IMAGE_LINK) of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) seek=$(shell expr $(ROOTFS_PARTITION_OFFSET) \* $(BLOCK_SECTOR)) count=$(shell expr $(AX_IMAGE_ROOTFS_SIZE) \* $(BLOCK_SECTOR))
+	dd if=$(HD51_BUILD_TMP)/$(HD51_IMAGE_LINK) of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) seek=$(shell expr $(ROOTFS_PARTITION_OFFSET) \* $(BLOCK_SECTOR)) count=$(shell expr $(HD51_IMAGE_ROOTFS_SIZE) \* $(BLOCK_SECTOR))
 	# Create final USB-image
 	mkdir -p $(IMAGE_DIR)/$(BOXMODEL)
 	cp $(ZIMAGE_DTB) $(IMAGE_DIR)/$(BOXMODEL)/kernel.bin
@@ -208,15 +208,15 @@ flash-image-axt-single:
 	zip -r $(IMAGE_PREFIX)-$(IMAGE_SUFFIX)_single_usb.zip $(BOXMODEL)/*
 	# cleanup
 	rm -rf $(IMAGE_DIR)/$(BOXMODEL)
-	rm -rf $(AX_BUILD_TMP)
+	rm -rf $(HD51_BUILD_TMP)
 
-flash-image-axt-multi:
-	mkdir -p $(AX_BUILD_TMP)
+flash-image-arm-multi:
+	mkdir -p $(HD51_BUILD_TMP)
 	# Create a sparse image block
-	dd if=/dev/zero of=$(AX_BUILD_TMP)/$(AX_IMAGE_LINK) seek=$(shell expr $(AX_IMAGE_ROOTFS_SIZE) \* $(BLOCK_SECTOR)) count=0 bs=$(BLOCK_SIZE)
-	mkfs.ext4 -F $(AX_BUILD_TMP)/$(AX_IMAGE_LINK) -d $(BOX)
+	dd if=/dev/zero of=$(HD51_BUILD_TMP)/$(HD51_IMAGE_LINK) seek=$(shell expr $(HD51_IMAGE_ROOTFS_SIZE) \* $(BLOCK_SECTOR)) count=0 bs=$(BLOCK_SIZE)
+	mkfs.ext4 -F $(HD51_BUILD_TMP)/$(HD51_IMAGE_LINK) -d $(BOX)
 	# Error codes 0-3 indicate successfull operation of fsck (no errors or errors corrected)
-	fsck.ext4 -pvfD $(AX_BUILD_TMP)/$(AX_IMAGE_LINK) || [ $? -le 3 ]
+	fsck.ext4 -pvfD $(HD51_BUILD_TMP)/$(HD51_IMAGE_LINK) || [ $? -le 3 ]
 	dd if=/dev/zero of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) count=0 seek=$(shell expr $(EMMC_IMAGE_SIZE) \* $(BLOCK_SECTOR))
 	parted -s $(EMMC_IMAGE) mklabel gpt
 	parted -s $(EMMC_IMAGE) unit KiB mkpart boot fat16 $(IMAGE_ROOTFS_ALIGNMENT) $(shell expr $(IMAGE_ROOTFS_ALIGNMENT) \+ $(BOOT_PARTITION_SIZE))
@@ -229,23 +229,23 @@ flash-image-axt-multi:
 	parted -s $(EMMC_IMAGE) unit KiB mkpart kernel4 $(FOURTH_KERNEL_PARTITION_OFFSET) $(shell expr $(FOURTH_KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))
 	parted -s $(EMMC_IMAGE) unit KiB mkpart rootfs4 ext4 $(FOURTH_ROOTFS_PARTITION_OFFSET) $(shell expr $(FOURTH_ROOTFS_PARTITION_OFFSET) \+ $(ROOTFS_PARTITION_SIZE_MULTI))
 	parted -s $(EMMC_IMAGE) unit KiB mkpart swap linux-swap $(SWAP_PARTITION_OFFSET) $(shell expr $(EMMC_IMAGE_SIZE) \- 1024)
-	dd if=/dev/zero of=$(AX_BUILD_TMP)/$(AX_BOOT_IMAGE) bs=$(BLOCK_SIZE) count=$(shell expr $(BOOT_PARTITION_SIZE) \* $(BLOCK_SECTOR))
-	mkfs.msdos -S 512 $(AX_BUILD_TMP)/$(AX_BOOT_IMAGE)
-	echo "boot emmcflash0.kernel1 'brcm_cma=440M@328M brcm_cma=192M@768M root=/dev/mmcblk0p3 rw rootwait $(BOXMODEL)_4.boxmode=1'" > $(AX_BUILD_TMP)/STARTUP
-	echo "boot emmcflash0.kernel1 'brcm_cma=440M@328M brcm_cma=192M@768M root=/dev/mmcblk0p3 rw rootwait $(BOXMODEL)_4.boxmode=1'" > $(AX_BUILD_TMP)/STARTUP_1
-	echo "boot emmcflash0.kernel2 'brcm_cma=440M@328M brcm_cma=192M@768M root=/dev/mmcblk0p5 rw rootwait $(BOXMODEL)_4.boxmode=1'" > $(AX_BUILD_TMP)/STARTUP_2
-	echo "boot emmcflash0.kernel3 'brcm_cma=440M@328M brcm_cma=192M@768M root=/dev/mmcblk0p7 rw rootwait $(BOXMODEL)_4.boxmode=1'" > $(AX_BUILD_TMP)/STARTUP_3
-	echo "boot emmcflash0.kernel4 'brcm_cma=440M@328M brcm_cma=192M@768M root=/dev/mmcblk0p9 rw rootwait $(BOXMODEL)_4.boxmode=1'" > $(AX_BUILD_TMP)/STARTUP_4
-	mcopy -i $(AX_BUILD_TMP)/$(AX_BOOT_IMAGE) -v $(AX_BUILD_TMP)/STARTUP ::
-	mcopy -i $(AX_BUILD_TMP)/$(AX_BOOT_IMAGE) -v $(AX_BUILD_TMP)/STARTUP_1 ::
-	mcopy -i $(AX_BUILD_TMP)/$(AX_BOOT_IMAGE) -v $(AX_BUILD_TMP)/STARTUP_2 ::
-	mcopy -i $(AX_BUILD_TMP)/$(AX_BOOT_IMAGE) -v $(AX_BUILD_TMP)/STARTUP_3 ::
-	mcopy -i $(AX_BUILD_TMP)/$(AX_BOOT_IMAGE) -v $(AX_BUILD_TMP)/STARTUP_4 ::
-	dd conv=notrunc if=$(AX_BUILD_TMP)/$(AX_BOOT_IMAGE) of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) seek=$(shell expr $(IMAGE_ROOTFS_ALIGNMENT) \* $(BLOCK_SECTOR))
+	dd if=/dev/zero of=$(HD51_BUILD_TMP)/$(HD51_BOOT_IMAGE) bs=$(BLOCK_SIZE) count=$(shell expr $(BOOT_PARTITION_SIZE) \* $(BLOCK_SECTOR))
+	mkfs.msdos -S 512 $(HD51_BUILD_TMP)/$(HD51_BOOT_IMAGE)
+	echo "boot emmcflash0.kernel1 'brcm_cma=440M@328M brcm_cma=192M@768M root=/dev/mmcblk0p3 rw rootwait $(BOXMODEL)_4.boxmode=1'" > $(HD51_BUILD_TMP)/STARTUP
+	echo "boot emmcflash0.kernel1 'brcm_cma=440M@328M brcm_cma=192M@768M root=/dev/mmcblk0p3 rw rootwait $(BOXMODEL)_4.boxmode=1'" > $(HD51_BUILD_TMP)/STARTUP_1
+	echo "boot emmcflash0.kernel2 'brcm_cma=440M@328M brcm_cma=192M@768M root=/dev/mmcblk0p5 rw rootwait $(BOXMODEL)_4.boxmode=1'" > $(HD51_BUILD_TMP)/STARTUP_2
+	echo "boot emmcflash0.kernel3 'brcm_cma=440M@328M brcm_cma=192M@768M root=/dev/mmcblk0p7 rw rootwait $(BOXMODEL)_4.boxmode=1'" > $(HD51_BUILD_TMP)/STARTUP_3
+	echo "boot emmcflash0.kernel4 'brcm_cma=440M@328M brcm_cma=192M@768M root=/dev/mmcblk0p9 rw rootwait $(BOXMODEL)_4.boxmode=1'" > $(HD51_BUILD_TMP)/STARTUP_4
+	mcopy -i $(HD51_BUILD_TMP)/$(HD51_BOOT_IMAGE) -v $(HD51_BUILD_TMP)/STARTUP ::
+	mcopy -i $(HD51_BUILD_TMP)/$(HD51_BOOT_IMAGE) -v $(HD51_BUILD_TMP)/STARTUP_1 ::
+	mcopy -i $(HD51_BUILD_TMP)/$(HD51_BOOT_IMAGE) -v $(HD51_BUILD_TMP)/STARTUP_2 ::
+	mcopy -i $(HD51_BUILD_TMP)/$(HD51_BOOT_IMAGE) -v $(HD51_BUILD_TMP)/STARTUP_3 ::
+	mcopy -i $(HD51_BUILD_TMP)/$(HD51_BOOT_IMAGE) -v $(HD51_BUILD_TMP)/STARTUP_4 ::
+	dd conv=notrunc if=$(HD51_BUILD_TMP)/$(HD51_BOOT_IMAGE) of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) seek=$(shell expr $(IMAGE_ROOTFS_ALIGNMENT) \* $(BLOCK_SECTOR))
 	dd conv=notrunc if=$(ZIMAGE_DTB) of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) seek=$(shell expr $(KERNEL_PARTITION_OFFSET) \* $(BLOCK_SECTOR))
-	resize2fs $(AX_BUILD_TMP)/$(AX_IMAGE_LINK) $(ROOTFS_PARTITION_SIZE_MULTI)k
+	resize2fs $(HD51_BUILD_TMP)/$(HD51_IMAGE_LINK) $(ROOTFS_PARTITION_SIZE_MULTI)k
 	# Truncate on purpose
-	dd if=$(AX_BUILD_TMP)/$(AX_IMAGE_LINK) of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) seek=$(shell expr $(ROOTFS_PARTITION_OFFSET) \* $(BLOCK_SECTOR)) count=$(shell expr $(AX_IMAGE_ROOTFS_SIZE) \* $(BLOCK_SECTOR))
+	dd if=$(HD51_BUILD_TMP)/$(HD51_IMAGE_LINK) of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) seek=$(shell expr $(ROOTFS_PARTITION_OFFSET) \* $(BLOCK_SECTOR)) count=$(shell expr $(HD51_IMAGE_ROOTFS_SIZE) \* $(BLOCK_SECTOR))
 	# Create final USB-image
 	mkdir -p $(IMAGE_DIR)/$(BOXMODEL)
 	cp $(ZIMAGE_DTB) $(IMAGE_DIR)/$(BOXMODEL)/kernel.bin
@@ -258,9 +258,14 @@ flash-image-axt-multi:
 	zip -r $(IMAGE_PREFIX)-$(IMAGE_SUFFIX)_multi_usb.zip $(BOXMODEL)/*
 	# cleanup
 	rm -rf $(IMAGE_DIR)/$(BOXMODEL)
-	rm -rf $(AX_BUILD_TMP)
+	rm -rf $(HD51_BUILD_TMP)
 
-flash-image-axt-minimal:
+flash-image-arm: BOXNAME="AX/Mut@nt"
+flash-image-arm: IMAGE_NAME=$(IMAGE_PREFIX)-$(IMAGE_SUFFIX)
+flash-image-arm: IMAGE_DESC="$(BOXNAME) [$(IMAGE_SUFFIX)] $(shell echo $(IMAGE_TYPE_STRING) | sed 's/.*/\u&/')"
+flash-image-arm: IMAGE_MD5FILE=$(IMAGE_TYPE_STRING)-$(IMAGE_SUFFIX).txt
+flash-image-arm: IMAGE_DATE=$(shell cat $(BOX)/.version | grep "^version=" | cut -d= -f2 | cut -c 5-)
+flash-image-arm:
 	mkdir -p $(IMAGE_DIR)/$(BOXMODEL)
 	cp $(ZIMAGE_DTB) $(IMAGE_DIR)/$(BOXMODEL)/kernel.bin
 	cd $(BOX); \
@@ -268,5 +273,6 @@ flash-image-axt-minimal:
 	bzip2 $(IMAGE_DIR)/$(BOXMODEL)/rootfs.tar
 	# Create minimal image
 	cd $(IMAGE_DIR)/$(BOXMODEL); \
-	tar -czf $(IMAGE_DIR)/$(IMAGE_PREFIX)-$(IMAGE_SUFFIX).tgz kernel.bin rootfs.tar.bz2
+	tar -czf $(IMAGE_DIR)/$(IMAGE_NAME).tgz kernel.bin rootfs.tar.bz2
 	rm -rf $(IMAGE_DIR)/$(BOXMODEL)
+	echo $(IMAGE_URL)/$(IMAGE_NAME).tgz $(IMAGE_TYPE)$(IMAGE_VERSION)$(IMAGE_DATE) `md5sum $(IMAGE_DIR)/$(IMAGE_NAME).tgz | cut -c1-32` $(IMAGE_DESC) $(IMAGE_VERSION_STRING) >> $(IMAGE_DIR)/$(IMAGE_MD5FILE)
