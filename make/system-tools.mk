@@ -1003,5 +1003,6 @@ $(D)/aio-grab: $(D)/zlib $(D)/libpng $(D)/libjpeg | $(TARGETPREFIX)
 	touch $@
 
 $(D)/ca-bundle: $(ARCHIVE)/curl-ca-bundle.crt | $(TARGETPREFIX)
-	mkdir -p $(CA_BUNDLE_DIR) && \
-	cp -a $(ARCHIVE)/$(CA_BUNDLE) $(CA_BUNDLE_DIR)
+	mkdir -p $(CA_BUNDLE_TARGET_DIR) && \
+	cp -a $(ARCHIVE)/$(CA_BUNDLE) $(CA_BUNDLE_TARGET_DIR)
+	touch $@
