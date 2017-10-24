@@ -1002,7 +1002,6 @@ $(D)/aio-grab: $(D)/zlib $(D)/libpng $(D)/libjpeg | $(TARGETPREFIX)
 	$(REMOVE)/aio-grab
 	touch $@
 
-$(D)/ca-bundle: $(ARCHIVE)/curl-ca-bundle.crt | $(TARGETPREFIX)
-	mkdir -p $(CA_BUNDLE_TARGET_DIR) && \
-	cp -a $(ARCHIVE)/$(CA_BUNDLE) $(CA_BUNDLE_TARGET_DIR)
+$(D)/ca-bundle: $(ARCHIVE)/cacert.pem | $(TARGETPREFIX)
+	install -D -m 644 $(ARCHIVE)/cacert.pem $(TARGETPREFIX)/$(CA_BUNDLE_DIR)/$(CA_BUNDLE)
 	touch $@
