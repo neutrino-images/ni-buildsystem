@@ -1001,3 +1001,7 @@ $(D)/aio-grab: $(D)/zlib $(D)/libpng $(D)/libjpeg | $(TARGETPREFIX)
 		$(MAKE) install DESTDIR=$(TARGETPREFIX)
 	$(REMOVE)/aio-grab
 	touch $@
+
+$(D)/ca-bundle: $(ARCHIVE)/curl-ca-bundle.crt | $(TARGETPREFIX)
+	mkdir -p $(CA_BUNDLE_DIR) && \
+	cp -a $(ARCHIVE)/$(CA_BUNDLE) $(CA_BUNDLE_DIR)

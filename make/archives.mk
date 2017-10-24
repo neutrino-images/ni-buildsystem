@@ -379,4 +379,4 @@ $(ARCHIVE)/mtools-$(MTOOLS_VER).tar.gz:
 $(ARCHIVE)/curl-ca-bundle.crt:
 	cd $(ARCHIVE); \
 		wget https://curl.haxx.se/ca/cacert.pem; \
-		mv cacert.pem curl-ca-bundle.crt
+		mv cacert.pem $(CA_BUNDLE)

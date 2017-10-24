@@ -424,7 +424,7 @@ GNUTLS_SOURCE = gnutls-$(GNUTLS_VER).tar.xz
 $(ARCHIVE)/$(GNUTLS_SOURCE):
 	$(WGET) ftp://ftp.gnutls.org/gcrypt/gnutls/v$(GNUTLS_VER_MAJOR)/$(GNUTLS_SOURCE)
 
-$(D)/gnutls: $(D)/install-certs $(D)/nettle $(ARCHIVE)/$(GNUTLS_SOURCE)
+$(D)/gnutls: $(D)/nettle $(D)/ca-bundle $(ARCHIVE)/$(GNUTLS_SOURCE)
 	$(UNTAR)/$(GNUTLS_SOURCE)
 	set -e; cd $(BUILD_TMP)/gnutls-$(GNUTLS_VER); \
 		$(CONFIGURE) \
@@ -436,7 +436,7 @@ $(D)/gnutls: $(D)/install-certs $(D)/nettle $(ARCHIVE)/$(GNUTLS_SOURCE)
 			--enable-local-libopts \
 			--with-libpthread-prefix=$(TARGETPREFIX) \
 			--with-included-unistring \
-			--with-default-trust-store-dir=/etc/ssl/certs/ \
+			--with-default-trust-store-dir=$(CA_BUNDLE_DIR)/ \
 			--disable-guile \
 			--without-p11-kit \
 		; \
@@ -448,10 +448,6 @@ $(D)/gnutls: $(D)/install-certs $(D)/nettle $(ARCHIVE)/$(GNUTLS_SOURCE)
 	$(REWRITE_LIBTOOLDEP)/libgnutlsxx.la
 	rm -f $(addprefix $(TARGETPREFIX)/bin/,psktool gnutls-cli-debug certtool srptool ocsptool gnutls-serv gnutls-cli)
 	$(REMOVE)/gnutls-$(GNUTLS_VER)
-	touch $@
-
-$(D)/install-certs:
-	cp -a $(IMAGEFILES)/ca-certificates/* $(TARGETPREFIX)
 	touch $@
 
 #

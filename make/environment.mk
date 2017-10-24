@@ -161,6 +161,10 @@ CCACHE        = /usr/bin/ccache
 CCACHE_DIR    = $(HOME)/.ccache-ni-buildsystem-$(BOXARCH)-$(BOXSERIES)
 export CCACHE_DIR
 
+# certificates
+CA_BUNDLE     = ca-certificates.crt
+CA_BUNDLE_DIR = $(TARGETPREFIX)/etc/ssl/certs
+
 # create debug image
 DEBUG ?= no
 
