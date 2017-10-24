@@ -1,7 +1,7 @@
 #!/bin/sh
 
 CERTSCONF=/etc/ca-certificates.conf
-CERTSDIR=/usr/share/ca-certificates
+CERTSDIR=/share/ca-certificates
 
 rm -f $CERTSCONF
 
