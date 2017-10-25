@@ -12,6 +12,7 @@ $boxmodel = trim($_GET["boxmodel"]);
 $image_version = "???"; # wildcard for version (e.g. 320)
 $image_date = "????????????"; # wildcard for date (e.g. 201601012359)
 $image_type = "release";
+$image_ext = "img";
 
 # convert strings to lower case
 $boxtype = strtolower($boxtype);
@@ -38,13 +39,14 @@ elseif ($boxtype == "armbox" || $boxtype == "arm")
 {
 	# AX Tech
 	$boxtype_sc = "arm";
+	$image_ext = "tgz";
 }
 
 # release/ni320-YYYYMMDDHHMM-cst-kronos.img
 $directory = $image_type;
 if ($debug)
 	$directory .= "/debug";
-$pattern = $directory . "/ni" . $image_version . "-" . $image_date . "-" . $boxtype_sc . "-" . $boxmodel . ".img";
+$pattern = $directory . "/ni" . $image_version . "-" . $image_date . "-" . $boxtype_sc . "-" . $boxmodel . "." . $image_ext;
 
 # find last (newest) image
 $last_mod = 0;
