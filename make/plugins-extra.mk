@@ -76,3 +76,12 @@ $(LIBPLUG)/blockads.so: $(LIBPLUG)
 	pushd $(SOURCE_DIR)/$(TUXBOX_PLUGINS)/blockads && \
 	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) -I$(TARGETINCLUDE)/freetype2 -lfreetype -lz $(CORTEX-STRINGS) -o $@ blockads.c gfx.c io.c text.c globals.c http.c && \
 	install -m644 blockads.cfg $(LIBPLUG)/
+
+stbup: $(BIN)/stbup
+$(BIN)/stbup: $(BIN)
+	pushd $(SOURCES)/stbup && \
+	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) stbup.c -o $@ && \
+	install -m 644 stbup.conf $(TARGETPREFIX)/etc && \
+	install -m 755 stbup.init $(TARGETPREFIX)/etc/init.d/stbup
+	ln -s stbup $(TARGETPREFIX)/etc/init.d/S99stbup
+	ln -s stbup $(TARGETPREFIX)/etc/init.d/K01stbup

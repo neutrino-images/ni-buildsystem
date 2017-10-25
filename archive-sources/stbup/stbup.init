@@ -1,0 +1,20 @@
+#!/bin/sh
+
+case $1 in
+	start)	
+		if [ -e /var/etc/.stbup ]; then
+			( /bin/stbup 2>&1>/dev/console ) &
+		fi
+		;;
+	stop)
+		if [ -e /var/etc/.stbup ]; then
+			killall stbup
+		fi
+		;;
+	restart)
+		if [ -e /var/etc/.stbup ]; then
+			$0 stop
+			$0 start
+		fi
+		;;
+esac
