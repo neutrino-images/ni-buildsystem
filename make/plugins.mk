@@ -65,7 +65,7 @@ plugins-all: $(D)/neutrino \
 	add-locale \
 	favorites2bin \
 	localtv \
-	coolithek \
+	neutrino-mediathek \
 	openvpn-setup \
 	oscammon \
 	lcd4linux-all \
@@ -213,12 +213,13 @@ openvpn-setup: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(LIBPLUG) $(ETCINIT)
 	cp -a $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/$@/$@* $(LIBPLUG)/
 	install -m755 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/$@/ovpn.init $(ETCINIT)/ovpn
 
-coolithek: $(LIBPLUG)
-	git clone https://git.tuxcode.de/mediathek-luaV2.git $(BUILD_TMP)/coolithek && \
-	pushd $(BUILD_TMP)/coolithek && \
-	cp -rf coolithek* $(LIBPLUG)/ && \
-	cp -rf share* $(TARGETPREFIX)/
-	$(REMOVE)/coolithek
+neutrino-mediathek: $(LIBPLUG)
+	$(REMOVE)/$@
+	git clone https://github.com/neutrino-mediathek/mediathek.git $(BUILD_TMP)/$@
+	pushd $(BUILD_TMP)/$@ && \
+	cp -a plugins/* $(LIBPLUG)/ && \
+	cp -a share $(TARGETPREFIX)
+	$(REMOVE)/$@
 
 #scripts-lua
 add-locale \
