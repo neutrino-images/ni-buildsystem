@@ -7,7 +7,7 @@ if [ -e /var/etc/.coredump ]; then
 fi
 
 # uncomment for gstreamer debugging
-#GST_DEBUG=4
+#export GST_DEBUG=4
 
 until neutrino; do
 	RET=$?
