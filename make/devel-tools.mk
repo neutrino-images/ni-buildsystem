@@ -2,11 +2,11 @@
 
 valgrind: valgrind-$(BOXSERIES)
 
+$(D)/valgrind-hd51 \
 $(D)/valgrind-hd2: $(ARCHIVE)/valgrind-$(VALGRIND_VER).tar.bz2 | $(TARGETPREFIX)
 	$(UNTAR)/valgrind-$(VALGRIND_VER).tar.bz2
 	cd $(BUILD_TMP)/valgrind-$(VALGRIND_VER) && \
-	$(PATCH)/valgrind-fix-coolstream-hd2-build.patch && \
-	$(PATCH)/valgrind-fix-build-with-kernel-4.x.patch && \
+	$(PATCH)/valgrind-fix-$(BOXSERIES)-build.patch && \
 		export AR=$(TARGET)-ar && \
 		autoreconf -fi && \
 		$(CONFIGURE) \
@@ -43,11 +43,10 @@ $(D)/valgrind-hd1:
 	$(REMOVE)/valgrind
 	touch $@
 
-# strace 4.9 needs newer kernel or at least a kernel-patch
-# https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=79b5dc0c64d88cda3da23b2e22a5cec0964372ac
 $(D)/strace: $(ARCHIVE)/strace-$(STRACE_VER).tar.xz | $(TARGETPREFIX)
 	$(UNTAR)/strace-$(STRACE_VER).tar.xz
 	cd $(BUILD_TMP)/strace-$(STRACE_VER) && \
+	$(PATCH)/strace-error_prints-fix-potential-program_invocation_name-t.patch && \
 		$(CONFIGURE) \
 			--prefix= \
 			--mandir=$(BUILD_TMP)/.remove \
@@ -59,7 +58,7 @@ $(D)/strace: $(ARCHIVE)/strace-$(STRACE_VER).tar.xz | $(TARGETPREFIX)
 	$(REMOVE)/strace-$(STRACE_VER)
 	touch $@
 
-$(D)/gdb: $(ARCHIVE)/gdb-$(GDB_VER).tar.xz $(D)/zlib $(D)/libncurses | $(TARGETPREFIX)
+$(D)/gdb: $(D)/zlib $(D)/libncurses $(ARCHIVE)/gdb-$(GDB_VER).tar.xz $(D)/zlib $(D)/libncurses | $(TARGETPREFIX)
 	$(REMOVE)/gdb-$(GDB_VER)
 	$(UNTAR)/gdb-$(GDB_VER).tar.xz
 	set -e; cd $(BUILD_TMP)/gdb-$(GDB_VER); \
@@ -78,7 +77,3 @@ $(D)/gdb: $(ARCHIVE)/gdb-$(GDB_VER).tar.xz $(D)/zlib $(D)/libncurses | $(TARGETP
 	find $(TARGETPREFIX)/share/gdb/syscalls -type f -not -name 'arm-linux.xml' -not -name 'gdb-syscalls.dtd' -print0 | xargs -0 rm --
 	$(REMOVE)/gdb-$(GDB_VER)
 	touch $@
-
-devel-tools: $(D)/gdb $(D)/strace
-
-PHONY += devel-tools

@@ -36,7 +36,7 @@ LIBTIRPC_VER=1.0.1
 $(ARCHIVE)/libtirpc-$(LIBTIRPC_VER).tar.bz2:
 	$(WGET) http://sourceforge.net/projects/libtirpc/files/libtirpc/$(LIBTIRPC_VER)/libtirpc-$(LIBTIRPC_VER).tar.bz2
 
-STRACE_VER=4.8
+STRACE_VER=4.19
 $(ARCHIVE)/strace-$(STRACE_VER).tar.xz:
 	$(WGET) http://sourceforge.net/projects/strace/files/strace/$(STRACE_VER)/strace-$(STRACE_VER).tar.xz
 
@@ -309,9 +309,9 @@ endif
 $(ARCHIVE)/bash-$(BASH_VER).tar.gz:
 	$(WGET) http://ftp.gnu.org/gnu/bash/bash-$(BASH_VER).tar.gz
 
-VALGRIND_VER=3.10.1
+VALGRIND_VER=3.13.0
 $(ARCHIVE)/valgrind-$(VALGRIND_VER).tar.bz2:
-	$(WGET) http://valgrind.org/downloads/valgrind-$(VALGRIND_VER).tar.bz2
+	$(WGET) ftp://sourceware.org/pub/valgrind/valgrind-$(VALGRIND_VER).tar.bz2
 
 CORTEX-STRINGS_VER=48fd30c346ff2ab14ca574b770b5c1bcbefadba8
 $(ARCHIVE)/cortex-strings-$(CORTEX-STRINGS_VER).tar.bz2:

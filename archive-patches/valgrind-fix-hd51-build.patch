@@ -1,8 +1,8 @@
-From fa7cddebd33aeb434943a7f0663235d6a317727b Mon Sep 17 00:00:00 2001
-Message-Id: <fa7cddebd33aeb434943a7f0663235d6a317727b.1424364554.git.striper@gmx.de>
-From: striper <striper@gmx.de>
-Date: Thu, 19 Feb 2015 17:49:03 +0100
-Subject: [PATCH] - valgrind-fix-coolstream-hd2-build-3.10.1
+From 9901cac770d0d81ccf1ee8e5a02abf54d18e3a04 Mon Sep 17 00:00:00 2001
+Message-Id: <9901cac770d0d81ccf1ee8e5a02abf54d18e3a04.1509108606.git.thomas.harfmann@gmail.com>
+From: gixxpunk <thomas.harfmann@gmail.com>
+Date: Fri, 27 Oct 2017 14:50:01 +0200
+Subject: [PATCH] - valgrind-fix-hd51-build
 
 ---
  Makefile.all.am | 6 +++---
@@ -10,29 +10,29 @@ Subject: [PATCH] - valgrind-fix-coolstream-hd2-build-3.10.1
  2 files changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/Makefile.all.am b/Makefile.all.am
-index ef216c3..40f74fb 100644
+index 1859a51..648a197 100644
 --- a/Makefile.all.am
 +++ b/Makefile.all.am
-@@ -181,11 +181,11 @@ AM_CCASFLAGS_PPC64LE_LINUX  = @FLAG_M64@ -g
+@@ -199,11 +199,11 @@ AM_CCASFLAGS_PPC64LE_LINUX  = @FLAG_M64@ -g
  
  AM_FLAG_M3264_ARM_LINUX   = @FLAG_M32@
  AM_CFLAGS_ARM_LINUX       = @FLAG_M32@ \
 -			 	$(AM_CFLAGS_BASE) -marm -mcpu=cortex-a8
-+			 	$(AM_CFLAGS_BASE) -mlittle-endian -march=armv7-a -mtune=cortex-a9 -mfpu=vfpv3-d16 -mhard-float
++			 	$(AM_CFLAGS_BASE) -mlittle-endian -march=armv7ve -mtune=cortex-a15 -mfpu=neon-vfpv4 -mhard-float
  AM_CFLAGS_PSO_ARM_LINUX   = @FLAG_M32@ $(AM_CFLAGS_BASE) \
 -				-marm -mcpu=cortex-a8 $(AM_CFLAGS_PSO_BASE)
-+				-mlittle-endian -march=armv7-a -mtune=cortex-a9 -mfpu=vfpv3-d16 -mhard-float $(AM_CFLAGS_PSO_BASE)
++				-mlittle-endian -march=armv7ve -mtune=cortex-a15 -mfpu=neon-vfpv4 -mhard-float $(AM_CFLAGS_PSO_BASE)
  AM_CCASFLAGS_ARM_LINUX    = @FLAG_M32@ \
 -				-marm -mcpu=cortex-a8 -g
-+				-mlittle-endian -march=armv7-a -mtune=cortex-a9 -mfpu=vfpv3-d16 -mhard-float -g
++				-mlittle-endian -march=armv7ve -mtune=cortex-a15 -mfpu=neon-vfpv4 -mhard-float -g
  
  AM_FLAG_M3264_ARM64_LINUX = @FLAG_M64@
  AM_CFLAGS_ARM64_LINUX     = @FLAG_M64@ $(AM_CFLAGS_BASE)
 diff --git a/configure.ac b/configure.ac
-index 0fd2a41..2ac2cbe 100644
+index 3874296..0fc12f7 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -212,7 +212,7 @@ case "${host_cpu}" in
+@@ -234,7 +234,7 @@ case "${host_cpu}" in
          ARCH_MAX="s390x"
          ;;
  
@@ -42,5 +42,5 @@ index 0fd2a41..2ac2cbe 100644
  	ARCH_MAX="arm"
  	;;
 -- 
-2.3.0
+2.15.0.rc2
 
