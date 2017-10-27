@@ -760,6 +760,11 @@ $(D)/dosfstools: $(DOSFSTOOLS_DEPS) $(ARCHIVE)/dosfstools-$(DOSFSTOOLS_VER).tar.
 	$(REMOVE)/dosfstools-$(DOSFSTOOLS_VER)
 	touch $@
 
+NFS-UTILS_IPV6="--enable-ipv6"
+ifeq ($(BOXSERIES), hd1)
+	NFS-UTILS_IPV6="--disable-ipv6"
+endif
+
 $(D)/nfs-utils: $(D)/rpcbind $(ARCHIVE)/nfs-utils-$(NFS-UTILS_VER).tar.bz2 | $(TARGETPREFIX)
 	$(UNTAR)/nfs-utils-$(NFS-UTILS_VER).tar.bz2
 	pushd $(BUILD_TMP)/nfs-utils-$(NFS-UTILS_VER) && \
@@ -780,7 +785,7 @@ $(D)/nfs-utils: $(D)/rpcbind $(ARCHIVE)/nfs-utils-$(NFS-UTILS_VER).tar.bz2 | $(T
 			--disable-nfsv41 \
 			--disable-gss \
 			--disable-uuid \
-			--disable-ipv6 \
+			$(NFS-UTILS_IPV6) \
 			--without-tcp-wrappers \
 			--with-statedir=/var/lib/nfs \
 			--with-rpcgen=internal \
