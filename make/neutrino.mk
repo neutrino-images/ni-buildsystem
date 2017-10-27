@@ -184,4 +184,12 @@ neutrino-clean:
 neutrino-clean-all: neutrino-clean
 	-rm -r $(N_OBJDIR)
 
+libstb-hal-clean:
+	-make -C $(LH_OBJDIR) clean
+	-rm $(LH_OBJDIR)/config.status
+	-rm $(D)/libstb-hal
+
+libstb-hal-clean-all: libstb-hal-clean
+	-rm -r $(LH_OBJDIR)
+
 PHONY += neutrino-clean neutrino-clean-all
