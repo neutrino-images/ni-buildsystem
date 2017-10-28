@@ -8,9 +8,6 @@ SHOWINFO "start"
 
 mount -t proc proc /proc
 
-# update
-# FIXME
-
 # init system
 SHOWINFO "creating and mounting system directories..."
 mount -t sysfs sys /sys
@@ -51,9 +48,6 @@ mkdir -p /var/run/wpa_supplicant
 if [ -e /var/backup_flash.tar.gz ]; then
 	/bin/restore_flash.sh
 fi
-
-# update system
-# FIXME
 
 service hostname start
 
