@@ -10,8 +10,10 @@ case $1 in
 		fi
 	;;
 	stop)
-		SHOWINFO "stopping ..."
-		killall emmrd
+		if [ -e /var/etc/.emmrd ]; then
+			SHOWINFO "stopping ..."
+			killall emmrd
+		fi
 	;;
 	*)
 		echo "[${BASENAME}] Usage: $0 {start|stop}"
