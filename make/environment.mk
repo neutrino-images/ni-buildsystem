@@ -182,6 +182,7 @@ ifeq ($(BOXSERIES), hd1)
   TARGET_MARCH_CFLAGS    = -march=armv6 -mfloat-abi=soft -mlittle-endian
   TARGET_EXTRA_CFLAGS    = -fdata-sections -ffunction-sections
   TARGET_EXTRA_LDFLAGS   = -Wl,--gc-sections
+  CXX11_ABI              =
 endif
 
 ifeq ($(BOXSERIES), hd2)
@@ -207,6 +208,7 @@ ifeq ($(BOXSERIES), hd2)
     TARGET_EXTRA_CFLAGS  = -fdata-sections -ffunction-sections
     TARGET_EXTRA_LDFLAGS = -Wl,--gc-sections
   endif
+  CXX11_ABI              = -D_GLIBCXX_USE_CXX11_ABI=0
 endif
 
 ifeq ($(BOXSERIES), hd51)
@@ -221,9 +223,10 @@ ifeq ($(BOXSERIES), hd51)
   TARGET_MARCH_CFLAGS    = -march=armv7ve -mtune=cortex-a15 -mfpu=neon-vfpv4 -mfloat-abi=hard
   TARGET_EXTRA_CFLAGS    =
   TARGET_EXTRA_LDFLAGS   =
+  CXX11_ABI              =
 endif
 
-TARGET_CFLAGS   = -pipe $(TARGET_O_CFLAGS) $(TARGET_MARCH_CFLAGS) $(TARGET_EXTRA_CFLAGS) -g -I$(TARGETINCLUDE)
+TARGET_CFLAGS   = -pipe $(TARGET_O_CFLAGS) $(TARGET_MARCH_CFLAGS) $(TARGET_EXTRA_CFLAGS) $(CXX11_ABI) -g -I$(TARGETINCLUDE)
 TARGET_CPPFLAGS = $(TARGET_CFLAGS)
 TARGET_CXXFLAGS = $(TARGET_CFLAGS)
 TARGET_LDFLAGS  = $(CORTEX-STRINGS) -Wl,-O1 -Wl,-rpath,$(TARGETLIB) -Wl,-rpath-link,$(TARGETLIB) -L$(TARGETLIB) $(TARGET_EXTRA_LDFLAGS)

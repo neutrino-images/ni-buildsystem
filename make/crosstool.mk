@@ -83,7 +83,7 @@ crosstool-arm-hd2: CROSS_DIR-check $(ARCHIVE)/gcc-linaro-$(GCC_VER).tar.xz $(SOU
 	chmod -R +w $(CROSS_DIR)
 	test -e $(CROSS_DIR)/$(TARGET)/lib && mv $(CROSS_DIR)/$(TARGET)/lib $(CROSS_DIR)/$(TARGET)/lib.x
 	test -e $(CROSS_DIR)/$(TARGET)/lib || ln -sf sys-root/lib $(CROSS_DIR)/$(TARGET)/
-	rm -f $(CROSS_DIR)/$(TARGET)/sys-root/lib/libstdc++.so.6.0.20-gdb.py
+	rm -f $(CROSS_DIR)/$(TARGET)/sys-root/lib/libstdc++.so.6.0.22-gdb.py
 	$(REMOVE)/crosstool-ng
 
 crosstool-arm-hd51: CROSS_DIR-check

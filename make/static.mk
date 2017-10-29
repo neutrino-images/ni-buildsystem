@@ -12,9 +12,9 @@ $(STATICLIB)/libcortex-strings.la: $(ARCHIVE)/cortex-strings-$(CORTEX-STRINGS_VE
 	$(UNTAR)/cortex-strings-$(CORTEX-STRINGS_VER).tar.bz2
 	pushd $(BUILD_TMP)/cortex-strings-$(CORTEX-STRINGS_VER) && \
 		./autogen.sh && \
-		CFLAGS="-pipe -O2 -g -I$(TARGETINCLUDE)" \
-		CPPFLAGS="-pipe -O2 -g -I$(TARGETINCLUDE)" \
-		CXXFLAGS="-pipe -O2 -g -I$(TARGETINCLUDE)" \
+		CFLAGS="-pipe -O2 $(CXX11_ABI) -g -I$(TARGETINCLUDE)" \
+		CPPFLAGS="-pipe -O2 $(CXX11_ABI) -g -I$(TARGETINCLUDE)" \
+		CXXFLAGS="-pipe -O2 $(CXX11_ABI) -g -I$(TARGETINCLUDE)" \
 		LDFLAGS="-Wl,-O1 -L$(TARGETLIB)" \
 		PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
 		./configure $(CONFIGURE_OPTS) \
