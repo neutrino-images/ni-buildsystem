@@ -163,7 +163,7 @@ static int write(const string file, const string &data)
 	}
 	else
 	{
-		cout << BASNAME << "error opening file " << fh << endl;
+		cout << BASNAME << "error opening file \"" << file << "\"" << endl;
 	}
 
 	return 0;

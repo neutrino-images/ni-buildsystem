@@ -239,6 +239,7 @@ $(D)/ushare: $(ARCHIVE)/ushare-$(USHARE_VER).tar.bz2 $(D)/libupnp | $(TARGETPREF
 	$(UNTAR)/ushare-$(USHARE_VER).tar.bz2
 	pushd $(BUILD_TMP)/ushare-$(USHARE_VER) && \
 		$(PATCH)/ushare.diff && \
+		$(PATCH)/ushare-fix-building-with-gcc-5.x.patch && \
 		$(BUILDENV) \
 		./configure \
 			--prefix=$(TARGETPREFIX) \

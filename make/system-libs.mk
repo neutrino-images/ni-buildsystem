@@ -430,6 +430,7 @@ $(D)/ffmpeg: $(FFMPEG_DEPS) | $(TARGETPREFIX)
 $(D)/libncurses: $(ARCHIVE)/ncurses-$(LIBNCURSES_VER).tar.gz | $(TARGETPREFIX)
 	$(UNTAR)/ncurses-$(LIBNCURSES_VER).tar.gz && \
 	pushd $(BUILD_TMP)/ncurses-$(LIBNCURSES_VER) && \
+	$(PATCH)/ncurses-gcc-5.x-MKlib_gen.patch && \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
 			--prefix= \
