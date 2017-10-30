@@ -298,7 +298,6 @@ $(D)/vsftpd: $(D)/openssl $(ARCHIVE)/vsftpd-$(VSFTPD_VER).tar.gz | $(TARGETPREFI
 	cd $(BUILD_TMP)/vsftpd-$(VSFTPD_VER) && \
 		$(PATCH)/vsftpd-fix-CVE-2015-1419.patch && \
 		$(PATCH)/vsftpd-disable-capabilities.patch && \
-		$(PATCH)/vsftpd-musl-compatibility.patch && \
 		sed -i -e 's/.*VSF_BUILD_PAM/#undef VSF_BUILD_PAM/' builddefs.h && \
 		sed -i -e 's/.*VSF_BUILD_SSL/#define VSF_BUILD_SSL/' builddefs.h && \
 		make clean && \

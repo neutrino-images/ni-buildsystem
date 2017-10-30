@@ -67,7 +67,6 @@ $(D)/libdvbsi: | $(TARGETPREFIX)
 	cd $(BUILD_TMP)/libdvbsi++; \
 		$(PATCH)/libdvbsi++-fix-sectionLength-check.patch; \
 		$(PATCH)/libdvbsi++-content_identifier_descriptor.patch; \
-		$(PATCH)/libdvbsi++-fix-unaligned-access-on-SuperH.patch; \
 		$(CONFIGURE) \
 			--prefix= \
 			--enable-shared \
