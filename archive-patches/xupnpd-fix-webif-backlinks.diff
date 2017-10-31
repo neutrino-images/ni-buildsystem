@@ -1,19 +1,8 @@
-diff --git a/src/ui/ui_config.html b/src/ui/ui_config.html
-index 784f27e..afce5af 100644
---- a/src/ui/ui_config.html
-+++ b/src/ui/ui_config.html
-@@ -204,5 +204,5 @@
- <a class='btn btn-primary' href='/ui/restart'>Restart</a>
- <a class='btn btn-info' href='/ui/plugins'>Plugins</a>
- <a class='btn btn-info' href='/ui/profiles'>Profiles</a>
--<a class='btn btn-info' href='/ui'>Back</a>
-+<a class='btn btn-info' href='/ui/'>Back</a>
- </form>
 diff --git a/src/ui/xupnpd_ui.lua b/src/ui/xupnpd_ui.lua
-index dbd9c7d..863c5b3 100644
+index 9236780..d19398b 100644
 --- a/src/ui/xupnpd_ui.lua
 +++ b/src/ui/xupnpd_ui.lua
-@@ -11,7 +11,7 @@ end
+@@ -14,7 +14,7 @@ end
  
  function ui_error()
      http.send('<h2>Error occurred</h3>')
@@ -22,7 +11,7 @@ index dbd9c7d..863c5b3 100644
  end
  
  function ui_downloads()
-@@ -23,7 +23,7 @@ function ui_downloads()
+@@ -26,7 +26,7 @@ function ui_downloads()
          end
      end
      http.send('</table>')
@@ -31,7 +20,7 @@ index dbd9c7d..863c5b3 100644
  end
  
  function ui_download(name)
-@@ -84,7 +84,7 @@ function ui_playlists()
+@@ -87,7 +87,7 @@ function ui_playlists()
      http.send('<input type=file name=m3ufile><br /><br />')
      http.send('<input class="btn btn-primary" type=submit value=Send>')
      http.send('</form><hr/>')
@@ -40,7 +29,7 @@ index dbd9c7d..863c5b3 100644
  end
  
  function ui_feeds()
-@@ -118,7 +118,7 @@ function ui_feeds()
+@@ -121,7 +121,7 @@ function ui_feeds()
      http.send('<br/><input class="btn btn-primary" type=submit value=Add> <a class="btn btn-info" href="/ui/fhelp" target="_blank">Help</a>')
      http.send('</form><hr/>')
  
@@ -49,7 +38,7 @@ index dbd9c7d..863c5b3 100644
  end
  
  function ui_fhelp()
-@@ -425,7 +425,7 @@ function ui_status()
+@@ -429,7 +429,7 @@ function ui_status()
  
      http.send('</table>')
  
