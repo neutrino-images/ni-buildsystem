@@ -493,7 +493,8 @@ $(BIN)/showiframe: $(BIN)
 		\
 		showiframe.c \
 		\
-		-o $@
+		-o $@ && \
+	install -m755 showiframe.sh $(BIN)/
 
 # shellexec
 shellexec: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(LIBPLUG)/shellexec.so
