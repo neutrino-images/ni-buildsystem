@@ -9,10 +9,13 @@ crosstools:
 
 crosstools-renew:
 	make ccache-clean BOXSERIES=hd1
+	make static-clean BOXSERIES=hd1
 	rm -rf $(BASE_DIR)/cross/$(BOXARCH)/hd1
 	make ccache-clean BOXSERIES=hd2
+	make static-clean BOXSERIES=hd2
 	rm -rf $(BASE_DIR)/cross/$(BOXARCH)/hd2
 	make ccache-clean BOXSERIES=hd51
+	make static-clean BOXSERIES=hd51
 	rm -rf $(BASE_DIR)/cross/$(BOXARCH)/hd51
 	rm -rf $(HOSTPREFIX)/bin/arm-*
 	rm -rf $(HOSTPREFIX)/bin/pkg-config
