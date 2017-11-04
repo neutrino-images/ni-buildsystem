@@ -52,6 +52,9 @@ fi
 if [ ! -e /var/tuxbox/config/webtv_usr.xml ]; then
 	cp -a /var_init/tuxbox/config/webtv_usr.xml /var/tuxbox/config/webtv_usr.xml
 fi
+if [ ! -e /var/tuxbox/config/webradio_usr.xml ]; then
+	cp -a /var_init/tuxbox/config/webradio_usr.xml /var/tuxbox/config/webradio_usr.xml
+fi
 if [ ! -e /var/etc/inadyn.conf ]; then
 	cp -a /var_init/etc/inadyn.conf /var/etc/inadyn.conf
 fi
