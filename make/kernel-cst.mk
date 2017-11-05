@@ -49,7 +49,7 @@ $(D)/kernel-cst-hd2: $(SOURCE_DIR)/$(NI_LINUX-KERNEL) $(SOURCE_DIR)/$(NI_DRIVERS
 	cd $(BUILD_TMP)/linux-$(KERNEL_VERSION) && \
 	touch .scmversion && \
 	cp $(CONFIGS)/kernel-3.10-$(BOXFAMILY).config $(BUILD_TMP)/linux-$(KERNEL_VERSION)/.config && \
-	sed -i -e 's/SUBLEVEL = 107/SUBLEVEL = 93/g' Makefile && \
+	sed -i -e 's/SUBLEVEL = 108/SUBLEVEL = 93/g' Makefile && \
 	mkdir -p $(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules && \
 		$(MAKE) ARCH=arm CROSS_COMPILE=$(TARGET)- INSTALL_MOD_PATH=$(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules silentoldconfig && \
 		$(MAKE) ARCH=arm CROSS_COMPILE=$(TARGET)- INSTALL_MOD_PATH=$(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules zImage && \
