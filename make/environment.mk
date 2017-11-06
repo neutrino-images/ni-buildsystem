@@ -300,11 +300,7 @@ BITBUCKET_SSH		= git@bitbucket.org
 
 NI_GIT			= $(BITBUCKET_SSH):neutrino-images
 NI_NEUTRINO		= ni-neutrino-hd
-# for testing
 NI_NEUTRINO_BRANCH	?= ni/mp/tuxbox
-ifeq ($(USE_LIBSTB-HAL), yes)
-  NI_NEUTRINO_BRANCH	:= ni/mp/tuxbox
-endif
 NI_NEUTRINO-PLUGINS	= ni-neutrino-plugins
 
 BUILD-GENERIC-PC	= build-generic-pc
