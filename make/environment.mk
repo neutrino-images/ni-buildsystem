@@ -317,8 +317,8 @@ NI_STREAMRIPPER		= ni-streamripper
 # ffmpeg/master is currently not mature enough for daily use
 # if you want to help testing you can enable it here
 NI_FFMPEG		= ni-ffmpeg
-NI_FFMPEG_BRANCH	= ni/ffmpeg/2.8
-#NI_FFMPEG_BRANCH	= ni/ffmpeg/master
+NI_FFMPEG_BRANCH	?= ni/ffmpeg/2.8
+#NI_FFMPEG_BRANCH	?= ni/ffmpeg/master
 
 TUXBOX_GIT		= $(GITHUB)/tuxbox-neutrino
 TUXBOX_NEUTRINO		= gui-neutrino
