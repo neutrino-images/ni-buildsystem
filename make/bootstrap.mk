@@ -60,6 +60,9 @@ endif
 $(TARGETLIB): | $(TARGETPREFIX)
 	mkdir -p $@
 	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(DRIVERS_DIR)/libs/* $@
+ifeq ($(BOXTYPE), coolstream)
+	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(DRIVERS_DIR)/libcoolstream/$(shell echo -n $(NI_FFMPEG_BRANCH) | sed 's,/,-,g')/* $@
+endif
 
 $(TARGETLIB)/modules: | $(TARGETPREFIX)
 	mkdir -p $@
