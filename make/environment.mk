@@ -191,11 +191,11 @@ ifeq ($(BOXSERIES), hd2)
   KERNEL_BRANCH          = ni/3.10.x
   ifeq ($(BOXFAMILY), apollo)
     KERNEL_DTB           = hd849x
-    DRIVERS_DIR          = apollo-3.x
+    DRIVERS_DIR          = apollo
   endif
   ifeq ($(BOXFAMILY), kronos)
     KERNEL_DTB           = en75x1
-    DRIVERS_DIR          = kronos-3.x
+    DRIVERS_DIR          = kronos
   endif
   CORTEX-STRINGS         = -lcortex-strings
   TARGET                 = arm-cortex-linux-uclibcgnueabi
