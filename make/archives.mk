@@ -102,7 +102,7 @@ OPENSSH_VER=7.6p1
 $(ARCHIVE)/openssh-$(OPENSSH_VER).tar.gz:
 	$(WGET) https://ftp.fau.de/pub/OpenBSD/OpenSSH/portable/openssh-$(OPENSSH_VER).tar.gz
 
-INADYN_VER=2.1
+INADYN_VER=2.2.1
 $(ARCHIVE)/inadyn-$(INADYN_VER).tar.xz:
 	$(WGET) https://github.com/troglobit/inadyn/releases/download/v$(INADYN_VER)/inadyn-$(INADYN_VER).tar.xz
 
@@ -325,11 +325,11 @@ LESS_VER=527
 $(ARCHIVE)/less-$(LESS_VER).tar.gz:
 	$(WGET) http://www.greenwoodsoftware.com/less/less-$(LESS_VER).tar.gz
 
-CONFUSE_VER=3.0
+CONFUSE_VER=3.2.1
 $(ARCHIVE)/confuse-$(CONFUSE_VER).tar.xz:
 	$(WGET) https://github.com/martinh/libconfuse/releases/download/v$(CONFUSE_VER)/confuse-$(CONFUSE_VER).tar.xz
 
-ITE_VER=1.8.0
+ITE_VER=1.9.3
 $(ARCHIVE)/libite-$(ITE_VER).tar.xz:
 	$(WGET) https://github.com/troglobit/libite/releases/download/v$(ITE_VER)/libite-$(ITE_VER).tar.xz
 
