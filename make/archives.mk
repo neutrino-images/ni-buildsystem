@@ -24,15 +24,15 @@ LIBXML2_VER=2.9.7
 $(ARCHIVE)/libxml2-$(LIBXML2_VER).tar.gz:
 	$(WGET) ftp://xmlsoft.org/libxml2/libxml2-$(LIBXML2_VER).tar.gz
 
-NFS-UTILS_VER=1.3.3
+NFS-UTILS_VER=2.2.1
 $(ARCHIVE)/nfs-utils-$(NFS-UTILS_VER).tar.bz2:
 	$(WGET) http://sourceforge.net/projects/nfs/files/nfs-utils/$(NFS-UTILS_VER)/nfs-utils-$(NFS-UTILS_VER).tar.bz2
 
-RPCBIND_VER=0.2.3
+RPCBIND_VER=0.2.4
 $(ARCHIVE)/rpcbind-$(RPCBIND_VER).tar.bz2:
 	$(WGET) http://sourceforge.net/projects/rpcbind/files/rpcbind/$(RPCBIND_VER)/rpcbind-$(RPCBIND_VER).tar.bz2
 
-LIBTIRPC_VER=1.0.1
+LIBTIRPC_VER=1.0.2
 $(ARCHIVE)/libtirpc-$(LIBTIRPC_VER).tar.bz2:
 	$(WGET) http://sourceforge.net/projects/libtirpc/files/libtirpc/$(LIBTIRPC_VER)/libtirpc-$(LIBTIRPC_VER).tar.bz2
 
