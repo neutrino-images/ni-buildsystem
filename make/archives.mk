@@ -1,10 +1,10 @@
 # makefile for tarball download
 
-LIBGCRYPT_VER=1.7.6
+LIBGCRYPT_VER=1.8.1
 $(ARCHIVE)/libgcrypt-$(LIBGCRYPT_VER).tar.gz:
 	$(WGET) ftp://ftp.gnupg.org/gcrypt/libgcrypt/libgcrypt-$(LIBGCRYPT_VER).tar.gz
 
-LIBGPG-ERROR_VER=1.26
+LIBGPG-ERROR_VER=1.27
 $(ARCHIVE)/libgpg-error-$(LIBGPG-ERROR_VER).tar.bz2:
 	$(WGET) ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-$(LIBGPG-ERROR_VER).tar.bz2
 
@@ -12,7 +12,7 @@ TZDATA_VER=2016j
 $(ARCHIVE)/tzdata$(TZDATA_VER).tar.gz:
 	$(WGET) ftp://ftp.iana.org/tz/releases/tzdata$(TZDATA_VER).tar.gz
 
-TZCODE_VER=2016j
+TZCODE_VER=2017c
 $(ARCHIVE)/tzcode$(TZCODE_VER).tar.gz:
 	$(WGET) ftp://ftp.iana.org/tz/releases/tzcode$(TZCODE_VER).tar.gz
 
@@ -20,7 +20,7 @@ PUGIXML_VER=1.8
 $(ARCHIVE)/pugixml-$(PUGIXML_VER).tar.gz:
 	$(WGET) http://github.com/zeux/pugixml/releases/download/v$(PUGIXML_VER)/pugixml-$(PUGIXML_VER).tar.gz
 
-LIBXML2_VER=2.9.4
+LIBXML2_VER=2.9.7
 $(ARCHIVE)/libxml2-$(LIBXML2_VER).tar.gz:
 	$(WGET) ftp://xmlsoft.org/libxml2/libxml2-$(LIBXML2_VER).tar.gz
 
@@ -64,11 +64,11 @@ USHARE_VER=1.1a
 $(ARCHIVE)/ushare-$(USHARE_VER).tar.bz2:
 	$(WGET) http://ushare.geexbox.org/releases/ushare-$(USHARE_VER).tar.bz2
 
-HDPARM_VER=9.50
+HDPARM_VER=9.52
 $(ARCHIVE)/hdparm-$(HDPARM_VER).tar.gz:
 	$(WGET) http://sourceforge.net/projects/hdparm/files/hdparm/hdparm-$(HDPARM_VER).tar.gz
 
-LIBUPNP_VER=1.6.21
+LIBUPNP_VER=1.6.22
 $(ARCHIVE)/libupnp-$(LIBUPNP_VER).tar.bz2:
 	$(WGET) http://sourceforge.net/projects/pupnp/files/pupnp/libUPnP%20$(LIBUPNP_VER)/libupnp-$(LIBUPNP_VER).tar.bz2
 
@@ -76,7 +76,7 @@ WPA_SUPP_VER=0.7.3
 $(ARCHIVE)/wpa_supplicant-$(WPA_SUPP_VER).tar.gz:
 	$(WGET) https://ftp.osuosl.org/pub/blfs/conglomeration/wpa_supplicant/wpa_supplicant-$(WPA_SUPP_VER).tar.gz
 
-LIBGD_VER=2.2.4
+LIBGD_VER=2.2.5
 $(ARCHIVE)/libgd-$(LIBGD_VER).tar.xz:
 	$(WGET) https://github.com/libgd/libgd/releases/download/gd-$(LIBGD_VER)/libgd-$(LIBGD_VER).tar.xz
 
@@ -88,7 +88,7 @@ FUSE_VER=2.9.7
 $(ARCHIVE)/fuse-$(FUSE_VER).tar.gz:
 	$(WGET) https://github.com/libfuse/libfuse/releases/download/fuse-$(FUSE_VER)/fuse-$(FUSE_VER).tar.gz
 
-OPENVPN_VER=2.4.2
+OPENVPN_VER=2.4.4
 $(ARCHIVE)/openvpn-$(OPENVPN_VER).tar.xz:
 	$(WGET) http://swupdate.openvpn.org/community/releases/openvpn-$(OPENVPN_VER).tar.xz
 
@@ -98,7 +98,7 @@ CUSTOM_GCC=$(ARCHIVE)/gcc-linaro-$(GCC_VER).tar.xz
 $(ARCHIVE)/gcc-linaro-$(GCC_VER).tar.xz:
 	$(WGET) https://releases.linaro.org/components/toolchain/gcc-linaro/$(GCC_VER)/gcc-linaro-$(GCC_VER).tar.xz
 
-OPENSSH_VER=7.5p1
+OPENSSH_VER=7.6p1
 $(ARCHIVE)/openssh-$(OPENSSH_VER).tar.gz:
 	$(WGET) https://ftp.fau.de/pub/OpenBSD/OpenSSH/portable/openssh-$(OPENSSH_VER).tar.gz
 
@@ -106,7 +106,7 @@ INADYN_VER=2.1
 $(ARCHIVE)/inadyn-$(INADYN_VER).tar.xz:
 	$(WGET) https://github.com/troglobit/inadyn/releases/download/v$(INADYN_VER)/inadyn-$(INADYN_VER).tar.xz
 
-COREUTILS_VER=8.27
+COREUTILS_VER=8.28
 $(ARCHIVE)/coreutils-$(COREUTILS_VER).tar.xz:
 	$(WGET) http://ftp.gnu.org/gnu/coreutils/coreutils-$(COREUTILS_VER).tar.xz
 
@@ -139,7 +139,7 @@ ZLIB_VER=1.2.11
 $(ARCHIVE)/zlib-$(ZLIB_VER).tar.gz:
 	$(WGET) http://zlib.net/zlib-$(ZLIB_VER).tar.gz
 
-LIBPNG_VER=1.6.32
+LIBPNG_VER=1.6.34
 $(ARCHIVE)/libpng-$(LIBPNG_VER).tar.xz:
 	$(WGET) http://sourceforge.net/projects/libpng/files/libpng16/$(LIBPNG_VER)/libpng-$(LIBPNG_VER).tar.xz
 
@@ -167,7 +167,7 @@ GIFLIB_VER=5.1.4
 $(ARCHIVE)/giflib-$(GIFLIB_VER).tar.bz2:
 	$(WGET) http://sourceforge.net/projects/giflib/files/giflib-$(GIFLIB_VER).tar.bz2
 
-LIBCURL_VER=7.55.1
+LIBCURL_VER=7.56.1
 $(ARCHIVE)/curl-$(LIBCURL_VER).tar.bz2:
 	$(WGET) http://curl.haxx.se/download/curl-$(LIBCURL_VER).tar.bz2
 
@@ -183,7 +183,7 @@ FREETYPE_VER=2.8.1
 $(ARCHIVE)/freetype-$(FREETYPE_VER).tar.bz2:
 	$(WGET) https://sourceforge.net/projects/freetype/files/freetype2/$(FREETYPE_VER)/freetype-$(FREETYPE_VER).tar.bz2
 
-OPENSSL_VER=1.0.2l
+OPENSSL_VER=1.0.2m
 $(ARCHIVE)/openssl-$(OPENSSL_VER).tar.gz:
 	$(WGET) http://www.openssl.org/source/openssl-$(OPENSSL_VER).tar.gz
 
@@ -214,11 +214,11 @@ SAMBA36_VER=3.6.25
 $(ARCHIVE)/samba-$(SAMBA36_VER).tar.gz:
 	$(WGET) https://download.samba.org/pub/samba/stable/samba-$(SAMBA36_VER).tar.gz
 
-E2FSPROGS_VER=1.43.5
+E2FSPROGS_VER=1.43.7
 $(ARCHIVE)/e2fsprogs-$(E2FSPROGS_VER).tar.gz:
 	$(WGET) http://downloads.sourceforge.net/project/e2fsprogs/e2fsprogs/v$(E2FSPROGS_VER)/e2fsprogs-$(E2FSPROGS_VER).tar.gz
 
-SMARTMON_VER=6.5
+SMARTMON_VER=6.6
 $(ARCHIVE)/smartmontools-$(SMARTMON_VER).tar.gz:
 	$(WGET) http://downloads.sourceforge.net/project/smartmontools/smartmontools/$(SMARTMON_VER)/smartmontools-$(SMARTMON_VER).tar.gz
 
@@ -279,7 +279,7 @@ LIBBLURAY_VER=0.9.2
 $(ARCHIVE)/libbluray-$(LIBBLURAY_VER).tar.bz2:
 	$(WGET) ftp://ftp.videolan.org/pub/videolan/libbluray/$(LIBBLURAY_VER)/libbluray-$(LIBBLURAY_VER).tar.bz2
 
-LIBASS_VER=0.13.7
+LIBASS_VER=0.14.0
 $(ARCHIVE)/libass-$(LIBASS_VER).tar.xz:
 	$(WGET) https://github.com/libass/libass/releases/download/$(LIBASS_VER)/libass-$(LIBASS_VER).tar.xz
 
@@ -295,7 +295,7 @@ LIBAACS_VER=0.8.1
 $(ARCHIVE)/libaacs-$(LIBAACS_VER).tar.bz2:
 	$(WGET) ftp://ftp.videolan.org/pub/videolan/libaacs/$(LIBAACS_VER)/libaacs-$(LIBAACS_VER).tar.bz2
 
-BC_VER=1.06
+BC_VER=1.07
 $(ARCHIVE)/bc-$(BC_VER).tar.gz:
 	$(WGET) ftp://ftp.gnu.org/gnu/bc/bc-$(BC_VER).tar.gz
 
@@ -325,7 +325,7 @@ DOSFSTOOLS_VER=4.1
 $(ARCHIVE)/dosfstools-$(DOSFSTOOLS_VER).tar.xz:
 	$(WGET) https://github.com/dosfstools/dosfstools/releases/download/v$(DOSFSTOOLS_VER)/dosfstools-$(DOSFSTOOLS_VER).tar.xz
 
-LESS_VER=487
+LESS_VER=527
 $(ARCHIVE)/less-$(LESS_VER).tar.gz:
 	$(WGET) http://www.greenwoodsoftware.com/less/less-$(LESS_VER).tar.gz
 
@@ -337,11 +337,11 @@ ITE_VER=1.8.0
 $(ARCHIVE)/libite-$(ITE_VER).tar.xz:
 	$(WGET) https://github.com/troglobit/libite/releases/download/v$(ITE_VER)/libite-$(ITE_VER).tar.xz
 
-FUSE_EXFAT_VER=1.2.6
+FUSE_EXFAT_VER=1.2.7
 $(ARCHIVE)/fuse-exfat-$(FUSE_EXFAT_VER).tar.gz:
 	$(WGET) https://github.com/relan/exfat/releases/download/v$(FUSE_EXFAT_VER)/fuse-exfat-$(FUSE_EXFAT_VER).tar.gz
 
-EXFAT_UTILS_VER=1.2.6
+EXFAT_UTILS_VER=1.2.7
 $(ARCHIVE)/exfat-utils-$(EXFAT_UTILS_VER).tar.gz:
 	$(WGET) https://github.com/relan/exfat/releases/download/v$(EXFAT_UTILS_VER)/exfat-utils-$(EXFAT_UTILS_VER).tar.gz
 
@@ -368,7 +368,7 @@ GETTEXT_VERSION=0.19.8.1
 $(ARCHIVE)/gettext-$(GETTEXT_VERSION).tar.xz:
 	$(WGET) ftp://ftp.gnu.org/gnu/gettext/gettext-$(GETTEXT_VERSION).tar.xz
 
-WGET_VER=1.19.1
+WGET_VER=1.19.2
 $(ARCHIVE)/wget-$(WGET_VER).tar.gz:
 	$(WGET) http://ftp.gnu.org/gnu/wget/wget-$(WGET_VER).tar.gz
 
