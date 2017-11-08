@@ -726,20 +726,6 @@ $(D)/xupnpd: $(D)/lua $(D)/openssl | $(TARGETPREFIX)
 	$(REMOVE)/xupnpd
 	touch $@
 
-$(D)/bc: $(ARCHIVE)/bc-$(BC_VER).tar.gz | $(TARGETPREFIX)
-	$(UNTAR)/bc-$(BC_VER).tar.gz
-	cd $(BUILD_TMP)/bc-$(BC_VER) && \
-		autoreconf -fi && \
-		$(CONFIGURE) \
-			--target=$(TARGET) \
-			--prefix= \
-			--mandir=/.remove \
-			--infodir=/.remove && \
-		$(MAKE) && \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
-	$(REMOVE)/bc-$(BC_VER)
-	touch $@
-
 DOSFSTOOLS_CFLAGS = $(TARGET_CFLAGS) -D_GNU_SOURCE -fomit-frame-pointer -D_FILE_OFFSET_BITS=64
 
 $(D)/dosfstools: $(DOSFSTOOLS_DEPS) $(ARCHIVE)/dosfstools-$(DOSFSTOOLS_VER).tar.xz | $(TARGETPREFIX)

@@ -295,10 +295,6 @@ LIBAACS_VER=0.8.1
 $(ARCHIVE)/libaacs-$(LIBAACS_VER).tar.bz2:
 	$(WGET) ftp://ftp.videolan.org/pub/videolan/libaacs/$(LIBAACS_VER)/libaacs-$(LIBAACS_VER).tar.bz2
 
-BC_VER=1.07
-$(ARCHIVE)/bc-$(BC_VER).tar.gz:
-	$(WGET) ftp://ftp.gnu.org/gnu/bc/bc-$(BC_VER).tar.gz
-
 BASH_MAJOR=4
 BASH_MINOR=4
 BASH_MICRO=0

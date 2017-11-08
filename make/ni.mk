@@ -69,7 +69,6 @@ ni-image:
 	make dropbear
 	make -j$(NUM_CPUS) hdparm
 	make -j$(NUM_CPUS) busybox
-	make -j$(NUM_CPUS) bc
 	make -j$(NUM_CPUS) coreutils
 	make -j$(NUM_CPUS) dosfstools
 	make -j$(NUM_CPUS) wpa_supplicant
