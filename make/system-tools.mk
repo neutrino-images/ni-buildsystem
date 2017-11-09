@@ -726,20 +726,6 @@ $(D)/xupnpd: $(D)/lua $(D)/openssl | $(TARGETPREFIX)
 	$(REMOVE)/xupnpd
 	touch $@
 
-$(D)/bc: $(ARCHIVE)/bc-$(BC_VER).tar.gz | $(TARGETPREFIX)
-	$(UNTAR)/bc-$(BC_VER).tar.gz
-	cd $(BUILD_TMP)/bc-$(BC_VER) && \
-		autoreconf -fi && \
-		$(CONFIGURE) \
-			--target=$(TARGET) \
-			--prefix= \
-			--mandir=/.remove \
-			--infodir=/.remove && \
-		$(MAKE) && \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
-	$(REMOVE)/bc-$(BC_VER)
-	touch $@
-
 DOSFSTOOLS_CFLAGS = $(TARGET_CFLAGS) -D_GNU_SOURCE -fomit-frame-pointer -D_FILE_OFFSET_BITS=64
 
 $(D)/dosfstools: $(DOSFSTOOLS_DEPS) $(ARCHIVE)/dosfstools-$(DOSFSTOOLS_VER).tar.xz | $(TARGETPREFIX)
@@ -760,9 +746,9 @@ $(D)/dosfstools: $(DOSFSTOOLS_DEPS) $(ARCHIVE)/dosfstools-$(DOSFSTOOLS_VER).tar.
 	$(REMOVE)/dosfstools-$(DOSFSTOOLS_VER)
 	touch $@
 
-NFS-UTILS_IPV6="--enable-ipv6"
+NFS-UTILS_IPV6=--enable-ipv6
 ifeq ($(BOXSERIES), hd1)
-	NFS-UTILS_IPV6="--disable-ipv6"
+	NFS-UTILS_IPV6=--disable-ipv6
 endif
 
 $(D)/nfs-utils: $(D)/rpcbind $(ARCHIVE)/nfs-utils-$(NFS-UTILS_VER).tar.bz2 | $(TARGETPREFIX)
@@ -812,8 +798,6 @@ $(D)/rpcbind: $(D)/libtirpc $(ARCHIVE)/rpcbind-$(RPCBIND_VER).tar.bz2 | $(TARGET
 	$(UNTAR)/rpcbind-$(RPCBIND_VER).tar.bz2
 	cd $(BUILD_TMP)/rpcbind-$(RPCBIND_VER) && \
 	$(PATCH)/rpcbind-0001-Remove-yellow-pages-support.patch && \
-	$(PATCH)/rpcbind-0002-handle_reply-Don-t-use-the-xp_auth-pointer-directly.patch && \
-	$(PATCH)/rpcbind-0003-src-remove-use-of-the-__P-macro.patch && \
 		autoreconf -fi && \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
