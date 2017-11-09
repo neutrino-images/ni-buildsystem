@@ -2,7 +2,7 @@
 
 . /etc/init.d/globals
 
-# Emu-Fileflags
+# Camd-Fileflags
 FLAGDIR="/var/etc"
 F_MGCAM=".mgcamd"
 F_NEWCS=".newcs"
@@ -12,6 +12,7 @@ F_OSCAM=".oscam"
 F_NCAM=".ncam"
 F_GBOX=".gbox"
 F_CS2GBOX=".cs2gbox"
+F_CIPLUSHELPER=".ciplushelper"
 
 MGCAM_Action()
 {
@@ -97,8 +98,8 @@ DOSCAM_Action()
 				ulimit -c unlimited
 			fi
 
-			SHOWINFO "start oscamfix"
-			/etc/init.d/oscamfix start doscam
+			SHOWINFO "start camd_datefix"
+			/etc/init.d/camd_datefix start doscam
 			SHOWINFO "start doscam"
 			/var/bin/doscam -b -w0
 			if [ -e $FLAGDIR/$F_MGCAM ]; then
@@ -106,8 +107,8 @@ DOSCAM_Action()
 			fi
 		;;
 		"stop" )
-			SHOWINFO "stop oscamfix"
-			/etc/init.d/oscamfix stop doscam
+			SHOWINFO "stop camd_datefix"
+			/etc/init.d/camd_datefix stop doscam
 			SHOWINFO "stop doscam"
 			killall doscam
 			sleep 1
@@ -126,8 +127,8 @@ OSCAM_Action()
 {
 	case $1 in
 		"start" )
-			SHOWINFO "start oscamfix"
-			/etc/init.d/oscamfix start oscam
+			SHOWINFO "start camd_datefix"
+			/etc/init.d/camd_datefix start oscam
 			SHOWINFO "start oscam"
 			/var/bin/oscam -b
 			if [ -e $FLAGDIR/$F_MGCAM ]; then
@@ -135,8 +136,8 @@ OSCAM_Action()
 			fi
 		;;
 		"stop" )
-			SHOWINFO "stop oscamfix"
-			/etc/init.d/oscamfix stop oscam
+			SHOWINFO "stop camd_datefix"
+			/etc/init.d/camd_datefix stop oscam
 			SHOWINFO "stop oscam"
 			killall oscam
 			sleep 1
@@ -155,8 +156,8 @@ NCAM_Action()
 {
 	case $1 in
 		"start" )
-			SHOWINFO "start oscamfix"
-			/etc/init.d/oscamfix start ncam
+			SHOWINFO "start camd_datefix"
+			/etc/init.d/camd_datefix start ncam
 			SHOWINFO "start ncam"
 			/var/bin/ncam -b
 			if [ -e $FLAGDIR/$F_MGCAM ]; then
@@ -164,8 +165,8 @@ NCAM_Action()
 			fi
 		;;
 		"stop" )
-			SHOWINFO "stop oscamfix"
-			/etc/init.d/oscamfix stop ncam
+			SHOWINFO "stop camd_datefix"
+			/etc/init.d/camd_datefix stop ncam
 			SHOWINFO "stop ncam"
 			killall ncam
 			sleep 1
@@ -228,9 +229,33 @@ CS2GBOX_Action()
 	esac
 }
 
-EMU_Action()
+CIPLUSHELPER_Action()
 {
 	case $1 in
+		"start" )
+			SHOWINFO "start ciplushelper"
+			/var/bin/ciplushelper &
+			sleep 1
+		;;
+		"stop" )
+			SHOWINFO "stop ciplushelper"
+			killall ciplushelper
+			sleep 1
+		;;
+		* )
+			CIPLUSHELPER_Action "stop"
+			sleep 1
+			CIPLUSHELPER_Action "start"
+		;;
+	esac
+}
+
+CAMD_Action()
+{
+	case $1 in
+		"ciplushelper")
+			CIPLUSHELPER_Action $ACTION
+		;;
 		"cs2gbox")
 			CS2GBOX_Action $ACTION
 		;;
@@ -256,6 +281,10 @@ EMU_Action()
 			MGCAM_Action $ACTION
 		;;
 		*)
+			if [ -e $FLAGDIR/$F_CIPLUSHELPER ]; then
+				CIPLUSHELPER_Action $ACTION
+			fi
+
 			if [ -e $FLAGDIR/$F_CS2GBOX ]; then
 				CS2GBOX_Action $ACTION
 			fi
@@ -294,14 +323,14 @@ EMU_Action()
 case $1 in
 	"start")
 		ACTION="start"
-		EMU_Action $2
+		CAMD_Action $2
 	;;
 	"stop")
 		ACTION="stop"
-		EMU_Action $2
+		CAMD_Action $2
 	;;
 	*)
 		ACTION="restart"
-		EMU_Action $2
+		CAMD_Action $2
 	;;
 esac

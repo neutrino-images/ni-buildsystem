@@ -36,6 +36,9 @@ $(VARPLUG) \
 $(VARCONF) : | $(TARGETPREFIX)
 	mkdir -p $@
 
+init-scripts: \
+	init-camd
+
 plugins-all: $(D)/neutrino \
 	getrc \
 	input \
@@ -78,6 +81,17 @@ plugins-hd2: # nothing to do
 
 plugins-hd51: \
 	showiframe
+
+#####################
+### init-scripts  ###
+#####################
+
+init-camd: $(ETCINIT)
+	install -m755 $(IMAGEFILES)/scripts/camd.init $(ETCINIT)/camd && \
+	install -m755 $(IMAGEFILES)/scripts/camd_datefix.init $(ETCINIT)/camd_datefix
+	cd $(ETCINIT) && \
+	ln -sf camd S99camd && \
+	ln -sf camd K01camd
 
 ################
 ### plugins  ###

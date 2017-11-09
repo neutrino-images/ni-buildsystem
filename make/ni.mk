@@ -105,6 +105,7 @@ endif
 ifeq ($(PERSONALIZE), yes)
 	make personalize
 endif
+	make init-scripts
 	make rootfs
 	make images
 	@make done
