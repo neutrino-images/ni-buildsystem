@@ -101,60 +101,64 @@ endif
 # create softlinks in filesystem
 softlinks: $(BOX)
 	pushd $(BOX) && \
-	ln -sf /var/root root && \
+		ln -sf /var/root root
+ifeq ($(BOXSERIES), hd51)
+	pushd $(BOX) && \
+		ln -sf /var/root home
+endif
 	pushd $(BOX)/usr && \
-	ln -sf /share share && \
+		ln -sf /share share
 	pushd $(BOX)/usr/bin && \
-	ln -sf /bin/env env && \
+		ln -sf /bin/env env
 	pushd $(BOX)/var && \
-	ln -sf /tmp run && \
-	ln -sf /tmp tmp && \
+		ln -sf /tmp run && \
+		ln -sf /tmp tmp
 	pushd $(BOX)/etc/init.d && \
-	ln -sf fstab K99fstab && \
-	ln -sf fstab S01fstab && \
-	ln -sf syslogd K98syslogd && \
-	ln -sf sdX K97sdX && \
-	ln -sf crond S55crond && \
-	ln -sf crond K55crond && \
-	ln -sf inetd S53inetd && \
-	ln -sf inetd K80inetd
+		ln -sf fstab K99fstab && \
+		ln -sf fstab S01fstab && \
+		ln -sf syslogd K98syslogd && \
+		ln -sf sdX K97sdX && \
+		ln -sf crond S55crond && \
+		ln -sf crond K55crond && \
+		ln -sf inetd S53inetd && \
+		ln -sf inetd K80inetd
 	pushd $(BOX)/lib && \
-	ln -sf libcrypto.so.1.0.0 libcrypto.so.1.0.2 && \
-	ln -sf libssl.so.1.0.0 libssl.so.1.0.2 && \
-	ln -sf libcrypto.so.1.0.0 libcrypto.so.0.9.8 && \
-	ln -sf libssl.so.1.0.0 libssl.so.0.9.8 && \
-	ln -sf libcrypto.so.1.0.0 libcrypto.so.0.9.7 && \
-	ln -sf libssl.so.1.0.0 libssl.so.0.9.7
+		ln -sf libcrypto.so.1.0.0 libcrypto.so.1.0.2 && \
+		ln -sf libssl.so.1.0.0 libssl.so.1.0.2 && \
+		ln -sf libcrypto.so.1.0.0 libcrypto.so.0.9.8 && \
+		ln -sf libssl.so.1.0.0 libssl.so.0.9.8 && \
+		ln -sf libcrypto.so.1.0.0 libcrypto.so.0.9.7 && \
+		ln -sf libssl.so.1.0.0 libssl.so.0.9.7
 	pushd $(BOX)/bin && \
-	ln -sf fbshot dboxshot
+		ln -sf fbshot dboxshot
 	pushd $(BOX)/sbin && \
-	ln -sf ntfs-3g mount.ntfs
+		ln -sf ntfs-3g mount.ntfs
 ifeq ($(BOXSERIES), hd1)
 	pushd $(BOX)/lib && \
-	ln -sf libnxp.so libconexant.so
+		ln -sf libnxp.so libconexant.so
 	pushd $(BOX)/lib/firmware && \
-	ln -sf rt2870.bin rt3070.bin
+		ln -sf rt2870.bin rt3070.bin
 endif
 ifeq ($(BOXSERIES), hd2)
 	pushd $(BOX)/etc && \
-	ln -sf /var/etc/exports exports && \
-	ln -sf /var/etc/fstab fstab && \
-	ln -sf /var/etc/hostname hostname && \
-	ln -sf /var/etc/localtime localtime && \
-	ln -sf /var/etc/passwd passwd && \
-	ln -sf /var/etc/resolv.conf resolv.conf && \
-	ln -sf /var/etc/wpa_supplicant.conf wpa_supplicant.conf
+		ln -sf /var/etc/exports exports && \
+		ln -sf /var/etc/fstab fstab && \
+		ln -sf /var/etc/hostname hostname && \
+		ln -sf /var/etc/localtime localtime && \
+		ln -sf /var/etc/passwd passwd && \
+		ln -sf /var/etc/resolv.conf resolv.conf && \
+		ln -sf /var/etc/wpa_supplicant.conf wpa_supplicant.conf
 	pushd $(BOX)/etc/network && \
-	ln -sf /var/etc/network/interfaces interfaces
+		ln -sf /var/etc/network/interfaces interfaces
 	pushd $(BOX)/lib && \
-	ln -sf libuClibc-$(UCLIBC_VER).so libcrypt.so.0 && \
-	ln -sf libuClibc-$(UCLIBC_VER).so libdl.so.0 && \
-	ln -sf libuClibc-$(UCLIBC_VER).so libpthread.so.0 && \
-	ln -sf libuClibc-$(UCLIBC_VER).so libm.so.0 && \
-	ln -sf libuClibc-$(UCLIBC_VER).so librt.so.0
-ifeq ($(NEWIMAGE), yes)
+		ln -sf libuClibc-$(UCLIBC_VER).so libcrypt.so.0 && \
+		ln -sf libuClibc-$(UCLIBC_VER).so libdl.so.0 && \
+		ln -sf libuClibc-$(UCLIBC_VER).so libpthread.so.0 && \
+		ln -sf libuClibc-$(UCLIBC_VER).so libm.so.0 && \
+		ln -sf libuClibc-$(UCLIBC_VER).so librt.so.0
+  ifeq ($(NEWIMAGE), yes)
 	touch -f $(BOX)/var/etc/.newimage
-endif
+  endif
 endif
 	mkdir -p $(BOX)/var/tuxbox/config && \
 	pushd $(BOX)/var/tuxbox/config && \
