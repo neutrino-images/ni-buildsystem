@@ -1044,19 +1044,20 @@ $(D)/libffi: $(ARCHIVE)/libffi-$(LIBFFI_VER).tar.gz
 # glibc provides a stub
 # gettext implementation,
 # so we only build it for hd2
-LIBGLIB_DEPS =
+LIBGLIB2_DEPS =
 ifeq ($(BOXSERIES), hd2)
-	LIBGLIB_DEPS = $(D)/gettext
+	LIBGLIB2_DEPS = $(D)/gettext
 endif
 
-LIBGLIB_CONF =
+LIBGLIB2_CONF =
 ifeq ($(BOXSERIES), hd1)
-	LIBGLIB_CONF = --enable-static --disable-shared
+	LIBGLIB2_CONF = --enable-static --disable-shared
 endif
 
-$(D)/libglib: $(ARCHIVE)/glib-$(GLIB_VER).tar.xz $(D)/zlib $(LIBGLIB_DEPS) $(D)/libffi | $(TARGETPREFIX)
+$(D)/libglib2: $(ARCHIVE)/glib-$(GLIB_VER).tar.xz $(D)/zlib $(LIBGLIB2_DEPS) $(D)/libffi | $(TARGETPREFIX)
 	$(UNTAR)/glib-$(GLIB_VER).tar.xz
 	pushd $(BUILD_TMP)/glib-$(GLIB_VER); \
+	$(PATCH)/libglib2-disable-tests.patch; \
 		echo "ac_cv_type_long_long=yes"		 > arm-linux.cache; \
 		echo "glib_cv_stack_grows=no"		>> arm-linux.cache; \
 		echo "glib_cv_uscore=no"		>> arm-linux.cache; \
@@ -1072,7 +1073,7 @@ $(D)/libglib: $(ARCHIVE)/glib-$(GLIB_VER).tar.xz $(D)/zlib $(LIBGLIB_DEPS) $(D)/
 			--enable-libmount=no \
 			--disable-fam \
 			--with-pcre=internal \
-			$(LIBGLIB_CONF) \
+			$(LIBGLIB2_CONF) \
 			; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGETPREFIX)

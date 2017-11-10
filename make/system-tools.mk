@@ -845,7 +845,7 @@ $(D)/exfat-utils: $(ARCHIVE)/exfat-utils-$(EXFAT_UTILS_VER).tar.gz $(D)/fuse-exf
 	$(REMOVE)/exfat-utils-$(EXFAT_UTILS_VER)
 	touch $@
 
-$(D)/streamripper: $(D)/libvorbisidec $(D)/libmad $(D)/libglib | $(TARGETPREFIX)
+$(D)/streamripper: $(D)/libvorbisidec $(D)/libmad $(D)/libglib2 | $(TARGETPREFIX)
 	$(REMOVE)/$(NI_STREAMRIPPER)
 	tar -C $(SOURCE_DIR) -cp $(NI_STREAMRIPPER) --exclude-vcs | tar -C $(BUILD_TMP) -x
 	pushd $(BUILD_TMP)/$(NI_STREAMRIPPER); \
@@ -889,7 +889,7 @@ $(D)/gettext: $(ARCHIVE)/gettext-$(GETTEXT_VERSION).tar.xz | $(TARGETPREFIX)
 	$(REMOVE)/gettext-$(GETTEXT_VERSION)
 	touch $@
 
-$(D)/mc: $(ARCHIVE)/mc-$(MC-VER).tar.xz $(D)/libglib $(D)/libncurses | $(TARGETPREFIX)
+$(D)/mc: $(ARCHIVE)/mc-$(MC-VER).tar.xz $(D)/libglib2 $(D)/libncurses | $(TARGETPREFIX)
 	$(REMOVE)/mc-$(MC-VER)
 	$(UNTAR)/mc-$(MC-VER).tar.xz
 	pushd $(BUILD_TMP)/mc-$(MC-VER); \

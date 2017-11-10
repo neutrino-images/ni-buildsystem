@@ -19,7 +19,7 @@ GSTREAMER_SOURCE = gstreamer-$(GSTREAMER_VER).tar.xz
 $(ARCHIVE)/$(GSTREAMER_SOURCE):
 	$(WGET) https://gstreamer.freedesktop.org/src/gstreamer/$(GSTREAMER_SOURCE)
 
-$(D)/gstreamer: $(D)/libglib $(D)/libxml2 $(D)/glib_networking $(ARCHIVE)/$(GSTREAMER_SOURCE)
+$(D)/gstreamer: $(D)/libglib2 $(D)/libxml2 $(D)/glib_networking $(ARCHIVE)/$(GSTREAMER_SOURCE)
 	$(UNTAR)/$(GSTREAMER_SOURCE)
 	set -e; cd $(BUILD_TMP)/gstreamer-$(GSTREAMER_VER); \
 		$(PATCH)/gstreamer-$(GSTREAMER_VER)-revert-use-new-gst-adapter-get-buffer.patch; \
@@ -66,7 +66,7 @@ GST_PLUGINS_BASE_SOURCE = gst-plugins-base-$(GST_PLUGINS_BASE_VER).tar.xz
 $(ARCHIVE)/$(GST_PLUGINS_BASE_SOURCE):
 	$(WGET) https://gstreamer.freedesktop.org/src/gst-plugins-base/$(GST_PLUGINS_BASE_SOURCE)
 
-$(D)/gst_plugins_base: $(D)/zlib $(D)/libglib $(D)/orc $(D)/gstreamer $(D)/alsa_lib $(D)/libogg $(D)/libvorbisidec $(ARCHIVE)/$(GST_PLUGINS_BASE_SOURCE)
+$(D)/gst_plugins_base: $(D)/zlib $(D)/libglib2 $(D)/orc $(D)/gstreamer $(D)/alsa_lib $(D)/libogg $(D)/libvorbisidec $(ARCHIVE)/$(GST_PLUGINS_BASE_SOURCE)
 	$(UNTAR)/$(GST_PLUGINS_BASE_SOURCE)
 	set -e; cd $(BUILD_TMP)/gst-plugins-base-$(GST_PLUGINS_BASE_VER); \
 		$(PATCH)/gst-plugins-base-$(GSTREAMER_VER)-Makefile.am-don-t-hardcode-libtool-name-when-running.patch; \
@@ -461,7 +461,7 @@ GLIB_NETWORKING_SOURCE = glib-networking-$(GLIB_NETWORKING_VER).tar.xz
 $(ARCHIVE)/$(GLIB_NETWORKING_SOURCE):
 	$(WGET) https://ftp.acc.umu.se/pub/GNOME/sources/glib-networking/$(GLIB_NETWORKING_VER_MAJOR)/$(GLIB_NETWORKING_SOURCE)
 
-$(D)/glib_networking: $(D)/gnutls $(D)/libglib $(ARCHIVE)/$(GLIB_NETWORKING_SOURCE)
+$(D)/glib_networking: $(D)/gnutls $(D)/libglib2 $(ARCHIVE)/$(GLIB_NETWORKING_SOURCE)
 	$(UNTAR)/$(GLIB_NETWORKING_SOURCE)
 	set -e; cd $(BUILD_TMP)/glib-networking-$(GLIB_NETWORKING_VER); \
 		$(CONFIGURE) \
@@ -524,7 +524,7 @@ LIBSOUP_SOURCE = libsoup-$(LIBSOUP_VER).tar.xz
 $(ARCHIVE)/$(LIBSOUP_SOURCE):
 	$(WGET) https://download.gnome.org/sources/libsoup/$(LIBSOUP_VER_MAJOR)/$(LIBSOUP_SOURCE)
 
-$(D)/libsoup: $(D)/sqlite $(D)/libxml2 $(D)/libglib $(ARCHIVE)/$(LIBSOUP_SOURCE)
+$(D)/libsoup: $(D)/sqlite $(D)/libxml2 $(D)/libglib2 $(ARCHIVE)/$(LIBSOUP_SOURCE)
 	$(UNTAR)/$(LIBSOUP_SOURCE)
 	set -e; cd $(BUILD_TMP)/libsoup-$(LIBSOUP_VER); \
 		$(CONFIGURE) \
