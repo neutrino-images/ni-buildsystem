@@ -96,7 +96,6 @@ ifeq ($(BOXMODEL), kronos_v2)
 endif
 ifeq ($(BOXMODEL), hd51)
 	make flash-image-arm
-	#make flash-image-arm-single
 	make flash-image-arm-multi
 endif
 
@@ -158,12 +157,6 @@ BOOT_PARTITION_SIZE = 3072
 KERNEL_PARTITION_OFFSET = $(shell expr $(IMAGE_ROOTFS_ALIGNMENT) \+ $(BOOT_PARTITION_SIZE))
 KERNEL_PARTITION_SIZE = 8192
 ROOTFS_PARTITION_OFFSET = $(shell expr $(KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))
-
-# partition sizes single
-ROOTFS_PARTITION_SIZE_SINGLE = 1048576
-STORAGE_PARTITION_OFFSET_SINGLE = $(shell expr $(ROOTFS_PARTITION_OFFSET) \+ $(ROOTFS_PARTITION_SIZE_SINGLE))
-
-# partition sizes multi
 ROOTFS_PARTITION_SIZE_MULTI = 819200
 SECOND_KERNEL_PARTITION_OFFSET = $(shell expr $(ROOTFS_PARTITION_OFFSET) \+ $(ROOTFS_PARTITION_SIZE_MULTI))
 
@@ -173,42 +166,6 @@ THIRD_ROOTFS_PARTITION_OFFSET = $(shell expr $(THIRD_KERNEL_PARTITION_OFFSET) \+
 FOURTH_KERNEL_PARTITION_OFFSET = $(shell expr $(THIRD_ROOTFS_PARTITION_OFFSET) \+ $(ROOTFS_PARTITION_SIZE_MULTI))
 FOURTH_ROOTFS_PARTITION_OFFSET = $(shell expr $(FOURTH_KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))
 SWAP_PARTITION_OFFSET = $(shell expr $(FOURTH_ROOTFS_PARTITION_OFFSET) \+ $(ROOTFS_PARTITION_SIZE_MULTI))
-
-flash-image-arm-single:
-	mkdir -p $(HD51_BUILD_TMP)
-	# Create a sparse image block
-	dd if=/dev/zero of=$(HD51_BUILD_TMP)/$(HD51_IMAGE_LINK) seek=$(shell expr $(HD51_IMAGE_ROOTFS_SIZE) \* $(BLOCK_SECTOR)) count=0 bs=$(BLOCK_SIZE)
-	mkfs.ext4 -F $(HD51_BUILD_TMP)/$(HD51_IMAGE_LINK) -d $(BOX)
-	# Error codes 0-3 indicate successfull operation of fsck (no errors or errors corrected)
-	fsck.ext4 -pvfD $(HD51_BUILD_TMP)/$(HD51_IMAGE_LINK) || [ $? -le 3 ]
-	dd if=/dev/zero of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) count=0 seek=$(shell expr $(EMMC_IMAGE_SIZE) \* $(BLOCK_SECTOR))
-	parted -s $(EMMC_IMAGE) mklabel gpt
-	parted -s $(EMMC_IMAGE) unit KiB mkpart boot fat16 $(IMAGE_ROOTFS_ALIGNMENT) $(shell expr $(IMAGE_ROOTFS_ALIGNMENT) \+ $(BOOT_PARTITION_SIZE))
-	parted -s $(EMMC_IMAGE) unit KiB mkpart kernel1 $(KERNEL_PARTITION_OFFSET) $(shell expr $(KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))
-	parted -s $(EMMC_IMAGE) unit KiB mkpart rootfs1 ext4 $(ROOTFS_PARTITION_OFFSET) $(shell expr $(ROOTFS_PARTITION_OFFSET) \+ $(ROOTFS_PARTITION_SIZE_SINGLE))
-	parted -s $(EMMC_IMAGE) unit KiB mkpart storage ext4 $(STORAGE_PARTITION_OFFSET_SINGLE) $(shell expr $(EMMC_IMAGE_SIZE) \- 1024)
-	dd if=/dev/zero of=$(HD51_BUILD_TMP)/$(HD51_BOOT_IMAGE) bs=$(BLOCK_SIZE) count=$(shell expr $(BOOT_PARTITION_SIZE) \* $(BLOCK_SECTOR))
-	mkfs.msdos -S 512 $(HD51_BUILD_TMP)/$(HD51_BOOT_IMAGE)
-	echo "boot emmcflash0.kernel1 'root=/dev/mmcblk0p2 rw rootwait $(BOXMODEL)_4.boxmode=12'" > $(HD51_BUILD_TMP)/STARTUP_1
-	mcopy -i $(HD51_BUILD_TMP)/$(HD51_BOOT_IMAGE) -v $(HD51_BUILD_TMP)/STARTUP_1 ::
-	dd conv=notrunc if=$(HD51_BUILD_TMP)/$(HD51_BOOT_IMAGE) of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) seek=$(shell expr $(IMAGE_ROOTFS_ALIGNMENT) \* $(BLOCK_SECTOR))
-	dd conv=notrunc if=$(ZIMAGE_DTB) of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) seek=$(shell expr $(KERNEL_PARTITION_OFFSET) \* $(BLOCK_SECTOR))
-	resize2fs $(HD51_BUILD_TMP)/$(HD51_IMAGE_LINK) $(ROOTFS_PARTITION_SIZE_SINGLE)k
-	# Truncate on purpose
-	dd if=$(HD51_BUILD_TMP)/$(HD51_IMAGE_LINK) of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) seek=$(shell expr $(ROOTFS_PARTITION_OFFSET) \* $(BLOCK_SECTOR)) count=$(shell expr $(HD51_IMAGE_ROOTFS_SIZE) \* $(BLOCK_SECTOR))
-	# Create final USB-image
-	mkdir -p $(IMAGE_DIR)/$(BOXMODEL)
-	cp $(ZIMAGE_DTB) $(IMAGE_DIR)/$(BOXMODEL)/kernel.bin
-	cp $(EMMC_IMAGE) $(IMAGE_DIR)/$(BOXMODEL)
-	cd $(BOX); \
-	tar -cvf $(IMAGE_DIR)/$(BOXMODEL)/rootfs.tar -C $(BOX) .  > /dev/null 2>&1; \
-	bzip2 $(IMAGE_DIR)/$(BOXMODEL)/rootfs.tar
-	echo $(IMAGE_PREFIX) > $(IMAGE_DIR)/$(BOXMODEL)/imageversion
-	cd $(IMAGE_DIR); \
-	zip -r $(IMAGE_PREFIX)-$(IMAGE_SUFFIX)_single_usb.zip $(BOXMODEL)/*
-	# cleanup
-	rm -rf $(IMAGE_DIR)/$(BOXMODEL)
-	rm -rf $(HD51_BUILD_TMP)
 
 flash-image-arm-multi:
 	mkdir -p $(HD51_BUILD_TMP)
