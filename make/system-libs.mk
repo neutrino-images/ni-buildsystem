@@ -400,6 +400,7 @@ ifeq ($(BOXSERIES), hd51)
   FFMPEG_CONFIGURE = \
 			--enable-encoder=mpeg2video \
 			--enable-muxer=mpeg2video \
+			--enable-demuxer=image2 \
 			--enable-filter=scale \
 			--enable-hardcoded-tables \
 			--cpu=cortex-a15 \
