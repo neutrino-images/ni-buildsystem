@@ -34,6 +34,22 @@ LOGINFO "${ACTION} $channel ${manufacturer:-$idVendor} ${product:-$idProduct}"
 #LOGINFO "PRODUCT=${product} idProduct=${idProduct}"
 #LOGINFO "MANUFACTURER=${manufacturer} idVendor=${idVendor}"
 
+# ignore controllers and hubs
+cat /sys/bus/usb/devices/*/bDeviceClass | grep -q -v '02\|09'
+RET=$?
+case "$ACTION" in
+	add)
+		if [ $RET = 0 ]; then
+			echo 1 > /proc/stb/lcd/symbol_usb
+		fi
+	;;
+	remove)
+		if [ $RET = 1 ]; then
+			echo 0 > /proc/stb/lcd/symbol_usb
+		fi
+	;;
+esac
+
 # http://en.wikipedia.org/wiki/Universal_Serial_Bus#Device_classes
 # http://www.usb.org/developers/defined_class
 [ 0 -eq "${TYPE%%/*}" ] && TYPE=$INTERFACE
