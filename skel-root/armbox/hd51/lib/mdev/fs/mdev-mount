@@ -86,6 +86,7 @@ case "$ACTION" in
 		done
 		if [ $RET1 = 0 ]; then
 			create_symlinks
+			echo 1 > /proc/stb/lcd/symbol_hdd
 		else
 			LOGWARN "mount   /dev/$MDEV $MOUNTPOINT failed with $RET1"
 			LOGWARN "        $OUT1"
@@ -103,6 +104,9 @@ case "$ACTION" in
 		if [ $RET = 0 ]; then
 			rmdir $MOUNTPOINT
 			remove_symlinks
+			if ! grep -q "[hs]d[a-z][0-9]" /proc/mounts; then
+				echo 0 > /proc/stb/lcd/symbol_hdd
+			fi
 		else
 			LOGWARN "umount $MOUNTBASE/$MDEV failed with $RET"
 		fi
