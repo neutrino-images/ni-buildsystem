@@ -54,6 +54,15 @@ service hostname start
 # logging as much as possible
 service syslogd start
 
+# load modules / create nodes
+load_module extra/hd51_1.ko
+load_module extra/hd51_2.ko
+load_module extra/hd51_3.ko
+load_module extra/hd51_4.ko
+
+# show bootlogo
+showiframe.sh bootlogo.m2v
+
 ## mdev coldplug for node permissions
 LOGINFO "mdev coldplug ..."
 echo >/dev/mdev.seq
@@ -70,15 +79,6 @@ for i in /sys/bus/usb/devices/*; do
 		;;
 	esac
 done
-
-# load modules / create nodes
-load_module extra/hd51_1.ko
-load_module extra/hd51_2.ko
-load_module extra/hd51_3.ko
-load_module extra/hd51_4.ko
-
-# show bootlogo
-showiframe.sh bootlogo.m2v
 
 service networking start
 service ntpdate start
