@@ -1,43 +1,25 @@
 #!/bin/sh
 
-touch /tmp/norestart
+. /etc/init.d/globals
 
 if [ -e /var/etc/.coredump ]; then
 	ulimit -c unlimited
 fi
 
-until neutrino; do
-	RET=$?
+# if neutrino crashes, just restart it or reboot the box?
+REBOOT_ON_ERROR=true
 
-	# shutdown
-	if [ $RET -eq 1 ]; then
-		touch /tmp/.halt
-		break
-	fi
+do_cleanup() {
+	# remove files created by neutrino
+	rm -f /tmp/.reboot /tmp/.timer
+}
 
-	echo "Neutrino exited with exit code $RET"
-	dt -t"NEUTRINO: $RET"
-
-	if [ -e /tmp/.lcd-usbdev?.? ]; then
-		echo "0"		> /tmp/lcd/mode_logo
-		echo "Neutrino"		> /tmp/lcd/service
-		echo "Error: $RET"	> /tmp/lcd/event
-	fi
-
-	while [ -e /tmp/norestart ]; do # for debugging: stop the restart loop
-		sleep 1;
-	done
-done
-
-if [ -e /tmp/.reboot ]; then # gets created by neutrino
-	dt -t" ..REBOOT.."
-	reboot
-elif [ -e /tmp/.halt ]; then
+do_shutdown() {
 	dt -t"SHUTDOWN"
 
 	TIMER="/tmp/.timer"
 	if [ -e $TIMER ]; then
-		# custom poweroff binary
+		# send timers, led and bright settings to frontpanel
 		if type shutdown_helper > /dev/null; then
 			PARAM=`cat $TIMER`
 			echo "calling 'shutdown_helper "$PARAM"'"
@@ -46,4 +28,44 @@ elif [ -e /tmp/.halt ]; then
 	fi
 
 	poweroff
-fi
+}
+
+do_reboot() {
+	dt -t"REBOOT"
+	reboot
+}
+
+while true; do
+	do_cleanup
+
+	neutrino; RET=$?
+	LOGINFO "Neutrino exited with exit code $RET"
+
+	if [ $RET -eq 0 ]; then
+		# do nothing
+		break
+	elif [ $RET -eq 1 ]; then
+		do_shutdown
+		break
+	elif [ $RET -eq 2 ]; then
+		do_reboot
+		break
+	fi
+
+	dt -t"NEUTRINO: $RET"
+
+	# report errors on external display
+	if [ -e /tmp/.lcd-usbdev?.? ]; then
+		echo "0"		> /tmp/lcd/mode_logo
+		echo "Neutrino"		> /tmp/lcd/service
+		echo "Error: $RET"	> /tmp/lcd/event
+	fi
+
+	if $REBOOT_ON_ERROR; then
+		LOGINFO "Rebooting due to REBOOT_ON_ERROR=true and exit code $RET"
+		do_reboot
+		break
+	fi
+
+	LOGINFO "Restarting neutrino after exit code $RET"
+done

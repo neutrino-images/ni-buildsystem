@@ -1,6 +1,6 @@
 #!/bin/sh
 
-touch /tmp/norestart
+. /etc/init.d/globals
 
 if [ -e /var/etc/.coredump ]; then
 	ulimit -c unlimited
@@ -9,33 +9,55 @@ fi
 # uncomment for gstreamer debugging
 #export GST_DEBUG=4
 
-until neutrino; do
-	RET=$?
+# if neutrino crashes, just restart it or reboot the box?
+REBOOT_ON_ERROR=false
 
-	# shutdown
-	if [ $RET -eq 1 ]; then
-		touch /tmp/.halt
+do_cleanup() {
+	# remove files created by neutrino
+	rm -f /tmp/.reboot /tmp/.timer
+}
+
+do_shutdown() {
+	echo "Shutdown ..." > /dev/dbox/oled0
+	poweroff
+}
+
+do_reboot() {
+	echo "Reboot ..." > /dev/dbox/oled0
+	reboot
+}
+
+while true; do
+	do_cleanup
+
+	neutrino; RET=$?
+	LOGINFO "Neutrino exited with exit code $RET"
+
+	if [ $RET -eq 0 ]; then
+		# do nothing
+		break
+	elif [ $RET -eq 1 ]; then
+		do_shutdown
+		break
+	elif [ $RET -eq 2 ]; then
+		do_reboot
 		break
 	fi
 
-	echo "Neutrino exited with exit code $RET"
 	echo "Neutrino: $RET" > /dev/dbox/oled0
 
+	# report errors on external display
 	if [ -e /tmp/.lcd-usbdev?.? ]; then
 		echo "0"		> /tmp/lcd/mode_logo
 		echo "Neutrino"		> /tmp/lcd/service
 		echo "Error: $RET"	> /tmp/lcd/event
 	fi
 
-	while [ -e /tmp/norestart ]; do # for debugging: stop the restart loop
-		sleep 1;
-	done
-done
+	if $REBOOT_ON_ERROR; then
+		LOGINFO "Rebooting due to REBOOT_ON_ERROR=true and exit code $RET"
+		do_reboot
+		break
+	fi
 
-if [ -e /tmp/.reboot ]; then # gets created by neutrino
-	echo "Reboot ..." > /dev/dbox/oled0
-	reboot
-elif [ -e /tmp/.halt ]; then
-	echo "Shutdown ..." > /dev/dbox/oled0
-	poweroff
-fi
+	LOGINFO "Restarting neutrino after exit code $RET"
+done
