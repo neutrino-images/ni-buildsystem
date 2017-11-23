@@ -23,3 +23,6 @@ LOGINFO "run initscripts stop ..."
 run_initscripts stop
 
 SHOWINFO "done"
+
+# send current time, wakeup time, led and bright settings to frontpanel
+service custom-poweroff stop

@@ -12,17 +12,6 @@ do_cleanup() {
 
 do_shutdown() {
 	dt -t"SHUTDOWN"
-
-	TIMER="/tmp/.timer"
-	if [ -e $TIMER ]; then
-		# send timers, led and bright settings to frontpanel
-		if type shutdown_helper > /dev/null; then
-			PARAM=`cat $TIMER`
-			echo "calling 'shutdown_helper "$PARAM"'"
-			shutdown_helper $PARAM
-		fi
-	fi
-
 	poweroff
 }
 
