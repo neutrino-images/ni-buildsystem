@@ -343,7 +343,7 @@ $(ARCHIVE)/exfat-utils-$(EXFAT_UTILS_VER).tar.gz:
 
 FRIBIDI_VER = 0.19.7
 $(ARCHIVE)/fribidi-$(FRIBIDI_VER).tar.bz2:
-	$(WGET) https://fribidi.org/download/fribidi-$(FRIBIDI_VER).tar.bz2
+	$(WGET) https://download.videolan.org/contrib/fribidi/fribidi-$(FRIBIDI_VER).tar.bz2
 
 MC-VER=4.8.19
 $(ARCHIVE)/mc-$(MC-VER).tar.xz:
