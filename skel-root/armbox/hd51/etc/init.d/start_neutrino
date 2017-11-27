@@ -14,7 +14,7 @@ REBOOT_ON_ERROR=false
 
 do_cleanup() {
 	# remove files created by neutrino
-	rm -f /tmp/.reboot /tmp/.timer
+	rm -f /tmp/.timer
 }
 
 do_shutdown() {
@@ -40,6 +40,7 @@ while true; do
 		do_shutdown
 		break
 	elif [ $RET -eq 2 ]; then
+		do_cleanup
 		do_reboot
 		break
 	fi
