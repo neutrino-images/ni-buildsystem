@@ -66,7 +66,7 @@ GST_PLUGINS_BASE_SOURCE = gst-plugins-base-$(GST_PLUGINS_BASE_VER).tar.xz
 $(ARCHIVE)/$(GST_PLUGINS_BASE_SOURCE):
 	$(WGET) https://gstreamer.freedesktop.org/src/gst-plugins-base/$(GST_PLUGINS_BASE_SOURCE)
 
-$(D)/gst_plugins_base: $(D)/zlib $(D)/libglib2 $(D)/orc $(D)/gstreamer $(D)/alsa_lib $(D)/libogg $(D)/libvorbisidec $(ARCHIVE)/$(GST_PLUGINS_BASE_SOURCE)
+$(D)/gst_plugins_base: $(D)/zlib $(D)/libglib2 $(D)/orc $(D)/gstreamer $(D)/alsa-lib $(D)/libogg $(D)/libvorbisidec $(ARCHIVE)/$(GST_PLUGINS_BASE_SOURCE)
 	$(UNTAR)/$(GST_PLUGINS_BASE_SOURCE)
 	set -e; cd $(BUILD_TMP)/gst-plugins-base-$(GST_PLUGINS_BASE_VER); \
 		$(PATCH)/gst-plugins-base-$(GSTREAMER_VER)-Makefile.am-don-t-hardcode-libtool-name-when-running.patch; \
@@ -476,19 +476,19 @@ $(D)/glib_networking: $(D)/gnutls $(D)/libglib2 $(ARCHIVE)/$(GLIB_NETWORKING_SOU
 	touch $@
 
 #
-# alsa_lib
+# alsa-lib
 #
-ALSA_LIB_VER = 1.1.4.1
-ALSA_LIB_SOURCE = alsa-lib-$(ALSA_LIB_VER).tar.bz2
+ALSA-LIB_VER = 1.1.5
+ALSA-LIB_SOURCE = alsa-lib-$(ALSA-LIB_VER).tar.bz2
 
-$(ARCHIVE)/$(ALSA_LIB_SOURCE):
-	$(WGET) ftp://ftp.alsa-project.org/pub/lib/$(ALSA_LIB_SOURCE)
+$(ARCHIVE)/$(ALSA-LIB_SOURCE):
+	$(WGET) ftp://ftp.alsa-project.org/pub/lib/$(ALSA-LIB_SOURCE)
 
-$(D)/alsa_lib: $(ARCHIVE)/$(ALSA_LIB_SOURCE)
-	$(UNTAR)/$(ALSA_LIB_SOURCE)
-	set -e; cd $(BUILD_TMP)/alsa-lib-$(ALSA_LIB_VER); \
-		$(PATCH)/alsa-lib-$(ALSA_LIB_VER)-link_fix.patch; \
-		$(PATCH)/alsa-lib-$(ALSA_LIB_VER).patch; \
+$(D)/alsa-lib: $(ARCHIVE)/$(ALSA-LIB_SOURCE)
+	$(UNTAR)/$(ALSA-LIB_SOURCE)
+	set -e; cd $(BUILD_TMP)/alsa-lib-$(ALSA-LIB_VER); \
+		$(PATCH)/alsa-lib-$(ALSA-LIB_VER)-link_fix.patch; \
+		$(PATCH)/alsa-lib-$(ALSA-LIB_VER).patch; \
 		$(CONFIGURE) \
 			--prefix= \
 			--datarootdir=/.remove \
@@ -510,7 +510,7 @@ $(D)/alsa_lib: $(ARCHIVE)/$(ALSA_LIB_SOURCE)
 		$(MAKE) install DESTDIR=$(TARGETPREFIX)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/alsa.pc
 	$(REWRITE_LIBTOOL)/libasound.la
-	$(REMOVE)/alsa-lib-$(ALSA_LIB_VER)
+	$(REMOVE)/alsa-lib-$(ALSA-LIB_VER)
 	touch $@
 
 #
