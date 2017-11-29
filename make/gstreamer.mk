@@ -19,7 +19,7 @@ GSTREAMER_SOURCE = gstreamer-$(GSTREAMER_VER).tar.xz
 $(ARCHIVE)/$(GSTREAMER_SOURCE):
 	$(WGET) https://gstreamer.freedesktop.org/src/gstreamer/$(GSTREAMER_SOURCE)
 
-$(D)/gstreamer: $(D)/libglib2 $(D)/libxml2 $(D)/glib_networking $(ARCHIVE)/$(GSTREAMER_SOURCE)
+$(D)/gstreamer: $(D)/libglib2 $(D)/libxml2 $(D)/glib-networking $(ARCHIVE)/$(GSTREAMER_SOURCE)
 	$(UNTAR)/$(GSTREAMER_SOURCE)
 	set -e; cd $(BUILD_TMP)/gstreamer-$(GSTREAMER_VER); \
 		$(PATCH)/gstreamer-$(GSTREAMER_VER)-revert-use-new-gst-adapter-get-buffer.patch; \
@@ -453,17 +453,17 @@ $(D)/gnutls: $(D)/nettle $(D)/ca-bundle $(ARCHIVE)/$(GNUTLS_SOURCE)
 #
 # glib-networking
 #
-GLIB_NETWORKING_VER_MAJOR = 2.54
-GLIB_NETWORKING_VER_MINOR = 0
-GLIB_NETWORKING_VER = $(GLIB_NETWORKING_VER_MAJOR).$(GLIB_NETWORKING_VER_MINOR)
-GLIB_NETWORKING_SOURCE = glib-networking-$(GLIB_NETWORKING_VER).tar.xz
+GLIB-NETWORKING_VER_MAJOR = 2.50
+GLIB-NETWORKING_VER_MINOR = 0
+GLIB-NETWORKING_VER = $(GLIB-NETWORKING_VER_MAJOR).$(GLIB-NETWORKING_VER_MINOR)
+GLIB-NETWORKING_SOURCE = glib-networking-$(GLIB-NETWORKING_VER).tar.xz
 
-$(ARCHIVE)/$(GLIB_NETWORKING_SOURCE):
-	$(WGET) https://ftp.acc.umu.se/pub/GNOME/sources/glib-networking/$(GLIB_NETWORKING_VER_MAJOR)/$(GLIB_NETWORKING_SOURCE)
+$(ARCHIVE)/$(GLIB-NETWORKING_SOURCE):
+	$(WGET) https://ftp.acc.umu.se/pub/GNOME/sources/glib-networking/$(GLIB-NETWORKING_VER_MAJOR)/$(GLIB-NETWORKING_SOURCE)
 
-$(D)/glib_networking: $(D)/gnutls $(D)/libglib2 $(ARCHIVE)/$(GLIB_NETWORKING_SOURCE)
-	$(UNTAR)/$(GLIB_NETWORKING_SOURCE)
-	set -e; cd $(BUILD_TMP)/glib-networking-$(GLIB_NETWORKING_VER); \
+$(D)/glib-networking: $(D)/gnutls $(D)/libglib2 $(ARCHIVE)/$(GLIB-NETWORKING_SOURCE)
+	$(UNTAR)/$(GLIB-NETWORKING_SOURCE)
+	set -e; cd $(BUILD_TMP)/glib-networking-$(GLIB-NETWORKING_VER); \
 		$(CONFIGURE) \
 			--prefix= \
 			--datadir=/.remove \
@@ -472,7 +472,7 @@ $(D)/glib_networking: $(D)/gnutls $(D)/libglib2 $(ARCHIVE)/$(GLIB_NETWORKING_SOU
 		; \
 		$(MAKE); \
 		$(MAKE) install prefix=$(TARGETPREFIX)
-	$(REMOVE)/glib-networking-$(GLIB_NETWORKING_VER)
+	$(REMOVE)/glib-networking-$(GLIB-NETWORKING_VER)
 	touch $@
 
 #
