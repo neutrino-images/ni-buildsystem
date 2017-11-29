@@ -889,10 +889,10 @@ $(D)/gettext: $(ARCHIVE)/gettext-$(GETTEXT_VERSION).tar.xz | $(TARGETPREFIX)
 	$(REMOVE)/gettext-$(GETTEXT_VERSION)
 	touch $@
 
-$(D)/mc: $(ARCHIVE)/mc-$(MC-VER).tar.xz $(D)/libglib2 $(D)/libncurses | $(TARGETPREFIX)
-	$(REMOVE)/mc-$(MC-VER)
-	$(UNTAR)/mc-$(MC-VER).tar.xz
-	pushd $(BUILD_TMP)/mc-$(MC-VER); \
+$(D)/mc: $(ARCHIVE)/mc-$(MC_VER).tar.xz $(D)/libglib2 $(D)/libncurses | $(TARGETPREFIX)
+	$(REMOVE)/mc-$(MC_VER)
+	$(UNTAR)/mc-$(MC_VER).tar.xz
+	pushd $(BUILD_TMP)/mc-$(MC_VER); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--prefix= \
@@ -914,7 +914,7 @@ $(D)/mc: $(ARCHIVE)/mc-$(MC-VER).tar.xz $(D)/libglib2 $(D)/libncurses | $(TARGET
 		$(MAKE) install DESTDIR=$(TARGETPREFIX)
 	rm -rf $(TARGETPREFIX)/share/mc/examples
 	find $(TARGETPREFIX)/share/mc/skins -type f ! -name default.ini | xargs --no-run-if-empty rm
-	$(REMOVE)/mc-$(MC-VER)
+	$(REMOVE)/mc-$(MC_VER)
 	touch $@
 
 $(D)/wget: $(D)/openssl $(ARCHIVE)/wget-$(WGET_VER).tar.gz | $(TARGETPREFIX)
