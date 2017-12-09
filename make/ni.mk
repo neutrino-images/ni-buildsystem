@@ -108,3 +108,21 @@ endif
 	make rootfs
 	make images
 	@make done
+
+# -----------------------------------------------------------------------------
+
+# Create reversed changelog using git log --reverse.
+# Remove duplicated commits and re-reverse the changelog using awk.
+# This keeps the original commit and removes all picked duplicates.
+define make-changelog
+	git log --reverse --pretty=oneline --no-merges --abbrev-commit | \
+	awk '!seen[substr($$0,12)]++' | \
+	awk '{a[i++]=$$0} END {for (j=i-1; j>=0;) print a[j--]}'
+endef
+
+changelogs:
+	$(call make-changelog) > $(BUILD_TMP)/changelog-buildsystem
+	pushd $(SOURCE_DIR)/$(NI_NEUTRINO); \
+		$(call make-changelog) > $(BUILD_TMP)/changelog-neutrino
+	pushd $(SOURCE_DIR)/$(NI_LIBSTB-HAL-NEXT); \
+		$(call make-changelog) > $(BUILD_TMP)/changelog-libstb-hal
