@@ -417,7 +417,7 @@ $(D)/gmp: $(ARCHIVE)/$(GMP_SOURCE)
 # gnutls
 #
 GNUTLS_VER_MAJOR = 3.6
-GNUTLS_VER_MINOR = 0
+GNUTLS_VER_MINOR = 1
 GNUTLS_VER = $(GNUTLS_VER_MAJOR).$(GNUTLS_VER_MINOR)
 GNUTLS_SOURCE = gnutls-$(GNUTLS_VER).tar.xz
 
@@ -438,6 +438,7 @@ $(D)/gnutls: $(D)/nettle $(D)/ca-bundle $(ARCHIVE)/$(GNUTLS_SOURCE)
 			--with-included-unistring \
 			--with-default-trust-store-dir=$(CA_BUNDLE_DIR)/ \
 			--disable-guile \
+			--disable-doc \
 			--without-p11-kit \
 		; \
 		$(MAKE); \
