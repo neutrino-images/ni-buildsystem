@@ -9,8 +9,13 @@ ifeq ($(USE_LIBSTB-HAL), yes)
 	NEUTRINO_DEPS += libstb-hal
 endif
 
+USE_GSTREAMER = yes
 ifeq ($(BOXSERIES), hd51)
+  ifeq ($(USE_GSTREAMER), yes)
 	NEUTRINO_DEPS += $(D)/gst_plugins_dvbmediasink
+  else
+	NEUTRINO_DEPS += $(D)/alsa-lib
+  endif
 endif
 
 # uncomment next line to build neutrino without --enable-ffmpegdec
@@ -23,11 +28,14 @@ endif
 ifeq ($(BOXSERIES), hd2)
 	N_CFLAGS += -DFB_HW_ACCELERATION
 endif
+
 ifeq ($(BOXSERIES), hd51)
+  ifeq ($(USE_GSTREAMER), yes)
 	N_CFLAGS += $(shell $(PKG_CONFIG) --cflags --libs gstreamer-1.0)
 	N_CFLAGS += $(shell $(PKG_CONFIG) --cflags --libs gstreamer-audio-1.0)
 	N_CFLAGS += $(shell $(PKG_CONFIG) --cflags --libs gstreamer-video-1.0)
 	N_CFLAGS += $(shell $(PKG_CONFIG) --cflags --libs glib-2.0)
+  endif
 endif
 
 ifeq ($(DEBUG), yes)
@@ -45,11 +53,11 @@ endif
 
 N_CONFIGURE_DEBUG =
 ifeq ($(HAS_LIBCS), yes)
-ifeq ($(DEBUG), yes)
+  ifeq ($(DEBUG), yes)
 	N_CONFIGURE_DEBUG += \
 		--enable-libcoolstream-static \
 		--with-libcoolstream-static-dir=$(TARGETLIB)
-endif
+  endif
 endif
 
 N_CONFIGURE_LIBSTB-HAL =
@@ -127,6 +135,14 @@ endif
 			--with-boxtype=$(BOXTYPE) \
 			--with-boxmodel=$(BOXSERIES)
 
+LH_CONFIGURE_GSTREAMER =
+ifeq ($(BOXSERIES), hd51)
+  ifeq ($(USE_GSTREAMER), yes)
+	LH_CONFIGURE_GSTREAMER += \
+			--enable-gstreamer_10
+  endif
+endif
+
 $(LH_OBJDIR)/config.status: $(NEUTRINO_DEPS)
 	rm -rf $(LH_OBJDIR)
 	tar -C $(SOURCE_DIR) -cp $(NI_LIBSTB-HAL-NEXT) --exclude-vcs | tar -C $(BUILD_TMP) -x
@@ -143,7 +159,8 @@ $(LH_OBJDIR)/config.status: $(NEUTRINO_DEPS)
 			--enable-maintainer-mode \
 			--enable-silent-rules \
 			--enable-shared=no \
-			--enable-gstreamer_10 \
+			\
+			$(LH_CONFIGURE_GSTREAMER) \
 			\
 			--with-target=cdk \
 			--with-boxtype=$(BOXMODEL)
