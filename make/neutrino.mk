@@ -143,6 +143,7 @@ $(LH_OBJDIR)/config.status: $(NEUTRINO_DEPS)
 			--enable-maintainer-mode \
 			--enable-silent-rules \
 			--enable-shared=no \
+			--enable-gstreamer_10 \
 			\
 			--with-target=cdk \
 			--with-boxtype=$(BOXMODEL)
