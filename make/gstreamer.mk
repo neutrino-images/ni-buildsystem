@@ -13,7 +13,7 @@ endif
 #
 # gstreamer
 #
-GSTREAMER_VER = 1.12.3
+GSTREAMER_VER = 1.12.4
 GSTREAMER_SOURCE = gstreamer-$(GSTREAMER_VER).tar.xz
 
 $(ARCHIVE)/$(GSTREAMER_SOURCE):
@@ -316,7 +316,7 @@ $(D)/gst_plugins_dvbmediasink: $(D)/gstreamer $(D)/gst_plugins_base $(D)/gst_plu
 #
 # orc
 #
-ORC_VER = 0.4.27
+ORC_VER = 0.4.28
 ORC_SOURCE = orc-$(ORC_VER).tar.xz
 
 $(ARCHIVE)/$(ORC_SOURCE):
@@ -367,7 +367,7 @@ $(D)/libdca: $(ARCHIVE)/$(LIBDCA_SOURCE)
 #
 # nettle
 #
-NETTLE_VER = 3.3
+NETTLE_VER = 3.4
 NETTLE_SOURCE = nettle-$(NETTLE_VER).tar.gz
 
 $(ARCHIVE)/$(NETTLE_SOURCE):
@@ -376,7 +376,6 @@ $(ARCHIVE)/$(NETTLE_SOURCE):
 $(D)/nettle: $(D)/gmp $(ARCHIVE)/$(NETTLE_SOURCE)
 	$(UNTAR)/$(NETTLE_SOURCE)
 	set -e; cd $(BUILD_TMP)/nettle-$(NETTLE_VER); \
-		$(PATCH)/nettle-$(NETTLE_VER).patch; \
 		$(CONFIGURE) \
 			--prefix= \
 			--disable-documentation \
@@ -517,8 +516,8 @@ $(D)/alsa-lib: $(ARCHIVE)/$(ALSA-LIB_SOURCE)
 #
 # libsoup
 #
-LIBSOUP_VER_MAJOR = 2.60
-LIBSOUP_VER_MINOR = 0
+LIBSOUP_VER_MAJOR = 2.61
+LIBSOUP_VER_MINOR = 1
 LIBSOUP_VER = $(LIBSOUP_VER_MAJOR).$(LIBSOUP_VER_MINOR)
 LIBSOUP_SOURCE = libsoup-$(LIBSOUP_VER).tar.xz
 
@@ -547,7 +546,7 @@ $(D)/libsoup: $(D)/sqlite $(D)/libxml2 $(D)/libglib2 $(ARCHIVE)/$(LIBSOUP_SOURCE
 #
 # sqlite
 #
-SQLITE_VER = 3200100
+SQLITE_VER = 3210000
 SQLITE_SOURCE = sqlite-autoconf-$(SQLITE_VER).tar.gz
 
 $(ARCHIVE)/$(SQLITE_SOURCE):
