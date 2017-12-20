@@ -121,8 +121,8 @@ define make-changelog
 endef
 
 changelogs:
-	$(call make-changelog) > $(BUILD_TMP)/changelog-buildsystem
+	$(call make-changelog) > $(STAGING_DIR)/changelog-buildsystem
 	pushd $(SOURCE_DIR)/$(NI_NEUTRINO); \
-		$(call make-changelog) > $(BUILD_TMP)/changelog-neutrino
+		$(call make-changelog) > $(STAGING_DIR)/changelog-neutrino
 	pushd $(SOURCE_DIR)/$(NI_LIBSTB-HAL-NEXT); \
-		$(call make-changelog) > $(BUILD_TMP)/changelog-libstb-hal
+		$(call make-changelog) > $(STAGING_DIR)/changelog-libstb-hal
