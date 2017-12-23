@@ -19,7 +19,7 @@ ifeq ($(NI_ADMIN), true)
 	export GIT_MERGE_AUTOEDIT=no && \
 	cd $(N_HD_SOURCE) && \
 		git checkout $(NI_NEUTRINO_BRANCH) && \
-		git pull $(TUXBOX_REMOTE_REPO) $(TUXBOX_NEUTRINO_BRANCH) && \
+		#git pull $(TUXBOX_REMOTE_REPO) $(TUXBOX_NEUTRINO_BRANCH) && \
 		git fetch $(TUXBOX_REMOTE_REPO)
 	cd $(SOURCE_DIR)/$(NI_LIBSTB-HAL) && \
 		git checkout master && \
