@@ -49,10 +49,16 @@ printenv:
 		echo "=> please check your setup. Maybe you need to 'make crosstool'."; \
 	fi
 	@if ! LANG=C make -n preqs|grep -q "Nothing to be done"; then \
-		echo;echo "Your next target to do is probably 'make preqs'"; fi
-	@if ! test -e $(BASE_DIR)/config; then \
-		echo;echo "If you want to change the configuration, copy 'doc/config.example' to 'config'"; \
-		echo "and edit it to fit your needs. See the comments in there."; echo; fi
+		echo; \
+		echo "Your next target to do is probably 'make preqs'"; \
+	fi
+	@if ! test -e $(BASE_DIR)/config.local; then \
+		echo; \
+		echo "If you want to change the configuration, then run"; \
+		echo -e "$(TERM_YELLOW)cp config.example config.local$(TERM_NORMAL)"; \
+		echo "and edit config.local to fit your needs. See the comments in there."; \
+		echo; \
+	fi
 
 help:
 	@echo "a few helpful make targets:"
