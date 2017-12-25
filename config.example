@@ -11,7 +11,7 @@
 #BOXMODEL = kronos
 #BOXMODEL = kronos_v2
 
-# AX Technologies
+# AX/Mutant
 #BOXMODEL = hd51
 
 # Create debug-image. Not useful in real life.
