@@ -153,7 +153,7 @@ PATCHES       = $(BASE_DIR)/archive-patches
 IMAGEFILES    = $(BASE_DIR)/archive-imagefiles
 SOURCES       = $(BASE_DIR)/archive-sources
 SKEL_ROOT     = $(BASE_DIR)/skel-root/$(BOXTYPE)/$(BOXSERIES)
-STATICLIB     = $(STATIC_DIR)/lib
+STATIC_LIB_DIR = $(STATIC_DIR)/lib
 TARGETLIB     = $(TARGET_DIR)/lib
 TARGETINCLUDE = $(TARGET_DIR)/include
 BUILD        ?= $(shell /usr/share/libtool/config.guess 2>/dev/null || /usr/share/libtool/config/config.guess 2>/dev/null || /usr/share/misc/config.guess)
@@ -255,7 +255,7 @@ PKG_CONFIG_PATH = $(PKG_CONFIG_LIBDIR)/pkgconfig
 
 # helper-"functions":
 REWRITE_LIBTOOL        = sed -i "s,^libdir=.*,libdir='$(TARGETLIB)'," $(TARGETLIB)
-REWRITE_LIBTOOL_STATIC = sed -i "s,^libdir=.*,libdir='$(TARGETLIB)'," $(STATICLIB)
+REWRITE_LIBTOOL_STATIC = sed -i "s,^libdir=.*,libdir='$(TARGETLIB)'," $(STATIC_LIB_DIR)
 REWRITE_LIBTOOLDEP     = sed -i -e "s,\(^dependency_libs='\| \|-L\|^dependency_libs='\)/lib,\ $(TARGETLIB),g" $(TARGETLIB)
 REWRITE_PKGCONF        = sed -i "s,^prefix=.*,prefix='$(TARGET_DIR)',"
 

@@ -7,8 +7,8 @@ ifneq ($(BOXSERIES), hd51)
 	CORTEX-STRINGS_CONF = --without-neon
 endif
 
-cortex-strings: $(STATICLIB)/libcortex-strings.la
-$(STATICLIB)/libcortex-strings.la: $(ARCHIVE)/cortex-strings-$(CORTEX-STRINGS_VER).tar.bz2 | $(TARGET_DIR)
+cortex-strings: $(STATIC_LIB_DIR)/libcortex-strings.la
+$(STATIC_LIB_DIR)/libcortex-strings.la: $(ARCHIVE)/cortex-strings-$(CORTEX-STRINGS_VER).tar.bz2 | $(TARGET_DIR)
 	$(UNTAR)/cortex-strings-$(CORTEX-STRINGS_VER).tar.bz2
 	pushd $(BUILD_TMP)/cortex-strings-$(CORTEX-STRINGS_VER) && \
 		./autogen.sh && \

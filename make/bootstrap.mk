@@ -8,7 +8,7 @@ ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd51))
 endif
 
 PLAT_INCS  = $(TARGETLIB)/firmware
-PLAT_LIBS  = $(TARGETLIB) $(STATICLIB)
+PLAT_LIBS  = $(TARGETLIB) $(STATIC_LIB_DIR)
 
 bootstrap: $(BOOTSTRAP)
 	@echo -e "$(TERM_YELLOW)Bootstrapped for $(shell echo $(BOXTYPE) | sed 's/.*/\u&/') $(BOXMODEL)$(TERM_NORMAL)"
@@ -48,7 +48,7 @@ $(HOST_DIR):
 $(HOST_DIR)/bin: $(HOST_DIR)
 	mkdir -p $@
 
-$(STATICLIB):
+$(STATIC_LIB_DIR):
 	mkdir -p $@
 
 $(TARGETLIB)/firmware: | $(TARGET_DIR)
