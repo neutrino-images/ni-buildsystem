@@ -15,7 +15,7 @@ $(STATIC_LIB_DIR)/libcortex-strings.la: $(ARCHIVE)/cortex-strings-$(CORTEX-STRIN
 		CFLAGS="-pipe -O2 $(CXX11_ABI) -g -I$(TARGETINCLUDE)" \
 		CPPFLAGS="-pipe -O2 $(CXX11_ABI) -g -I$(TARGETINCLUDE)" \
 		CXXFLAGS="-pipe -O2 $(CXX11_ABI) -g -I$(TARGETINCLUDE)" \
-		LDFLAGS="-Wl,-O1 -L$(TARGETLIB)" \
+		LDFLAGS="-Wl,-O1 -L$(TARGET_LIB_DIR)" \
 		PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
 		./configure $(CONFIGURE_OPTS) \
 			--prefix= \

@@ -1,14 +1,14 @@
 # makefile to setup and initialize the final buildsystem
 
 BOOTSTRAP  = targetprefix $(D) $(BUILD_TMP) $(CROSS_DIR) $(STAGING_DIR) $(IMAGE_DIR) $(UPDATE_DIR) $(HOST_DIR)/bin includes-and-libs modules host-preqs
-BOOTSTRAP += $(TARGETLIB)/libc.so.6
+BOOTSTRAP += $(TARGET_LIB_DIR)/libc.so.6
 
 ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd51))
   BOOTSTRAP += static blobs
 endif
 
-PLAT_INCS  = $(TARGETLIB)/firmware
-PLAT_LIBS  = $(TARGETLIB) $(STATIC_LIB_DIR)
+PLAT_INCS  = $(TARGET_LIB_DIR)/firmware
+PLAT_LIBS  = $(TARGET_LIB_DIR) $(STATIC_LIB_DIR)
 
 bootstrap: $(BOOTSTRAP)
 	@echo -e "$(TERM_YELLOW)Bootstrapped for $(shell echo $(BOXTYPE) | sed 's/.*/\u&/') $(BOXMODEL)$(TERM_NORMAL)"
@@ -51,28 +51,28 @@ $(HOST_DIR)/bin: $(HOST_DIR)
 $(STATIC_LIB_DIR):
 	mkdir -p $@
 
-$(TARGETLIB)/firmware: | $(TARGET_DIR)
+$(TARGET_LIB_DIR)/firmware: | $(TARGET_DIR)
 ifeq ($(BOXTYPE), coolstream)
 	mkdir -p $@
 	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(DRIVERS_DIR)/firmware/* $@/
 endif
 
-$(TARGETLIB): | $(TARGET_DIR)
+$(TARGET_LIB_DIR): | $(TARGET_DIR)
 	mkdir -p $@
 	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(DRIVERS_DIR)/libs/* $@
 ifeq ($(BOXTYPE), coolstream)
 	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(DRIVERS_DIR)/libcoolstream/$(shell echo -n $(NI_FFMPEG_BRANCH) | sed 's,/,-,g')/* $@
 endif
 
-$(TARGETLIB)/modules: | $(TARGET_DIR)
+$(TARGET_LIB_DIR)/modules: | $(TARGET_DIR)
 	mkdir -p $@
 	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(DRIVERS_DIR)/drivers/$(KERNEL_VERSION_FULL) $@/
 
-$(TARGETLIB)/libc.so.6: | $(TARGET_DIR)
+$(TARGET_LIB_DIR)/libc.so.6: | $(TARGET_DIR)
 	if test -e $(CROSS_DIR)/$(TARGET)/sys-root/lib; then \
-		cp -a $(CROSS_DIR)/$(TARGET)/sys-root/lib/*so* $(TARGETLIB); \
+		cp -a $(CROSS_DIR)/$(TARGET)/sys-root/lib/*so* $(TARGET_LIB_DIR); \
 	else \
-		cp -a $(CROSS_DIR)/$(TARGET)/lib/*so* $(TARGETLIB); \
+		cp -a $(CROSS_DIR)/$(TARGET)/lib/*so* $(TARGET_LIB_DIR); \
 	fi
 
 $(TARGET_DIR)/var/update: | $(TARGET_DIR)
@@ -88,7 +88,7 @@ endif
 
 includes-and-libs: $(PLAT_INCS) $(PLAT_LIBS)
 
-modules: $(TARGETLIB)/modules
+modules: $(TARGET_LIB_DIR)/modules
 
 blobs: $(TARGET_DIR)/var/update
 
@@ -222,8 +222,8 @@ $(HOST_DIR)/bin/resize2fs: $(ARCHIVE)/e2fsprogs-$(E2FSPROGS_VER).tar.gz | $(HOST
 	$(REMOVE)/e2fsprogs-$(E2FSPROGS_VER)
 
 # hack to make sure they are always copied
-PHONY += $(TARGETLIB)
-PHONY += $(TARGETLIB)/firmware
-PHONY += $(TARGETLIB)/modules
+PHONY += $(TARGET_LIB_DIR)
+PHONY += $(TARGET_LIB_DIR)/firmware
+PHONY += $(TARGET_LIB_DIR)/modules
 PHONY += $(TARGET_DIR)/var/update
 PHONY += ccache includes-and-libs modules targetprefix bootstrap blobs

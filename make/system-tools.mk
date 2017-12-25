@@ -38,7 +38,7 @@ $(D)/openssh: $(D)/openssl $(D)/zlib $(ARCHIVE)/openssh-$(OPENSSH_VER).tar.gz | 
 		--with-pid-dir=/tmp \
 		--with-privsep-path=/var/empty \
 		--with-cppflags="-pipe $(TARGET_O_CFLAGS) $(TARGET_MARCH_CFLAGS) -g -I$(TARGETINCLUDE)" \
-		--with-ldflags="-L$(TARGETLIB)" \
+		--with-ldflags="-L$(TARGET_LIB_DIR)" \
 		--libexecdir=/bin \
 		--disable-strip \
 		--disable-lastlog \
@@ -278,7 +278,7 @@ $(D)/inadyn: $(D)/openssl $(D)/confuse $(D)/libite $(ARCHIVE)/inadyn-$(INADYN_VE
 		autoreconf -fi && \
 		$(CONFIGURE) \
 			--prefix= \
-			--libdir=$(TARGETLIB) \
+			--libdir=$(TARGET_LIB_DIR) \
 			--includedir=$(TARGETINCLUDE) \
 			--mandir=/.remove \
 			--docdir=/.remove \
@@ -324,7 +324,7 @@ $(D)/procps-ng: $(D)/libncurses $(ARCHIVE)/procps-ng-$(PROCPS-NG_VER).tar.xz | $
 		rm -f $(TARGET_DIR)/bin/ps $(TARGET_DIR)/bin/top && \
 		install -D -m 755 top/.libs/top $(TARGET_DIR)/bin/top && \
 		install -D -m 755 ps/.libs/pscommand $(TARGET_DIR)/bin/ps && \
-		cp -a proc/.libs/libprocps.so* $(TARGETLIB)
+		cp -a proc/.libs/libprocps.so* $(TARGET_LIB_DIR)
 	$(REMOVE)/procps-ng-$(PROCPS-NG_VER)
 	touch $@
 
@@ -646,9 +646,9 @@ $(D)/sg3-utils: $(ARCHIVE)/sg3_utils-$(SG3-UTILS_VER).tar.xz | $(TARGET_DIR)
 			--mandir=/.remove && \
 		$(MAKE) && \
 		cp -a src/.libs/sg_start $(TARGET_DIR)/bin && \
-		cp -a lib/.libs/libsgutils2.so.2.0.0 $(TARGETLIB) && \
-		cp -a lib/.libs/libsgutils2.so.2 $(TARGETLIB) && \
-		cp -a lib/.libs/libsgutils2.so $(TARGETLIB)
+		cp -a lib/.libs/libsgutils2.so.2.0.0 $(TARGET_LIB_DIR) && \
+		cp -a lib/.libs/libsgutils2.so.2 $(TARGET_LIB_DIR) && \
+		cp -a lib/.libs/libsgutils2.so $(TARGET_LIB_DIR)
 	$(REMOVE)/sg3_utils-$(SG3-UTILS_VER)
 	touch $@
 
@@ -668,14 +668,14 @@ $(D)/lcd4linux: $(D)/libncurses $(D)/libgd2 $(D)/libdpf | $(TARGET_DIR)
 	cd $(BUILD_TMP)/lcd4linux && \
 		./bootstrap && \
 		$(CONFIGURE) \
-			--libdir=$(TARGETLIB) \
+			--libdir=$(TARGET_LIB_DIR) \
 			--includedir=$(TARGETINCLUDE) \
 			--bindir=$(TARGET_DIR)/bin \
 			--prefix= \
 			--mandir=/.remove \
 			--docdir=/.remove \
 			--infodir=/.remove \
-			--with-ncurses=$(TARGETLIB) \
+			--with-ncurses=$(TARGET_LIB_DIR) \
 			--with-drivers='DPF, SamsungSPF' \
 			--with-plugins='all,!dbus,!mpris_dbus,!asterisk,!isdn,!pop3,!ppp,!seti,!huawei,!imon,!kvv,!sample,!w1retap,!wireless,!xmms,!gps,!mpd,!mysql,!qnaplog,!iconv' && \
 		$(MAKE) vcs_version && \

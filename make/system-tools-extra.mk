@@ -158,8 +158,8 @@ $(D)/python: $(ARCHIVE)/Python-$(PYTHON_VER).tgz | $(TARGET_DIR)
 			CROSS_COMPILE_TARGET=yes \
 			prefix=$(BUILD_TMP)/Python-$(PYTHON_VER)/_install \
 		; \
-		cp -a $(BUILD_TMP)/Python-$(PYTHON_VER)/_install/lib/python* $(TARGETLIB)/
-		cp -a $(BUILD_TMP)/Python-$(PYTHON_VER)/_install/lib/libpython* $(TARGETLIB)/
-		chmod +w $(TARGETLIB)/libpython*
+		cp -a $(BUILD_TMP)/Python-$(PYTHON_VER)/_install/lib/python* $(TARGET_LIB_DIR)/
+		cp -a $(BUILD_TMP)/Python-$(PYTHON_VER)/_install/lib/libpython* $(TARGET_LIB_DIR)/
+		chmod +w $(TARGET_LIB_DIR)/libpython*
 		install -m755 $(BUILD_TMP)/Python-$(PYTHON_VER)/_install/bin/python $(TARGET_DIR)/bin/
 	$(REMOVE)/Python-$(PYTHON_VER)

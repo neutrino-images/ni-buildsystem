@@ -14,7 +14,7 @@ $(LIBPLUG)/links.so: $(D)/zlib $(D)/openssl $(D)/libpng $(D)/libjpeg $(D)/giflib
 		export STRIP=$(TARGET)-strip && \
 		export SYSROOT=$(TARGET_DIR) && \
 		export PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) && \
-		export LD_LIBRARY_PATH=$(TARGETLIB) && \
+		export LD_LIBRARY_PATH=$(TARGET_LIB_DIR) && \
 		export CFLAGS="$(TARGET_CFLAGS)" && \
 		export LIBS="$(TARGET_LDFLAGS) $(CORTEX-STRINGS)" && \
 		./configure \

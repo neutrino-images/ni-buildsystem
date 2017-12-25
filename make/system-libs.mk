@@ -201,7 +201,7 @@ $(D)/libjpeg: $(ARCHIVE)/libjpeg-turbo-$(LIBJPEG-TURBO_VER).tar.gz | $(TARGET_DI
 		$(MAKE)  && \
 		make install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL)/libjpeg.la
-	rm -f $(TARGETLIB)/libturbojpeg* $(TARGETINCLUDE)/turbojpeg.h
+	rm -f $(TARGET_LIB_DIR)/libturbojpeg* $(TARGETINCLUDE)/turbojpeg.h
 	$(REMOVE)/libjpeg-turbo-$(LIBJPEG-TURBO_VER)
 	touch $@
 
@@ -237,12 +237,12 @@ $(D)/openssl: $(ARCHIVE)/openssl-$(OPENSSL_VER).tar.gz | $(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/openssl.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libcrypto.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libssl.pc
-	rm -rf $(TARGET_DIR)/bin/c_rehash $(TARGETLIB)/engines
+	rm -rf $(TARGET_DIR)/bin/c_rehash $(TARGET_LIB_DIR)/engines
 ifneq ($(BOXSERIES), hd51)
 	rm -rf $(TARGET_DIR)/bin/openssl
 endif
 	$(REMOVE)/openssl-$(OPENSSL_VER)
-	chmod 0755 $(TARGETLIB)/libcrypto.so.* $(TARGETLIB)/libssl.so.*
+	chmod 0755 $(TARGET_LIB_DIR)/libcrypto.so.* $(TARGET_LIB_DIR)/libssl.so.*
 	touch $@
 
 FFMPEG_DEPS = $(D)/openssl $(D)/librtmp $(D)/libbluray $(D)/libass
@@ -451,7 +451,7 @@ $(D)/libncurses: $(ARCHIVE)/ncurses-$(LIBNCURSES_VER).tar.gz | $(TARGET_DIR)
 		$(MAKE) libs && \
 		$(MAKE) install.libs DESTDIR=$(TARGET_DIR)
 	rm -rf $(HOST_DIR)/bin/ncurses*
-	rm -rf $(TARGETLIB)/libform* $(TARGETLIB)/libmenu* $(TARGETLIB)/libpanel*
+	rm -rf $(TARGET_LIB_DIR)/libform* $(TARGET_LIB_DIR)/libmenu* $(TARGET_LIB_DIR)/libpanel*
 	rm -rf $(PKG_CONFIG_PATH)/form.pc $(PKG_CONFIG_PATH)/menu.pc $(PKG_CONFIG_PATH)/panel.pc
 	mv $(TARGET_DIR)/bin/ncurses6-config $(HOST_DIR)/bin
 	$(REWRITE_PKGCONF) $(HOST_DIR)/bin/ncurses6-config
@@ -550,7 +550,7 @@ $(D)/libdpf: $(D)/libusb_compat $(ARCHIVE)/dpf-ax_svn$(DPF-AX_REV).tar.gz | $(TA
 		cp dpf.h $(TARGETINCLUDE)/libdpf/libdpf.h; \
 		cp ../include/spiflash.h $(TARGETINCLUDE)/libdpf/; \
 		cp ../include/usbuser.h $(TARGETINCLUDE)/libdpf/; \
-		cp libdpf.a $(TARGETLIB)/
+		cp libdpf.a $(TARGET_LIB_DIR)/
 	$(REMOVE)/dpf-ax_svn$(DPF-AX_REV)
 	touch $@
 
@@ -608,7 +608,7 @@ $(D)/luaexpat: $(ARCHIVE)/luaexpat-$(LUA_EXPAT_VER).tar.gz $(D)/expat | $(TARGET
 		$(MAKE) \
 		CC=$(TARGET)-gcc LUA_V=$(LUA_ABIVER) LDFLAGS="$(TARGET_LDFLAGS)" \
 		LUA_INC=-I$(TARGETINCLUDE) EXPAT_INC=-I$(TARGETINCLUDE); \
-		$(MAKE) install LUA_LDIR=$(TARGET_DIR)/share/lua/$(LUA_ABIVER) LUA_CDIR=$(TARGETLIB)/lua/$(LUA_ABIVER)
+		$(MAKE) install LUA_LDIR=$(TARGET_DIR)/share/lua/$(LUA_ABIVER) LUA_CDIR=$(TARGET_LIB_DIR)/lua/$(LUA_ABIVER)
 	rm -rf $(TARGET_DIR)/share/lua/$(LUA_ABIVER)/lxp/tests
 	$(REMOVE)/luaexpat-$(LUA_EXPAT_VER)
 	touch $@
@@ -621,7 +621,7 @@ $(D)/luacurl: $(D)/libcurl $(D)/lua $(ARCHIVE)/Lua-cURL$(LUACURL_VER).tar.xz | $
 			CC=$(TARGET)-gcc \
 			LUA_CMOD=/lib/lua/$(LUA_ABIVER) \
 			LUA_LMOD=/share/lua/$(LUA_ABIVER) \
-			LIBDIR=$(TARGETLIB) \
+			LIBDIR=$(TARGET_LIB_DIR) \
 			LUA_INC=$(TARGETINCLUDE) \
 			CURL_LIBS="$(TARGET_LDFLAGS) -lcurl" \
 			$(MAKE); \
@@ -645,7 +645,7 @@ $(D)/luaposix: $(HOST_DIR)/bin/lua-$(LUA_VER) $(D)/lua $(D)/luaexpat $(ARCHIVE)/
 		$(CONFIGURE) \
 			--prefix= \
 			--exec-prefix= \
-			--libdir=$(TARGETLIB)/lua/$(LUA_ABIVER) \
+			--libdir=$(TARGET_LIB_DIR)/lua/$(LUA_ABIVER) \
 			--datarootdir=$(TARGET_DIR)/share/lua/$(LUA_ABIVER) \
 			--mandir=$(TARGET_DIR)/.remove \
 			--docdir=$(TARGET_DIR)/.remove \
@@ -678,8 +678,8 @@ $(D)/lua: $(D)/libncurses $(ARCHIVE)/lua-$(LUA_VER).tar.gz | $(TARGET_DIR)
 		sed -i 's/^R=.*/R= $(LUA_VER)/' etc/lua.pc; \
 		$(MAKE) linux PKG_VERSION=$(LUA_VER) CC=$(TARGET)-gcc LD=$(TARGET)-ld AR="$(TARGET)-ar rcu" RANLIB=$(TARGET)-ranlib LDFLAGS="$(TARGET_LDFLAGS)"; \
 		$(MAKE) install INSTALL_TOP=$(TARGET_DIR)
-	install -m 0755 -D $(BUILD_TMP)/lua-$(LUA_VER)/src/liblua.so.$(LUA_VER) $(TARGETLIB)/liblua.so.$(LUA_VER)
-	cd $(TARGETLIB); ln -sf liblua.so.$(LUA_VER) $(TARGETLIB)/liblua.so
+	install -m 0755 -D $(BUILD_TMP)/lua-$(LUA_VER)/src/liblua.so.$(LUA_VER) $(TARGET_LIB_DIR)/liblua.so.$(LUA_VER)
+	cd $(TARGET_LIB_DIR); ln -sf liblua.so.$(LUA_VER) $(TARGET_LIB_DIR)/liblua.so
 	install -m 0644 -D $(BUILD_TMP)/lua-$(LUA_VER)/etc/lua.pc $(PKG_CONFIG_PATH)/lua.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/lua.pc
 	rm -rf $(TARGET_DIR)/bin/luac
@@ -847,8 +847,8 @@ $(D)/libxml2: $(ARCHIVE)/libxml2-$(LIBXML2_VER).tar.gz | $(TARGET_DIR)
 	$(REWRITE_LIBTOOL)/libxml2.la
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libxml-2.0.pc
 	$(REWRITE_PKGCONF) $(HOST_DIR)/bin/xml2-config
-	rm -rf $(TARGETLIB)/xml2Conf.sh
-	rm -rf $(TARGETLIB)/cmake
+	rm -rf $(TARGET_LIB_DIR)/xml2Conf.sh
+	rm -rf $(TARGET_LIB_DIR)/cmake
 	$(REMOVE)/libxml2-$(LIBXML2_VER)
 	touch $@
 

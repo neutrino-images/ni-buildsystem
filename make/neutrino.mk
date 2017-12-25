@@ -44,11 +44,11 @@ else
 	N_CFLAGS += $(TARGET_CFLAGS)
 endif
 
-N_LDFLAGS = -lcrypto -ldl -lz $(CORTEX-STRINGS) -L$(TARGETLIB)
+N_LDFLAGS = -lcrypto -ldl -lz $(CORTEX-STRINGS) -L$(TARGET_LIB_DIR)
 ifeq ($(DEBUG), yes)
-	N_LDFLAGS += -Wl,-rpath-link,$(TARGETLIB)
+	N_LDFLAGS += -Wl,-rpath-link,$(TARGET_LIB_DIR)
 else
-	N_LDFLAGS += -Wl,-O1 -Wl,-rpath-link,$(TARGETLIB) $(TARGET_EXTRA_LDFLAGS)
+	N_LDFLAGS += -Wl,-O1 -Wl,-rpath-link,$(TARGET_LIB_DIR) $(TARGET_EXTRA_LDFLAGS)
 endif
 
 N_CONFIGURE_DEBUG =
@@ -56,7 +56,7 @@ ifeq ($(HAS_LIBCS), yes)
   ifeq ($(DEBUG), yes)
 	N_CONFIGURE_DEBUG += \
 		--enable-libcoolstream-static \
-		--with-libcoolstream-static-dir=$(TARGETLIB)
+		--with-libcoolstream-static-dir=$(TARGET_LIB_DIR)
   endif
 endif
 

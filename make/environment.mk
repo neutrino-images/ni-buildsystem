@@ -154,7 +154,7 @@ IMAGEFILES    = $(BASE_DIR)/archive-imagefiles
 SOURCES       = $(BASE_DIR)/archive-sources
 SKEL_ROOT     = $(BASE_DIR)/skel-root/$(BOXTYPE)/$(BOXSERIES)
 STATIC_LIB_DIR = $(STATIC_DIR)/lib
-TARGETLIB     = $(TARGET_DIR)/lib
+TARGET_LIB_DIR = $(TARGET_DIR)/lib
 TARGETINCLUDE = $(TARGET_DIR)/include
 BUILD        ?= $(shell /usr/share/libtool/config.guess 2>/dev/null || /usr/share/libtool/config/config.guess 2>/dev/null || /usr/share/misc/config.guess)
 CCACHE        = /usr/bin/ccache
@@ -229,7 +229,7 @@ endif
 TARGET_CFLAGS   = -pipe $(TARGET_O_CFLAGS) $(TARGET_MARCH_CFLAGS) $(TARGET_EXTRA_CFLAGS) $(CXX11_ABI) -g -I$(TARGETINCLUDE)
 TARGET_CPPFLAGS = $(TARGET_CFLAGS)
 TARGET_CXXFLAGS = $(TARGET_CFLAGS)
-TARGET_LDFLAGS  = $(CORTEX-STRINGS) -Wl,-O1 -Wl,-rpath,$(TARGETLIB) -Wl,-rpath-link,$(TARGETLIB) -L$(TARGETLIB) $(TARGET_EXTRA_LDFLAGS)
+TARGET_LDFLAGS  = $(CORTEX-STRINGS) -Wl,-O1 -Wl,-rpath,$(TARGET_LIB_DIR) -Wl,-rpath-link,$(TARGET_LIB_DIR) -L$(TARGET_LIB_DIR) $(TARGET_EXTRA_LDFLAGS)
 
 VPATH = $(D)
 
@@ -250,13 +250,13 @@ endif
 PATH := $(HOST_DIR)/bin:$(CROSS_DIR)/bin:$(HELPERS_DIR):$(PATH)
 
 PKG_CONFIG = $(HOST_DIR)/bin/$(TARGET)-pkg-config
-PKG_CONFIG_LIBDIR = $(TARGETLIB)
+PKG_CONFIG_LIBDIR = $(TARGET_LIB_DIR)
 PKG_CONFIG_PATH = $(PKG_CONFIG_LIBDIR)/pkgconfig
 
 # helper-"functions":
-REWRITE_LIBTOOL        = sed -i "s,^libdir=.*,libdir='$(TARGETLIB)'," $(TARGETLIB)
-REWRITE_LIBTOOL_STATIC = sed -i "s,^libdir=.*,libdir='$(TARGETLIB)'," $(STATIC_LIB_DIR)
-REWRITE_LIBTOOLDEP     = sed -i -e "s,\(^dependency_libs='\| \|-L\|^dependency_libs='\)/lib,\ $(TARGETLIB),g" $(TARGETLIB)
+REWRITE_LIBTOOL        = sed -i "s,^libdir=.*,libdir='$(TARGET_LIB_DIR)'," $(TARGET_LIB_DIR)
+REWRITE_LIBTOOL_STATIC = sed -i "s,^libdir=.*,libdir='$(TARGET_LIB_DIR)'," $(STATIC_LIB_DIR)
+REWRITE_LIBTOOLDEP     = sed -i -e "s,\(^dependency_libs='\| \|-L\|^dependency_libs='\)/lib,\ $(TARGET_LIB_DIR),g" $(TARGET_LIB_DIR)
 REWRITE_PKGCONF        = sed -i "s,^prefix=.*,prefix='$(TARGET_DIR)',"
 
 # unpack tarballs, clean up

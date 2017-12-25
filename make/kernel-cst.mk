@@ -5,7 +5,7 @@ IMAGE		= $(BUILD_TMP)/linux-$(KERNEL_VERSION)/arch/arm/boot/Image
 ZIMAGE		= $(BUILD_TMP)/linux-$(KERNEL_VERSION)/arch/arm/boot/zImage
 MODULES_DIR	= $(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules/lib/modules/$(KERNEL_VERSION_FULL)
 
-TARGETMODULES	= $(TARGETLIB)/modules/$(KERNEL_VERSION_FULL)
+TARGETMODULES	= $(TARGET_LIB_DIR)/modules/$(KERNEL_VERSION_FULL)
 
 ifneq ($(wildcard $(SKEL_ROOT)-$(BOXFAMILY)),)
   KERNEL_DESTDIR = $(SKEL_ROOT)-$(BOXFAMILY)/var/update
