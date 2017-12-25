@@ -37,7 +37,7 @@ $(D)/openssh: $(D)/openssl $(D)/zlib $(ARCHIVE)/openssh-$(OPENSSH_VER).tar.gz | 
 		--infodir=/.remove \
 		--with-pid-dir=/tmp \
 		--with-privsep-path=/var/empty \
-		--with-cppflags="-pipe $(TARGET_O_CFLAGS) $(TARGET_MARCH_CFLAGS) -g -I$(TARGETINCLUDE)" \
+		--with-cppflags="-pipe $(TARGET_O_CFLAGS) $(TARGET_MARCH_CFLAGS) -g -I$(TARGET_INCLUDE_DIR)" \
 		--with-ldflags="-L$(TARGET_LIB_DIR)" \
 		--libexecdir=/bin \
 		--disable-strip \
@@ -279,7 +279,7 @@ $(D)/inadyn: $(D)/openssl $(D)/confuse $(D)/libite $(ARCHIVE)/inadyn-$(INADYN_VE
 		$(CONFIGURE) \
 			--prefix= \
 			--libdir=$(TARGET_LIB_DIR) \
-			--includedir=$(TARGETINCLUDE) \
+			--includedir=$(TARGET_INCLUDE_DIR) \
 			--mandir=/.remove \
 			--docdir=/.remove \
 			--enable-openssl && \
@@ -669,7 +669,7 @@ $(D)/lcd4linux: $(D)/libncurses $(D)/libgd2 $(D)/libdpf | $(TARGET_DIR)
 		./bootstrap && \
 		$(CONFIGURE) \
 			--libdir=$(TARGET_LIB_DIR) \
-			--includedir=$(TARGETINCLUDE) \
+			--includedir=$(TARGET_INCLUDE_DIR) \
 			--bindir=$(TARGET_DIR)/bin \
 			--prefix= \
 			--mandir=/.remove \
@@ -707,7 +707,7 @@ $(D)/xupnpd: $(D)/lua $(D)/openssl | $(TARGET_DIR)
 		$(PATCH)/xupnpd-add-configuration-files.diff
 	pushd $(BUILD_TMP)/xupnpd/src && \
 		$(BUILDENV) \
-		$(MAKE) embedded TARGET=$(TARGET) CC=$(TARGET)-gcc STRIP=$(TARGET)-strip LUAFLAGS="$(TARGET_LDFLAGS) -I$(TARGETINCLUDE)" && \
+		$(MAKE) embedded TARGET=$(TARGET) CC=$(TARGET)-gcc STRIP=$(TARGET)-strip LUAFLAGS="$(TARGET_LDFLAGS) -I$(TARGET_INCLUDE_DIR)" && \
 	install -D -m 0755 xupnpd $(BIN)/ && \
 	mkdir -p $(TARGET_DIR)/share/xupnpd/config && \
 	for object in *.lua plugins/ profiles/ ui/ www/; do \

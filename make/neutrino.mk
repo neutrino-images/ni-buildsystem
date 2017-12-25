@@ -39,7 +39,7 @@ ifeq ($(BOXSERIES), hd51)
 endif
 
 ifeq ($(DEBUG), yes)
-	N_CFLAGS += -ggdb3 -rdynamic -I$(TARGETINCLUDE)
+	N_CFLAGS += -ggdb3 -rdynamic -I$(TARGET_INCLUDE_DIR)
 else
 	N_CFLAGS += $(TARGET_CFLAGS)
 endif

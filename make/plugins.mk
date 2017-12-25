@@ -141,7 +141,7 @@ $(LIBPLUG)/FritzInfoMonitor.so: $(D)/freetype $(D)/openssl $(D)/libcurl $(LIBPLU
 	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/FritzInfoMonitor && \
 	$(TARGET)-gcc -Wall $(TARGET_CFLAGS) $(TARGET_LDFLAGS) \
 		-I$(N_OBJDIR) -I$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/include \
-		-I$(TARGETINCLUDE)/freetype2 \
+		-I$(TARGET_INCLUDE_DIR)/freetype2 \
 		\
 		-lfreetype -lz -lstdc++ -lcrypto -lcurl \
 		\
@@ -263,7 +263,7 @@ $(BIN)/input: $(D)/freetype $(BIN)
 	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/input && \
 	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) \
 		-I$(N_OBJDIR) -I$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/include \
-		-I$(TARGETINCLUDE)/freetype2 \
+		-I$(TARGET_INCLUDE_DIR)/freetype2 \
 		\
 		-lfreetype -lz -lpng \
 		\
@@ -296,7 +296,7 @@ $(LIBPLUG)/logoset.so: $(D)/freetype $(LIBPLUG)
 	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/logomask && \
 	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) \
 		-I$(N_OBJDIR) -I$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/include \
-		-I$(TARGETINCLUDE)/freetype2 \
+		-I$(TARGET_INCLUDE_DIR)/freetype2 \
 		\
 		-lfreetype -lz \
 		\
@@ -326,7 +326,7 @@ $(BIN)/msgbox: $(D)/freetype $(BIN)
 	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/msgbox && \
 	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) \
 		-I$(N_OBJDIR) -I$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/include \
-		-I$(TARGETINCLUDE)/freetype2 \
+		-I$(TARGET_INCLUDE_DIR)/freetype2 \
 		\
 		-lfreetype -lz -lpng \
 		\
@@ -348,7 +348,7 @@ $(BIN)/tuxcald: $(D)/freetype $(BIN) $(ETCINIT) $(VARCONF)
 	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/tuxcal/daemon && \
 	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) \
 		-I$(N_OBJDIR) -I$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/include \
-		-I$(TARGETINCLUDE)/freetype2 \
+		-I$(TARGET_INCLUDE_DIR)/freetype2 \
 		\
 		-lfreetype -lz -lpthread \
 		\
@@ -367,7 +367,7 @@ $(LIBPLUG)/tuxcal.so: $(LIBPLUG)
 	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/tuxcal && \
 	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) \
 		-I$(N_OBJDIR) -I$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/include \
-		-I$(TARGETINCLUDE)/freetype2 \
+		-I$(TARGET_INCLUDE_DIR)/freetype2 \
 		\
 		-lfreetype -lz \
 		\
@@ -383,7 +383,7 @@ $(LIBPLUG)/tuxcom.so: $(D)/freetype $(LIBPLUG)
 	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/tuxcom && \
 	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) \
 		-I$(N_OBJDIR) -I$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/include \
-		-I$(TARGETINCLUDE)/freetype2 \
+		-I$(TARGET_INCLUDE_DIR)/freetype2 \
 		\
 		-lfreetype -lz \
 		\
@@ -399,7 +399,7 @@ $(BIN)/tuxmaild: $(D)/freetype $(D)/openssl $(BIN) $(ETCINIT) $(VARCONF)
 	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/tuxmail/daemon && \
 	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) \
 		-I$(N_OBJDIR) -I$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/include \
-		-I$(TARGETINCLUDE)/freetype2 \
+		-I$(TARGET_INCLUDE_DIR)/freetype2 \
 		\
 		-lfreetype -lz -lcrypto -lssl -lpthread \
 		\
@@ -420,7 +420,7 @@ $(LIBPLUG)/tuxmail.so: $(LIBPLUG)
 	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/tuxmail && \
 	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) \
 		-I$(N_OBJDIR) -I$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/include \
-		-I$(TARGETINCLUDE)/freetype2 \
+		-I$(TARGET_INCLUDE_DIR)/freetype2 \
 		\
 		-lfreetype -lz \
 		\
@@ -436,7 +436,7 @@ $(LIBPLUG)/tuxwetter.so: $(D)/freetype $(D)/libcurl $(D)/giflib $(D)/libjpeg $(L
 	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/tuxwetter && \
 	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) \
 		-I$(N_OBJDIR) -I$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/include \
-		-I$(TARGETINCLUDE)/freetype2 \
+		-I$(TARGET_INCLUDE_DIR)/freetype2 \
 		\
 		-lfreetype -lz -lcrypto -lssl -lcurl -ljpeg -lpng -lgif \
 		\
@@ -488,7 +488,7 @@ $(LIBPLUG)/oscammon.so: $(LIBPLUG) $(VARCONF)
 	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/oscammon && \
 	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) \
 		-I$(N_OBJDIR) -I$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/include \
-		-I$(TARGETINCLUDE)/freetype2 \
+		-I$(TARGET_INCLUDE_DIR)/freetype2 \
 		\
 		-lfreetype -lz -lcrypto \
 		\
@@ -516,7 +516,7 @@ $(LIBPLUG)/shellexec.so: $(D)/freetype $(LIBPLUG) $(SHAREFLEX) $(VARCONF) $(BIN)
 	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/shellexec; \
 	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) \
 		-I$(N_OBJDIR) -I$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/include \
-		-I$(TARGETINCLUDE)/freetype2 \
+		-I$(TARGET_INCLUDE_DIR)/freetype2 \
 		\
 		-lfreetype -lz -lpng \
 		\

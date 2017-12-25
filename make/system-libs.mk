@@ -181,7 +181,7 @@ $(D)/freetype: $(D)/zlib $(D)/libpng $(ARCHIVE)/freetype-$(FREETYPE_VER).tar.bz2
 			--disable-static && \
 		$(MAKE) all && \
 		make install && \
-		ln -sf ./freetype2/freetype $(TARGETINCLUDE)/freetype && \
+		ln -sf ./freetype2/freetype $(TARGET_INCLUDE_DIR)/freetype && \
 	mv $(TARGET_DIR)/bin/freetype-config $(HOST_DIR)/bin/freetype-config
 	$(REMOVE)/freetype-$(FREETYPE_VER) $(TARGET_DIR)/share/aclocal
 	touch $@
@@ -201,7 +201,7 @@ $(D)/libjpeg: $(ARCHIVE)/libjpeg-turbo-$(LIBJPEG-TURBO_VER).tar.gz | $(TARGET_DI
 		$(MAKE)  && \
 		make install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL)/libjpeg.la
-	rm -f $(TARGET_LIB_DIR)/libturbojpeg* $(TARGETINCLUDE)/turbojpeg.h
+	rm -f $(TARGET_LIB_DIR)/libturbojpeg* $(TARGET_INCLUDE_DIR)/turbojpeg.h
 	$(REMOVE)/libjpeg-turbo-$(LIBJPEG-TURBO_VER)
 	touch $@
 
@@ -383,7 +383,7 @@ ifeq ($(BOXSERIES), hd2)
 			--enable-decoder=vc1 \
 			--enable-hardcoded-tables \
 			--cpu=cortex-a9 \
-			--extra-cflags="-Wno-deprecated-declarations -I$(TARGETINCLUDE) -mfpu=vfpv3-d16 -mfloat-abi=hard"
+			--extra-cflags="-Wno-deprecated-declarations -I$(TARGET_INCLUDE_DIR) -mfpu=vfpv3-d16 -mfloat-abi=hard"
 endif
 
 ifeq ($(BOXSERIES), hd1)
@@ -393,7 +393,7 @@ ifeq ($(BOXSERIES), hd1)
 			--disable-neon \
 			--enable-small \
 			--cpu=armv6 \
-			--extra-cflags="-Wno-deprecated-declarations -I$(TARGETINCLUDE)"
+			--extra-cflags="-Wno-deprecated-declarations -I$(TARGET_INCLUDE_DIR)"
 endif
 
 ifeq ($(BOXSERIES), hd51)
@@ -404,7 +404,7 @@ ifeq ($(BOXSERIES), hd51)
 			--enable-filter=scale \
 			--enable-hardcoded-tables \
 			--cpu=cortex-a15 \
-			--extra-cflags="-Wno-deprecated-declarations -I$(TARGETINCLUDE) -mfpu=neon-vfpv4 -mfloat-abi=hard"
+			--extra-cflags="-Wno-deprecated-declarations -I$(TARGET_INCLUDE_DIR) -mfpu=neon-vfpv4 -mfloat-abi=hard"
 endif
 
 $(D)/ffmpeg: $(FFMPEG_DEPS) | $(TARGET_DIR)
@@ -456,9 +456,9 @@ $(D)/libncurses: $(ARCHIVE)/ncurses-$(LIBNCURSES_VER).tar.gz | $(TARGET_DIR)
 	mv $(TARGET_DIR)/bin/ncurses6-config $(HOST_DIR)/bin
 	$(REWRITE_PKGCONF) $(HOST_DIR)/bin/ncurses6-config
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/ncurses.pc
-	ln -sf ./ncurses/curses.h $(TARGETINCLUDE)/curses.h
-	ln -sf ./ncurses/curses.h $(TARGETINCLUDE)/ncurses.h
-	ln -sf ./ncurses/term.h $(TARGETINCLUDE)/term.h
+	ln -sf ./ncurses/curses.h $(TARGET_INCLUDE_DIR)/curses.h
+	ln -sf ./ncurses/curses.h $(TARGET_INCLUDE_DIR)/ncurses.h
+	ln -sf ./ncurses/term.h $(TARGET_INCLUDE_DIR)/term.h
 	$(REMOVE)/ncurses-$(LIBNCURSES_VER)
 	touch $@
 
@@ -546,10 +546,10 @@ $(D)/libdpf: $(D)/libusb_compat $(ARCHIVE)/dpf-ax_svn$(DPF-AX_REV).tar.gz | $(TA
 	cd $(BUILD_TMP)/dpf-ax_svn$(DPF-AX_REV)/dpflib && \
 		$(PATCH)/libdpf-crossbuild.diff; \
 		make libdpf.a CC=$(TARGET)-gcc PREFIX=$(TARGET_DIR); \
-		mkdir -p $(TARGETINCLUDE)/libdpf; \
-		cp dpf.h $(TARGETINCLUDE)/libdpf/libdpf.h; \
-		cp ../include/spiflash.h $(TARGETINCLUDE)/libdpf/; \
-		cp ../include/usbuser.h $(TARGETINCLUDE)/libdpf/; \
+		mkdir -p $(TARGET_INCLUDE_DIR)/libdpf; \
+		cp dpf.h $(TARGET_INCLUDE_DIR)/libdpf/libdpf.h; \
+		cp ../include/spiflash.h $(TARGET_INCLUDE_DIR)/libdpf/; \
+		cp ../include/usbuser.h $(TARGET_INCLUDE_DIR)/libdpf/; \
 		cp libdpf.a $(TARGET_LIB_DIR)/
 	$(REMOVE)/dpf-ax_svn$(DPF-AX_REV)
 	touch $@
@@ -576,8 +576,8 @@ $(D)/libsigc++: $(ARCHIVE)/libsigc++-$(LIBSIGCPP_VER).tar.xz | $(TARGET_DIR)
 			--enable-silent-rules; \
 		$(MAKE); \
 		make install DESTDIR=$(TARGET_DIR); \
-	ln -sf ./sigc++-2.0/sigc++ $(TARGETINCLUDE)/sigc++
-	cp $(BUILD_TMP)/libsigc++-$(LIBSIGCPP_VER)/sigc++config.h $(TARGETINCLUDE)
+	ln -sf ./sigc++-2.0/sigc++ $(TARGET_INCLUDE_DIR)/sigc++
+	cp $(BUILD_TMP)/libsigc++-$(LIBSIGCPP_VER)/sigc++config.h $(TARGET_INCLUDE_DIR)
 	$(REWRITE_LIBTOOL)/libsigc-2.0.la
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/sigc++-2.0.pc
 	$(REMOVE)/libsigc++-$(LIBSIGCPP_VER)
@@ -607,7 +607,7 @@ $(D)/luaexpat: $(ARCHIVE)/luaexpat-$(LUA_EXPAT_VER).tar.gz $(D)/expat | $(TARGET
 		$(PATCH)/luaexpat-lua-5.2-test-fix.patch; \
 		$(MAKE) \
 		CC=$(TARGET)-gcc LUA_V=$(LUA_ABIVER) LDFLAGS="$(TARGET_LDFLAGS)" \
-		LUA_INC=-I$(TARGETINCLUDE) EXPAT_INC=-I$(TARGETINCLUDE); \
+		LUA_INC=-I$(TARGET_INCLUDE_DIR) EXPAT_INC=-I$(TARGET_INCLUDE_DIR); \
 		$(MAKE) install LUA_LDIR=$(TARGET_DIR)/share/lua/$(LUA_ABIVER) LUA_CDIR=$(TARGET_LIB_DIR)/lua/$(LUA_ABIVER)
 	rm -rf $(TARGET_DIR)/share/lua/$(LUA_ABIVER)/lxp/tests
 	$(REMOVE)/luaexpat-$(LUA_EXPAT_VER)
@@ -622,7 +622,7 @@ $(D)/luacurl: $(D)/libcurl $(D)/lua $(ARCHIVE)/Lua-cURL$(LUACURL_VER).tar.xz | $
 			LUA_CMOD=/lib/lua/$(LUA_ABIVER) \
 			LUA_LMOD=/share/lua/$(LUA_ABIVER) \
 			LIBDIR=$(TARGET_LIB_DIR) \
-			LUA_INC=$(TARGETINCLUDE) \
+			LUA_INC=$(TARGET_INCLUDE_DIR) \
 			CURL_LIBS="$(TARGET_LDFLAGS) -lcurl" \
 			$(MAKE); \
 			LUA_CMOD=/lib/lua/$(LUA_ABIVER) \

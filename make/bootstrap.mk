@@ -25,7 +25,7 @@ skeleton: | $(TARGET_DIR)
 targetprefix:
 	mkdir -p $(TARGET_DIR)
 	mkdir -p $(TARGET_DIR)/bin
-	mkdir -p $(TARGETINCLUDE)
+	mkdir -p $(TARGET_INCLUDE_DIR)
 	mkdir -p $(PKG_CONFIG_PATH)
 	make skeleton
 

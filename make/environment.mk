@@ -155,7 +155,7 @@ SOURCES       = $(BASE_DIR)/archive-sources
 SKEL_ROOT     = $(BASE_DIR)/skel-root/$(BOXTYPE)/$(BOXSERIES)
 STATIC_LIB_DIR = $(STATIC_DIR)/lib
 TARGET_LIB_DIR = $(TARGET_DIR)/lib
-TARGETINCLUDE = $(TARGET_DIR)/include
+TARGET_INCLUDE_DIR = $(TARGET_DIR)/include
 BUILD        ?= $(shell /usr/share/libtool/config.guess 2>/dev/null || /usr/share/libtool/config/config.guess 2>/dev/null || /usr/share/misc/config.guess)
 CCACHE        = /usr/bin/ccache
 CCACHE_DIR    = $(HOME)/.ccache-ni-buildsystem-$(BOXARCH)-$(BOXSERIES)
@@ -226,7 +226,7 @@ ifeq ($(BOXSERIES), hd51)
   CXX11_ABI              =
 endif
 
-TARGET_CFLAGS   = -pipe $(TARGET_O_CFLAGS) $(TARGET_MARCH_CFLAGS) $(TARGET_EXTRA_CFLAGS) $(CXX11_ABI) -g -I$(TARGETINCLUDE)
+TARGET_CFLAGS   = -pipe $(TARGET_O_CFLAGS) $(TARGET_MARCH_CFLAGS) $(TARGET_EXTRA_CFLAGS) $(CXX11_ABI) -g -I$(TARGET_INCLUDE_DIR)
 TARGET_CPPFLAGS = $(TARGET_CFLAGS)
 TARGET_CXXFLAGS = $(TARGET_CFLAGS)
 TARGET_LDFLAGS  = $(CORTEX-STRINGS) -Wl,-O1 -Wl,-rpath,$(TARGET_LIB_DIR) -Wl,-rpath-link,$(TARGET_LIB_DIR) -L$(TARGET_LIB_DIR) $(TARGET_EXTRA_LDFLAGS)
