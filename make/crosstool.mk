@@ -17,8 +17,8 @@ crosstools-renew:
 	make ccache-clean BOXSERIES=hd51
 	make static-clean BOXSERIES=hd51
 	rm -rf $(BASE_DIR)/cross/$(BOXARCH)/hd51
-	rm -rf $(HOSTPREFIX)/bin/arm-*
-	rm -rf $(HOSTPREFIX)/bin/pkg-config
+	rm -rf $(HOST_DIR)/bin/arm-*
+	rm -rf $(HOST_DIR)/bin/pkg-config
 	rm -rf $(BASE_DIR)/static
 	make crosstools
 	make bootstrap

@@ -129,9 +129,9 @@ $(D)/libcurl: $(D)/zlib $(D)/openssl $(D)/librtmp $(D)/ca-bundle $(ARCHIVE)/curl
 			$(CURL_IPV6) \
 			--enable-optimize && \
 		$(MAKE) all && \
-		mkdir -p $(HOSTPREFIX)/bin && \
-		sed -e "s,^prefix=,prefix=$(TARGETPREFIX)," < curl-config > $(HOSTPREFIX)/bin/curl-config && \
-		chmod 755 $(HOSTPREFIX)/bin/curl-config && \
+		mkdir -p $(HOST_DIR)/bin && \
+		sed -e "s,^prefix=,prefix=$(TARGETPREFIX)," < curl-config > $(HOST_DIR)/bin/curl-config && \
+		chmod 755 $(HOST_DIR)/bin/curl-config && \
 		make install DESTDIR=$(TARGETPREFIX)
 	rm -rf $(TARGETPREFIX)/bin/curl-config $(TARGETPREFIX)/share/zsh
 	$(REWRITE_LIBTOOL)/libcurl.la
@@ -150,7 +150,7 @@ $(D)/libpng: $(ARCHIVE)/libpng-$(LIBPNG_VER).tar.xz $(D)/zlib | $(TARGETPREFIX)
 		$(PATCH)/libpng-Disable-pngfix-and-png-fix-itxt.patch && \
 		$(CONFIGURE) \
 			--prefix=$(TARGETPREFIX) \
-			--bindir=$(HOSTPREFIX)/bin \
+			--bindir=$(HOST_DIR)/bin \
 			--mandir=$(BUILD_TMP)/.remove \
 			--enable-silent-rules \
 			$(LIBPNG_CONF) \
@@ -182,7 +182,7 @@ $(D)/freetype: $(D)/zlib $(D)/libpng $(ARCHIVE)/freetype-$(FREETYPE_VER).tar.bz2
 		$(MAKE) all && \
 		make install && \
 		ln -sf ./freetype2/freetype $(TARGETINCLUDE)/freetype && \
-	mv $(TARGETPREFIX)/bin/freetype-config $(HOSTPREFIX)/bin/freetype-config
+	mv $(TARGETPREFIX)/bin/freetype-config $(HOST_DIR)/bin/freetype-config
 	$(REMOVE)/freetype-$(FREETYPE_VER) $(TARGETPREFIX)/share/aclocal
 	touch $@
 
@@ -450,11 +450,11 @@ $(D)/libncurses: $(ARCHIVE)/ncurses-$(LIBNCURSES_VER).tar.gz | $(TARGETPREFIX)
 			--without-cxx-binding && \
 		$(MAKE) libs && \
 		$(MAKE) install.libs DESTDIR=$(TARGETPREFIX)
-	rm -rf $(HOSTPREFIX)/bin/ncurses*
+	rm -rf $(HOST_DIR)/bin/ncurses*
 	rm -rf $(TARGETLIB)/libform* $(TARGETLIB)/libmenu* $(TARGETLIB)/libpanel*
 	rm -rf $(PKG_CONFIG_PATH)/form.pc $(PKG_CONFIG_PATH)/menu.pc $(PKG_CONFIG_PATH)/panel.pc
-	mv $(TARGETPREFIX)/bin/ncurses6-config $(HOSTPREFIX)/bin
-	$(REWRITE_PKGCONF) $(HOSTPREFIX)/bin/ncurses6-config
+	mv $(TARGETPREFIX)/bin/ncurses6-config $(HOST_DIR)/bin
+	$(REWRITE_PKGCONF) $(HOST_DIR)/bin/ncurses6-config
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/ncurses.pc
 	ln -sf ./ncurses/curses.h $(TARGETINCLUDE)/curses.h
 	ln -sf ./ncurses/curses.h $(TARGETINCLUDE)/ncurses.h
@@ -511,8 +511,8 @@ $(D)/libusb_compat: $(ARCHIVE)/libusb-compat-$(LIBUSB_COMPAT_VER).tar.bz2 $(D)/l
 		$(MAKE) && \
 		make install DESTDIR=$(TARGETPREFIX) && \
 	$(REMOVE)/libusb-compat-$(LIBUSB_COMPAT_VER)
-	mv $(TARGETPREFIX)/bin/libusb-config $(HOSTPREFIX)/bin
-	$(REWRITE_PKGCONF) $(HOSTPREFIX)/bin/libusb-config
+	mv $(TARGETPREFIX)/bin/libusb-config $(HOST_DIR)/bin
+	$(REWRITE_PKGCONF) $(HOST_DIR)/bin/libusb-config
 	$(REWRITE_LIBTOOL)/libusb.la
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libusb.pc
 	touch $@
@@ -632,14 +632,14 @@ $(D)/luacurl: $(D)/libcurl $(D)/lua $(ARCHIVE)/Lua-cURL$(LUACURL_VER).tar.xz | $
 	$(REMOVE)/Lua-cURL$(LUACURL_VER)
 	touch $@
 
-$(D)/luaposix: $(HOSTPREFIX)/bin/lua-$(LUA_VER) $(D)/lua $(D)/luaexpat $(ARCHIVE)/v$(LUAPOSIX_VER).tar.gz $(ARCHIVE)/v$(SLINGSHOT_VER).tar.gz $(ARCHIVE)/gnulib-$(GNULIB_VER)-stable.tar.gz | $(TARGETPREFIX)
+$(D)/luaposix: $(HOST_DIR)/bin/lua-$(LUA_VER) $(D)/lua $(D)/luaexpat $(ARCHIVE)/v$(LUAPOSIX_VER).tar.gz $(ARCHIVE)/v$(SLINGSHOT_VER).tar.gz $(ARCHIVE)/gnulib-$(GNULIB_VER)-stable.tar.gz | $(TARGETPREFIX)
 	$(UNTAR)/v$(LUAPOSIX_VER).tar.gz
 	tar -C $(BUILD_TMP)/luaposix-$(LUAPOSIX_VER)/slingshot --strip=1 -xf $(ARCHIVE)/v$(SLINGSHOT_VER).tar.gz
 	tar -C $(BUILD_TMP)/luaposix-$(LUAPOSIX_VER)/gnulib --strip=1 -xf $(ARCHIVE)/gnulib-$(GNULIB_VER)-stable.tar.gz
 	set -e; cd $(BUILD_TMP)/luaposix-$(LUAPOSIX_VER); \
 		$(PATCH)/luaposix-fix-build.patch; \
 		$(PATCH)/luaposix-fix-docdir-build.patch; \
-		export LUA=$(HOSTPREFIX)/bin/lua-$(LUA_VER); \
+		export LUA=$(HOST_DIR)/bin/lua-$(LUA_VER); \
 		./bootstrap; \
 		autoreconf -fi; \
 		$(CONFIGURE) \
@@ -656,7 +656,7 @@ $(D)/luaposix: $(HOSTPREFIX)/bin/lua-$(LUA_VER) $(D)/lua $(D)/luaexpat $(ARCHIVE
 	touch $@
 
 # helper for luaposix build
-$(HOSTPREFIX)/bin/lua-$(LUA_VER): $(ARCHIVE)/lua-$(LUA_VER).tar.gz | $(TARGETPREFIX)
+$(HOST_DIR)/bin/lua-$(LUA_VER): $(ARCHIVE)/lua-$(LUA_VER).tar.gz | $(TARGETPREFIX)
 	$(UNTAR)/lua-$(LUA_VER).tar.gz
 	set -e; cd $(BUILD_TMP)/lua-$(LUA_VER); \
 		$(PATCH)/lua-01-fix-coolstream-build.patch; \
@@ -753,8 +753,8 @@ $(D)/libgpg-error: $(ARCHIVE)/libgpg-error-$(LIBGPG-ERROR_VER).tar.bz2 | $(TARGE
 			--disable-static && \
 		$(MAKE) && \
 		$(MAKE) install DESTDIR=$(TARGETPREFIX)
-	mv $(TARGETPREFIX)/bin/gpg-error-config $(HOSTPREFIX)/bin
-	$(REWRITE_PKGCONF) $(HOSTPREFIX)/bin/gpg-error-config
+	mv $(TARGETPREFIX)/bin/gpg-error-config $(HOST_DIR)/bin
+	$(REWRITE_PKGCONF) $(HOST_DIR)/bin/gpg-error-config
 	$(REWRITE_LIBTOOL)/libgpg-error.la
 	rm -rf $(TARGETPREFIX)/bin/gpg-error
 	rm -rf $(TARGETPREFIX)/share/common-lisp
@@ -775,8 +775,8 @@ $(D)/libgcrypt: $(ARCHIVE)/libgcrypt-$(LIBGCRYPT_VER).tar.gz $(D)/libgpg-error |
 			--disable-static && \
 		$(MAKE) && \
 		$(MAKE) install DESTDIR=$(TARGETPREFIX)
-	mv $(TARGETPREFIX)/bin/libgcrypt-config $(HOSTPREFIX)/bin
-	$(REWRITE_PKGCONF) $(HOSTPREFIX)/bin/libgcrypt-config
+	mv $(TARGETPREFIX)/bin/libgcrypt-config $(HOST_DIR)/bin
+	$(REWRITE_PKGCONF) $(HOST_DIR)/bin/libgcrypt-config
 	$(REWRITE_LIBTOOL)/libgcrypt.la
 	rm -rf $(TARGETPREFIX)/bin/dumpsexp
 	rm -rf $(TARGETPREFIX)/bin/hmac256
@@ -843,10 +843,10 @@ $(D)/libxml2: $(ARCHIVE)/libxml2-$(LIBXML2_VER).tar.gz | $(TARGETPREFIX)
 			--without-schematron && \
 		$(MAKE) && \
 		$(MAKE) install DESTDIR=$(TARGETPREFIX)
-	mv $(TARGETPREFIX)/bin/xml2-config $(HOSTPREFIX)/bin
+	mv $(TARGETPREFIX)/bin/xml2-config $(HOST_DIR)/bin
 	$(REWRITE_LIBTOOL)/libxml2.la
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libxml-2.0.pc
-	$(REWRITE_PKGCONF) $(HOSTPREFIX)/bin/xml2-config
+	$(REWRITE_PKGCONF) $(HOST_DIR)/bin/xml2-config
 	rm -rf $(TARGETLIB)/xml2Conf.sh
 	rm -rf $(TARGETLIB)/cmake
 	$(REMOVE)/libxml2-$(LIBXML2_VER)

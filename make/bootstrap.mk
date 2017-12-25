@@ -1,6 +1,6 @@
 # makefile to setup and initialize the final buildsystem
 
-BOOTSTRAP  = targetprefix $(D) $(BUILD_TMP) $(CROSS_DIR) $(STAGING_DIR) $(IMAGE_DIR) $(UPDATE_DIR) $(HOSTPREFIX)/bin includes-and-libs modules host-preqs
+BOOTSTRAP  = targetprefix $(D) $(BUILD_TMP) $(CROSS_DIR) $(STAGING_DIR) $(IMAGE_DIR) $(UPDATE_DIR) $(HOST_DIR)/bin includes-and-libs modules host-preqs
 BOOTSTRAP += $(TARGETLIB)/libc.so.6
 
 ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd51))
@@ -42,10 +42,10 @@ $(CROSS_DIR) \
 $(STAGING_DIR) \
 $(IMAGE_DIR) \
 $(UPDATE_DIR) \
-$(HOSTPREFIX):
+$(HOST_DIR):
 	mkdir -p $@
 
-$(HOSTPREFIX)/bin: $(HOSTPREFIX)
+$(HOST_DIR)/bin: $(HOST_DIR)
 	mkdir -p $@
 
 $(STATICLIB):
@@ -93,39 +93,39 @@ modules: $(TARGETLIB)/modules
 blobs: $(TARGETPREFIX)/var/update
 
 # helper target to create ccache links (make sure to have ccache installed in /usr/bin ;)
-ccache: find-ccache $(CCACHE) $(HOSTPREFIX)/bin
-	@ln -sf $(CCACHE) $(HOSTPREFIX)/bin/cc
-	@ln -sf $(CCACHE) $(HOSTPREFIX)/bin/gcc
-	@ln -sf $(CCACHE) $(HOSTPREFIX)/bin/g++
-	@ln -sf $(CCACHE) $(HOSTPREFIX)/bin/$(TARGET)-gcc
-	@ln -sf $(CCACHE) $(HOSTPREFIX)/bin/$(TARGET)-g++
+ccache: find-ccache $(CCACHE) $(HOST_DIR)/bin
+	@ln -sf $(CCACHE) $(HOST_DIR)/bin/cc
+	@ln -sf $(CCACHE) $(HOST_DIR)/bin/gcc
+	@ln -sf $(CCACHE) $(HOST_DIR)/bin/g++
+	@ln -sf $(CCACHE) $(HOST_DIR)/bin/$(TARGET)-gcc
+	@ln -sf $(CCACHE) $(HOST_DIR)/bin/$(TARGET)-g++
 
 # build all needed host-binaries
 host-preqs: pkg-config mkfs.jffs2 mkfs.fat sumtool mkimage zic parted_host mtools resize2fs ccache
 
 pkg-config-preqs:
-	@PATH=$(subst $(HOSTPREFIX)/bin:,,$(PATH)); \
+	@PATH=$(subst $(HOST_DIR)/bin:,,$(PATH)); \
 		if ! pkg-config --exists glib-2.0; then \
 			echo "pkg-config and glib2-devel packages are needed for building cross-pkg-config."; false; \
 		fi
 
-pkg-config: $(HOSTPREFIX)/bin/pkg-config
-$(HOSTPREFIX)/bin/pkg-config: $(ARCHIVE)/pkg-config-$(PKGCONF_VER).tar.gz | $(HOSTPREFIX)/bin pkg-config-preqs
+pkg-config: $(HOST_DIR)/bin/pkg-config
+$(HOST_DIR)/bin/pkg-config: $(ARCHIVE)/pkg-config-$(PKGCONF_VER).tar.gz | $(HOST_DIR)/bin pkg-config-preqs
 	$(UNTAR)/pkg-config-$(PKGCONF_VER).tar.gz
 	set -e; cd $(BUILD_TMP)/pkg-config-$(PKGCONF_VER); \
 		./configure \
 			--with-pc_path=$(PKG_CONFIG_PATH); \
 		$(MAKE); \
-		cp -a pkg-config $(HOSTPREFIX)/bin; \
-	ln -sf pkg-config $(HOSTPREFIX)/bin/arm-cx2450x-linux-gnueabi-pkg-config
-	ln -sf pkg-config $(HOSTPREFIX)/bin/arm-cortex-linux-uclibcgnueabi-pkg-config
-	ln -sf pkg-config $(HOSTPREFIX)/bin/arm-cortex-linux-gnueabihf-pkg-config
+		cp -a pkg-config $(HOST_DIR)/bin; \
+	ln -sf pkg-config $(HOST_DIR)/bin/arm-cx2450x-linux-gnueabi-pkg-config
+	ln -sf pkg-config $(HOST_DIR)/bin/arm-cortex-linux-uclibcgnueabi-pkg-config
+	ln -sf pkg-config $(HOST_DIR)/bin/arm-cortex-linux-gnueabihf-pkg-config
 	$(REMOVE)/pkg-config-$(PKGCONF_VER)
 
-mkfs.jffs2: $(HOSTPREFIX)/bin/mkfs.jffs2
-sumtool: $(HOSTPREFIX)/bin/sumtool
-$(HOSTPREFIX)/bin/mkfs.jffs2 \
-$(HOSTPREFIX)/bin/sumtool: $(ARCHIVE)/mtd-utils-$(MTD-UTILS_VER).tar.bz2 | $(HOSTPREFIX)/bin
+mkfs.jffs2: $(HOST_DIR)/bin/mkfs.jffs2
+sumtool: $(HOST_DIR)/bin/sumtool
+$(HOST_DIR)/bin/mkfs.jffs2 \
+$(HOST_DIR)/bin/sumtool: $(ARCHIVE)/mtd-utils-$(MTD-UTILS_VER).tar.bz2 | $(HOST_DIR)/bin
 	$(UNTAR)/mtd-utils-$(MTD-UTILS_VER).tar.bz2
 	pushd $(BUILD_TMP)/mtd-utils-$(MTD-UTILS_VER) && \
 		./configure \
@@ -138,32 +138,32 @@ $(HOSTPREFIX)/bin/sumtool: $(ARCHIVE)/mtd-utils-$(MTD-UTILS_VER).tar.bz2 | $(HOS
 			--without-xattr \
 			--disable-tests && \
 		$(MAKE)
-	install -D -m 0755 $(BUILD_TMP)/mtd-utils-$(MTD-UTILS_VER)/sumtool $(HOSTPREFIX)/bin/
-	install -D -m 0755 $(BUILD_TMP)/mtd-utils-$(MTD-UTILS_VER)/mkfs.jffs2 $(HOSTPREFIX)/bin/
+	install -D -m 0755 $(BUILD_TMP)/mtd-utils-$(MTD-UTILS_VER)/sumtool $(HOST_DIR)/bin/
+	install -D -m 0755 $(BUILD_TMP)/mtd-utils-$(MTD-UTILS_VER)/mkfs.jffs2 $(HOST_DIR)/bin/
 	$(REMOVE)/mtd-utils-$(MTD-UTILS_VER)
 
-mkimage: $(HOSTPREFIX)/bin/mkimage
-$(HOSTPREFIX)/bin/mkimage: $(ARCHIVE)/u-boot-$(U_BOOT_VER).tar.bz2 | $(HOSTPREFIX)/bin
+mkimage: $(HOST_DIR)/bin/mkimage
+$(HOST_DIR)/bin/mkimage: $(ARCHIVE)/u-boot-$(U_BOOT_VER).tar.bz2 | $(HOST_DIR)/bin
 	$(UNTAR)/u-boot-$(U_BOOT_VER).tar.bz2
 	pushd $(BUILD_TMP)/u-boot-$(U_BOOT_VER) && \
 		$(MAKE) defconfig && \
 		$(MAKE) silentoldconfig && \
 		$(MAKE) tools-only
-	install -D -m 0755 $(BUILD_TMP)/u-boot-$(U_BOOT_VER)/tools/mkimage $(HOSTPREFIX)/bin/
+	install -D -m 0755 $(BUILD_TMP)/u-boot-$(U_BOOT_VER)/tools/mkimage $(HOST_DIR)/bin/
 	$(REMOVE)/u-boot-$(U_BOOT_VER)
 
-zic: $(HOSTPREFIX)/bin/zic
-$(HOSTPREFIX)/bin/zic: $(ARCHIVE)/tzdata$(TZDATA_VER).tar.gz $(ARCHIVE)/tzcode$(TZCODE_VER).tar.gz | $(HOSTPREFIX)/bin
+zic: $(HOST_DIR)/bin/zic
+$(HOST_DIR)/bin/zic: $(ARCHIVE)/tzdata$(TZDATA_VER).tar.gz $(ARCHIVE)/tzcode$(TZCODE_VER).tar.gz | $(HOST_DIR)/bin
 	mkdir $(BUILD_TMP)/tzcode && \
 	tar -C $(BUILD_TMP)/tzcode -xf $(ARCHIVE)/tzcode$(TZCODE_VER).tar.gz
 	tar -C $(BUILD_TMP)/tzcode -xf $(ARCHIVE)/tzdata$(TZDATA_VER).tar.gz
 	pushd $(BUILD_TMP)/tzcode && \
 		$(MAKE) zic
-	install -D -m 0755 $(BUILD_TMP)/tzcode/zic $(HOSTPREFIX)/bin/
+	install -D -m 0755 $(BUILD_TMP)/tzcode/zic $(HOST_DIR)/bin/
 	$(REMOVE)/tzcode
 
-parted_host: $(HOSTPREFIX)/bin/parted
-$(HOSTPREFIX)/bin/parted: $(ARCHIVE)/parted-$(PARTED_VER).tar.xz | $(HOSTPREFIX)/bin
+parted_host: $(HOST_DIR)/bin/parted
+$(HOST_DIR)/bin/parted: $(ARCHIVE)/parted-$(PARTED_VER).tar.xz | $(HOST_DIR)/bin
 	$(UNTAR)/parted-$(PARTED_VER).tar.xz
 	cd $(BUILD_TMP)/parted-$(PARTED_VER) && \
 		$(PATCH)/parted-3.2-devmapper-1.patch && \
@@ -175,50 +175,50 @@ $(HOSTPREFIX)/bin/parted: $(ARCHIVE)/parted-$(PARTED_VER).tar.xz | $(HOSTPREFIX)
 			--disable-device-mapper \
 			--without-readline && \
 		$(MAKE)
-	install -D -m 0755 $(BUILD_TMP)/parted-$(PARTED_VER)/parted/parted $(HOSTPREFIX)/bin/
+	install -D -m 0755 $(BUILD_TMP)/parted-$(PARTED_VER)/parted/parted $(HOST_DIR)/bin/
 	$(REMOVE)/parted-$(PARTED_VER)
 
-mkfs.fat: $(HOSTPREFIX)/bin/mkfs.fat
-$(HOSTPREFIX)/bin/mkfs.fat: $(ARCHIVE)/dosfstools-$(DOSFSTOOLS_VER).tar.xz | $(HOSTPREFIX)/bin
+mkfs.fat: $(HOST_DIR)/bin/mkfs.fat
+$(HOST_DIR)/bin/mkfs.fat: $(ARCHIVE)/dosfstools-$(DOSFSTOOLS_VER).tar.xz | $(HOST_DIR)/bin
 	$(UNTAR)/dosfstools-$(DOSFSTOOLS_VER).tar.xz
 	set -e; cd $(BUILD_TMP)/dosfstools-$(DOSFSTOOLS_VER); \
 		./configure \
 			--without-udev \
 		; \
 		$(MAKE)
-	install -D -m 0755 $(BUILD_TMP)/dosfstools-$(DOSFSTOOLS_VER)/src/mkfs.fat $(HOSTPREFIX)/bin/
-	ln -sf mkfs.fat $(HOSTPREFIX)/bin/mkfs.vfat
-	ln -sf mkfs.fat $(HOSTPREFIX)/bin/mkfs.msdos
-	ln -sf mkfs.fat $(HOSTPREFIX)/bin/mkdosfs
+	install -D -m 0755 $(BUILD_TMP)/dosfstools-$(DOSFSTOOLS_VER)/src/mkfs.fat $(HOST_DIR)/bin/
+	ln -sf mkfs.fat $(HOST_DIR)/bin/mkfs.vfat
+	ln -sf mkfs.fat $(HOST_DIR)/bin/mkfs.msdos
+	ln -sf mkfs.fat $(HOST_DIR)/bin/mkdosfs
 	$(REMOVE)/dosfstools-$(DOSFSTOOLS_VER)
 
-mtools: $(HOSTPREFIX)/bin/mtools
-$(HOSTPREFIX)/bin/mtools: $(ARCHIVE)/mtools-$(MTOOLS_VER).tar.gz | $(HOSTPREFIX)/bin
+mtools: $(HOST_DIR)/bin/mtools
+$(HOST_DIR)/bin/mtools: $(ARCHIVE)/mtools-$(MTOOLS_VER).tar.gz | $(HOST_DIR)/bin
 	$(UNTAR)/mtools-$(MTOOLS_VER).tar.gz
 	set -e; cd $(BUILD_TMP)/mtools-$(MTOOLS_VER); \
 		./configure; \
 		$(MAKE)
-	install -D -m 0755 $(BUILD_TMP)/mtools-$(MTOOLS_VER)/mtools $(HOSTPREFIX)/bin/
-	ln -sf mtools $(HOSTPREFIX)/bin/mcopy
+	install -D -m 0755 $(BUILD_TMP)/mtools-$(MTOOLS_VER)/mtools $(HOST_DIR)/bin/
+	ln -sf mtools $(HOST_DIR)/bin/mcopy
 	$(REMOVE)/mtools-$(MTOOLS_VER)
 
-resize2fs: $(HOSTPREFIX)/bin/resize2fs
-$(HOSTPREFIX)/bin/resize2fs: $(ARCHIVE)/e2fsprogs-$(E2FSPROGS_VER).tar.gz | $(HOSTPREFIX)/bin
+resize2fs: $(HOST_DIR)/bin/resize2fs
+$(HOST_DIR)/bin/resize2fs: $(ARCHIVE)/e2fsprogs-$(E2FSPROGS_VER).tar.gz | $(HOST_DIR)/bin
 	$(UNTAR)/e2fsprogs-$(E2FSPROGS_VER).tar.gz
 	cd $(BUILD_TMP)/e2fsprogs-$(E2FSPROGS_VER) && \
 		./configure; \
 		$(MAKE)
-	install -D -m 0755 $(BUILD_TMP)/e2fsprogs-$(E2FSPROGS_VER)/resize/resize2fs $(HOSTPREFIX)/bin/
-	install -D -m 0755 $(BUILD_TMP)/e2fsprogs-$(E2FSPROGS_VER)/misc/mke2fs $(HOSTPREFIX)/bin/
-	ln -sf mke2fs $(HOSTPREFIX)/bin/mkfs.ext2
-	ln -sf mke2fs $(HOSTPREFIX)/bin/mkfs.ext3
-	ln -sf mke2fs $(HOSTPREFIX)/bin/mkfs.ext4
-	ln -sf mke2fs $(HOSTPREFIX)/bin/mkfs.ext4dev
-	install -D -m 0755 $(BUILD_TMP)/e2fsprogs-$(E2FSPROGS_VER)/e2fsck/e2fsck $(HOSTPREFIX)/bin/
-	ln -sf e2fsck $(HOSTPREFIX)/bin/fsck.ext2
-	ln -sf e2fsck $(HOSTPREFIX)/bin/fsck.ext3
-	ln -sf e2fsck $(HOSTPREFIX)/bin/fsck.ext4
-	ln -sf e2fsck $(HOSTPREFIX)/bin/fsck.ext4dev
+	install -D -m 0755 $(BUILD_TMP)/e2fsprogs-$(E2FSPROGS_VER)/resize/resize2fs $(HOST_DIR)/bin/
+	install -D -m 0755 $(BUILD_TMP)/e2fsprogs-$(E2FSPROGS_VER)/misc/mke2fs $(HOST_DIR)/bin/
+	ln -sf mke2fs $(HOST_DIR)/bin/mkfs.ext2
+	ln -sf mke2fs $(HOST_DIR)/bin/mkfs.ext3
+	ln -sf mke2fs $(HOST_DIR)/bin/mkfs.ext4
+	ln -sf mke2fs $(HOST_DIR)/bin/mkfs.ext4dev
+	install -D -m 0755 $(BUILD_TMP)/e2fsprogs-$(E2FSPROGS_VER)/e2fsck/e2fsck $(HOST_DIR)/bin/
+	ln -sf e2fsck $(HOST_DIR)/bin/fsck.ext2
+	ln -sf e2fsck $(HOST_DIR)/bin/fsck.ext3
+	ln -sf e2fsck $(HOST_DIR)/bin/fsck.ext4
+	ln -sf e2fsck $(HOST_DIR)/bin/fsck.ext4dev
 	$(REMOVE)/e2fsprogs-$(E2FSPROGS_VER)
 
 # hack to make sure they are always copied

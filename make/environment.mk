@@ -136,7 +136,7 @@ ARCHIVE       = $(BASE_DIR)/download
 BUILD_TMP     = $(BASE_DIR)/build_tmp
 D             = $(BASE_DIR)/deps
 DEPDIR        = $(D)
-HOSTPREFIX    = $(BASE_DIR)/host
+HOST_DIR      = $(BASE_DIR)/host
 TARGETPREFIX ?= $(BASE_DIR)/root
 SOURCE_DIR    = $(BASE_DIR)/source
 MAKE_DIR      = $(BASE_DIR)/make
@@ -247,9 +247,9 @@ ifneq ($(BOXTYPE), coolstream)
   USE_LIBSTB-HAL = yes
 endif
 
-PATH := $(HOSTPREFIX)/bin:$(CROSS_DIR)/bin:$(HELPERS_DIR):$(PATH)
+PATH := $(HOST_DIR)/bin:$(CROSS_DIR)/bin:$(HELPERS_DIR):$(PATH)
 
-PKG_CONFIG = $(HOSTPREFIX)/bin/$(TARGET)-pkg-config
+PKG_CONFIG = $(HOST_DIR)/bin/$(TARGET)-pkg-config
 PKG_CONFIG_LIBDIR = $(TARGETLIB)
 PKG_CONFIG_PATH = $(PKG_CONFIG_LIBDIR)/pkgconfig
 
