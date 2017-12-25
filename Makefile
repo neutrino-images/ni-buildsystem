@@ -26,7 +26,6 @@ printenv:
 	@echo '============================================================================== '
 	@echo "Build Environment Varibles:"
 	@echo "CROSS_DIR:   $(CROSS_DIR)"
-	@echo "CROSS_BASE:  $(CROSS_BASE)"
 	@echo "TARGET:      $(TARGET)"
 	@echo "BASE_DIR:    $(BASE_DIR)"
 	@echo "BUILD:       $(BUILD)"

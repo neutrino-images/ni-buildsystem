@@ -475,12 +475,12 @@ $(D)/openthreads: $(SOURCE_DIR)/$(NI_OPENTHREADS) | $(TARGET_DIR)
 			-DCMAKE_INSTALL_PREFIX="" \
 			-DCMAKE_C_COMPILER="$(TARGET)-gcc" \
 			-DCMAKE_CXX_COMPILER="$(TARGET)-g++" \
-			-DCMAKE_LINKER="$(CROSS_BASE)/bin/$(TARGET)-ld" \
-			-DCMAKE_RANLIB="$(CROSS_BASE)/bin/$(TARGET)-ranlib" \
-			-DCMAKE_AR="$(CROSS_BASE)/bin/$(TARGET)-ar" \
-			-DCMAKE_NM="$(CROSS_BASE)/bin/$(TARGET)-nm" \
-			-DCMAKE_OBJDUMP="$(CROSS_BASE)/bin/$(TARGET)-objdump" \
-			-DCMAKE_STRIP="$(CROSS_BASE)/bin/$(TARGET)-strip" \
+			-DCMAKE_LINKER="$(CROSS_DIR)/bin/$(TARGET)-ld" \
+			-DCMAKE_RANLIB="$(CROSS_DIR)/bin/$(TARGET)-ranlib" \
+			-DCMAKE_AR="$(CROSS_DIR)/bin/$(TARGET)-ar" \
+			-DCMAKE_NM="$(CROSS_DIR)/bin/$(TARGET)-nm" \
+			-DCMAKE_OBJDUMP="$(CROSS_DIR)/bin/$(TARGET)-objdump" \
+			-DCMAKE_STRIP="$(CROSS_DIR)/bin/$(TARGET)-strip" \
 			-DCMAKE_SUPPRESS_DEVELOPER_WARNINGS="1" \
 			-D_OPENTHREADS_ATOMIC_USE_GCC_BUILTINS_EXITCODE="0" && \
 		$(MAKE) && \
@@ -867,12 +867,12 @@ $(D)/pugixml: $(ARCHIVE)/pugixml-$(PUGIXML_VER).tar.gz | $(TARGET_DIR)
 		-DCMAKE_SYSTEM_PROCESSOR="arm" \
 		-DCMAKE_C_COMPILER="$(TARGET)-gcc" \
 		-DCMAKE_CXX_COMPILER="$(TARGET)-g++" \
-		-DCMAKE_LINKER="$(CROSS_BASE)/bin/$(TARGET)-ld" \
-		-DCMAKE_RANLIB="$(CROSS_BASE)/bin/$(TARGET)-ranlib" \
-		-DCMAKE_AR="$(CROSS_BASE)/bin/$(TARGET)-ar" \
-		-DCMAKE_NM="$(CROSS_BASE)/bin/$(TARGET)-nm" \
-		-DCMAKE_OBJDUMP="$(CROSS_BASE)/bin/$(TARGET)-objdump" \
-		-DCMAKE_STRIP="$(CROSS_BASE)/bin/$(TARGET)-strip" \
+		-DCMAKE_LINKER="$(CROSS_DIR)/bin/$(TARGET)-ld" \
+		-DCMAKE_RANLIB="$(CROSS_DIR)/bin/$(TARGET)-ranlib" \
+		-DCMAKE_AR="$(CROSS_DIR)/bin/$(TARGET)-ar" \
+		-DCMAKE_NM="$(CROSS_DIR)/bin/$(TARGET)-nm" \
+		-DCMAKE_OBJDUMP="$(CROSS_DIR)/bin/$(TARGET)-objdump" \
+		-DCMAKE_STRIP="$(CROSS_DIR)/bin/$(TARGET)-strip" \
 		; \
 		$(MAKE); \
 		make install DESTDIR=$(TARGET_DIR)
