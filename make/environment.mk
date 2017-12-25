@@ -153,13 +153,14 @@ PATCHES       = $(BASE_DIR)/archive-patches
 IMAGEFILES    = $(BASE_DIR)/archive-imagefiles
 SOURCES       = $(BASE_DIR)/archive-sources
 SKEL_ROOT     = $(BASE_DIR)/skel-root/$(BOXTYPE)/$(BOXSERIES)
-STATIC_LIB_DIR = $(STATIC_DIR)/lib
-TARGET_LIB_DIR = $(TARGET_DIR)/lib
-TARGET_INCLUDE_DIR = $(TARGET_DIR)/include
 BUILD        ?= $(shell /usr/share/libtool/config.guess 2>/dev/null || /usr/share/libtool/config/config.guess 2>/dev/null || /usr/share/misc/config.guess)
 CCACHE        = /usr/bin/ccache
 CCACHE_DIR    = $(HOME)/.ccache-ni-buildsystem-$(BOXARCH)-$(BOXSERIES)
 export CCACHE_DIR
+
+STATIC_LIB_DIR = $(STATIC_DIR)/lib
+TARGET_LIB_DIR = $(TARGET_DIR)/lib
+TARGET_INCLUDE_DIR = $(TARGET_DIR)/include
 
 # certificates
 CA_BUNDLE	= ca-certificates.crt
