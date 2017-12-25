@@ -40,7 +40,7 @@ kernel-cst-install-all:
 	#
 	make clean > /dev/null 2>&1
 
-$(D)/kernel-cst-hd2: $(SOURCE_DIR)/$(NI_LINUX-KERNEL) $(SOURCE_DIR)/$(NI_DRIVERS-BIN) | $(TARGETPREFIX)
+$(D)/kernel-cst-hd2: $(SOURCE_DIR)/$(NI_LINUX-KERNEL) $(SOURCE_DIR)/$(NI_DRIVERS-BIN) | $(TARGET_DIR)
 	cd $(SOURCE_DIR)/$(NI_LINUX-KERNEL) && \
 		git checkout $(KERNEL_BRANCH) && \
 	tar -C $(SOURCE_DIR) -cp $(NI_LINUX-KERNEL) --exclude-vcs | tar -C $(BUILD_TMP) -x
@@ -69,7 +69,7 @@ endif
 kernel-cst-install-hd2: $(D)/kernel-cst-hd2
 	cp -af $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-vmlinux.ub.gz $(KERNEL_DESTDIR)/vmlinux.ub.gz
 
-$(D)/kernel-cst-hd1: $(SOURCE_DIR)/$(NI_LINUX-KERNEL) | $(TARGETPREFIX)
+$(D)/kernel-cst-hd1: $(SOURCE_DIR)/$(NI_LINUX-KERNEL) | $(TARGET_DIR)
 	cd $(SOURCE_DIR)/$(NI_LINUX-KERNEL) && \
 		git checkout $(KERNEL_BRANCH) && \
 	tar -C $(SOURCE_DIR) -cp $(NI_LINUX-KERNEL) --exclude-vcs | tar -C $(BUILD_TMP) -x
@@ -125,10 +125,10 @@ kernel-cst-modules-hd2: kernel-cst
 	make depmod-hd2
 
 depmod-hd1:
-	PATH=$(PATH):/sbin:/usr/sbin depmod -b $(TARGETPREFIX) $(KERNEL_VERSION_FULL)
+	PATH=$(PATH):/sbin:/usr/sbin depmod -b $(TARGET_DIR) $(KERNEL_VERSION_FULL)
 	mv $(TARGETMODULES)/modules.dep $(TARGETMODULES)/.modules.dep
 	rm $(TARGETMODULES)/modules.*
 	mv $(TARGETMODULES)/.modules.dep $(TARGETMODULES)/modules.dep
 
 depmod-hd2:
-	PATH=$(PATH):/sbin:/usr/sbin depmod -b $(TARGETPREFIX) $(KERNEL_VERSION_FULL)
+	PATH=$(PATH):/sbin:/usr/sbin depmod -b $(TARGET_DIR) $(KERNEL_VERSION_FULL)

@@ -5,7 +5,7 @@ USB_UTILS_VER=007
 $(ARCHIVE)/usbutils-$(USB_UTILS_VER).tar.xz:
 	$(WGET) https://www.kernel.org/pub/linux/utils/usb/usbutils/usbutils-$(USB_UTILS_VER).tar.xz
 
-$(D)/usbutils: $(D)/libusb_compat $(ARCHIVE)/usbutils-$(USB_UTILS_VER).tar.xz | $(TARGETPREFIX)
+$(D)/usbutils: $(D)/libusb_compat $(ARCHIVE)/usbutils-$(USB_UTILS_VER).tar.xz | $(TARGET_DIR)
 	$(UNTAR)/usbutils-$(USB_UTILS_VER).tar.xz
 	cd $(BUILD_TMP)/usbutils-$(USB_UTILS_VER) && \
 	$(PATCH)/usbutils-avoid-dependency-on-bash.patch && \
@@ -16,12 +16,12 @@ $(D)/usbutils: $(D)/libusb_compat $(ARCHIVE)/usbutils-$(USB_UTILS_VER).tar.xz | 
 			--mandir=/.remove \
 			--infodir=/.remove && \
 		$(MAKE) && \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
-	rm -rf $(TARGETPREFIX)/bin/lsusb.py
-	rm -rf $(TARGETPREFIX)/bin/usbhid-dump
-	rm -rf $(TARGETPREFIX)/sbin/update-usbids.sh
-	rm -rf $(TARGETPREFIX)/share/pkgconfig
-	rm -rf $(TARGETPREFIX)/share/usb.ids.gz
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	rm -rf $(TARGET_DIR)/bin/lsusb.py
+	rm -rf $(TARGET_DIR)/bin/usbhid-dump
+	rm -rf $(TARGET_DIR)/sbin/update-usbids.sh
+	rm -rf $(TARGET_DIR)/share/pkgconfig
+	rm -rf $(TARGET_DIR)/share/usb.ids.gz
 	$(REMOVE)/usbutils-$(USB_UTILS_VER)
 	touch $@
 
@@ -29,7 +29,7 @@ BINUTILS_VER=2.25
 $(ARCHIVE)/binutils-$(BINUTILS_VER).tar.bz2:
 	$(WGET) https://ftp.gnu.org/gnu/binutils/binutils-$(BINUTILS_VER).tar.bz2
 
-$(D)/binutils: $(ARCHIVE)/binutils-$(BINUTILS_VER).tar.bz2 | $(TARGETPREFIX)
+$(D)/binutils: $(ARCHIVE)/binutils-$(BINUTILS_VER).tar.bz2 | $(TARGET_DIR)
 	$(UNTAR)/binutils-$(BINUTILS_VER).tar.bz2
 	cd $(BUILD_TMP)/binutils-$(BINUTILS_VER) && \
 		$(CONFIGURE) \
@@ -51,7 +51,7 @@ UTIL-LINUX_VER=2.29
 $(ARCHIVE)/util-linux-$(UTIL-LINUX_VER).tar.xz:
 	$(WGET) https://www.kernel.org/pub/linux/utils/util-linux/v$(UTIL-LINUX_VER)/util-linux-$(UTIL-LINUX_VER).tar.xz
 
-$(D)/util-linux: $(D)/libncurses $(ARCHIVE)/util-linux-$(UTIL-LINUX_VER).tar.xz | $(TARGETPREFIX)
+$(D)/util-linux: $(D)/libncurses $(ARCHIVE)/util-linux-$(UTIL-LINUX_VER).tar.xz | $(TARGET_DIR)
 	$(UNTAR)/util-linux-$(UTIL-LINUX_VER).tar.xz
 	cd $(BUILD_TMP)/util-linux-$(UTIL-LINUX_VER) && \
 		autoreconf -fi && \
@@ -63,7 +63,7 @@ $(D)/util-linux: $(D)/libncurses $(ARCHIVE)/util-linux-$(UTIL-LINUX_VER).tar.xz 
 			--disable-shared \
 			--mandir=/.remove && \
 		$(MAKE) sfdisk && \
-		install -m755 sfdisk $(TARGETPREFIX)/sbin/sfdisk
+		install -m755 sfdisk $(TARGET_DIR)/sbin/sfdisk
 	$(REMOVE)/util-linux-$(UTIL-LINUX_VER)
 	touch $@
 
@@ -71,14 +71,14 @@ IPTABLES_VER = 1.4.21
 $(ARCHIVE)/iptables-$(IPTABLES_VER).tar.bz2:
 	$(WGET) http://www.netfilter.org/projects/iptables/files/iptables-$(IPTABLES_VER).tar.bz2
 
-$(D)/iptables: $(ARCHIVE)/iptables-$(IPTABLES_VER).tar.bz2 | $(TARGETPREFIX)
+$(D)/iptables: $(ARCHIVE)/iptables-$(IPTABLES_VER).tar.bz2 | $(TARGET_DIR)
 	$(UNTAR)/iptables-$(IPTABLES_VER).tar.bz2
 	set -e; cd $(BUILD_TMP)/iptables-$(IPTABLES_VER); \
 		$(CONFIGURE) \
 			--prefix= \
 			--mandir=/.remove; \
 		$(MAKE); \
-		make install DESTDIR=$(TARGETPREFIX)
+		make install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL)/libip4tc.la
 	$(REWRITE_LIBTOOL)/libip6tc.la
 	$(REWRITE_LIBTOOL)/libiptc.la
@@ -94,7 +94,7 @@ LIGHTTPD_VER=1.4.31
 $(ARCHIVE)/lighttpd-$(LIGHTTPD_VER).tar.gz:
 	$(WGET) http://download.lighttpd.net/lighttpd/releases-1.4.x/lighttpd-$(LIGHTTPD_VER).tar.gz
 
-$(D)/lighttpd: $(D)/zlib $(ARCHIVE)/lighttpd-$(LIGHTTPD_VER).tar.gz | $(TARGETPREFIX)
+$(D)/lighttpd: $(D)/zlib $(ARCHIVE)/lighttpd-$(LIGHTTPD_VER).tar.gz | $(TARGET_DIR)
 	$(UNTAR)/lighttpd-$(LIGHTTPD_VER).tar.gz
 	cd $(BUILD_TMP)/lighttpd-$(LIGHTTPD_VER) && \
 	$(BUILDENV) ./configure \
@@ -109,7 +109,7 @@ $(D)/lighttpd: $(D)/zlib $(ARCHIVE)/lighttpd-$(LIGHTTPD_VER).tar.gz | $(TARGETPR
 		--without-pcre \
 		--without-bzip2 && \
 	$(MAKE) && \
-	$(MAKE) install DESTDIR=$(TARGETPREFIX)
+	$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REMOVE)/lighttpd-$(LIGHTTPD_VER)
 	touch $@
 
@@ -117,7 +117,7 @@ PYTHON_VER=2.7.11
 $(ARCHIVE)/Python-$(PYTHON_VER).tgz:
 	$(WGET) http://www.python.org/ftp/python/$(PYTHON_VER)/Python-$(PYTHON_VER).tgz
 
-$(D)/python: $(ARCHIVE)/Python-$(PYTHON_VER).tgz | $(TARGETPREFIX)
+$(D)/python: $(ARCHIVE)/Python-$(PYTHON_VER).tgz | $(TARGET_DIR)
 	$(REMOVE)/Python-$(PYTHON_VER)
 	$(UNTAR)/Python-$(PYTHON_VER).tgz
 	pushd $(BUILD_TMP)/Python-$(PYTHON_VER) && \
@@ -161,5 +161,5 @@ $(D)/python: $(ARCHIVE)/Python-$(PYTHON_VER).tgz | $(TARGETPREFIX)
 		cp -a $(BUILD_TMP)/Python-$(PYTHON_VER)/_install/lib/python* $(TARGETLIB)/
 		cp -a $(BUILD_TMP)/Python-$(PYTHON_VER)/_install/lib/libpython* $(TARGETLIB)/
 		chmod +w $(TARGETLIB)/libpython*
-		install -m755 $(BUILD_TMP)/Python-$(PYTHON_VER)/_install/bin/python $(TARGETPREFIX)/bin/
+		install -m755 $(BUILD_TMP)/Python-$(PYTHON_VER)/_install/bin/python $(TARGET_DIR)/bin/
 	$(REMOVE)/Python-$(PYTHON_VER)

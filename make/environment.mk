@@ -137,7 +137,7 @@ BUILD_TMP     = $(BASE_DIR)/build_tmp
 D             = $(BASE_DIR)/deps
 DEPDIR        = $(D)
 HOST_DIR      = $(BASE_DIR)/host
-TARGETPREFIX ?= $(BASE_DIR)/root
+TARGET_DIR   ?= $(BASE_DIR)/root
 SOURCE_DIR    = $(BASE_DIR)/source
 MAKE_DIR      = $(BASE_DIR)/make
 STAGING_DIR   = $(BASE_DIR)/staging
@@ -154,8 +154,8 @@ IMAGEFILES    = $(BASE_DIR)/archive-imagefiles
 SOURCES       = $(BASE_DIR)/archive-sources
 SKEL_ROOT     = $(BASE_DIR)/skel-root/$(BOXTYPE)/$(BOXSERIES)
 STATICLIB     = $(STATIC_DIR)/lib
-TARGETLIB     = $(TARGETPREFIX)/lib
-TARGETINCLUDE = $(TARGETPREFIX)/include
+TARGETLIB     = $(TARGET_DIR)/lib
+TARGETINCLUDE = $(TARGET_DIR)/include
 BUILD        ?= $(shell /usr/share/libtool/config.guess 2>/dev/null || /usr/share/libtool/config/config.guess 2>/dev/null || /usr/share/misc/config.guess)
 CCACHE        = /usr/bin/ccache
 CCACHE_DIR    = $(HOME)/.ccache-ni-buildsystem-$(BOXARCH)-$(BOXSERIES)
@@ -257,11 +257,11 @@ PKG_CONFIG_PATH = $(PKG_CONFIG_LIBDIR)/pkgconfig
 REWRITE_LIBTOOL        = sed -i "s,^libdir=.*,libdir='$(TARGETLIB)'," $(TARGETLIB)
 REWRITE_LIBTOOL_STATIC = sed -i "s,^libdir=.*,libdir='$(TARGETLIB)'," $(STATICLIB)
 REWRITE_LIBTOOLDEP     = sed -i -e "s,\(^dependency_libs='\| \|-L\|^dependency_libs='\)/lib,\ $(TARGETLIB),g" $(TARGETLIB)
-REWRITE_PKGCONF        = sed -i "s,^prefix=.*,prefix='$(TARGETPREFIX)',"
+REWRITE_PKGCONF        = sed -i "s,^prefix=.*,prefix='$(TARGET_DIR)',"
 
 # unpack tarballs, clean up
 UNTAR = tar -C $(BUILD_TMP) -xf $(ARCHIVE)
-REMOVE = rm -rf $(BUILD_TMP)/.remove $(TARGETPREFIX)/.remove $(BUILD_TMP)
+REMOVE = rm -rf $(BUILD_TMP)/.remove $(TARGET_DIR)/.remove $(BUILD_TMP)
 PATCH = patch -p1 -i $(PATCHES)
 
 # wget tarballs into archive directory
@@ -331,6 +331,6 @@ TANGO_REMOTE_REPO	= tango
 # execute local scripts
 define local-script
 	@if [ -x $(LOCAL_DIR)/scripts/$(1) ]; then \
-		$(LOCAL_DIR)/scripts/$(1) $(2) $(TARGETPREFIX) $(BUILD_TMP); \
+		$(LOCAL_DIR)/scripts/$(1) $(2) $(TARGET_DIR) $(BUILD_TMP); \
 	fi
 endef

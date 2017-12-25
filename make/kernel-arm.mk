@@ -7,7 +7,7 @@ MODULES_DIR	= $(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules/lib/modules/$(KERNEL_
 
 TARGETMODULES	= $(TARGETLIB)/modules/$(KERNEL_VERSION_FULL)
 
-$(D)/kernel-arm: $(SOURCE_DIR)/$(NI_LINUX-KERNEL) | $(TARGETPREFIX)
+$(D)/kernel-arm: $(SOURCE_DIR)/$(NI_LINUX-KERNEL) | $(TARGET_DIR)
 	cd $(SOURCE_DIR)/$(NI_LINUX-KERNEL) && \
 		git checkout $(KERNEL_BRANCH) && \
 	tar -C $(SOURCE_DIR) -cp $(NI_LINUX-KERNEL) --exclude-vcs | tar -C $(BUILD_TMP) -x
@@ -32,4 +32,4 @@ kernel-arm-modules: $(D)/kernel-arm
 	make depmod-arm
 
 depmod-arm:
-	PATH=$(PATH):/sbin:/usr/sbin depmod -b $(TARGETPREFIX) $(KERNEL_VERSION_FULL)
+	PATH=$(PATH):/sbin:/usr/sbin depmod -b $(TARGET_DIR) $(KERNEL_VERSION_FULL)

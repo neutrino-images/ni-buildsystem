@@ -41,7 +41,7 @@ printenv:
 	@echo "'make help' lists useful targets."
 	@echo ""
 	@make --no-print-directory toolcheck
-	@make -i -s $(TARGETPREFIX)
+	@make -i -s $(TARGET_DIR)
 	@PATH=$(PATH):$(CROSS_DIR)/bin && \
 	if type -p $(TARGET)-gcc >/dev/null 2>&1; then \
 		echo "$(TARGET)-gcc found in PATH or in \$$CROSS_DIR/bin."; \

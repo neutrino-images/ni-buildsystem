@@ -1,26 +1,26 @@
 # makefile for plugins
 
-TARGETPREFIX ?= $(DESTDIR)
+TARGET_DIR ?= $(DESTDIR)
 
 # workaround make-warnings
-T = $(TARGETPREFIX)/T
+T = $(TARGET_DIR)/T
 $(T):
 	mkdir -p $@
 	cd $@ && rm -r T
 
 # Some useful variables
-BIN		= $(TARGETPREFIX)/bin
-ETCINIT		= $(TARGETPREFIX)/etc/init.d
-LIBPLUG		= $(TARGETPREFIX)/lib/tuxbox/plugins
-SHAREICONS	= $(TARGETPREFIX)/share/tuxbox/neutrino/icons
-SHAREFLEX	= $(TARGETPREFIX)/share/tuxbox/neutrino/flex
-SHAREPLUG	= $(TARGETPREFIX)/share/tuxbox/neutrino/plugins
-SHARETHEMES	= $(TARGETPREFIX)/share/tuxbox/neutrino/themes
-SHAREWEBTV	= $(TARGETPREFIX)/share/tuxbox/neutrino/webtv
-USRBIN		= $(TARGETPREFIX)/usr/bin
-VARINIT		= $(TARGETPREFIX)/var/etc/init.d
-VARPLUG		= $(TARGETPREFIX)/var/tuxbox/plugins
-VARCONF		= $(TARGETPREFIX)/var/tuxbox/config
+BIN		= $(TARGET_DIR)/bin
+ETCINIT		= $(TARGET_DIR)/etc/init.d
+LIBPLUG		= $(TARGET_DIR)/lib/tuxbox/plugins
+SHAREICONS	= $(TARGET_DIR)/share/tuxbox/neutrino/icons
+SHAREFLEX	= $(TARGET_DIR)/share/tuxbox/neutrino/flex
+SHAREPLUG	= $(TARGET_DIR)/share/tuxbox/neutrino/plugins
+SHARETHEMES	= $(TARGET_DIR)/share/tuxbox/neutrino/themes
+SHAREWEBTV	= $(TARGET_DIR)/share/tuxbox/neutrino/webtv
+USRBIN		= $(TARGET_DIR)/usr/bin
+VARINIT		= $(TARGET_DIR)/var/etc/init.d
+VARPLUG		= $(TARGET_DIR)/var/tuxbox/plugins
+VARCONF		= $(TARGET_DIR)/var/tuxbox/config
 
 $(BIN) \
 $(ETCINIT) \
@@ -33,7 +33,7 @@ $(SHAREWEBTV) \
 $(USRBIN) \
 $(VARINIT) \
 $(VARPLUG) \
-$(VARCONF) : | $(TARGETPREFIX)
+$(VARCONF) : | $(TARGET_DIR)
 	mkdir -p $@
 
 init-scripts: \
@@ -104,8 +104,8 @@ channellogos: $(SOURCE_DIR)/$(NI_LOGO-STUFF) $(SHAREICONS)
 	pushd $(SOURCE_DIR)/$(NI_LOGO-STUFF)/ && \
 	./logo_linker.sh complete.db $(SHAREICONS)/logo
 
-lcd4linux-all: $(D)/lcd4linux | $(TARGETPREFIX)
-	cp -a $(IMAGEFILES)/lcd4linux/* $(TARGETPREFIX)/
+lcd4linux-all: $(D)/lcd4linux | $(TARGET_DIR)
+	cp -a $(IMAGEFILES)/lcd4linux/* $(TARGET_DIR)/
 
 emmrd: $(SHAREICONS) $(BIN)/emmrd
 $(BIN)/emmrd: $(BIN) $(VARCONF) $(ETCINIT)
@@ -200,14 +200,14 @@ smarthomeinfo: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(LIBPLUG) $(VARCONF)
 	cp -a $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/$@/plugin/tuxbox/config/* $(VARCONF)/
 
 doscam-webif-skin: $(VARCONF)
-	mkdir -p $(TARGETPREFIX)/share/doscam/tpl/
-	install -m644 $(SOURCES)/doscam-webif-skin/*.tpl $(TARGETPREFIX)/share/doscam/tpl/
-	mkdir -p $(TARGETPREFIX)/share/doscam/skin/
-	install -m644 $(SOURCES)/doscam-webif-skin/doscam_ni-dark.css $(TARGETPREFIX)/share/doscam/skin
+	mkdir -p $(TARGET_DIR)/share/doscam/tpl/
+	install -m644 $(SOURCES)/doscam-webif-skin/*.tpl $(TARGET_DIR)/share/doscam/tpl/
+	mkdir -p $(TARGET_DIR)/share/doscam/skin/
+	install -m644 $(SOURCES)/doscam-webif-skin/doscam_ni-dark.css $(TARGET_DIR)/share/doscam/skin
 
 playlists:
-	mkdir -p $(TARGETPREFIX)/share/playlists/
-	cp -a $(IMAGEFILES)/playlists/* $(TARGETPREFIX)/share/playlists/
+	mkdir -p $(TARGET_DIR)/share/playlists/
+	cp -a $(IMAGEFILES)/playlists/* $(TARGET_DIR)/share/playlists/
 
 mountpointmanagement: $(LIBPLUG)
 	install -m755 $(SOURCES)/mountpointmanagement/*.sh $(LIBPLUG)/
@@ -232,7 +232,7 @@ neutrino-mediathek: $(LIBPLUG)
 	git clone https://github.com/neutrino-mediathek/mediathek.git $(BUILD_TMP)/$@
 	pushd $(BUILD_TMP)/$@ && \
 	cp -a plugins/* $(LIBPLUG)/ && \
-	cp -a share $(TARGETPREFIX)
+	cp -a share $(TARGET_DIR)
 	$(REMOVE)/$@
 
 #scripts-lua

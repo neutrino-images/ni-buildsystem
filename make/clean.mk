@@ -2,7 +2,7 @@
 
 rebuild-clean:
 	-rm -rf $(BUILD_TMP)
-	-rm -rf $(TARGETPREFIX)
+	-rm -rf $(TARGET_DIR)
 	-rm -rf $(D)
 
 staging-clean:

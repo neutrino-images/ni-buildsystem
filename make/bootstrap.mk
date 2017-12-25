@@ -13,25 +13,25 @@ PLAT_LIBS  = $(TARGETLIB) $(STATICLIB)
 bootstrap: $(BOOTSTRAP)
 	@echo -e "$(TERM_YELLOW)Bootstrapped for $(shell echo $(BOXTYPE) | sed 's/.*/\u&/') $(BOXMODEL)$(TERM_NORMAL)"
 
-skeleton: | $(TARGETPREFIX)
-	cp --remove-destination -a $(SKEL_ROOT)/* $(TARGETPREFIX)/
+skeleton: | $(TARGET_DIR)
+	cp --remove-destination -a $(SKEL_ROOT)/* $(TARGET_DIR)/
 	if [ -d $(SKEL_ROOT)-$(BOXFAMILY)/ ]; then \
-		cp -a $(SKEL_ROOT)-$(BOXFAMILY)/* $(TARGETPREFIX)/; \
+		cp -a $(SKEL_ROOT)-$(BOXFAMILY)/* $(TARGET_DIR)/; \
 	fi
 	if [ -d $(STATIC_DIR)/ ]; then \
-		cp -a $(STATIC_DIR)/* $(TARGETPREFIX)/; \
+		cp -a $(STATIC_DIR)/* $(TARGET_DIR)/; \
 	fi
 
 targetprefix:
-	mkdir -p $(TARGETPREFIX)
-	mkdir -p $(TARGETPREFIX)/bin
+	mkdir -p $(TARGET_DIR)
+	mkdir -p $(TARGET_DIR)/bin
 	mkdir -p $(TARGETINCLUDE)
 	mkdir -p $(PKG_CONFIG_PATH)
 	make skeleton
 
-$(TARGETPREFIX):
+$(TARGET_DIR):
 	@echo "**********************************************************************"
-	@echo "TARGETPREFIX does not exist. You probably need to run 'make bootstrap'"
+	@echo "TARGET_DIR does not exist. You probably need to run 'make bootstrap'"
 	@echo "**********************************************************************"
 	@echo ""
 	@false
@@ -51,31 +51,31 @@ $(HOST_DIR)/bin: $(HOST_DIR)
 $(STATICLIB):
 	mkdir -p $@
 
-$(TARGETLIB)/firmware: | $(TARGETPREFIX)
+$(TARGETLIB)/firmware: | $(TARGET_DIR)
 ifeq ($(BOXTYPE), coolstream)
 	mkdir -p $@
 	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(DRIVERS_DIR)/firmware/* $@/
 endif
 
-$(TARGETLIB): | $(TARGETPREFIX)
+$(TARGETLIB): | $(TARGET_DIR)
 	mkdir -p $@
 	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(DRIVERS_DIR)/libs/* $@
 ifeq ($(BOXTYPE), coolstream)
 	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(DRIVERS_DIR)/libcoolstream/$(shell echo -n $(NI_FFMPEG_BRANCH) | sed 's,/,-,g')/* $@
 endif
 
-$(TARGETLIB)/modules: | $(TARGETPREFIX)
+$(TARGETLIB)/modules: | $(TARGET_DIR)
 	mkdir -p $@
 	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(DRIVERS_DIR)/drivers/$(KERNEL_VERSION_FULL) $@/
 
-$(TARGETLIB)/libc.so.6: | $(TARGETPREFIX)
+$(TARGETLIB)/libc.so.6: | $(TARGET_DIR)
 	if test -e $(CROSS_DIR)/$(TARGET)/sys-root/lib; then \
 		cp -a $(CROSS_DIR)/$(TARGET)/sys-root/lib/*so* $(TARGETLIB); \
 	else \
 		cp -a $(CROSS_DIR)/$(TARGET)/lib/*so* $(TARGETLIB); \
 	fi
 
-$(TARGETPREFIX)/var/update: | $(TARGETPREFIX)
+$(TARGET_DIR)/var/update: | $(TARGET_DIR)
 	mkdir -p $@
 ifeq ($(BOXTYPE), coolstream)
 	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(DRIVERS_DIR)/uldr.bin $@/
@@ -90,7 +90,7 @@ includes-and-libs: $(PLAT_INCS) $(PLAT_LIBS)
 
 modules: $(TARGETLIB)/modules
 
-blobs: $(TARGETPREFIX)/var/update
+blobs: $(TARGET_DIR)/var/update
 
 # helper target to create ccache links (make sure to have ccache installed in /usr/bin ;)
 ccache: find-ccache $(CCACHE) $(HOST_DIR)/bin
@@ -225,5 +225,5 @@ $(HOST_DIR)/bin/resize2fs: $(ARCHIVE)/e2fsprogs-$(E2FSPROGS_VER).tar.gz | $(HOST
 PHONY += $(TARGETLIB)
 PHONY += $(TARGETLIB)/firmware
 PHONY += $(TARGETLIB)/modules
-PHONY += $(TARGETPREFIX)/var/update
+PHONY += $(TARGET_DIR)/var/update
 PHONY += ccache includes-and-libs modules targetprefix bootstrap blobs

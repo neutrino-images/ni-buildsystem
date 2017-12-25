@@ -45,7 +45,7 @@ u-FritzCallMonitor:
 	mkdir -pv $(UPDATE_INST_DIR)/bin  && \
 	mkdir -pv $(UPDATE_INST_DIR)/var/tuxbox/config && \
 	cp -f $(BIN)/FritzCallMonitor $(UPDATE_INST_DIR)/bin/ && \
-	cp -f $(TARGETPREFIX)/var/tuxbox/config/FritzCallMonitor.cfg $(UPDATE_INST_DIR)/var/tuxbox/config/
+	cp -f $(TARGET_DIR)/var/tuxbox/config/FritzCallMonitor.cfg $(UPDATE_INST_DIR)/var/tuxbox/config/
 	$(MAKE) u-update-bin \
 			UPDATE_MD5FILE=$(UPDATE_MD5FILE-BOXMODEL) \
 			UPDATE_NAME=FritzCallMonitor-$(BOXMODEL) \
@@ -62,7 +62,7 @@ u-FritzInfoMonitor:
 	mkdir -pv $(UPDATE_INST_DIR)/lib/tuxbox/plugins && \
 	cp -f $(LIBPLUG)/FritzInfoMonitor.cfg $(UPDATE_INST_DIR)/lib/tuxbox/plugins/ && \
 	cp -f $(LIBPLUG)/FritzInfoMonitor.so $(UPDATE_INST_DIR)/lib/tuxbox/plugins/ && \
-	cp -f $(TARGETPREFIX)/var/tuxbox/config/FritzCallMonitor.cfg $(UPDATE_INST_DIR)/var/tuxbox/config/
+	cp -f $(TARGET_DIR)/var/tuxbox/config/FritzCallMonitor.cfg $(UPDATE_INST_DIR)/var/tuxbox/config/
 	$(MAKE) u-update-bin \
 			UPDATE_MD5FILE=$(UPDATE_MD5FILE-BOXMODEL) \
 			UPDATE_NAME=FritzInfoMonitor-$(BOXMODEL) \
@@ -71,7 +71,7 @@ u-FritzInfoMonitor:
 
 u-lcd4linux: $(D)/lcd4linux
 ifeq ($(DEBUG), no)
-	$(TARGET)-strip $(TARGETPREFIX)/bin/lcd4linux
+	$(TARGET)-strip $(TARGET_DIR)/bin/lcd4linux
 endif
 	$(MAKE) u-init
 	echo "service lcd4linux stop"									>> $(PREINSTALL_SH)
@@ -80,12 +80,12 @@ endif
 	echo "/bin/sync"										>> $(POSTINSTALL_SH)
 	echo "service lcd4linux start"									>> $(POSTINSTALL_SH)
 	mkdir -pv $(UPDATE_INST_DIR)/bin && \
-	cp -f $(TARGETPREFIX)/bin/lcd4linux $(UPDATE_INST_DIR)/bin/ && \
+	cp -f $(TARGET_DIR)/bin/lcd4linux $(UPDATE_INST_DIR)/bin/ && \
 	$(MAKE) u-update-bin \
 			UPDATE_MD5FILE=$(UPDATE_MD5FILE-BOXSERIES) \
 			UPDATE_NAME=lcd4linux-$(BOXSERIES) \
 			UPDATE_DESC="LCD4Linux [$(BOXSERIES)]" \
-			UPDATE_VERSION_STRING=`strings $(TARGETPREFIX)/bin/lcd4linux | grep -m1 LCD4Linux | cut -d" " -f2`
+			UPDATE_VERSION_STRING=`strings $(TARGET_DIR)/bin/lcd4linux | grep -m1 LCD4Linux | cut -d" " -f2`
 
 u-pr-auto-timer:
 	$(MAKE) u-init
@@ -114,11 +114,11 @@ u-neutrino: neutrino-clean
 	echo "killall start_neutrino neutrino; sleep 5"	>> $(PREINSTALL_SH)
 	echo "sync; /bin/busybox reboot"		>> $(POSTINSTALL_SH)
 	$(MAKE) neutrino
-	install -D -m 0644 $(TARGETPREFIX)/.version $(UPDATE_INST_DIR)/.version
-	install -D -m 0755 $(TARGETPREFIX)/etc/init.d/start_neutrino $(UPDATE_INST_DIR)/etc/init.d/start_neutrino
-	install -D -m 0755 $(TARGETPREFIX)/bin/neutrino $(UPDATE_INST_DIR)/bin/neutrino
-	install -D -m 0644 $(TARGETPREFIX)/share/tuxbox/neutrino/locale/deutsch.locale $(UPDATE_INST_DIR)/share/tuxbox/neutrino/locale/deutsch.locale
-	install -D -m 0644 $(TARGETPREFIX)/share/tuxbox/neutrino/locale/english.locale $(UPDATE_INST_DIR)/share/tuxbox/neutrino/locale/english.locale
+	install -D -m 0644 $(TARGET_DIR)/.version $(UPDATE_INST_DIR)/.version
+	install -D -m 0755 $(TARGET_DIR)/etc/init.d/start_neutrino $(UPDATE_INST_DIR)/etc/init.d/start_neutrino
+	install -D -m 0755 $(TARGET_DIR)/bin/neutrino $(UPDATE_INST_DIR)/bin/neutrino
+	install -D -m 0644 $(TARGET_DIR)/share/tuxbox/neutrino/locale/deutsch.locale $(UPDATE_INST_DIR)/share/tuxbox/neutrino/locale/deutsch.locale
+	install -D -m 0644 $(TARGET_DIR)/share/tuxbox/neutrino/locale/english.locale $(UPDATE_INST_DIR)/share/tuxbox/neutrino/locale/english.locale
 ifeq ($(DEBUG), no)
 	find $(UPDATE_INST_DIR)/bin -type f ! -name *.sh -print0 | xargs -0 $(TARGET)-strip || true
 endif
@@ -130,8 +130,8 @@ u-neutrino-full: neutrino-clean
 	echo "killall start_neutrino neutrino; sleep 5"	>> $(PREINSTALL_SH)
 	echo "sync; /bin/busybox reboot"		>> $(POSTINSTALL_SH)
 	$(MAKE) neutrino NEUTRINO_INST_DIR=$(UPDATE_INST_DIR)
-	install -D -m 0644 $(TARGETPREFIX)/.version $(UPDATE_INST_DIR)/.version
-	install -D -m 0755 $(TARGETPREFIX)/etc/init.d/start_neutrino $(UPDATE_INST_DIR)/etc/init.d/start_neutrino
+	install -D -m 0644 $(TARGET_DIR)/.version $(UPDATE_INST_DIR)/.version
+	install -D -m 0755 $(TARGET_DIR)/etc/init.d/start_neutrino $(UPDATE_INST_DIR)/etc/init.d/start_neutrino
 ifeq ($(DEBUG), no)
 	find $(UPDATE_INST_DIR)/bin -type f ! -name *.sh -print0 | xargs -0 $(TARGET)-strip || true
 endif
@@ -149,9 +149,9 @@ u-openvpn-setup:
 	echo "wget -q "http://localhost/control/message?popup=OpenVPN-Plugin%20installed." -O /dev/null"	>> $(POSTINSTALL_SH)
 	echo "wget -q "http://localhost/control/reloadplugins" -O /dev/null"					>> $(POSTINSTALL_SH)
 	#$(MAKE) openvpn
-	#$(TARGET)-strip $(TARGETPREFIX)/sbin/openvpn
+	#$(TARGET)-strip $(TARGET_DIR)/sbin/openvpn
 	#mkdir -p $(UPDATE_INST_DIR)/var/sbin  && \
-	#cp -f $(TARGETPREFIX)/sbin/openvpn $(UPDATE_INST_DIR)/var/sbin
+	#cp -f $(TARGET_DIR)/sbin/openvpn $(UPDATE_INST_DIR)/var/sbin
 	cp -a $(SOURCES)/openvpn-setup/* $(UPDATE_INST_DIR)/
 	$(MAKE) u-update-bin \
 			UPDATE_NAME=openvpn-setup-$(BOXSERIES)-v011 \
@@ -162,7 +162,7 @@ u-update.urls: update.urls
 	$(MAKE) u-init
 	echo "wget -q "http://localhost/control/message?popup=update.urls%20installed." -O /dev/null"	>> $(POSTINSTALL_SH)
 	mkdir -pv $(UPDATE_INST_DIR)/var/etc
-	cp -f $(TARGETPREFIX)/var/etc/update.urls $(UPDATE_INST_DIR)/var/etc/
+	cp -f $(TARGET_DIR)/var/etc/update.urls $(UPDATE_INST_DIR)/var/etc/
 	$(MAKE) u-update-bin \
 			UPDATE_NAME=update.urls \
 			UPDATE_DESC=update.urls

@@ -165,17 +165,17 @@ $(LH_OBJDIR)/config.status: $(NEUTRINO_DEPS)
 			--with-target=cdk \
 			--with-boxtype=$(BOXMODEL)
 
-NEUTRINO_INST_DIR ?= $(TARGETPREFIX)
+NEUTRINO_INST_DIR ?= $(TARGET_DIR)
 $(D)/neutrino: $(N_OBJDIR)/config.status
 	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
-	$(MAKE) -C $(N_OBJDIR) all     DESTDIR=$(TARGETPREFIX)
+	$(MAKE) -C $(N_OBJDIR) all     DESTDIR=$(TARGET_DIR)
 	$(MAKE) -C $(N_OBJDIR) install DESTDIR=$(NEUTRINO_INST_DIR)
-	make $(TARGETPREFIX)/.version
+	make $(TARGET_DIR)/.version
 	touch $@
 
 $(D)/libstb-hal: $(LH_OBJDIR)/config.status
 	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
-	$(MAKE) -C $(LH_OBJDIR) all     DESTDIR=$(TARGETPREFIX)
+	$(MAKE) -C $(LH_OBJDIR) all     DESTDIR=$(TARGET_DIR)
 	$(MAKE) -C $(LH_OBJDIR) install DESTDIR=$(NEUTRINO_INST_DIR)
 	$(REWRITE_LIBTOOL)/libstb-hal.la
 	touch $@
@@ -186,10 +186,10 @@ ifeq ($(CLEAN), yes)
 endif
 	$(MAKE) $(N_OBJDIR)/config.status
 	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
-	$(MAKE) -C $(N_OBJDIR) all DESTDIR=$(TARGETPREFIX)
-	install -D -m 755 $(N_OBJDIR)/src/neutrino $(TARGETPREFIX)/bin/neutrino
+	$(MAKE) -C $(N_OBJDIR) all DESTDIR=$(TARGET_DIR)
+	install -D -m 755 $(N_OBJDIR)/src/neutrino $(TARGET_DIR)/bin/neutrino
 ifneq ($(DEBUG), yes)
-	$(TARGET)-strip $(TARGETPREFIX)/bin/neutrino
+	$(TARGET)-strip $(TARGET_DIR)/bin/neutrino
 endif
 	make done
 

@@ -3,7 +3,7 @@
 valgrind: valgrind-$(BOXSERIES)
 
 $(D)/valgrind-hd51 \
-$(D)/valgrind-hd2: $(ARCHIVE)/valgrind-$(VALGRIND_VER).tar.bz2 | $(TARGETPREFIX)
+$(D)/valgrind-hd2: $(ARCHIVE)/valgrind-$(VALGRIND_VER).tar.bz2 | $(TARGET_DIR)
 	$(UNTAR)/valgrind-$(VALGRIND_VER).tar.bz2
 	cd $(BUILD_TMP)/valgrind-$(VALGRIND_VER) && \
 	$(PATCH)/valgrind-fix-$(BOXSERIES)-build.patch && \
@@ -15,13 +15,13 @@ $(D)/valgrind-hd2: $(ARCHIVE)/valgrind-$(VALGRIND_VER).tar.bz2 | $(TARGETPREFIX)
 			--mandir=/.remove \
 			--datadir=/.remove && \
 		$(MAKE) all && \
-		make install DESTDIR=$(TARGETPREFIX)
+		make install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/valgrind.pc
-	rm $(TARGETPREFIX)/bin/callgrind_annotate
-	rm $(TARGETPREFIX)/bin/callgrind_control
-	rm $(TARGETPREFIX)/bin/cg_annotate
-	rm $(TARGETPREFIX)/bin/cg_diff
-	rm $(TARGETPREFIX)/bin/ms_print
+	rm $(TARGET_DIR)/bin/callgrind_annotate
+	rm $(TARGET_DIR)/bin/callgrind_control
+	rm $(TARGET_DIR)/bin/cg_annotate
+	rm $(TARGET_DIR)/bin/cg_diff
+	rm $(TARGET_DIR)/bin/ms_print
 	$(REMOVE)/valgrind-$(VALGRIND_VER)
 	touch $@
 
@@ -38,12 +38,12 @@ $(D)/valgrind-hd1:
 			--mandir=/.remove \
 			--datadir=/.remove && \
 		$(MAKE) all && \
-		make install DESTDIR=$(TARGETPREFIX)
+		make install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/valgrind.pc
 	$(REMOVE)/valgrind
 	touch $@
 
-$(D)/strace: $(ARCHIVE)/strace-$(STRACE_VER).tar.xz | $(TARGETPREFIX)
+$(D)/strace: $(ARCHIVE)/strace-$(STRACE_VER).tar.xz | $(TARGET_DIR)
 	$(UNTAR)/strace-$(STRACE_VER).tar.xz
 	cd $(BUILD_TMP)/strace-$(STRACE_VER) && \
 	$(PATCH)/strace-error_prints-fix-potential-program_invocation_name-t.patch && \
@@ -52,13 +52,13 @@ $(D)/strace: $(ARCHIVE)/strace-$(STRACE_VER).tar.xz | $(TARGETPREFIX)
 			--mandir=$(BUILD_TMP)/.remove \
 			--enable-silent-rules && \
 		$(MAKE) all && \
-		make install prefix=$(TARGETPREFIX)
-	rm $(TARGETPREFIX)/bin/strace-graph
-	rm $(TARGETPREFIX)/bin/strace-log-merge
+		make install prefix=$(TARGET_DIR)
+	rm $(TARGET_DIR)/bin/strace-graph
+	rm $(TARGET_DIR)/bin/strace-log-merge
 	$(REMOVE)/strace-$(STRACE_VER)
 	touch $@
 
-$(D)/gdb: $(D)/zlib $(D)/libncurses $(ARCHIVE)/gdb-$(GDB_VER).tar.xz $(D)/zlib $(D)/libncurses | $(TARGETPREFIX)
+$(D)/gdb: $(D)/zlib $(D)/libncurses $(ARCHIVE)/gdb-$(GDB_VER).tar.xz $(D)/zlib $(D)/libncurses | $(TARGET_DIR)
 	$(REMOVE)/gdb-$(GDB_VER)
 	$(UNTAR)/gdb-$(GDB_VER).tar.xz
 	set -e; cd $(BUILD_TMP)/gdb-$(GDB_VER); \
@@ -72,8 +72,8 @@ $(D)/gdb: $(D)/zlib $(D)/libncurses $(ARCHIVE)/gdb-$(GDB_VER).tar.xz $(D)/zlib $
 			--with-zlib \
 			--enable-static; \
 		$(MAKE) all-gdb; \
-		make install-gdb prefix=$(TARGETPREFIX)
-	rm -rf $(TARGETPREFIX)/share/gdb/system-gdbinit
-	find $(TARGETPREFIX)/share/gdb/syscalls -type f -not -name 'arm-linux.xml' -not -name 'gdb-syscalls.dtd' -print0 | xargs -0 rm --
+		make install-gdb prefix=$(TARGET_DIR)
+	rm -rf $(TARGET_DIR)/share/gdb/system-gdbinit
+	find $(TARGET_DIR)/share/gdb/syscalls -type f -not -name 'arm-linux.xml' -not -name 'gdb-syscalls.dtd' -print0 | xargs -0 rm --
 	$(REMOVE)/gdb-$(GDB_VER)
 	touch $@

@@ -42,7 +42,7 @@ $(D)/gstreamer: $(D)/libglib2 $(D)/libxml2 $(D)/glib-networking $(ARCHIVE)/$(GST
 			ac_cv_header_valgrind_valgrind_h=no \
 		; \
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-1.0.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-base-1.0.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-controller-1.0.pc
@@ -85,8 +85,8 @@ $(D)/gst_plugins_base: $(D)/zlib $(D)/libglib2 $(D)/orc $(D)/gstreamer $(D)/alsa
 			--disable-gtk-doc-html \
 		; \
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
-	for i in `cd $(TARGETPREFIX)/lib/gstreamer-1.0; echo *.la`; do \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	for i in `cd $(TARGET_DIR)/lib/gstreamer-1.0; echo *.la`; do \
 		$(REWRITE_LIBTOOL)/gstreamer-1.0/$$i; done
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-allocators-1.0.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-app-1.0.pc
@@ -149,8 +149,8 @@ $(D)/gst_plugins_good: $(D)/libpng $(D)/libjpeg $(D)/gstreamer $(D)/gst_plugins_
 			--disable-gtk-doc-html \
 		; \
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
-	for i in `cd $(TARGETPREFIX)/lib/gstreamer-1.0; echo *.la`; do \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	for i in `cd $(TARGET_DIR)/lib/gstreamer-1.0; echo *.la`; do \
 		$(REWRITE_LIBTOOL)/gstreamer-1.0/$$i; done
 	$(REMOVE)/gst-plugins-good-$(GST_PLUGINS_GOOD_VER)
 	touch $@
@@ -187,8 +187,8 @@ $(D)/gst_plugins_bad: $(D)/libass $(D)/libcurl $(D)/libxml2 $(D)/openssl $(D)/li
 			--disable-gtk-doc-html \
 		; \
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
-	for i in `cd $(TARGETPREFIX)/lib/gstreamer-1.0; echo *.la`; do \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	for i in `cd $(TARGET_DIR)/lib/gstreamer-1.0; echo *.la`; do \
 		$(REWRITE_LIBTOOL)/gstreamer-1.0/$$i; done
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-codecparsers-1.0.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-bad-audio-1.0.pc
@@ -238,8 +238,8 @@ $(D)/gst_plugins_ugly: $(D)/gstreamer $(D)/gst_plugins_base $(ARCHIVE)/$(GST_PLU
 			--disable-gtk-doc-html \
 		; \
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
-	for i in `cd $(TARGETPREFIX)/lib/gstreamer-1.0; echo *.la`; do \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	for i in `cd $(TARGET_DIR)/lib/gstreamer-1.0; echo *.la`; do \
 		$(REWRITE_LIBTOOL)/gstreamer-1.0/$$i; done
 	$(REMOVE)/gst-plugins-ugly-$(GST_PLUGINS_UGLY_VER)
 	touch $@
@@ -266,8 +266,8 @@ $(D)/gst_plugin_subsink: $(D)/gstreamer $(D)/gst_plugins_base $(D)/gst_plugins_g
 			--enable-silent-rules \
 		; \
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
-	for i in `cd $(TARGETPREFIX)/lib/gstreamer-1.0; echo *.la`; do \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	for i in `cd $(TARGET_DIR)/lib/gstreamer-1.0; echo *.la`; do \
 		$(REWRITE_LIBTOOL)/gstreamer-1.0/$$i; done
 	$(REMOVE)/gstreamer$(GST_PLUGIN_SUBSINK_VER)-plugin-subsink
 	touch $@
@@ -305,8 +305,8 @@ $(D)/gst_plugins_dvbmediasink: $(D)/gstreamer $(D)/gst_plugins_base $(D)/gst_plu
 			--with-gstversion=1.0 \
 		; \
 		$(MAKE) all; \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
-	for i in `cd $(TARGETPREFIX)/lib/gstreamer-1.0; echo *.la`; do \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	for i in `cd $(TARGET_DIR)/lib/gstreamer-1.0; echo *.la`; do \
 		$(REWRITE_LIBTOOL)/gstreamer-1.0/$$i; done
 	$(REMOVE)/gstreamer$(GST_PLUGINS_DVBMEDIASINK_VER)-plugin-dvbmediasink
 	touch $@
@@ -330,12 +330,12 @@ $(D)/orc: $(ARCHIVE)/$(ORC_SOURCE)
 			--prefix= \
 		; \
 		$(MAKE) all; \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/orc-0.4.pc
 	$(REWRITE_LIBTOOL)/liborc-0.4.la
 	$(REWRITE_LIBTOOL)/liborc-test-0.4.la
 	$(REWRITE_LIBTOOLDEP)/liborc-test-0.4.la
-	rm -f $(addprefix $(TARGETPREFIX)/bin/,orc-bugreport orcc)
+	rm -f $(addprefix $(TARGET_DIR)/bin/,orc-bugreport orcc)
 	$(REMOVE)/orc-$(ORC_VER)
 	touch $@
 
@@ -356,11 +356,11 @@ $(D)/libdca: $(ARCHIVE)/$(LIBDCA_SOURCE)
 			--mandir=/.remove \
 		; \
 		$(MAKE) all; \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libdca.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libdts.pc
 	$(REWRITE_LIBTOOL)/libdca.la
-	rm -f $(addprefix $(TARGETPREFIX)/bin/,extract_dca extract_dts)
+	rm -f $(addprefix $(TARGET_DIR)/bin/,extract_dca extract_dts)
 	$(REMOVE)/libdca-$(LIBDCA_VER)
 	touch $@
 
@@ -381,10 +381,10 @@ $(D)/nettle: $(D)/gmp $(ARCHIVE)/$(NETTLE_SOURCE)
 			--disable-documentation \
 		; \
 		$(MAKE) all; \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/hogweed.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/nettle.pc
-	rm -f $(addprefix $(TARGETPREFIX)/bin/,sexp-conv nettle-hash nettle-pbkdf2 nettle-lfib-stream pkcs1-conv)
+	rm -f $(addprefix $(TARGET_DIR)/bin/,sexp-conv nettle-hash nettle-pbkdf2 nettle-lfib-stream pkcs1-conv)
 	$(REMOVE)/nettle-$(NETTLE_VER)
 	touch $@
 
@@ -407,7 +407,7 @@ $(D)/gmp: $(ARCHIVE)/$(GMP_SOURCE)
 			--infodir=/.remove \
 		; \
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL)/libgmp.la
 	$(REMOVE)/gmp-$(GMP_VER_MAJOR)
 	touch $@
@@ -433,7 +433,7 @@ $(D)/gnutls: $(D)/nettle $(D)/ca-bundle $(ARCHIVE)/$(GNUTLS_SOURCE)
 			--datarootdir=/.remove \
 			--with-included-libtasn1 \
 			--enable-local-libopts \
-			--with-libpthread-prefix=$(TARGETPREFIX) \
+			--with-libpthread-prefix=$(TARGET_DIR) \
 			--with-included-unistring \
 			--with-default-trust-store-dir=$(CA_BUNDLE_DIR)/ \
 			--disable-guile \
@@ -441,12 +441,12 @@ $(D)/gnutls: $(D)/nettle $(D)/ca-bundle $(ARCHIVE)/$(GNUTLS_SOURCE)
 			--without-p11-kit \
 		; \
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gnutls.pc
 	$(REWRITE_LIBTOOL)/libgnutls.la
 	$(REWRITE_LIBTOOL)/libgnutlsxx.la
 	$(REWRITE_LIBTOOLDEP)/libgnutlsxx.la
-	rm -f $(addprefix $(TARGETPREFIX)/bin/,psktool gnutls-cli-debug certtool srptool ocsptool gnutls-serv gnutls-cli)
+	rm -f $(addprefix $(TARGET_DIR)/bin/,psktool gnutls-cli-debug certtool srptool ocsptool gnutls-serv gnutls-cli)
 	$(REMOVE)/gnutls-$(GNUTLS_VER)
 	touch $@
 
@@ -471,7 +471,7 @@ $(D)/glib-networking: $(D)/gnutls $(D)/libglib2 $(ARCHIVE)/$(GLIB-NETWORKING_SOU
 			--localedir=/.remove \
 		; \
 		$(MAKE); \
-		$(MAKE) install prefix=$(TARGETPREFIX)
+		$(MAKE) install prefix=$(TARGET_DIR)
 	$(REMOVE)/glib-networking-$(GLIB-NETWORKING_VER)
 	touch $@
 
@@ -507,7 +507,7 @@ $(D)/alsa-lib: $(ARCHIVE)/$(ALSA-LIB_SOURCE)
 			--disable-python \
 		; \
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/alsa.pc
 	$(REWRITE_LIBTOOL)/libasound.la
 	$(REMOVE)/alsa-lib-$(ALSA-LIB_VER)
@@ -537,7 +537,7 @@ $(D)/libsoup: $(D)/sqlite $(D)/libxml2 $(D)/libglib2 $(ARCHIVE)/$(LIBSOUP_SOURCE
 			--disable-gtk-doc-pdf \
 		; \
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX) itlocaledir=$$(TARGETPREFIX)/.remove
+		$(MAKE) install DESTDIR=$(TARGET_DIR) itlocaledir=$$(TARGET_DIR)/.remove
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libsoup-2.4.pc
 	$(REWRITE_LIBTOOL)/libsoup-2.4.la
 	$(REMOVE)/libsoup-$(LIBSOUP_VER)
@@ -560,9 +560,9 @@ $(D)/sqlite: $(ARCHIVE)/$(SQLITE_SOURCE)
 			--mandir=/.remove \
 		; \
 		$(MAKE) all; \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/sqlite3.pc
 	$(REWRITE_LIBTOOL)/libsqlite3.la
-	rm -f $(addprefix $(TARGETPREFIX)/bin/,sqlite3)
+	rm -f $(addprefix $(TARGET_DIR)/bin/,sqlite3)
 	$(REMOVE)/sqlite-autoconf-$(SQLITE_VER)
 	touch $@

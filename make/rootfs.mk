@@ -3,8 +3,8 @@
 # rootfs targets
 rootfs: .version update.urls $(BOX) cleanup strip softlinks
 
-.version: $(TARGETPREFIX)/.version
-$(TARGETPREFIX)/.version:
+.version: $(TARGET_DIR)/.version
+$(TARGET_DIR)/.version:
 	echo "version="$(IMAGE_TYPE)$(IMAGE_VERSION)$(IMAGE_DATE) > $@
 	# determinate last NI-release-tag an use this to git describe
 	GITTAG=`cd $(N_HD_SOURCE); git tag -l "NI-*" | tail -n1`; \
@@ -26,17 +26,17 @@ else
 endif
 	echo "homepage=www.neutrino-images.de"			>> $@
 
-update.urls: $(TARGETPREFIX)/var/etc/update.urls
-$(TARGETPREFIX)/var/etc/update.urls:
+update.urls: $(TARGET_DIR)/var/etc/update.urls
+$(TARGET_DIR)/var/etc/update.urls:
 	rm -f $@
 	touch $@
 	echo "$(NI-SERVER)/update.php"				>> $@
 	echo "$(CHANLIST_URL)/$(CHANLIST_MD5FILE)"		>> $@
 
 # create filesystem for our images
-$(BOX): | $(TARGETPREFIX)
+$(BOX): | $(TARGET_DIR)
 	rm -rf $(BOX)
-	cp -a $(TARGETPREFIX) $(BOX)
+	cp -a $(TARGET_DIR) $(BOX)
 
 # cleanup filesystem from useless stuff
 cleanup: $(BOX)
@@ -84,14 +84,14 @@ ifeq ($(DEBUG), yes)
 	@echo "*******************************************************"
 	@echo "***        Strip samba for debug image              ***"
 	@echo "*******************************************************"
-	$(TARGET)-strip $(TARGETPREFIX)/bin/smbclient
-	$(TARGET)-strip $(TARGETPREFIX)/bin/smbpasswd
-	$(TARGET)-strip $(TARGETPREFIX)/lib/libsmbsharemodes.so.0
-	$(TARGET)-strip $(TARGETPREFIX)/lib/libsmbclient.so.0
-	$(TARGET)-strip $(TARGETPREFIX)/lib/libnetapi.so.0
-	$(TARGET)-strip $(TARGETPREFIX)/lib/libtdb.so.1
-	$(TARGET)-strip $(TARGETPREFIX)/lib/libtalloc.so.1
-	$(TARGET)-strip $(TARGETPREFIX)/lib/libwbclient.so.0
+	$(TARGET)-strip $(TARGET_DIR)/bin/smbclient
+	$(TARGET)-strip $(TARGET_DIR)/bin/smbpasswd
+	$(TARGET)-strip $(TARGET_DIR)/lib/libsmbsharemodes.so.0
+	$(TARGET)-strip $(TARGET_DIR)/lib/libsmbclient.so.0
+	$(TARGET)-strip $(TARGET_DIR)/lib/libnetapi.so.0
+	$(TARGET)-strip $(TARGET_DIR)/lib/libtdb.so.1
+	$(TARGET)-strip $(TARGET_DIR)/lib/libtalloc.so.1
+	$(TARGET)-strip $(TARGET_DIR)/lib/libwbclient.so.0
 	find $(BOX)/lib/samba -type f -print0 | xargs -0 $(TARGET)-strip || true
 	@echo -e "$(TERM_YELLOW)"
 	@du -sh $(BOX)
@@ -195,12 +195,12 @@ get-update-info-hd1:
 	);
 	@echo " ============================================================================== "
 
-personalize: | $(TARGETPREFIX)
+personalize: | $(TARGET_DIR)
 	$(call local-script,$(notdir $@),start)
 	@LOCAL_ROOT=$(LOCAL_DIR)/root; \
 	if [ $$(ls -A $$LOCAL_ROOT) ]; then \
-		cp -a -v $$LOCAL_ROOT/* $(TARGETPREFIX)/; \
+		cp -a -v $$LOCAL_ROOT/* $(TARGET_DIR)/; \
 	fi
 	$(call local-script,$(notdir $@),stop)
 
-PHONY += $(TARGETPREFIX)/.version $(TARGETPREFIX)/var/etc/update.urls $(BOX)
+PHONY += $(TARGET_DIR)/.version $(TARGET_DIR)/var/etc/update.urls $(BOX)

@@ -12,7 +12,7 @@ $(LIBPLUG)/links.so: $(D)/zlib $(D)/openssl $(D)/libpng $(D)/libjpeg $(D)/giflib
 		export RANLIB=$(TARGET)-ranlib && \
 		export OBJDUMP=$(TARGET)-objdump && \
 		export STRIP=$(TARGET)-strip && \
-		export SYSROOT=$(TARGETPREFIX) && \
+		export SYSROOT=$(TARGET_DIR) && \
 		export PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) && \
 		export LD_LIBRARY_PATH=$(TARGETLIB) && \
 		export CFLAGS="$(TARGET_CFLAGS)" && \
@@ -29,7 +29,7 @@ $(LIBPLUG)/links.so: $(D)/zlib $(D)/openssl $(D)/libpng $(D)/libjpeg $(D)/giflib
 			--enable-graphics \
 			--enable-javascript && \
 		$(MAKE) && \
-		DESTDIR=$(TARGETPREFIX) make install prefix=$(TARGETPREFIX)
+		DESTDIR=$(TARGET_DIR) make install prefix=$(TARGET_DIR)
 	$(REMOVE)/links
 	mv -f $(BIN)/links $(LIBPLUG)/links.so
 	echo "name=Links Webbrowser"	 > $(LIBPLUG)/links.cfg
@@ -81,7 +81,7 @@ stbup: $(BIN)/stbup
 $(BIN)/stbup: $(BIN)
 	pushd $(SOURCES)/stbup && \
 	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) stbup.c -o $@ && \
-	install -m 644 stbup.conf $(TARGETPREFIX)/etc && \
-	install -m 755 stbup.init $(TARGETPREFIX)/etc/init.d/stbup
-	ln -s stbup $(TARGETPREFIX)/etc/init.d/S99stbup
-	ln -s stbup $(TARGETPREFIX)/etc/init.d/K01stbup
+	install -m 644 stbup.conf $(TARGET_DIR)/etc && \
+	install -m 755 stbup.init $(TARGET_DIR)/etc/init.d/stbup
+	ln -s stbup $(TARGET_DIR)/etc/init.d/S99stbup
+	ln -s stbup $(TARGET_DIR)/etc/init.d/K01stbup

@@ -8,7 +8,7 @@ ifneq ($(BOXSERIES), hd51)
 endif
 
 cortex-strings: $(STATICLIB)/libcortex-strings.la
-$(STATICLIB)/libcortex-strings.la: $(ARCHIVE)/cortex-strings-$(CORTEX-STRINGS_VER).tar.bz2 | $(TARGETPREFIX)
+$(STATICLIB)/libcortex-strings.la: $(ARCHIVE)/cortex-strings-$(CORTEX-STRINGS_VER).tar.bz2 | $(TARGET_DIR)
 	$(UNTAR)/cortex-strings-$(CORTEX-STRINGS_VER).tar.bz2
 	pushd $(BUILD_TMP)/cortex-strings-$(CORTEX-STRINGS_VER) && \
 		./autogen.sh && \
