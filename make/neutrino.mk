@@ -9,7 +9,7 @@ ifeq ($(USE_LIBSTB-HAL), yes)
 	NEUTRINO_DEPS += libstb-hal
 endif
 
-USE_GSTREAMER = yes
+USE_GSTREAMER = no
 ifeq ($(BOXSERIES), hd51)
   ifeq ($(USE_GSTREAMER), yes)
 	NEUTRINO_DEPS += $(D)/gst_plugins_dvbmediasink
