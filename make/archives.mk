@@ -372,5 +372,10 @@ MTOOLS_VER=4.0.18
 $(ARCHIVE)/mtools-$(MTOOLS_VER).tar.gz:
 	$(WGET) ftp://ftp.gnu.org/gnu/mtools/mtools-$(MTOOLS_VER).tar.gz
 
+ALSA-LIB_VER = 1.1.5
+ALSA-LIB_SOURCE = alsa-lib-$(ALSA-LIB_VER).tar.bz2
+$(ARCHIVE)/$(ALSA-LIB_SOURCE):
+	$(WGET) ftp://ftp.alsa-project.org/pub/lib/$(ALSA-LIB_SOURCE)
+
 $(ARCHIVE)/cacert.pem:
 	$(WGET) https://curl.haxx.se/ca/cacert.pem

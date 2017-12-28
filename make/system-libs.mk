@@ -1107,3 +1107,32 @@ $(D)/libglib2: $(ARCHIVE)/glib-$(GLIB_VER).tar.xz $(D)/zlib $(LIBGLIB2_DEPS) $(D
 	$(REWRITE_LIBTOOLDEP)/libgthread-2.0.la
 	$(REMOVE)/glib-$(GLIB_VER)
 	touch $@
+
+$(D)/alsa-lib: $(ARCHIVE)/$(ALSA-LIB_SOURCE)
+	$(UNTAR)/$(ALSA-LIB_SOURCE)
+	set -e; cd $(BUILD_TMP)/alsa-lib-$(ALSA-LIB_VER); \
+		$(PATCH)/alsa-lib-$(ALSA-LIB_VER)-link_fix.patch; \
+		$(PATCH)/alsa-lib-$(ALSA-LIB_VER).patch; \
+		$(CONFIGURE) \
+			--prefix= \
+			--datarootdir=/.remove \
+			--with-alsa-devdir=/dev/snd/ \
+			--with-plugindir=/lib/alsa \
+			--without-debug \
+			--with-debug=no \
+			--with-versioned=no \
+			--enable-symbolic-functions \
+			--disable-aload \
+			--disable-rawmidi \
+			--disable-resmgr \
+			--disable-old-symbols \
+			--disable-alisp \
+			--disable-hwdep \
+			--disable-python \
+		; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/alsa.pc
+	$(REWRITE_LIBTOOL)/libasound.la
+	$(REMOVE)/alsa-lib-$(ALSA-LIB_VER)
+	touch $@
