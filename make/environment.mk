@@ -312,6 +312,7 @@ NI_LINUX-KERNEL		= ni-linux-kernel
 NI_LOGO-STUFF		= ni-logo-stuff
 NI_OFGWRITE		= ni-ofgwrite
 NI_OPENTHREADS		= ni-openthreads
+NI_RTMPDUMP		= ni-rtmpdump
 NI_STREAMRIPPER		= ni-streamripper
 
 # ffmpeg/master is currently not mature enough for daily use

@@ -880,10 +880,10 @@ $(D)/pugixml: $(ARCHIVE)/pugixml-$(PUGIXML_VER).tar.gz | $(TARGET_DIR)
 	$(REMOVE)/pugixml-$(PUGIXML_VER)
 	touch $@
 
-$(D)/librtmp: $(D)/zlib $(D)/openssl | $(TARGET_DIR)
-	$(REMOVE)/rtmpdump
-	git clone https://bitbucket.org/neutrino-images/ni-rtmpdump.git $(BUILD_TMP)/rtmpdump
-	set -e; cd $(BUILD_TMP)/rtmpdump; \
+$(D)/librtmp: $(D)/zlib $(D)/openssl $(SOURCE_DIR)/$(NI_RTMPDUMP) | $(TARGET_DIR)
+	$(REMOVE)/$(NI_RTMPDUMP)
+	tar -C $(SOURCE_DIR) -cp $(NI_RTMPDUMP) --exclude-vcs | tar -C $(BUILD_TMP) -x
+	set -e; cd $(BUILD_TMP)/$(NI_RTMPDUMP); \
 		make CROSS_COMPILE=$(TARGET)- XCFLAGS="-I$(TARGET_DIR)/include -L$(TARGET_DIR)/lib" LDFLAGS="-L$(TARGET_DIR)/lib" prefix=$(TARGET_DIR);\
 		make install DESTDIR=$(TARGET_DIR) prefix="" mandir=/.remove ;\
 		rm -rf $(TARGET_DIR)/.remove
@@ -891,7 +891,7 @@ $(D)/librtmp: $(D)/zlib $(D)/openssl | $(TARGET_DIR)
 		rm -rf $(TARGET_DIR)/sbin/rtmpsrv
 		rm -rf $(TARGET_DIR)/sbin/rtmpsuck
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/librtmp.pc
-	$(REMOVE)/rtmpdump
+	$(REMOVE)/$(NI_RTMPDUMP)
 	touch $@
 
 $(D)/libtirpc: $(ARCHIVE)/libtirpc-$(LIBTIRPC_VER).tar.bz2 | $(TARGET_DIR)

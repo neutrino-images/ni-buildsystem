@@ -59,6 +59,7 @@ endif
 	cd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) && git pull
 	cd $(SOURCE_DIR)/$(NI_OFGWRITE) && git pull
 	cd $(SOURCE_DIR)/$(NI_OPENTHREADS) && git pull
+	cd $(SOURCE_DIR)/$(NI_RTMPDUMP) && git pull
 	cd $(SOURCE_DIR)/$(NI_STREAMRIPPER) && git pull
 
 
@@ -88,6 +89,7 @@ endif
 	cd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) && git push
 	cd $(SOURCE_DIR)/$(NI_OFGWRITE) && git push
 	cd $(SOURCE_DIR)/$(NI_OPENTHREADS) && git push
+	cd $(SOURCE_DIR)/$(NI_RTMPDUMP) && git push
 	cd $(SOURCE_DIR)/$(NI_STREAMRIPPER) && git push
 
 PHONY += update-self update-neutrino
