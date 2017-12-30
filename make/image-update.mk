@@ -184,6 +184,14 @@ pathauf_HD-19:
 	install -m755 $(IMAGEFILES)/channellists/update-ctrl/postinstall.sh $(POSTINSTALL_SH)
 	mkdir -pv $(UPDATE_INST_DIR)/var/tuxbox/config/zapit && \
 	cp -f $(IMAGEFILES)/channellists/$@/* $(UPDATE_INST_DIR)/var/tuxbox/config/zapit/
+	# remove non-printable chars and re-format xml-files
+	cd $(UPDATE_INST_DIR)/var/tuxbox/config/zapit/; \
+	for file in *.xml; do \
+		sed -i 's/[^[:print:]]//g' $$file; \
+		XMLLINT_INDENT="	" \
+		xmllint --format $$file > _$$file; \
+		mv _$$file $$file; \
+	done
 	#
 	# we should try to keep this array table up-to-date ;-)
 	#
