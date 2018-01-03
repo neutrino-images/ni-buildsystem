@@ -248,7 +248,7 @@ endif
 FFMPEG_DEPS = $(D)/openssl $(D)/librtmp $(D)/libbluray $(D)/libass
 FFMPEG_CONFIGURE_VER =
 
-ifeq ($(NI_FFMPEG_BRANCH), ni/ffmpeg/master)
+ifneq ($(NI_FFMPEG_BRANCH), ni/ffmpeg/2.8)
 	FFMPEG_DEPS +=  $(D)/libxml2
 	FFMPEG_CONFIGURE_VER =	\
 			--enable-demuxer=dash \
