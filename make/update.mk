@@ -45,7 +45,7 @@ update-ni-force:
 	make ni-git
 	make update-ni-git
 
-update-ni-git:
+update-ni-git: ni-git
 	cd $(BUILD-GENERIC-PC) && git pull
 	cd $(SOURCE_DIR)/$(NI_DRIVERS-BIN) && git pull
 	cd $(SOURCE_DIR)/$(NI_FFMPEG) && git pull --all && git checkout $(NI_FFMPEG_BRANCH)
