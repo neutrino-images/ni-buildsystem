@@ -12,8 +12,8 @@ IMAGE_SUFFIX	= $(BOXTYPE_SC)-$(BOXMODEL)
 # Image-Type
 # Release	= 0
 # Beta		= 1
-# Internal	= 2 <- not used atm
-IMAGE_TYPE	= 0
+# Nightly	= 2
+IMAGE_TYPE	?= 0
 
 # JFFS2-Summary
 SUMMARIZE	= yes
@@ -27,10 +27,14 @@ ifeq ($(IMAGE_TYPE), 0)
   # Release
   NI-SUBDIR	= release
   IMAGE_TYPE_STRING = release
-else
+else ifeq ($(IMAGE_TYPE), 1)
   # Beta
   NI-SUBDIR	= beta
   IMAGE_TYPE_STRING = beta
+else
+  # Nightly
+  NI-SUBDIR	= nightly
+  IMAGE_TYPE_STRING = nightly
 endif
 
 IMAGE_URL	= $(NI-SERVER)/$(NI-SUBDIR)
