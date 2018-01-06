@@ -198,7 +198,7 @@ get-update-info-hd1:
 personalize: | $(TARGET_DIR)
 	$(call local-script,$(notdir $@),start)
 	@LOCAL_ROOT=$(LOCAL_DIR)/root; \
-	if [ -z "$$(ls -A $$LOCAL_ROOT)" ]; then \
+	if [ -n "$$(ls -A $$LOCAL_ROOT)" ]; then \
 		cp -a -v $$LOCAL_ROOT/* $(TARGET_DIR)/; \
 	fi
 	$(call local-script,$(notdir $@),stop)
