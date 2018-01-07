@@ -12,7 +12,6 @@ F_OSCAM=".oscam"
 F_NCAM=".ncam"
 F_GBOX=".gbox"
 F_CS2GBOX=".cs2gbox"
-F_CIPLUSHELPER=".ciplushelper"
 
 MGCAM_Action()
 {
@@ -229,33 +228,9 @@ CS2GBOX_Action()
 	esac
 }
 
-CIPLUSHELPER_Action()
-{
-	case $1 in
-		"start" )
-			SHOWINFO "start ciplushelper"
-			/var/bin/ciplushelper &
-			sleep 1
-		;;
-		"stop" )
-			SHOWINFO "stop ciplushelper"
-			killall ciplushelper
-			sleep 1
-		;;
-		* )
-			CIPLUSHELPER_Action "stop"
-			sleep 1
-			CIPLUSHELPER_Action "start"
-		;;
-	esac
-}
-
 CAMD_Action()
 {
 	case $1 in
-		"ciplushelper")
-			CIPLUSHELPER_Action $ACTION
-		;;
 		"cs2gbox")
 			CS2GBOX_Action $ACTION
 		;;
@@ -281,10 +256,6 @@ CAMD_Action()
 			MGCAM_Action $ACTION
 		;;
 		*)
-			if [ -e $FLAGDIR/$F_CIPLUSHELPER ]; then
-				CIPLUSHELPER_Action $ACTION
-			fi
-
 			if [ -e $FLAGDIR/$F_CS2GBOX ]; then
 				CS2GBOX_Action $ACTION
 			fi
