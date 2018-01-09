@@ -991,6 +991,20 @@ $(D)/aio-grab: $(D)/zlib $(D)/libpng $(D)/libjpeg | $(TARGET_DIR)
 	$(REMOVE)/aio-grab
 	touch $@
 
+$(D)/dvbsnoop: | $(TARGET_DIR)
+	$(REMOVE)/dvbsnoop
+	cd $(BUILD_TMP); \
+	git clone https://github.com/cotdp/dvbsnoop.git dvbsnoop; \
+	cd dvbsnoop; \
+		$(CONFIGURE) \
+			--prefix= \
+			--mandir=/.remove \
+		; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(REMOVE)/dvbsnoop
+	touch $@
+
 $(D)/ca-bundle: $(ARCHIVE)/cacert.pem | $(TARGET_DIR)
 	install -D -m 644 $(ARCHIVE)/cacert.pem $(TARGET_DIR)/$(CA_BUNDLE_DIR)/$(CA_BUNDLE)
 	touch $@
