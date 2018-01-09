@@ -91,6 +91,7 @@ ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd51))
   ifeq ($(BOXSERIES), hd51)
 	make -j$(NUM_CPUS) ofgwrite
 	make -j$(NUM_CPUS) aio-grab
+	make -j$(NUM_CPUS) dvbsnoop
 	make stb-startup
   endif
   ifeq ($(DEBUG), yes)
