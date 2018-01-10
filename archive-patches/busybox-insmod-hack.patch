@@ -9,8 +9,8 @@ index 9b76c83..c7579c5 100644
 -	depends on DEPMOD || MODPROBE || MODINFO
 +	depends on DEPMOD || MODPROBE || MODINFO || INSMOD
  	help
- 	  Directory that contains kernel modules.
- 	  Defaults to "/lib/modules"
+ 	Directory that contains kernel modules.
+ 	Defaults to "/lib/modules"
 diff --git a/modutils/insmod.c b/modutils/insmod.c
 index 8526979..d36acc4 100644
 --- a/modutils/insmod.c
