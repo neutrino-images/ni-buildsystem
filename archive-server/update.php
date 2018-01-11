@@ -75,7 +75,15 @@ if (empty($boxtype_sc) ||empty($boxseries) || empty($boxmodel))
 	exit(1);
 }
 
-$file = $directory . "/" . $image_type . "-" . $boxtype_sc . "-" . $boxmodel . ".txt";
+$file = "release/release-" . $boxtype_sc . "-" . $boxmodel . ".txt";
+if (file_exists($file))
+	$result .= file_get_contents($file, true);
+
+$file = "beta/beta-" . $boxtype_sc . "-" . $boxmodel . ".txt";
+if (file_exists($file))
+	$result .= file_get_contents($file, true);
+
+$file = "nightly/nightly-" . $boxtype_sc . "-" . $boxmodel . ".txt";
 if (file_exists($file))
 	$result .= file_get_contents($file, true);
 
@@ -90,14 +98,6 @@ if (file_exists($file))
 $file = $directory . "/update-" . $boxtype_sc . "-" . $boxmodel . ".txt";
 if (file_exists($file))
 	$result .= file_get_contents($file, true);
-
-# allow to switch from beta to release
-if (strcmp($image_type, "beta") == 0)
-{
-	$file = "release/release-" . $boxtype_sc . "-" . $boxmodel . ".txt";
-	if (file_exists($file))
-		$result .= file_get_contents($file, true);
-} 
 
 #$file = "plugins/pr-auto-timer.txt";
 #if (file_exists($file))
