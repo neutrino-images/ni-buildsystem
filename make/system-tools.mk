@@ -994,9 +994,10 @@ $(D)/aio-grab: $(D)/zlib $(D)/libpng $(D)/libjpeg | $(TARGET_DIR)
 $(D)/dvbsnoop: | $(TARGET_DIR)
 	$(REMOVE)/dvbsnoop
 	cd $(BUILD_TMP); \
-	git clone https://github.com/cotdp/dvbsnoop.git dvbsnoop; \
+	git clone https://github.com/Duckbox-Developers/dvbsnoop.git dvbsnoop; \
 	cd dvbsnoop; \
 		$(CONFIGURE) \
+			--enable-silent-rules \
 			--prefix= \
 			--mandir=/.remove \
 		; \
