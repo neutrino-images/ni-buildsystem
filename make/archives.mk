@@ -200,8 +200,8 @@ $(ARCHIVE)/procps-ng-$(PROCPS-NG_VER).tar.xz:
 	$(WGET) http://sourceforge.net/projects/procps-ng/files/Production/procps-ng-$(PROCPS-NG_VER).tar.xz
 
 BUSYBOX_MAJOR=1
-BUSYBOX_MINOR=28
-BUSYBOX_MICRO=0
+BUSYBOX_MINOR=27
+BUSYBOX_MICRO=2
 BUSYBOX_VER=$(BUSYBOX_MAJOR).$(BUSYBOX_MINOR).$(BUSYBOX_MICRO)
 $(ARCHIVE)/busybox-$(BUSYBOX_VER).tar.bz2:
 	$(WGET) http://busybox.net/downloads/busybox-$(BUSYBOX_VER).tar.bz2
