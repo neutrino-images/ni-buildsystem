@@ -98,13 +98,8 @@ LH_OBJDIR = $(BUILD_TMP)/$(NI_LIBSTB-HAL-NEXT)
 
 $(N_OBJDIR)/config.status: $(N_DEPS) $(MAKE_DIR)/neutrino.mk
 	test -d $(N_OBJDIR) || mkdir -p $(N_OBJDIR)
-ifeq ($(ORIGINAL), yes)
-	cd $(N_HD_SOURCE) && \
-		git checkout $(TUXBOX_REMOTE_REPO)/$(TUXBOX_NEUTRINO_BRANCH)
-else ifeq ($(FLAVOUR), ni-neutrino-hd)
 	cd $(N_HD_SOURCE) && \
 		git checkout $(NI_NEUTRINO_BRANCH)
-endif
 	$(N_HD_SOURCE)/autogen.sh
 	pushd $(N_OBJDIR) && \
 		test -e version.h || touch version.h && \
