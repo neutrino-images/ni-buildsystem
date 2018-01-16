@@ -1,25 +1,26 @@
 # makefile to build NEUTRINO
 
-NEUTRINO_DEPS = libcurl freetype libjpeg giflib ffmpeg openthreads openssl libdvbsi ntp libsigc++ luaposix pugixml libfribidi
+N_DEPS = libcurl freetype libjpeg giflib ffmpeg openthreads openssl libdvbsi ntp libsigc++ luaposix pugixml libfribidi
+
+LH_DEPS = ffmpeg alsa-lib
 
 ifeq ($(BOXTYPE)-$(HAS_LIBCS), coolstream-yes)
-	NEUTRINO_DEPS += libcoolstream
+	N_DEPS += libcoolstream
 endif
+
 ifeq ($(USE_LIBSTB-HAL), yes)
-	NEUTRINO_DEPS += libstb-hal
+	N_DEPS += libstb-hal
 endif
 
 USE_GSTREAMER = no
 ifeq ($(BOXSERIES), hd51)
   ifeq ($(USE_GSTREAMER), yes)
-	NEUTRINO_DEPS += $(D)/gst_plugins_dvbmediasink
-  else
-	NEUTRINO_DEPS += $(D)/alsa-lib
+	LH_DEPS += gst_plugins_dvbmediasink
   endif
 endif
 
 # uncomment next line to build neutrino without --enable-ffmpegdec
-#NEUTRINO_DEPS += libvorbisidec libid3tag libmad libFLAC
+#N_DEPS += libvorbisidec libid3tag libmad libFLAC
 
 N_CFLAGS = -Wall -W -Wshadow -D__STDC_CONSTANT_MACROS -DENABLE_FREESATEPG
 ifeq ($(BOXSERIES), hd1)
@@ -95,7 +96,7 @@ N_BUILDENV = \
 N_OBJDIR = $(BUILD_TMP)/$(FLAVOUR)
 LH_OBJDIR = $(BUILD_TMP)/$(NI_LIBSTB-HAL-NEXT)
 
-$(N_OBJDIR)/config.status: $(NEUTRINO_DEPS) $(MAKE_DIR)/neutrino.mk
+$(N_OBJDIR)/config.status: $(N_DEPS) $(MAKE_DIR)/neutrino.mk
 	test -d $(N_OBJDIR) || mkdir -p $(N_OBJDIR)
 ifeq ($(ORIGINAL), yes)
 	cd $(N_HD_SOURCE) && \
@@ -143,7 +144,7 @@ ifeq ($(BOXSERIES), hd51)
   endif
 endif
 
-$(LH_OBJDIR)/config.status: $(NEUTRINO_DEPS)
+$(LH_OBJDIR)/config.status: $(LH_DEPS)
 	rm -rf $(LH_OBJDIR)
 	tar -C $(SOURCE_DIR) -cp $(NI_LIBSTB-HAL-NEXT) --exclude-vcs | tar -C $(BUILD_TMP) -x
 	pushd $(LH_OBJDIR) && \
