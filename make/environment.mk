@@ -336,3 +336,24 @@ define local-script
 		$(LOCAL_DIR)/scripts/$(1) $(2) $(TARGET_DIR) $(BUILD_TMP); \
 	fi
 endef
+
+# apply patch sets
+define apply_patches
+	for i in $(1); do \
+		if [ -d $$i ]; then \
+			for p in $$i/*; do \
+				if [ $${p:0:1} == "/" ]; then \
+					patch -p1 -i $$p; \
+				else \
+					$(PATCH)/$$p; \
+				fi; \
+			done; \
+		else \
+			if [ $${i:0:1} == "/" ]; then \
+				patch -p1 -i $$i; \
+			else \
+				$(PATCH)/$$i; \
+			fi; \
+		fi; \
+	done
+endef
