@@ -25,7 +25,7 @@ FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-chunked_transfer_fix_eof.patch
 
 # -----------------------------------------------------------------------------
 
-FFMPEG_DEPS = $(D)/openssl $(D)/librtmp $(D)/libbluray $(D)/libass $(D)/libxml2
+FFMPEG_DEPS = $(D)/openssl $(D)/freetype $(D)/librtmp $(D)/libbluray $(D)/libass $(D)/libxml2
 
 # -----------------------------------------------------------------------------
 
@@ -304,6 +304,7 @@ FFMPEG_CONFIGURE_GENERIC = \
 			--enable-bsfs \
 			--enable-libass \
 			--enable-libbluray \
+			--enable-libfreetype \
 			--enable-librtmp \
 			--enable-network \
 			--enable-nonfree \
