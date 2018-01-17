@@ -86,6 +86,7 @@ include make/clean.mk
 include make/update.mk
 include make/kernel-$(BOXTYPE_SC).mk
 include make/static.mk
+include make/ffmpeg-$(BOXTYPE_SC).mk
 include make/system-libs.mk
 include make/system-libs-extra.mk
 include make/system-tools.mk
