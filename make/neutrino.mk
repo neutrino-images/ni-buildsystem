@@ -2,7 +2,7 @@
 
 N_DEPS = libcurl freetype libjpeg giflib ffmpeg openthreads openssl libdvbsi ntp libsigc++ luaposix pugixml libfribidi
 
-LH_DEPS = ffmpeg alsa-lib
+LH_DEPS = ffmpeg
 
 ifeq ($(BOXTYPE)-$(HAS_LIBCS), coolstream-yes)
 	N_DEPS += libcoolstream
