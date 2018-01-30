@@ -1011,10 +1011,8 @@ $(D)/ethtool: $(ARCHIVE)/$(ETHTOOL_SOURCE) | $(TARGET_DIR)
 	$(UNTAR)/$(ETHTOOL_SOURCE)
 	set -e; cd $(BUILD_TMP)/ethtool-$(ETHTOOL_VER); \
 		$(CONFIGURE) \
-			--prefix=/usr \
+			--prefix= \
 			--mandir=/.remove \
-			--bindir=/bin \
-			--sbindir=/sbin \
 			--libdir=$(TARGET_LIB_DIR) \
 		; \
 		$(MAKE); \
