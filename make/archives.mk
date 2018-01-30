@@ -377,5 +377,10 @@ ALSA-LIB_SOURCE = alsa-lib-$(ALSA-LIB_VER).tar.bz2
 $(ARCHIVE)/$(ALSA-LIB_SOURCE):
 	$(WGET) ftp://ftp.alsa-project.org/pub/lib/$(ALSA-LIB_SOURCE)
 
+ETHTOOL_VER = 4.13
+ETHTOOL_SOURCE = ethtool-$(ETHTOOL_VER).tar.xz
+$(ARCHIVE)/$(ETHTOOL_SOURCE):
+	$(WGET) https://www.kernel.org/pub/software/network/ethtool/$(ETHTOOL_SOURCE)
+
 $(ARCHIVE)/cacert.pem:
 	$(WGET) https://curl.haxx.se/ca/cacert.pem

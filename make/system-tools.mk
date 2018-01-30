@@ -1006,6 +1006,22 @@ $(D)/dvbsnoop: | $(TARGET_DIR)
 	$(REMOVE)/dvbsnoop
 	touch $@
 
+$(D)/ethtool: $(ARCHIVE)/$(ETHTOOL_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/ethtool-$(ETHTOOL_VER)
+	$(UNTAR)/$(ETHTOOL_SOURCE)
+	set -e; cd $(BUILD_TMP)/ethtool-$(ETHTOOL_VER); \
+		$(CONFIGURE) \
+			--prefix=/usr \
+			--mandir=/.remove \
+			--bindir=/bin \
+			--sbindir=/sbin \
+			--libdir=$(TARGET_LIB_DIR) \
+		; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(REMOVE)/ethtool-$(ETHTOOL_VER)
+	touch $@
+
 $(D)/ca-bundle: $(ARCHIVE)/cacert.pem | $(TARGET_DIR)
 	install -D -m 644 $(ARCHIVE)/cacert.pem $(TARGET_DIR)/$(CA_BUNDLE_DIR)/$(CA_BUNDLE)
 	touch $@

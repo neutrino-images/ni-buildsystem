@@ -82,6 +82,7 @@ ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd51))
 	make -j$(NUM_CPUS) parted
 	make -j$(NUM_CPUS) openvpn
 	make -j$(NUM_CPUS) openssh
+	make -j$(NUM_CPUS) ethtool
   ifneq ($(BOXMODEL), kronos_v2)
 	make -j$(NUM_CPUS) bash
 	make -j$(NUM_CPUS) iperf
