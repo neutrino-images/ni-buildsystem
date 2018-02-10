@@ -4,6 +4,8 @@
 
 SERVICE="$1"
 ACTION="$2"
+shift 2
+OPTIONS="$*"
 
 usage() {
 	echo "usage: service <name> <action>"
@@ -17,8 +19,8 @@ test -z "$ACTION" && usage;
 
 for i in /etc/init.d/$SERVICE /var/etc/init.d/$SERVICE; do
 	if [ -x "$i" ]; then
-		LOGINFO "running $i $ACTION"
-		"$i" "$ACTION"
+		LOGINFO "running $i $ACTION $OPTIONS"
+		"$i" "$ACTION" "$OPTIONS"
 		exit $?
 	fi
 done
