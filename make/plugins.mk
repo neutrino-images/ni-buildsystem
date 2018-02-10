@@ -12,6 +12,7 @@ $(T):
 BIN		= $(TARGET_DIR)/bin
 ETCINIT		= $(TARGET_DIR)/etc/init.d
 LIBPLUG		= $(TARGET_DIR)/lib/tuxbox/plugins
+SBIN		= $(TARGET_DIR)/sbin
 SHAREICONS	= $(TARGET_DIR)/share/tuxbox/neutrino/icons
 SHAREFLEX	= $(TARGET_DIR)/share/tuxbox/neutrino/flex
 SHAREPLUG	= $(TARGET_DIR)/share/tuxbox/neutrino/plugins
@@ -25,6 +26,7 @@ VARCONF		= $(TARGET_DIR)/var/tuxbox/config
 $(BIN) \
 $(ETCINIT) \
 $(LIBPLUG) \
+$(SBIN) \
 $(SHAREICONS) \
 $(SHAREFLEX) \
 $(SHAREPLUG) \
@@ -81,6 +83,13 @@ plugins-hd2: # nothing to do
 
 plugins-hd51: \
 	showiframe
+
+################
+### scripts  ###
+################
+
+scripts:
+	install -m755 $(IMAGEFILES)/scripts/service $(SBIN)
 
 #####################
 ### init-scripts  ###
