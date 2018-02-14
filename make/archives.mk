@@ -255,7 +255,7 @@ $(ARCHIVE)/libsigc++-$(LIBSIGCPP_VER).tar.xz:
 	$(WGET) http://ftp.gnome.org/pub/GNOME/sources/libsigc++/$(LIBSIGCPP_MAJOR).$(LIBSIGCPP_MINOR)/libsigc++-$(LIBSIGCPP_VER).tar.xz
 
 LUA_ABIVER=5.2
-LUA_VER=$(LUA_ABIVER).3
+LUA_VER=$(LUA_ABIVER).4
 $(ARCHIVE)/lua-$(LUA_VER).tar.gz:
 	$(WGET) http://www.lua.org/ftp/lua-$(LUA_VER).tar.gz
 
