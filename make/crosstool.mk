@@ -63,7 +63,7 @@ crosstool-arm-hd2: CROSS_DIR-check $(ARCHIVE)/gcc-linaro-$(GCC_VER).tar.xz $(SOU
 	git clone https://github.com/crosstool-ng/crosstool-ng && \
 	cd crosstool-ng && \
 	git checkout 1dbb06f2 && \
-	cp -a $(PATCHES)/crosstool-ng/gcc/* $(BUILD_TMP)/crosstool-ng/patches/gcc/linaro-4.9-2017.01 && \
+	cp -a $(PATCHES)/crosstool-ng/gcc/* $(BUILD_TMP)/crosstool-ng/patches/gcc/linaro-6.3-2017.02 && \
 	unset CONFIG_SITE LIBRARY_PATH CPATH C_INCLUDE_PATH PKG_CONFIG_PATH CPLUS_INCLUDE_PATH INCLUDE && \
 	cd $(BUILD_TMP)/crosstool-ng && \
 		mkdir -p $(BUILD_TMP)/crosstool-ng/targets/src/ && \
@@ -96,6 +96,7 @@ crosstool-arm-hd51: CROSS_DIR-check
 	git clone https://github.com/crosstool-ng/crosstool-ng && \
 	cd crosstool-ng && \
 	git checkout 1dbb06f2 && \
+	cp -a $(PATCHES)/crosstool-ng/gcc/* $(BUILD_TMP)/crosstool-ng/patches/gcc/linaro-6.3-2017.02 && \
 	unset CONFIG_SITE LIBRARY_PATH CPATH C_INCLUDE_PATH PKG_CONFIG_PATH CPLUS_INCLUDE_PATH INCLUDE && \
 	cd $(BUILD_TMP)/crosstool-ng && \
 		mkdir -p $(BUILD_TMP)/crosstool-ng/targets/src/ && \
