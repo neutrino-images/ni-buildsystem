@@ -159,7 +159,7 @@ LIBICONV_VER=1.13.1
 $(ARCHIVE)/libiconv-$(LIBICONV_VER).tar.gz:
 	$(WGET) http://ftp.gnu.org/gnu/libiconv/libiconv-$(LIBICONV_VER).tar.gz
 
-LIBJPEG-TURBO_VER=1.5.2
+LIBJPEG-TURBO_VER=1.5.3
 $(ARCHIVE)/libjpeg-turbo-$(LIBJPEG-TURBO_VER).tar.gz:
 	$(WGET) https://sourceforge.net/projects/libjpeg-turbo/files/$(LIBJPEG-TURBO_VER)/libjpeg-turbo-$(LIBJPEG-TURBO_VER).tar.gz
 
@@ -167,7 +167,7 @@ GIFLIB_VER=5.1.4
 $(ARCHIVE)/giflib-$(GIFLIB_VER).tar.bz2:
 	$(WGET) http://sourceforge.net/projects/giflib/files/giflib-$(GIFLIB_VER).tar.bz2
 
-LIBCURL_VER=7.56.1
+LIBCURL_VER=7.58.0
 $(ARCHIVE)/curl-$(LIBCURL_VER).tar.bz2:
 	$(WGET) http://curl.haxx.se/download/curl-$(LIBCURL_VER).tar.bz2
 
@@ -179,7 +179,7 @@ FBSHOT_VER=0.3
 $(ARCHIVE)/fbshot-$(FBSHOT_VER).tar.gz:
 	$(WGET) http://distro.ibiblio.org/amigolinux/download/Utils/fbshot/fbshot-$(FBSHOT_VER).tar.gz
 
-FREETYPE_VER=2.8.1
+FREETYPE_VER=2.9
 $(ARCHIVE)/freetype-$(FREETYPE_VER).tar.bz2:
 	$(WGET) https://sourceforge.net/projects/freetype/files/freetype2/$(FREETYPE_VER)/freetype-$(FREETYPE_VER).tar.bz2
 
@@ -226,8 +226,8 @@ GDB_VER=7.12.1
 $(ARCHIVE)/gdb-$(GDB_VER).tar.xz:
 	$(WGET) http://ftp.gnu.org/gnu/gdb/gdb-$(GDB_VER).tar.xz
 
-NANO_VER=2.8.7
-NANO_VER_MAJ=2.8
+NANO_VER=2.9.3
+NANO_VER_MAJ=2.9
 $(ARCHIVE)/nano-$(NANO_VER).tar.gz:
 	$(WGET) http://www.nano-editor.org/dist/v$(NANO_VER_MAJ)/nano-$(NANO_VER).tar.gz
 
