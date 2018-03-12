@@ -62,7 +62,6 @@ endif
 	cd $(SOURCE_DIR)/$(NI_RTMPDUMP) && git pull
 	cd $(SOURCE_DIR)/$(NI_STREAMRIPPER) && git pull
 
-
 update-ni:
 	make update-self
 	make update-neutrino

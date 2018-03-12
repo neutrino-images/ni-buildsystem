@@ -51,7 +51,7 @@ $(SOURCE_DIR)/$(NI_LIBSTB-HAL-NEXT):
 	cd $(SOURCE_DIR) && \
 		git clone $(NI_GIT)/$(notdir $@).git
 	cd $@ && \
-		git remote add $(TANGO_REMOTE_REPO) https://github.com/TangoCash/libstb-hal-cst-next.git && \
+		git remote add $(TANGO_REMOTE_REPO) https://github.com/TangoCash/libstb-hal-tangos.git && \
 		git fetch $(TANGO_REMOTE_REPO)
 
 $(SOURCE_DIR)/$(NI_LIBCOOLSTREAM):
