@@ -63,7 +63,7 @@ $(D)/libupnp: $(ARCHIVE)/libupnp-$(LIBUPNP_VER).tar.bz2 | $(TARGET_DIR)
 	
 $(D)/libdvbsi: | $(TARGET_DIR)
 	$(REMOVE)/libdvbsi++
-	git clone git://git.opendreambox.org/git/obi/libdvbsi++.git $(BUILD_TMP)/libdvbsi++
+	git clone git://github.com/OpenDMM/libdvbsi-.git $(BUILD_TMP)/libdvbsi++
 	cd $(BUILD_TMP)/libdvbsi++; \
 		$(PATCH)/libdvbsi++-fix-sectionLength-check.patch; \
 		$(PATCH)/libdvbsi++-content_identifier_descriptor.patch; \
