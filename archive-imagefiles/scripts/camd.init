@@ -9,6 +9,7 @@ F_NEWCS=".newcs"
 F_OSEMU=".osemu"
 F_DOSCAM=".doscam"
 F_OSCAM=".oscam"
+F_CCCAM=".cccam"
 F_NCAM=".ncam"
 F_GBOX=".gbox"
 F_CS2GBOX=".cs2gbox"
@@ -180,6 +181,26 @@ NCAM_Action()
 	esac
 }
 
+CCCAM_Action()
+{
+	case $1 in
+		"start" )
+			SHOWINFO "start cccam"
+			/var/bin/cccam &
+			sleep 10
+		;;
+		"stop" )
+			SHOWINFO "stop ccam"
+			killall cccam
+
+		* )
+			CCCAM_Action "stop"
+			sleep 1
+			CCCAM_Action "start"
+		;;
+	esac
+}
+
 GBOX_Action()
 {
 	case $1 in
@@ -249,6 +270,9 @@ CAMD_Action()
 		"ncam")
 			NCAM_Action $ACTION
 		;;
+		"cccam")
+			CCCAM_Action $ACTION
+		;;
 		"newcs")
 			NEWCS_Action $ACTION
 		;;
@@ -278,6 +302,10 @@ CAMD_Action()
 
 			if [ -e $FLAGDIR/$F_NCAM ]; then
 				NCAM_Action $ACTION
+			fi
+
+			if [ -e $FLAGDIR/$F_CCCAM ]; then
+				CCCAM_Action $ACTION
 			fi
 
 			if [ -e $FLAGDIR/$F_NEWCS ]; then
