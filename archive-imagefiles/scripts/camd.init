@@ -187,12 +187,12 @@ CCCAM_Action()
 		"start" )
 			SHOWINFO "start cccam"
 			/var/bin/cccam &
-			sleep 10
+			sleep 5
 		;;
 		"stop" )
-			SHOWINFO "stop ccam"
+			SHOWINFO "stop cccam"
 			killall cccam
-
+		;;
 		* )
 			CCCAM_Action "stop"
 			sleep 1
