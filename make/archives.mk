@@ -147,7 +147,7 @@ LIBVORBISIDEC_VER=1.0.2+svn18153
 $(ARCHIVE)/libvorbisidec_$(LIBVORBISIDEC_VER).orig.tar.gz:
 	$(WGET) http://ftp.de.debian.org/debian/pool/main/libv/libvorbisidec/libvorbisidec_$(LIBVORBISIDEC_VER).orig.tar.gz
 
-LIBOGG_VER=1.3.2
+LIBOGG_VER=1.3.3
 $(ARCHIVE)/libogg-$(LIBOGG_VER).tar.xz:
 	$(WGET) http://downloads.xiph.org/releases/ogg/libogg-$(LIBOGG_VER).tar.xz
 
