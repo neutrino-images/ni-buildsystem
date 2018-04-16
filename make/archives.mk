@@ -20,7 +20,7 @@ PUGIXML_VER=1.8
 $(ARCHIVE)/pugixml-$(PUGIXML_VER).tar.gz:
 	$(WGET) http://github.com/zeux/pugixml/releases/download/v$(PUGIXML_VER)/pugixml-$(PUGIXML_VER).tar.gz
 
-LIBXML2_VER=2.9.7
+LIBXML2_VER=2.9.8
 $(ARCHIVE)/libxml2-$(LIBXML2_VER).tar.gz:
 	$(WGET) ftp://xmlsoft.org/libxml2/libxml2-$(LIBXML2_VER).tar.gz
 
