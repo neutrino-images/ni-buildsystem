@@ -69,7 +69,8 @@ plugins-all: $(D)/neutrino \
 	userbouquets \
 	add-locale \
 	favorites2bin \
-	localtv \
+	LocalTV \
+	webtv-scripts \
 	neutrino-mediathek \
 	openvpn-setup \
 	oscammon \
@@ -246,13 +247,16 @@ neutrino-mediathek: $(LIBPLUG)
 
 #scripts-lua
 add-locale \
-localtv \
+LocalTV \
 userbouquets \
 stb-startup \
 netzkino \
 mtv \
 favorites2bin: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(LIBPLUG)
 	install -m755 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/$@/* $(LIBPLUG)/
+
+webtv-scripts: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(SHAREWEBTV)
+	install -m755 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/webtv/* $(SHAREWEBTV)/
 
 #getrc
 getrc: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(BIN)/getrc
