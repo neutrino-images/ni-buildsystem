@@ -615,9 +615,9 @@ $(D)/samba-hd2: $(D)/zlib $(ARCHIVE)/samba-$(SAMBA36_VER).tar.gz | $(TARGET_DIR)
 	touch $@
 
 $(D)/dropbear: $(D)/zlib $(ARCHIVE)/dropbear-$(DROPBEAR_VER).tar.bz2 | $(TARGET_DIR)
+	$(REMOVE)/dropbear-$(DROPBEAR_VER)
 	$(UNTAR)/dropbear-$(DROPBEAR_VER).tar.bz2
 	cd $(BUILD_TMP)/dropbear-$(DROPBEAR_VER) && \
-		$(PATCH)/dropbear-fix-paths.patch && \
 		$(CONFIGURE) \
 			--prefix= \
 			--mandir=/.remove \
@@ -627,8 +627,12 @@ $(D)/dropbear: $(D)/zlib $(ARCHIVE)/dropbear-$(DROPBEAR_VER).tar.bz2 | $(TARGET_
 			--disable-loginfunc \
 			--disable-pam \
 			&& \
-		sed -i 's:.*\(#define NO_FAST_EXPTMOD\).*:\1:' options.h && \
-		sed -i 's:^#define DROPBEAR_SMALL_CODE::' options.h && \
+		# disable SMALL_CODE define && \
+		sed -i 's|^\(#define DROPBEAR_SMALL_CODE\).*|\1 0|' default_options.h && \
+		# fix PATH define && \
+		sed -i 's|^\(#define DEFAULT_PATH\).*|\1 "/sbin:/bin:/var/bin"|' default_options.h && \
+		# remove /usr prefix && \
+		sed -i 's|/usr/|/|g' default_options.h && \
 		$(MAKE) PROGRAMS="dropbear dbclient dropbearkey scp" SCPPROGRESS=1 && \
 		$(MAKE) PROGRAMS="dropbear dbclient dropbearkey scp" install DESTDIR=$(TARGET_DIR)
 	install -D -m 0755 $(IMAGEFILES)/scripts/dropbear.init $(TARGET_DIR)/etc/init.d/dropbear

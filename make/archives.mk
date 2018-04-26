@@ -171,7 +171,7 @@ LIBCURL_VER=7.59.0
 $(ARCHIVE)/curl-$(LIBCURL_VER).tar.bz2:
 	$(WGET) http://curl.haxx.se/download/curl-$(LIBCURL_VER).tar.bz2
 
-DROPBEAR_VER=2017.75
+DROPBEAR_VER=2018.76
 $(ARCHIVE)/dropbear-$(DROPBEAR_VER).tar.bz2:
 	$(WGET) http://matt.ucc.asn.au/dropbear/releases/dropbear-$(DROPBEAR_VER).tar.bz2
 
