@@ -88,7 +88,7 @@ FUSE_VER=2.9.7
 $(ARCHIVE)/fuse-$(FUSE_VER).tar.gz:
 	$(WGET) https://github.com/libfuse/libfuse/releases/download/fuse-$(FUSE_VER)/fuse-$(FUSE_VER).tar.gz
 
-OPENVPN_VER=2.4.5
+OPENVPN_VER=2.4.6
 $(ARCHIVE)/openvpn-$(OPENVPN_VER).tar.xz:
 	$(WGET) http://swupdate.openvpn.org/community/releases/openvpn-$(OPENVPN_VER).tar.xz
 
