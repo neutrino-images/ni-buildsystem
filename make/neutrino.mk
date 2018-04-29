@@ -1,5 +1,10 @@
 # makefile to build NEUTRINO
 
+YOUTUBE_DEV_KEY ?= AIzaSyBLdZe7M3rpNMZqSj-3IEvjbb2hATWJIdM
+OMDB_API_KEY ?= 20711f9e
+TMDB_DEV_KEY ?= 7270f1b571c4ecbb5b204ddb7f8939b1
+SHOUTCAST_DEV_KEY ?= fa1669MuiRPorUBw
+
 N_DEPS = libcurl freetype libjpeg giflib ffmpeg openthreads openssl libdvbsi ntp libsigc++ luaposix pugixml libfribidi
 
 LH_DEPS = ffmpeg openthreads
@@ -123,6 +128,11 @@ $(N_OBJDIR)/config.status: $(N_DEPS) $(MAKE_DIR)/neutrino.mk
 			--enable-mdev \
 			--enable-pip \
 			--enable-pugixml \
+			\
+			--with-youtube-dev-key="$(YOUTUBE_DEV_KEY)" \
+			--with-omdb-api-key="$(OMDB_API_KEY)" \
+			--with-tmdb-dev-key="$(TMDB_DEV_KEY)" \
+			--with-shoutcast-dev-key="$(SHOUTCAST_DEV_KEY)" \
 			\
 			$(N_CONFIGURE_LIBSTB-HAL) \
 			--with-tremor \
