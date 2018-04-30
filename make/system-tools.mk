@@ -626,7 +626,14 @@ $(D)/dropbear: $(D)/zlib $(ARCHIVE)/dropbear-$(DROPBEAR_VER).tar.bz2 | $(TARGET_
 			--disable-wtmpx \
 			--disable-loginfunc \
 			--disable-pam \
+			--disable-zlib \
+			--disable-harden \
+			--enable-bundled-libtom \
 			&& \
+		# Ensure that dropbear doesn't use crypt() when it's not available && \
+		echo '#if !HAVE_CRYPT'                          >> localoptions.h && \
+		echo '#define DROPBEAR_SVR_PASSWORD_AUTH 0'     >> localoptions.h && \
+		echo '#endif'                                   >> localoptions.h && \
 		# disable SMALL_CODE define && \
 		sed -i 's|^\(#define DROPBEAR_SMALL_CODE\).*|\1 0|' default_options.h && \
 		# fix PATH define && \
