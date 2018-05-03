@@ -30,7 +30,7 @@ VERSION=0.40a
 
 # Changelog:
 #
-# 0.40a by tewsbso (NI-Team)
+# 0.40a by tewsbo (NI-Team)
 #	-fix msgbox-calls for larger OSD-resolutions
 #
 # 0.40 by vanhofen (NI-Team)
@@ -45,7 +45,7 @@ VERSION=0.40a
 #	 To search for every show that contains "Mikrokosmos" in EPG-data use:
 #		Das Erste HD;*;*,+Mikrokosmos;R
 #
-# 0.38b by tewsbso (NI-Team)
+# 0.38b by tewsbo (NI-Team)
 #	-find correct Sky Cinema channel
 #	 add exclude channels: Action Comedy Emotion Family Hits Nostalgie
 #
@@ -2322,7 +2322,7 @@ parse_sky_cinema() {
 	end_ifs_block
 
 	sky_start_sec_add=0
-	sky_exclude_channels="Active Action Comedy Emotion Family Hits Nostalgie"
+	sky_exclude_channels="Active Action Comedy Emotion Family Hits Nostalgie Uno"
 
 	case $(echo $sky_cinema | awk '{print toupper($0)}') in
 		SD)
