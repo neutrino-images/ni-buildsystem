@@ -163,3 +163,21 @@ $(D)/python: $(ARCHIVE)/Python-$(PYTHON_VER).tgz | $(TARGET_DIR)
 		chmod +w $(TARGET_LIB_DIR)/libpython*
 		install -m755 $(BUILD_TMP)/Python-$(PYTHON_VER)/_install/bin/python $(TARGET_DIR)/bin/
 	$(REMOVE)/Python-$(PYTHON_VER)
+
+$(D)/astra-sm: $(D)/openssl | $(TARGET_DIR)
+	# workaround unrecognized command line options
+	make astra-sm-no-march-cflags TARGET_MARCH_CFLAGS=""
+
+$(D)/astra-sm-no-march-cflags:
+	$(REMOVE)/astra-sm
+	cd $(BUILD_TMP); \
+	git clone https://gitlab.com/crazycat69/astra-sm.git astra-sm; \
+	cd astra-sm; \
+		autoreconf -fi; \
+		$(CONFIGURE) \
+			--prefix= \
+			--without-lua-compiler \
+		; \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(REMOVE)/astra-sm
+	touch $@
