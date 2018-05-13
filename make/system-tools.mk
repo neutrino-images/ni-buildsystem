@@ -1031,6 +1031,30 @@ $(D)/ethtool: $(ARCHIVE)/$(ETHTOOL_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/ethtool-$(ETHTOOL_VER)
 	touch $@
 
+$(D)/gptfdisk: $(D)/popt $(D)/e2fsprogs $(ARCHIVE)/$(GPTFDISK_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/gptfdisk-$(GPTFDISK_VER)
+	$(UNTAR)/$(GPTFDISK_SOURCE)
+	cd $(BUILD_TMP)/gptfdisk-$(GPTFDISK_VER); \
+		sed -i 's|^CC=.*|CC=$(TARGET)-gcc|' Makefile; \
+		sed -i 's|^CXX=.*|CXX=$(TARGET)-g++|' Makefile; \
+		$(BUILDENV) \
+		$(MAKE) sgdisk; \
+	install -m 755 -D sgdisk $(TARGET_DIR)/sbin/
+	#$(REMOVE)/gptfdisk-$(GPTFDISK_VER)
+	touch $@
+
+$(D)/popt: $(ARCHIVE)/$(POPT_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/popt-$(POPT_VER)
+	$(UNTAR)/$(POPT_SOURCE)
+	set -e; cd $(BUILD_TMP)/popt-$(POPT_VER); \
+		$(CONFIGURE) \
+			--prefix= \
+		; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(REMOVE)/popt-$(POPT_VER)
+	touch $@
+
 $(D)/ca-bundle: $(ARCHIVE)/cacert.pem | $(TARGET_DIR)
 	install -D -m 644 $(ARCHIVE)/cacert.pem $(TARGET_DIR)/$(CA_BUNDLE_DIR)/$(CA_BUNDLE)
 	touch $@

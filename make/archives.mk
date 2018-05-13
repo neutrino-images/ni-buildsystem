@@ -382,5 +382,15 @@ ETHTOOL_SOURCE = ethtool-$(ETHTOOL_VER).tar.xz
 $(ARCHIVE)/$(ETHTOOL_SOURCE):
 	$(WGET) https://www.kernel.org/pub/software/network/ethtool/$(ETHTOOL_SOURCE)
 
+GPTFDISK_VER = 1.0.3
+GPTFDISK_SOURCE = gptfdisk-$(GPTFDISK_VER).tar.gz
+$(ARCHIVE)/$(GPTFDISK_SOURCE):
+	$(WGET) http://sourceforge.net/projects/gptfdisk/files/gptfdisk/$(GPTFDISK_VER)/$(GPTFDISK_SOURCE)
+
+POPT_VER = 1.16
+POPT_SOURCE = popt-$(POPT_VER).tar.gz
+$(ARCHIVE)/$(POPT_SOURCE):
+	$(WGET) http://rpm5.org/files/popt/$(POPT_SOURCE)
+
 $(ARCHIVE)/cacert.pem:
 	$(WGET) https://curl.haxx.se/ca/cacert.pem
