@@ -350,16 +350,9 @@ $(D)/libgd2: $(D)/zlib $(D)/libpng $(D)/libjpeg $(D)/freetype $(ARCHIVE)/libgd-$
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gdlib.pc
 	touch $@
 
-DPF-AX_REV=54
-$(ARCHIVE)/dpf-ax_svn$(DPF-AX_REV).tar.gz:
-	cd $(BUILD_TMP); \
-		svn co -r$(DPF-AX_REV) https://dpf-ax.svn.sourceforge.net/svnroot/dpf-ax/trunk dpf-ax_svn$(DPF-AX_REV); \
-		tar cvpzf $@ dpf-ax_svn$(DPF-AX_REV)
-	$(REMOVE)/dpf-ax_svn$(DPF-AX_REV)
-
-$(D)/libdpf: $(D)/libusb_compat $(ARCHIVE)/dpf-ax_svn$(DPF-AX_REV).tar.gz | $(TARGET_DIR)
-	$(UNTAR)/dpf-ax_svn$(DPF-AX_REV).tar.gz
-	cd $(BUILD_TMP)/dpf-ax_svn$(DPF-AX_REV)/dpflib && \
+$(D)/libdpf: $(D)/libusb_compat $(ARCHIVE)/$(LIBDPF_SOURCE) | $(TARGET_DIR)
+	$(UNTAR)/$(LIBDPF_SOURCE)
+	cd $(BUILD_TMP)/dpf-ax-git-$(LIBDPF_VER)/dpflib && \
 		$(PATCH)/libdpf-crossbuild.diff; \
 		make libdpf.a CC=$(TARGET)-gcc PREFIX=$(TARGET_DIR); \
 		mkdir -p $(TARGET_INCLUDE_DIR)/libdpf; \
@@ -367,7 +360,7 @@ $(D)/libdpf: $(D)/libusb_compat $(ARCHIVE)/dpf-ax_svn$(DPF-AX_REV).tar.gz | $(TA
 		cp ../include/spiflash.h $(TARGET_INCLUDE_DIR)/libdpf/; \
 		cp ../include/usbuser.h $(TARGET_INCLUDE_DIR)/libdpf/; \
 		cp libdpf.a $(TARGET_LIB_DIR)/
-	$(REMOVE)/dpf-ax_svn$(DPF-AX_REV)
+	$(REMOVE)/dpf-ax-git-$(LIBDPF_VER)
 	touch $@
 
 $(D)/lzo: $(ARCHIVE)/lzo-$(LZO_VER).tar.gz | $(TARGET_DIR)
