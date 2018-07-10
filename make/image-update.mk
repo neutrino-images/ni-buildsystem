@@ -196,9 +196,9 @@ pathauf_HD-19:
 	# we should try to keep this array table up-to-date ;-)
 	#
 	DIR[0]="#directory"	&& DESC[0]="#description"			&& DATE[0]="#date"	 ; \
-	DIR[1]="matze-19"	&& DESC[1]="Matze-Settings 19.2"		&& DATE[1]="10.05.2018"	 ; \
-	DIR[2]="matze-19-13"	&& DESC[2]="Matze-Settings 19.2, 13.0"		&& DATE[2]="10.05.2018"	 ; \
-	DIR[3]="pathauf_HD-19"	&& DESC[3]="pathAuf-HD+-Settings 19.2"		&& DATE[3]="14.05.2017"	 ; \
+	DIR[1]="matze-19"	&& DESC[1]="Matze-Settings 19.2"		&& DATE[1]="08.07.2018"	 ; \
+	DIR[2]="matze-19-13"	&& DESC[2]="Matze-Settings 19.2, 13.0"		&& DATE[2]="08.07.2018"	 ; \
+	DIR[3]="pathauf_HD-19"	&& DESC[3]="pathAuf-HD+-Settings 19.2"		&& DATE[3]="29.06.2018"	 ; \
 	#; \
 	i=0; \
 	for dir in $${DIR[*]}; do \

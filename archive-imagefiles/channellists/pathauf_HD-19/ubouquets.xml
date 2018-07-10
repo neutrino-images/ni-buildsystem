@@ -36,12 +36,13 @@
 		<S i="14" t="4" on="85" s="192" frq="12032" n="Sky Cinema Emotion"/>
 		<S i="6e" t="d" on="85" s="192" frq="11992" n="Sky Atlantic HD"/>
 		<S i="90" t="10" on="85" s="192" frq="11798" n="Sky Atlantic +1 HD"/>
-		<S i="7c" t="a" on="85" s="192" frq="11332" n="Fox HD"/>
+		<S i="7c" t="c" on="85" s="192" frq="12304" n="Fox HD"/>
 		<S i="7b" t="b" on="85" s="192" frq="12382" n="TNT Serie HD"/>
 		<S i="88" t="e" on="85" s="192" frq="11876" n="TNT Comedy HD"/>
 		<S i="65" t="e" on="85" s="192" frq="11876" n="Universal HD"/>
 		<S i="195" t="6" on="85" s="192" frq="11914" n="TNT Film (TCM)"/>
 		<S i="93" t="8" on="85" s="192" frq="12070" n="Sky 1 HD"/>
+		<S i="90" t="e" on="85" s="192" frq="11876" n="Sky 1 +1 HD"/>
 		<S i="17" t="4" on="85" s="192" frq="12032" n="Sky Krimi"/>
 		<S i="7f" t="d" on="85" s="192" frq="11992" n="13th Street HD"/>
 		<S i="91" t="9" on="85" s="192" frq="11171" n="Sky Arts HD"/>
@@ -58,16 +59,14 @@
 		<S i="81" t="6" on="85" s="192" frq="11914" n="Sky Sport 1 HD"/>
 		<S i="72" t="d" on="85" s="192" frq="11992" n="Sky Sport 2 HD"/>
 		<S i="10c" t="6" on="85" s="192" frq="11914" n="Sky Sport 3 HD"/>
-		<S i="66" t="a" on="85" s="192" frq="11332" n="Sky Sport Fanzone HD"/>
 		<S i="69" t="c" on="85" s="192" frq="12304" n="Sky Sport Bundesliga 1 HD"/>
 		<S i="10b" t="6" on="85" s="192" frq="11914" n="Sky Sport Bundesliga 2 HD"/>
 		<S i="115" t="d" on="85" s="192" frq="11992" n="Sky Sport Bundesliga 3 HD"/>
 		<S i="8f" t="9" on="85" s="192" frq="11171" n="Sky Sport Austria HD"/>
 		<S i="1581" t="41f" on="1" s="192" frq="10803" n="SPORT1 HD"/>
-		<S i="7a" t="b" on="85" s="192" frq="12382" n="Sport1+ HD"/>
-		<S i="77" t="a" on="85" s="192" frq="11332" n="Sport1 US HD"/>
 		<S i="84" t="b" on="85" s="192" frq="12382" n="Eurosport 1 HD"/>
 		<S i="6d" t="9" on="85" s="192" frq="11171" n="Eurosport 2 HD"/>
+		<S i="30d7" t="413" on="1" s="192" frq="11112" n="Eurosport 2 HD Xtra"/>
 		<S i="10e" t="6" on="85" s="192" frq="11914" n="Eurosport360HD 1"/>
 		<S i="118" t="d" on="85" s="192" frq="11992" n="Eurosport360HD 2"/>
 	</Bouquet>
@@ -81,7 +80,7 @@
 		<S i="134" t="8" on="85" s="192" frq="12070" n="Sky Sport 7 HD"/>
 		<S i="13e" t="9" on="85" s="192" frq="11171" n="Sky Sport 8 HD"/>
 		<S i="148" t="10" on="85" s="192" frq="11798" n="Sky Sport 9 HD"/>
-		<S i="152" t="a" on="85" s="192" frq="11332" n="Sky Sport 10 HD"/>
+		<S i="152" t="9" on="85" s="192" frq="11171" n="Sky Sport 10 HD"/>
 		<S i="102" t="e" on="85" s="192" frq="11876" n="Sky Sport 11 HD"/>
 	</Bouquet>
 	<Bouquet name="Sky Sport Bundesliga Feeds">
@@ -93,7 +92,7 @@
 		<S i="133" t="8" on="85" s="192" frq="12070" n="Sky Sport Bundesliga 6 HD"/>
 		<S i="13d" t="9" on="85" s="192" frq="11171" n="Sky Sport Bundesliga 7 HD"/>
 		<S i="147" t="10" on="85" s="192" frq="11798" n="Sky Sport Bundesliga 8 HD"/>
-		<S i="151" t="a" on="85" s="192" frq="11332" n="Sky Sport Bundesliga 9 HD"/>
+		<S i="151" t="9" on="85" s="192" frq="11171" n="Sky Sport Bundesliga 9 HD"/>
 		<S i="101" t="e" on="85" s="192" frq="11876" n="Sky Sport Bundesliga 10 HD"/>
 	</Bouquet>
 	<Bouquet name="Eurosport360HD Feeds">
@@ -104,16 +103,15 @@
 		<S i="136" t="8" on="85" s="192" frq="12070" n="Eurosport360HD 5"/>
 		<S i="140" t="9" on="85" s="192" frq="11171" n="Eurosport360HD 6"/>
 		<S i="14a" t="10" on="85" s="192" frq="11798" n="Eurosport360HD 7"/>
-		<S i="154" t="a" on="85" s="192" frq="11332" n="Eurosport360HD 8"/>
+		<S i="154" t="9" on="85" s="192" frq="11171" n="Eurosport360HD 8"/>
 		<S i="104" t="e" on="85" s="192" frq="11876" n="Eurosport360HD 9"/>
 	</Bouquet>
 	<Bouquet name="Dokus und Reportagen">
 		<S i="82" t="6" on="85" s="192" frq="11914" n="Discovery HD"/>
 		<S i="71" t="b" on="85" s="192" frq="12382" n="History HD"/>
-		<S i="89" t="a" on="85" s="192" frq="11332" n="Spiegel Geschichte HD"/>
+		<S i="89" t="10" on="85" s="192" frq="11798" n="Spiegel Geschichte HD"/>
 		<S i="76" t="6" on="85" s="192" frq="11914" n="Nat Geo Wild HD"/>
 		<S i="70" t="d" on="85" s="192" frq="11992" n="NatGeo HD"/>
-		<S i="39" t="f" on="85" s="192" frq="10921" n="unknown (0x000F_0x0039)"/>
 		<S i="80" t="e" on="85" s="192" frq="11876" n="E! Entertainm. HD"/>
 		<S i="314d" t="459" on="1" s="192" frq="12633" n="MEDIA BROADCAST - Test 3"/>
 		<S i="4465" t="453" on="1" s="192" frq="12545" n="kabel eins Doku"/>
