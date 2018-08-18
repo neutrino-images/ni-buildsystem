@@ -84,7 +84,7 @@ DJMOUNT_VER=0.71
 $(ARCHIVE)/djmount-$(DJMOUNT_VER).tar.gz:
 	$(WGET) http://sourceforge.net/projects/djmount/files/djmount/$(DJMOUNT_VER)/djmount-$(DJMOUNT_VER).tar.gz
 
-FUSE_VER=2.9.7
+FUSE_VER=2.9.8
 $(ARCHIVE)/fuse-$(FUSE_VER).tar.gz:
 	$(WGET) https://github.com/libfuse/libfuse/releases/download/fuse-$(FUSE_VER)/fuse-$(FUSE_VER).tar.gz
 
