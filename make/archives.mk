@@ -28,7 +28,7 @@ NFS-UTILS_VER=2.2.1
 $(ARCHIVE)/nfs-utils-$(NFS-UTILS_VER).tar.bz2:
 	$(WGET) http://sourceforge.net/projects/nfs/files/nfs-utils/$(NFS-UTILS_VER)/nfs-utils-$(NFS-UTILS_VER).tar.bz2
 
-RPCBIND_VER=0.2.4
+RPCBIND_VER=1.2.5
 $(ARCHIVE)/rpcbind-$(RPCBIND_VER).tar.bz2:
 	$(WGET) http://sourceforge.net/projects/rpcbind/files/rpcbind/$(RPCBIND_VER)/rpcbind-$(RPCBIND_VER).tar.bz2
 
