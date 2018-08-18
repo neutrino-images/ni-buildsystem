@@ -52,9 +52,9 @@ IPERF_VER=3.1.3
 $(ARCHIVE)/iperf-$(IPERF_VER)-source.tar.gz:
 	$(WGET) https://iperf.fr/download/source/iperf-$(IPERF_VER)-source.tar.gz
 
-HDIDLE_VER=1.04
-$(ARCHIVE)/hd-idle-$(HDIDLE_VER).tgz:
-	$(WGET) http://downloads.sourceforge.net/project/hd-idle/hd-idle-$(HDIDLE_VER).tgz
+HD-IDLE_VER=1.05
+$(ARCHIVE)/hd-idle-$(HD-IDLE_VER).tgz:
+	$(WGET) http://downloads.sourceforge.net/project/hd-idle/hd-idle-$(HD-IDLE_VER).tgz
 
 NTP_VER=4.2.8
 $(ARCHIVE)/ntp-$(NTP_VER).tar.gz:

@@ -155,8 +155,8 @@ $(D)/hdparm: $(ARCHIVE)/hdparm-$(HDPARM_VER).tar.gz | $(TARGET_DIR)
 	$(REMOVE)/hdparm-$(HDPARM_VER)
 	touch $@
 
-$(D)/hd-idle: $(ARCHIVE)/hd-idle-$(HDIDLE_VER).tgz | $(TARGET_DIR)
-	$(UNTAR)/hd-idle-$(HDIDLE_VER).tgz
+$(D)/hd-idle: $(ARCHIVE)/hd-idle-$(HD-IDLE_VER).tgz | $(TARGET_DIR)
+	$(UNTAR)/hd-idle-$(HD-IDLE_VER).tgz
 	pushd $(BUILD_TMP)/hd-idle && \
 		$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) -o hd-idle hd-idle.c && \
 	install -m755 hd-idle $(BIN)/
