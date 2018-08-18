@@ -340,6 +340,7 @@ endef
 # apply patch sets
 define apply_patches
 	for i in $(1); do \
+		echo -e "$(TERM_YELLOW)Applying $$i$(TERM_NORMAL)"; \
 		if [ -d $$i ]; then \
 			for p in $$i/*; do \
 				if [ $${p:0:1} == "/" ]; then \
