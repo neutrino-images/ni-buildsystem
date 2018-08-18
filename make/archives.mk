@@ -40,7 +40,7 @@ STRACE_VER=4.21
 $(ARCHIVE)/strace-$(STRACE_VER).tar.xz:
 	$(WGET) http://sourceforge.net/projects/strace/files/strace/$(STRACE_VER)/strace-$(STRACE_VER).tar.xz
 
-MTD-UTILS_VER=2.0.1
+MTD-UTILS_VER=2.0.2
 $(ARCHIVE)/mtd-utils-$(MTD-UTILS_VER).tar.bz2:
 	$(WGET) ftp://ftp.infradead.org/pub/mtd-utils/mtd-utils-$(MTD-UTILS_VER).tar.bz2
 
