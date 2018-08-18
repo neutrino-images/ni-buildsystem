@@ -102,7 +102,7 @@ OPENSSH_VER=7.7p1
 $(ARCHIVE)/openssh-$(OPENSSH_VER).tar.gz:
 	$(WGET) https://ftp.fau.de/pub/OpenBSD/OpenSSH/portable/openssh-$(OPENSSH_VER).tar.gz
 
-INADYN_VER=2.2.1
+INADYN_VER=2.4
 $(ARCHIVE)/inadyn-$(INADYN_VER).tar.xz:
 	$(WGET) https://github.com/troglobit/inadyn/releases/download/v$(INADYN_VER)/inadyn-$(INADYN_VER).tar.xz
 
