@@ -333,11 +333,11 @@ ITE_VER=1.9.3
 $(ARCHIVE)/libite-$(ITE_VER).tar.xz:
 	$(WGET) https://github.com/troglobit/libite/releases/download/v$(ITE_VER)/libite-$(ITE_VER).tar.xz
 
-FUSE_EXFAT_VER=1.2.7
+FUSE_EXFAT_VER=1.2.8
 $(ARCHIVE)/fuse-exfat-$(FUSE_EXFAT_VER).tar.gz:
 	$(WGET) https://github.com/relan/exfat/releases/download/v$(FUSE_EXFAT_VER)/fuse-exfat-$(FUSE_EXFAT_VER).tar.gz
 
-EXFAT_UTILS_VER=1.2.7
+EXFAT_UTILS_VER=1.2.8
 $(ARCHIVE)/exfat-utils-$(EXFAT_UTILS_VER).tar.gz:
 	$(WGET) https://github.com/relan/exfat/releases/download/v$(EXFAT_UTILS_VER)/exfat-utils-$(EXFAT_UTILS_VER).tar.gz
 
