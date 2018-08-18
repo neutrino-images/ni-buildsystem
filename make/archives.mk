@@ -16,7 +16,7 @@ TZCODE_VER=2017c
 $(ARCHIVE)/tzcode$(TZCODE_VER).tar.gz:
 	$(WGET) ftp://ftp.iana.org/tz/releases/tzcode$(TZCODE_VER).tar.gz
 
-PUGIXML_VER=1.8
+PUGIXML_VER=1.9
 $(ARCHIVE)/pugixml-$(PUGIXML_VER).tar.gz:
 	$(WGET) http://github.com/zeux/pugixml/releases/download/v$(PUGIXML_VER)/pugixml-$(PUGIXML_VER).tar.gz
 
