@@ -1,6 +1,6 @@
 # makefile for tarball download
 
-LIBGCRYPT_VER=1.8.1
+LIBGCRYPT_VER=1.8.3
 $(ARCHIVE)/libgcrypt-$(LIBGCRYPT_VER).tar.gz:
 	$(WGET) ftp://ftp.gnupg.org/gcrypt/libgcrypt/libgcrypt-$(LIBGCRYPT_VER).tar.gz
 
