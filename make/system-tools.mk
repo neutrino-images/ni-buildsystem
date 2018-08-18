@@ -151,7 +151,7 @@ $(D)/hdparm: $(ARCHIVE)/hdparm-$(HDPARM_VER).tar.gz | $(TARGET_DIR)
 	pushd $(BUILD_TMP)/hdparm-$(HDPARM_VER) && \
 		$(BUILDENV) \
 		$(MAKE) CC=$(TARGET)-gcc STRIP=$(TARGET)-strip && \
-		install -m755 hdparm $(TARGET_DIR)/sbin/hdparm
+		install -D -m755 hdparm $(TARGET_DIR)/sbin/hdparm
 	$(REMOVE)/hdparm-$(HDPARM_VER)
 	touch $@
 

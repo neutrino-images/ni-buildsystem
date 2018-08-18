@@ -64,7 +64,7 @@ USHARE_VER=1.1a
 $(ARCHIVE)/ushare-$(USHARE_VER).tar.bz2:
 	$(WGET) http://ushare.geexbox.org/releases/ushare-$(USHARE_VER).tar.bz2
 
-HDPARM_VER=9.52
+HDPARM_VER=9.54
 $(ARCHIVE)/hdparm-$(HDPARM_VER).tar.gz:
 	$(WGET) http://sourceforge.net/projects/hdparm/files/hdparm/hdparm-$(HDPARM_VER).tar.gz
 
