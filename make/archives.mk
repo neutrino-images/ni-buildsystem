@@ -291,7 +291,7 @@ LIBBDPLUS_VER=0.1.2
 $(ARCHIVE)/libbdplus-$(LIBBDPLUS_VER).tar.bz2:
 	$(WGET) ftp://ftp.videolan.org/pub/videolan/libbdplus/$(LIBBDPLUS_VER)/libbdplus-$(LIBBDPLUS_VER).tar.bz2
 	
-LIBAACS_VER=0.8.1
+LIBAACS_VER=0.9.0
 $(ARCHIVE)/libaacs-$(LIBAACS_VER).tar.bz2:
 	$(WGET) ftp://ftp.videolan.org/pub/videolan/libaacs/$(LIBAACS_VER)/libaacs-$(LIBAACS_VER).tar.bz2
 
