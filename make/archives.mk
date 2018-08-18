@@ -98,7 +98,7 @@ CUSTOM_GCC=$(ARCHIVE)/gcc-linaro-$(GCC_VER).tar.xz
 $(ARCHIVE)/gcc-linaro-$(GCC_VER).tar.xz:
 	$(WGET) https://releases.linaro.org/components/toolchain/gcc-linaro/$(GCC_VER)/gcc-linaro-$(GCC_VER).tar.xz
 
-OPENSSH_VER=7.6p1
+OPENSSH_VER=7.7p1
 $(ARCHIVE)/openssh-$(OPENSSH_VER).tar.gz:
 	$(WGET) https://ftp.fau.de/pub/OpenBSD/OpenSSH/portable/openssh-$(OPENSSH_VER).tar.gz
 
