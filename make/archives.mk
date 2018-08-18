@@ -179,7 +179,7 @@ FBSHOT_VER=0.3
 $(ARCHIVE)/fbshot-$(FBSHOT_VER).tar.gz:
 	$(WGET) http://distro.ibiblio.org/amigolinux/download/Utils/fbshot/fbshot-$(FBSHOT_VER).tar.gz
 
-FREETYPE_VER=2.9
+FREETYPE_VER=2.9.1
 $(ARCHIVE)/freetype-$(FREETYPE_VER).tar.bz2:
 	$(WGET) https://sourceforge.net/projects/freetype/files/freetype2/$(FREETYPE_VER)/freetype-$(FREETYPE_VER).tar.bz2
 

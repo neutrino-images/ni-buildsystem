@@ -160,6 +160,7 @@ $(D)/libpng: $(ARCHIVE)/libpng-$(LIBPNG_VER).tar.xz $(D)/zlib | $(TARGET_DIR)
 	touch $@
 
 $(D)/freetype: $(D)/zlib $(D)/libpng $(ARCHIVE)/freetype-$(FREETYPE_VER).tar.bz2 | $(TARGET_DIR)
+	$(REMOVE)/freetype-$(FREETYPE_VER)
 	$(UNTAR)/freetype-$(FREETYPE_VER).tar.bz2
 	pushd $(BUILD_TMP)/freetype-$(FREETYPE_VER) && \
 		$(PATCH)/freetype2_subpixel.patch; \
@@ -173,11 +174,13 @@ $(D)/freetype: $(D)/zlib $(D)/libpng $(ARCHIVE)/freetype-$(FREETYPE_VER).tar.bz2
 			--prefix=$(TARGET_DIR) \
 			--mandir=$(BUILD_TMP)/.remove \
 			--enable-shared \
+			--disable-static \
+			--enable-freetype-config \
 			--with-png \
 			--with-zlib \
 			--without-harfbuzz \
 			--without-bzip2 \
-			--disable-static && \
+			; \
 		$(MAKE) all && \
 		make install && \
 		ln -sf ./freetype2/freetype $(TARGET_INCLUDE_DIR)/freetype && \
