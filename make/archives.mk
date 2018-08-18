@@ -329,7 +329,7 @@ CONFUSE_VER=3.2.1
 $(ARCHIVE)/confuse-$(CONFUSE_VER).tar.xz:
 	$(WGET) https://github.com/martinh/libconfuse/releases/download/v$(CONFUSE_VER)/confuse-$(CONFUSE_VER).tar.xz
 
-ITE_VER=1.9.3
+ITE_VER=2.0.2
 $(ARCHIVE)/libite-$(ITE_VER).tar.xz:
 	$(WGET) https://github.com/troglobit/libite/releases/download/v$(ITE_VER)/libite-$(ITE_VER).tar.xz
 
