@@ -214,7 +214,7 @@ SAMBA36_VER=3.6.25
 $(ARCHIVE)/samba-$(SAMBA36_VER).tar.gz:
 	$(WGET) https://download.samba.org/pub/samba/stable/samba-$(SAMBA36_VER).tar.gz
 
-E2FSPROGS_VER=1.44.1
+E2FSPROGS_VER=1.44.3
 $(ARCHIVE)/e2fsprogs-$(E2FSPROGS_VER).tar.gz:
 	$(WGET) http://downloads.sourceforge.net/project/e2fsprogs/e2fsprogs/v$(E2FSPROGS_VER)/e2fsprogs-$(E2FSPROGS_VER).tar.gz
 
