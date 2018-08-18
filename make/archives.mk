@@ -4,7 +4,7 @@ LIBGCRYPT_VER=1.8.1
 $(ARCHIVE)/libgcrypt-$(LIBGCRYPT_VER).tar.gz:
 	$(WGET) ftp://ftp.gnupg.org/gcrypt/libgcrypt/libgcrypt-$(LIBGCRYPT_VER).tar.gz
 
-LIBGPG-ERROR_VER=1.27
+LIBGPG-ERROR_VER=1.32
 $(ARCHIVE)/libgpg-error-$(LIBGPG-ERROR_VER).tar.bz2:
 	$(WGET) ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-$(LIBGPG-ERROR_VER).tar.bz2
 
