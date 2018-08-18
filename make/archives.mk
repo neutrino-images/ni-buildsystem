@@ -143,7 +143,7 @@ LIBPNG_VER=1.6.35
 $(ARCHIVE)/libpng-$(LIBPNG_VER).tar.xz:
 	$(WGET) http://sourceforge.net/projects/libpng/files/libpng16/$(LIBPNG_VER)/libpng-$(LIBPNG_VER).tar.xz
 
-LIBVORBISIDEC_VER=1.0.2+svn18153
+LIBVORBISIDEC_VER=1.2.1+git20180316
 $(ARCHIVE)/libvorbisidec_$(LIBVORBISIDEC_VER).orig.tar.gz:
 	$(WGET) http://ftp.de.debian.org/debian/pool/main/libv/libvorbisidec/libvorbisidec_$(LIBVORBISIDEC_VER).orig.tar.gz
 
