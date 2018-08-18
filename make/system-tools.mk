@@ -1025,6 +1025,7 @@ $(D)/ethtool: $(ARCHIVE)/$(ETHTOOL_SOURCE) | $(TARGET_DIR)
 			--prefix= \
 			--mandir=/.remove \
 			--libdir=$(TARGET_LIB_DIR) \
+			--disable-pretty-dump \
 		; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
