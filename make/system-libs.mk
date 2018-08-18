@@ -715,7 +715,6 @@ $(D)/libtirpc: $(ARCHIVE)/libtirpc-$(LIBTIRPC_VER).tar.bz2 | $(TARGET_DIR)
 	$(PATCH)/libtirpc-0004-Automatically-generate-XDR-header-files-from-.x-sour.patch && \
 	$(PATCH)/libtirpc-0005-Add-more-XDR-files-needed-to-build-rpcbind-on-top-of.patch && \
 	$(PATCH)/libtirpc-0006-Disable-DES-authentification-support.patch && \
-	$(PATCH)/libtirpc-0007-include-stdint.h-for-uintptr_t.patch && \
 		autoreconf -fi && \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
