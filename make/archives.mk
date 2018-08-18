@@ -382,7 +382,7 @@ ETHTOOL_SOURCE = ethtool-$(ETHTOOL_VER).tar.xz
 $(ARCHIVE)/$(ETHTOOL_SOURCE):
 	$(WGET) https://www.kernel.org/pub/software/network/ethtool/$(ETHTOOL_SOURCE)
 
-GPTFDISK_VER = 1.0.3
+GPTFDISK_VER = 1.0.4
 GPTFDISK_SOURCE = gptfdisk-$(GPTFDISK_VER).tar.gz
 $(ARCHIVE)/$(GPTFDISK_SOURCE):
 	$(WGET) http://sourceforge.net/projects/gptfdisk/files/gptfdisk/$(GPTFDISK_VER)/$(GPTFDISK_SOURCE)
