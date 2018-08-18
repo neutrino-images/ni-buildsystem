@@ -321,7 +321,7 @@ DOSFSTOOLS_VER=4.1
 $(ARCHIVE)/dosfstools-$(DOSFSTOOLS_VER).tar.xz:
 	$(WGET) https://github.com/dosfstools/dosfstools/releases/download/v$(DOSFSTOOLS_VER)/dosfstools-$(DOSFSTOOLS_VER).tar.xz
 
-LESS_VER=527
+LESS_VER=530
 $(ARCHIVE)/less-$(LESS_VER).tar.gz:
 	$(WGET) http://www.greenwoodsoftware.com/less/less-$(LESS_VER).tar.gz
 
