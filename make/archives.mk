@@ -8,11 +8,11 @@ LIBGPG-ERROR_VER=1.27
 $(ARCHIVE)/libgpg-error-$(LIBGPG-ERROR_VER).tar.bz2:
 	$(WGET) ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-$(LIBGPG-ERROR_VER).tar.bz2
 
-TZDATA_VER=2016j
+TZDATA_VER=2018e
 $(ARCHIVE)/tzdata$(TZDATA_VER).tar.gz:
 	$(WGET) ftp://ftp.iana.org/tz/releases/tzdata$(TZDATA_VER).tar.gz
 
-TZCODE_VER=2017c
+TZCODE_VER=2018e
 $(ARCHIVE)/tzcode$(TZCODE_VER).tar.gz:
 	$(WGET) ftp://ftp.iana.org/tz/releases/tzcode$(TZCODE_VER).tar.gz
 
