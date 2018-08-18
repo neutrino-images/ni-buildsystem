@@ -315,6 +315,8 @@ NI_OPENTHREADS		= ni-openthreads
 NI_RTMPDUMP		= ni-rtmpdump
 NI_STREAMRIPPER		= ni-streamripper
 
+# Note: NI_FFMPEG-variables are only used for Coolstream-builds
+#
 # ffmpeg/master is currently not mature enough for daily use
 # if you want to help testing you can enable it here
 NI_FFMPEG		= ni-ffmpeg
