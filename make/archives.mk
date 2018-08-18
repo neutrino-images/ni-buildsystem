@@ -187,7 +187,7 @@ OPENSSL_VER=1.0.2p
 $(ARCHIVE)/openssl-$(OPENSSL_VER).tar.gz:
 	$(WGET) http://www.openssl.org/source/openssl-$(OPENSSL_VER).tar.gz
 
-LIBNCURSES_VER=6.0
+LIBNCURSES_VER=6.1
 $(ARCHIVE)/ncurses-$(LIBNCURSES_VER).tar.gz:
 	$(WGET) http://ftp.gnu.org/pub/gnu/ncurses/ncurses-$(LIBNCURSES_VER).tar.gz
 
