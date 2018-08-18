@@ -46,7 +46,6 @@ $(D)/valgrind-hd1:
 $(D)/strace: $(ARCHIVE)/strace-$(STRACE_VER).tar.xz | $(TARGET_DIR)
 	$(UNTAR)/strace-$(STRACE_VER).tar.xz
 	cd $(BUILD_TMP)/strace-$(STRACE_VER) && \
-	$(PATCH)/strace-error_prints-fix-potential-program_invocation_name-t.patch && \
 		$(CONFIGURE) \
 			--prefix= \
 			--mandir=$(BUILD_TMP)/.remove \

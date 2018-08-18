@@ -36,7 +36,7 @@ LIBTIRPC_VER=1.0.2
 $(ARCHIVE)/libtirpc-$(LIBTIRPC_VER).tar.bz2:
 	$(WGET) http://sourceforge.net/projects/libtirpc/files/libtirpc/$(LIBTIRPC_VER)/libtirpc-$(LIBTIRPC_VER).tar.bz2
 
-STRACE_VER=4.19
+STRACE_VER=4.21
 $(ARCHIVE)/strace-$(STRACE_VER).tar.xz:
 	$(WGET) http://sourceforge.net/projects/strace/files/strace/$(STRACE_VER)/strace-$(STRACE_VER).tar.xz
 
