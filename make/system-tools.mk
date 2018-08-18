@@ -458,7 +458,6 @@ $(D)/autofs5: $(D)/libtirpc $(ARCHIVE)/autofs-$(AUTOFS5_VER).tar.gz | $(TARGET_D
 	$(REMOVE)/autofs-$(AUTOFS5_VER)
 	$(UNTAR)/autofs-$(AUTOFS5_VER).tar.gz
 	cd $(BUILD_TMP)/autofs-$(AUTOFS5_VER) && \
-	$(PATCH)/autofs-use-pkg-config-to-search-for-libtirpc-to-fix-cross-c.patch && \
 	$(PATCH)/autofs-include-linux-nfs.h-directly-in-rpc_sub.patch && \
 	export ac_cv_linux_procfs=yes && \
 	export ac_cv_path_KRB5_CONFIG=no && \

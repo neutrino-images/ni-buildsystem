@@ -130,7 +130,7 @@ $(ARCHIVE)/vsftpd-$(VSFTPD_VER).tar.gz:
 
 AUTOFS5_MAJOR=5
 AUTOFS5_MINOR=1
-AUTOFS5_MICRO=3
+AUTOFS5_MICRO=4
 AUTOFS5_VER=$(AUTOFS5_MAJOR).$(AUTOFS5_MINOR).$(AUTOFS5_MICRO)
 $(ARCHIVE)/autofs-$(AUTOFS5_VER).tar.gz:
 	$(WGET) https://www.kernel.org/pub/linux/daemons/autofs/v$(AUTOFS5_MAJOR)/autofs-$(AUTOFS5_VER).tar.gz
