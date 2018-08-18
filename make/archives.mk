@@ -341,7 +341,7 @@ EXFAT_UTILS_VER=1.2.7
 $(ARCHIVE)/exfat-utils-$(EXFAT_UTILS_VER).tar.gz:
 	$(WGET) https://github.com/relan/exfat/releases/download/v$(EXFAT_UTILS_VER)/exfat-utils-$(EXFAT_UTILS_VER).tar.gz
 
-FRIBIDI_VER = 0.19.7
+FRIBIDI_VER = 1.0.4
 $(ARCHIVE)/fribidi-$(FRIBIDI_VER).tar.bz2:
 	$(WGET) https://download.videolan.org/contrib/fribidi/fribidi-$(FRIBIDI_VER).tar.bz2
 
