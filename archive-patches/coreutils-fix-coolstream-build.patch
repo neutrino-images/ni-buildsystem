@@ -1,50 +1,22 @@
-From 05c95b740a02c3859752ea0c9b12c7a299ba42d4 Mon Sep 17 00:00:00 2001
-Message-Id: <05c95b740a02c3859752ea0c9b12c7a299ba42d4.1387717153.git.striper@gmx.de>
-From: striper <striper@gmx.de>
-Date: Sun, 22 Dec 2013 13:59:01 +0100
-Subject: [PATCH] - fix coolstream build
-
----
- man/dummy-man | 7 -------
- man/local.mk  | 5 -----
- 2 files changed, 12 deletions(-)
-
 diff --git a/man/dummy-man b/man/dummy-man
-index dca2b67..ee6355f 100755
+index e298295..73846b7 100755
 --- a/man/dummy-man
 +++ b/man/dummy-man
-@@ -38,14 +38,7 @@ while test $# -gt 0; do
+@@ -37,17 +37,10 @@ while test $# -gt 0; do
    shift
  done
  
 -test $# -gt 0 || fatal_ "missing argument"
 -test $# -le 1 || fatal_ "too many non-option arguments"
 -
+ dist_man=$(printf '%s\n' "$include" | sed 's/\.x$/.1/')
+ test -f "$dist_man" && cp "$dist_man" "$output" && exit || :
+ 
  baseout=`basename_ "$output"`
 -sed 's/^/WARNING: /' >&2 <<END
--Cannot create proper '$baseout' man page, since perl is missing or
--inadequate on this system.  Creating a stub man page instead.
+-Did not generate or find default '$baseout' man page.
+-Creating a stub man page instead.
 -END
  
  progname=`basename_ "$1"`
- year=`LC_ALL=C date +%Y`
-diff --git a/man/local.mk b/man/local.mk
-index 45dbcb9..9a8ee88 100644
---- a/man/local.mk
-+++ b/man/local.mk
-@@ -18,12 +18,7 @@
- 
- EXTRA_DIST += man/help2man man/dummy-man
- 
--## Graceful degradation for systems lacking perl.
--if HAVE_PERL
--run_help2man = $(PERL) -- $(srcdir)/man/help2man
--else
- run_help2man = $(SHELL) $(srcdir)/man/dummy-man
--endif
- 
- man1_MANS = @man1_MANS@
- EXTRA_DIST += $(man1_MANS:.1=.x)
--- 
-1.8.5.2
-
+ bs='\'

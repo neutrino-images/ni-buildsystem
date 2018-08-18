@@ -106,7 +106,7 @@ INADYN_VER=2.2.1
 $(ARCHIVE)/inadyn-$(INADYN_VER).tar.xz:
 	$(WGET) https://github.com/troglobit/inadyn/releases/download/v$(INADYN_VER)/inadyn-$(INADYN_VER).tar.xz
 
-COREUTILS_VER=8.28
+COREUTILS_VER=8.30
 $(ARCHIVE)/coreutils-$(COREUTILS_VER).tar.xz:
 	$(WGET) http://ftp.gnu.org/gnu/coreutils/coreutils-$(COREUTILS_VER).tar.xz
 
