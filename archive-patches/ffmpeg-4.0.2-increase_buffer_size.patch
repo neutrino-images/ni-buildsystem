@@ -1,6 +1,8 @@
+diff --git a/libavformat/avio.h b/libavformat/avio.h
+index 75912ce..56f0a4d 100644
 --- a/libavformat/avio.h
 +++ b/libavformat/avio.h
-@@ -281,12 +281,6 @@
+@@ -290,12 +290,6 @@ typedef struct AVIOContext {
       */
      int writeout_count;
  
@@ -13,6 +15,8 @@
  
      /**
       * Threshold to favor readahead over seek.
+diff --git a/libavformat/aviobuf.c b/libavformat/aviobuf.c
+index e752d0e..108f089 100644
 --- a/libavformat/aviobuf.c
 +++ b/libavformat/aviobuf.c
 @@ -33,7 +33,7 @@
@@ -24,21 +28,21 @@
  
  /**
   * Do seeks within this distance ahead of the current buffer by skipping
-@@ -88,7 +88,6 @@
-                   int64_t (*seek)(void *opaque, int64_t offset, int whence))
- {
+@@ -90,7 +90,6 @@ int ffio_init_context(AVIOContext *s,
+     memset(s, 0, sizeof(AVIOContext));
+ 
      s->buffer      = buffer;
 -    s->orig_buffer_size =
      s->buffer_size = buffer_size;
      s->buf_ptr     = buffer;
-     s->opaque      = opaque;
-@@ -534,16 +533,16 @@
+     s->buf_ptr_max = buffer;
+@@ -570,16 +569,16 @@ static void fill_buffer(AVIOContext *s)
      }
  
      /* make buffer smaller in case it ended up large after probing */
 -    if (s->read_packet && s->orig_buffer_size && s->buffer_size > s->orig_buffer_size) {
 +    if (s->read_packet && s->buffer_size > max_buffer_size) {
-         if (dst == s->buffer) {
+         if (dst == s->buffer && s->buf_ptr != dst) {
 -            int ret = ffio_set_buf_size(s, s->orig_buffer_size);
 +            int ret = ffio_set_buf_size(s, max_buffer_size);
              if (ret < 0)
@@ -52,22 +56,23 @@
 +        len = max_buffer_size;
      }
  
-     if (s->read_packet)
-@@ -985,7 +984,6 @@
+     len = read_packet_wrapper(s, dst, len);
+@@ -1087,7 +1086,6 @@ int ffio_set_buf_size(AVIOContext *s, int buf_size)
  
      av_free(s->buffer);
      s->buffer = buffer;
 -    s->orig_buffer_size =
      s->buffer_size = buf_size;
-     s->buf_ptr = buffer;
+     s->buf_ptr = s->buf_ptr_max = buffer;
      url_resetbuf(s, s->write_flag ? AVIO_FLAG_WRITE : AVIO_FLAG_READ);
+diff --git a/libavformat/utils.c b/libavformat/utils.c
+index c25eab4..02ce5e2 100644
 --- a/libavformat/utils.c
 +++ b/libavformat/utils.c
-@@ -118,6 +118,25 @@
- MAKE_ACCESSORS(AVFormatContext, format, AVOpenCallback, open_cb)
- FF_ENABLE_DEPRECATION_WARNINGS
+@@ -138,6 +138,25 @@ FF_ENABLE_DEPRECATION_WARNINGS
  #endif
-+
+ #endif
+ 
 +void *av_fast_realloc(void *ptr, unsigned int *size, size_t min_size)
 +{
 +    if (min_size < *size)
@@ -86,6 +91,7 @@
 +
 +    return ptr;
 +}
- 
++
  int64_t av_stream_get_end_pts(const AVStream *st)
  {
+     if (st->internal->priv_pts) {

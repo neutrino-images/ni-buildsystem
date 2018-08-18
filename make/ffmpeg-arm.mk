@@ -4,7 +4,7 @@
 
 # -----------------------------------------------------------------------------
 
-FFMPEG_VER = 3.3
+FFMPEG_VER = 4.0.2
 FFMPEG_SOURCE = ffmpeg-$(FFMPEG_VER).tar.xz
 
 $(ARCHIVE)/$(FFMPEG_SOURCE):
@@ -12,16 +12,16 @@ $(ARCHIVE)/$(FFMPEG_SOURCE):
 
 # -----------------------------------------------------------------------------
 
-FFMPEG_PATCH  = ffmpeg-$(FFMPEG_VER)-fix-hls.patch
-FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-buffer-size.patch
-FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-aac.patch
-FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-fix-edit-list-parsing.patch
+FFMPEG_UNPATCHED := no
+
+FFMPEG_PATCH  = ffmpeg-$(FFMPEG_VER)-fix_hls.patch
+FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-increase_buffer_size.patch
+FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-optimize_aac.patch
+FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-fix_edit_list_parsing.patch
 # ffmpeg exteplayer3 patches
-FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-fix-mpegts.patch
-FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-allow-to-choose-rtmp-impl-at-runtime.patch
-FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-add-dash-demux.patch
-FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-hls-replace-key-uri.patch
-FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-chunked_transfer_fix_eof.patch
+FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-fix_mpegts.patch
+FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-allow_to_choose_rtmp_impl_at_runtime.patch
+FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-hls_replace_key_uri.patch
 
 # -----------------------------------------------------------------------------
 
@@ -43,7 +43,6 @@ FFMPEG_CONFIGURE_GENERIC = \
 			--disable-txtpages \
 			\
 			--disable-ffplay \
-			--disable-ffserver \
 			--enable-ffprobe \
 			\
 			--disable-altivec \
@@ -71,7 +70,7 @@ FFMPEG_CONFIGURE_GENERIC = \
 			--disable-ssse3 \
 			--disable-vfp \
 			--disable-xop \
-			--disable-yasm \
+			--disable-x86asm \
 			\
 			--disable-dxva2 \
 			--disable-vaapi \
@@ -350,8 +349,11 @@ FFMPEG_CONFIGURE_PLATFORM = \
 $(D)/ffmpeg: $(FFMPEG_DEPS) $(ARCHIVE)/$(FFMPEG_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/ffmpeg-$(FFMPEG_VER)
 	$(UNTAR)/$(FFMPEG_SOURCE)
+ifneq ($(FFMPEG_UNPATCHED), yes)
 	set -e; cd $(BUILD_TMP)/ffmpeg-$(FFMPEG_VER); \
-		$(call apply_patches, $(FFMPEG_PATCH)); \
+		$(call apply_patches, $(FFMPEG_PATCH))
+endif
+	set -e; cd $(BUILD_TMP)/ffmpeg-$(FFMPEG_VER); \
 		./configure \
 			$(FFMPEG_CONFIGURE_GENERIC) \
 			$(FFMPEG_CONFIGURE_PLATFORM) \
