@@ -364,7 +364,7 @@ GETTEXT_VERSION=0.19.8.1
 $(ARCHIVE)/gettext-$(GETTEXT_VERSION).tar.xz:
 	$(WGET) ftp://ftp.gnu.org/gnu/gettext/gettext-$(GETTEXT_VERSION).tar.xz
 
-WGET_VER=1.19.2
+WGET_VER=1.19.5
 $(ARCHIVE)/wget-$(WGET_VER).tar.gz:
 	$(WGET) http://ftp.gnu.org/gnu/wget/wget-$(WGET_VER).tar.gz
 
