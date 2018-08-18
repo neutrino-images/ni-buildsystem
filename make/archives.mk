@@ -222,7 +222,7 @@ SMARTMON_VER=6.6
 $(ARCHIVE)/smartmontools-$(SMARTMON_VER).tar.gz:
 	$(WGET) http://downloads.sourceforge.net/project/smartmontools/smartmontools/$(SMARTMON_VER)/smartmontools-$(SMARTMON_VER).tar.gz
 
-GDB_VER=7.12.1
+GDB_VER=8.1.1
 $(ARCHIVE)/gdb-$(GDB_VER).tar.xz:
 	$(WGET) http://ftp.gnu.org/gnu/gdb/gdb-$(GDB_VER).tar.xz
 
