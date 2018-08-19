@@ -32,7 +32,7 @@ RPCBIND_VER=1.2.5
 $(ARCHIVE)/rpcbind-$(RPCBIND_VER).tar.bz2:
 	$(WGET) http://sourceforge.net/projects/rpcbind/files/rpcbind/$(RPCBIND_VER)/rpcbind-$(RPCBIND_VER).tar.bz2
 
-LIBTIRPC_VER=1.0.3
+LIBTIRPC_VER=1.0.2
 $(ARCHIVE)/libtirpc-$(LIBTIRPC_VER).tar.bz2:
 	$(WGET) http://sourceforge.net/projects/libtirpc/files/libtirpc/$(LIBTIRPC_VER)/libtirpc-$(LIBTIRPC_VER).tar.bz2
 
