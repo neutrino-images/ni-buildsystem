@@ -200,11 +200,12 @@ $(ARCHIVE)/procps-ng-$(PROCPS-NG_VER).tar.xz:
 	$(WGET) http://sourceforge.net/projects/procps-ng/files/Production/procps-ng-$(PROCPS-NG_VER).tar.xz
 
 BUSYBOX_MAJOR=1
-BUSYBOX_MINOR=27
+BUSYBOX_MINOR=29
 BUSYBOX_MICRO=2
 BUSYBOX_VER=$(BUSYBOX_MAJOR).$(BUSYBOX_MINOR).$(BUSYBOX_MICRO)
-$(ARCHIVE)/busybox-$(BUSYBOX_VER).tar.bz2:
-	$(WGET) http://busybox.net/downloads/busybox-$(BUSYBOX_VER).tar.bz2
+BUSYBOX_SOURCE=busybox-$(BUSYBOX_VER).tar.bz2
+$(ARCHIVE)/$(BUSYBOX_SOURCE):
+	$(WGET) http://busybox.net/downloads/$(BUSYBOX_SOURCE)
 
 SAMBA33_VER=3.3.16
 $(ARCHIVE)/samba-$(SAMBA33_VER).tar.gz:

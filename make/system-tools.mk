@@ -376,15 +376,18 @@ BUSYBOX_MAKE_OPTS = \
 	EXTRA_LDFLAGS="$(TARGET_LDFLAGS)" \
 	CONFIG_PREFIX="$(TARGET_DIR)"
 
-$(D)/busybox: $(D)/libtirpc $(ARCHIVE)/busybox-$(BUSYBOX_VER).tar.bz2 | $(TARGET_DIR)
+BUSYBOX_PATCH  = busybox-fix-config-header.diff
+BUSYBOX_PATCH += busybox-insmod-hack.patch
+BUSYBOX_PATCH += busybox-mount-use-var-etc-fstab.patch
+BUSYBOX_PATCH += busybox-fix-partition-size.patch
+
+$(D)/busybox: $(D)/libtirpc $(ARCHIVE)/$(BUSYBOX_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/busybox-$(BUSYBOX_VER)
-	$(UNTAR)/busybox-$(BUSYBOX_VER).tar.bz2
+	$(UNTAR)/$(BUSYBOX_SOURCE)
 	pushd $(BUILD_TMP)/busybox-$(BUSYBOX_VER) && \
-		$(PATCH)/busybox-fix-config-header.diff && \
-		$(PATCH)/busybox-insmod-hack.patch && \
-		$(PATCH)/busybox-mount-use-var-etc-fstab.patch && \
-		$(PATCH)/busybox-fix-partition-size.patch && \
+		$(call apply_patches, $(BUSYBOX_PATCH)) && \
 		cp $(CONFIGS)/busybox-$(BOXSERIES).config .config && \
+		sed -i -e 's|^CONFIG_PREFIX=.*|CONFIG_PREFIX="$(TARGET_DIR)"|' .config && \
 		$(BUSYBOX_MAKE_ENV) $(MAKE) busybox $(BUSYBOX_MAKE_OPTS) && \
 		$(BUSYBOX_MAKE_ENV) $(MAKE) install $(BUSYBOX_MAKE_OPTS)
 	$(REMOVE)/busybox-$(BUSYBOX_VER)

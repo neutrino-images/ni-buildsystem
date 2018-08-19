@@ -2,7 +2,7 @@ diff --git a/util-linux/mount.c b/util-linux/mount.c
 index 5fcc795..ba279f5 100644
 --- a/util-linux/mount.c
 +++ b/util-linux/mount.c
-@@ -2184,6 +2184,7 @@ int mount_main(int argc UNUSED_PARAM, char **argv)
+@@ -2185,6 +2185,7 @@ int mount_main(int argc UNUSED_PARAM, char **argv)
  	llist_t *lst_o = NULL;
  	const char *fstabname = "/etc/fstab";
  	FILE *fstab;
@@ -10,7 +10,7 @@ index 5fcc795..ba279f5 100644
  	int i, j;
  	int rc = EXIT_SUCCESS;
  	unsigned long cmdopt_flags;
-@@ -2280,6 +2281,13 @@ int mount_main(int argc UNUSED_PARAM, char **argv)
+@@ -2285,6 +2286,13 @@ int mount_main(int argc UNUSED_PARAM, char **argv)
  	// A malicious user could overmount /usr without this.
  	if (ENABLE_FEATURE_MOUNT_OTHERTAB && nonroot)
  		fstabname = "/etc/fstab";
