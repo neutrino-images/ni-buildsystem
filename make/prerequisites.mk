@@ -127,7 +127,7 @@ archives-info: archives-list
 		fi; \
 	done;
 	@echo "[ ** ] Unused archives"
-	@find $(ARCHIVE)/ -type f | \
+	@find $(ARCHIVE)/ -maxdepth 1 -type f | \
 	while read archive; do \
 		if ! grep -q $$archive $(BUILD_TMP)/archives-list; then \
 			echo -e "[$(TERM_YELLOW) rm $(TERM_NORMAL)] $$archive"; \
