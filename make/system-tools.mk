@@ -397,9 +397,7 @@ $(D)/bash: $(ARCHIVE)/bash-$(BASH_VER).tar.gz | $(TARGET_DIR)
 	$(REMOVE)/bash-$(BASH_VER)
 	$(UNTAR)/bash-$(BASH_VER).tar.gz
 	cd $(BUILD_TMP)/bash-$(BASH_VER); \
-		for patch in $(PATCHES)/bash-$(BASH_MAJOR).$(BASH_MINOR)/*; do \
-			patch -p0 -i $$patch; \
-		done; \
+		$(call apply_patches, $(PATCHES)/bash-$(BASH_MAJOR).$(BASH_MINOR), 0) && \
 		$(CONFIGURE) && \
 		$(MAKE) && \
 		install -m 755 bash $(TARGET_DIR)/bin
