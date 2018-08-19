@@ -341,21 +341,23 @@ endef
 
 # apply patch sets
 define apply_patches
+	l=`echo $(2)`; test -z $$l && l=1; \
 	for i in $(1); do \
-		echo -e "$(TERM_YELLOW)Applying $$i$(TERM_NORMAL)"; \
 		if [ -d $$i ]; then \
 			for p in $$i/*; do \
+				echo -e "$(TERM_YELLOW)Applying $$p$(TERM_NORMAL)"; \
 				if [ $${p:0:1} == "/" ]; then \
-					patch -p1 -i $$p; \
+					patch -p$$l -i $$p; \
 				else \
-					$(PATCH)/$$p; \
+					patch -p$$l -i $(PATCHES)/$$p; \
 				fi; \
 			done; \
 		else \
+			echo -e "$(TERM_YELLOW)Applying $$i$(TERM_NORMAL)"; \
 			if [ $${i:0:1} == "/" ]; then \
-				patch -p1 -i $$i; \
+				patch -p$$l -i $$i; \
 			else \
-				$(PATCH)/$$i; \
+				patch -p$$l -i $(PATCHES)/$$i; \
 			fi; \
 		fi; \
 	done
