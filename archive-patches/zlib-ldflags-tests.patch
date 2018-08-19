@@ -14,7 +14,7 @@ Upstream-Status: Pending
  LDSHARED=$(CC)
  CPP=$(CC) -E
 
-@@ -176,22 +176,22 @@ placebo $(SHAREDLIBV): $(PIC_OBJS) libz.
+@@ -286,22 +286,22 @@ placebo $(SHAREDLIBV): $(PIC_OBJS) libz.
 	-@rmdir objs
 
  example$(EXE): example.o $(STATICLIB)

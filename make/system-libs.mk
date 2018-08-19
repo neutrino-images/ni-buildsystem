@@ -1,10 +1,14 @@
 # makefile to build system libs
 
+# -----------------------------------------------------------------------------
+
+ZLIB_PATCH  = zlib-ldflags-tests.patch
+ZLIB_PATCH += zlib-remove.ldconfig.call.patch
+
 $(D)/zlib: $(ARCHIVE)/zlib-$(ZLIB_VER).tar.gz | $(TARGET_DIR)
 	$(UNTAR)/zlib-$(ZLIB_VER).tar.gz
 	cd $(BUILD_TMP)/zlib-$(ZLIB_VER) && \
-		$(PATCH)/zlib-ldflags-tests.patch && \
-		$(PATCH)/zlib-remove.ldconfig.call.patch && \
+		$(call apply_patches, $(ZLIB_PATCH)) && \
 		rm -rf config.cache && \
 		$(BUILDENV) \
 		CC=$(TARGET)-gcc \
@@ -21,6 +25,8 @@ $(D)/zlib: $(ARCHIVE)/zlib-$(ZLIB_VER).tar.gz | $(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/zlib.pc
 	$(REMOVE)/zlib-$(ZLIB_VER)
 	touch $@
+
+# -----------------------------------------------------------------------------
 
 $(D)/libfuse: $(ARCHIVE)/fuse-$(FUSE_VER).tar.gz | $(TARGET_DIR)
 	$(UNTAR)/fuse-$(FUSE_VER).tar.gz
