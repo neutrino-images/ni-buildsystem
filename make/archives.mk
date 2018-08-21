@@ -326,7 +326,7 @@ LESS_VER=530
 $(ARCHIVE)/less-$(LESS_VER).tar.gz:
 	$(WGET) http://www.greenwoodsoftware.com/less/less-$(LESS_VER).tar.gz
 
-CONFUSE_VER=3.2.1
+CONFUSE_VER=3.2.2
 $(ARCHIVE)/confuse-$(CONFUSE_VER).tar.xz:
 	$(WGET) https://github.com/martinh/libconfuse/releases/download/v$(CONFUSE_VER)/confuse-$(CONFUSE_VER).tar.xz
 
