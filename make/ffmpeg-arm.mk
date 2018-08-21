@@ -159,6 +159,7 @@ FFMPEG_CONFIGURE_GENERIC = \
 				--enable-decoder=mp3on4 \
 				--enable-decoder=mp3on4float \
 				--enable-decoder=mpeg1video \
+				--enable-decoder=mpeg2video \
 				--enable-decoder=mpeg4 \
 				--enable-decoder=nellymoser \
 				--enable-decoder=opus \
