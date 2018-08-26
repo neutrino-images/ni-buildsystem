@@ -1,0 +1,207 @@
+autofs-5.1.4 - fix directory create permission
+
+From: Ian Kent <raven@themaw.net>
+
+autofs mount point directory creation is done using a permission of
+0555.
+
+But it is necessary to create directories within autofs mount points
+for some map entry types so write access should be set for the owner
+on mount point directories.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG               |    1 +
+ daemon/automount.c      |    2 ++
+ daemon/direct.c         |    4 ++--
+ daemon/indirect.c       |    2 +-
+ daemon/lookup.c         |    2 +-
+ include/automount.h     |    1 +
+ modules/mount_bind.c    |    6 +++---
+ modules/mount_changer.c |    2 +-
+ modules/mount_ext2.c    |    2 +-
+ modules/mount_generic.c |    2 +-
+ modules/mount_nfs.c     |    2 +-
+ modules/parse_amd.c     |    2 +-
+ 12 files changed, 16 insertions(+), 12 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index d07d88ce..4faab510 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -1,5 +1,6 @@
+ xx/xx/2018 autofs-5.1.5
+ - fix flag file permission.
++- fix directory create permission.
+ 
+ 19/12/2017 autofs-5.1.4
+ - fix spec file url.
+diff --git a/daemon/automount.c b/daemon/automount.c
+index 5c739617..dcdc19fb 100644
+--- a/daemon/automount.c
++++ b/daemon/automount.c
+@@ -51,6 +51,8 @@ const char *libdir = AUTOFS_LIB_DIR;	/* Location of library modules */
+ const char *mapdir = AUTOFS_MAP_DIR;	/* Location of mount maps */
+ const char *confdir = AUTOFS_CONF_DIR;	/* Location of autofs config file */
+ 
++unsigned int mp_mode = 0755;
++
+ unsigned int nfs_mount_uses_string_options = 0;
+ static struct nfs_mount_vers vers, check = {1, 1, 1};
+ 
+diff --git a/daemon/direct.c b/daemon/direct.c
+index 9a134351..3fdecdb8 100644
+--- a/daemon/direct.c
++++ b/daemon/direct.c
+@@ -424,7 +424,7 @@ int do_mount_autofs_direct(struct autofs_point *ap,
+ 	}
+ 
+ 	/* In case the directory doesn't exist, try to mkdir it */
+-	if (mkdir_path(me->key, 0555) < 0) {
++	if (mkdir_path(me->key, mp_mode) < 0) {
+ 		if (errno != EEXIST && errno != EROFS) {
+ 			crit(ap->logopt,
+ 			     "failed to create mount directory %s", me->key);
+@@ -739,7 +739,7 @@ int mount_autofs_offset(struct autofs_point *ap, struct mapent *me, const char *
+ 	strcat(mountpoint, offset);
+ 
+ 	/* In case the directory doesn't exist, try to mkdir it */
+-	if (mkdir_path(mountpoint, 0555) < 0) {
++	if (mkdir_path(mountpoint, mp_mode) < 0) {
+ 		if (errno == EEXIST) {
+ 			/*
+ 			 * If the mount point directory is a real mount
+diff --git a/daemon/indirect.c b/daemon/indirect.c
+index ffb11b8c..03c081ed 100644
+--- a/daemon/indirect.c
++++ b/daemon/indirect.c
+@@ -133,7 +133,7 @@ static int do_mount_autofs_indirect(struct autofs_point *ap, const char *root)
+ 	}
+ 
+ 	/* In case the directory doesn't exist, try to mkdir it */
+-	if (mkdir_path(root, 0555) < 0) {
++	if (mkdir_path(root, mp_mode) < 0) {
+ 		if (errno != EEXIST && errno != EROFS) {
+ 			crit(ap->logopt,
+ 			     "failed to create autofs directory %s",
+diff --git a/daemon/lookup.c b/daemon/lookup.c
+index cb67e7d9..6a722b3b 100644
+--- a/daemon/lookup.c
++++ b/daemon/lookup.c
+@@ -802,7 +802,7 @@ int lookup_ghost(struct autofs_point *ap, const char *root)
+ 				goto next;
+ 			}
+ 
+-			ret = mkdir_path(fullpath, 0555);
++			ret = mkdir_path(fullpath, mp_mode);
+ 			if (ret < 0 && errno != EEXIST) {
+ 				char *estr = strerror_r(errno, buf, MAX_ERR_BUF);
+ 				warn(ap->logopt,
+diff --git a/include/automount.h b/include/automount.h
+index 2e2c2b02..e5c19d23 100644
+--- a/include/automount.h
++++ b/include/automount.h
+@@ -269,6 +269,7 @@ void reset_signals(void);
+ int do_mount(struct autofs_point *ap, const char *root, const char *name,
+ 	     int name_len, const char *what, const char *fstype,
+ 	     const char *options);
++extern unsigned int mp_mode;
+ int mkdir_path(const char *path, mode_t mode);
+ int rmdir_path(struct autofs_point *ap, const char *path, dev_t dev);
+ 
+diff --git a/modules/mount_bind.c b/modules/mount_bind.c
+index 4864ea51..5effa880 100644
+--- a/modules/mount_bind.c
++++ b/modules/mount_bind.c
+@@ -151,7 +151,7 @@ int mount_mount(struct autofs_point *ap, const char *root, const char *name, int
+ 
+ 		debug(ap->logopt, MODPREFIX "calling mkdir_path %s", fullpath);
+ 
+-		status = mkdir_path(fullpath, 0555);
++		status = mkdir_path(fullpath, mp_mode);
+ 		if (status && errno != EEXIST) {
+ 			char *estr = strerror_r(errno, buf, MAX_ERR_BUF);
+ 			error(ap->logopt,
+@@ -203,7 +203,7 @@ int mount_mount(struct autofs_point *ap, const char *root, const char *name, int
+ 		} else {
+ 			debug(ap->logopt,
+ 			      MODPREFIX "calling mkdir_path %s", basepath);
+-			if (mkdir_path(basepath, 0555) && errno != EEXIST) {
++			if (mkdir_path(basepath, mp_mode) && errno != EEXIST) {
+ 				char *estr;
+ 				estr = strerror_r(errno, buf, MAX_ERR_BUF);
+ 				error(ap->logopt,
+@@ -219,7 +219,7 @@ int mount_mount(struct autofs_point *ap, const char *root, const char *name, int
+ 			      "failed to create symlink %s -> %s",
+ 			      fullpath, what);
+ 			if ((ap->flags & MOUNT_FLAG_GHOST) && !status) {
+-				if (mkdir_path(fullpath, 0555) && errno != EEXIST) {
++				if (mkdir_path(fullpath, mp_mode) && errno != EEXIST) {
+ 					char *estr = strerror_r(errno, buf, MAX_ERR_BUF);
+ 					error(ap->logopt,
+ 					      MODPREFIX "mkdir_path %s failed: %s",
+diff --git a/modules/mount_changer.c b/modules/mount_changer.c
+index 798f23b2..7d44a720 100644
+--- a/modules/mount_changer.c
++++ b/modules/mount_changer.c
+@@ -87,7 +87,7 @@ int mount_mount(struct autofs_point *ap, const char *root, const char *name, int
+ 
+ 	debug(ap->logopt, MODPREFIX "calling mkdir_path %s", fullpath);
+ 
+-	status = mkdir_path(fullpath, 0555);
++	status = mkdir_path(fullpath, mp_mode);
+ 	if (status && errno != EEXIST) {
+ 		char *estr = strerror_r(errno, buf, MAX_ERR_BUF);
+ 		error(ap->logopt,
+diff --git a/modules/mount_ext2.c b/modules/mount_ext2.c
+index 90fc0876..3bbea95a 100644
+--- a/modules/mount_ext2.c
++++ b/modules/mount_ext2.c
+@@ -69,7 +69,7 @@ int mount_mount(struct autofs_point *ap, const char *root, const char *name, int
+ 
+ 	debug(ap->logopt, MODPREFIX "calling mkdir_path %s", fullpath);
+ 
+-	status = mkdir_path(fullpath, 0555);
++	status = mkdir_path(fullpath, mp_mode);
+ 	if (status && errno != EEXIST) {
+ 		char *estr = strerror_r(errno, buf, MAX_ERR_BUF);
+ 		error(ap->logopt,
+diff --git a/modules/mount_generic.c b/modules/mount_generic.c
+index ae637875..b1a3adbf 100644
+--- a/modules/mount_generic.c
++++ b/modules/mount_generic.c
+@@ -68,7 +68,7 @@ int mount_mount(struct autofs_point *ap, const char *root, const char *name, int
+ 
+ 	debug(ap->logopt, MODPREFIX "calling mkdir_path %s", fullpath);
+ 
+-	status = mkdir_path(fullpath, 0555);
++	status = mkdir_path(fullpath, mp_mode);
+ 	if (status && errno != EEXIST) {
+ 		char *estr = strerror_r(errno, buf, MAX_ERR_BUF);
+ 		error(ap->logopt,
+diff --git a/modules/mount_nfs.c b/modules/mount_nfs.c
+index bf712a93..77166544 100644
+--- a/modules/mount_nfs.c
++++ b/modules/mount_nfs.c
+@@ -277,7 +277,7 @@ dont_probe:
+ 
+ 	debug(ap->logopt, MODPREFIX "calling mkdir_path %s", fullpath);
+ 
+-	status = mkdir_path(fullpath, 0555);
++	status = mkdir_path(fullpath, mp_mode);
+ 	if (status && errno != EEXIST) {
+ 		char *estr = strerror_r(errno, buf, MAX_ERR_BUF);
+ 		error(ap->logopt,
+diff --git a/modules/parse_amd.c b/modules/parse_amd.c
+index b40c1ad1..c4b3ef0b 100644
+--- a/modules/parse_amd.c
++++ b/modules/parse_amd.c
+@@ -1288,7 +1288,7 @@ static int do_program_mount(struct autofs_point *ap,
+ 		rv = 0;
+ 		ext_mount_add(&entry->ext_mount, entry->fs, 1);
+ 	} else {
+-		rv = mkdir_path(entry->fs, 0555);
++		rv = mkdir_path(entry->fs, mp_mode);
+ 		if (rv && errno != EEXIST) {
+ 			char buf[MAX_ERR_BUF];
+ 			char *estr;

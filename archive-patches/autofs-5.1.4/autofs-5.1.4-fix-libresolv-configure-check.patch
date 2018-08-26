@@ -1,0 +1,94 @@
+autofs-5.1.4 - fix libresolv configure check
+
+From: Ian Kent <raven@themaw.net>
+
+The libresolv functions are not found by AC_CHECK_LIB() unless
+they are prefixed with "__".
+
+So change the library check to also look for __<function> during
+the check.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG    |    1 +
+ configure    |   41 +++++++++++++++++++++++++++++++++++++++++
+ configure.in |    2 +-
+ 3 files changed, 43 insertions(+), 1 deletion(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index a7bb89dc..dbfb8389 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -13,6 +13,7 @@ xx/xx/2018 autofs-5.1.5
+ - fix monotonic_elapsed.
+ - Makefiles.rules: remove 'samples' from SUBDIRS.
+ - dont allow trailing slash in master map mount points.
++- fix libresolv configure check.
+ 
+ 19/12/2017 autofs-5.1.4
+ - fix spec file url.
+diff --git a/configure b/configure
+index 2d517aac..5c8aae30 100755
+--- a/configure
++++ b/configure
+@@ -4821,6 +4821,47 @@ fi
+ $as_echo "$ac_cv_lib_resolv_res_query" >&6; }
+ if test "x$ac_cv_lib_resolv_res_query" = xyes; then :
+   LIBRESOLV="-lresolv"
++else
++  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for __res_query in -lresolv" >&5
++$as_echo_n "checking for __res_query in -lresolv... " >&6; }
++if ${ac_cv_lib_resolv___res_query+:} false; then :
++  $as_echo_n "(cached) " >&6
++else
++  ac_check_lib_save_LIBS=$LIBS
++LIBS="-lresolv  $LIBS"
++cat confdefs.h - <<_ACEOF >conftest.$ac_ext
++/* end confdefs.h.  */
++
++/* Override any GCC internal prototype to avoid an error.
++   Use char because int might match the return type of a GCC
++   builtin and then its argument prototype would still apply.  */
++#ifdef __cplusplus
++extern "C"
++#endif
++char __res_query ();
++int
++main ()
++{
++return __res_query ();
++  ;
++  return 0;
++}
++_ACEOF
++if ac_fn_c_try_link "$LINENO"; then :
++  ac_cv_lib_resolv___res_query=yes
++else
++  ac_cv_lib_resolv___res_query=no
++fi
++rm -f core conftest.err conftest.$ac_objext \
++    conftest$ac_exeext conftest.$ac_ext
++LIBS=$ac_check_lib_save_LIBS
++fi
++{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_resolv___res_query" >&5
++$as_echo "$ac_cv_lib_resolv___res_query" >&6; }
++if test "x$ac_cv_lib_resolv___res_query" = xyes; then :
++  LIBRESOLV="-lresolv"
++fi
++
+ fi
+ 
+ 
+diff --git a/configure.in b/configure.in
+index d74775cc..4d1208f5 100644
+--- a/configure.in
++++ b/configure.in
+@@ -217,7 +217,7 @@ AC_SUBST(NSL_LIBS)
+ NSL_CFLAGS=""
+ ])
+ 
+-AC_CHECK_LIB(resolv, res_query, LIBRESOLV="-lresolv")
++AC_CHECK_LIB(resolv, res_query, LIBRESOLV="-lresolv", AC_CHECK_LIB(resolv, __res_query, LIBRESOLV="-lresolv"))
+ AC_SUBST(LIBRESOLV)
+ 
+ #

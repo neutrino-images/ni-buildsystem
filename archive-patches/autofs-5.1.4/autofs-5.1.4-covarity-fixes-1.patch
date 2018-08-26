@@ -1,0 +1,434 @@
+autofs-5.1.4 - covarity fixes 1
+
+From: Ian Kent <raven@themaw.net>
+
+* remove conditional close of nullfd.
+* fix memory leak of local_domain in lib/macros.c:macro_init().
+* check for NULL prior to several assignments in lib/master_parse.y.
+* fix memory leak in lib/mounts.c:add_std_amd_vars().
+* add missing break in lib/rpc_subs.c:rpc_get_netid().
+* fix variable scope problem in modules/amd_parse.c:make_selector().
+* fix selector itself not freed in lib/parse_subs.c:free_selector().
+* fix possible memory leak in modules/lookup_ldap.c:parse_ldap_config().
+* fix possible memory leak in modules/lookup_ldap.c:decode_percent_hack().
+* fix usage of decode_percent_hack() in modules/lookup_ldap.c.
+* initialize enc_key1 and enc_key2 in modules/lookup_ldap.c:lookup_one().
+* fix double alloc of map_type in modules/parse_amd.c:make_default_entry().
+* fix double alloc of map_type in modules/parse_amd.c:get_defaults_entry().
+* fix possible memory leak in modules/parse_sun.c:parse_reinit().
+* initialize myoptions and ro_loc in modules/parse_sun.c:mount_subtree().
+* initialize myoptions and loc in modules/parse_sun.c:parse_mount().
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ lib/log.c             |    3 +--
+ lib/macros.c          |    1 +
+ lib/master_parse.y    |   28 ++++++++++++++++++++++++++++
+ lib/mounts.c          |    4 +++-
+ lib/parse_subs.c      |    1 +
+ lib/rpc_subs.c        |    1 +
+ modules/amd_parse.y   |    4 ++--
+ modules/lookup_ldap.c |   27 ++++++++++++++++++++++-----
+ modules/parse_amd.c   |    4 ++--
+ modules/parse_sun.c   |   10 +++++++++-
+ 10 files changed, 70 insertions(+), 13 deletions(-)
+
+diff --git a/lib/log.c b/lib/log.c
+index 1a0bc3fa..f6ab77c1 100644
+--- a/lib/log.c
++++ b/lib/log.c
+@@ -336,8 +336,7 @@ void log_to_syslog(void)
+ 		exit(1);
+ 	}
+ 
+-	if (nullfd > 2)
+-		close(nullfd);
++	close(nullfd);
+ 
+ 	return;
+ }
+diff --git a/lib/macros.c b/lib/macros.c
+index dfdca857..5def26da 100644
+--- a/lib/macros.c
++++ b/lib/macros.c
+@@ -137,6 +137,7 @@ void macro_init(void)
+ 
+ 	macro_init_done = 1;
+ 	macro_unlock();
++	free(local_domain);
+ 	return;
+ }
+ 
+diff --git a/lib/master_parse.y b/lib/master_parse.y
+index 761ade9b..5d687a70 100644
+--- a/lib/master_parse.y
++++ b/lib/master_parse.y
+@@ -157,6 +157,8 @@ line:
+ 
+ 		trim_maptype($2);
+ 
++		if (path)
++			free(path);
+ 		path = master_strdup($1);
+ 		if (!path) {
+ 			master_error("memory allocation error");
+@@ -167,6 +169,8 @@ line:
+ 		if ((tmp = strchr($2, ',')))
+ 			*tmp++ = '\0';
+ 
++		if (type)
++			free(type);
+ 		type = master_strdup($2);
+ 		if (!type) {
+ 			master_error("memory allocation error");
+@@ -174,6 +178,8 @@ line:
+ 			YYABORT;
+ 		}
+ 		if (tmp) {
++			if (format)
++				free(format);
+ 			format = master_strdup(tmp);
+ 			if (!format) {
+ 				master_error("memory allocation error");
+@@ -204,6 +210,8 @@ line:
+ 
+ mapspec: map
+ 	{
++		if (local_argv)
++			free_argv(local_argc, (const char **) local_argv);
+ 		local_argc = tmp_argc;
+ 		local_argv = tmp_argv;
+ 		tmp_argc = 0;
+@@ -211,6 +219,8 @@ mapspec: map
+ 	}
+ 	| map options
+ 	{
++		if (local_argv)
++			free_argv(local_argc, (const char **) local_argv);
+ 		local_argc = tmp_argc;
+ 		local_argv = tmp_argv;
+ 		tmp_argc = 0;
+@@ -288,6 +298,8 @@ map:	PATH
+ 	}
+ 	| MAPHOSTS
+ 	{
++		if (type)
++			free(type);
+ 		type = master_strdup($1 + 1);
+ 		if (!type) {
+ 			local_free_vars();
+@@ -302,6 +314,8 @@ map:	PATH
+ 	}
+ 	| MAPNULL
+ 	{
++		if (type)
++			free(type);
+ 		type = master_strdup($1 + 1);
+ 		if (!type) {
+ 			local_free_vars();
+@@ -310,6 +324,8 @@ map:	PATH
+ 	}
+ 	| dnattrs
+ 	{
++		if (type)
++			free(type);
+ 		type = master_strdup("ldap");
+ 		if (!type) {
+ 			local_free_vars();
+@@ -332,6 +348,8 @@ map:	PATH
+ 		if ((tmp = strchr($1, ',')))
+ 			*tmp++ = '\0';
+ 
++		if (type)
++			free(type);
+ 		if (strcmp($1, "exec"))
+ 			type = master_strdup($1);
+ 		else
+@@ -342,6 +360,8 @@ map:	PATH
+ 			YYABORT;
+ 		}
+ 		if (tmp) {
++			if (format)
++				free(format);
+ 			format = master_strdup(tmp);
+ 			if (!format) {
+ 				master_error("memory allocation error");
+@@ -366,6 +386,8 @@ map:	PATH
+ 		if ((tmp = strchr($1, ',')))
+ 			*tmp++ = '\0';
+ 
++		if (type)
++			free(type);
+ 		if (strcmp($1, "exec"))
+ 			type = master_strdup($1);
+ 		else
+@@ -376,6 +398,8 @@ map:	PATH
+ 			YYABORT;
+ 		}
+ 		if (tmp) {
++			if (format)
++				free(format);
+ 			format = master_strdup(tmp);
+ 			if (!format) {
+ 				master_error("memory allocation error");
+@@ -400,6 +424,8 @@ map:	PATH
+ 		if ((tmp = strchr($1, ',')))
+ 			*tmp++ = '\0';
+ 
++		if (type)
++			free(type);
+ 		if (strcmp($1, "exec"))
+ 			type = master_strdup($1);
+ 		else
+@@ -410,6 +436,8 @@ map:	PATH
+ 			YYABORT;
+ 		}
+ 		if (tmp) {
++			if (format)
++				free(format);
+ 			format = master_strdup(tmp);
+ 			if (!format) {
+ 				master_error("memory allocation error");
+diff --git a/lib/mounts.c b/lib/mounts.c
+index f46fab2b..a35503bf 100644
+--- a/lib/mounts.c
++++ b/lib/mounts.c
+@@ -489,8 +489,10 @@ void add_std_amd_vars(struct substvar *sv)
+ 		const struct substvar *v = macro_findvar(sv, "domain", 4);
+ 		if (v && *v->val) {
+ 			tmp = strdup(v->val);
+-			if (tmp)
++			if (tmp) {
+ 				macro_global_addvar("cluster", 7, tmp);
++				free(tmp);
++			}
+ 		}
+ 	}
+ 
+diff --git a/lib/parse_subs.c b/lib/parse_subs.c
+index 841e81fd..cdda2e1a 100644
+--- a/lib/parse_subs.c
++++ b/lib/parse_subs.c
+@@ -189,6 +189,7 @@ void free_selector(struct selector *selector)
+ 			free(s->func.arg2);
+ 		s = next;
+ 	}
++	free(selector);
+ 	return;
+ }
+ 
+diff --git a/lib/rpc_subs.c b/lib/rpc_subs.c
+index 9451c455..8b23627a 100644
+--- a/lib/rpc_subs.c
++++ b/lib/rpc_subs.c
+@@ -389,6 +389,7 @@ static enum clnt_stat rpc_get_netid(const sa_family_t family,
+ 		}
+ 
+ 		*netid = nc_netid;
++		break;
+ 	}
+ 	endnetconfig(handle);
+ 	free(nc_proto);
+diff --git a/modules/amd_parse.y b/modules/amd_parse.y
+index 1d72f190..5bd688d9 100644
+--- a/modules/amd_parse.y
++++ b/modules/amd_parse.y
+@@ -822,13 +822,13 @@ static int make_selector(char *name,
+ 		if (!value1)
+ 			tmp = NULL;
+ 		else {
+-			char *tmp = amd_strdup(value1);
++			tmp = amd_strdup(value1);
+ 			if (!tmp)
+ 				goto error;
+ 		}
+ 		s->func.arg1 = tmp;
+ 	} else if (s->sel->flags & SEL_FLAG_FUNC2) {
+-		char *tmp = amd_strdup(value1);
++		tmp = amd_strdup(value1);
+ 		if (!tmp)
+ 			goto error;
+ 		s->func.arg1 = tmp;
+diff --git a/modules/lookup_ldap.c b/modules/lookup_ldap.c
+index 37810e1c..06c96973 100644
+--- a/modules/lookup_ldap.c
++++ b/modules/lookup_ldap.c
+@@ -1137,6 +1137,7 @@ int parse_ldap_config(unsigned logopt, struct lookup_context *ctxt)
+ 		error(logopt,
+ 		      MODPREFIX "stat(2) failed with error %s.",
+ 		      strerror(errno));
++		free(auth_conf);
+ 		return 0;
+ 	}
+ 
+@@ -1148,6 +1149,7 @@ int parse_ldap_config(unsigned logopt, struct lookup_context *ctxt)
+ 		      "Please make sure that it is owned by root, group "
+ 		      "is root, and the mode is 0600.",
+ 		      auth_conf);
++		free(auth_conf);
+ 		return -1;
+ 	}
+ 
+@@ -1182,9 +1184,11 @@ int parse_ldap_config(unsigned logopt, struct lookup_context *ctxt)
+ 		goto out;
+ 	}
+ 
+-	if (!usetls || ctxt->port == LDAPS_PORT)
++	if (!usetls || ctxt->port == LDAPS_PORT) {
+ 		use_tls = LDAP_TLS_DONT_USE;
+-	else {
++		if (usetls)
++			free(usetls);
++	} else {
+ 		if (!strcasecmp(usetls, "yes"))
+ 			use_tls = LDAP_TLS_INIT;
+ 		else if (!strcasecmp(usetls, "no"))
+@@ -1194,6 +1198,7 @@ int parse_ldap_config(unsigned logopt, struct lookup_context *ctxt)
+ 			      MODPREFIX
+ 			      "The usetls property must have value "
+ 			      "\"yes\" or \"no\".");
++			free(usetls);
+ 			ret = -1;
+ 			goto out;
+ 		}
+@@ -1221,6 +1226,7 @@ int parse_ldap_config(unsigned logopt, struct lookup_context *ctxt)
+ 			      MODPREFIX
+ 			      "The tlsrequired property must have value "
+ 			      "\"yes\" or \"no\".");
++			free(tlsrequired);
+ 			ret = -1;
+ 			goto out;
+ 		}
+@@ -1252,6 +1258,7 @@ int parse_ldap_config(unsigned logopt, struct lookup_context *ctxt)
+ 			      MODPREFIX
+ 			      "The authrequired property must have value "
+ 			      "\"yes\", \"no\", \"autodetect\", or \"simple\".");
++			free(authrequired);
+ 			ret = -1;
+ 			goto out;
+ 		}
+@@ -1338,6 +1345,7 @@ auth_fail:
+ 	(void)get_property(logopt, root, "credentialcache", &client_cc);
+ 
+ 	ctxt->auth_conf = auth_conf;
++	auth_conf = NULL;
+ 	ctxt->use_tls = use_tls;
+ 	ctxt->tls_required = tls_required;
+ 	ctxt->auth_required = auth_required;
+@@ -1375,8 +1383,12 @@ auth_fail:
+ 		      user, secret ? "specified" : "unspecified",
+ 		      client_princ, client_cc);
+ 	}
++	if (authtype)
++		free(authtype);
+ out:
+ 	xmlFreeDoc(doc);
++	if (auth_conf)
++		free(auth_conf);
+ 
+ 	if (fallback)
+ 		return 0;
+@@ -1986,7 +1998,7 @@ int lookup_read_master(struct master *master, time_t age, void *context)
+ 			}
+ 		} else if (count == 1) {
+ 			dec_len = decode_percent_hack(keyValue[0], &key);
+-			if (dec_len < 0) {
++			if (dec_len <= 0) {
+ 				error(logopt, MODPREFIX
+ 				      "invalid map key %s - ignoring",
+ 				      *keyValue);
+@@ -1994,7 +2006,7 @@ int lookup_read_master(struct master *master, time_t age, void *context)
+ 			}
+ 		} else {
+ 			dec_len = decode_percent_hack(keyValue[0], &key);
+-			if (dec_len < 0) {
++			if (dec_len <= 0) {
+ 				error(logopt, MODPREFIX
+ 				      "invalid map key %s - ignoring",
+ 				      *keyValue);
+@@ -2004,7 +2016,7 @@ int lookup_read_master(struct master *master, time_t age, void *context)
+ 			for (i = 1; i < count; i++) {
+ 				char *k;
+ 				dec_len = decode_percent_hack(keyValue[i], &k);
+-				if (dec_len < 0) {
++				if (dec_len <= 0) {
+ 					error(logopt, MODPREFIX
+ 					      "invalid map key %s - ignoring",
+ 					      *keyValue);
+@@ -2159,6 +2171,8 @@ static int decode_percent_hack(const char *name, char **key)
+ 	*key = NULL;
+ 
+ 	len = get_percent_decoded_len(name);
++	if (!len)
++		return 0;
+ 	new = malloc(len + 1);
+ 	if (!new)
+ 		return -1;
+@@ -2998,6 +3012,9 @@ static int lookup_one(struct autofs_point *ap, struct map_source *source,
+ 	attrs[1] = info;
+ 	attrs[2] = NULL;
+ 
++	enc_key1 = NULL;
++	enc_key2 = NULL;
++
+ 	if (*qKey == '*' && qKey_len == 1)
+ 		*qKey = '/';
+ 	else if (!strcasecmp(class, "nisObject")) {
+diff --git a/modules/parse_amd.c b/modules/parse_amd.c
+index 9543ced3..ea57270a 100644
+--- a/modules/parse_amd.c
++++ b/modules/parse_amd.c
+@@ -1879,7 +1879,7 @@ struct amd_entry *make_default_entry(struct autofs_point *ap,
+ 	 */
+ 	map_type = conf_amd_get_map_type(ap->path);
+ 	if (map_type)
+-		defaults_entry->map_type = strdup(map_type);
++		defaults_entry->map_type = map_type;
+ 	/* The list should now be empty .... */
+ 	free_amd_entry_list(&dflts);
+ 	return defaults_entry;
+@@ -2006,7 +2006,7 @@ static struct amd_entry *get_defaults_entry(struct autofs_point *ap,
+ 			 */
+ 			char *map_type = conf_amd_get_map_type(ap->path);
+ 			if (map_type)
+-				entry->map_type = strdup(map_type);
++				entry->map_type = map_type;
+ 		}
+ 		free(expand);
+ 	}
+diff --git a/modules/parse_sun.c b/modules/parse_sun.c
+index 536a9bc1..88dde0b2 100644
+--- a/modules/parse_sun.c
++++ b/modules/parse_sun.c
+@@ -443,8 +443,10 @@ int parse_reinit(int argc, const char *const *argv, void **context)
+ 
+ 	*new = default_context;
+ 
+-	if (do_init(argc, argv, new))
++	if (do_init(argc, argv, new)) {
++		free(new);
+ 		return 1;
++	}
+ 
+ 	kill_context(ctxt);
+ 
+@@ -1143,6 +1145,9 @@ static int mount_subtree(struct autofs_point *ap, struct mapent *me,
+ 			const char *root;
+ 			int ro_len;
+ 
++			myoptions = NULL;
++			ro_loc = NULL;
++
+ 			rv = parse_mapent(ro->mapent,
+ 				options, &myoptions, &ro_loc, ap->logopt);
+ 			if (!rv) {
+@@ -1524,6 +1529,9 @@ dont_expand:
+ 			p += l;
+ 			p = skipspace(p);
+ 
++			myoptions = NULL;
++			loc = NULL;
++
+ 			l = parse_mapent(p, options, &myoptions, &loc, ap->logopt);
+ 			if (!l) {
+ 				cache_delete_offset_list(mc, name);

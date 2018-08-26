@@ -453,17 +453,24 @@ $(D)/ntfs-3g: $(ARCHIVE)/ntfs-3g_ntfsprogs-$(NTFS3G_VER).tgz | $(TARGET_DIR)
 	$(REMOVE)/ntfs-3g_ntfsprogs-$(NTFS3G_VER)
 	touch $@
 
-# the 'autofs-use-pkg-config' patch for libtirpc link should hopefully be added upstream soon
-# see: https://patchwork.ozlabs.org/patch/782714/
+# -----------------------------------------------------------------------------
+
+# cd $(PATCHES)\autofs-5.1.4
+# wget -N https://mirrors.edge.kernel.org/pub/linux/daemons/autofs/v5/patches-5.1.5/patch_order-5.1.4
+# for p in $(cat patch_order-5.1.4); do test -f $p || wget https://mirrors.edge.kernel.org/pub/linux/daemons/autofs/v5/patches-5.1.5/$p; done
+
+AUTOFS_PATCH = $(addprefix autofs-$(AUTOFS5_VER)/, $(shell cat $(PATCHES)/autofs-$(AUTOFS5_VER)/patch_order-$(AUTOFS5_VER)))
+
 $(D)/autofs5: $(D)/libtirpc $(ARCHIVE)/autofs-$(AUTOFS5_VER).tar.gz | $(TARGET_DIR)
 	$(REMOVE)/autofs-$(AUTOFS5_VER)
 	$(UNTAR)/autofs-$(AUTOFS5_VER).tar.gz
 	cd $(BUILD_TMP)/autofs-$(AUTOFS5_VER) && \
-	$(PATCH)/autofs-include-linux-nfs.h-directly-in-rpc_sub.patch && \
-	export ac_cv_linux_procfs=yes && \
-	export ac_cv_path_KRB5_CONFIG=no && \
-	export ac_cv_path_MODPROBE=/sbin/modprobe && \
-	export ac_cv_path_RANLIB=$(TARGET)-ranlib && \
+		$(call apply_patches, $(AUTOFS_PATCH)) && \
+		read; \
+		export ac_cv_linux_procfs=yes && \
+		export ac_cv_path_KRB5_CONFIG=no && \
+		export ac_cv_path_MODPROBE=/sbin/modprobe && \
+		export ac_cv_path_RANLIB=$(TARGET)-ranlib && \
 		autoreconf -fi && \
 		$(CONFIGURE) \
 			--prefix= \
@@ -488,6 +495,8 @@ $(D)/autofs5: $(D)/libtirpc $(ARCHIVE)/autofs-$(AUTOFS5_VER).tar.gz | $(TARGET_D
 	ln -sf autofs $(TARGET_DIR)/etc/init.d/K40autofs
 	$(REMOVE)/autofs-$(AUTOFS5_VER)
 	touch $@
+
+# -----------------------------------------------------------------------------
 
 samba: samba-$(BOXSERIES)
 

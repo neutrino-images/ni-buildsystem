@@ -1,0 +1,75 @@
+autofs-5.1.4 - fix NFS version mask usage
+
+From: Ian Kent <raven@themaw.net>
+
+Upstream commit a8af65195 changed NFS_VERS_MASK to exclude NFSv2
+so NFSv2 would be excluded in the default availability probe.
+
+But NFS_VERS_MASK is used like a mask elsewhere and causes NFSv2
+to be cleared for the availability probe even when it is requested.
+
+So add a macro to NFS_VERS_DEFAULT (and accompanying macros) to be
+used to set initial defaults and restore NFS_VERS_MASK to what it
+should be when used as a mask.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG            |    1 +
+ include/replicated.h |    5 ++++-
+ modules/mount_nfs.c  |    6 +++---
+ 3 files changed, 8 insertions(+), 4 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index e3ada7e7..dd48bf71 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -24,6 +24,7 @@ xx/xx/2018 autofs-5.1.5
+ - tiny patch for autofs typo and possible bug.
+ - add units After line to include statd service.
+ - use systemd sd_notify() at startup.
++- fix NFS version mask usage.
+ 
+ 19/12/2017 autofs-5.1.4
+ - fix spec file url.
+diff --git a/include/replicated.h b/include/replicated.h
+index 0f482d21..95ff1f0d 100644
+--- a/include/replicated.h
++++ b/include/replicated.h
+@@ -26,7 +26,9 @@
+ #define NFS2_SUPPORTED		0x0010
+ #define NFS3_SUPPORTED		0x0020
+ #define NFS4_SUPPORTED		0x0040
+-#define NFS_VERS_MASK		(NFS3_SUPPORTED)
++#define NFS_VERS_DEFAULT	(NFS3_SUPPORTED)
++#define NFS_VERS_MASK		(NFS2_SUPPORTED|NFS3_SUPPORTED)
++#define NFS4_VERS_DEFAULT	(NFS4_SUPPORTED)
+ #define NFS4_VERS_MASK		(NFS4_SUPPORTED)
+ 
+ #define NFS2_REQUESTED		NFS2_SUPPORTED
+@@ -39,6 +41,7 @@
+ #define UDP_REQUESTED		UDP_SUPPORTED
+ #define TCP6_REQUESTED		0x0100
+ #define UDP6_REQUESTED		0x0200
++#define NFS_PROTO_DEFAULT	(TCP_SUPPORTED|UDP_SUPPORTED)
+ #define NFS_PROTO_MASK		(TCP_SUPPORTED|UDP_SUPPORTED)
+ 
+ #define NFS2_TCP_SUPPORTED	NFS2_SUPPORTED
+diff --git a/modules/mount_nfs.c b/modules/mount_nfs.c
+index 4cf0cd27..426c27bd 100644
+--- a/modules/mount_nfs.c
++++ b/modules/mount_nfs.c
+@@ -86,11 +86,11 @@ int mount_mount(struct autofs_point *ap, const char *root, const char *name, int
+ 	      root, name, what, fstype, options);
+ 
+ 	mount_default_proto = defaults_get_mount_nfs_default_proto();
+-	vers = NFS_VERS_MASK | NFS_PROTO_MASK;
++	vers = NFS_VERS_DEFAULT | NFS_PROTO_DEFAULT;
+ 	if (strcmp(fstype, "nfs4") == 0)
+-		vers = NFS4_VERS_MASK | TCP_SUPPORTED;
++		vers = NFS4_VERS_DEFAULT | TCP_SUPPORTED;
+ 	else if (mount_default_proto == 4)
+-		vers = vers | NFS4_VERS_MASK;
++		vers = vers | NFS4_VERS_DEFAULT;
+ 
+ 	/* Extract "nosymlink" pseudo-option which stops local filesystems
+ 	 * from being symlinked.

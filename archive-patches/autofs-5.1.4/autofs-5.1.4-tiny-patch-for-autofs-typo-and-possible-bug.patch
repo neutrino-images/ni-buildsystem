@@ -1,0 +1,52 @@
+autofs-5.1.4 - tiny patch for autofs typo and possible bug
+
+From: Todd Eigenschink <todd@fai2.com>
+
+(1) The word "to" is doubled in two warnings.
+
+(2) It prints a warning when it can't open the "old" config file, even
+if it was able to open the default one. That's a reasonable warning if
+it *couldn't* open the new one, but seems unnecessary if it could.
+
+The patch removes the unneeded "to"s and only prints warning about the
+old config file if it couldn't open the default one.
+
+Signed-off-by: Todd Eigenschink <todd@fai2.com>
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG      |    1 +
+ lib/defaults.c |    6 +++---
+ 2 files changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index a5b79dd6..1e11c3d5 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -21,6 +21,7 @@ xx/xx/2018 autofs-5.1.5
+ - add an example fedfs master map entry to the installed master map.
+ - improve hostname lookup error logging.
+ - fix rpm spec install premissions on auto.net and auto.smb.
++- tiny patch for autofs typo and possible bug.
+ 
+ 19/12/2017 autofs-5.1.4
+ - fix spec file url.
+diff --git a/lib/defaults.c b/lib/defaults.c
+index d20c1907..ae4d27c1 100644
+--- a/lib/defaults.c
++++ b/lib/defaults.c
+@@ -1207,12 +1207,12 @@ unsigned int defaults_read_config(unsigned int to_syslog)
+ 
+ 	conf = open_fopen_r(DEFAULT_CONFIG_FILE);
+ 	if (!conf)
+-		message(to_syslog, "failed to to open config %s",
++		message(to_syslog, "failed to open config %s",
+ 			DEFAULT_CONFIG_FILE);
+ 
+ 	oldconf = open_fopen_r(OLD_CONFIG_FILE);
+-	if (!oldconf)
+-		message(to_syslog, "failed to to open old config %s",
++	if (!oldconf && !conf)
++		message(to_syslog, "failed to open old config %s",
+ 			OLD_CONFIG_FILE);
+ 
+ 	/* Neither config has been updated */

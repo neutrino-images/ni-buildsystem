@@ -1,0 +1,123 @@
+autofs-5.1.4 - improve hostname lookup error logging
+
+From: Ian Kent <raven@themaw.net>
+
+There's not enough information in name lookup log messages
+to determine if the failed lookup is in fact a problem or
+is expected.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG            |    1 +
+ lib/parse_subs.c     |    3 ++-
+ lib/rpc_subs.c       |    3 ++-
+ modules/dclist.c     |    4 +++-
+ modules/parse_amd.c  |    9 ++++++---
+ modules/replicated.c |    5 +++--
+ 6 files changed, 17 insertions(+), 8 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index f771a433..596590a8 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -19,6 +19,7 @@ xx/xx/2018 autofs-5.1.5
+ - add fedfs-map-nfs4.c.
+ - add conditional inclusion of fedfs binaries.
+ - add an example fedfs master map entry to the installed master map.
++- improve hostname lookup error logging.
+ 
+ 19/12/2017 autofs-5.1.4
+ - fix spec file url.
+diff --git a/lib/parse_subs.c b/lib/parse_subs.c
+index db784a58..841e81fd 100644
+--- a/lib/parse_subs.c
++++ b/lib/parse_subs.c
+@@ -476,7 +476,8 @@ unsigned int get_network_proximity(const char *name)
+ 
+ 	ret = getaddrinfo(name_or_num, NULL, &hints, &ni);
+ 	if (ret) {
+-		logerr("getaddrinfo: %s", gai_strerror(ret));
++		logerr("hostname lookup for %s failed: %s",
++		       name_or_num, gai_strerror(ret));
+ 		return PROXIMITY_ERROR;
+ 	}
+ 
+diff --git a/lib/rpc_subs.c b/lib/rpc_subs.c
+index 60ede9f8..cc83e84d 100644
+--- a/lib/rpc_subs.c
++++ b/lib/rpc_subs.c
+@@ -693,7 +693,8 @@ static int create_client(struct conn_info *info, CLIENT **client)
+ 	ret = getaddrinfo(info->host, NULL, &hints, &ai);
+ 	if (ret) {
+ 		error(LOGOPT_ANY,
+-		      "hostname lookup failed: %s", gai_strerror(ret));
++		      "hostname lookup for %s failed: %s",
++		      info->host, gai_strerror(ret));
+ 		goto out_close;
+ 	}
+ 
+diff --git a/modules/dclist.c b/modules/dclist.c
+index 4daa199b..ba32134d 100644
+--- a/modules/dclist.c
++++ b/modules/dclist.c
+@@ -357,7 +357,9 @@ static char *getdnsdomainname(unsigned int logopt)
+ 
+ 	ret = getaddrinfo(name, NULL, &hints, &ni);
+ 	if (ret) {
+-		error(logopt, "hostname lookup failed: %s", gai_strerror(ret));
++		error(logopt,
++		      "hostname lookup for %s failed: %s",
++		      name, gai_strerror(ret));
+ 		return NULL;
+ 	}
+ 
+diff --git a/modules/parse_amd.c b/modules/parse_amd.c
+index e7debc56..9543ced3 100644
+--- a/modules/parse_amd.c
++++ b/modules/parse_amd.c
+@@ -260,7 +260,8 @@ static int match_my_name(unsigned int logopt, const char *name, struct substvar
+ 	ret = getaddrinfo(v->val, NULL, &hints, &cni);
+ 	if (ret) {
+ 		error(logopt, MODPREFIX
+-		      "hostname lookup failed: %s\n", gai_strerror(ret));
++		      "hostname lookup for %s failed: %s\n",
++		      v->val, gai_strerror(ret));
+ 		goto out;
+ 	}
+ 
+@@ -270,7 +271,8 @@ static int match_my_name(unsigned int logopt, const char *name, struct substvar
+ 	ret = getaddrinfo(name, NULL, &hints, &ni);
+ 	if (ret) {
+ 		error(logopt, MODPREFIX
+-		      "hostname lookup failed: %s\n", gai_strerror(ret));
++		      "hostname lookup for %s failed: %s\n",
++		      name, gai_strerror(ret));
+ 		freeaddrinfo(cni);
+ 		goto out;
+ 	}
+@@ -678,7 +680,8 @@ static char *normalize_hostname(unsigned int logopt, const char *host,
+ 		ret = getaddrinfo(host, NULL, &hints, &ni);
+ 		if (ret) {
+ 			error(logopt, MODPREFIX
+-			      "hostname lookup failed: %s", gai_strerror(ret));
++			      "hostname lookup for %s failed: %s",
++			      host, gai_strerror(ret));
+ 			return NULL;
+ 		}
+ 		name = strdup(ni->ai_canonname);
+diff --git a/modules/replicated.c b/modules/replicated.c
+index f7b83236..740270ec 100644
+--- a/modules/replicated.c
++++ b/modules/replicated.c
+@@ -1007,8 +1007,9 @@ try_name:
+ 
+ 	ret = getaddrinfo(name, NULL, &hints, &ni);
+ 	if (ret) {
+-		error(LOGOPT_ANY, "hostname lookup failed: %s",
+-		      gai_strerror(ret));
++		error(LOGOPT_ANY,
++		      "hostname lookup for %s failed: %s",
++		      name, gai_strerror(ret));
+ 		free(name);
+ 		return 0;
+ 	}

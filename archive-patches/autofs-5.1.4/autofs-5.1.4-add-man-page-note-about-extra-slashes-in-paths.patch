@@ -1,0 +1,44 @@
+autofs-5.1.4 - add-man page note about extra slashes in paths
+
+From: Ian Kent <raven@themaw.net>
+
+Make note of the effect unnecessary multiple slashes can have in map
+paths in auto.master(5).
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG            |    1 +
+ man/auto.master.5.in |    8 ++++++++
+ 2 files changed, 9 insertions(+)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index 92e60df9..14eb1de8 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -26,6 +26,7 @@ xx/xx/2018 autofs-5.1.5
+ - use systemd sd_notify() at startup.
+ - fix NFS version mask usage.
+ - fix fd leak in rpc_do_create_client().
++- add-man page note about extra slashes in paths.
+ 
+ 19/12/2017 autofs-5.1.4
+ - fix spec file url.
+diff --git a/man/auto.master.5.in b/man/auto.master.5.in
+index 55a6acd0..e9afb97f 100644
+--- a/man/auto.master.5.in
++++ b/man/auto.master.5.in
+@@ -66,6 +66,14 @@ will process the map according to the specification described below for
+ map entries. Indirect map entries must be unique in the master map so
+ second and subsequent entries for an indirect mount point are ignored by
+ .BR automount (8).
++.TP
++.B NOTE:
++autofs currently does not collapse multiple slashes in paths, so it is
++important to ensure paths used in maps are correct. If unnecessary multiple
++slashes are present in a path it can lead to unexpected failures such as
++an inability to expire automounts. An exception to this is a trailing slash
++at the end of the automount point path in the master map which will be
++removed if present.
+ .SH "FORMAT"
+ Master map entries have three fields separated by an arbitrary number
+ of spaces or tabs. Lines beginning with # are comments. The first field

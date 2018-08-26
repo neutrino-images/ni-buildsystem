@@ -1,0 +1,55 @@
+autofs-5.1.4 - fix use after free in do_master_list_reset()
+
+From: Ian Kent <raven@themaw.net>
+
+Umm ... list_for_each() can't be used in do_master_list_reset() because
+the subject entry of the loop is removed for the list within the loop
+body. Therefore it can't be used to calculate the next pointer within a
+for (...) loop.
+
+There is no list_for_each_safe() macro in the list.h of autofs so it
+needs to be done manually.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG          |    1 +
+ daemon/automount.c |    8 ++++++--
+ 2 files changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index 4faab510..2747327b 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -1,6 +1,7 @@
+ xx/xx/2018 autofs-5.1.5
+ - fix flag file permission.
+ - fix directory create permission.
++- fix use after free in do_master_list_reset().
+ 
+ 19/12/2017 autofs-5.1.4
+ - fix spec file url.
+diff --git a/daemon/automount.c b/daemon/automount.c
+index dcdc19fb..28b3f2f5 100644
+--- a/daemon/automount.c
++++ b/daemon/automount.c
+@@ -2070,14 +2070,18 @@ static void remove_empty_args(char **argv, int *argc)
+ 
+ static void do_master_list_reset(struct master *master)
+ {
+-	struct list_head *head, *p;
++	struct list_head *head, *p, *n;
+ 
+ 	master_mutex_lock();
+ 
+ 	head = &master->mounts;
+-	list_for_each(p, head) {
++	n = head->next;
++	while (n != head) {
+ 		struct master_mapent *entry;
+ 
++		p = n;
++		n = p->next;
++
+ 		entry = list_entry(p, struct master_mapent, list);
+ 
+ 		if (!list_empty(&entry->list))
