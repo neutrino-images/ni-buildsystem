@@ -466,7 +466,6 @@ $(D)/autofs5: $(D)/libtirpc $(ARCHIVE)/autofs-$(AUTOFS5_VER).tar.gz | $(TARGET_D
 	$(UNTAR)/autofs-$(AUTOFS5_VER).tar.gz
 	cd $(BUILD_TMP)/autofs-$(AUTOFS5_VER) && \
 		$(call apply_patches, $(AUTOFS_PATCH)) && \
-		read; \
 		export ac_cv_linux_procfs=yes && \
 		export ac_cv_path_KRB5_CONFIG=no && \
 		export ac_cv_path_MODPROBE=/sbin/modprobe && \
