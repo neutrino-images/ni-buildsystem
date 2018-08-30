@@ -5,7 +5,7 @@ OMDB_API_KEY ?= 20711f9e
 TMDB_DEV_KEY ?= 7270f1b571c4ecbb5b204ddb7f8939b1
 SHOUTCAST_DEV_KEY ?= fa1669MuiRPorUBw
 
-N_DEPS = libcurl freetype libjpeg giflib ffmpeg openthreads openssl libdvbsi ntp libsigc++ luaposix pugixml libfribidi
+N_DEPS = libcurl freetype libjpeg giflib ffmpeg openthreads openssl libdvbsi ntp libsigc++ luaposix pugixml libfribidi zlib
 
 LH_DEPS = ffmpeg openthreads
 
