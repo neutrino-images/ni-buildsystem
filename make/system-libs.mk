@@ -670,10 +670,13 @@ $(D)/libxml2: $(ARCHIVE)/libxml2-$(LIBXML2_VER).tar.gz | $(TARGET_DIR)
 	$(REMOVE)/libxml2-$(LIBXML2_VER)
 	touch $@
 
+PUGIXML_PATCH = pugixml-config.patch
+
 $(D)/pugixml: $(ARCHIVE)/pugixml-$(PUGIXML_VER).tar.gz | $(TARGET_DIR)
 	$(REMOVE)/pugixml-$(PUGIXML_VER)
 	$(UNTAR)/pugixml-$(PUGIXML_VER).tar.gz
 	set -e; cd $(BUILD_TMP)/pugixml-$(PUGIXML_VER); \
+	$(call apply_patches, $(PUGIXML_PATCH)); \
 	rm -f CMakeCache.txt && \
 		cmake \
 		--no-warn-unused-cli \
