@@ -240,9 +240,9 @@ openvpn-setup: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(LIBPLUG) $(ETCINIT)
 neutrino-mediathek: $(LIBPLUG)
 	$(REMOVE)/$@
 	git clone https://github.com/neutrino-mediathek/mediathek.git $(BUILD_TMP)/$@
-	pushd $(BUILD_TMP)/$@ && \
-	cp -a plugins/* $(LIBPLUG)/ && \
-	cp -a share $(TARGET_DIR)
+	$(CHDIR)/$@; \
+		cp -a plugins/* $(LIBPLUG)/; \
+		cp -a share $(TARGET_DIR)
 	$(REMOVE)/$@
 
 #scripts-lua

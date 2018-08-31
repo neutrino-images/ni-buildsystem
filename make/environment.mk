@@ -267,6 +267,9 @@ PATCH = patch -p1 -i $(PATCHES)
 # wget tarballs into archive directory
 WGET = wget -t3 -T60 -c -P $(ARCHIVE)
 
+CHDIR = set -e; cd $(BUILD_TMP)
+TOUCH = @touch $@
+
 CONFIGURE_OPTS = \
 	--build=$(BUILD) --host=$(TARGET)
 

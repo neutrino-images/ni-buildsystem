@@ -177,14 +177,14 @@ $(D)/neutrino: $(N_OBJDIR)/config.status
 	$(MAKE) -C $(N_OBJDIR) all     DESTDIR=$(TARGET_DIR)
 	$(MAKE) -C $(N_OBJDIR) install DESTDIR=$(NEUTRINO_INST_DIR)
 	make $(TARGET_DIR)/.version
-	touch $@
+	$(TOUCH)
 
 $(D)/libstb-hal: $(LH_OBJDIR)/config.status
 	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
 	$(MAKE) -C $(LH_OBJDIR) all     DESTDIR=$(TARGET_DIR)
 	$(MAKE) -C $(LH_OBJDIR) install DESTDIR=$(NEUTRINO_INST_DIR)
 	$(REWRITE_LIBTOOL)/libstb-hal.la
-	touch $@
+	$(TOUCH)
 
 neutrino-bin:
 ifeq ($(CLEAN), yes)

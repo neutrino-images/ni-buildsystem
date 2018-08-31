@@ -1,21 +1,25 @@
 # makefile to build extra system tools (mostly unused)
 
+# -----------------------------------------------------------------------------
+
 # usbutils-008 needs udev
 USB_UTILS_VER=007
 $(ARCHIVE)/usbutils-$(USB_UTILS_VER).tar.xz:
 	$(WGET) https://www.kernel.org/pub/linux/utils/usb/usbutils/usbutils-$(USB_UTILS_VER).tar.xz
 
 $(D)/usbutils: $(D)/libusb_compat $(ARCHIVE)/usbutils-$(USB_UTILS_VER).tar.xz | $(TARGET_DIR)
+	$(REMOVE)/usbutils-$(USB_UTILS_VER)
 	$(UNTAR)/usbutils-$(USB_UTILS_VER).tar.xz
-	cd $(BUILD_TMP)/usbutils-$(USB_UTILS_VER) && \
-	$(PATCH)/usbutils-avoid-dependency-on-bash.patch && \
-	$(PATCH)/usbutils-fix-null-pointer-crash.patch && \
+	$(CHDIR)/usbutils-$(USB_UTILS_VER); \
+		$(PATCH)/usbutils-avoid-dependency-on-bash.patch; \
+		$(PATCH)/usbutils-fix-null-pointer-crash.patch; \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
 			--prefix= \
 			--mandir=/.remove \
-			--infodir=/.remove && \
-		$(MAKE) && \
+			--infodir=/.remove \
+			; \
+		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	rm -rf $(TARGET_DIR)/bin/lsusb.py
 	rm -rf $(TARGET_DIR)/bin/usbhid-dump
@@ -23,15 +27,18 @@ $(D)/usbutils: $(D)/libusb_compat $(ARCHIVE)/usbutils-$(USB_UTILS_VER).tar.xz | 
 	rm -rf $(TARGET_DIR)/share/pkgconfig
 	rm -rf $(TARGET_DIR)/share/usb.ids.gz
 	$(REMOVE)/usbutils-$(USB_UTILS_VER)
-	touch $@
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
 
 BINUTILS_VER=2.25
 $(ARCHIVE)/binutils-$(BINUTILS_VER).tar.bz2:
 	$(WGET) https://ftp.gnu.org/gnu/binutils/binutils-$(BINUTILS_VER).tar.bz2
 
 $(D)/binutils: $(ARCHIVE)/binutils-$(BINUTILS_VER).tar.bz2 | $(TARGET_DIR)
+	$(REMOVE)/binutils-$(BINUTILS_VER)
 	$(UNTAR)/binutils-$(BINUTILS_VER).tar.bz2
-	cd $(BUILD_TMP)/binutils-$(BINUTILS_VER) && \
+	$(CHDIR)/binutils-$(BINUTILS_VER); \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
 			--prefix= \
@@ -40,43 +47,52 @@ $(D)/binutils: $(ARCHIVE)/binutils-$(BINUTILS_VER).tar.bz2 | $(TARGET_DIR)
 			--disable-plugins \
 			--enable-build-warnings=no \
 			--disable-sim \
-			--disable-gdb && \
+			--disable-gdb \
+			; \
 		$(MAKE)
 		install -m755 $(BUILD_TMP)/binutils-$(BINUTILS_VER)/binutils/objdump $(BIN)/
 		install -m755 $(BUILD_TMP)/binutils-$(BINUTILS_VER)/binutils/objcopy $(BIN)/
 	$(REMOVE)/binutils-$(BINUTILS_VER)
-	touch $@
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
 
 UTIL-LINUX_VER=2.29
 $(ARCHIVE)/util-linux-$(UTIL-LINUX_VER).tar.xz:
 	$(WGET) https://www.kernel.org/pub/linux/utils/util-linux/v$(UTIL-LINUX_VER)/util-linux-$(UTIL-LINUX_VER).tar.xz
 
 $(D)/util-linux: $(D)/libncurses $(ARCHIVE)/util-linux-$(UTIL-LINUX_VER).tar.xz | $(TARGET_DIR)
+	$(REMOVE)/util-linux-$(UTIL-LINUX_VER)
 	$(UNTAR)/util-linux-$(UTIL-LINUX_VER).tar.xz
-	cd $(BUILD_TMP)/util-linux-$(UTIL-LINUX_VER) && \
-		autoreconf -fi && \
+	$(CHDIR)/util-linux-$(UTIL-LINUX_VER); \
+		autoreconf -fi; \
 		$(CONFIGURE) \
 			--prefix= \
 			--build=$(BUILD) \
 			--host=$(TARGET) \
 			--enable-static \
 			--disable-shared \
-			--mandir=/.remove && \
-		$(MAKE) sfdisk && \
+			--mandir=/.remove \
+			; \
+		$(MAKE) sfdisk; \
 		install -m755 sfdisk $(TARGET_DIR)/sbin/sfdisk
 	$(REMOVE)/util-linux-$(UTIL-LINUX_VER)
-	touch $@
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
 
 IPTABLES_VER = 1.4.21
 $(ARCHIVE)/iptables-$(IPTABLES_VER).tar.bz2:
 	$(WGET) http://www.netfilter.org/projects/iptables/files/iptables-$(IPTABLES_VER).tar.bz2
 
 $(D)/iptables: $(ARCHIVE)/iptables-$(IPTABLES_VER).tar.bz2 | $(TARGET_DIR)
+	$(REMOVE)/iptables-$(IPTABLES_VER)
 	$(UNTAR)/iptables-$(IPTABLES_VER).tar.bz2
-	set -e; cd $(BUILD_TMP)/iptables-$(IPTABLES_VER); \
+	$(CHDIR)/iptables-$(IPTABLES_VER); \
 		$(CONFIGURE) \
 			--prefix= \
-			--mandir=/.remove; \
+			--mandir=/.remove \
+			; \
 		$(MAKE); \
 		make install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL)/libip4tc.la
@@ -88,30 +104,36 @@ $(D)/iptables: $(ARCHIVE)/iptables-$(IPTABLES_VER).tar.bz2 | $(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libiptc.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/xtables.pc
 	$(REMOVE)/iptables-$(IPTABLES_VER)
-	touch $@
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
 
 LIGHTTPD_VER=1.4.31
 $(ARCHIVE)/lighttpd-$(LIGHTTPD_VER).tar.gz:
 	$(WGET) http://download.lighttpd.net/lighttpd/releases-1.4.x/lighttpd-$(LIGHTTPD_VER).tar.gz
 
 $(D)/lighttpd: $(D)/zlib $(ARCHIVE)/lighttpd-$(LIGHTTPD_VER).tar.gz | $(TARGET_DIR)
-	$(UNTAR)/lighttpd-$(LIGHTTPD_VER).tar.gz
-	cd $(BUILD_TMP)/lighttpd-$(LIGHTTPD_VER) && \
-	$(BUILDENV) ./configure \
-		--build=$(BUILD) \
-		--host=$(TARGET) \
-		--prefix= \
-		--mandir=/.remove \
-		--docdir=/.remove \
-		--infodir=/.remove \
-		--with-zlib \
-		--enable-silent-rules \
-		--without-pcre \
-		--without-bzip2 && \
-	$(MAKE) && \
-	$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REMOVE)/lighttpd-$(LIGHTTPD_VER)
-	touch $@
+	$(UNTAR)/lighttpd-$(LIGHTTPD_VER).tar.gz
+	$(CHDIR)/lighttpd-$(LIGHTTPD_VER); \
+		$(BUILDENV) ./configure \
+			--build=$(BUILD) \
+			--host=$(TARGET) \
+			--prefix= \
+			--mandir=/.remove \
+			--docdir=/.remove \
+			--infodir=/.remove \
+			--with-zlib \
+			--enable-silent-rules \
+			--without-pcre \
+			--without-bzip2 \
+			; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(REMOVE)/lighttpd-$(LIGHTTPD_VER)
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
 
 PYTHON_VER=2.7.11
 $(ARCHIVE)/Python-$(PYTHON_VER).tgz:
@@ -120,10 +142,10 @@ $(ARCHIVE)/Python-$(PYTHON_VER).tgz:
 $(D)/python: $(ARCHIVE)/Python-$(PYTHON_VER).tgz | $(TARGET_DIR)
 	$(REMOVE)/Python-$(PYTHON_VER)
 	$(UNTAR)/Python-$(PYTHON_VER).tgz
-	pushd $(BUILD_TMP)/Python-$(PYTHON_VER) && \
-		echo "ac_cv_file__dev_ptmx=no" > config.site && \
-		echo "ac_cv_file__dev_ptc=no" >> config.site && \
-		export CONFIG_SITE=config.site && \
+	$(CHDIR)/Python-$(PYTHON_VER); \
+		echo "ac_cv_file__dev_ptmx=no" > config.site; \
+		echo "ac_cv_file__dev_ptc=no" >> config.site; \
+		export CONFIG_SITE=config.site; \
 		./configure; \
 		make python Parser/pgen; \
 		mv python hostpython; \
@@ -140,7 +162,7 @@ $(D)/python: $(ARCHIVE)/Python-$(PYTHON_VER).tgz | $(TARGET_DIR)
 			--prefix= \
 			--enable-shared \
 			--disable-ipv6 \
-		; \
+			; \
 		make \
 			HOSTPYTHON=./hostpython \
 			HOSTPGEN=./Parser/hostpgen \
@@ -149,7 +171,7 @@ $(D)/python: $(ARCHIVE)/Python-$(PYTHON_VER).tgz | $(TARGET_DIR)
 			CROSS_COMPILE_TARGET=yes \
 			HOSTARCH=$(TARGET) \
 			BUILDARCH=$(BUILD) \
-		; \
+			; \
 		make install \
 			HOSTPYTHON=./hostpython \
 			HOSTPGEN=./Parser/hostpgen \
@@ -157,12 +179,15 @@ $(D)/python: $(ARCHIVE)/Python-$(PYTHON_VER).tgz | $(TARGET_DIR)
 			CROSS_COMPILE=$(TARGET)- \
 			CROSS_COMPILE_TARGET=yes \
 			prefix=$(BUILD_TMP)/Python-$(PYTHON_VER)/_install \
-		; \
+			; \
 		cp -a $(BUILD_TMP)/Python-$(PYTHON_VER)/_install/lib/python* $(TARGET_LIB_DIR)/
 		cp -a $(BUILD_TMP)/Python-$(PYTHON_VER)/_install/lib/libpython* $(TARGET_LIB_DIR)/
 		chmod +w $(TARGET_LIB_DIR)/libpython*
 		install -m755 $(BUILD_TMP)/Python-$(PYTHON_VER)/_install/bin/python $(TARGET_DIR)/bin/
 	$(REMOVE)/Python-$(PYTHON_VER)
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
 
 $(D)/astra-sm: $(D)/openssl | $(TARGET_DIR)
 	# workaround unrecognized command line options
@@ -170,14 +195,13 @@ $(D)/astra-sm: $(D)/openssl | $(TARGET_DIR)
 
 $(D)/astra-sm-no-march-cflags:
 	$(REMOVE)/astra-sm
-	cd $(BUILD_TMP); \
-	git clone https://gitlab.com/crazycat69/astra-sm.git astra-sm; \
-	cd astra-sm; \
+	git clone https://gitlab.com/crazycat69/astra-sm.git $(BUILD_TMP)/astra-sm; \
+	$(CHDIR)/astra-sm; \
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--prefix= \
 			--without-lua-compiler \
-		; \
+			; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REMOVE)/astra-sm
-	touch $@
+	$(TOUCH)

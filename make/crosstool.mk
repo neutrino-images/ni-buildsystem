@@ -27,12 +27,10 @@ crosstools-renew:
 crosstool-arm-hd1: CROSS_DIR-check $(SOURCE_DIR)/$(NI_LINUX-KERNEL)
 	make $(BUILD_TMP)
 	$(REMOVE)/crosstool-ng
-	cd $(BUILD_TMP) && \
-	git clone https://github.com/crosstool-ng/crosstool-ng && \
-	cd crosstool-ng && \
-	git checkout 1dbb06f2 && \
-	unset CONFIG_SITE LIBRARY_PATH CPATH C_INCLUDE_PATH PKG_CONFIG_PATH CPLUS_INCLUDE_PATH INCLUDE && \
-	cd $(BUILD_TMP)/crosstool-ng && \
+	git clone https://github.com/crosstool-ng/crosstool-ng $(BUILD_TMP)/crosstool-ng && \
+	$(CHDIR)/crosstool-ng && \
+		git checkout 1dbb06f2 && \
+		unset CONFIG_SITE LIBRARY_PATH CPATH C_INCLUDE_PATH PKG_CONFIG_PATH CPLUS_INCLUDE_PATH INCLUDE && \
 		mkdir -p $(BUILD_TMP)/crosstool-ng/targets/src/ && \
 			pushd $(SOURCE_DIR)/$(NI_LINUX-KERNEL) && \
 				git checkout $(KERNEL_BRANCH) && \
@@ -59,13 +57,11 @@ UCLIBC_VER=1.0.24
 crosstool-arm-hd2: CROSS_DIR-check $(ARCHIVE)/gcc-linaro-$(GCC_VER).tar.xz $(SOURCE_DIR)/$(NI_LINUX-KERNEL)
 	make $(BUILD_TMP)
 	$(REMOVE)/crosstool-ng
-	cd $(BUILD_TMP) && \
-	git clone https://github.com/crosstool-ng/crosstool-ng && \
-	cd crosstool-ng && \
-	git checkout 1dbb06f2 && \
-	cp -a $(PATCHES)/crosstool-ng/gcc/* $(BUILD_TMP)/crosstool-ng/patches/gcc/linaro-6.3-2017.02 && \
-	unset CONFIG_SITE LIBRARY_PATH CPATH C_INCLUDE_PATH PKG_CONFIG_PATH CPLUS_INCLUDE_PATH INCLUDE && \
-	cd $(BUILD_TMP)/crosstool-ng && \
+	git clone https://github.com/crosstool-ng/crosstool-ng $(BUILD_TMP)/crosstool-ng && \
+	$(CHDIR)/crosstool-ng && \
+		git checkout 1dbb06f2 && \
+		cp -a $(PATCHES)/crosstool-ng/gcc/* $(BUILD_TMP)/crosstool-ng/patches/gcc/linaro-6.3-2017.02 && \
+		unset CONFIG_SITE LIBRARY_PATH CPATH C_INCLUDE_PATH PKG_CONFIG_PATH CPLUS_INCLUDE_PATH INCLUDE && \
 		mkdir -p $(BUILD_TMP)/crosstool-ng/targets/src/ && \
 			pushd $(SOURCE_DIR)/$(NI_LINUX-KERNEL) && \
 				git checkout $(KERNEL_BRANCH) && \
@@ -92,13 +88,11 @@ crosstool-arm-hd2: CROSS_DIR-check $(ARCHIVE)/gcc-linaro-$(GCC_VER).tar.xz $(SOU
 crosstool-arm-hd51: CROSS_DIR-check
 	make $(BUILD_TMP)
 	$(REMOVE)/crosstool-ng
-	cd $(BUILD_TMP) && \
-	git clone https://github.com/crosstool-ng/crosstool-ng && \
-	cd crosstool-ng && \
-	git checkout 1dbb06f2 && \
-	cp -a $(PATCHES)/crosstool-ng/gcc/* $(BUILD_TMP)/crosstool-ng/patches/gcc/linaro-6.3-2017.02 && \
-	unset CONFIG_SITE LIBRARY_PATH CPATH C_INCLUDE_PATH PKG_CONFIG_PATH CPLUS_INCLUDE_PATH INCLUDE && \
-	cd $(BUILD_TMP)/crosstool-ng && \
+	git clone https://github.com/crosstool-ng/crosstool-ng $(BUILD_TMP)/crosstool-ng && \
+	$(CHDIR)/crosstool-ng && \
+		git checkout 1dbb06f2 && \
+		cp -a $(PATCHES)/crosstool-ng/gcc/* $(BUILD_TMP)/crosstool-ng/patches/gcc/linaro-6.3-2017.02 && \
+		unset CONFIG_SITE LIBRARY_PATH CPATH C_INCLUDE_PATH PKG_CONFIG_PATH CPLUS_INCLUDE_PATH INCLUDE && \
 		mkdir -p $(BUILD_TMP)/crosstool-ng/targets/src/ && \
 			pushd $(SOURCE_DIR)/$(NI_LINUX-KERNEL) && \
 				git checkout $(KERNEL_BRANCH) && \

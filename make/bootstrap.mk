@@ -111,8 +111,9 @@ pkg-config-preqs:
 
 pkg-config: $(HOST_DIR)/bin/pkg-config
 $(HOST_DIR)/bin/pkg-config: $(ARCHIVE)/pkg-config-$(PKGCONF_VER).tar.gz | $(HOST_DIR)/bin pkg-config-preqs
+	$(REMOVE)/pkg-config-$(PKGCONF_VER)
 	$(UNTAR)/pkg-config-$(PKGCONF_VER).tar.gz
-	set -e; cd $(BUILD_TMP)/pkg-config-$(PKGCONF_VER); \
+	$(CHDIR)/pkg-config-$(PKGCONF_VER); \
 		./configure \
 			--with-pc_path=$(PKG_CONFIG_PATH); \
 		$(MAKE); \
@@ -126,8 +127,9 @@ mkfs.jffs2: $(HOST_DIR)/bin/mkfs.jffs2
 sumtool: $(HOST_DIR)/bin/sumtool
 $(HOST_DIR)/bin/mkfs.jffs2 \
 $(HOST_DIR)/bin/sumtool: $(ARCHIVE)/mtd-utils-$(MTD-UTILS_VER).tar.bz2 | $(HOST_DIR)/bin
+	$(REMOVE)/mtd-utils-$(MTD-UTILS_VER)
 	$(UNTAR)/mtd-utils-$(MTD-UTILS_VER).tar.bz2
-	pushd $(BUILD_TMP)/mtd-utils-$(MTD-UTILS_VER) && \
+	$(CHDIR)/mtd-utils-$(MTD-UTILS_VER) && \
 		./configure \
 			ZLIB_CFLAGS=" " \
 			ZLIB_LIBS="-lz" \
@@ -144,8 +146,9 @@ $(HOST_DIR)/bin/sumtool: $(ARCHIVE)/mtd-utils-$(MTD-UTILS_VER).tar.bz2 | $(HOST_
 
 mkimage: $(HOST_DIR)/bin/mkimage
 $(HOST_DIR)/bin/mkimage: $(ARCHIVE)/u-boot-$(U_BOOT_VER).tar.bz2 | $(HOST_DIR)/bin
+	$(REMOVE)/u-boot-$(U_BOOT_VER)
 	$(UNTAR)/u-boot-$(U_BOOT_VER).tar.bz2
-	pushd $(BUILD_TMP)/u-boot-$(U_BOOT_VER) && \
+	$(CHDIR)/u-boot-$(U_BOOT_VER) && \
 		$(MAKE) defconfig && \
 		$(MAKE) silentoldconfig && \
 		$(MAKE) tools-only
@@ -154,18 +157,20 @@ $(HOST_DIR)/bin/mkimage: $(ARCHIVE)/u-boot-$(U_BOOT_VER).tar.bz2 | $(HOST_DIR)/b
 
 zic: $(HOST_DIR)/bin/zic
 $(HOST_DIR)/bin/zic: $(ARCHIVE)/tzdata$(TZDATA_VER).tar.gz $(ARCHIVE)/tzcode$(TZCODE_VER).tar.gz | $(HOST_DIR)/bin
+	$(REMOVE)/tzcode
 	mkdir $(BUILD_TMP)/tzcode && \
 	tar -C $(BUILD_TMP)/tzcode -xf $(ARCHIVE)/tzcode$(TZCODE_VER).tar.gz
 	tar -C $(BUILD_TMP)/tzcode -xf $(ARCHIVE)/tzdata$(TZDATA_VER).tar.gz
-	pushd $(BUILD_TMP)/tzcode && \
+	$(CHDIR)/tzcode && \
 		$(MAKE) zic
 	install -D -m 0755 $(BUILD_TMP)/tzcode/zic $(HOST_DIR)/bin/
 	$(REMOVE)/tzcode
 
 parted_host: $(HOST_DIR)/bin/parted
 $(HOST_DIR)/bin/parted: $(ARCHIVE)/parted-$(PARTED_VER).tar.xz | $(HOST_DIR)/bin
+	$(REMOVE)/parted-$(PARTED_VER)
 	$(UNTAR)/parted-$(PARTED_VER).tar.xz
-	cd $(BUILD_TMP)/parted-$(PARTED_VER) && \
+	$(CHDIR)/parted-$(PARTED_VER) && \
 		$(PATCH)/parted-3.2-devmapper-1.patch && \
 		$(PATCH)/parted-3.2-sysmacros.patch && \
 		./configure \
@@ -180,8 +185,9 @@ $(HOST_DIR)/bin/parted: $(ARCHIVE)/parted-$(PARTED_VER).tar.xz | $(HOST_DIR)/bin
 
 mkfs.fat: $(HOST_DIR)/bin/mkfs.fat
 $(HOST_DIR)/bin/mkfs.fat: $(ARCHIVE)/dosfstools-$(DOSFSTOOLS_VER).tar.xz | $(HOST_DIR)/bin
+	$(REMOVE)/dosfstools-$(DOSFSTOOLS_VER)
 	$(UNTAR)/dosfstools-$(DOSFSTOOLS_VER).tar.xz
-	set -e; cd $(BUILD_TMP)/dosfstools-$(DOSFSTOOLS_VER); \
+	$(CHDIR)/dosfstools-$(DOSFSTOOLS_VER); \
 		./configure \
 			--without-udev \
 		; \
@@ -194,8 +200,9 @@ $(HOST_DIR)/bin/mkfs.fat: $(ARCHIVE)/dosfstools-$(DOSFSTOOLS_VER).tar.xz | $(HOS
 
 mtools: $(HOST_DIR)/bin/mtools
 $(HOST_DIR)/bin/mtools: $(ARCHIVE)/mtools-$(MTOOLS_VER).tar.gz | $(HOST_DIR)/bin
+	$(REMOVE)/mtools-$(MTOOLS_VER)
 	$(UNTAR)/mtools-$(MTOOLS_VER).tar.gz
-	set -e; cd $(BUILD_TMP)/mtools-$(MTOOLS_VER); \
+	$(CHDIR)/mtools-$(MTOOLS_VER); \
 		./configure; \
 		$(MAKE)
 	install -D -m 0755 $(BUILD_TMP)/mtools-$(MTOOLS_VER)/mtools $(HOST_DIR)/bin/
@@ -204,8 +211,9 @@ $(HOST_DIR)/bin/mtools: $(ARCHIVE)/mtools-$(MTOOLS_VER).tar.gz | $(HOST_DIR)/bin
 
 resize2fs: $(HOST_DIR)/bin/resize2fs
 $(HOST_DIR)/bin/resize2fs: $(ARCHIVE)/e2fsprogs-$(E2FSPROGS_VER).tar.gz | $(HOST_DIR)/bin
+	$(REMOVE)/e2fsprogs-$(E2FSPROGS_VER)
 	$(UNTAR)/e2fsprogs-$(E2FSPROGS_VER).tar.gz
-	cd $(BUILD_TMP)/e2fsprogs-$(E2FSPROGS_VER) && \
+	$(CHDIR)/e2fsprogs-$(E2FSPROGS_VER) && \
 		./configure; \
 		$(MAKE)
 	install -D -m 0755 $(BUILD_TMP)/e2fsprogs-$(E2FSPROGS_VER)/resize/resize2fs $(HOST_DIR)/bin/

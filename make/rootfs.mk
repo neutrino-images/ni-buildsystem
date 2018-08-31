@@ -28,9 +28,7 @@ endif
 
 update.urls: $(TARGET_DIR)/var/etc/update.urls
 $(TARGET_DIR)/var/etc/update.urls:
-	rm -f $@
-	touch $@
-	echo "$(NI-SERVER)/update.php"				>> $@
+	echo "$(NI-SERVER)/update.php"				 > $@
 	echo "$(CHANLIST_URL)/$(CHANLIST_MD5FILE)"		>> $@
 
 # create filesystem for our images

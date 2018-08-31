@@ -351,10 +351,10 @@ $(D)/ffmpeg: $(FFMPEG_DEPS) $(ARCHIVE)/$(FFMPEG_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/ffmpeg-$(FFMPEG_VER)
 	$(UNTAR)/$(FFMPEG_SOURCE)
 ifneq ($(FFMPEG_UNPATCHED), yes)
-	set -e; cd $(BUILD_TMP)/ffmpeg-$(FFMPEG_VER); \
+	$(CHDIR)/ffmpeg-$(FFMPEG_VER); \
 		$(call apply_patches, $(FFMPEG_PATCH))
 endif
-	set -e; cd $(BUILD_TMP)/ffmpeg-$(FFMPEG_VER); \
+	$(CHDIR)/ffmpeg-$(FFMPEG_VER); \
 		./configure \
 			$(FFMPEG_CONFIGURE_GENERIC) \
 			$(FFMPEG_CONFIGURE_PLATFORM) \
@@ -369,4 +369,4 @@ endif
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libswresample.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libswscale.pc
 	$(REMOVE)/ffmpeg-$(FFMPEG_VER)
-	touch $@
+	$(TOUCH)

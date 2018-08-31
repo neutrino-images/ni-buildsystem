@@ -176,9 +176,9 @@ endif
 $(D)/ffmpeg: $(FFMPEG_DEPS) | $(TARGET_DIR)
 	$(REMOVE)/$(NI_FFMPEG)
 	cd $(SOURCE_DIR)/$(NI_FFMPEG) && \
-		git checkout $(NI_FFMPEG_BRANCH) && \
+		git checkout $(NI_FFMPEG_BRANCH)
 	tar -C $(SOURCE_DIR) -cp $(NI_FFMPEG) --exclude-vcs | tar -C $(BUILD_TMP) -x
-	cd $(BUILD_TMP)/$(NI_FFMPEG) && \
+	$(CHDIR)/$(NI_FFMPEG); \
 		./configure \
 			$(FFMPEG_CONFIGURE_GENERIC) \
 			$(FFMPEG_CONFIGURE_PLATFORM) \
@@ -193,4 +193,4 @@ $(D)/ffmpeg: $(FFMPEG_DEPS) | $(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libavutil.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libswresample.pc
 	$(REMOVE)/$(NI_FFMPEG)
-	touch $@
+	$(TOUCH)

@@ -1,5 +1,7 @@
 # makefile to build gstreamer and all it's dependencies
 
+# -----------------------------------------------------------------------------
+
 # change to activate debug
 GSTREAMER_DEBUG = yes
 
@@ -9,6 +11,8 @@ ifeq ($(GSTREAMER_DEBUG), yes)
   GST_MAIN_CONFIG_DEBUG = --enable-gst-debug
   GST_PLUGIN_CONFIG_DEBUG = --enable-debug
 endif
+
+# -----------------------------------------------------------------------------
 
 #
 # gstreamer
@@ -21,7 +25,8 @@ $(ARCHIVE)/$(GSTREAMER_SOURCE):
 
 $(D)/gstreamer: $(D)/libglib2 $(D)/libxml2 $(D)/glib-networking $(ARCHIVE)/$(GSTREAMER_SOURCE)
 	$(UNTAR)/$(GSTREAMER_SOURCE)
-	set -e; cd $(BUILD_TMP)/gstreamer-$(GSTREAMER_VER); \
+	$(REMOVE)/gstreamer-$(GSTREAMER_VER)
+	$(CHDIR)/gstreamer-$(GSTREAMER_VER); \
 		$(PATCH)/gstreamer-$(GSTREAMER_VER)-revert-use-new-gst-adapter-get-buffer.patch; \
 		./autogen.sh --noconfigure; \
 		$(CONFIGURE) \
@@ -40,7 +45,7 @@ $(D)/gstreamer: $(D)/libglib2 $(D)/libxml2 $(D)/glib-networking $(ARCHIVE)/$(GST
 			--disable-benchmarks \
 			--disable-gtk-doc-html \
 			ac_cv_header_valgrind_valgrind_h=no \
-		; \
+			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-1.0.pc
@@ -55,7 +60,9 @@ $(D)/gstreamer: $(D)/libglib2 $(D)/libxml2 $(D)/glib-networking $(ARCHIVE)/$(GST
 	$(REWRITE_LIBTOOLDEP)/libgstcontroller-1.0.la
 	$(REWRITE_LIBTOOLDEP)/libgstnet-1.0.la
 	$(REMOVE)/gstreamer-$(GSTREAMER_VER)
-	touch $@
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
 
 #
 # gst_plugins_base
@@ -67,8 +74,9 @@ $(ARCHIVE)/$(GST_PLUGINS_BASE_SOURCE):
 	$(WGET) https://gstreamer.freedesktop.org/src/gst-plugins-base/$(GST_PLUGINS_BASE_SOURCE)
 
 $(D)/gst_plugins_base: $(D)/zlib $(D)/libglib2 $(D)/orc $(D)/gstreamer $(D)/alsa-lib $(D)/libogg $(D)/libvorbisidec $(ARCHIVE)/$(GST_PLUGINS_BASE_SOURCE)
+	$(REMOVE)/gst-plugins-base-$(GST_PLUGINS_BASE_VER)
 	$(UNTAR)/$(GST_PLUGINS_BASE_SOURCE)
-	set -e; cd $(BUILD_TMP)/gst-plugins-base-$(GST_PLUGINS_BASE_VER); \
+	$(CHDIR)/gst-plugins-base-$(GST_PLUGINS_BASE_VER); \
 		$(PATCH)/gst-plugins-base-$(GSTREAMER_VER)-Makefile.am-don-t-hardcode-libtool-name-when-running.patch; \
 		$(PATCH)/gst-plugins-base-$(GSTREAMER_VER)-Makefile.am-prefix-calls-to-pkg-config-with-PKG_CONF.patch; \
 		$(PATCH)/gst-plugins-base-$(GSTREAMER_VER)-riff-media-added-fourcc-to-all-ffmpeg-mpeg4-video-caps.patch; \
@@ -83,11 +91,12 @@ $(D)/gst_plugins_base: $(D)/zlib $(D)/libglib2 $(D)/orc $(D)/gstreamer $(D)/alsa
 			$(GST_PLUGIN_CONFIG_DEBUG) \
 			--disable-examples \
 			--disable-gtk-doc-html \
-		; \
+			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	for i in `cd $(TARGET_DIR)/lib/gstreamer-1.0; echo *.la`; do \
-		$(REWRITE_LIBTOOL)/gstreamer-1.0/$$i; done
+		$(REWRITE_LIBTOOL)/gstreamer-1.0/$$i; \
+	done
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-allocators-1.0.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-app-1.0.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-audio-1.0.pc
@@ -123,7 +132,9 @@ $(D)/gst_plugins_base: $(D)/zlib $(D)/libglib2 $(D)/orc $(D)/gstreamer $(D)/alsa
 	$(REWRITE_LIBTOOLDEP)/libgsttag-1.0.la
 	$(REWRITE_LIBTOOLDEP)/libgstvideo-1.0.la
 	$(REMOVE)/gst-plugins-base-$(GST_PLUGINS_BASE_VER)
-	touch $@
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
 
 #
 # gst_plugins_good
@@ -135,8 +146,9 @@ $(ARCHIVE)/$(GST_PLUGINS_GOOD_SOURCE):
 	$(WGET) https://gstreamer.freedesktop.org/src/gst-plugins-good/$(GST_PLUGINS_GOOD_SOURCE)
 
 $(D)/gst_plugins_good: $(D)/libpng $(D)/libjpeg $(D)/gstreamer $(D)/gst_plugins_base $(D)/libsoup $(D)/libFLAC $(ARCHIVE)/$(GST_PLUGINS_GOOD_SOURCE)
+	$(REMOVE)/gst-plugins-good-$(GST_PLUGINS_GOOD_VER)
 	$(UNTAR)/$(GST_PLUGINS_GOOD_SOURCE)
-	set -e; cd $(BUILD_TMP)/gst-plugins-good-$(GST_PLUGINS_GOOD_VER); \
+	$(CHDIR)/gst-plugins-good-$(GST_PLUGINS_GOOD_VER); \
 		$(PATCH)/gst-plugins-good-$(GSTREAMER_VER)-gstrtpmp4gpay-set-dafault-value-for-MPEG4-without-co.patch; \
 		./autogen.sh --noconfigure; \
 		$(CONFIGURE) \
@@ -147,13 +159,16 @@ $(D)/gst_plugins_good: $(D)/libpng $(D)/libjpeg $(D)/gstreamer $(D)/gst_plugins_
 			$(GST_PLUGIN_CONFIG_DEBUG) \
 			--disable-examples \
 			--disable-gtk-doc-html \
-		; \
+			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	for i in `cd $(TARGET_DIR)/lib/gstreamer-1.0; echo *.la`; do \
-		$(REWRITE_LIBTOOL)/gstreamer-1.0/$$i; done
+		$(REWRITE_LIBTOOL)/gstreamer-1.0/$$i; \
+	done
 	$(REMOVE)/gst-plugins-good-$(GST_PLUGINS_GOOD_VER)
-	touch $@
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
 
 #
 # gst_plugins_bad
@@ -165,8 +180,9 @@ $(ARCHIVE)/$(GST_PLUGINS_BAD_SOURCE):
 	$(WGET) https://gstreamer.freedesktop.org/src/gst-plugins-bad/$(GST_PLUGINS_BAD_SOURCE)
 
 $(D)/gst_plugins_bad: $(D)/libass $(D)/libcurl $(D)/libxml2 $(D)/openssl $(D)/librtmp $(D)/gstreamer $(D)/gst_plugins_base $(ARCHIVE)/$(GST_PLUGINS_BAD_SOURCE)
+	$(REMOVE)/gst-plugins-bad-$(GST_PLUGINS_BAD_VER)
 	$(UNTAR)/$(GST_PLUGINS_BAD_SOURCE)
-	set -e; cd $(BUILD_TMP)/gst-plugins-bad-$(GST_PLUGINS_BAD_VER); \
+	$(CHDIR)/gst-plugins-bad-$(GST_PLUGINS_BAD_VER); \
 		$(PATCH)/gst-plugins-bad-$(GSTREAMER_VER)-Makefile.am-don-t-hardcode-libtool-name-when-running-pbad.patch; \
 		$(PATCH)/gst-plugins-bad-$(GSTREAMER_VER)-rtmp-fix-seeking-and-potential-segfault.patch; \
 		$(PATCH)/gst-plugins-bad-$(GSTREAMER_VER)-rtmp-hls-tsdemux-fix.patch; \
@@ -185,11 +201,12 @@ $(D)/gst_plugins_bad: $(D)/libass $(D)/libcurl $(D)/libxml2 $(D)/openssl $(D)/li
 			$(GST_PLUGIN_CONFIG_DEBUG) \
 			--disable-examples \
 			--disable-gtk-doc-html \
-		; \
+			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	for i in `cd $(TARGET_DIR)/lib/gstreamer-1.0; echo *.la`; do \
-		$(REWRITE_LIBTOOL)/gstreamer-1.0/$$i; done
+		$(REWRITE_LIBTOOL)/gstreamer-1.0/$$i; \
+	done
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-codecparsers-1.0.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-bad-audio-1.0.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-bad-base-1.0.pc
@@ -213,7 +230,9 @@ $(D)/gst_plugins_bad: $(D)/libass $(D)/libcurl $(D)/libxml2 $(D)/openssl $(D)/li
 	$(REWRITE_LIBTOOLDEP)/libgstadaptivedemux-1.0.la
 	$(REWRITE_LIBTOOLDEP)/libgstbadvideo-1.0.la
 	$(REMOVE)/gst-plugins-bad-$(GST_PLUGINS_BAD_VER)
-	touch $@
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
 
 #
 # gst_plugins_ugly
@@ -225,8 +244,9 @@ $(ARCHIVE)/$(GST_PLUGINS_UGLY_SOURCE):
 	$(WGET) https://gstreamer.freedesktop.org/src/gst-plugins-ugly/$(GST_PLUGINS_UGLY_SOURCE)
 
 $(D)/gst_plugins_ugly: $(D)/gstreamer $(D)/gst_plugins_base $(ARCHIVE)/$(GST_PLUGINS_UGLY_SOURCE)
+	$(REMOVE)/gst-plugins-ugly-$(GST_PLUGINS_UGLY_VER)
 	$(UNTAR)/$(GST_PLUGINS_UGLY_SOURCE)
-	set -e; cd $(BUILD_TMP)/gst-plugins-ugly-$(GST_PLUGINS_UGLY_VER); \
+	$(CHDIR)/gst-plugins-ugly-$(GST_PLUGINS_UGLY_VER); \
 		./autogen.sh --noconfigure; \
 		$(CONFIGURE) \
 			--prefix= \
@@ -236,13 +256,16 @@ $(D)/gst_plugins_ugly: $(D)/gstreamer $(D)/gst_plugins_base $(ARCHIVE)/$(GST_PLU
 			$(GST_PLUGIN_CONFIG_DEBUG) \
 			--disable-examples \
 			--disable-gtk-doc-html \
-		; \
+			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	for i in `cd $(TARGET_DIR)/lib/gstreamer-1.0; echo *.la`; do \
-		$(REWRITE_LIBTOOL)/gstreamer-1.0/$$i; done
+		$(REWRITE_LIBTOOL)/gstreamer-1.0/$$i; \
+	done
 	$(REMOVE)/gst-plugins-ugly-$(GST_PLUGINS_UGLY_VER)
-	touch $@
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
 
 #
 # gst_plugin_subsink
@@ -254,8 +277,9 @@ $(D)/gst_plugin_subsink: $(D)/gstreamer $(D)/gst_plugins_base $(D)/gst_plugins_g
 		then cd $(ARCHIVE)/gstreamer$(GST_PLUGIN_SUBSINK_VER)-plugin-subsink.git; git pull; \
 		else cd $(ARCHIVE); git clone git://github.com/christophecvr/gstreamer$(GST_PLUGIN_SUBSINK_VER)-plugin-subsink.git gstreamer$(GST_PLUGIN_SUBSINK_VER)-plugin-subsink.git; \
 		fi
+	$(REMOVE)/gstreamer$(GST_PLUGIN_SUBSINK_VER)-plugin-subsink
 	cp -ra $(ARCHIVE)/gstreamer$(GST_PLUGIN_SUBSINK_VER)-plugin-subsink.git $(BUILD_TMP)/gstreamer$(GST_PLUGIN_SUBSINK_VER)-plugin-subsink
-	set -e; cd $(BUILD_TMP)/gstreamer$(GST_PLUGIN_SUBSINK_VER)-plugin-subsink; \
+	$(CHDIR)/gstreamer$(GST_PLUGIN_SUBSINK_VER)-plugin-subsink; \
 		aclocal --force -I m4; \
 		libtoolize --copy --ltdl --force; \
 		autoconf --force; \
@@ -264,13 +288,16 @@ $(D)/gst_plugin_subsink: $(D)/gstreamer $(D)/gst_plugins_base $(D)/gst_plugins_g
 		$(CONFIGURE) \
 			--prefix= \
 			--enable-silent-rules \
-		; \
+			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	for i in `cd $(TARGET_DIR)/lib/gstreamer-1.0; echo *.la`; do \
-		$(REWRITE_LIBTOOL)/gstreamer-1.0/$$i; done
+		$(REWRITE_LIBTOOL)/gstreamer-1.0/$$i; \
+	done
 	$(REMOVE)/gstreamer$(GST_PLUGIN_SUBSINK_VER)-plugin-subsink
-	touch $@
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
 
 #
 # gst_plugins_dvbmediasink
@@ -282,8 +309,9 @@ $(D)/gst_plugins_dvbmediasink: $(D)/gstreamer $(D)/gst_plugins_base $(D)/gst_plu
 		then cd $(ARCHIVE)/gstreamer$(GST_PLUGINS_DVBMEDIASINK_VER)-plugin-dvbmediasink.git; git pull; \
 		else cd $(ARCHIVE); git clone -b gst-1.0 https://github.com/OpenPLi/gst-plugin-dvbmediasink.git gstreamer$(GST_PLUGINS_DVBMEDIASINK_VER)-plugin-dvbmediasink.git; \
 		fi
+	$(REMOVE)/gstreamer$(GST_PLUGINS_DVBMEDIASINK_VER)-plugin-dvbmediasink
 	cp -ra $(ARCHIVE)/gstreamer$(GST_PLUGINS_DVBMEDIASINK_VER)-plugin-dvbmediasink.git $(BUILD_TMP)/gstreamer$(GST_PLUGINS_DVBMEDIASINK_VER)-plugin-dvbmediasink
-	set -e; cd $(BUILD_TMP)/gstreamer$(GST_PLUGINS_DVBMEDIASINK_VER)-plugin-dvbmediasink; \
+	$(CHDIR)/gstreamer$(GST_PLUGINS_DVBMEDIASINK_VER)-plugin-dvbmediasink; \
 		aclocal --force -I m4; \
 		libtoolize --copy --ltdl --force; \
 		autoconf --force; \
@@ -303,15 +331,16 @@ $(D)/gst_plugins_dvbmediasink: $(D)/gstreamer $(D)/gst_plugins_base $(D)/gst_plu
 			--with-vb9 \
 			--with-spark \
 			--with-gstversion=1.0 \
-		; \
+			; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	for i in `cd $(TARGET_DIR)/lib/gstreamer-1.0; echo *.la`; do \
-		$(REWRITE_LIBTOOL)/gstreamer-1.0/$$i; done
+		$(REWRITE_LIBTOOL)/gstreamer-1.0/$$i; \
+	done
 	$(REMOVE)/gstreamer$(GST_PLUGINS_DVBMEDIASINK_VER)-plugin-dvbmediasink
-	touch $@
+	$(TOUCH)
 
-##########################################################################################################
+# -----------------------------------------------------------------------------
 
 #
 # orc
@@ -323,12 +352,13 @@ $(ARCHIVE)/$(ORC_SOURCE):
 	$(WGET) https://gstreamer.freedesktop.org/src/orc/$(ORC_SOURCE)
 
 $(D)/orc: $(ARCHIVE)/$(ORC_SOURCE)
+	$(REMOVE)/orc-$(ORC_VER)
 	$(UNTAR)/$(ORC_SOURCE)
-	set -e; cd $(BUILD_TMP)/orc-$(ORC_VER); \
+	$(CHDIR)/orc-$(ORC_VER); \
 		$(CONFIGURE) \
 			--datarootdir=/.remove \
 			--prefix= \
-		; \
+			; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/orc-0.4.pc
@@ -337,7 +367,9 @@ $(D)/orc: $(ARCHIVE)/$(ORC_SOURCE)
 	$(REWRITE_LIBTOOLDEP)/liborc-test-0.4.la
 	rm -f $(addprefix $(TARGET_DIR)/bin/,orc-bugreport orcc)
 	$(REMOVE)/orc-$(ORC_VER)
-	touch $@
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
 
 #
 # libdca
@@ -349,12 +381,13 @@ $(ARCHIVE)/$(LIBDCA_SOURCE):
 	$(WGET) http://download.videolan.org/pub/videolan/libdca/$(LIBDCA_VER)/$(LIBDCA_SOURCE)
 
 $(D)/libdca: $(ARCHIVE)/$(LIBDCA_SOURCE)
+	$(REMOVE)/libdca-$(LIBDCA_VER)
 	$(UNTAR)/$(LIBDCA_SOURCE)
-	set -e; cd $(BUILD_TMP)/libdca-$(LIBDCA_VER); \
+	$(CHDIR)/libdca-$(LIBDCA_VER); \
 		$(CONFIGURE) \
 			--prefix= \
 			--mandir=/.remove \
-		; \
+			; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libdca.pc
@@ -362,7 +395,9 @@ $(D)/libdca: $(ARCHIVE)/$(LIBDCA_SOURCE)
 	$(REWRITE_LIBTOOL)/libdca.la
 	rm -f $(addprefix $(TARGET_DIR)/bin/,extract_dca extract_dts)
 	$(REMOVE)/libdca-$(LIBDCA_VER)
-	touch $@
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
 
 #
 # nettle
@@ -374,19 +409,22 @@ $(ARCHIVE)/$(NETTLE_SOURCE):
 	$(WGET) https://ftp.gnu.org/gnu/nettle/$(NETTLE_SOURCE)
 
 $(D)/nettle: $(D)/gmp $(ARCHIVE)/$(NETTLE_SOURCE)
+	$(REMOVE)/nettle-$(NETTLE_VER)
 	$(UNTAR)/$(NETTLE_SOURCE)
-	set -e; cd $(BUILD_TMP)/nettle-$(NETTLE_VER); \
+	$(CHDIR)/nettle-$(NETTLE_VER); \
 		$(CONFIGURE) \
 			--prefix= \
 			--disable-documentation \
-		; \
+			; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/hogweed.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/nettle.pc
 	rm -f $(addprefix $(TARGET_DIR)/bin/,sexp-conv nettle-hash nettle-pbkdf2 nettle-lfib-stream pkcs1-conv)
 	$(REMOVE)/nettle-$(NETTLE_VER)
-	touch $@
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
 
 #
 # gmp
@@ -400,17 +438,20 @@ $(ARCHIVE)/$(GMP_SOURCE):
 	$(WGET) ftp://ftp.gmplib.org/pub/gmp-$(GMP_VER_MAJOR)/$(GMP_SOURCE)
 
 $(D)/gmp: $(ARCHIVE)/$(GMP_SOURCE)
+	$(REMOVE)/gmp-$(GMP_VER_MAJOR)
 	$(UNTAR)/$(GMP_SOURCE)
-	set -e; cd $(BUILD_TMP)/gmp-$(GMP_VER_MAJOR); \
+	$(CHDIR)/gmp-$(GMP_VER_MAJOR); \
 		$(CONFIGURE) \
 			--prefix= \
 			--infodir=/.remove \
-		; \
+			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL)/libgmp.la
 	$(REMOVE)/gmp-$(GMP_VER_MAJOR)
-	touch $@
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
 
 #
 # gnutls
@@ -424,8 +465,9 @@ $(ARCHIVE)/$(GNUTLS_SOURCE):
 	$(WGET) ftp://ftp.gnutls.org/gcrypt/gnutls/v$(GNUTLS_VER_MAJOR)/$(GNUTLS_SOURCE)
 
 $(D)/gnutls: $(D)/nettle $(D)/ca-bundle $(ARCHIVE)/$(GNUTLS_SOURCE)
+	$(REMOVE)/gnutls-$(GNUTLS_VER)
 	$(UNTAR)/$(GNUTLS_SOURCE)
-	set -e; cd $(BUILD_TMP)/gnutls-$(GNUTLS_VER); \
+	$(CHDIR)/gnutls-$(GNUTLS_VER); \
 		$(CONFIGURE) \
 			--prefix= \
 			--mandir=/.remove \
@@ -439,7 +481,7 @@ $(D)/gnutls: $(D)/nettle $(D)/ca-bundle $(ARCHIVE)/$(GNUTLS_SOURCE)
 			--disable-guile \
 			--disable-doc \
 			--without-p11-kit \
-		; \
+			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gnutls.pc
@@ -448,7 +490,9 @@ $(D)/gnutls: $(D)/nettle $(D)/ca-bundle $(ARCHIVE)/$(GNUTLS_SOURCE)
 	$(REWRITE_LIBTOOLDEP)/libgnutlsxx.la
 	rm -f $(addprefix $(TARGET_DIR)/bin/,psktool gnutls-cli-debug certtool srptool ocsptool gnutls-serv gnutls-cli)
 	$(REMOVE)/gnutls-$(GNUTLS_VER)
-	touch $@
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
 
 #
 # glib-networking
@@ -462,18 +506,21 @@ $(ARCHIVE)/$(GLIB-NETWORKING_SOURCE):
 	$(WGET) https://ftp.acc.umu.se/pub/GNOME/sources/glib-networking/$(GLIB-NETWORKING_VER_MAJOR)/$(GLIB-NETWORKING_SOURCE)
 
 $(D)/glib-networking: $(D)/gnutls $(D)/libglib2 $(ARCHIVE)/$(GLIB-NETWORKING_SOURCE)
+	$(REMOVE)/glib-networking-$(GLIB-NETWORKING_VER)
 	$(UNTAR)/$(GLIB-NETWORKING_SOURCE)
-	set -e; cd $(BUILD_TMP)/glib-networking-$(GLIB-NETWORKING_VER); \
+	$(CHDIR)/glib-networking-$(GLIB-NETWORKING_VER); \
 		$(CONFIGURE) \
 			--prefix= \
 			--datadir=/.remove \
 			--datarootdir=/.remove \
 			--localedir=/.remove \
-		; \
+			; \
 		$(MAKE); \
 		$(MAKE) install prefix=$(TARGET_DIR)
 	$(REMOVE)/glib-networking-$(GLIB-NETWORKING_VER)
-	touch $@
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
 
 #
 # libsoup
@@ -487,8 +534,9 @@ $(ARCHIVE)/$(LIBSOUP_SOURCE):
 	$(WGET) https://download.gnome.org/sources/libsoup/$(LIBSOUP_VER_MAJOR)/$(LIBSOUP_SOURCE)
 
 $(D)/libsoup: $(D)/sqlite $(D)/libxml2 $(D)/libglib2 $(ARCHIVE)/$(LIBSOUP_SOURCE)
+	$(REMOVE)/libsoup-$(LIBSOUP_VER)
 	$(UNTAR)/$(LIBSOUP_SOURCE)
-	set -e; cd $(BUILD_TMP)/libsoup-$(LIBSOUP_VER); \
+	$(CHDIR)/libsoup-$(LIBSOUP_VER); \
 		$(CONFIGURE) \
 			--prefix= \
 			--datarootdir=/.remove \
@@ -497,13 +545,15 @@ $(D)/libsoup: $(D)/sqlite $(D)/libxml2 $(D)/libglib2 $(ARCHIVE)/$(LIBSOUP_SOURCE
 			--disable-gtk-doc \
 			--disable-gtk-doc-html \
 			--disable-gtk-doc-pdf \
-		; \
+			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR) itlocaledir=$$(TARGET_DIR)/.remove
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libsoup-2.4.pc
 	$(REWRITE_LIBTOOL)/libsoup-2.4.la
 	$(REMOVE)/libsoup-$(LIBSOUP_VER)
-	touch $@
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
 
 #
 # sqlite
@@ -515,16 +565,17 @@ $(ARCHIVE)/$(SQLITE_SOURCE):
 	$(WGET) http://www.sqlite.org/2017/$(SQLITE_SOURCE)
 
 $(D)/sqlite: $(ARCHIVE)/$(SQLITE_SOURCE)
+	$(REMOVE)/sqlite-autoconf-$(SQLITE_VER)
 	$(UNTAR)/$(SQLITE_SOURCE)
-	set -e; cd $(BUILD_TMP)/sqlite-autoconf-$(SQLITE_VER); \
+	$(CHDIR)/sqlite-autoconf-$(SQLITE_VER); \
 		$(CONFIGURE) \
 			--prefix= \
 			--mandir=/.remove \
-		; \
+			; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/sqlite3.pc
 	$(REWRITE_LIBTOOL)/libsqlite3.la
 	rm -f $(addprefix $(TARGET_DIR)/bin/,sqlite3)
 	$(REMOVE)/sqlite-autoconf-$(SQLITE_VER)
-	touch $@
+	$(TOUCH)

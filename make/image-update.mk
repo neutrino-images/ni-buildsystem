@@ -42,7 +42,7 @@ u-FritzCallMonitor:
 	echo "wget -q \"http://localhost/control/message?popup=FritzCallMonitor%20installed.\" -O /dev/null"	>> $(POSTINSTALL_SH)
 	echo "sleep 5"												>> $(POSTINSTALL_SH)
 	echo "/bin/sync"											>> $(POSTINSTALL_SH)
-	mkdir -pv $(UPDATE_INST_DIR)/bin  && \
+	mkdir -pv $(UPDATE_INST_DIR)/bin && \
 	mkdir -pv $(UPDATE_INST_DIR)/var/tuxbox/config && \
 	cp -f $(BIN)/FritzCallMonitor $(UPDATE_INST_DIR)/bin/ && \
 	cp -f $(TARGET_DIR)/var/tuxbox/config/FritzCallMonitor.cfg $(UPDATE_INST_DIR)/var/tuxbox/config/
@@ -221,7 +221,7 @@ pathauf_HD-19:
 
 u-update-bin:
 	pushd $(BUILD_TMP) && \
-	tar -czvf $(UPDATE_DIR)/$(UPDATE_NAME).bin temp_inst
+		tar -czvf $(UPDATE_DIR)/$(UPDATE_NAME).bin temp_inst
 	echo $(UPDATE_URL)/$(UPDATE_NAME).bin $(UPDATE_TYPE)$(UPDATE_VERSION)$(UPDATE_DATE) `md5sum $(UPDATE_DIR)/$(UPDATE_NAME).bin | cut -c1-32` $(UPDATE_DESC) $(UPDATE_VERSION_STRING) >> $(UPDATE_DIR)/$(UPDATE_MD5FILE)
 	$(MAKE) u-clean
 

@@ -4,8 +4,9 @@
 links: $(SOURCE_DIR)/$(TUXBOX_PLUGINS) $(LIBPLUG)/links.so
 
 $(LIBPLUG)/links.so: $(D)/zlib $(D)/openssl $(D)/libpng $(D)/libjpeg $(D)/giflib $(LIBPLUG) $(VARCONF)
+	$(REMOVE)/links
 	tar -C $(SOURCE_DIR)/$(TUXBOX_PLUGINS) -cp links --exclude-vcs | tar -C $(BUILD_TMP) -x
-	cd $(BUILD_TMP)/links && \
+	$(CHDIR)/links && \
 		export CC=$(TARGET)-gcc && \
 		export AR=$(TARGET)-ar && \
 		export NM=$(TARGET)-nm && \
