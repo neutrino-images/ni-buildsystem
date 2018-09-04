@@ -44,4 +44,4 @@
 ## the custom directory 'oldest'
 #/mnt/autofs/record/sky/,1000;oldest
 
-# Don't forget the the newline after the last entry.
+# Don't forget the newline after the last entry.

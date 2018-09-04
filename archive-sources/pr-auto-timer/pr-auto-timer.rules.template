@@ -114,4 +114,4 @@
 ## The regular expression includes only episodes where the string "5. Staffel" was found in the description
 #Fox HD;*;Walking Dead,+5\\.[[:blank:]]Staffel;D
 
-# Don't forget the the newline after the last entry.
+# Don't forget the newline after the last entry.

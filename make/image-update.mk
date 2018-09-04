@@ -102,12 +102,13 @@ u-pr-auto-timer:
 	install -m644 $(SOURCES)/pr-auto-timer/pr-auto-timer.rules.template $(UPDATE_INST_DIR)/var/tuxbox/config/
 	install -m644 $(SOURCES)/pr-auto-timer/auto-record-cleaner.conf.template $(UPDATE_INST_DIR)/var/tuxbox/config/
 	install -m644 $(SOURCES)/pr-auto-timer/auto-record-cleaner.rules.template $(UPDATE_INST_DIR)/var/tuxbox/config/
+	VERSION_STRING=`cat $(SOURCES)/pr-auto-timer/pr-auto-timer | grep '^VERSION' | cut -d= -f2`; \
 	$(MAKE) u-update-bin \
 			UPDATE_MD5FILE=pr-auto-timer.txt \
 			UPDATE_URL=$(NI-SERVER)/plugins/pr-auto-timer \
-			UPDATE_NAME=pr-auto-timer_040 \
-			UPDATE_DESC="Auto-Timer" \
-			UPDATE_VERSION_STRING=0.40
+			UPDATE_NAME=pr-auto-timer_$${VERSION_STRING//./} \
+			UPDATE_DESC=Auto-Timer \
+			UPDATE_VERSION_STRING=$$VERSION_STRING
 
 u-neutrino: neutrino-clean
 	$(MAKE) u-init

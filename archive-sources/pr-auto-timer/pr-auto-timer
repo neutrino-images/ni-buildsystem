@@ -5,7 +5,7 @@
 # Copyright (C) 2012-2013  Patrick Reinhardt, pr-cs <at> reinhardtweb.de
 #               2013-2014  nadine
 #                    2014  LtCmdrLuke
-#               2013-2017  NI-Team
+#               2013-2018  NI-Team
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -26,9 +26,19 @@
 #	Timer rules:		/var/tuxbox/config/pr-auto-timer.rules
 #	Neutrino plugin:	/lib/tuxbox/plugins/pr-auto-timer.{sh,cfg}
 
-VERSION=0.40a
+VERSION=0.41
 
 # Changelog:
+#
+# 0.41 by vanhofen (NI-Team)
+#	-fix search-code in find_show_by_regex()
+#	-minor format changes in logging
+#	-fix new movies on Sky Cinema; align to new format on website again
+#	-fix another arithmetic syntax error
+#
+# 0.40b by tewsbo (NI-Team)
+#	-add Sky Stars to sky_exclude_channels
+#	-fix arithmetic syntax error
 #
 # 0.40a by tewsbo (NI-Team)
 #	-fix msgbox-calls for larger OSD-resolutions
@@ -561,14 +571,8 @@ scale2res()
 #######################################################################################
 #BEGIN SECTION "Initialization"
 
-init_config() {
-	#Parse config file (default: /var/tuxbox/config/pr-auto-timer.conf)
-	if [ -e $CONFIG_FILE ]; then
-		source $CONFIG_FILE 2>/dev/null
-	fi
-
-
-	# Initialize the logfile first, so we can write to it...
+init_log() {
+	# Initialize the logfile, so we can write to it ...
 	if [ ! -d "${LOG_FILE%/*}" ]; then
 		case $LOG_FILE in
 			[oO][fF][fF])
@@ -579,7 +583,18 @@ init_config() {
 				;;
 		esac
 	fi
-	echo -e "\n\n========================== New log started at $(date) ======================================" >> $LOG_FILE
+
+	if [ "$LOG_FILE" != "" -a ! -e "$LOG_FILE" ]; then
+		# Create logfile
+		touch $LOG_FILE
+	fi
+}
+
+init_config() {
+	#Parse config file (default: /var/tuxbox/config/pr-auto-timer.conf)
+	if [ -e $CONFIG_FILE ]; then
+		source $CONFIG_FILE 2>/dev/null
+	fi
 
 	# Check the settings and reset them to default if unset or invalid
 	case $MAX_DIFF_MINS in
@@ -670,7 +685,7 @@ init_config() {
 
 	# Prepare some internal variables
 	RULE_FILES="$RULE_FILE $RULE_FILE_EXT"
-	max_diff_secs=$(( $MAX_DIFF_MINS \* 60 ))
+	max_diff_secs=$(( $MAX_DIFF_MINS * 60 ))
 }
 
 init_temp() {
@@ -1261,7 +1276,7 @@ find_show_by_regex() {
 						}
 					}
 
-					if (find_option = "all")
+					if (find_option == "all")
 					{
 						if ( (exclude_matches > 0) && (exclude_counter == exclude_matches) )
 						{
@@ -1269,7 +1284,7 @@ find_show_by_regex() {
 							show_found = false;
 						}
 					}
-					else if (find_option = "one")
+					else if (find_option == "one")
 					{
 						if ( (exclude_matches > 0) && (exclude_counter >= 1) )
 						{
@@ -1293,7 +1308,7 @@ find_show_by_regex() {
 						}
 					}
 
-					if (find_option = "all")
+					if (find_option == "all")
 					{
 						if ( (include_counter > 0) && (include_counter != include_matches) )
 						{
@@ -1301,7 +1316,7 @@ find_show_by_regex() {
 							show_found = false;
 						}
 					}
-					else if (find_option = "one")
+					else if (find_option == "one")
 					{
 						if ( (include_counter > 0) && (include_matches < 1) )
 						{
@@ -2219,7 +2234,7 @@ get_sky_moviedata() {
 			next;
 		}
 
-		/<p>|\/serie\// {
+		/<span>|\/serie\// {
 			next;
 		}
 
@@ -2322,7 +2337,7 @@ parse_sky_cinema() {
 	end_ifs_block
 
 	sky_start_sec_add=0
-	sky_exclude_channels="Active Action Comedy Emotion Family Hits Nostalgie Uno"
+	sky_exclude_channels="Active Action Comedy Emotion Family Hits Nostalgie Uno Stars"
 
 	case $(echo $sky_cinema | awk '{print toupper($0)}') in
 		SD)
@@ -2362,28 +2377,28 @@ parse_sky_cinema() {
 # set the signal handler
 trap signal_handler INT TERM
 
-# First initialize the values from the config, otherwise we cannot log anywhere
+# Initialize the logfile first
+init_log
+
+# We happily started ...
+log "$ME V$VERSION started."
+
+# Initialize the values from the config, otherwise we cannot log anywhere
 init_config
 init_temp
 
 HISTORY_IDX_TMP_FILE="$temp_dir/history_index"
 TIMER_IDX_TMP_FILE="$temp_dir/timer_index"
 
-
 # Now get command line option, as these might override some values from the config or default variables
 parse_options $@
 
 if [ -e $PID_FILE ]; then
-	log "$ME ist already running. Exiting..."
+	log "$ME ist already running. Exiting."
 	exit $EXIT_ALREADY_RUNNING
 else
 	echo $$ > $PID_FILE
 fi
-
-# We happily started..
-log ""
-log "$ME V$VERSION started."
-
 
 if [ $DEBUG_TEMP == 1 ]; then
 	log "\tmain: !!! WARNING: DEBUG_TEMP is enabled. Temporary files will not be removed !!!"
@@ -2439,7 +2454,7 @@ if [ $opt_menu ]; then
 fi
 
 for rule_file in $RULE_FILES; do
-	log "\tmain: processing '${rule_file}'"
+	log "\tmain: Processing '${rule_file}'"
 	rule_line=0
 	cat $rule_file | while read line ;do
 		rule_line=$((${rule_line}+1))
@@ -2576,7 +2591,7 @@ parse_sky_cinema
 
 if [ ! "$sky_cinema" = "" ]; then
 	log ""
-	log "\tmain: processing new movies at \"$sky_cinema\""
+	log "\tmain: Processing new movies at \"$sky_cinema\""
 
 	parse_timespan "$timespan"
 	parse_recdir
@@ -2589,7 +2604,7 @@ if [ ! "$sky_cinema" = "" ]; then
 			if [ $sky_start_sec -lt $now ]; then
 				continue
 			fi
-			sky_start_sec=$((sky_start_sec \+ sky_start_sec_add))
+			sky_start_sec=$((sky_start_sec + sky_start_sec_add))
 			sky_show_data=$(find_show_by_start_sec "$sky_cinema" "$sky_start_sec")
 			if [ ! "$sky_show_data" = "" ]; then
 				# split sky_show_data
@@ -2707,6 +2722,7 @@ else
 fi
 
 log "$ME V$VERSION exiting."
+log "=================================================="
 
 #END SECTION "Main"
 #######################################################################################
