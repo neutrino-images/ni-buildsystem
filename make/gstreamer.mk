@@ -24,8 +24,8 @@ $(ARCHIVE)/$(GSTREAMER_SOURCE):
 	$(WGET) https://gstreamer.freedesktop.org/src/gstreamer/$(GSTREAMER_SOURCE)
 
 $(D)/gstreamer: $(D)/libglib2 $(D)/libxml2 $(D)/glib-networking $(ARCHIVE)/$(GSTREAMER_SOURCE)
-	$(UNTAR)/$(GSTREAMER_SOURCE)
 	$(REMOVE)/gstreamer-$(GSTREAMER_VER)
+	$(UNTAR)/$(GSTREAMER_SOURCE)
 	$(CHDIR)/gstreamer-$(GSTREAMER_VER); \
 		$(PATCH)/gstreamer-$(GSTREAMER_VER)-revert-use-new-gst-adapter-get-buffer.patch; \
 		./autogen.sh --noconfigure; \
