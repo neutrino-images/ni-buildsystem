@@ -269,6 +269,7 @@ WGET = wget -t3 -T60 -c -P $(ARCHIVE)
 
 CHDIR = set -e; cd $(BUILD_TMP)
 TOUCH = @touch $@
+STRIP = $(TARGET)-strip
 
 CONFIGURE_OPTS = \
 	--build=$(BUILD) --host=$(TARGET)
