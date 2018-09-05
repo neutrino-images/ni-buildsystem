@@ -1025,7 +1025,7 @@ endif
 $(D)/libglib2: $(ARCHIVE)/glib-$(GLIB_VER).tar.xz $(D)/zlib $(LIBGLIB2_DEPS) $(D)/libffi | $(TARGET_DIR)
 	$(REMOVE)/glib-$(GLIB_VER)
 	$(UNTAR)/glib-$(GLIB_VER).tar.xz
-	$(CHDIR)/glib-$(GLIB_VER); \
+	cd $(BUILD_TMP)/glib-$(GLIB_VER); \
 		$(PATCH)/libglib2-disable-tests.patch; \
 		echo "ac_cv_type_long_long=yes"		 > arm-linux.cache; \
 		echo "glib_cv_stack_grows=no"		>> arm-linux.cache; \
