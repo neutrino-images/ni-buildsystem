@@ -23,7 +23,7 @@ index 008ad58..007332d 100644
  ACLOCAL_AMFLAGS = -I m4macros ${ACLOCAL_FLAGS}
  
 -SUBDIRS = . m4macros glib gmodule gthread gobject gio po docs tests
-+SUBDIRS = . m4macros glib gmodule gthread gobject gio po docs
++SUBDIRS = . m4macros glib gmodule gthread gobject gio
  DIST_SUBDIRS = $(SUBDIRS) build win32
  
  bin_SCRIPTS = glib-gettextize
@@ -31,7 +31,7 @@ diff --git a/gio/Makefile.am b/gio/Makefile.am
 index 67db1b7..78309b5 100644
 --- a/gio/Makefile.am
 +++ b/gio/Makefile.am
-@@ -244,7 +244,7 @@ platform_libadd += win32/libgiowin32.la
+@@ -253,7 +253,7 @@ platform_libadd += win32/libgiowin32.la
  platform_deps += win32/libgiowin32.la
  endif
  

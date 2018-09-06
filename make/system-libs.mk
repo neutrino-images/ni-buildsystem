@@ -1022,14 +1022,18 @@ ifeq ($(BOXSERIES), hd1)
 	LIBGLIB2_CONF = --enable-static --disable-shared
 endif
 
+LIBGLIB2_PATCH  = libglib2-disable-tests.patch
+
 $(D)/libglib2: $(ARCHIVE)/glib-$(GLIB_VER).tar.xz $(D)/zlib $(LIBGLIB2_DEPS) $(D)/libffi | $(TARGET_DIR)
 	$(REMOVE)/glib-$(GLIB_VER)
 	$(UNTAR)/glib-$(GLIB_VER).tar.xz
-	cd $(BUILD_TMP)/glib-$(GLIB_VER); \
-		$(PATCH)/libglib2-disable-tests.patch; \
+	$(CHDIR)/glib-$(GLIB_VER); \
+		$(call apply_patches, $(LIBGLIB2_PATCH)); \
 		echo "ac_cv_type_long_long=yes"		 > arm-linux.cache; \
 		echo "glib_cv_stack_grows=no"		>> arm-linux.cache; \
 		echo "glib_cv_uscore=no"		>> arm-linux.cache; \
+		echo "glib_cv_va_copy=no"		>> arm-linux.cache; \
+		echo "glib_cv_va_val_copy=yes"		>> arm-linux.cache; \
 		echo "ac_cv_func_posix_getpwuid_r=yes"	>> arm-linux.cache; \
 		echo "ac_cv_func_posix_getgrgid_r=yes"	>> arm-linux.cache; \
 		autoreconf -fi; \
@@ -1037,14 +1041,16 @@ $(D)/libglib2: $(ARCHIVE)/glib-$(GLIB_VER).tar.xz $(D)/zlib $(LIBGLIB2_DEPS) $(D
 			--prefix= \
 			--datarootdir=/.remove \
 			--cache-file=arm-linux.cache \
-			--enable-debug=no \
+			--disable-debug \
 			--disable-selinux \
-			--enable-libmount=no \
+			--disable-libmount \
 			--disable-fam \
+			--disable-gtk-doc \
+			--disable-gtk-doc-html \
+			--with-threads="posix" \
 			--with-pcre=internal \
 			$(LIBGLIB2_CONF) \
 			; \
-		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	rm -rf $(TARGET_DIR)/bin/gapplication
 	rm -rf $(TARGET_DIR)/bin/gdbus*
