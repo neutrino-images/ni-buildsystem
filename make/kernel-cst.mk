@@ -41,21 +41,22 @@ kernel-cst-install-all:
 	make clean > /dev/null 2>&1
 
 $(D)/kernel-cst-hd2: $(SOURCE_DIR)/$(NI_LINUX-KERNEL) $(SOURCE_DIR)/$(NI_DRIVERS-BIN) | $(TARGET_DIR)
-	cd $(SOURCE_DIR)/$(NI_LINUX-KERNEL) && \
+	$(REMOVE)/linux-$(KERNEL_VERSION)
+	cd $(SOURCE_DIR)/$(NI_LINUX-KERNEL); \
 		git checkout $(KERNEL_BRANCH)
 	tar -C $(SOURCE_DIR) -cp $(NI_LINUX-KERNEL) --exclude-vcs | tar -C $(BUILD_TMP) -x
-	cd $(BUILD_TMP) && \
+	cd $(BUILD_TMP); \
 		mv $(NI_LINUX-KERNEL) linux-$(KERNEL_VERSION)
-	cd $(BUILD_TMP)/linux-$(KERNEL_VERSION) && \
-		touch .scmversion && \
-		cp $(CONFIGS)/kernel-3.10-$(BOXFAMILY).config $(BUILD_TMP)/linux-$(KERNEL_VERSION)/.config && \
-		sed -i -e 's/SUBLEVEL = 108/SUBLEVEL = 93/g' Makefile && \
-		mkdir -p $(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules && \
-		$(MAKE) ARCH=arm CROSS_COMPILE=$(TARGET)- INSTALL_MOD_PATH=$(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules silentoldconfig && \
-		$(MAKE) ARCH=arm CROSS_COMPILE=$(TARGET)- INSTALL_MOD_PATH=$(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules zImage && \
-		$(MAKE) ARCH=arm CROSS_COMPILE=$(TARGET)- INSTALL_MOD_PATH=$(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules modules && \
-		$(MAKE) ARCH=arm CROSS_COMPILE=$(TARGET)- INSTALL_MOD_PATH=$(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules modules_install && \
-		cat $(ZIMAGE) $(DTB) > zImage_DTB && \
+	$(CHDIR)/linux-$(KERNEL_VERSION); \
+		touch .scmversion; \
+		cp $(CONFIGS)/kernel-3.10-$(BOXFAMILY).config $(BUILD_TMP)/linux-$(KERNEL_VERSION)/.config; \
+		sed -i -e 's/SUBLEVEL = 108/SUBLEVEL = 93/g' Makefile; \
+		mkdir -p $(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules; \
+		$(MAKE) ARCH=arm CROSS_COMPILE=$(TARGET)- INSTALL_MOD_PATH=$(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules silentoldconfig; \
+		$(MAKE) ARCH=arm CROSS_COMPILE=$(TARGET)- INSTALL_MOD_PATH=$(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules zImage; \
+		$(MAKE) ARCH=arm CROSS_COMPILE=$(TARGET)- INSTALL_MOD_PATH=$(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules modules; \
+		$(MAKE) ARCH=arm CROSS_COMPILE=$(TARGET)- INSTALL_MOD_PATH=$(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules modules_install; \
+		cat $(ZIMAGE) $(DTB) > zImage_DTB; \
 		mkimage -A ARM -O linux -T kernel -C none -a 0x8000 -e 0x8000 -n "$(KERNEL_NAME)" -d zImage_DTB $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-vmlinux.ub.gz
 ifeq ($(BOXFAMILY), apollo)
   ifeq ($(BOXMODEL), apollo)
@@ -70,21 +71,22 @@ kernel-cst-install-hd2: $(D)/kernel-cst-hd2
 	cp -af $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-vmlinux.ub.gz $(KERNEL_DESTDIR)/vmlinux.ub.gz
 
 $(D)/kernel-cst-hd1: $(SOURCE_DIR)/$(NI_LINUX-KERNEL) | $(TARGET_DIR)
-	cd $(SOURCE_DIR)/$(NI_LINUX-KERNEL) && \
-		git checkout $(KERNEL_BRANCH) && \
+	$(REMOVE)/linux-$(KERNEL_VERSION)
+	cd $(SOURCE_DIR)/$(NI_LINUX-KERNEL); \
+		git checkout $(KERNEL_BRANCH)
 	tar -C $(SOURCE_DIR) -cp $(NI_LINUX-KERNEL) --exclude-vcs | tar -C $(BUILD_TMP) -x
-	cd $(BUILD_TMP) && \
+	cd $(BUILD_TMP); \
 		mv $(NI_LINUX-KERNEL) linux-$(KERNEL_VERSION)
-	cd $(BUILD_TMP)/linux-$(KERNEL_VERSION) && \
-		touch .scmversion && \
-		cp $(CONFIGS)/kernel-$(KERNEL_VERSION).config $(BUILD_TMP)/linux-$(KERNEL_VERSION)/.config && \
-		sed -i -e 's/EXTRAVERSION = .15/EXTRAVERSION = .13/g' Makefile && \
-		mkdir -p $(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules && \
-		$(MAKE) ARCH=arm CROSS_COMPILE=$(TARGET)- INSTALL_MOD_PATH=$(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules silentoldconfig && \
-		$(MAKE) ARCH=arm CROSS_COMPILE=$(TARGET)- INSTALL_MOD_PATH=$(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules zImage && \
-		$(MAKE) ARCH=arm CROSS_COMPILE=$(TARGET)- INSTALL_MOD_PATH=$(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules modules && \
-		$(MAKE) ARCH=arm CROSS_COMPILE=$(TARGET)- INSTALL_MOD_PATH=$(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules modules_install && \
-		mkimage -A arm -O linux -T kernel -C none -a 0x48000 -e 0x48000 -n "$(KERNEL_NAME)" -d $(IMAGE) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-uImage.img && \
+	$(CHDIR)/linux-$(KERNEL_VERSION); \
+		touch .scmversion; \
+		cp $(CONFIGS)/kernel-$(KERNEL_VERSION).config $(BUILD_TMP)/linux-$(KERNEL_VERSION)/.config; \
+		sed -i -e 's/EXTRAVERSION = .15/EXTRAVERSION = .13/g' Makefile; \
+		mkdir -p $(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules; \
+		$(MAKE) ARCH=arm CROSS_COMPILE=$(TARGET)- INSTALL_MOD_PATH=$(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules silentoldconfig; \
+		$(MAKE) ARCH=arm CROSS_COMPILE=$(TARGET)- INSTALL_MOD_PATH=$(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules zImage; \
+		$(MAKE) ARCH=arm CROSS_COMPILE=$(TARGET)- INSTALL_MOD_PATH=$(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules modules; \
+		$(MAKE) ARCH=arm CROSS_COMPILE=$(TARGET)- INSTALL_MOD_PATH=$(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules modules_install; \
+		mkimage -A arm -O linux -T kernel -C none -a 0x48000 -e 0x48000 -n "$(KERNEL_NAME)" -d $(IMAGE) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-uImage.img; \
 		mkimage -A arm -O linux -T kernel -C none -a 0x48000 -e 0x48000 -n "$(KERNEL_NAME)" -d $(ZIMAGE) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-zImage.img
 	$(TOUCH)
 
