@@ -465,15 +465,16 @@ $(D)/libsigc++: $(ARCHIVE)/libsigc++-$(LIBSIGCPP_VER).tar.xz | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-$(D)/expat: $(ARCHIVE)/expat-$(EXPAT_VER).tar.gz | $(TARGET_DIR)
+$(D)/expat: $(ARCHIVE)/expat-$(EXPAT_VER).tar.bz2 | $(TARGET_DIR)
 	$(REMOVE)/expat-$(EXPAT_VER)
-	$(UNTAR)/expat-$(EXPAT_VER).tar.gz
+	$(UNTAR)/expat-$(EXPAT_VER).tar.bz2
 	$(CHDIR)/expat-$(EXPAT_VER); \
 		$(CONFIGURE) \
 			--prefix= \
 			--mandir=/.remove \
 			--enable-shared \
 			--disable-static \
+			--without-xmlwf \
 			; \
 		$(MAKE); \
 		make install DESTDIR=$(TARGET_DIR)
@@ -484,7 +485,7 @@ $(D)/expat: $(ARCHIVE)/expat-$(EXPAT_VER).tar.gz | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-$(D)/luaexpat: $(ARCHIVE)/luaexpat-$(LUA_EXPAT_VER).tar.gz $(D)/expat | $(TARGET_DIR)
+$(D)/luaexpat: $(ARCHIVE)/luaexpat-$(LUA_EXPAT_VER).tar.gz $(D)/expat $(D)/lua | $(TARGET_DIR)
 	$(REMOVE)/luaexpat-$(LUA_EXPAT_VER)
 	$(UNTAR)/luaexpat-$(LUA_EXPAT_VER).tar.gz
 	$(CHDIR)/luaexpat-$(LUA_EXPAT_VER); \

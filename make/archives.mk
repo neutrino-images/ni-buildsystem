@@ -264,9 +264,9 @@ LUAPOSIX_VER=31
 $(ARCHIVE)/v$(LUAPOSIX_VER).tar.gz:
 	$(WGET) https://github.com/luaposix/luaposix/archive/v$(LUAPOSIX_VER).tar.gz
 
-EXPAT_VER=2.1.0
-$(ARCHIVE)/expat-$(EXPAT_VER).tar.gz:
-	$(WGET) http://sourceforge.net/projects/expat/files/expat/$(EXPAT_VER)/expat-$(EXPAT_VER).tar.gz
+EXPAT_VER=2.2.6
+$(ARCHIVE)/expat-$(EXPAT_VER).tar.bz2:
+	$(WGET) http://sourceforge.net/projects/expat/files/expat/$(EXPAT_VER)/expat-$(EXPAT_VER).tar.bz2
 
 LUA_EXPAT_VER=1.2.0
 $(ARCHIVE)/luaexpat-$(LUA_EXPAT_VER).tar.gz:
