@@ -485,20 +485,16 @@ $(D)/expat: $(ARCHIVE)/expat-$(EXPAT_VER).tar.bz2 | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-$(D)/luaexpat: $(ARCHIVE)/luaexpat-$(LUA_EXPAT_VER).tar.gz $(D)/expat $(D)/lua | $(TARGET_DIR)
-	$(REMOVE)/luaexpat-$(LUA_EXPAT_VER)
-	$(UNTAR)/luaexpat-$(LUA_EXPAT_VER).tar.gz
-	$(CHDIR)/luaexpat-$(LUA_EXPAT_VER); \
-		rm makefile*; \
-		$(PATCH)/luaexpat-makefile.diff; \
-		$(PATCH)/luaexpat-1.3.0-lua-5.2.patch; \
-		$(PATCH)/luaexpat-lua-5.2-test-fix.patch; \
-		$(MAKE) \
-		CC=$(TARGET)-gcc LUA_V=$(LUA_ABIVER) LDFLAGS="$(TARGET_LDFLAGS)" \
-		LUA_INC=-I$(TARGET_INCLUDE_DIR) EXPAT_INC=-I$(TARGET_INCLUDE_DIR); \
-		$(MAKE) install LUA_LDIR=$(TARGET_DIR)/share/lua/$(LUA_ABIVER) LUA_CDIR=$(TARGET_LIB_DIR)/lua/$(LUA_ABIVER)
-	rm -rf $(TARGET_DIR)/share/lua/$(LUA_ABIVER)/lxp/tests
-	$(REMOVE)/luaexpat-$(LUA_EXPAT_VER)
+LUAEXPAT_PATCH  = luaexpat-makefile.patch
+
+$(D)/luaexpat: $(D)/expat $(D)/lua $(ARCHIVE)/luaexpat-$(LUAEXPAT_VER).tar.gz | $(TARGET_DIR)
+	$(REMOVE)/luaexpat-$(LUAEXPAT_VER)
+	$(UNTAR)/luaexpat-$(LUAEXPAT_VER).tar.gz
+	$(CHDIR)/luaexpat-$(LUAEXPAT_VER); \
+		$(call apply_patches, $(LUAEXPAT_PATCH)); \
+		$(MAKE) CC=$(TARGET)-gcc LDFLAGS="$(TARGET_LDFLAGS)" PREFIX=$(TARGET_DIR); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(REMOVE)/luaexpat-$(LUAEXPAT_VER)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------

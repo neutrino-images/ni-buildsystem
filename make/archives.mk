@@ -268,9 +268,9 @@ EXPAT_VER=2.2.6
 $(ARCHIVE)/expat-$(EXPAT_VER).tar.bz2:
 	$(WGET) http://sourceforge.net/projects/expat/files/expat/$(EXPAT_VER)/expat-$(EXPAT_VER).tar.bz2
 
-LUA_EXPAT_VER=1.2.0
-$(ARCHIVE)/luaexpat-$(LUA_EXPAT_VER).tar.gz:
-	$(WGET) http://matthewwild.co.uk/projects/luaexpat/luaexpat-$(LUA_EXPAT_VER).tar.gz
+LUAEXPAT_VER=1.3.0
+$(ARCHIVE)/luaexpat-$(LUAEXPAT_VER).tar.gz:
+	$(WGET) http://matthewwild.co.uk/projects/luaexpat/luaexpat-$(LUAEXPAT_VER).tar.gz
 
 LUACURL_VER=v3
 $(ARCHIVE)/Lua-cURL$(LUACURL_VER).tar.xz:
