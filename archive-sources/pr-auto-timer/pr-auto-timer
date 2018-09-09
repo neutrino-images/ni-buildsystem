@@ -26,9 +26,12 @@
 #	Timer rules:		/var/tuxbox/config/pr-auto-timer.rules
 #	Neutrino plugin:	/lib/tuxbox/plugins/pr-auto-timer.{sh,cfg}
 
-VERSION=0.41
+VERSION=0.41a
 
 # Changelog:
+#
+# 0.41a by vanhofen (NI-Team)
+#	-fix "minor format changes in logging" from previous version
 #
 # 0.41 by vanhofen (NI-Team)
 #	-fix search-code in find_show_by_regex()
@@ -571,8 +574,13 @@ scale2res()
 #######################################################################################
 #BEGIN SECTION "Initialization"
 
-init_log() {
-	# Initialize the logfile, so we can write to it ...
+init_config() {
+	#Parse config file (default: /var/tuxbox/config/pr-auto-timer.conf)
+	if [ -e $CONFIG_FILE ]; then
+		source $CONFIG_FILE 2>/dev/null
+	fi
+
+	# Initialize the logfile first, so we can write to it ...
 	if [ ! -d "${LOG_FILE%/*}" ]; then
 		case $LOG_FILE in
 			[oO][fF][fF])
@@ -587,13 +595,6 @@ init_log() {
 	if [ "$LOG_FILE" != "" -a ! -e "$LOG_FILE" ]; then
 		# Create logfile
 		touch $LOG_FILE
-	fi
-}
-
-init_config() {
-	#Parse config file (default: /var/tuxbox/config/pr-auto-timer.conf)
-	if [ -e $CONFIG_FILE ]; then
-		source $CONFIG_FILE 2>/dev/null
 	fi
 
 	# Check the settings and reset them to default if unset or invalid
@@ -2377,15 +2378,12 @@ parse_sky_cinema() {
 # set the signal handler
 trap signal_handler INT TERM
 
-# Initialize the logfile first
-init_log
-
-# We happily started ...
-log "$ME V$VERSION started."
-
 # Initialize the values from the config, otherwise we cannot log anywhere
 init_config
 init_temp
+
+# We happily started ...
+log "$ME V$VERSION started."
 
 HISTORY_IDX_TMP_FILE="$temp_dir/history_index"
 TIMER_IDX_TMP_FILE="$temp_dir/timer_index"
