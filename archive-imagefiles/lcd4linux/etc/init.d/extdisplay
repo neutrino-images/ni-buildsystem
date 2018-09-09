@@ -51,7 +51,7 @@ for DEVICE in ${DEVICES}; do
 
 				if $(echo "${SPFmonitor}" | grep -q "${DEVICE}"); then
 					LOGINFO "SPF in monitor mode found"
-					if [ -e /tmp/lcd4linux.pid ]; then
+					if [ -e /var/run/lcd4linux.pid ]; then
 						LOGINFO "do nothing"
 					else
 						LOGINFO "(re)starting lcd4linux"

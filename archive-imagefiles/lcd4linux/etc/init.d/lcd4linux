@@ -23,9 +23,9 @@ doStart() {
 }
 
 doStop() {
-	if [ -e /tmp/lcd4linux.pid ]; then
+	if [ -e /var/run/lcd4linux.pid ]; then
 		# read pid from pidfile
-		read PID < /tmp/lcd4linux.pid
+		read PID < /var/run/lcd4linux.pid
 
 		# kill child processes
 		CHILDS=$(ps -o pid --ppid $PID --no-heading)
