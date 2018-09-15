@@ -9,8 +9,11 @@ $boxtype_sc = "";
 $boxseries = "";
 $boxmodel = "";
 
+$image_type = "";
 $image_type = trim($_GET["image_type"]);
+$revision = "";
 $revision = trim($_GET["revision"]);
+$chip_type = "";
 $chip_type = trim($_GET["chip_type"]);
 
 if ($revision == 1) //FIXME
@@ -60,7 +63,7 @@ elseif ($revision == 13 || $revision == 14)
 }
 
 if (empty($image_type))
-	$image_type = "release";
+	$image_type = "nightly";
 
 $image_type = strtolower($image_type);
 $directory = $image_type;
