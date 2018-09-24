@@ -2,7 +2,7 @@ diff --git a/src/xupnpd.lua b/src/xupnpd.lua
 index bebb1e1..25e1d9e 100644
 --- a/src/xupnpd.lua
 +++ b/src/xupnpd.lua
-@@ -113,4 +113,13 @@ cfg.ui_path='./ui/'
+@@ -117,4 +117,13 @@ cfg.ui_path='./ui/'
  cfg.drive=''                    -- reload playlists only if drive state=active/idle, example: cfg.drive='/dev/sda'
  cfg.profiles='./profiles/'      -- device profiles feature
  
