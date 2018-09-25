@@ -17,6 +17,7 @@ SHAREICONS	= $(TARGET_DIR)/share/tuxbox/neutrino/icons
 SHAREFLEX	= $(TARGET_DIR)/share/tuxbox/neutrino/flex
 SHAREPLUG	= $(TARGET_DIR)/share/tuxbox/neutrino/plugins
 SHARETHEMES	= $(TARGET_DIR)/share/tuxbox/neutrino/themes
+SHAREWEBRADIO	= $(TARGET_DIR)/share/tuxbox/neutrino/webradio
 SHAREWEBTV	= $(TARGET_DIR)/share/tuxbox/neutrino/webtv
 USRBIN		= $(TARGET_DIR)/usr/bin
 VARINIT		= $(TARGET_DIR)/var/etc/init.d
@@ -31,6 +32,7 @@ $(SHAREICONS) \
 $(SHAREFLEX) \
 $(SHAREPLUG) \
 $(SHARETHEMES) \
+$(SHAREWEBRADIO) \
 $(SHAREWEBTV) \
 $(USRBIN) \
 $(VARINIT) \
@@ -70,7 +72,8 @@ plugins-all: $(D)/neutrino \
 	add-locale \
 	favorites2bin \
 	LocalTV \
-	webtv-scripts \
+	webradio \
+	webtv \
 	neutrino-mediathek \
 	openvpn-setup \
 	oscammon \
@@ -255,7 +258,10 @@ mtv \
 favorites2bin: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(LIBPLUG)
 	install -m755 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/$@/* $(LIBPLUG)/
 
-webtv-scripts: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(SHAREWEBTV)
+webradio: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(SHAREWEBRADIO)
+	install -m755 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/webradio/* $(SHAREWEBRADIO)/
+
+webtv: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(SHAREWEBTV)
 	install -m755 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/webtv/* $(SHAREWEBTV)/
 
 #getrc
