@@ -193,6 +193,15 @@ pathauf_HD-19:
 		xmllint --format $$file > _$$file; \
 		mv _$$file $$file; \
 	done
+	# sync sat-names with current satellites.xml
+	# Astra 19.2
+	A192=`grep 'position=\"192\"' $(N_HD_SOURCE)/data/satellites.xml`; \
+	A192=`echo $$A192`; \
+	sed -i "/position=\"192\"/c\	$$A192" $(UPDATE_INST_DIR)/var/tuxbox/config/zapit/services.xml
+	# Hotbird 13.0
+	H130=`grep 'position=\"130\"' $(N_HD_SOURCE)/data/satellites.xml`; \
+	H130=`echo $$H130`; \
+	sed -i "/position=\"130\"/c\	$$H130" $(UPDATE_INST_DIR)/var/tuxbox/config/zapit/services.xml
 	#
 	# we should try to keep this array table up-to-date ;-)
 	#
