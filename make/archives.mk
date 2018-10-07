@@ -355,8 +355,8 @@ $(ARCHIVE)/libffi-$(LIBFFI_VER).tar.gz:
 	$(WGET) ftp://sourceware.org/pub/libffi/libffi-$(LIBFFI_VER).tar.gz
 
 GLIB_MAJOR=2
-GLIB_MINOR=55
-GLIB_MICRO=0
+GLIB_MINOR=56
+GLIB_MICRO=3
 GLIB_VER=$(GLIB_MAJOR).$(GLIB_MINOR).$(GLIB_MICRO)
 $(ARCHIVE)/glib-$(GLIB_VER).tar.xz:
 	$(WGET) http://ftp.gnome.org/pub/gnome/sources/glib/$(GLIB_MAJOR).$(GLIB_MINOR)/glib-$(GLIB_VER).tar.xz

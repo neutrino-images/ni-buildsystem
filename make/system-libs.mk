@@ -1044,6 +1044,7 @@ $(D)/libglib2: $(ARCHIVE)/glib-$(GLIB_VER).tar.xz $(D)/zlib $(LIBGLIB2_DEPS) $(D
 			--disable-fam \
 			--disable-gtk-doc \
 			--disable-gtk-doc-html \
+			--disable-compile-warnings \
 			--with-threads="posix" \
 			--with-pcre=internal \
 			$(LIBGLIB2_CONF) \
