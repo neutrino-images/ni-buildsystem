@@ -205,3 +205,23 @@ $(D)/astra-sm-no-march-cflags:
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REMOVE)/astra-sm
 	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
+IOZONE_VER = 482
+IOZONE_SOURCE = iozone3_$(IOZONE_VER).tar
+
+$(ARCHIVE)/$(IOZONE_SOURCE):
+	$(WGET) http://www.iozone.org/src/current/$(IOZONE_SOURCE)
+
+$(D)/iozone3: $(ARCHIVE)/$(IOZONE_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/iozone3_$(IOZONE_VER)
+	$(UNTAR)/$(IOZONE_SOURCE)
+	$(CHDIR)/iozone3_$(IOZONE_VER)/src/current; \
+		sed -i -e "s/= gcc/= $(TARGET)-gcc/" makefile; \
+		sed -i -e "s/= cc/= $(TARGET)-cc/" makefile; \
+		$(BUILDENV) \
+		$(MAKE) linux-arm; \
+		install -m 755 iozone $(TARGET_DIR)/bin
+	$(REMOVE)/iozone3_$(IOZONE_VER)
+	$(TOUCH)
