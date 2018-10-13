@@ -79,7 +79,6 @@ plugins-all: $(D)/neutrino \
 	oscammon \
 	lcd4linux-all \
 	doscam-webif-skin \
-	playlists \
 	shellexec
 
 plugins-hd1: # nothing to do
@@ -217,10 +216,6 @@ doscam-webif-skin: $(VARCONF)
 	install -m644 $(SOURCES)/doscam-webif-skin/*.tpl $(TARGET_DIR)/share/doscam/tpl/
 	mkdir -p $(TARGET_DIR)/share/doscam/skin/
 	install -m644 $(SOURCES)/doscam-webif-skin/doscam_ni-dark.css $(TARGET_DIR)/share/doscam/skin
-
-playlists:
-	mkdir -p $(TARGET_DIR)/share/playlists/
-	cp -a $(IMAGEFILES)/playlists/* $(TARGET_DIR)/share/playlists/
 
 mountpointmanagement: $(LIBPLUG)
 	install -m755 $(SOURCES)/mountpointmanagement/*.sh $(LIBPLUG)/
