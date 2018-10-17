@@ -369,7 +369,7 @@ WGET_VER=1.19.2
 $(ARCHIVE)/wget-$(WGET_VER).tar.gz:
 	$(WGET) http://ftp.gnu.org/gnu/wget/wget-$(WGET_VER).tar.gz
 
-MTOOLS_VER=4.0.18
+MTOOLS_VER=4.0.19
 $(ARCHIVE)/mtools-$(MTOOLS_VER).tar.gz:
 	$(WGET) ftp://ftp.gnu.org/gnu/mtools/mtools-$(MTOOLS_VER).tar.gz
 
