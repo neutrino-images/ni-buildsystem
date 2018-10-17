@@ -52,7 +52,7 @@ cleanup: $(BOX)
 
 # strip bins and libs in filesystem
 strip: $(BOX)
-ifeq ($(DEBUG), no)
+ifneq ($(DEBUG), yes)
 	@echo "*******************************************************"
 	@echo "*** The following warnings from strip are harmless! ***"
 	@echo "*******************************************************"

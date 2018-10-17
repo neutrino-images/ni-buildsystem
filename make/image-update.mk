@@ -70,7 +70,7 @@ u-FritzInfoMonitor:
 			UPDATE_VERSION_STRING=`cat $(SOURCES)/FritzCallMonitor/FritzInfoMonitor/FritzInfoMonitor.h | grep 'define VERSION' | cut -d\" -f2`
 
 u-lcd4linux: $(D)/lcd4linux
-ifeq ($(DEBUG), no)
+ifneq ($(DEBUG), yes)
 	$(TARGET)-strip $(TARGET_DIR)/bin/lcd4linux
 endif
 	$(MAKE) u-init
@@ -120,7 +120,7 @@ u-neutrino: neutrino-clean
 	install -D -m 0755 $(TARGET_DIR)/bin/neutrino $(UPDATE_INST_DIR)/bin/neutrino
 	install -D -m 0644 $(TARGET_DIR)/share/tuxbox/neutrino/locale/deutsch.locale $(UPDATE_INST_DIR)/share/tuxbox/neutrino/locale/deutsch.locale
 	install -D -m 0644 $(TARGET_DIR)/share/tuxbox/neutrino/locale/english.locale $(UPDATE_INST_DIR)/share/tuxbox/neutrino/locale/english.locale
-ifeq ($(DEBUG), no)
+ifneq ($(DEBUG), yes)
 	find $(UPDATE_INST_DIR)/bin -type f ! -name *.sh -print0 | xargs -0 $(TARGET)-strip || true
 endif
 	$(MAKE) u-update-bin \
@@ -133,7 +133,7 @@ u-neutrino-full: neutrino-clean
 	$(MAKE) neutrino NEUTRINO_INST_DIR=$(UPDATE_INST_DIR)
 	install -D -m 0644 $(TARGET_DIR)/.version $(UPDATE_INST_DIR)/.version
 	install -D -m 0755 $(TARGET_DIR)/etc/init.d/start_neutrino $(UPDATE_INST_DIR)/etc/init.d/start_neutrino
-ifeq ($(DEBUG), no)
+ifneq ($(DEBUG), yes)
 	find $(UPDATE_INST_DIR)/bin -type f ! -name *.sh -print0 | xargs -0 $(TARGET)-strip || true
 endif
 ifeq ($(BOXSERIES), hd2)
