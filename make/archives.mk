@@ -249,8 +249,8 @@ $(ARCHIVE)/v$(SLINGSHOT_VER).tar.gz:
 	$(WGET) https://github.com/gvvaughan/slingshot/archive/v$(SLINGSHOT_VER).tar.gz
 
 LIBSIGCPP_MAJOR=2
-LIBSIGCPP_MINOR=10
-LIBSIGCPP_MICRO=0
+LIBSIGCPP_MINOR=4
+LIBSIGCPP_MICRO=1
 LIBSIGCPP_VER=$(LIBSIGCPP_MAJOR).$(LIBSIGCPP_MINOR).$(LIBSIGCPP_MICRO)
 $(ARCHIVE)/libsigc++-$(LIBSIGCPP_VER).tar.xz:
 	$(WGET) http://ftp.gnome.org/pub/GNOME/sources/libsigc++/$(LIBSIGCPP_MAJOR).$(LIBSIGCPP_MINOR)/libsigc++-$(LIBSIGCPP_VER).tar.xz
