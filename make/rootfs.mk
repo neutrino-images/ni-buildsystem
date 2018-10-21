@@ -201,4 +201,9 @@ personalize: | $(TARGET_DIR)
 	fi
 	$(call local-script,$(notdir $@),stop)
 
-PHONY += $(TARGET_DIR)/.version $(TARGET_DIR)/var/etc/update.urls $(BOX)
+PHONY += rootfs
+PHONY += .version $(TARGET_DIR)/.version
+PHONY += update.urls $(TARGET_DIR)/var/etc/update.urls
+PHONY += $(BOX)
+PHONY += cleanup strip softlinks
+PHONY += personalize

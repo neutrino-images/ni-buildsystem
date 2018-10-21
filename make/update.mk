@@ -91,6 +91,11 @@ endif
 	cd $(SOURCE_DIR)/$(NI_RTMPDUMP) && git push
 	cd $(SOURCE_DIR)/$(NI_STREAMRIPPER) && git push
 
-PHONY += update-self update-neutrino
-PHONY += update-ni-git update-remotes
+PHONY += update-self
+PHONY += update-neutrino
+PHONY += update-remotes
+PHONY += update-ni-force
+PHONY += update-ni-git
+PHONY += update-ni
+PHONY += update-all
 PHONY += push

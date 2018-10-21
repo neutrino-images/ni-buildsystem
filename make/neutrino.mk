@@ -217,3 +217,4 @@ libstb-hal-clean-all: libstb-hal-clean
 	-rm -r $(LH_OBJDIR)
 
 PHONY += neutrino-clean neutrino-clean-all
+PHONY += libstb-hal-clean libstb-hal-clean-all
