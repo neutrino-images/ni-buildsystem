@@ -57,6 +57,8 @@ ifeq ($(BOXSERIES), hd2)
   SUMFLAGS	= -n -l
 endif
 
+# -----------------------------------------------------------------------------
+
 devtable: $(BUILD_TMP)/devtable-$(BOXSERIES).txt
 
 $(BUILD_TMP)/devtable-hd1.txt:
@@ -84,6 +86,8 @@ $(BUILD_TMP)/devtable-hd2.txt:
 devtable-remove:
 	$(REMOVE)/devtable-$(BOXSERIES).txt
 
+# -----------------------------------------------------------------------------
+
 images:
 ifeq ($(BOXMODEL), nevis)
 	make flash-image-cst ERASE_SIZE=0x20000 BOXNAME="HD1, BSE, Neo, Neo², Zee"
@@ -103,6 +107,8 @@ ifeq ($(BOXMODEL), hd51)
 	make flash-image-arm-multi
 endif
 
+# -----------------------------------------------------------------------------
+
 flash-image-cst: IMAGE_NAME=$(IMAGE_PREFIX)-$(IMAGE_SUFFIX)
 flash-image-cst: IMAGE_DESC="$(BOXNAME) [$(IMAGE_SUFFIX)][$(BOXSERIES)] $(shell echo $(IMAGE_TYPE_STRING) | sed 's/.*/\u&/')"
 flash-image-cst: IMAGE_MD5FILE=$(IMAGE_TYPE_STRING)-$(IMAGE_SUFFIX).txt
@@ -118,6 +124,8 @@ ifeq ($(SUMMARIZE), yes)
 endif
 	echo $(IMAGE_URL)/$(IMAGE_NAME).img $(IMAGE_TYPE)$(IMAGE_VERSION)$(IMAGE_DATE) `md5sum $(IMAGE_DIR)/$(IMAGE_NAME).img | cut -c1-32` $(IMAGE_DESC) $(IMAGE_VERSION_STRING) >> $(IMAGE_DIR)/$(IMAGE_MD5FILE)
 	make check-image-size IMAGE_TO_CHECK=$(IMAGE_DIR)/$(IMAGE_NAME).img
+
+# -----------------------------------------------------------------------------
 
 # ROOTFS_SIZE detected with 'df -k'
 ifeq ($(BOXMODEL), nevis)
@@ -140,7 +148,26 @@ ifdef IMAGE_TO_CHECK
 	fi
 endif
 
-### armbox hd51
+# -----------------------------------------------------------------------------
+
+flash-image-arm: BOXNAME="AX/Mut@nt"
+flash-image-arm: IMAGE_NAME=$(IMAGE_PREFIX)-$(IMAGE_SUFFIX)
+flash-image-arm: IMAGE_DESC="$(BOXNAME) [$(IMAGE_SUFFIX)] $(shell echo $(IMAGE_TYPE_STRING) | sed 's/.*/\u&/')"
+flash-image-arm: IMAGE_MD5FILE=$(IMAGE_TYPE_STRING)-$(IMAGE_SUFFIX).txt
+flash-image-arm: IMAGE_DATE=$(shell cat $(BOX)/.version | grep "^version=" | cut -d= -f2 | cut -c 5-)
+flash-image-arm:
+	mkdir -p $(IMAGE_DIR)/$(BOXMODEL)
+	cp $(ZIMAGE_DTB) $(IMAGE_DIR)/$(BOXMODEL)/kernel.bin
+	cd $(BOX); \
+	tar -cvf $(IMAGE_DIR)/$(BOXMODEL)/rootfs.tar -C $(BOX) .  > /dev/null 2>&1; \
+	bzip2 $(IMAGE_DIR)/$(BOXMODEL)/rootfs.tar
+	# Create minimal image
+	cd $(IMAGE_DIR)/$(BOXMODEL); \
+	tar -czf $(IMAGE_DIR)/$(IMAGE_NAME).tgz kernel.bin rootfs.tar.bz2
+	rm -rf $(IMAGE_DIR)/$(BOXMODEL)
+	echo $(IMAGE_URL)/$(IMAGE_NAME).tgz $(IMAGE_TYPE)$(IMAGE_VERSION)$(IMAGE_DATE) `md5sum $(IMAGE_DIR)/$(IMAGE_NAME).tgz | cut -c1-32` $(IMAGE_DESC) $(IMAGE_VERSION_STRING) >> $(IMAGE_DIR)/$(IMAGE_MD5FILE)
+
+# -----------------------------------------------------------------------------
 
 # general
 HD51_IMAGE_NAME = disk
@@ -220,23 +247,6 @@ flash-image-arm-multi:
 	# cleanup
 	rm -rf $(IMAGE_DIR)/$(BOXMODEL)
 	rm -rf $(HD51_BUILD_TMP)
-
-flash-image-arm: BOXNAME="AX/Mut@nt"
-flash-image-arm: IMAGE_NAME=$(IMAGE_PREFIX)-$(IMAGE_SUFFIX)
-flash-image-arm: IMAGE_DESC="$(BOXNAME) [$(IMAGE_SUFFIX)] $(shell echo $(IMAGE_TYPE_STRING) | sed 's/.*/\u&/')"
-flash-image-arm: IMAGE_MD5FILE=$(IMAGE_TYPE_STRING)-$(IMAGE_SUFFIX).txt
-flash-image-arm: IMAGE_DATE=$(shell cat $(BOX)/.version | grep "^version=" | cut -d= -f2 | cut -c 5-)
-flash-image-arm:
-	mkdir -p $(IMAGE_DIR)/$(BOXMODEL)
-	cp $(ZIMAGE_DTB) $(IMAGE_DIR)/$(BOXMODEL)/kernel.bin
-	cd $(BOX); \
-	tar -cvf $(IMAGE_DIR)/$(BOXMODEL)/rootfs.tar -C $(BOX) .  > /dev/null 2>&1; \
-	bzip2 $(IMAGE_DIR)/$(BOXMODEL)/rootfs.tar
-	# Create minimal image
-	cd $(IMAGE_DIR)/$(BOXMODEL); \
-	tar -czf $(IMAGE_DIR)/$(IMAGE_NAME).tgz kernel.bin rootfs.tar.bz2
-	rm -rf $(IMAGE_DIR)/$(BOXMODEL)
-	echo $(IMAGE_URL)/$(IMAGE_NAME).tgz $(IMAGE_TYPE)$(IMAGE_VERSION)$(IMAGE_DATE) `md5sum $(IMAGE_DIR)/$(IMAGE_NAME).tgz | cut -c1-32` $(IMAGE_DESC) $(IMAGE_VERSION_STRING) >> $(IMAGE_DIR)/$(IMAGE_MD5FILE)
 
 # -----------------------------------------------------------------------------
 
