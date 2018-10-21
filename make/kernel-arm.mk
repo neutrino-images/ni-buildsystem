@@ -5,7 +5,7 @@ ZIMAGE		= $(BUILD_TMP)/linux-$(KERNEL_VERSION)/arch/arm/boot/zImage
 ZIMAGE_DTB	= $(BUILD_TMP)/linux-$(KERNEL_VERSION)/arch/arm/boot/zImage_DTB
 MODULES_DIR	= $(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules/lib/modules/$(KERNEL_VERSION_FULL)
 
-TARGETMODULES	= $(TARGET_LIB_DIR)/modules/$(KERNEL_VERSION_FULL)
+TARGET_MODULES_DIR = $(TARGET_LIB_DIR)/modules/$(KERNEL_VERSION_FULL)
 
 $(D)/kernel-arm: $(SOURCE_DIR)/$(NI_LINUX-KERNEL) | $(TARGET_DIR)
 	$(REMOVE)/linux-$(KERNEL_VERSION)
@@ -27,9 +27,9 @@ $(D)/kernel-arm: $(SOURCE_DIR)/$(NI_LINUX-KERNEL) | $(TARGET_DIR)
 	$(TOUCH)
 
 kernel-arm-modules: $(D)/kernel-arm
-	cp -a $(MODULES_DIR)/kernel $(TARGETMODULES)
-	cp -a $(MODULES_DIR)/modules.builtin $(TARGETMODULES)
-	cp -a $(MODULES_DIR)/modules.order $(TARGETMODULES)
+	cp -a $(MODULES_DIR)/kernel $(TARGET_MODULES_DIR)
+	cp -a $(MODULES_DIR)/modules.builtin $(TARGET_MODULES_DIR)
+	cp -a $(MODULES_DIR)/modules.order $(TARGET_MODULES_DIR)
 	make depmod-arm
 
 depmod-arm:

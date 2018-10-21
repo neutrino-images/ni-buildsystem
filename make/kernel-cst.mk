@@ -5,7 +5,7 @@ IMAGE		= $(BUILD_TMP)/linux-$(KERNEL_VERSION)/arch/arm/boot/Image
 ZIMAGE		= $(BUILD_TMP)/linux-$(KERNEL_VERSION)/arch/arm/boot/zImage
 MODULES_DIR	= $(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules/lib/modules/$(KERNEL_VERSION_FULL)
 
-TARGETMODULES	= $(TARGET_LIB_DIR)/modules/$(KERNEL_VERSION_FULL)
+TARGET_MODULES_DIR = $(TARGET_LIB_DIR)/modules/$(KERNEL_VERSION_FULL)
 
 ifneq ($(wildcard $(SKEL_ROOT)-$(BOXFAMILY)),)
   KERNEL_DESTDIR = $(SKEL_ROOT)-$(BOXFAMILY)/var/update
@@ -97,40 +97,40 @@ kernel-cst-modules: kernel-cst-modules-$(BOXSERIES)
 
 kernel-cst-modules-hd1: kernel-cst
 	$(TARGET)-objcopy --strip-unneeded $(MODULES_DIR)/kernel/drivers/mtd/devices/mtdram.ko
-	cp -af $(MODULES_DIR)/kernel/drivers/mtd/devices/mtdram.ko $(TARGETMODULES)
+	cp -af $(MODULES_DIR)/kernel/drivers/mtd/devices/mtdram.ko $(TARGET_MODULES_DIR)
 	$(TARGET)-objcopy --strip-unneeded $(MODULES_DIR)/kernel/drivers/mtd/devices/block2mtd.ko
-	cp -af $(MODULES_DIR)/kernel/drivers/mtd/devices/block2mtd.ko $(TARGETMODULES)
+	cp -af $(MODULES_DIR)/kernel/drivers/mtd/devices/block2mtd.ko $(TARGET_MODULES_DIR)
 	$(TARGET)-objcopy --strip-unneeded $(MODULES_DIR)/kernel/drivers/net/tun.ko
-	cp -af $(MODULES_DIR)/kernel/drivers/net/tun.ko $(TARGETMODULES)
+	cp -af $(MODULES_DIR)/kernel/drivers/net/tun.ko $(TARGET_MODULES_DIR)
 	$(TARGET)-objcopy --strip-unneeded $(MODULES_DIR)/kernel/drivers/staging/rt2870/rt2870sta.ko
-	cp -af $(MODULES_DIR)/kernel/drivers/staging/rt2870/rt2870sta.ko $(TARGETMODULES)
+	cp -af $(MODULES_DIR)/kernel/drivers/staging/rt2870/rt2870sta.ko $(TARGET_MODULES_DIR)
 	$(TARGET)-objcopy --strip-unneeded $(MODULES_DIR)/kernel/drivers/usb/serial/ftdi_sio.ko
-	cp -af $(MODULES_DIR)/kernel/drivers/usb/serial/ftdi_sio.ko $(TARGETMODULES)
+	cp -af $(MODULES_DIR)/kernel/drivers/usb/serial/ftdi_sio.ko $(TARGET_MODULES_DIR)
 	$(TARGET)-objcopy --strip-unneeded $(MODULES_DIR)/kernel/drivers/usb/serial/pl2303.ko
-	cp -af $(MODULES_DIR)/kernel/drivers/usb/serial/pl2303.ko $(TARGETMODULES)
+	cp -af $(MODULES_DIR)/kernel/drivers/usb/serial/pl2303.ko $(TARGET_MODULES_DIR)
 	$(TARGET)-objcopy --strip-unneeded $(MODULES_DIR)/kernel/drivers/usb/serial/usbserial.ko
-	cp -af $(MODULES_DIR)/kernel/drivers/usb/serial/usbserial.ko $(TARGETMODULES)
+	cp -af $(MODULES_DIR)/kernel/drivers/usb/serial/usbserial.ko $(TARGET_MODULES_DIR)
 	$(TARGET)-objcopy --strip-unneeded $(MODULES_DIR)/kernel/fs/autofs4/autofs4.ko
-	cp -af $(MODULES_DIR)/kernel/fs/autofs4/autofs4.ko $(TARGETMODULES)
+	cp -af $(MODULES_DIR)/kernel/fs/autofs4/autofs4.ko $(TARGET_MODULES_DIR)
 	$(TARGET)-objcopy --strip-unneeded $(MODULES_DIR)/kernel/fs/cifs/cifs.ko
-	cp -af $(MODULES_DIR)/kernel/fs/cifs/cifs.ko $(TARGETMODULES)
+	cp -af $(MODULES_DIR)/kernel/fs/cifs/cifs.ko $(TARGET_MODULES_DIR)
 	$(TARGET)-objcopy --strip-unneeded $(MODULES_DIR)/kernel/fs/fuse/fuse.ko
-	cp -af $(MODULES_DIR)/kernel/fs/fuse/fuse.ko $(TARGETMODULES)
-	rm -rf $(TARGETMODULES)/usb-storage.ko # builtin already
+	cp -af $(MODULES_DIR)/kernel/fs/fuse/fuse.ko $(TARGET_MODULES_DIR)
+	rm -rf $(TARGET_MODULES_DIR)/usb-storage.ko # builtin already
 	make depmod-hd1
 
 kernel-cst-modules-hd2: kernel-cst
-	rm -rf $(TARGETMODULES)/kernel # nuke cst kernel-drivers but leave cst extra-drivers
-	cp -a $(MODULES_DIR)/kernel $(TARGETMODULES) # copy own kernel-drivers
-	cp -a $(MODULES_DIR)/modules.builtin $(TARGETMODULES)
-	cp -a $(MODULES_DIR)/modules.order $(TARGETMODULES)
+	rm -rf $(TARGET_MODULES_DIR)/kernel # nuke cst kernel-drivers but leave cst extra-drivers
+	cp -a $(MODULES_DIR)/kernel $(TARGET_MODULES_DIR) # copy own kernel-drivers
+	cp -a $(MODULES_DIR)/modules.builtin $(TARGET_MODULES_DIR)
+	cp -a $(MODULES_DIR)/modules.order $(TARGET_MODULES_DIR)
 	make depmod-hd2
 
 depmod-hd1:
 	PATH=$(PATH):/sbin:/usr/sbin depmod -b $(TARGET_DIR) $(KERNEL_VERSION_FULL)
-	mv $(TARGETMODULES)/modules.dep $(TARGETMODULES)/.modules.dep
-	rm $(TARGETMODULES)/modules.*
-	mv $(TARGETMODULES)/.modules.dep $(TARGETMODULES)/modules.dep
+	mv $(TARGET_MODULES_DIR)/modules.dep $(TARGET_MODULES_DIR)/.modules.dep
+	rm $(TARGET_MODULES_DIR)/modules.*
+	mv $(TARGET_MODULES_DIR)/.modules.dep $(TARGET_MODULES_DIR)/modules.dep
 
 depmod-hd2:
 	PATH=$(PATH):/sbin:/usr/sbin depmod -b $(TARGET_DIR) $(KERNEL_VERSION_FULL)
