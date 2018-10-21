@@ -114,7 +114,7 @@ crosstool-arm-hd51: CROSS_DIR-check
 	rm -f $(CROSS_DIR)/$(TARGET)/sys-root/lib/libstdc++.so.6.0.20-gdb.py
 	$(REMOVE)/crosstool-ng
 
-PHONY += crosstool $(CROSS_DIR)
+# -----------------------------------------------------------------------------
 
 CROSS_DIR-check:
 ifneq ($(wildcard $(CROSS_DIR)),)
@@ -126,3 +126,11 @@ ifneq ($(wildcard $(CROSS_DIR)),)
 	@echo
 	@false
 endif
+
+# -----------------------------------------------------------------------------
+
+PHONY += crosstool
+PHONY += crosstools
+PHONY += crosstools-renew
+PHONY += $(CROSS_DIR)
+PHONY += CROSS_DIR-check

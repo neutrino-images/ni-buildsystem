@@ -237,3 +237,13 @@ flash-image-arm:
 	tar -czf $(IMAGE_DIR)/$(IMAGE_NAME).tgz kernel.bin rootfs.tar.bz2
 	rm -rf $(IMAGE_DIR)/$(BOXMODEL)
 	echo $(IMAGE_URL)/$(IMAGE_NAME).tgz $(IMAGE_TYPE)$(IMAGE_VERSION)$(IMAGE_DATE) `md5sum $(IMAGE_DIR)/$(IMAGE_NAME).tgz | cut -c1-32` $(IMAGE_DESC) $(IMAGE_VERSION_STRING) >> $(IMAGE_DIR)/$(IMAGE_MD5FILE)
+
+# -----------------------------------------------------------------------------
+
+PHONY += devtable
+PHONY += devtable-remove
+PHONY += images
+PHONY += flash-image-cst
+PHONY += check-image-size
+PHONY += flash-image-arm
+PHONY += flash-image-arm-multi

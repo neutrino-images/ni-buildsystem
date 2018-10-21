@@ -2,6 +2,8 @@
 
 static: cortex-strings
 
+# -----------------------------------------------------------------------------
+
 CORTEX-STRINGS_CONF =
 ifneq ($(BOXSERIES), hd51)
 	CORTEX-STRINGS_CONF = --without-neon
@@ -28,6 +30,8 @@ $(STATIC_LIB_DIR)/libcortex-strings.la: $(ARCHIVE)/cortex-strings-$(CORTEX-STRIN
 		$(MAKE) install DESTDIR=$(STATIC_DIR)
 	$(REWRITE_LIBTOOL_STATIC)/libcortex-strings.la
 	$(REMOVE)/cortex-strings-$(CORTEX-STRINGS_VER)
+
+# -----------------------------------------------------------------------------
 
 PHONY += static
 PHONY += cortex-strings

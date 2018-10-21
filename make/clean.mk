@@ -20,7 +20,6 @@ all-clean: rebuild-clean staging-clean static-clean
 %-clean:
 	cd $(D) && find . -name $(subst -clean,,$@) -delete
 
-ni-clean \
 clean: rebuild-clean pkg-clean bootstrap
 
 clean-all:
@@ -32,4 +31,13 @@ ccache-clean:
 	@echo "Clearing $$CCACHE_DIR"
 	@$(CCACHE) -C
 
-PHONY += rebuild-clean all-clean pkg-clean
+# -----------------------------------------------------------------------------
+
+PHONY += rebuild-clean
+PHONY += staging-clean
+PHONY += stytic-clean
+PHONY += all-clean
+PHONY += %-clean
+PHONY += clean
+PHONY += clean-all
+PHONY += ccache-clean

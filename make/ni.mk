@@ -1,6 +1,5 @@
 # custom ni-makefile - just a collection of targets
 
-ni-init \
 init: preqs crosstools bootstrap
 
 # -- wrapper-targets for Neutrino-Updates -------------------------------------
@@ -129,3 +128,15 @@ changelogs:
 		$(call make-changelog) > $(STAGING_DIR)/changelog-neutrino
 	pushd $(SOURCE_DIR)/$(NI_LIBSTB-HAL-NEXT); \
 		$(call make-changelog) > $(STAGING_DIR)/changelog-libstb-hal
+
+# -----------------------------------------------------------------------------
+
+PHONY += init
+PHONY += ni-neutrino-update
+PHONY += ni-neutrino-updates
+PHONY += ni-neutrino-full-update
+PHONY += ni-neutrino-full-updates
+PHONY += ni-images
+PHONY += personalized-image
+PHONY += ni-image
+PHONY += changelogs

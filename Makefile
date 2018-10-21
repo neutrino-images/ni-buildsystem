@@ -115,8 +115,9 @@ everything: $(shell sed -n 's/^\$$.D.\/\(.*\):.*/\1/p' make/*.mk)
 .print-phony:
 	@echo $(PHONY)
 
-PHONY += everything
-PHONY += all printenv .print-phony
+PHONY += local-files
+PHONY += printenv help done all everything
+PHONY += .print-phony
 .PHONY: $(PHONY)
 
 # this makes sure we do not build top-level dependencies in parallel

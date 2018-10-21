@@ -105,9 +105,9 @@ host-preqs: pkg-config mkfs.jffs2 mkfs.fat sumtool mkimage zic parted_host mtool
 
 pkg-config-preqs:
 	@PATH=$(subst $(HOST_DIR)/bin:,,$(PATH)); \
-		if ! pkg-config --exists glib-2.0; then \
-			echo "pkg-config and glib2-devel packages are needed for building cross-pkg-config."; false; \
-		fi
+	if ! pkg-config --exists glib-2.0; then \
+		echo "pkg-config and glib2-devel packages are needed for building cross-pkg-config."; false; \
+	fi
 
 pkg-config: $(HOST_DIR)/bin/pkg-config
 $(HOST_DIR)/bin/pkg-config: $(ARCHIVE)/pkg-config-$(PKGCONF_VER).tar.gz | $(HOST_DIR)/bin pkg-config-preqs
@@ -229,9 +229,22 @@ $(HOST_DIR)/bin/resize2fs: $(ARCHIVE)/e2fsprogs-$(E2FSPROGS_VER).tar.gz | $(HOST
 	ln -sf e2fsck $(HOST_DIR)/bin/fsck.ext4dev
 	$(REMOVE)/e2fsprogs-$(E2FSPROGS_VER)
 
+# -----------------------------------------------------------------------------
+
 # hack to make sure they are always copied
 PHONY += $(TARGET_LIB_DIR)
 PHONY += $(TARGET_LIB_DIR)/firmware
 PHONY += $(TARGET_LIB_DIR)/modules
 PHONY += $(TARGET_DIR)/var/update
-PHONY += ccache includes-and-libs modules targetprefix bootstrap blobs
+
+# -----------------------------------------------------------------------------
+
+PHONY += bootstrap
+PHONY += skeleton
+PHONY += targetprefix
+PHONY += includes-and-libs
+PHONY += modules
+PHONY += blobs
+PHONY += ccache
+PHONY += host-preqs
+PHONY += pkg-config-preqs

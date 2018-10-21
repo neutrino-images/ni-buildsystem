@@ -93,3 +93,7 @@ $(D)/gdb: $(D)/zlib $(D)/libncurses $(ARCHIVE)/gdb-$(GDB_VER).tar.xz | $(TARGET_
 	find $(TARGET_DIR)/share/gdb/syscalls -type f -not -name 'arm-linux.xml' -not -name 'gdb-syscalls.dtd' -print0 | xargs -0 rm --
 	$(REMOVE)/gdb-$(GDB_VER)
 	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
+PHONY += valgrind
