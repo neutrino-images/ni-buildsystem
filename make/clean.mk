@@ -20,7 +20,7 @@ all-clean: rebuild-clean staging-clean static-clean
 %-clean:
 	cd $(D) && find . -name $(subst -clean,,$@) -delete
 
-clean: rebuild-clean pkg-clean bootstrap
+clean: rebuild-clean bootstrap
 
 clean-all:
 	make update-all
