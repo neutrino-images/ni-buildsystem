@@ -13,7 +13,8 @@ IMAGE_SUFFIX	= $(BOXTYPE_SC)-$(BOXMODEL)
 # Release	= 0
 # Beta		= 1
 # Nightly	= 2
-IMAGE_TYPE	?= 0
+# Selfmade	= 9
+IMAGE_TYPE	?= 9
 
 # JFFS2-Summary
 SUMMARIZE	= yes
@@ -31,10 +32,14 @@ else ifeq ($(IMAGE_TYPE), 1)
   # Beta
   NI-SUBDIR	= beta
   IMAGE_TYPE_STRING = beta
-else
+else ifeq ($(IMAGE_TYPE), 2)
   # Nightly
   NI-SUBDIR	= nightly
   IMAGE_TYPE_STRING = nightly
+else
+  # Selfmade; just for compatibility; not needed for our builds
+  NI-SUBDIR	= selfmade
+  IMAGE_TYPE_STRING = selfmade
 endif
 
 IMAGE_URL	= $(NI-SERVER)/$(NI-SUBDIR)
