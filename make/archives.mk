@@ -218,7 +218,7 @@ $(ARCHIVE)/samba-$(SAMBA36_VER).tar.gz:
 E2FSPROGS_VER=1.44.4
 ifeq ($(BOXSERIES), hd1)
 # formatting ext4 failes with newer versions
-E2FSPROGS_VER=1.44.2
+E2FSPROGS_VER=1.43.8
 endif
 $(ARCHIVE)/e2fsprogs-$(E2FSPROGS_VER).tar.gz:
 	$(WGET) http://downloads.sourceforge.net/project/e2fsprogs/e2fsprogs/v$(E2FSPROGS_VER)/e2fsprogs-$(E2FSPROGS_VER).tar.gz
