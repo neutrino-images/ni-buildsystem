@@ -8,18 +8,15 @@ BOOTSTRAP += $(STAGING_DIR)
 BOOTSTRAP += $(IMAGE_DIR)
 BOOTSTRAP += $(UPDATE_DIR)
 BOOTSTRAP += $(HOST_DIR)/bin
-BOOTSTRAP += includes-and-libs
+BOOTSTRAP += libs
+BOOTSTRAP += firmware
 BOOTSTRAP += modules
 BOOTSTRAP += host-preqs
 BOOTSTRAP += $(TARGET_LIB_DIR)/libc.so.6
 
 ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd51))
-  BOOTSTRAP += static-libs
   BOOTSTRAP += blobs
 endif
-
-PLAT_INCS = $(TARGET_LIB_DIR)/firmware
-PLAT_LIBS = $(TARGET_LIB_DIR) $(STATIC_LIB_DIR)
 
 bootstrap: $(BOOTSTRAP)
 	@echo -e "$(TERM_YELLOW)Bootstrapped for $(shell echo $(BOXTYPE) | sed 's/.*/\u&/') $(BOXMODEL)$(TERM_NORMAL)"
@@ -28,9 +25,6 @@ skeleton: | $(TARGET_DIR)
 	cp --remove-destination -a $(SKEL_ROOT)/* $(TARGET_DIR)/
 	if [ -d $(SKEL_ROOT)-$(BOXFAMILY)/ ]; then \
 		cp -a $(SKEL_ROOT)-$(BOXFAMILY)/* $(TARGET_DIR)/; \
-	fi
-	if [ -d $(STATIC_DIR)/ ]; then \
-		cp -a $(STATIC_DIR)/* $(TARGET_DIR)/; \
 	fi
 
 targetprefix:
@@ -59,20 +53,17 @@ $(HOST_DIR):
 $(HOST_DIR)/bin: $(HOST_DIR)
 	mkdir -p $@
 
-$(STATIC_LIB_DIR):
-	mkdir -p $@
-
-$(TARGET_LIB_DIR)/firmware: | $(TARGET_DIR)
-ifeq ($(BOXTYPE), coolstream)
-	mkdir -p $@
-	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(DRIVERS_DIR)/firmware/* $@/
-endif
-
 $(TARGET_LIB_DIR): | $(TARGET_DIR)
 	mkdir -p $@
 	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(DRIVERS_DIR)/libs/* $@
 ifeq ($(BOXTYPE), coolstream)
 	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(DRIVERS_DIR)/libcoolstream/$(shell echo -n $(NI_FFMPEG_BRANCH) | sed 's,/,-,g')/* $@
+endif
+
+$(TARGET_LIB_DIR)/firmware: | $(TARGET_DIR)
+ifeq ($(BOXTYPE), coolstream)
+	mkdir -p $@
+	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(DRIVERS_DIR)/firmware/* $@/
 endif
 
 $(TARGET_LIB_DIR)/modules: | $(TARGET_DIR)
@@ -86,6 +77,12 @@ $(TARGET_LIB_DIR)/libc.so.6: | $(TARGET_DIR)
 		cp -a $(CROSS_DIR)/$(TARGET)/lib/*so* $(TARGET_LIB_DIR); \
 	fi
 
+$(STATIC_LIB_DIR): | $(TARGET_DIR)
+	mkdir -p $@
+	if [ -d $(STATIC_DIR)/ ]; then \
+		cp -a $(STATIC_DIR)/* $(TARGET_DIR)/; \
+	fi
+
 $(TARGET_DIR)/var/update: | $(TARGET_DIR)
 	mkdir -p $@
 ifeq ($(BOXTYPE), coolstream)
@@ -97,7 +94,9 @@ ifeq ($(BOXTYPE), coolstream)
   endif
 endif
 
-includes-and-libs: $(PLAT_INCS) $(PLAT_LIBS)
+libs: $(TARGET_LIB_DIR) static-libs $(STATIC_LIB_DIR)
+
+firmware: $(TARGET_LIB_DIR)/firmware
 
 modules: $(TARGET_LIB_DIR)/modules
 
@@ -110,12 +109,14 @@ PHONY += $(TARGET_LIB_DIR)
 PHONY += $(TARGET_LIB_DIR)/firmware
 PHONY += $(TARGET_LIB_DIR)/modules
 PHONY += $(TARGET_DIR)/var/update
+PHONY += $(STATIC_LIB_DIR)
 
 # -----------------------------------------------------------------------------
 
 PHONY += bootstrap
 PHONY += skeleton
 PHONY += targetprefix
-PHONY += includes-and-libs
+PHONY += libs
+PHONY += firmware
 PHONY += modules
 PHONY += blobs

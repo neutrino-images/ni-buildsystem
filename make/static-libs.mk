@@ -1,6 +1,11 @@
 # makefile to build static libraries
 
-static-libs: cortex-strings
+STATIC_LIBS =
+ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd51))
+  STATIC_LIBS += cortex-strings
+endif
+
+static-libs: $(STATIC_LIBS)
 
 # -----------------------------------------------------------------------------
 
