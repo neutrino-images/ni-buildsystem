@@ -12,10 +12,6 @@ TZDATA_VER=2018e
 $(ARCHIVE)/tzdata$(TZDATA_VER).tar.gz:
 	$(WGET) ftp://ftp.iana.org/tz/releases/tzdata$(TZDATA_VER).tar.gz
 
-TZCODE_VER=2018e
-$(ARCHIVE)/tzcode$(TZCODE_VER).tar.gz:
-	$(WGET) ftp://ftp.iana.org/tz/releases/tzcode$(TZCODE_VER).tar.gz
-
 PUGIXML_VER=1.9
 $(ARCHIVE)/pugixml-$(PUGIXML_VER).tar.gz:
 	$(WGET) http://github.com/zeux/pugixml/releases/download/v$(PUGIXML_VER)/pugixml-$(PUGIXML_VER).tar.gz
@@ -288,10 +284,6 @@ LIBASS_VER=0.14.0
 $(ARCHIVE)/libass-$(LIBASS_VER).tar.xz:
 	$(WGET) https://github.com/libass/libass/releases/download/$(LIBASS_VER)/libass-$(LIBASS_VER).tar.xz
 
-PKGCONF_VER=0.29.2
-$(ARCHIVE)/pkg-config-$(PKGCONF_VER).tar.gz:
-	$(WGET) https://pkg-config.freedesktop.org/releases/pkg-config-$(PKGCONF_VER).tar.gz
-	
 LIBBDPLUS_VER=0.1.2
 $(ARCHIVE)/libbdplus-$(LIBBDPLUS_VER).tar.bz2:
 	$(WGET) ftp://ftp.videolan.org/pub/videolan/libbdplus/$(LIBBDPLUS_VER)/libbdplus-$(LIBBDPLUS_VER).tar.bz2
@@ -317,10 +309,6 @@ $(ARCHIVE)/valgrind-$(VALGRIND_VER).tar.bz2:
 CORTEX-STRINGS_VER=48fd30c346ff2ab14ca574b770b5c1bcbefadba8
 $(ARCHIVE)/cortex-strings-$(CORTEX-STRINGS_VER).tar.bz2:
 	get-git-archive.sh http://git.linaro.org/git-ro/toolchain/cortex-strings.git $(CORTEX-STRINGS_VER) $(notdir $@) $(ARCHIVE)
-
-U_BOOT_VER=2018.09
-$(ARCHIVE)/u-boot-$(U_BOOT_VER).tar.bz2:
-	$(WGET) ftp://ftp.denx.de/pub/u-boot/u-boot-$(U_BOOT_VER).tar.bz2
 
 DOSFSTOOLS_VER=4.1
 $(ARCHIVE)/dosfstools-$(DOSFSTOOLS_VER).tar.xz:
@@ -372,10 +360,6 @@ $(ARCHIVE)/gettext-$(GETTEXT_VERSION).tar.xz:
 WGET_VER=1.19.2
 $(ARCHIVE)/wget-$(WGET_VER).tar.gz:
 	$(WGET) http://ftp.gnu.org/gnu/wget/wget-$(WGET_VER).tar.gz
-
-MTOOLS_VER=4.0.19
-$(ARCHIVE)/mtools-$(MTOOLS_VER).tar.gz:
-	$(WGET) ftp://ftp.gnu.org/gnu/mtools/mtools-$(MTOOLS_VER).tar.gz
 
 ALSA-LIB_VER = 1.1.6
 ALSA-LIB_SOURCE = alsa-lib-$(ALSA-LIB_VER).tar.bz2

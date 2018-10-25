@@ -82,6 +82,7 @@ include make/archives.mk
 include make/prerequisites.mk
 include make/crosstool.mk
 include make/bootstrap.mk
+include make/host-tools.mk
 include make/clean.mk
 include make/update.mk
 include make/kernel-$(BOXTYPE_SC).mk
