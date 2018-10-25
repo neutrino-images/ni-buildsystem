@@ -4,7 +4,7 @@ BOOTSTRAP  = targetprefix $(D) $(BUILD_TMP) $(CROSS_DIR) $(STAGING_DIR) $(IMAGE_
 BOOTSTRAP += $(TARGET_LIB_DIR)/libc.so.6
 
 ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd51))
-  BOOTSTRAP += static blobs
+  BOOTSTRAP += static-libs blobs
 endif
 
 PLAT_INCS  = $(TARGET_LIB_DIR)/firmware

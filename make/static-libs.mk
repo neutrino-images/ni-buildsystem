@@ -1,6 +1,6 @@
 # makefile to build static libraries
 
-static: cortex-strings
+static-libs: cortex-strings
 
 # -----------------------------------------------------------------------------
 
@@ -33,5 +33,5 @@ $(STATIC_LIB_DIR)/libcortex-strings.la: $(ARCHIVE)/cortex-strings-$(CORTEX-STRIN
 
 # -----------------------------------------------------------------------------
 
-PHONY += static
+PHONY += static-libs
 PHONY += cortex-strings
