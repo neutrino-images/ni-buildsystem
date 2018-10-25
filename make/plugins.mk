@@ -2,12 +2,6 @@
 
 TARGET_DIR ?= $(DESTDIR)
 
-# workaround make-warnings
-T = $(TARGET_DIR)/T
-$(T):
-	mkdir -p $@
-	cd $@ && rm -r T
-
 # Some useful variables
 BIN		= $(TARGET_DIR)/bin
 ETCINIT		= $(TARGET_DIR)/etc/init.d
