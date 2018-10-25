@@ -64,22 +64,22 @@ $(D)/openssh: $(D)/openssl $(D)/zlib $(ARCHIVE)/openssh-$(OPENSSH_VER).tar.gz | 
 # -----------------------------------------------------------------------------
 
 ifeq ($(BOXSERIES), hd2)
-  LOC_TIME = var/etc/localtime
+  LOCALTIME = var/etc/localtime
 else
-  LOC_TIME = etc/localtime
+  LOCALTIME = etc/localtime
 endif
 
 $(D)/timezone: $(ARCHIVE)/tzdata$(TZDATA_VER).tar.gz | $(TARGET_DIR)
 	$(REMOVE)/timezone
 	$(MKDIR)/timezone
 	$(CHDIR)/timezone; \
-		tar -xf $(ARCHIVE)/tzdata$(TZDATA_VER).tar.gz
+		tar -xf $(ARCHIVE)/tzdata$(TZDATA_VER).tar.gz; \
 		unset ${!LC_*}; LANG=POSIX; LC_ALL=POSIX; export LANG LC_ALL; \
 		zic -d zoneinfo.tmp \
 			africa antarctica asia australasia \
 			europe northamerica southamerica pacificnew \
 			etcetera backward; \
-		mkdir zoneinfo
+		mkdir zoneinfo; \
 		sed -n '/zone=/{s/.*zone="\(.*\)".*$$/\1/; p}' $(IMAGEFILES)/timezone/timezone.xml | sort -u | \
 		while read x; do \
 			find zoneinfo.tmp -type f -name $$x | sort | \
@@ -91,7 +91,7 @@ $(D)/timezone: $(ARCHIVE)/tzdata$(TZDATA_VER).tar.gz | $(TARGET_DIR)
 		install -d -m 0755 $(TARGET_DIR)/share/ $(TARGET_DIR)/etc; \
 		mv zoneinfo/ $(TARGET_DIR)/share/
 	install -m 0644 $(IMAGEFILES)/timezone/timezone.xml $(TARGET_DIR)/etc/
-	cp $(TARGET_DIR)/share/zoneinfo/CET $(TARGET_DIR)/$(LOC_TIME)
+	cp $(TARGET_DIR)/share/zoneinfo/CET $(TARGET_DIR)/$(LOCALTIME)
 	$(REMOVE)/timezone
 	$(TOUCH)
 
@@ -592,6 +592,8 @@ $(D)/autofs5: $(D)/libtirpc $(ARCHIVE)/autofs-$(AUTOFS5_VER).tar.gz | $(TARGET_D
 
 samba: samba-$(BOXSERIES)
 
+# -----------------------------------------------------------------------------
+
 SAMBA33_PATCH  = samba33-build-only-what-we-need.patch
 SAMBA33_PATCH += samba33-configure.in-make-getgrouplist_ok-test-cross-compile.patch
 
@@ -675,9 +677,6 @@ $(D)/samba-hd2: $(D)/zlib $(ARCHIVE)/samba-$(SAMBA36_VER).tar.gz | $(TARGET_DIR)
 	$(CHDIR)/samba-$(SAMBA36_VER); \
 		$(call apply_patches, $(SAMBA36_PATCH1), 1); \
 		$(call apply_patches, $(SAMBA36_PATCH0), 0); \
-		patch -p0 -i $(BASE_DIR)/archive-patches/samba36-CVE-2016-2112-v3-6.patch; \
-		patch -p0 -i $(BASE_DIR)/archive-patches/samba36-CVE-2016-2115-v3-6.patch; \
-		patch -p0 -i $(BASE_DIR)/archive-patches/samba36-CVE-2017-7494-v3-6.patch
 	$(CHDIR)/samba-$(SAMBA36_VER)/source3; \
 		./autogen.sh; \
 		export CONFIG_SITE=$(CONFIGS)/samba36-config.site; \
