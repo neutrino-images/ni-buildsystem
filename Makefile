@@ -92,7 +92,7 @@ include make/system-libs.mk
 include make/system-libs-extra.mk
 include make/system-tools.mk
 include make/system-tools-extra.mk
-include make/devel-tools.mk
+include make/development-tools.mk
 include make/neutrino.mk
 include make/plugins.mk
 include make/plugins-extra.mk

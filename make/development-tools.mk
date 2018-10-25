@@ -1,4 +1,4 @@
-#Makefile to build devel-tools
+#Makefile to build development-tools
 
 # -----------------------------------------------------------------------------
 
