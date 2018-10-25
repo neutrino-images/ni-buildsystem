@@ -268,6 +268,7 @@ PATCH = patch -p1 -i $(PATCHES)
 WGET = wget -t3 -T60 -c -P $(ARCHIVE)
 
 CHDIR = set -e; cd $(BUILD_TMP)
+MKDIR = mkdir -p $(BUILD_TMP)
 TOUCH = @touch $@
 STRIP = $(TARGET)-strip
 

@@ -3,16 +3,18 @@
 # -----------------------------------------------------------------------------
 
 # usbutils-008 needs udev
-USB_UTILS_VER=007
-$(ARCHIVE)/usbutils-$(USB_UTILS_VER).tar.xz:
-	$(WGET) https://www.kernel.org/pub/linux/utils/usb/usbutils/usbutils-$(USB_UTILS_VER).tar.xz
+USBUTILS_VER=007
+$(ARCHIVE)/usbutils-$(USBUTILS_VER).tar.xz:
+	$(WGET) https://www.kernel.org/pub/linux/utils/usb/usbutils/usbutils-$(USBUTILS_VER).tar.xz
 
-$(D)/usbutils: $(D)/libusb_compat $(ARCHIVE)/usbutils-$(USB_UTILS_VER).tar.xz | $(TARGET_DIR)
-	$(REMOVE)/usbutils-$(USB_UTILS_VER)
-	$(UNTAR)/usbutils-$(USB_UTILS_VER).tar.xz
-	$(CHDIR)/usbutils-$(USB_UTILS_VER); \
-		$(PATCH)/usbutils-avoid-dependency-on-bash.patch; \
-		$(PATCH)/usbutils-fix-null-pointer-crash.patch; \
+USBUTILS_PATCH  = usbutils-avoid-dependency-on-bash.patch
+USBUTILS_PATCH += usbutils-fix-null-pointer-crash.patch
+
+$(D)/usbutils: $(D)/libusb_compat $(ARCHIVE)/usbutils-$(USBUTILS_VER).tar.xz | $(TARGET_DIR)
+	$(REMOVE)/usbutils-$(USBUTILS_VER)
+	$(UNTAR)/usbutils-$(USBUTILS_VER).tar.xz
+	$(CHDIR)/usbutils-$(USBUTILS_VER); \
+		$(call apply_patches, $(USBUTILS_PATCH)); \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
 			--prefix= \
@@ -26,7 +28,7 @@ $(D)/usbutils: $(D)/libusb_compat $(ARCHIVE)/usbutils-$(USB_UTILS_VER).tar.xz | 
 	rm -rf $(TARGET_DIR)/sbin/update-usbids.sh
 	rm -rf $(TARGET_DIR)/share/pkgconfig
 	rm -rf $(TARGET_DIR)/share/usb.ids.gz
-	$(REMOVE)/usbutils-$(USB_UTILS_VER)
+	$(REMOVE)/usbutils-$(USBUTILS_VER)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------

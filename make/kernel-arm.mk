@@ -17,7 +17,7 @@ $(D)/kernel-arm: $(SOURCE_DIR)/$(NI_LINUX-KERNEL) | $(TARGET_DIR)
 	$(CHDIR)/linux-$(KERNEL_VERSION); \
 		touch .scmversion; \
 		cp $(CONFIGS)/kernel-4.10-$(BOXFAMILY).config $(BUILD_TMP)/linux-$(KERNEL_VERSION)/.config; \
-		mkdir -p $(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules; \
+		$(MKDIR)/linux-$(KERNEL_VERSION)-modules; \
 		$(MAKE) ARCH=arm CROSS_COMPILE=$(TARGET)- INSTALL_MOD_PATH=$(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules silentoldconfig; \
 		$(MAKE) ARCH=arm CROSS_COMPILE=$(TARGET)- INSTALL_MOD_PATH=$(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules $(DTB_VER); \
 		$(MAKE) ARCH=arm CROSS_COMPILE=$(TARGET)- INSTALL_MOD_PATH=$(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules zImage; \

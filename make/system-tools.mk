@@ -71,14 +71,15 @@ endif
 
 $(D)/timezone: $(ARCHIVE)/tzdata$(TZDATA_VER).tar.gz | $(TARGET_DIR)
 	$(REMOVE)/timezone
-	mkdir $(BUILD_TMP)/timezone $(BUILD_TMP)/timezone/zoneinfo
-	tar -C $(BUILD_TMP)/timezone -xf $(ARCHIVE)/tzdata$(TZDATA_VER).tar.gz
+	$(MKDIR)/timezone
 	$(CHDIR)/timezone; \
+		tar -xf $(ARCHIVE)/tzdata$(TZDATA_VER).tar.gz
 		unset ${!LC_*}; LANG=POSIX; LC_ALL=POSIX; export LANG LC_ALL; \
 		zic -d zoneinfo.tmp \
 			africa antarctica asia australasia \
 			europe northamerica southamerica pacificnew \
 			etcetera backward; \
+		mkdir zoneinfo
 		sed -n '/zone=/{s/.*zone="\(.*\)".*$$/\1/; p}' $(IMAGEFILES)/timezone/timezone.xml | sort -u | \
 		while read x; do \
 			find zoneinfo.tmp -type f -name $$x | sort | \
@@ -122,11 +123,13 @@ endif
 
 # -----------------------------------------------------------------------------
 
+IPERF_PATCH  = iperf-disable-profiling.patch
+
 $(D)/iperf: $(ARCHIVE)/iperf-$(IPERF_VER)-source.tar.gz | $(TARGET_DIR)
 	$(REMOVE)/iperf-$(IPERF_VER)
 	$(UNTAR)/iperf-$(IPERF_VER)-source.tar.gz
 	$(CHDIR)/iperf-$(IPERF_VER); \
-		$(PATCH)/iperf-disable-profiling.patch; \
+		$(call apply_patches, $(IPERF_PATCH)); \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
 			--prefix= \
@@ -139,12 +142,14 @@ $(D)/iperf: $(ARCHIVE)/iperf-$(IPERF_VER)-source.tar.gz | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
+PARTED_PATCH  = parted-3.2-devmapper-1.patch
+PARTED_PATCH += parted-3.2-sysmacros.patch
+
 $(D)/parted: $(D)/e2fsprogs $(ARCHIVE)/parted-$(PARTED_VER).tar.xz | $(TARGET_DIR)
 	$(REMOVE)/parted-$(PARTED_VER)
 	$(UNTAR)/parted-$(PARTED_VER).tar.xz
 	$(CHDIR)/parted-$(PARTED_VER); \
-		$(PATCH)/parted-3.2-devmapper-1.patch; \
-		$(PATCH)/parted-3.2-sysmacros.patch; \
+		$(call apply_patches, $(PARTED_PATCH)); \
 		$(CONFIGURE) \
 			--prefix= \
 			--target=$(TARGET) \
@@ -192,12 +197,14 @@ $(D)/hd-idle: $(ARCHIVE)/hd-idle-$(HD-IDLE_VER).tgz | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
+COREUTILS_PATCH  = coreutils-fix-coolstream-build.patch
+
 # only used for "touch"
 $(D)/coreutils: $(ARCHIVE)/coreutils-$(COREUTILS_VER).tar.xz | $(TARGET_DIR)
 	$(REMOVE)/coreutils-$(COREUTILS_VER)
 	$(UNTAR)/coreutils-$(COREUTILS_VER).tar.xz
 	$(CHDIR)/coreutils-$(COREUTILS_VER); \
-		$(PATCH)/coreutils-fix-coolstream-build.patch; \
+		$(call apply_patches, $(COREUTILS_PATCH)); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
@@ -251,17 +258,19 @@ $(D)/ntp: $(ARCHIVE)/ntp-$(NTP_VER).tar.gz $(D)/openssl | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
+DJMOUNT_PATCH  = djmount-fix-hang-with-asset-upnp.patch
+DJMOUNT_PATCH += djmount-fix-incorrect-range-when-retrieving-content-via-HTTP.patch
+DJMOUNT_PATCH += djmount-fix-new-autotools.diff
+DJMOUNT_PATCH += djmount-fixed-crash-when-using-UTF-8-charset.patch
+DJMOUNT_PATCH += djmount-fixed-crash.patch
+DJMOUNT_PATCH += djmount-support-fstab-mounting.diff
+DJMOUNT_PATCH += djmount-support-seeking-in-large-2gb-files.patch
+
 $(D)/djmount: $(ARCHIVE)/djmount-$(DJMOUNT_VER).tar.gz $(D)/libfuse | $(TARGET_DIR)
 	$(REMOVE)/djmount-$(DJMOUNT_VER)
 	$(UNTAR)/djmount-$(DJMOUNT_VER).tar.gz
 	$(CHDIR)/djmount-$(DJMOUNT_VER); \
-		$(PATCH)/djmount-fix-hang-with-asset-upnp.patch; \
-		$(PATCH)/djmount-fix-incorrect-range-when-retrieving-content-via-HTTP.patch; \
-		$(PATCH)/djmount-fix-new-autotools.diff; \
-		$(PATCH)/djmount-fixed-crash-when-using-UTF-8-charset.patch; \
-		$(PATCH)/djmount-fixed-crash.patch; \
-		$(PATCH)/djmount-support-fstab-mounting.diff; \
-		$(PATCH)/djmount-support-seeking-in-large-2gb-files.patch; \
+		$(call apply_patches, $(DJMOUNT_PATCH)); \
 		touch libupnp/config.aux/config.rpath; \
 		autoreconf -fi; \
 		$(CONFIGURE) -C \
@@ -278,12 +287,14 @@ $(D)/djmount: $(ARCHIVE)/djmount-$(DJMOUNT_VER).tar.gz $(D)/libfuse | $(TARGET_D
 
 # -----------------------------------------------------------------------------
 
+USHARE_PATCH  = ushare.diff
+USHARE_PATCH += ushare-fix-building-with-gcc-5.x.patch
+
 $(D)/ushare: $(ARCHIVE)/ushare-$(USHARE_VER).tar.bz2 $(D)/libupnp | $(TARGET_DIR)
 	$(REMOVE)/ushare-$(USHARE_VER)
 	$(UNTAR)/ushare-$(USHARE_VER).tar.bz2
 	$(CHDIR)/ushare-$(USHARE_VER); \
-		$(PATCH)/ushare.diff; \
-		$(PATCH)/ushare-fix-building-with-gcc-5.x.patch; \
+		$(call apply_patches, $(USHARE_PATCH)); \
 		$(BUILDENV) \
 		./configure \
 			--prefix=$(TARGET_DIR) \
@@ -347,12 +358,14 @@ $(D)/inadyn: $(D)/openssl $(D)/confuse $(D)/libite $(ARCHIVE)/inadyn-$(INADYN_VE
 
 # -----------------------------------------------------------------------------
 
+VSFTP_PATCH  = vsftpd-fix-CVE-2015-1419.patch
+VSFTP_PATCH += vsftpd-disable-capabilities.patch
+
 $(D)/vsftpd: $(D)/openssl $(ARCHIVE)/vsftpd-$(VSFTPD_VER).tar.gz | $(TARGET_DIR)
 	$(REMOVE)/vsftpd-$(VSFTPD_VER)
 	$(UNTAR)/vsftpd-$(VSFTPD_VER).tar.gz
 	$(CHDIR)/vsftpd-$(VSFTPD_VER); \
-		$(PATCH)/vsftpd-fix-CVE-2015-1419.patch; \
-		$(PATCH)/vsftpd-disable-capabilities.patch; \
+		$(call apply_patches, $(VSFTP_PATCH)); \
 		sed -i -e 's/.*VSF_BUILD_PAM/#undef VSF_BUILD_PAM/' builddefs.h; \
 		sed -i -e 's/.*VSF_BUILD_SSL/#define VSF_BUILD_SSL/' builddefs.h; \
 		make clean; \
@@ -405,11 +418,13 @@ $(D)/nano: $(D)/libncurses $(ARCHIVE)/nano-$(NANO_VER).tar.gz | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
+MINICOM_PATCH  = minicom-fix-h-v-return-value-is-not-0.patch
+
 $(D)/minicom: $(D)/libncurses $(ARCHIVE)/minicom-$(MINICOM_VER).tar.gz | $(TARGET_DIR)
 	$(REMOVE)/minicom-$(MINICOM_VER)
 	$(UNTAR)/minicom-$(MINICOM_VER).tar.gz
 	$(CHDIR)/minicom-$(MINICOM_VER); \
-		$(PATCH)/minicom-fix-h-v-return-value-is-not-0.patch; \
+		$(call apply_patches, $(MINICOM_PATCH)); \
 		$(CONFIGURE) \
 			--prefix= \
 			--target=$(TARGET) \
@@ -577,12 +592,14 @@ $(D)/autofs5: $(D)/libtirpc $(ARCHIVE)/autofs-$(AUTOFS5_VER).tar.gz | $(TARGET_D
 
 samba: samba-$(BOXSERIES)
 
+SAMBA33_PATCH  = samba33-build-only-what-we-need.patch
+SAMBA33_PATCH += samba33-configure.in-make-getgrouplist_ok-test-cross-compile.patch
+
 $(D)/samba-hd1: $(D)/zlib $(ARCHIVE)/samba-$(SAMBA33_VER).tar.gz | $(TARGET_DIR)
 	$(REMOVE)/samba-$(SAMBA33_VER)
 	$(UNTAR)/samba-$(SAMBA33_VER).tar.gz
 	$(CHDIR)/samba-$(SAMBA33_VER); \
-		$(PATCH)/samba33-build-only-what-we-need.patch; \
-		$(PATCH)/samba33-configure.in-make-getgrouplist_ok-test-cross-compile.patch
+		$(call apply_patches, $(SAMBA33_PATCH)); \
 	$(CHDIR)/samba-$(SAMBA33_VER)/source; \
 		./autogen.sh; \
 		export CONFIG_SITE=$(CONFIGS)/samba33-config.site; \
@@ -639,18 +656,25 @@ $(D)/samba-hd1: $(D)/zlib $(ARCHIVE)/samba-$(SAMBA33_VER).tar.gz | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
+SAMBA36_PATCH1  = samba36-build-only-what-we-need.patch
+SAMBA36_PATCH1 += samba36-remove_printer_support.patch
+SAMBA36_PATCH1 += samba36-remove_ad_support.patch
+SAMBA36_PATCH1 += samba36-remove_services.patch
+SAMBA36_PATCH1 += samba36-remove_winreg_support.patch
+SAMBA36_PATCH1 += samba36-remove_registry_backend.patch
+SAMBA36_PATCH1 += samba36-strip_srvsvc.patch
+
+SAMBA36_PATCH0  = samba36-CVE-2016-2112-v3-6.patch
+SAMBA36_PATCH0 += samba36-CVE-2016-2115-v3-6.patch
+SAMBA36_PATCH0 += samba36-CVE-2017-7494-v3-6.patch
+
 $(D)/samba-hd51 \
 $(D)/samba-hd2: $(D)/zlib $(ARCHIVE)/samba-$(SAMBA36_VER).tar.gz | $(TARGET_DIR)
 	$(REMOVE)/samba-$(SAMBA36_VER)
 	$(UNTAR)/samba-$(SAMBA36_VER).tar.gz
 	$(CHDIR)/samba-$(SAMBA36_VER); \
-		$(PATCH)/samba36-build-only-what-we-need.patch; \
-		$(PATCH)/samba36-remove_printer_support.patch; \
-		$(PATCH)/samba36-remove_ad_support.patch; \
-		$(PATCH)/samba36-remove_services.patch; \
-		$(PATCH)/samba36-remove_winreg_support.patch; \
-		$(PATCH)/samba36-remove_registry_backend.patch; \
-		$(PATCH)/samba36-strip_srvsvc.patch; \
+		$(call apply_patches, $(SAMBA36_PATCH1), 1); \
+		$(call apply_patches, $(SAMBA36_PATCH0), 0); \
 		patch -p0 -i $(BASE_DIR)/archive-patches/samba36-CVE-2016-2112-v3-6.patch; \
 		patch -p0 -i $(BASE_DIR)/archive-patches/samba36-CVE-2016-2115-v3-6.patch; \
 		patch -p0 -i $(BASE_DIR)/archive-patches/samba36-CVE-2017-7494-v3-6.patch
@@ -763,13 +787,15 @@ $(D)/sg3-utils: $(ARCHIVE)/sg3_utils-$(SG3-UTILS_VER).tar.xz | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
+FBSHOT_PATCH  = fbshot-32bit_cs_fb.diff
+FBSHOT_PATCH += fbshot_cs_hd2.diff
+
 fbshot: $(TARGET_DIR)/bin/fbshot
 $(TARGET_DIR)/bin/fbshot: $(D)/libpng $(ARCHIVE)/fbshot-$(FBSHOT_VER).tar.gz | $(TARGET_DIR)
 	$(REMOVE)/fbshot-$(FBSHOT_VER)
 	$(UNTAR)/fbshot-$(FBSHOT_VER).tar.gz
 	$(CHDIR)/fbshot-$(FBSHOT_VER); \
-		$(PATCH)/fbshot-32bit_cs_fb.diff; \
-		$(PATCH)/fbshot_cs_hd2.diff; \
+		$(call apply_patches, $(FBSHOT_PATCH)); \
 		$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) fbshot.c -lpng -lz -o $@
 	$(REMOVE)/fbshot-$(FBSHOT_VER)
 
@@ -815,15 +841,17 @@ $(D)/wpa_supplicant: $(D)/openssl $(ARCHIVE)/wpa_supplicant-$(WPA_SUPP_VER).tar.
 
 # -----------------------------------------------------------------------------
 
+XUPNPD_PATCH  = xupnpd-coolstream-dynamic-lua.patch
+XUPNPD_PATCH += xupnpd-fix-memleak-on-coolstream-boxes-thanks-ng777.patch
+XUPNPD_PATCH += xupnpd-fix-webif-backlinks.diff
+XUPNPD_PATCH += xupnpd-change-XUPNPDROOTDIR.diff
+XUPNPD_PATCH += xupnpd-add-configuration-files.diff
+
 $(D)/xupnpd: $(D)/lua $(D)/openssl | $(TARGET_DIR)
 	$(REMOVE)/xupnpd
 	git clone https://github.com/clark15b/xupnpd.git $(BUILD_TMP)/xupnpd
 	$(CHDIR)/xupnpd; \
-		$(PATCH)/xupnpd-coolstream-dynamic-lua.patch; \
-		$(PATCH)/xupnpd-fix-memleak-on-coolstream-boxes-thanks-ng777.patch; \
-		$(PATCH)/xupnpd-fix-webif-backlinks.diff; \
-		$(PATCH)/xupnpd-change-XUPNPDROOTDIR.diff; \
-		$(PATCH)/xupnpd-add-configuration-files.diff
+		$(call apply_patches, $(XUPNPD_PATCH))
 	$(CHDIR)/xupnpd/src; \
 		$(BUILDENV) \
 		$(MAKE) embedded TARGET=$(TARGET) CC=$(TARGET)-gcc STRIP=$(TARGET)-strip LUAFLAGS="$(TARGET_LDFLAGS) -I$(TARGET_INCLUDE_DIR)"; \
@@ -874,15 +902,17 @@ ifeq ($(BOXSERIES), hd1)
 	NFS-UTILS_IPV6=--disable-ipv6
 endif
 
+NFS-UTILS_PATCH  = nfs-utils_01-Patch-taken-from-Gentoo.patch
+NFS-UTILS_PATCH += nfs-utils_02-Switch-legacy-index-in-favour-of-strchr.patch
+NFS-UTILS_PATCH += nfs-utils_03-Let-the-configure-script-find-getrpcbynumber-in-libt.patch
+NFS-UTILS_PATCH += nfs-utils_04-mountd-Add-check-for-struct-file_handle.patch
+NFS-UTILS_PATCH += nfs-utils_05-sm-notify-use-sbin-instead-of-usr-sbin.patch
+
 $(D)/nfs-utils: $(D)/rpcbind $(ARCHIVE)/nfs-utils-$(NFS-UTILS_VER).tar.bz2 | $(TARGET_DIR)
 	$(REMOVE)/nfs-utils-$(NFS-UTILS_VER)
 	$(UNTAR)/nfs-utils-$(NFS-UTILS_VER).tar.bz2
 	$(CHDIR)/nfs-utils-$(NFS-UTILS_VER); \
-		$(PATCH)/nfs-utils_01-Patch-taken-from-Gentoo.patch; \
-		$(PATCH)/nfs-utils_02-Switch-legacy-index-in-favour-of-strchr.patch; \
-		$(PATCH)/nfs-utils_03-Let-the-configure-script-find-getrpcbynumber-in-libt.patch; \
-		$(PATCH)/nfs-utils_04-mountd-Add-check-for-struct-file_handle.patch; \
-		$(PATCH)/nfs-utils_05-sm-notify-use-sbin-instead-of-usr-sbin.patch; \
+		$(call apply_patches, $(NFS-UTILS_PATCH)); \
 		export knfsd_cv_bsd_signals=no; \
 		autoreconf -fi; \
 		$(CONFIGURE) \
@@ -920,11 +950,13 @@ $(D)/nfs-utils: $(D)/rpcbind $(ARCHIVE)/nfs-utils-$(NFS-UTILS_VER).tar.bz2 | $(T
 
 # -----------------------------------------------------------------------------
 
+RPCBIND_PATCH  = rpcbind-0001-Remove-yellow-pages-support.patch
+
 $(D)/rpcbind: $(D)/libtirpc $(ARCHIVE)/rpcbind-$(RPCBIND_VER).tar.bz2 | $(TARGET_DIR)
 	$(REMOVE)/rpcbind-$(RPCBIND_VER)
 	$(UNTAR)/rpcbind-$(RPCBIND_VER).tar.bz2
 	$(CHDIR)/rpcbind-$(RPCBIND_VER); \
-		$(PATCH)/rpcbind-0001-Remove-yellow-pages-support.patch; \
+		$(call apply_patches, $(RPCBIND_PATCH)); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
@@ -1058,13 +1090,15 @@ $(D)/mc: $(ARCHIVE)/mc-$(MC_VER).tar.xz $(D)/libglib2 $(D)/libncurses | $(TARGET
 
 # -----------------------------------------------------------------------------
 
+WGET_PATCH  = wget-remove-hardcoded-engine-support-for-openss.patch
+WGET_PATCH += wget-set-check_cert-false-by-default.patch
+WGET_PATCH += wget-change_DEFAULT_LOGFILE.patch
+
 $(D)/wget: $(D)/openssl $(ARCHIVE)/wget-$(WGET_VER).tar.gz | $(TARGET_DIR)
 	$(REMOVE)/wget-$(WGET_VER)
 	$(UNTAR)/wget-$(WGET_VER).tar.gz
 	$(CHDIR)/wget-$(WGET_VER); \
-		$(PATCH)/wget-remove-hardcoded-engine-support-for-openss.patch; \
-		$(PATCH)/wget-set-check_cert-false-by-default.patch; \
-		$(PATCH)/wget-change_DEFAULT_LOGFILE.patch; \
+		$(call apply_patches, $(WGET_PATCH)); \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
 			--prefix= \
@@ -1083,14 +1117,16 @@ $(D)/wget: $(D)/openssl $(ARCHIVE)/wget-$(WGET_VER).tar.gz | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
+LIBICONV_PATCH  = iconv-disable_transliterations.patch
+LIBICONV_PATCH += iconv-strip_charsets.patch
+
 # builds only stripped down iconv binary
 # used for smarthomeinfo plugin
 $(D)/iconv: $(ARCHIVE)/libiconv-$(LIBICONV_VER).tar.gz | $(TARGET_DIR)
 	$(REMOVE)/libiconv-$(LIBICONV_VER)
 	$(UNTAR)/libiconv-$(LIBICONV_VER).tar.gz
 	$(CHDIR)/libiconv-$(LIBICONV_VER); \
-		$(PATCH)/iconv-disable_transliterations.patch; \
-		$(PATCH)/iconv-strip_charsets.patch; \
+		$(call apply_patches, $(LIBICONV_PATCH)); \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
 			--prefix= \

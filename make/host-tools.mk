@@ -102,13 +102,13 @@ $(ARCHIVE)/tzcode$(HOST_TZCODE_VER).tar.gz:
 host_zic: $(HOST_DIR)/bin/zic
 $(HOST_DIR)/bin/zic: $(ARCHIVE)/tzdata$(HOST_TZDATA_VER).tar.gz $(ARCHIVE)/tzcode$(HOST_TZCODE_VER).tar.gz | $(HOST_DIR)/bin
 	$(REMOVE)/tzcode
-	mkdir $(BUILD_TMP)/tzcode
+	$(MKDIR)/tzcode
 	$(CHDIR)/tzcode; \
 		tar -xf $(ARCHIVE)/tzcode$(HOST_TZCODE_VER).tar.gz; \
 		tar -xf $(ARCHIVE)/tzdata$(HOST_TZDATA_VER).tar.gz; \
 		$(MAKE) zic
 	install -D -m 0755 $(BUILD_TMP)/tzcode/zic $(HOST_DIR)/bin/
-	#$(REMOVE)/tzcode
+	$(REMOVE)/tzcode
 
 # -----------------------------------------------------------------------------
 
