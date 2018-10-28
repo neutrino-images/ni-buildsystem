@@ -120,8 +120,6 @@ endif
 		ln -sf crond K55crond && \
 		ln -sf inetd S53inetd && \
 		ln -sf inetd K80inetd
-	pushd $(BOX)/bin && \
-		ln -sf fbshot dboxshot
 	pushd $(BOX)/sbin && \
 		ln -sf ntfs-3g mount.ntfs
 ifeq ($(BOXSERIES), hd1)

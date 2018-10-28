@@ -797,6 +797,7 @@ $(TARGET_DIR)/bin/fbshot: $(D)/libpng $(ARCHIVE)/fbshot-$(FBSHOT_VER).tar.gz | $
 		$(call apply_patches, $(FBSHOT_PATCH)); \
 		$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) fbshot.c -lpng -lz -o $@
 	$(REMOVE)/fbshot-$(FBSHOT_VER)
+	ln -sf fbshot $(TARGET_DIR)/bin/dboxshot
 
 # -----------------------------------------------------------------------------
 
