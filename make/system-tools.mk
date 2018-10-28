@@ -542,7 +542,8 @@ $(D)/ntfs-3g: $(ARCHIVE)/ntfs-3g_ntfsprogs-$(NTFS3G_VER).tgz | $(TARGET_DIR)
 			--disable-library \
 			; \
 		$(MAKE); \
-	install -m 755 $(BUILD_TMP)/ntfs-3g_ntfsprogs-$(NTFS3G_VER)/src/ntfs-3g $(TARGET_DIR)/sbin/ntfs-3g
+	install -D -m 755 $(BUILD_TMP)/ntfs-3g_ntfsprogs-$(NTFS3G_VER)/src/ntfs-3g $(TARGET_DIR)/sbin/ntfs-3g
+	ln -sf ntfs-3g $(TARGET_DIR)/sbin/mount.ntfs
 	$(REMOVE)/ntfs-3g_ntfsprogs-$(NTFS3G_VER)
 	$(TOUCH)
 
