@@ -120,12 +120,6 @@ endif
 		ln -sf crond K55crond && \
 		ln -sf inetd S53inetd && \
 		ln -sf inetd K80inetd
-ifeq ($(BOXSERIES), hd1)
-	pushd $(BOX)/lib && \
-		ln -sf libnxp.so libconexant.so
-	pushd $(BOX)/lib/firmware && \
-		ln -sf rt2870.bin rt3070.bin
-endif
 ifeq ($(BOXSERIES), hd2)
 	pushd $(BOX)/etc && \
 		ln -sf /var/etc/exports exports && \

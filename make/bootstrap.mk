@@ -58,12 +58,18 @@ $(TARGET_LIB_DIR): | $(TARGET_DIR)
 	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(DRIVERS_DIR)/libs/* $@
 ifeq ($(BOXTYPE), coolstream)
 	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(DRIVERS_DIR)/libcoolstream/$(shell echo -n $(NI_FFMPEG_BRANCH) | sed 's,/,-,g')/* $@
+  ifeq ($(BOXSERIES), hd1)
+	ln -sf libnxp.so $@/libconexant.so
+  endif
 endif
 
 $(TARGET_LIB_DIR)/firmware: | $(TARGET_DIR)
 ifeq ($(BOXTYPE), coolstream)
 	mkdir -p $@
 	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(DRIVERS_DIR)/firmware/* $@/
+  ifeq ($(BOXSERIES), hd1)
+	ln -sf rt2870.bin $@/rt3070.bin
+  endif
 endif
 
 $(TARGET_LIB_DIR)/modules: | $(TARGET_DIR)
