@@ -6,12 +6,14 @@ valgrind: valgrind-$(BOXSERIES)
 
 # -----------------------------------------------------------------------------
 
+VALGRIND_PATCH  = valgrind-fix-$(BOXSERIES)-build.patch
+
 $(D)/valgrind-hd51 \
 $(D)/valgrind-hd2: $(ARCHIVE)/valgrind-$(VALGRIND_VER).tar.bz2 | $(TARGET_DIR)
 	$(REMOVE)/valgrind-$(VALGRIND_VER)
 	$(UNTAR)/valgrind-$(VALGRIND_VER).tar.bz2
 	$(CHDIR)/valgrind-$(VALGRIND_VER); \
-		$(PATCH)/valgrind-fix-$(BOXSERIES)-build.patch; \
+		$(call apply_patches, $(VALGRIND_PATCH)); \
 		export AR=$(TARGET)-ar; \
 		autoreconf -fi; \
 		$(CONFIGURE) \
@@ -33,13 +35,15 @@ $(D)/valgrind-hd2: $(ARCHIVE)/valgrind-$(VALGRIND_VER).tar.bz2 | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
+VALGRIND-HD1_PATCH  = valgrind12305-nevis-patch.diff
+VALGRIND-HD1_PATCH += valgrind-automake-1.11.2.patch
+
 $(D)/valgrind-hd1:
 	$(REMOVE)/valgrind
 	svn co -r 12305 svn://svn.valgrind.org/valgrind/trunk $(BUILD_TMP)/valgrind; \
 	$(CHDIR)/valgrind; \
 		svn up --force -r {2011-12-13} VEX; \
-		$(PATCH)/valgrind12305-nevis-patch.diff; \
-		$(PATCH)/valgrind-automake-1.11.2.patch; \
+		$(call apply_patches, $(VALGRIND-HD1_PATCH)); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--prefix= \

@@ -14,20 +14,19 @@ endif
 
 # -----------------------------------------------------------------------------
 
-#
-# gstreamer
-#
 GSTREAMER_VER = 1.12.4
 GSTREAMER_SOURCE = gstreamer-$(GSTREAMER_VER).tar.xz
 
 $(ARCHIVE)/$(GSTREAMER_SOURCE):
 	$(WGET) https://gstreamer.freedesktop.org/src/gstreamer/$(GSTREAMER_SOURCE)
 
+GSTREAMER_PATCH  = gstreamer-$(GSTREAMER_VER)-revert-use-new-gst-adapter-get-buffer.patch
+
 $(D)/gstreamer: $(D)/libglib2 $(D)/libxml2 $(D)/glib-networking $(ARCHIVE)/$(GSTREAMER_SOURCE)
 	$(REMOVE)/gstreamer-$(GSTREAMER_VER)
 	$(UNTAR)/$(GSTREAMER_SOURCE)
 	$(CHDIR)/gstreamer-$(GSTREAMER_VER); \
-		$(PATCH)/gstreamer-$(GSTREAMER_VER)-revert-use-new-gst-adapter-get-buffer.patch; \
+		$(call apply_patches, $(GSTREAMER_PATCH)); \
 		./autogen.sh --noconfigure; \
 		$(CONFIGURE) \
 			--prefix= \
@@ -64,24 +63,23 @@ $(D)/gstreamer: $(D)/libglib2 $(D)/libxml2 $(D)/glib-networking $(ARCHIVE)/$(GST
 
 # -----------------------------------------------------------------------------
 
-#
-# gst_plugins_base
-#
 GST_PLUGINS_BASE_VER = $(GSTREAMER_VER)
 GST_PLUGINS_BASE_SOURCE = gst-plugins-base-$(GST_PLUGINS_BASE_VER).tar.xz
 
 $(ARCHIVE)/$(GST_PLUGINS_BASE_SOURCE):
 	$(WGET) https://gstreamer.freedesktop.org/src/gst-plugins-base/$(GST_PLUGINS_BASE_SOURCE)
 
+GST_PLUGINS_BASE_PATCH  = gst-plugins-base-$(GSTREAMER_VER)-Makefile.am-don-t-hardcode-libtool-name-when-running.patch
+GST_PLUGINS_BASE_PATCH += gst-plugins-base-$(GSTREAMER_VER)-Makefile.am-prefix-calls-to-pkg-config-with-PKG_CONF.patch
+GST_PLUGINS_BASE_PATCH += gst-plugins-base-$(GSTREAMER_VER)-riff-media-added-fourcc-to-all-ffmpeg-mpeg4-video-caps.patch
+GST_PLUGINS_BASE_PATCH += gst-plugins-base-$(GSTREAMER_VER)-rtsp-drop-incorrect-reference-to-gstreamer-sdp-in-Ma.patch
+GST_PLUGINS_BASE_PATCH += gst-plugins-base-$(GSTREAMER_VER)-subparse-avoid-false-negatives-dealing-with-UTF-8.patch
+
 $(D)/gst_plugins_base: $(D)/zlib $(D)/libglib2 $(D)/orc $(D)/gstreamer $(D)/alsa-lib $(D)/libogg $(D)/libvorbisidec $(ARCHIVE)/$(GST_PLUGINS_BASE_SOURCE)
 	$(REMOVE)/gst-plugins-base-$(GST_PLUGINS_BASE_VER)
 	$(UNTAR)/$(GST_PLUGINS_BASE_SOURCE)
 	$(CHDIR)/gst-plugins-base-$(GST_PLUGINS_BASE_VER); \
-		$(PATCH)/gst-plugins-base-$(GSTREAMER_VER)-Makefile.am-don-t-hardcode-libtool-name-when-running.patch; \
-		$(PATCH)/gst-plugins-base-$(GSTREAMER_VER)-Makefile.am-prefix-calls-to-pkg-config-with-PKG_CONF.patch; \
-		$(PATCH)/gst-plugins-base-$(GSTREAMER_VER)-riff-media-added-fourcc-to-all-ffmpeg-mpeg4-video-caps.patch; \
-		$(PATCH)/gst-plugins-base-$(GSTREAMER_VER)-rtsp-drop-incorrect-reference-to-gstreamer-sdp-in-Ma.patch; \
-		$(PATCH)/gst-plugins-base-$(GSTREAMER_VER)-subparse-avoid-false-negatives-dealing-with-UTF-8.patch; \
+		$(call apply_patches, $(GST_PLUGINS_BASE_PATCH)); \
 		./autogen.sh --noconfigure; \
 		$(CONFIGURE) \
 			--prefix= \
@@ -136,20 +134,19 @@ $(D)/gst_plugins_base: $(D)/zlib $(D)/libglib2 $(D)/orc $(D)/gstreamer $(D)/alsa
 
 # -----------------------------------------------------------------------------
 
-#
-# gst_plugins_good
-#
 GST_PLUGINS_GOOD_VER = $(GSTREAMER_VER)
 GST_PLUGINS_GOOD_SOURCE = gst-plugins-good-$(GST_PLUGINS_GOOD_VER).tar.xz
 
 $(ARCHIVE)/$(GST_PLUGINS_GOOD_SOURCE):
 	$(WGET) https://gstreamer.freedesktop.org/src/gst-plugins-good/$(GST_PLUGINS_GOOD_SOURCE)
 
+GST_PLUGINS_GOOD_PATCH  = gst-plugins-good-$(GSTREAMER_VER)-gstrtpmp4gpay-set-dafault-value-for-MPEG4-without-co.patch
+
 $(D)/gst_plugins_good: $(D)/libpng $(D)/libjpeg $(D)/gstreamer $(D)/gst_plugins_base $(D)/libsoup $(D)/libFLAC $(ARCHIVE)/$(GST_PLUGINS_GOOD_SOURCE)
 	$(REMOVE)/gst-plugins-good-$(GST_PLUGINS_GOOD_VER)
 	$(UNTAR)/$(GST_PLUGINS_GOOD_SOURCE)
 	$(CHDIR)/gst-plugins-good-$(GST_PLUGINS_GOOD_VER); \
-		$(PATCH)/gst-plugins-good-$(GSTREAMER_VER)-gstrtpmp4gpay-set-dafault-value-for-MPEG4-without-co.patch; \
+		$(call apply_patches, $(GST_PLUGINS_GOOD_PATCH)); \
 		./autogen.sh --noconfigure; \
 		$(CONFIGURE) \
 			--prefix= \
@@ -170,26 +167,25 @@ $(D)/gst_plugins_good: $(D)/libpng $(D)/libjpeg $(D)/gstreamer $(D)/gst_plugins_
 
 # -----------------------------------------------------------------------------
 
-#
-# gst_plugins_bad
-#
 GST_PLUGINS_BAD_VER = $(GSTREAMER_VER)
 GST_PLUGINS_BAD_SOURCE = gst-plugins-bad-$(GST_PLUGINS_BAD_VER).tar.xz
 
 $(ARCHIVE)/$(GST_PLUGINS_BAD_SOURCE):
 	$(WGET) https://gstreamer.freedesktop.org/src/gst-plugins-bad/$(GST_PLUGINS_BAD_SOURCE)
 
+GST_PLUGINS_BAD_PATCH  = gst-plugins-bad-$(GSTREAMER_VER)-Makefile.am-don-t-hardcode-libtool-name-when-running-pbad.patch
+GST_PLUGINS_BAD_PATCH += gst-plugins-bad-$(GSTREAMER_VER)-rtmp-fix-seeking-and-potential-segfault.patch
+GST_PLUGINS_BAD_PATCH += gst-plugins-bad-$(GSTREAMER_VER)-rtmp-hls-tsdemux-fix.patch
+GST_PLUGINS_BAD_PATCH += gst-plugins-bad-$(GSTREAMER_VER)-configure-allow-to-disable-libssh2.patch
+GST_PLUGINS_BAD_PATCH += gst-plugins-bad-$(GSTREAMER_VER)-dvbapi5-fix-old-kernel.patch
+GST_PLUGINS_BAD_PATCH += gst-plugins-bad-$(GSTREAMER_VER)-fix-maybe-uninitialized-warnings-when-compiling-with-Os.patch
+GST_PLUGINS_BAD_PATCH += gst-plugins-bad-$(GSTREAMER_VER)-hls-main-thread-block.patch
+
 $(D)/gst_plugins_bad: $(D)/libass $(D)/libcurl $(D)/libxml2 $(D)/openssl $(D)/librtmp $(D)/gstreamer $(D)/gst_plugins_base $(ARCHIVE)/$(GST_PLUGINS_BAD_SOURCE)
 	$(REMOVE)/gst-plugins-bad-$(GST_PLUGINS_BAD_VER)
 	$(UNTAR)/$(GST_PLUGINS_BAD_SOURCE)
 	$(CHDIR)/gst-plugins-bad-$(GST_PLUGINS_BAD_VER); \
-		$(PATCH)/gst-plugins-bad-$(GSTREAMER_VER)-Makefile.am-don-t-hardcode-libtool-name-when-running-pbad.patch; \
-		$(PATCH)/gst-plugins-bad-$(GSTREAMER_VER)-rtmp-fix-seeking-and-potential-segfault.patch; \
-		$(PATCH)/gst-plugins-bad-$(GSTREAMER_VER)-rtmp-hls-tsdemux-fix.patch; \
-		$(PATCH)/gst-plugins-bad-$(GSTREAMER_VER)-configure-allow-to-disable-libssh2.patch; \
-		$(PATCH)/gst-plugins-bad-$(GSTREAMER_VER)-dvbapi5-fix-old-kernel.patch; \
-		$(PATCH)/gst-plugins-bad-$(GSTREAMER_VER)-fix-maybe-uninitialized-warnings-when-compiling-with-Os.patch; \
-		$(PATCH)/gst-plugins-bad-$(GSTREAMER_VER)-hls-main-thread-block.patch; \
+		$(call apply_patches, $(GST_PLUGINS_BAD_PATCH)); \
 		./autogen.sh --noconfigure; \
 		$(CONFIGURE) \
 			--build=$(BUILD) \
@@ -234,9 +230,6 @@ $(D)/gst_plugins_bad: $(D)/libass $(D)/libcurl $(D)/libxml2 $(D)/openssl $(D)/li
 
 # -----------------------------------------------------------------------------
 
-#
-# gst_plugins_ugly
-#
 GST_PLUGINS_UGLY_VER = $(GSTREAMER_VER)
 GST_PLUGINS_UGLY_SOURCE = gst-plugins-ugly-$(GST_PLUGINS_UGLY_VER).tar.xz
 
@@ -267,9 +260,6 @@ $(D)/gst_plugins_ugly: $(D)/gstreamer $(D)/gst_plugins_base $(ARCHIVE)/$(GST_PLU
 
 # -----------------------------------------------------------------------------
 
-#
-# gst_plugin_subsink
-#
 GST_PLUGIN_SUBSINK_VER = 1.0
 
 $(D)/gst_plugin_subsink: $(D)/gstreamer $(D)/gst_plugins_base $(D)/gst_plugins_good $(D)/gst_plugins_bad $(D)/gst_plugins_ugly
@@ -299,9 +289,6 @@ $(D)/gst_plugin_subsink: $(D)/gstreamer $(D)/gst_plugins_base $(D)/gst_plugins_g
 
 # -----------------------------------------------------------------------------
 
-#
-# gst_plugins_dvbmediasink
-#
 GST_PLUGINS_DVBMEDIASINK_VER = 1.0
 
 $(D)/gst_plugins_dvbmediasink: $(D)/gstreamer $(D)/gst_plugins_base $(D)/gst_plugins_good $(D)/gst_plugins_bad $(D)/gst_plugins_ugly $(D)/gst_plugin_subsink $(D)/libdca
@@ -342,9 +329,6 @@ $(D)/gst_plugins_dvbmediasink: $(D)/gstreamer $(D)/gst_plugins_base $(D)/gst_plu
 
 # -----------------------------------------------------------------------------
 
-#
-# orc
-#
 ORC_VER = 0.4.28
 ORC_SOURCE = orc-$(ORC_VER).tar.xz
 
@@ -371,9 +355,6 @@ $(D)/orc: $(ARCHIVE)/$(ORC_SOURCE)
 
 # -----------------------------------------------------------------------------
 
-#
-# libdca
-#
 LIBDCA_VER = 0.0.5
 LIBDCA_SOURCE = libdca-$(LIBDCA_VER).tar.bz2
 
@@ -399,9 +380,6 @@ $(D)/libdca: $(ARCHIVE)/$(LIBDCA_SOURCE)
 
 # -----------------------------------------------------------------------------
 
-#
-# nettle
-#
 NETTLE_VER = 3.4
 NETTLE_SOURCE = nettle-$(NETTLE_VER).tar.gz
 
@@ -426,16 +404,11 @@ $(D)/nettle: $(D)/gmp $(ARCHIVE)/$(NETTLE_SOURCE)
 
 # -----------------------------------------------------------------------------
 
-#
-# gmp
-#
-GMP_VER_MAJOR = 6.1.2
-GMP_VER_MINOR =
-GMP_VER = $(GMP_VER_MAJOR)$(GMP_VER_MINOR)
+GMP_VER = 6.1.2
 GMP_SOURCE = gmp-$(GMP_VER).tar.xz
 
 $(ARCHIVE)/$(GMP_SOURCE):
-	$(WGET) ftp://ftp.gmplib.org/pub/gmp-$(GMP_VER_MAJOR)/$(GMP_SOURCE)
+	$(WGET) ftp://ftp.gmplib.org/pub/gmp-$(GMP_VER)/$(GMP_SOURCE)
 
 $(D)/gmp: $(ARCHIVE)/$(GMP_SOURCE)
 	$(REMOVE)/gmp-$(GMP_VER_MAJOR)
@@ -453,9 +426,6 @@ $(D)/gmp: $(ARCHIVE)/$(GMP_SOURCE)
 
 # -----------------------------------------------------------------------------
 
-#
-# gnutls
-#
 GNUTLS_VER_MAJOR = 3.6
 GNUTLS_VER_MINOR = 1
 GNUTLS_VER = $(GNUTLS_VER_MAJOR).$(GNUTLS_VER_MINOR)
@@ -494,9 +464,6 @@ $(D)/gnutls: $(D)/nettle $(D)/ca-bundle $(ARCHIVE)/$(GNUTLS_SOURCE)
 
 # -----------------------------------------------------------------------------
 
-#
-# glib-networking
-#
 GLIB-NETWORKING_VER_MAJOR = 2.54
 GLIB-NETWORKING_VER_MINOR = 1
 GLIB-NETWORKING_VER = $(GLIB-NETWORKING_VER_MAJOR).$(GLIB-NETWORKING_VER_MINOR)
@@ -522,9 +489,6 @@ $(D)/glib-networking: $(D)/gnutls $(D)/libglib2 $(ARCHIVE)/$(GLIB-NETWORKING_SOU
 
 # -----------------------------------------------------------------------------
 
-#
-# libsoup
-#
 LIBSOUP_VER_MAJOR = 2.61
 LIBSOUP_VER_MINOR = 1
 LIBSOUP_VER = $(LIBSOUP_VER_MAJOR).$(LIBSOUP_VER_MINOR)
@@ -555,9 +519,6 @@ $(D)/libsoup: $(D)/sqlite $(D)/libxml2 $(D)/libglib2 $(ARCHIVE)/$(LIBSOUP_SOURCE
 
 # -----------------------------------------------------------------------------
 
-#
-# sqlite
-#
 SQLITE_VER = 3210000
 SQLITE_SOURCE = sqlite-autoconf-$(SQLITE_VER).tar.gz
 

@@ -77,11 +77,13 @@ $(D)/libupnp: $(ARCHIVE)/libupnp-$(LIBUPNP_VER).tar.bz2 | $(TARGET_DIR)
 	
 # -----------------------------------------------------------------------------
 
+LIBDVBSI_PATCH  = libdvbsi++-content_identifier_descriptor.patch
+
 $(D)/libdvbsi: | $(TARGET_DIR)
 	$(REMOVE)/libdvbsi++
 	git clone git://github.com/OpenDMM/libdvbsi-.git $(BUILD_TMP)/libdvbsi++
 	$(CHDIR)/libdvbsi++; \
-		$(PATCH)/libdvbsi++-content_identifier_descriptor.patch; \
+		$(call apply_patches, $(LIBDVBSI_PATCH)); \
 		$(CONFIGURE) \
 			--prefix= \
 			--enable-shared \
@@ -165,6 +167,8 @@ $(D)/libcurl: $(D)/zlib $(D)/openssl $(D)/librtmp $(D)/ca-bundle $(ARCHIVE)/curl
 
 # -----------------------------------------------------------------------------
 
+LIBPNG_PATCH  = libpng-Disable-pngfix-and-png-fix-itxt.patch
+
 LIBPNG_CONF =
 ifneq ($(BOXSERIES), hd51)
 	LIBPNG_CONF = --disable-arm-neon
@@ -174,7 +178,7 @@ $(D)/libpng: $(ARCHIVE)/libpng-$(LIBPNG_VER).tar.xz $(D)/zlib | $(TARGET_DIR)
 	$(REMOVE)/libpng-$(LIBPNG_VER)
 	$(UNTAR)/libpng-$(LIBPNG_VER).tar.xz
 	$(CHDIR)/libpng-$(LIBPNG_VER); \
-		$(PATCH)/libpng-Disable-pngfix-and-png-fix-itxt.patch; \
+		$(call apply_patches, $(LIBPNG_PATCH)); \
 		$(CONFIGURE) \
 			--prefix=$(TARGET_DIR) \
 			--bindir=$(HOST_DIR)/bin \
@@ -190,11 +194,13 @@ $(D)/libpng: $(ARCHIVE)/libpng-$(LIBPNG_VER).tar.xz $(D)/zlib | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
+FREETYPE_PATCH  = freetype2_subpixel.patch
+
 $(D)/freetype: $(D)/zlib $(D)/libpng $(ARCHIVE)/freetype-$(FREETYPE_VER).tar.bz2 | $(TARGET_DIR)
 	$(REMOVE)/freetype-$(FREETYPE_VER)
 	$(UNTAR)/freetype-$(FREETYPE_VER).tar.bz2
 	$(CHDIR)/freetype-$(FREETYPE_VER); \
-		$(PATCH)/freetype2_subpixel.patch; \
+		$(call apply_patches, $(FREETYPE_PATCH)); \
 		sed -i '/^FONT_MODULES += \(type1\|cid\|pfr\|type42\|pcf\|bdf\|winfonts\|cff\)/d' modules.cfg
 	$(CHDIR)/freetype-$(FREETYPE_VER)/builds/unix; \
 		libtoolize --force --copy; \
@@ -244,6 +250,8 @@ $(D)/libjpeg: $(ARCHIVE)/libjpeg-turbo-$(LIBJPEG-TURBO_VER).tar.gz | $(TARGET_DI
 
 # -----------------------------------------------------------------------------
 
+OPENSSL_PATCH  = openssl-add-ni-specific-target.patch
+
 OPENSSLFLAGS = CC=$(TARGET)-gcc \
 		LD=$(TARGET)-ld \
 		AR="$(TARGET)-ar r" \
@@ -256,7 +264,7 @@ $(D)/openssl: $(ARCHIVE)/openssl-$(OPENSSL_VER).tar.gz | $(TARGET_DIR)
 	$(REMOVE)/openssl-$(OPENSSL_VER)
 	$(UNTAR)/openssl-$(OPENSSL_VER).tar.gz
 	$(CHDIR)/openssl-$(OPENSSL_VER); \
-		$(PATCH)/openssl-add-ni-specific-target.patch; \
+		$(call apply_patches, $(OPENSSL_PATCH)); \
 		./Configure \
 			linux-armv4-ni \
 			shared \
@@ -288,11 +296,13 @@ endif
 
 # -----------------------------------------------------------------------------
 
+LIBNCURSES_PATCH  = ncurses-gcc-5.x-MKlib_gen.patch
+
 $(D)/libncurses: $(ARCHIVE)/ncurses-$(LIBNCURSES_VER).tar.gz | $(TARGET_DIR)
 	$(REMOVE)/ncurses-$(LIBNCURSES_VER)
 	$(UNTAR)/ncurses-$(LIBNCURSES_VER).tar.gz; \
 	$(CHDIR)/ncurses-$(LIBNCURSES_VER); \
-		$(PATCH)/ncurses-gcc-5.x-MKlib_gen.patch; \
+		$(call apply_patches, $(LIBNCURSES_PATCH)); \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
 			--prefix= \
@@ -412,11 +422,13 @@ $(D)/libgd2: $(D)/zlib $(D)/libpng $(D)/libjpeg $(D)/freetype $(ARCHIVE)/libgd-$
 
 # -----------------------------------------------------------------------------
 
+LIBDPF_PATCH  = libdpf-crossbuild.diff
+
 $(D)/libdpf: $(D)/libusb_compat $(ARCHIVE)/$(LIBDPF_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/dpf-ax-git-$(LIBDPF_VER)
 	$(UNTAR)/$(LIBDPF_SOURCE)
 	$(CHDIR)/dpf-ax-git-$(LIBDPF_VER)/dpflib; \
-		$(PATCH)/libdpf-crossbuild.diff; \
+		$(call apply_patches, $(LIBDPF_PATCH)); \
 		make libdpf.a CC=$(TARGET)-gcc PREFIX=$(TARGET_DIR); \
 		mkdir -p $(TARGET_INCLUDE_DIR)/libdpf; \
 		cp dpf.h $(TARGET_INCLUDE_DIR)/libdpf/libdpf.h; \
@@ -499,11 +511,13 @@ $(D)/luaexpat: $(D)/expat $(D)/lua $(ARCHIVE)/luaexpat-$(LUAEXPAT_VER).tar.gz | 
 
 # -----------------------------------------------------------------------------
 
+LUACURL_PATCH  = lua-curl-Makefile.diff
+
 $(D)/luacurl: $(D)/libcurl $(D)/lua $(ARCHIVE)/Lua-cURL$(LUACURL_VER).tar.xz | $(TARGET_DIR)
 	$(REMOVE)/Lua-cURL$(LUACURL_VER)
 	$(UNTAR)/Lua-cURL$(LUACURL_VER).tar.xz
 	$(CHDIR)/Lua-cURL$(LUACURL_VER); \
-		$(PATCH)/lua-curl-Makefile.diff; \
+		$(call apply_patches, $(LUACURL_PATCH)); \
 		$(BUILDENV) \
 		CC=$(TARGET)-gcc \
 		LUA_CMOD=/lib/lua/$(LUA_ABIVER) \
@@ -521,14 +535,16 @@ $(D)/luacurl: $(D)/libcurl $(D)/lua $(ARCHIVE)/Lua-cURL$(LUACURL_VER).tar.xz | $
 
 # -----------------------------------------------------------------------------
 
+LUAPOSIX_PATCH  = luaposix-fix-build.patch
+LUAPOSIX_PATCH += luaposix-fix-docdir-build.patch
+
 $(D)/luaposix: $(HOST_DIR)/bin/lua-$(LUA_VER) $(D)/lua $(D)/luaexpat $(ARCHIVE)/v$(LUAPOSIX_VER).tar.gz $(ARCHIVE)/v$(SLINGSHOT_VER).tar.gz $(ARCHIVE)/gnulib-$(GNULIB_VER)-stable.tar.gz | $(TARGET_DIR)
 	$(REMOVE)/luaposix-$(LUAPOSIX_VER)
 	$(UNTAR)/v$(LUAPOSIX_VER).tar.gz
 	tar -C $(BUILD_TMP)/luaposix-$(LUAPOSIX_VER)/slingshot --strip=1 -xf $(ARCHIVE)/v$(SLINGSHOT_VER).tar.gz
 	tar -C $(BUILD_TMP)/luaposix-$(LUAPOSIX_VER)/gnulib --strip=1 -xf $(ARCHIVE)/gnulib-$(GNULIB_VER)-stable.tar.gz
 	$(CHDIR)/luaposix-$(LUAPOSIX_VER); \
-		$(PATCH)/luaposix-fix-build.patch; \
-		$(PATCH)/luaposix-fix-docdir-build.patch; \
+		$(call apply_patches, $(LUAPOSIX_PATCH)); \
 		export LUA=$(HOST_DIR)/bin/lua-$(LUA_VER); \
 		./bootstrap; \
 		autoreconf -fi; \
@@ -548,12 +564,14 @@ $(D)/luaposix: $(HOST_DIR)/bin/lua-$(LUA_VER) $(D)/lua $(D)/luaexpat $(ARCHIVE)/
 
 # -----------------------------------------------------------------------------
 
+HOST_LUA_PATCH  = lua-01-fix-coolstream-build.patch
+
 # helper for luaposix build
 $(HOST_DIR)/bin/lua-$(LUA_VER): $(ARCHIVE)/lua-$(LUA_VER).tar.gz | $(TARGET_DIR)
 	$(REMOVE)/lua-$(LUA_VER)
 	$(UNTAR)/lua-$(LUA_VER).tar.gz
 	$(CHDIR)/lua-$(LUA_VER); \
-		$(PATCH)/lua-01-fix-coolstream-build.patch; \
+		$(call apply_patches, $(HOST_LUA_PATCH)); \
 		$(MAKE) linux
 	install -m 0755 -D $(BUILD_TMP)/lua-$(LUA_VER)/src/lua $@
 	$(REMOVE)/lua-$(LUA_VER)
@@ -565,14 +583,16 @@ lua-libs: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
+LUA_PATCH  = lua-01-fix-coolstream-build.patch
+LUA_PATCH += lua-02-shared-libs-for-lua.patch
+LUA_PATCH += lua-03-lua-pc.patch
+LUA_PATCH += lua-04-crashfix.diff
+
 $(D)/lua: $(D)/libncurses $(ARCHIVE)/lua-$(LUA_VER).tar.gz | $(TARGET_DIR)
 	$(REMOVE)/lua-$(LUA_VER)
 	$(UNTAR)/lua-$(LUA_VER).tar.gz
 	$(CHDIR)/lua-$(LUA_VER); \
-		$(PATCH)/lua-01-fix-coolstream-build.patch; \
-		$(PATCH)/lua-02-shared-libs-for-lua.patch; \
-		$(PATCH)/lua-03-lua-pc.patch; \
-		$(PATCH)/lua-04-crashfix.diff; \
+		$(call apply_patches, $(LUA_PATCH)); \
 		sed -i 's/^V=.*/V= $(LUA_ABIVER)/' etc/lua.pc; \
 		sed -i 's/^R=.*/R= $(LUA_VER)/' etc/lua.pc; \
 		$(MAKE) linux PKG_VERSION=$(LUA_VER) CC=$(TARGET)-gcc LD=$(TARGET)-ld AR="$(TARGET)-ar rcu" RANLIB=$(TARGET)-ranlib LDFLAGS="$(TARGET_LDFLAGS)"; \
@@ -588,16 +608,18 @@ $(D)/lua: $(D)/libncurses $(ARCHIVE)/lua-$(LUA_VER).tar.gz | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-BLURAY_DEPS = $(D)/freetype
+LIBBLURAY_PATCH  = libbluray.diff
+
+LIBBLURAY_DEPS = $(D)/freetype
 ifeq ($(BOXSERIES), hd2)
-  BLURAY_DEPS += $(D)/libaacs $(D)/libbdplus
+  LIBBLURAY_DEPS += $(D)/libaacs $(D)/libbdplus
 endif
 
-$(D)/libbluray: $(BLURAY_DEPS) $(ARCHIVE)/libbluray-$(LIBBLURAY_VER).tar.bz2 | $(TARGET_DIR)
+$(D)/libbluray: $(LIBBLURAY_DEPS) $(ARCHIVE)/libbluray-$(LIBBLURAY_VER).tar.bz2 | $(TARGET_DIR)
 	$(REMOVE)/libbluray-$(LIBBLURAY_VER)
 	$(UNTAR)/libbluray-$(LIBBLURAY_VER).tar.bz2
 	$(CHDIR)/libbluray-$(LIBBLURAY_VER); \
-		$(PATCH)/libbluray.diff; \
+		$(call apply_patches, $(LIBBLURAY_PATCH)); \
 		./bootstrap; \
 		$(CONFIGURE) \
 			--prefix= \
@@ -829,17 +851,19 @@ $(D)/librtmp: $(D)/zlib $(D)/openssl $(SOURCE_DIR)/$(NI_RTMPDUMP) | $(TARGET_DIR
 
 # -----------------------------------------------------------------------------
 
+LIBTIRP_PATCH  = libtirpc-0001-Disable-parts-of-TIRPC-requiring-NIS-support.patch
+LIBTIRP_PATCH += libtirpc-0002-uClibc-without-RPC-support-and-musl-does-not-install-rpcent.h.patch
+LIBTIRP_PATCH += libtirpc-0003-Add-rpcgen-program-from-nfs-utils-sources.patch
+LIBTIRP_PATCH += libtirpc-0004-Automatically-generate-XDR-header-files-from-.x-sour.patch
+LIBTIRP_PATCH += libtirpc-0005-Add-more-XDR-files-needed-to-build-rpcbind-on-top-of.patch
+LIBTIRP_PATCH += libtirpc-0006-Disable-DES-authentification-support.patch
+LIBTIRP_PATCH += libtirpc-0007-include-stdint.h-for-uintptr_t.patch
+
 $(D)/libtirpc: $(ARCHIVE)/libtirpc-$(LIBTIRPC_VER).tar.bz2 | $(TARGET_DIR)
 	$(REMOVE)/libtirpc-$(LIBTIRPC_VER)
 	$(UNTAR)/libtirpc-$(LIBTIRPC_VER).tar.bz2
 	$(CHDIR)/libtirpc-$(LIBTIRPC_VER); \
-		$(PATCH)/libtirpc-0001-Disable-parts-of-TIRPC-requiring-NIS-support.patch; \
-		$(PATCH)/libtirpc-0002-uClibc-without-RPC-support-and-musl-does-not-install-rpcent.h.patch; \
-		$(PATCH)/libtirpc-0003-Add-rpcgen-program-from-nfs-utils-sources.patch; \
-		$(PATCH)/libtirpc-0004-Automatically-generate-XDR-header-files-from-.x-sour.patch; \
-		$(PATCH)/libtirpc-0005-Add-more-XDR-files-needed-to-build-rpcbind-on-top-of.patch; \
-		$(PATCH)/libtirpc-0006-Disable-DES-authentification-support.patch; \
-		$(PATCH)/libtirpc-0007-include-stdint.h-for-uintptr_t.patch; \
+		$(call apply_patches, $(LIBTIRP_PATCH)); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
@@ -897,16 +921,18 @@ $(D)/libite: $(ARCHIVE)/libite-$(ITE_VER).tar.xz | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
+LIBTIRP_PATCH  = libmad-pc-fix.diff
+LIBTIRP_PATCH += libmad-frame_length.diff
+LIBTIRP_PATCH += libmad-mips-h-constraint-removal.patch
+LIBTIRP_PATCH += libmad-remove-deprecated-cflags.patch
+LIBTIRP_PATCH += libmad-thumb2-fixed-arm.patch
+LIBTIRP_PATCH += libmad-thumb2-imdct-arm.patch
+
 $(D)/libmad: $(ARCHIVE)/libmad-$(LIBMAD_VER).tar.gz | $(TARGET_DIR)
 	$(REMOVE)/libmad-$(LIBMAD_VER)
 	$(UNTAR)/libmad-$(LIBMAD_VER).tar.gz
 	$(CHDIR)/libmad-$(LIBMAD_VER); \
-		$(PATCH)/libmad-pc-fix.diff; \
-		$(PATCH)/libmad-frame_length.diff; \
-		$(PATCH)/libmad-mips-h-constraint-removal.patch; \
-		$(PATCH)/libmad-remove-deprecated-cflags.patch; \
-		$(PATCH)/libmad-thumb2-fixed-arm.patch; \
-		$(PATCH)/libmad-thumb2-imdct-arm.patch; \
+		$(call apply_patches, $(LIBTIRP_PATCH)); \
 		touch NEWS AUTHORS ChangeLog; \
 		autoreconf -fi; \
 		$(CONFIGURE) \
@@ -983,6 +1009,8 @@ $(D)/libfribidi: $(ARCHIVE)/fribidi-$(FRIBIDI_VER).tar.bz2 | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
+LIBFFI_PATCH  = libffi-install_headers.patch
+
 LIBFFI_CONF =
 ifeq ($(BOXSERIES), hd1)
 	LIBFFI_CONF = --enable-static --disable-shared
@@ -992,7 +1020,7 @@ $(D)/libffi: $(ARCHIVE)/libffi-$(LIBFFI_VER).tar.gz
 	$(REMOVE)/libffi-$(LIBFFI_VER)
 	$(UNTAR)/libffi-$(LIBFFI_VER).tar.gz
 	$(CHDIR)/libffi-$(LIBFFI_VER); \
-		$(PATCH)/libffi-install_headers.patch; \
+		$(call apply_patches, $(LIBFFI_PATCH)); \
 		$(CONFIGURE) \
 			--prefix= \
 			--datarootdir=/.remove \
@@ -1081,12 +1109,14 @@ $(D)/libglib2: $(ARCHIVE)/glib-$(GLIB_VER).tar.xz $(D)/zlib $(LIBGLIB2_DEPS) $(D
 
 # -----------------------------------------------------------------------------
 
+ALSA-LIB_PATCH  = alsa-lib-$(ALSA-LIB_VER)-link_fix.patch
+ALSA-LIB_PATCH += alsa-lib-$(ALSA-LIB_VER).patch
+
 $(D)/alsa-lib: $(ARCHIVE)/$(ALSA-LIB_SOURCE)
 	$(REMOVE)/alsa-lib-$(ALSA-LIB_VER)
 	$(UNTAR)/$(ALSA-LIB_SOURCE)
 	$(CHDIR)/alsa-lib-$(ALSA-LIB_VER); \
-		$(PATCH)/alsa-lib-$(ALSA-LIB_VER)-link_fix.patch; \
-		$(PATCH)/alsa-lib-$(ALSA-LIB_VER).patch; \
+		$(call apply_patches, $(ALSA-LIB_PATCH)); \
 		$(CONFIGURE) \
 			--prefix= \
 			--datarootdir=/.remove \
