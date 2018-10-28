@@ -3,7 +3,7 @@
 #links
 links: $(SOURCE_DIR)/$(TUXBOX_PLUGINS) $(LIBPLUGINS)/links.so
 
-$(LIBPLUGINS)/links.so: $(D)/zlib $(D)/openssl $(D)/libpng $(D)/libjpeg $(D)/giflib $(LIBPLUGINS) $(VARCONF)
+$(LIBPLUGINS)/links.so: $(D)/zlib $(D)/openssl $(D)/libpng $(D)/libjpeg $(D)/giflib $(LIBPLUGINS) $(VARCONFIG)
 	$(REMOVE)/links
 	tar -C $(SOURCE_DIR)/$(TUXBOX_PLUGINS) -cp links --exclude-vcs | tar -C $(BUILD_TMP) -x
 	$(CHDIR)/links && \
@@ -33,17 +33,7 @@ $(LIBPLUGINS)/links.so: $(D)/zlib $(D)/openssl $(D)/libpng $(D)/libjpeg $(D)/gif
 		DESTDIR=$(TARGET_DIR) make install prefix=$(TARGET_DIR)
 	$(REMOVE)/links
 	mv -f $(BIN)/links $(LIBPLUGINS)/links.so
-	echo "name=Links Webbrowser"	 > $(LIBPLUGINS)/links.cfg
-	echo "desc=Webbrowser"		>> $(LIBPLUGINS)/links.cfg
-	echo "type=2"			>> $(LIBPLUGINS)/links.cfg
-	echo "needfb=1"			>> $(LIBPLUGINS)/links.cfg
-	echo "needrc=1"			>> $(LIBPLUGINS)/links.cfg
-	echo "needoffsets=1"		>> $(LIBPLUGINS)/links.cfg
-	echo "bookmarkcount=0"		 > $(VARCONF)/bookmarks
-	mkdir -p $(VARCONF)/links
-	touch $(VARCONF)/links/links.his
-	install -m644 $(IMAGEFILES)/scripts/tables.tar.gz $(VARCONF)/links/
-	install -m644 $(IMAGEFILES)/scripts/bookmarks.html $(VARCONF)/links/
+	cp -a $(IMAGEFILES)/links/* $(TARGET_DIR)/
 
 FritzBoxAction: convert
 	mkdir -p $(VARPLUGINS) && \
@@ -68,10 +58,10 @@ $(BIN)/logoview: $(BIN)
 
 #blockads
 blockads: $(SOURCE_DIR)/$(TUXBOX_PLUGINS) $(BIN)/blockad $(LIBPLUGINS)/blockads.so
-$(BIN)/blockad: $(D)/freetype $(BIN) $(VARCONF)
+$(BIN)/blockad: $(D)/freetype $(BIN) $(VARCONFIG)
 	pushd $(SOURCE_DIR)/$(TUXBOX_PLUGINS)/blockads && \
 	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) -I$(TARGET_INCLUDE_DIR)/freetype2 -lfreetype -lz $(CORTEX-STRINGS) -o $@ blockad.c globals.c http.c && \
-	install -m644 blockads.conf $(VARCONF)/
+	install -m644 blockads.conf $(VARCONFIG)/
 
 $(LIBPLUGINS)/blockads.so: $(LIBPLUGINS)
 	pushd $(SOURCE_DIR)/$(TUXBOX_PLUGINS)/blockads && \
