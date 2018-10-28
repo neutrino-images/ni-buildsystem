@@ -782,6 +782,8 @@ $(D)/sg3-utils: $(ARCHIVE)/sg3_utils-$(SG3-UTILS_VER).tar.xz | $(TARGET_DIR)
 		cp -a lib/.libs/libsgutils2.so.2.0.0 $(TARGET_LIB_DIR); \
 		cp -a lib/.libs/libsgutils2.so.2 $(TARGET_LIB_DIR); \
 		cp -a lib/.libs/libsgutils2.so $(TARGET_LIB_DIR)
+	install -D -m 755 $(IMAGEFILES)/scripts/sdX.init $(TARGET_DIR)/etc/init.d/sdX
+	ln -sf sdX $(TARGET_DIR)/etc/init.d/K97sdX
 	$(REMOVE)/sg3_utils-$(SG3-UTILS_VER)
 	$(TOUCH)
 

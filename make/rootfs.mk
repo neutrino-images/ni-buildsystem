@@ -115,7 +115,6 @@ endif
 		ln -sf fstab K99fstab && \
 		ln -sf fstab S01fstab && \
 		ln -sf syslogd K98syslogd && \
-		ln -sf sdX K97sdX && \
 		ln -sf crond S55crond && \
 		ln -sf crond K55crond && \
 		ln -sf inetd S53inetd && \
