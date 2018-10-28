@@ -79,6 +79,7 @@ plugins-hd1: # nothing to do
 plugins-hd2: # nothing to do
 
 plugins-hd51: \
+	links \
 	showiframe
 
 ################
