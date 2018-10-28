@@ -386,5 +386,9 @@ LIBDPF_SOURCE = dpf-ax-git-$(LIBDPF_VER).tar.bz2
 $(ARCHIVE)/$(LIBDPF_SOURCE):
 	get-git-archive.sh https://github.com/MaxWiesel/dpf-ax.git $(LIBDPF_VER) $(notdir $@) $(ARCHIVE)
 
+LINKS_VER = 2.17
+$(ARCHIVE)/links-$(LINKS_VER).tar.bz2:
+	$(WGET) http://links.twibright.com/download/links-$(LINKS_VER).tar.bz2
+
 $(ARCHIVE)/cacert.pem:
 	$(WGET) https://curl.haxx.se/ca/cacert.pem

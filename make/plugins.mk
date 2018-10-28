@@ -547,3 +547,39 @@ $(LIBPLUGINS)/shellexec.so: $(D)/freetype $(LIBPLUGINS) $(SHAREFLEX) $(VARCONFIG
 	mv -f $(LIBPLUGINS)/shellexec.cfg $(LIBPLUGINS)/00_shellexec.cfg
 	mv -f $(LIBPLUGINS)/shellexec_hint.png $(LIBPLUGINS)/00_shellexec_hint.png
 	ln -sf /lib/tuxbox/plugins/00_shellexec.so $(BIN)/shellexec
+
+# -----------------------------------------------------------------------------
+
+LINKS_PATCH  = links-$(LINKS_VER).patch
+LINKS_PATCH += links-$(LINKS_VER)-ac-prog-cxx.patch
+ifeq ($(BOXSERIES), hd51)
+LINKS_PATCH += links-$(LINKS_VER)-hd51-input.patch
+endif
+
+$(D)/links: $(D)/libpng $(D)/libjpeg $(D)/openssl $(ARCHIVE)/links-$(LINKS_VER).tar.bz2 $(LIBPLUGINS) | $(TARGET_DIR)
+	$(REMOVE)/links-$(LINKS_VER)
+	$(UNTAR)/links-$(LINKS_VER).tar.bz2
+	$(CHDIR)/links-$(LINKS_VER); \
+		$(call apply_patches,$(LINKS_PATCH)); \
+		autoreconf -vfi; \
+		$(CONFIGURE) \
+			--prefix= \
+			--mandir=$(BUILD_TMP)/.remove \
+			--enable-graphics \
+			--with-fb \
+			--with-libjpeg \
+			--with-ssl=$(TARGET_DIR) \
+			--without-atheos \
+			--without-directfb \
+			--without-libtiff \
+			--without-lzma \
+			--without-pmshell \
+			--without-svgalib \
+			--without-x \
+			; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	mv -f $(BIN)/links $(LIBPLUGINS)/links.so
+	cp -a $(IMAGEFILES)/links/* $(TARGET_DIR)/
+	$(REMOVE)/links-$(LINKS_VER)
+	$(TOUCH)

@@ -1,0 +1,16 @@
+--- a/configure.in
++++ b/configure.in
+@@ -16,9 +16,11 @@ image_formats="GIF PNG XBM"
+ AM_CONFIG_HEADER(config.h)
+ 
+ dnl Checks for programs.
+-AC_PROG_CC
++AC_PROG_CC_STDC
++AC_USE_SYSTEM_EXTENSIONS
++AC_SYS_LARGEFILE
+ 
+-dnl AC_PROG_CXX
++AC_PROG_CXX
+ dnl AC_PROG_AWK
+ dnl AM_PROG_LEX
+ dnl AC_PROG_YACC

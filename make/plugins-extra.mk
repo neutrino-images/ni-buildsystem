@@ -1,40 +1,5 @@
 # makefile for plugins (currently unused in ni-image)
 
-#links
-links: $(SOURCE_DIR)/$(TUXBOX_PLUGINS) $(LIBPLUGINS)/links.so
-
-$(LIBPLUGINS)/links.so: $(D)/zlib $(D)/openssl $(D)/libpng $(D)/libjpeg $(D)/giflib $(LIBPLUGINS) $(VARCONFIG)
-	$(REMOVE)/links
-	tar -C $(SOURCE_DIR)/$(TUXBOX_PLUGINS) -cp links --exclude-vcs | tar -C $(BUILD_TMP) -x
-	$(CHDIR)/links && \
-		export CC=$(TARGET)-gcc && \
-		export AR=$(TARGET)-ar && \
-		export NM=$(TARGET)-nm && \
-		export RANLIB=$(TARGET)-ranlib && \
-		export OBJDUMP=$(TARGET)-objdump && \
-		export STRIP=$(TARGET)-strip && \
-		export SYSROOT=$(TARGET_DIR) && \
-		export PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) && \
-		export LD_LIBRARY_PATH=$(TARGET_LIB_DIR) && \
-		export CFLAGS="$(TARGET_CFLAGS)" && \
-		export LIBS="$(TARGET_LDFLAGS) $(CORTEX-STRINGS)" && \
-		./configure \
-			--host=$(TARGET) \
-			--build=$(BUILD) \
-			--prefix= \
-			--mandir=$(BUILD_TMP)/.remove \
-			--without-svgalib \
-			--without-directfb \
-			--without-x \
-			--without-libtiff \
-			--enable-graphics \
-			--enable-javascript && \
-		$(MAKE) && \
-		DESTDIR=$(TARGET_DIR) make install prefix=$(TARGET_DIR)
-	$(REMOVE)/links
-	mv -f $(BIN)/links $(LIBPLUGINS)/links.so
-	cp -a $(IMAGEFILES)/links/* $(TARGET_DIR)/
-
 FritzBoxAction: convert
 	mkdir -p $(VARPLUGINS) && \
 	pushd $(SOURCES)/FritzBoxAction && \
