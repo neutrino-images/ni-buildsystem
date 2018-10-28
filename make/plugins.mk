@@ -80,6 +80,7 @@ plugins-hd2: # nothing to do
 
 plugins-hd51: \
 	links \
+	stb-startup \
 	showiframe
 
 ################
