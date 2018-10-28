@@ -62,7 +62,7 @@ $(BIN)/convert:
 logoview: $(SOURCE_DIR)/$(TUXBOX_PLUGINS) $(D)/neutrino $(BIN)/logoview
 $(BIN)/logoview: $(BIN)
 	pushd $(SOURCE_DIR)/$(TUXBOX_PLUGINS)/logoview && \
-	$(MAKE) logoview CROSS_CDK=$(CROSS_DIR) BUILDSYSTEM=$(BASE_DIR) N_HD_SOURCE=$(N_HD_SOURCE) TARGET=$(TARGET) && \
+	$(MAKE) logoview CROSS_CDK=$(CROSS_DIR) BUILDSYSTEM=$(BASE_DIR) N_HD_SOURCE=$(SOURCE_DIR)/$(NI_NEUTRINO) TARGET=$(TARGET) && \
 	install -m755 logoview $@ && \
 	$(MAKE) clean
 

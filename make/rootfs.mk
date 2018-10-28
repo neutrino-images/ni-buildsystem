@@ -7,15 +7,15 @@ rootfs: .version update.urls $(BOX) cleanup strip softlinks
 $(TARGET_DIR)/.version:
 	echo "version="$(IMAGE_TYPE)$(IMAGE_VERSION)$(IMAGE_DATE) > $@
 	# determinate last NI-release-tag an use this to git describe
-	GITTAG=`cd $(N_HD_SOURCE); git tag -l "NI-*" | tail -n1`; \
-	GITDESCRIBE=`cd $(N_HD_SOURCE); git describe --always --dirty --tags --match $$GITTAG`; \
+	GITTAG=`cd $(SOURCE_DIR)/$(NI_NEUTRINO); git tag -l "NI-*" | tail -n1`; \
+	GITDESCRIBE=`cd $(SOURCE_DIR)/$(NI_NEUTRINO); git describe --always --dirty --tags --match $$GITTAG`; \
 	GITDESCRIBE=$${GITDESCRIBE%-dirty}; \
 	echo "describe="$$GITDESCRIBE				>> $@
 	# determinate current branch in origin repo
-	BRANCH=`cd $(N_HD_SOURCE); git branch --no-color 2>/dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'`; \
+	BRANCH=`cd $(SOURCE_DIR)/$(NI_NEUTRINO); git branch --no-color 2>/dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'`; \
 	echo "branch="$$BRANCH					>> $@
 	# determinate last commit in origin repo
-	COMMIT=`cd $(N_HD_SOURCE); git fetch origin; git show origin/$(NI_NEUTRINO_BRANCH) --stat | grep ^commit | cut -d' ' -f2 | cut -c1-7`; \
+	COMMIT=`cd $(SOURCE_DIR)/$(NI_NEUTRINO); git fetch origin; git show origin/$(NI_NEUTRINO_BRANCH) --stat | grep ^commit | cut -d' ' -f2 | cut -c1-7`; \
 	echo "commit="$$COMMIT					>> $@
 	echo "builddate="`date`					>> $@
 	echo "creator=$(MAINTAINER)"				>> $@

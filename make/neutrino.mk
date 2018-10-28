@@ -97,21 +97,22 @@ N_BUILDENV = \
 	CXXFLAGS="$(N_CFLAGS)" \
 	LDFLAGS="$(N_LDFLAGS)"
 
-# finally we can build outside of the source directory
-N_OBJDIR = $(BUILD_TMP)/$(FLAVOUR)
+# -----------------------------------------------------------------------------
+
+N_OBJDIR = $(BUILD_TMP)/$(NI_NEUTRINO)
 LH_OBJDIR = $(BUILD_TMP)/$(NI_LIBSTB-HAL-NEXT)
 
 $(N_OBJDIR)/config.status: $(N_DEPS) $(MAKE_DIR)/neutrino.mk
 	test -d $(N_OBJDIR) || mkdir -p $(N_OBJDIR)
-	cd $(N_HD_SOURCE) && \
+	cd $(SOURCE_DIR)/$(NI_NEUTRINO) && \
 		git checkout $(NI_NEUTRINO_BRANCH)
-	$(N_HD_SOURCE)/autogen.sh
+	$(SOURCE_DIR)/$(NI_NEUTRINO)/autogen.sh
 	pushd $(N_OBJDIR) && \
 		test -e version.h || touch version.h && \
 		export PKG_CONFIG=$(PKG_CONFIG) && \
 		export PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) && \
 		$(N_BUILDENV) \
-		$(N_HD_SOURCE)/configure \
+		$(SOURCE_DIR)/$(NI_NEUTRINO)/configure \
 			--host=$(TARGET) \
 			--build=$(BUILD) \
 			--prefix= \
@@ -171,6 +172,8 @@ $(LH_OBJDIR)/config.status: $(LH_DEPS)
 			--with-target=cdk \
 			--with-boxtype=$(BOXMODEL)
 
+# -----------------------------------------------------------------------------
+
 NEUTRINO_INST_DIR ?= $(TARGET_DIR)
 $(D)/neutrino: $(N_OBJDIR)/config.status
 	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
@@ -186,6 +189,8 @@ $(D)/libstb-hal: $(LH_OBJDIR)/config.status
 	$(REWRITE_LIBTOOL)/libstb-hal.la
 	$(TOUCH)
 
+# -----------------------------------------------------------------------------
+
 neutrino-bin:
 ifeq ($(CLEAN), yes)
 	$(MAKE) neutrino-clean
@@ -198,6 +203,8 @@ ifneq ($(DEBUG), yes)
 	$(TARGET)-strip $(TARGET_DIR)/bin/neutrino
 endif
 	make done
+
+# -----------------------------------------------------------------------------
 
 neutrino-clean:
 	-make -C $(N_OBJDIR) uninstall

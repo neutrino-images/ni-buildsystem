@@ -130,7 +130,6 @@ endif
 MAKEFLAGS += --no-print-directory
 
 MAINTAINER   ?= NI-Team
-FLAVOUR      ?= ni-neutrino-hd
 WHOAMI       := $(shell id -un)
 ARCHIVE       = $(BASE_DIR)/download
 BUILD_TMP     = $(BASE_DIR)/build_tmp
@@ -161,7 +160,7 @@ STATIC_LIB_DIR = $(STATIC_DIR)/lib
 TARGET_LIB_DIR = $(TARGET_DIR)/lib
 TARGET_INCLUDE_DIR = $(TARGET_DIR)/include
 
-# certificates
+# ca-certificates
 CA_BUNDLE	= ca-certificates.crt
 CA_BUNDLE_DIR	= /etc/ssl/certs
 
@@ -241,7 +240,6 @@ TERM_YELLOW	= \033[40;0;33m
 TERM_YELLOW_BOLD= \033[40;1;33m
 TERM_NORMAL	= \033[0m
 
-N_HD_SOURCE ?= $(SOURCE_DIR)/$(FLAVOUR)
 USE_LIBSTB-HAL = no
 ifneq ($(BOXTYPE), coolstream)
   USE_LIBSTB-HAL = yes

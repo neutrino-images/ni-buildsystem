@@ -9,7 +9,7 @@ endif
 
 update-neutrino:
 	export GIT_MERGE_AUTOEDIT=no && \
-	cd $(N_HD_SOURCE) && \
+	cd $(SOURCE_DIR)/$(NI_NEUTRINO) && \
 		git checkout $(NI_NEUTRINO_BRANCH) && \
 		git pull origin $(NI_NEUTRINO_BRANCH) && \
 		git fetch
@@ -17,7 +17,7 @@ update-neutrino:
 update-remotes:
 ifeq ($(NI_ADMIN), true)
 	export GIT_MERGE_AUTOEDIT=no && \
-	cd $(N_HD_SOURCE) && \
+	cd $(SOURCE_DIR)/$(NI_NEUTRINO) && \
 		git checkout $(NI_NEUTRINO_BRANCH) && \
 		#git pull $(TUXBOX_REMOTE_REPO) $(TUXBOX_NEUTRINO_BRANCH) && \
 		git fetch $(TUXBOX_REMOTE_REPO)
@@ -74,7 +74,7 @@ push:
 ifeq ($(HAS_INTERNALS), yes)
 	cd $(BASE_DIR)/$(NI_INTERNALS) && git push
 endif
-	cd $(N_HD_SOURCE) && git push
+	cd $(SOURCE_DIR)/$(NI_NEUTRINO) && git push
 	cd $(BUILD-GENERIC-PC) && git push
 	cd $(SOURCE_DIR)/$(NI_DRIVERS-BIN) && git push
 	cd $(SOURCE_DIR)/$(NI_FFMPEG) && git push

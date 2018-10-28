@@ -6,7 +6,7 @@ TOOLCHECK += find-yacc find-flex find-tic find-pkg-config find-help2man
 TOOLCHECK += find-cmake find-ccache find-autopoint find-python find-curl
 TOOLCHECK += find-lzma find-gperf find-gettext find-bc
 
-preqs: download neutrino-hd-source ni-git
+preqs: download ni-git
 
 $(CCACHE):
 	@echo
@@ -25,14 +25,14 @@ download:
 	@echo
 	@false
 
-$(N_HD_SOURCE):
+$(SOURCE_DIR)/$(NI_NEUTRINO):
 	@echo ' ============================================================================== '
 	@echo "                          Cloning ni-neutrino-hd git repo"
 	@echo "                 	and creating remote repo '$(TUXBOX_REMOTE_REPO)'"
 	@echo ' ============================================================================== '
 	mkdir -p $(SOURCE_DIR)
 	cd $(SOURCE_DIR) && \
-		git clone $(NI_GIT)/$(NI_NEUTRINO).git $(FLAVOUR)
+		git clone $(NI_GIT)/$(notdir $@).git
 	pushd $@ && \
 		git remote add $(TUXBOX_REMOTE_REPO) $(TUXBOX_GIT)/$(TUXBOX_NEUTRINO).git && \
 		git fetch $(TUXBOX_REMOTE_REPO)
@@ -181,17 +181,16 @@ find-%:
 toolcheck: $(TOOLCHECK)
 	@echo "All required tools seem to be installed."
 
-neutrino-hd-source: $(N_HD_SOURCE)
-
 ni-git: \
 	$(BUILD-GENERIC-PC) \
 	$(SOURCE_DIR)/$(NI_DRIVERS-BIN) \
 	$(SOURCE_DIR)/$(NI_FFMPEG) \
 	$(SOURCE_DIR)/$(NI_LIBCOOLSTREAM) \
-	$(SOURCE_DIR)/$(NI_LIBSTB-HAL) \
 	$(SOURCE_DIR)/$(NI_LIBSTB-HAL-NEXT) \
+	$(SOURCE_DIR)/$(NI_LIBSTB-HAL) \
 	$(SOURCE_DIR)/$(NI_LINUX-KERNEL) \
 	$(SOURCE_DIR)/$(NI_LOGO-STUFF) \
+	$(SOURCE_DIR)/$(NI_NEUTRINO) \
 	$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) \
 	$(SOURCE_DIR)/$(NI_OFGWRITE) \
 	$(SOURCE_DIR)/$(NI_OPENTHREADS) \
