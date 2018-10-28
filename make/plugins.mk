@@ -4,34 +4,34 @@ TARGET_DIR ?= $(DESTDIR)
 
 # Some useful variables
 BIN		= $(TARGET_DIR)/bin
-ETCINIT		= $(TARGET_DIR)/etc/init.d
-LIBPLUG		= $(TARGET_DIR)/lib/tuxbox/plugins
+ETCINITD	= $(TARGET_DIR)/etc/init.d
+LIBPLUGINS	= $(TARGET_DIR)/lib/tuxbox/plugins
 SBIN		= $(TARGET_DIR)/sbin
-SHAREICONS	= $(TARGET_DIR)/share/tuxbox/neutrino/icons
 SHAREFLEX	= $(TARGET_DIR)/share/tuxbox/neutrino/flex
-SHAREPLUG	= $(TARGET_DIR)/share/tuxbox/neutrino/plugins
+SHAREICONS	= $(TARGET_DIR)/share/tuxbox/neutrino/icons
+SHAREPLUGINS	= $(TARGET_DIR)/share/tuxbox/neutrino/plugins
 SHARETHEMES	= $(TARGET_DIR)/share/tuxbox/neutrino/themes
 SHAREWEBRADIO	= $(TARGET_DIR)/share/tuxbox/neutrino/webradio
 SHAREWEBTV	= $(TARGET_DIR)/share/tuxbox/neutrino/webtv
 USRBIN		= $(TARGET_DIR)/usr/bin
-VARINIT		= $(TARGET_DIR)/var/etc/init.d
-VARPLUG		= $(TARGET_DIR)/var/tuxbox/plugins
-VARCONF		= $(TARGET_DIR)/var/tuxbox/config
+VARCONFIG	= $(TARGET_DIR)/var/tuxbox/config
+VARINITD	= $(TARGET_DIR)/var/etc/init.d
+VARPLUGINS	= $(TARGET_DIR)/var/tuxbox/plugins
 
 $(BIN) \
-$(ETCINIT) \
-$(LIBPLUG) \
+$(ETCINITD) \
+$(LIBPLUGINS) \
 $(SBIN) \
-$(SHAREICONS) \
 $(SHAREFLEX) \
-$(SHAREPLUG) \
+$(SHAREICONS) \
+$(SHAREPLUGINS) \
 $(SHARETHEMES) \
 $(SHAREWEBRADIO) \
 $(SHAREWEBTV) \
 $(USRBIN) \
-$(VARINIT) \
-$(VARPLUG) \
-$(VARCONF) : | $(TARGET_DIR)
+$(VARCONFIG) \
+$(VARINITD) \
+$(VARPLUGINS) : | $(TARGET_DIR)
 	mkdir -p $@
 
 init-scripts: \
@@ -92,10 +92,10 @@ scripts:
 ### init-scripts  ###
 #####################
 
-init-camd: $(ETCINIT)
-	install -m755 $(IMAGEFILES)/scripts/camd.init $(ETCINIT)/camd && \
-	install -m755 $(IMAGEFILES)/scripts/camd_datefix.init $(ETCINIT)/camd_datefix
-	cd $(ETCINIT) && \
+init-camd: $(ETCINITD)
+	install -m755 $(IMAGEFILES)/scripts/camd.init $(ETCINITD)/camd && \
+	install -m755 $(IMAGEFILES)/scripts/camd_datefix.init $(ETCINITD)/camd_datefix
+	cd $(ETCINITD) && \
 	ln -sf camd S99camd && \
 	ln -sf camd K01camd
 
@@ -114,17 +114,17 @@ lcd4linux-all: $(D)/lcd4linux | $(TARGET_DIR)
 	cp -a $(IMAGEFILES)/lcd4linux/* $(TARGET_DIR)/
 
 emmrd: $(SHAREICONS) $(BIN)/emmrd
-$(BIN)/emmrd: $(BIN) $(VARCONF) $(ETCINIT)
+$(BIN)/emmrd: $(BIN) $(VARCONFIG) $(ETCINITD)
 	pushd $(SOURCES)/emmrd && \
 	$(TARGET)-g++ -Wall $(TARGET_CFLAGS) $(TARGET_LDFLAGS) $(CORTEX-STRINGS) -o $@ emmremind.cpp  && \
-	install -m755 emmrd.init $(ETCINIT)/emmrd && \
+	install -m755 emmrd.init $(ETCINITD)/emmrd && \
 	install -m644 hint_emmrd.png $(SHAREICONS)/
-	cd $(ETCINIT) && \
+	cd $(ETCINITD) && \
 	ln -sf emmrd S99emmrd && \
 	ln -sf emmrd K01emmrd
 
 FritzCallMonitor: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(BIN)/FritzCallMonitor
-$(BIN)/FritzCallMonitor: $(D)/openssl $(D)/libcurl $(BIN) $(VARCONF) $(ETCINIT) $(SHAREICONS)
+$(BIN)/FritzCallMonitor: $(D)/openssl $(D)/libcurl $(BIN) $(VARCONFIG) $(ETCINITD) $(SHAREICONS)
 	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/FritzCallMonitor && \
 	$(TARGET)-gcc -Wall $(TARGET_CFLAGS) $(TARGET_LDFLAGS) \
 		\
@@ -134,16 +134,16 @@ $(BIN)/FritzCallMonitor: $(D)/openssl $(D)/libcurl $(BIN) $(VARCONF) $(ETCINIT) 
 		FritzCallMonitor.cpp \
 		\
 		-o $@ && \
-	install -m644 FritzCallMonitor.addr $(VARCONF)/ && \
-	install -m644 FritzCallMonitor.cfg $(VARCONF)/ && \
-	install -m755 fritzcallmonitor.init $(ETCINIT)/fritzcallmonitor && \
+	install -m644 FritzCallMonitor.addr $(VARCONFIG)/ && \
+	install -m644 FritzCallMonitor.cfg $(VARCONFIG)/ && \
+	install -m755 fritzcallmonitor.init $(ETCINITD)/fritzcallmonitor && \
 	install -m644 hint_FritzCallMonitor.png $(SHAREICONS)/
-	cd $(ETCINIT) && \
+	cd $(ETCINITD) && \
 	ln -sf fritzcallmonitor S99fritzcallmonitor && \
 	ln -sf fritzcallmonitor K01fritzcallmonitor
 
-FritzInfoMonitor: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(LIBPLUG)/FritzInfoMonitor.so
-$(LIBPLUG)/FritzInfoMonitor.so: $(D)/freetype $(D)/openssl $(D)/libcurl $(LIBPLUG)
+FritzInfoMonitor: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(LIBPLUGINS)/FritzInfoMonitor.so
+$(LIBPLUGINS)/FritzInfoMonitor.so: $(D)/freetype $(D)/openssl $(D)/libcurl $(LIBPLUGINS)
 	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/FritzInfoMonitor && \
 	$(TARGET)-gcc -Wall $(TARGET_CFLAGS) $(TARGET_LDFLAGS) \
 		-I$(N_OBJDIR) -I$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/include \
@@ -161,79 +161,79 @@ $(LIBPLUG)/FritzInfoMonitor.so: $(D)/freetype $(D)/openssl $(D)/libcurl $(LIBPLU
 		submenu.cpp \
 		\
 		-o $@ && \
-	install -m644 FritzInfoMonitor.cfg $(LIBPLUG)/ && \
-	install -m644 FritzInfoMonitor_hint.png $(LIBPLUG)/
+	install -m644 FritzInfoMonitor.cfg $(LIBPLUGINS)/ && \
+	install -m644 FritzInfoMonitor_hint.png $(LIBPLUGINS)/
 
-FritzInfoMonitor_setup: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(LIBPLUG)
-	install -m755 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/FritzInfoMonitor/FritzInfoMonitor_setup.lua $(LIBPLUG)/
-	install -m644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/FritzInfoMonitor/FritzInfoMonitor_setup.cfg $(LIBPLUG)/
-	install -m644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/FritzInfoMonitor/FritzInfoMonitor_setup_hint.png $(LIBPLUG)/
+FritzInfoMonitor_setup: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(LIBPLUGINS)
+	install -m755 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/FritzInfoMonitor/FritzInfoMonitor_setup.lua $(LIBPLUGINS)/
+	install -m644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/FritzInfoMonitor/FritzInfoMonitor_setup.cfg $(LIBPLUGINS)/
+	install -m644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/FritzInfoMonitor/FritzInfoMonitor_setup_hint.png $(LIBPLUGINS)/
 
 vinfo: $(BIN)/vinfo
 $(BIN)/vinfo: $(BIN)
 	pushd $(SOURCES)/vinfo && \
 	$(TARGET)-gcc $(TARGET_CFLAGS) -o $@ vinfo.c md5.c
 
-EPGscan: $(LIBPLUG) $(VARCONF)
-	install -m755 $(SOURCES)/EPGscan/*.sh $(LIBPLUG)/
-	install -m755 $(SOURCES)/EPGscan/*.lua $(LIBPLUG)/
-	install -m644 $(SOURCES)/EPGscan/*.cfg $(LIBPLUG)/
-	install -m644 $(SOURCES)/EPGscan/*_hint.png $(LIBPLUG)/
-	install -m644 $(SOURCES)/EPGscan/*.conf $(VARCONF)/
+EPGscan: $(LIBPLUGINS) $(VARCONFIG)
+	install -m755 $(SOURCES)/EPGscan/*.sh $(LIBPLUGINS)/
+	install -m755 $(SOURCES)/EPGscan/*.lua $(LIBPLUGINS)/
+	install -m644 $(SOURCES)/EPGscan/*.cfg $(LIBPLUGINS)/
+	install -m644 $(SOURCES)/EPGscan/*_hint.png $(LIBPLUGINS)/
+	install -m644 $(SOURCES)/EPGscan/*.conf $(VARCONFIG)/
 
-pr-auto-timer: $(LIBPLUG) $(VARCONF)
-	install -m755 $(SOURCES)/pr-auto-timer/auto-record-cleaner $(LIBPLUG)/
-	install -m644 $(SOURCES)/pr-auto-timer/auto-record-cleaner.conf.template $(VARCONF)/auto-record-cleaner.conf
-	install -m644 $(SOURCES)/pr-auto-timer/auto-record-cleaner.rules.template $(VARCONF)/auto-record-cleaner.rules
-	install -m755 $(SOURCES)/pr-auto-timer/pr-auto-timer.sh $(LIBPLUG)/
-	install -m644 $(SOURCES)/pr-auto-timer/pr-auto-timer.cfg $(LIBPLUG)/
-	install -m755 $(SOURCES)/pr-auto-timer/pr-auto-timer $(LIBPLUG)/
-	install -m644 $(SOURCES)/pr-auto-timer/pr-auto-timer_hint.png $(LIBPLUG)/
-	install -m644 $(SOURCES)/pr-auto-timer/pr-auto-timer.conf.template $(VARCONF)/pr-auto-timer.conf
-	install -m644 $(SOURCES)/pr-auto-timer/pr-auto-timer.rules.template $(VARCONF)/pr-auto-timer.rules
+pr-auto-timer: $(LIBPLUGINS) $(VARCONFIG)
+	install -m755 $(SOURCES)/pr-auto-timer/auto-record-cleaner $(LIBPLUGINS)/
+	install -m644 $(SOURCES)/pr-auto-timer/auto-record-cleaner.conf.template $(VARCONFIG)/auto-record-cleaner.conf
+	install -m644 $(SOURCES)/pr-auto-timer/auto-record-cleaner.rules.template $(VARCONFIG)/auto-record-cleaner.rules
+	install -m755 $(SOURCES)/pr-auto-timer/pr-auto-timer.sh $(LIBPLUGINS)/
+	install -m644 $(SOURCES)/pr-auto-timer/pr-auto-timer.cfg $(LIBPLUGINS)/
+	install -m755 $(SOURCES)/pr-auto-timer/pr-auto-timer $(LIBPLUGINS)/
+	install -m644 $(SOURCES)/pr-auto-timer/pr-auto-timer_hint.png $(LIBPLUGINS)/
+	install -m644 $(SOURCES)/pr-auto-timer/pr-auto-timer.conf.template $(VARCONFIG)/pr-auto-timer.conf
+	install -m644 $(SOURCES)/pr-auto-timer/pr-auto-timer.rules.template $(VARCONFIG)/pr-auto-timer.rules
 
-autoreboot: $(LIBPLUG)
-	install -m755 $(SOURCES)/$@/*.sh $(LIBPLUG)/
-	install -m644 $(SOURCES)/$@/*.cfg $(LIBPLUG)/
+autoreboot: $(LIBPLUGINS)
+	install -m755 $(SOURCES)/$@/*.sh $(LIBPLUGINS)/
+	install -m644 $(SOURCES)/$@/*.cfg $(LIBPLUGINS)/
 
-logo-addon: $(SOURCE_DIR)/$(NI_LOGO-STUFF) $(LIBPLUG)
-	install -m755 $(SOURCE_DIR)/$(NI_LOGO-STUFF)/logo-addon/*.sh $(LIBPLUG)/
-	install -m644 $(SOURCE_DIR)/$(NI_LOGO-STUFF)/logo-addon/*.cfg $(LIBPLUG)/
-	install -m644 $(SOURCE_DIR)/$(NI_LOGO-STUFF)/logo-addon/*.png $(LIBPLUG)/
+logo-addon: $(SOURCE_DIR)/$(NI_LOGO-STUFF) $(LIBPLUGINS)
+	install -m755 $(SOURCE_DIR)/$(NI_LOGO-STUFF)/logo-addon/*.sh $(LIBPLUGINS)/
+	install -m644 $(SOURCE_DIR)/$(NI_LOGO-STUFF)/logo-addon/*.cfg $(LIBPLUGINS)/
+	install -m644 $(SOURCE_DIR)/$(NI_LOGO-STUFF)/logo-addon/*.png $(LIBPLUGINS)/
 
-smarthomeinfo: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(LIBPLUG) $(VARCONF)
-	cp -a $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/$@/plugin/tuxbox/plugins/* $(LIBPLUG)/
-	cp -a $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/$@/plugin/tuxbox/config/* $(VARCONF)/
+smarthomeinfo: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(LIBPLUGINS) $(VARCONFIG)
+	cp -a $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/$@/plugin/tuxbox/plugins/* $(LIBPLUGINS)/
+	cp -a $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/$@/plugin/tuxbox/config/* $(VARCONFIG)/
 
-doscam-webif-skin: $(VARCONF)
+doscam-webif-skin: $(VARCONFIG)
 	mkdir -p $(TARGET_DIR)/share/doscam/tpl/
 	install -m644 $(SOURCES)/doscam-webif-skin/*.tpl $(TARGET_DIR)/share/doscam/tpl/
 	mkdir -p $(TARGET_DIR)/share/doscam/skin/
 	install -m644 $(SOURCES)/doscam-webif-skin/doscam_ni-dark.css $(TARGET_DIR)/share/doscam/skin
 
-mountpointmanagement: $(LIBPLUG)
-	install -m755 $(SOURCES)/mountpointmanagement/*.sh $(LIBPLUG)/
-	install -m755 $(SOURCES)/mountpointmanagement/*.so $(LIBPLUG)/
-	install -m644 $(SOURCES)/mountpointmanagement/*.cfg $(LIBPLUG)/
+mountpointmanagement: $(LIBPLUGINS)
+	install -m755 $(SOURCES)/mountpointmanagement/*.sh $(LIBPLUGINS)/
+	install -m755 $(SOURCES)/mountpointmanagement/*.so $(LIBPLUGINS)/
+	install -m644 $(SOURCES)/mountpointmanagement/*.cfg $(LIBPLUGINS)/
 
-EPGfilter: $(LIBPLUG)
-	install -m755 $(SOURCES)/EPGfilter/*.sri $(LIBPLUG)/
-	install -m755 $(SOURCES)/EPGfilter/*.lua $(LIBPLUG)/
-	install -m644 $(SOURCES)/EPGfilter/*.cfg $(LIBPLUG)/
-	install -m644 $(SOURCES)/EPGfilter/*.png $(LIBPLUG)/
+EPGfilter: $(LIBPLUGINS)
+	install -m755 $(SOURCES)/EPGfilter/*.sri $(LIBPLUGINS)/
+	install -m755 $(SOURCES)/EPGfilter/*.lua $(LIBPLUGINS)/
+	install -m644 $(SOURCES)/EPGfilter/*.cfg $(LIBPLUGINS)/
+	install -m644 $(SOURCES)/EPGfilter/*.png $(LIBPLUGINS)/
 
 dropbox_uploader: $(USRBIN)
 	install -m755 $(SOURCES)/$@/*.sh $(USRBIN)/
 
-openvpn-setup: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(LIBPLUG) $(ETCINIT)
-	cp -a $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/$@/$@* $(LIBPLUG)/
-	install -m755 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/$@/ovpn.init $(ETCINIT)/ovpn
+openvpn-setup: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(LIBPLUGINS) $(ETCINITD)
+	cp -a $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/$@/$@* $(LIBPLUGINS)/
+	install -m755 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/$@/ovpn.init $(ETCINITD)/ovpn
 
-neutrino-mediathek: $(LIBPLUG)
+neutrino-mediathek: $(LIBPLUGINS)
 	$(REMOVE)/$@
 	git clone https://github.com/neutrino-mediathek/mediathek.git $(BUILD_TMP)/$@
 	$(CHDIR)/$@; \
-		cp -a plugins/* $(LIBPLUG)/; \
+		cp -a plugins/* $(LIBPLUGINS)/; \
 		cp -a share $(TARGET_DIR)
 	$(REMOVE)/$@
 
@@ -244,8 +244,8 @@ userbouquets \
 stb-startup \
 netzkino \
 mtv \
-favorites2bin: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(LIBPLUG)
-	install -m755 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/$@/* $(LIBPLUG)/
+favorites2bin: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(LIBPLUGINS)
+	install -m755 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/$@/* $(LIBPLUGINS)/
 
 webradio: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(SHAREWEBRADIO)
 	install -m755 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/webradio/* $(SHAREWEBRADIO)/
@@ -288,7 +288,7 @@ $(BIN)/input: $(D)/freetype $(BIN)
 		-o $@
 
 #logomask
-logomask: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(BIN)/logomask $(LIBPLUG)/logoset.so $(LIBPLUG)/logomask.so
+logomask: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(BIN)/logomask $(LIBPLUGINS)/logoset.so $(LIBPLUGINS)/logomask.so
 $(BIN)/logomask: $(BIN)
 	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/logomask && \
 	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) \
@@ -300,7 +300,7 @@ $(BIN)/logomask: $(BIN)
 		-o $@ && \
 	install -m755 logomask.sh $(BIN)/
  
-$(LIBPLUG)/logoset.so: $(D)/freetype $(LIBPLUG)
+$(LIBPLUGINS)/logoset.so: $(D)/freetype $(LIBPLUGINS)
 	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/logomask && \
 	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) \
 		-I$(N_OBJDIR) -I$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/include \
@@ -314,10 +314,10 @@ $(LIBPLUG)/logoset.so: $(D)/freetype $(LIBPLUG)
 		text.c \
 		\
 		-o $@ && \
-	install -m644 logoset.cfg $(LIBPLUG)/ && \
-	install -m644 logoset_hint.png $(LIBPLUG)/
+	install -m644 logoset.cfg $(LIBPLUGINS)/ && \
+	install -m644 logoset_hint.png $(LIBPLUGINS)/
 
-$(LIBPLUG)/logomask.so: $(LIBPLUG) $(BIN)
+$(LIBPLUGINS)/logomask.so: $(LIBPLUGINS) $(BIN)
 	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/logomask && \
 	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) \
 		-I$(N_OBJDIR) -I$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/include \
@@ -325,8 +325,8 @@ $(LIBPLUG)/logomask.so: $(LIBPLUG) $(BIN)
 		starter_logomask.c \
 		\
 		-o $@ && \
-	install -m644 logomask.cfg $(LIBPLUG)/ && \
-	install -m644 logomask_hint.png $(LIBPLUG)/
+	install -m644 logomask.cfg $(LIBPLUGINS)/ && \
+	install -m644 logomask_hint.png $(LIBPLUGINS)/
 
 #msgbox
 msgbox: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(BIN)/msgbox
@@ -351,8 +351,8 @@ $(BIN)/msgbox: $(D)/freetype $(BIN)
 		-o $@
 
 #tuxcal
-tuxcal: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(BIN)/tuxcald $(LIBPLUG)/tuxcal.so
-$(BIN)/tuxcald: $(D)/freetype $(BIN) $(ETCINIT) $(VARCONF)
+tuxcal: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(BIN)/tuxcald $(LIBPLUGINS)/tuxcal.so
+$(BIN)/tuxcald: $(D)/freetype $(BIN) $(ETCINITD) $(VARCONFIG)
 	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/tuxcal/daemon && \
 	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) \
 		-I$(N_OBJDIR) -I$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/include \
@@ -363,15 +363,15 @@ $(BIN)/tuxcald: $(D)/freetype $(BIN) $(ETCINIT) $(VARCONF)
 		tuxcald.c \
 		\
 		-o $@ && \
-	install -m755 $(IMAGEFILES)/scripts/tuxcald.init $(ETCINIT)/tuxcald && \
-	cd $(ETCINIT) && \
+	install -m755 $(IMAGEFILES)/scripts/tuxcald.init $(ETCINITD)/tuxcald && \
+	cd $(ETCINITD) && \
 	ln -sf tuxcald S99tuxcald && \
 	ln -sf tuxcald K01tuxcald && \
 	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/tuxcal && \
-	mkdir -p $(VARCONF)/tuxcal && \
-	install -m644 tuxcal.conf $(VARCONF)/tuxcal/
+	mkdir -p $(VARCONFIG)/tuxcal && \
+	install -m644 tuxcal.conf $(VARCONFIG)/tuxcal/
 
-$(LIBPLUG)/tuxcal.so: $(LIBPLUG)
+$(LIBPLUGINS)/tuxcal.so: $(LIBPLUGINS)
 	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/tuxcal && \
 	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) \
 		-I$(N_OBJDIR) -I$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/include \
@@ -382,12 +382,12 @@ $(LIBPLUG)/tuxcal.so: $(LIBPLUG)
 		tuxcal.c \
 		\
 		-o $@ && \
-	install -m644 tuxcal.cfg $(LIBPLUG)/ && \
-	install -m644 tuxcal_hint.png $(LIBPLUG)/
+	install -m644 tuxcal.cfg $(LIBPLUGINS)/ && \
+	install -m644 tuxcal_hint.png $(LIBPLUGINS)/
 
 #tuxcom
-tuxcom: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(LIBPLUG)/tuxcom.so
-$(LIBPLUG)/tuxcom.so: $(D)/freetype $(LIBPLUG)
+tuxcom: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(LIBPLUGINS)/tuxcom.so
+$(LIBPLUGINS)/tuxcom.so: $(D)/freetype $(LIBPLUGINS)
 	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/tuxcom && \
 	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) \
 		-I$(N_OBJDIR) -I$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/include \
@@ -398,12 +398,12 @@ $(LIBPLUG)/tuxcom.so: $(D)/freetype $(LIBPLUG)
 		tuxcom.c \
 		\
 		-o $@ && \
-	install -m644 tuxcom.cfg $(LIBPLUG)/ && \
-	install -m644 tuxcom_hint.png $(LIBPLUG)/
+	install -m644 tuxcom.cfg $(LIBPLUGINS)/ && \
+	install -m644 tuxcom_hint.png $(LIBPLUGINS)/
 
 #tuxmail
-tuxmail: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(BIN)/tuxmaild $(LIBPLUG)/tuxmail.so
-$(BIN)/tuxmaild: $(D)/freetype $(D)/openssl $(BIN) $(ETCINIT) $(VARCONF)
+tuxmail: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(BIN)/tuxmaild $(LIBPLUGINS)/tuxmail.so
+$(BIN)/tuxmaild: $(D)/freetype $(D)/openssl $(BIN) $(ETCINITD) $(VARCONFIG)
 	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/tuxmail/daemon && \
 	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) \
 		-I$(N_OBJDIR) -I$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/include \
@@ -414,17 +414,17 @@ $(BIN)/tuxmaild: $(D)/freetype $(D)/openssl $(BIN) $(ETCINIT) $(VARCONF)
 		tuxmaild.c \
 		\
 		-o $@ && \
-	install -m755 $(IMAGEFILES)/scripts/tuxmaild.init $(ETCINIT)/tuxmaild && \
-	cd $(ETCINIT) && \
+	install -m755 $(IMAGEFILES)/scripts/tuxmaild.init $(ETCINITD)/tuxmaild && \
+	cd $(ETCINITD) && \
 	ln -sf tuxmaild S99tuxmaild && \
 	ln -sf tuxmaild K01tuxmaild && \
 	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/tuxmail && \
-	mkdir -p $(VARCONF)/tuxmail && \
-	install -m644 tuxmail.conf $(VARCONF)/tuxmail/ && \
+	mkdir -p $(VARCONFIG)/tuxmail && \
+	install -m644 tuxmail.conf $(VARCONFIG)/tuxmail/ && \
 	pushd $(IMAGEFILES)/scripts && \
-	install -m755 tuxmail.onreadmail $(VARCONF)/tuxmail/
+	install -m755 tuxmail.onreadmail $(VARCONFIG)/tuxmail/
 
-$(LIBPLUG)/tuxmail.so: $(LIBPLUG)
+$(LIBPLUGINS)/tuxmail.so: $(LIBPLUGINS)
 	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/tuxmail && \
 	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) \
 		-I$(N_OBJDIR) -I$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/include \
@@ -435,12 +435,12 @@ $(LIBPLUG)/tuxmail.so: $(LIBPLUG)
 		tuxmail.c \
 		\
 		-o $@ && \
-	install -m644 tuxmail.cfg $(LIBPLUG)/ && \
-	install -m644 tuxmail_hint.png $(LIBPLUG)/
+	install -m644 tuxmail.cfg $(LIBPLUGINS)/ && \
+	install -m644 tuxmail_hint.png $(LIBPLUGINS)/
 
 #tuxwetter
-tuxwetter: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(LIBPLUG)/tuxwetter.so
-$(LIBPLUG)/tuxwetter.so: $(D)/freetype $(D)/libcurl $(D)/giflib $(D)/libjpeg $(LIBPLUG) $(VARCONF)
+tuxwetter: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(LIBPLUGINS)/tuxwetter.so
+$(LIBPLUGINS)/tuxwetter.so: $(D)/freetype $(D)/libcurl $(D)/giflib $(D)/libjpeg $(LIBPLUGINS) $(VARCONFIG)
 	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/tuxwetter && \
 	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) \
 		-I$(N_OBJDIR) -I$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/include \
@@ -466,15 +466,15 @@ $(LIBPLUG)/tuxwetter.so: $(D)/freetype $(D)/libcurl $(D)/giflib $(D)/libjpeg $(L
 		tuxwetter.c \
 		\
 		-o $@; \
-	mkdir -p $(VARCONF)/tuxwetter/ && \
-	install -m644 tuxwetter.mcfg $(VARCONF)/tuxwetter/ && \
+	mkdir -p $(VARCONFIG)/tuxwetter/ && \
+	install -m644 tuxwetter.mcfg $(VARCONFIG)/tuxwetter/ && \
 	key=4cf30427c97b3bc5; \
-	sed -i "s|^LicenseKey=.*|LicenseKey=$$key|" $(VARCONF)/tuxwetter/tuxwetter.mcfg && \
-	install -m644 tuxwetter.conf $(VARCONF)/tuxwetter/ && \
-	install -m644 tuxwetter.png $(VARCONF)/tuxwetter/ && \
-	install -m644 convert.list $(VARCONF)/tuxwetter/ && \
-	install -m644 tuxwetter.cfg $(LIBPLUG)/ && \
-	install -m644 tuxwetter_hint.png $(LIBPLUG)/ && \
+	sed -i "s|^LicenseKey=.*|LicenseKey=$$key|" $(VARCONFIG)/tuxwetter/tuxwetter.mcfg && \
+	install -m644 tuxwetter.conf $(VARCONFIG)/tuxwetter/ && \
+	install -m644 tuxwetter.png $(VARCONFIG)/tuxwetter/ && \
+	install -m644 convert.list $(VARCONFIG)/tuxwetter/ && \
+	install -m644 tuxwetter.cfg $(LIBPLUGINS)/ && \
+	install -m644 tuxwetter_hint.png $(LIBPLUGINS)/ && \
 	ln -sf /lib/tuxbox/plugins/tuxwetter.so $(BIN)/tuxwetter
 
 #cooliTSclimax
@@ -491,8 +491,8 @@ $(BIN)/cooliTSclimax: $(D)/ffmpeg $(BIN)
 		-o $@
 
 # oscammon
-oscammon: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(D)/zlib $(D)/freetype $(D)/openssl $(LIBPLUG)/oscammon.so
-$(LIBPLUG)/oscammon.so: $(LIBPLUG) $(VARCONF)
+oscammon: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(D)/zlib $(D)/freetype $(D)/openssl $(LIBPLUGINS)/oscammon.so
+$(LIBPLUGINS)/oscammon.so: $(LIBPLUGINS) $(VARCONFIG)
 	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/oscammon && \
 	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) \
 		-I$(N_OBJDIR) -I$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/include \
@@ -503,9 +503,9 @@ $(LIBPLUG)/oscammon.so: $(LIBPLUG) $(VARCONF)
 		oscammon.c \
 		\
 		-o $@ && \
-	cp -f oscammon.conf $(VARCONF)/ && \
-	cp -f oscammon.cfg $(LIBPLUG)/ && \
-	cp -f oscammon_hint.png $(LIBPLUG)/
+	cp -f oscammon.conf $(VARCONFIG)/ && \
+	cp -f oscammon.cfg $(LIBPLUGINS)/ && \
+	cp -f oscammon_hint.png $(LIBPLUGINS)/
 
 # showiframe
 showiframe: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(BIN)/showiframe
@@ -519,8 +519,8 @@ $(BIN)/showiframe: $(BIN)
 	install -m755 showiframe.sh $(BIN)/
 
 # shellexec
-shellexec: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(LIBPLUG)/shellexec.so
-$(LIBPLUG)/shellexec.so: $(D)/freetype $(LIBPLUG) $(SHAREFLEX) $(VARCONF) $(BIN)
+shellexec: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(LIBPLUGINS)/shellexec.so
+$(LIBPLUGINS)/shellexec.so: $(D)/freetype $(LIBPLUGINS) $(SHAREFLEX) $(VARCONFIG) $(BIN)
 	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/shellexec; \
 	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) \
 		-I$(N_OBJDIR) -I$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/include \
@@ -538,12 +538,12 @@ $(LIBPLUG)/shellexec.so: $(D)/freetype $(LIBPLUG) $(SHAREFLEX) $(VARCONF) $(BIN)
 		text.c \
 		\
 		-o $@ && \
-	install -m644 shellexec.conf $(VARCONF)/ && \
-	install -m644 shellexec.cfg $(LIBPLUG)/ && \
-	install -m644 shellexec_hint.png $(LIBPLUG)/ && \
+	install -m644 shellexec.conf $(VARCONFIG)/ && \
+	install -m644 shellexec.cfg $(LIBPLUGINS)/ && \
+	install -m644 shellexec_hint.png $(LIBPLUGINS)/ && \
 	install -m644 flex_plugins.conf $(SHAREFLEX)/ && \
 	install -m644 flex_user.conf $(SHAREFLEX)/
-	mv -f $(LIBPLUG)/shellexec.so  $(LIBPLUG)/00_shellexec.so
-	mv -f $(LIBPLUG)/shellexec.cfg $(LIBPLUG)/00_shellexec.cfg
-	mv -f $(LIBPLUG)/shellexec_hint.png $(LIBPLUG)/00_shellexec_hint.png
+	mv -f $(LIBPLUGINS)/shellexec.so  $(LIBPLUGINS)/00_shellexec.so
+	mv -f $(LIBPLUGINS)/shellexec.cfg $(LIBPLUGINS)/00_shellexec.cfg
+	mv -f $(LIBPLUGINS)/shellexec_hint.png $(LIBPLUGINS)/00_shellexec_hint.png
 	ln -sf /lib/tuxbox/plugins/00_shellexec.so $(BIN)/shellexec

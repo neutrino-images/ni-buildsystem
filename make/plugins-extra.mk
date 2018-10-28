@@ -1,9 +1,9 @@
 # makefile for plugins (currently unused in ni-image)
 
 #links
-links: $(SOURCE_DIR)/$(TUXBOX_PLUGINS) $(LIBPLUG)/links.so
+links: $(SOURCE_DIR)/$(TUXBOX_PLUGINS) $(LIBPLUGINS)/links.so
 
-$(LIBPLUG)/links.so: $(D)/zlib $(D)/openssl $(D)/libpng $(D)/libjpeg $(D)/giflib $(LIBPLUG) $(VARCONF)
+$(LIBPLUGINS)/links.so: $(D)/zlib $(D)/openssl $(D)/libpng $(D)/libjpeg $(D)/giflib $(LIBPLUGINS) $(VARCONF)
 	$(REMOVE)/links
 	tar -C $(SOURCE_DIR)/$(TUXBOX_PLUGINS) -cp links --exclude-vcs | tar -C $(BUILD_TMP) -x
 	$(CHDIR)/links && \
@@ -32,13 +32,13 @@ $(LIBPLUG)/links.so: $(D)/zlib $(D)/openssl $(D)/libpng $(D)/libjpeg $(D)/giflib
 		$(MAKE) && \
 		DESTDIR=$(TARGET_DIR) make install prefix=$(TARGET_DIR)
 	$(REMOVE)/links
-	mv -f $(BIN)/links $(LIBPLUG)/links.so
-	echo "name=Links Webbrowser"	 > $(LIBPLUG)/links.cfg
-	echo "desc=Webbrowser"		>> $(LIBPLUG)/links.cfg
-	echo "type=2"			>> $(LIBPLUG)/links.cfg
-	echo "needfb=1"			>> $(LIBPLUG)/links.cfg
-	echo "needrc=1"			>> $(LIBPLUG)/links.cfg
-	echo "needoffsets=1"		>> $(LIBPLUG)/links.cfg
+	mv -f $(BIN)/links $(LIBPLUGINS)/links.so
+	echo "name=Links Webbrowser"	 > $(LIBPLUGINS)/links.cfg
+	echo "desc=Webbrowser"		>> $(LIBPLUGINS)/links.cfg
+	echo "type=2"			>> $(LIBPLUGINS)/links.cfg
+	echo "needfb=1"			>> $(LIBPLUGINS)/links.cfg
+	echo "needrc=1"			>> $(LIBPLUGINS)/links.cfg
+	echo "needoffsets=1"		>> $(LIBPLUGINS)/links.cfg
 	echo "bookmarkcount=0"		 > $(VARCONF)/bookmarks
 	mkdir -p $(VARCONF)/links
 	touch $(VARCONF)/links/links.his
@@ -46,9 +46,9 @@ $(LIBPLUG)/links.so: $(D)/zlib $(D)/openssl $(D)/libpng $(D)/libjpeg $(D)/giflib
 	install -m644 $(IMAGEFILES)/scripts/bookmarks.html $(VARCONF)/links/
 
 FritzBoxAction: convert
-	mkdir -p $(VARPLUG) && \
+	mkdir -p $(VARPLUGINS) && \
 	pushd $(SOURCES)/FritzBoxAction && \
-	cp -f FritzBoxAction $(VARPLUG)/ && \
+	cp -f FritzBoxAction $(VARPLUGINS)/ && \
 	mkdir -pv $(FLEX) && \
 	cp -f flex_FritzBoxAction.conf $(FLEX)/
 
@@ -67,16 +67,16 @@ $(BIN)/logoview: $(BIN)
 	$(MAKE) clean
 
 #blockads
-blockads: $(SOURCE_DIR)/$(TUXBOX_PLUGINS) $(BIN)/blockad $(LIBPLUG)/blockads.so
+blockads: $(SOURCE_DIR)/$(TUXBOX_PLUGINS) $(BIN)/blockad $(LIBPLUGINS)/blockads.so
 $(BIN)/blockad: $(D)/freetype $(BIN) $(VARCONF)
 	pushd $(SOURCE_DIR)/$(TUXBOX_PLUGINS)/blockads && \
 	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) -I$(TARGET_INCLUDE_DIR)/freetype2 -lfreetype -lz $(CORTEX-STRINGS) -o $@ blockad.c globals.c http.c && \
 	install -m644 blockads.conf $(VARCONF)/
 
-$(LIBPLUG)/blockads.so: $(LIBPLUG)
+$(LIBPLUGINS)/blockads.so: $(LIBPLUGINS)
 	pushd $(SOURCE_DIR)/$(TUXBOX_PLUGINS)/blockads && \
 	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) -I$(TARGET_INCLUDE_DIR)/freetype2 -lfreetype -lz $(CORTEX-STRINGS) -o $@ blockads.c gfx.c io.c text.c globals.c http.c && \
-	install -m644 blockads.cfg $(LIBPLUG)/
+	install -m644 blockads.cfg $(LIBPLUGINS)/
 
 stbup: $(BIN)/stbup
 $(BIN)/stbup: $(BIN)

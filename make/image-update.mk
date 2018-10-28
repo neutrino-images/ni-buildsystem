@@ -60,8 +60,8 @@ u-FritzInfoMonitor:
 	echo "/bin/sync"											>> $(POSTINSTALL_SH)
 	mkdir -pv $(UPDATE_INST_DIR)/var/tuxbox/config && \
 	mkdir -pv $(UPDATE_INST_DIR)/lib/tuxbox/plugins && \
-	cp -f $(LIBPLUG)/FritzInfoMonitor.cfg $(UPDATE_INST_DIR)/lib/tuxbox/plugins/ && \
-	cp -f $(LIBPLUG)/FritzInfoMonitor.so $(UPDATE_INST_DIR)/lib/tuxbox/plugins/ && \
+	cp -f $(LIBPLUGINS)/FritzInfoMonitor.cfg $(UPDATE_INST_DIR)/lib/tuxbox/plugins/ && \
+	cp -f $(LIBPLUGINS)/FritzInfoMonitor.so $(UPDATE_INST_DIR)/lib/tuxbox/plugins/ && \
 	cp -f $(TARGET_DIR)/var/tuxbox/config/FritzCallMonitor.cfg $(UPDATE_INST_DIR)/var/tuxbox/config/
 	$(MAKE) u-update-bin \
 			UPDATE_MD5FILE=$(UPDATE_MD5FILE-BOXMODEL) \
