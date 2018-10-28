@@ -120,13 +120,6 @@ endif
 		ln -sf crond K55crond && \
 		ln -sf inetd S53inetd && \
 		ln -sf inetd K80inetd
-	pushd $(BOX)/lib && \
-		ln -sf libcrypto.so.1.0.0 libcrypto.so.1.0.2 && \
-		ln -sf libssl.so.1.0.0 libssl.so.1.0.2 && \
-		ln -sf libcrypto.so.1.0.0 libcrypto.so.0.9.8 && \
-		ln -sf libssl.so.1.0.0 libssl.so.0.9.8 && \
-		ln -sf libcrypto.so.1.0.0 libcrypto.so.0.9.7 && \
-		ln -sf libssl.so.1.0.0 libssl.so.0.9.7
 	pushd $(BOX)/bin && \
 		ln -sf fbshot dboxshot
 	pushd $(BOX)/sbin && \

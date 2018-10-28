@@ -292,6 +292,10 @@ ifneq ($(BOXSERIES), hd51)
 endif
 	$(REMOVE)/openssl-$(OPENSSL_VER)
 	chmod 0755 $(TARGET_LIB_DIR)/libcrypto.so.* $(TARGET_LIB_DIR)/libssl.so.*
+	for version in 0.9.7 0.9.8 1.0.2; do \
+		ln -sf libcrypto.so.1.0.0 $(TARGET_LIB_DIR)/libcrypto.so.$$version; \
+		ln -sf libssl.so.1.0.0 $(TARGET_LIB_DIR)/libssl.so.$$version; \
+	done
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
