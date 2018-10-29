@@ -925,18 +925,18 @@ $(D)/libite: $(ARCHIVE)/libite-$(ITE_VER).tar.xz | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-LIBTIRP_PATCH  = libmad-pc-fix.diff
-LIBTIRP_PATCH += libmad-frame_length.diff
-LIBTIRP_PATCH += libmad-mips-h-constraint-removal.patch
-LIBTIRP_PATCH += libmad-remove-deprecated-cflags.patch
-LIBTIRP_PATCH += libmad-thumb2-fixed-arm.patch
-LIBTIRP_PATCH += libmad-thumb2-imdct-arm.patch
+LIBMAD_PATCH  = libmad-pc-fix.diff
+LIBMAD_PATCH += libmad-frame_length.diff
+LIBMAD_PATCH += libmad-mips-h-constraint-removal.patch
+LIBMAD_PATCH += libmad-remove-deprecated-cflags.patch
+LIBMAD_PATCH += libmad-thumb2-fixed-arm.patch
+LIBMAD_PATCH += libmad-thumb2-imdct-arm.patch
 
 $(D)/libmad: $(ARCHIVE)/libmad-$(LIBMAD_VER).tar.gz | $(TARGET_DIR)
 	$(REMOVE)/libmad-$(LIBMAD_VER)
 	$(UNTAR)/libmad-$(LIBMAD_VER).tar.gz
 	$(CHDIR)/libmad-$(LIBMAD_VER); \
-		$(call apply_patches, $(LIBTIRP_PATCH)); \
+		$(call apply_patches, $(LIBMAD_PATCH)); \
 		touch NEWS AUTHORS ChangeLog; \
 		autoreconf -fi; \
 		$(CONFIGURE) \
