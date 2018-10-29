@@ -1,0 +1,44 @@
+autofs-5.1.4 - fix program usage message
+
+From: Ian Kent <raven@themaw.net>
+
+There is a discrepancy between the list of options in the usage
+message of automount(8) and the options listed in the man page.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG          |    1 +
+ daemon/automount.c |    6 +++++-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index 70e043ee..f126de66 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -32,6 +32,7 @@ xx/xx/2018 autofs-5.1.5
+ - enable SIGUSR2 handling in rpm spec file.
+ - fix age setting at startup.
+ - fix update_negative_cache() map source usage.
++- fix program usage message.
+ 
+ 19/12/2017 autofs-5.1.4
+ - fix spec file url.
+diff --git a/daemon/automount.c b/daemon/automount.c
+index 99534295..05ec8a62 100644
+--- a/daemon/automount.c
++++ b/daemon/automount.c
+@@ -1893,9 +1893,13 @@ static void usage(void)
+ 		"	-h --help	this text\n"
+ 		"	-p --pid-file f write process id to file f\n"
+ 		"	-t --timeout n	auto-unmount in n seconds (0-disable)\n"
++		"	-M --master-wait n\n"
++	        "			maximum wait time (seconds) for master\n"
++	        "			map to become available\n"
+ 		"	-v --verbose	be verbose\n"
+ 		"	-d --debug	log debuging info\n"
+-		"	-D --define	define global macro variable\n"
++		"	-Dvariable=value, --define variable=value\n"
++		"			define global macro variable\n"
+ 		"	-f --foreground do not fork into background\n"
+ 		"	-r --random-multimount-selection\n"
+ 		"			use ramdom replicated server selection\n"

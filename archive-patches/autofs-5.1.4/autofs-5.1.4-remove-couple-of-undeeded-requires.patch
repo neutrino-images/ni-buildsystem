@@ -1,0 +1,38 @@
+autofs-5.1.4 - remove couple of undeeded requires
+
+From: Ian Kent <raven@themaw.net>
+
+Remove a couple of apparently undeeded Requires entries from the tar
+spec file.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG   |    1 +
+ autofs.spec |    2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index 2a551426..5e1bdf42 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -51,6 +51,7 @@ xx/xx/2018 autofs-5.1.5
+ - refactor negative map entry check.
+ - remove unused function dump_master().
+ - remove unused function dump_state_queue().
++- remove couple of undeeded requires.
+ 
+ 19/12/2017 autofs-5.1.4
+ - fix spec file url.
+diff --git a/autofs.spec b/autofs.spec
+index 6419e3e3..53654437 100644
+--- a/autofs.spec
++++ b/autofs.spec
+@@ -39,7 +39,7 @@ BuildRequires: libtirpc-devel
+ %endif
+ BuildRequires: autoconf, hesiod-devel, openldap-devel, bison, flex, cyrus-sasl-devel
+ Requires: chkconfig
+-Requires: /bin/bash mktemp sed textutils sh-utils grep /bin/ps
++Requires: /bin/bash sed grep /bin/ps
+ %if %{with_systemd}
+ Requires(post): systemd-sysv
+ Requires(post): systemd-units

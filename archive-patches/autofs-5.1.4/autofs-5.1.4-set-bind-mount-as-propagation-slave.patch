@@ -1,0 +1,73 @@
+autofs-5.1.4 - set bind mount as propagation slave
+
+From: Ian Kent <raven@themaw.net>
+
+When using a multi-mount with mount targets that are on the
+local machine and resulting bind mounts are made to a file
+system that is mount propagation shared (such as the root
+file system on systemd managed systems) the autofs offset
+mount triggers made within the bind mount will be propagated
+back to the target file system.
+
+When this happens the target of the offset (the unwanted
+propagated mount) is itself an autofs trigger mount and
+accessing the path results in a deadlock.
+
+In order for these multi-mounts to function properly in this
+case bind mounts that contain mount triggers must be set to
+propagation slave or private so the backward propagation
+doesn't occur.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG            |    1 +
+ modules/mount_bind.c |   16 +++++++++++++++-
+ 2 files changed, 16 insertions(+), 1 deletion(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index 42950d51..88829564 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -34,6 +34,7 @@ xx/xx/2018 autofs-5.1.5
+ - fix update_negative_cache() map source usage.
+ - fix program usage message.
+ - mark removed cache entry negative.
++- set bind mount as propagation slave.
+ 
+ 19/12/2017 autofs-5.1.4
+ - fix spec file url.
+diff --git a/modules/mount_bind.c b/modules/mount_bind.c
+index 5effa880..fe1ad9b6 100644
+--- a/modules/mount_bind.c
++++ b/modules/mount_bind.c
+@@ -20,6 +20,7 @@
+ #include <sys/param.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
++#include <sys/mount.h>
+ 
+ #define MODULE_MOUNT
+ #include "automount.h"
+@@ -183,8 +184,21 @@ int mount_mount(struct autofs_point *ap, const char *root, const char *name, int
+ 			debug(ap->logopt,
+ 			      MODPREFIX "mounted %s type %s on %s",
+ 			      what, fstype, fullpath);
+-			return 0;
+ 		}
++
++		/* The bind mount has succeeded but if the target
++		 * mount is propagation shared propagation of child
++		 * mounts (autofs offset mounts for example) back to
++		 * the target of the bind mount must be avoided or
++		 * autofs trigger mounts will deadlock.
++		 */
++		err = mount(NULL, fullpath, NULL, MS_SLAVE, NULL);
++		if (err)
++			warn(ap->logopt,
++			     "failed to set propagation type for %s",
++			     fullpath);
++
++		return 0;
+ 	} else {
+ 		char *cp;
+ 		char basepath[PATH_MAX];

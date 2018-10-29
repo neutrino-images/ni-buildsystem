@@ -1,0 +1,225 @@
+autofs-5.1.4 - use flags for startup boolean options
+
+From: Ian Kent <raven@themaw.net>
+
+The daemon uses a number of boolean flags each stored in unsigned int
+variables. But a single bit flag is sufficient storage for most of
+these flags.
+
+So use bit flags for these where possible.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG           |    1 +
+ daemon/automount.c  |   45 ++++++++++++++++++++++-----------------------
+ include/automount.h |    6 ++++++
+ lib/master.c        |    4 ++--
+ 4 files changed, 31 insertions(+), 25 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index b30e52c6..4c5f276e 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -45,6 +45,7 @@ xx/xx/2018 autofs-5.1.5
+ - remove autofs4 module load code.
+ - add NULL check in prepare_attempt_prefix().
+ - update build info with systemd.
++- use flags for startup boolean options.
+ 
+ 19/12/2017 autofs-5.1.4
+ - fix spec file url.
+diff --git a/daemon/automount.c b/daemon/automount.c
+index a99d6b33..d891562a 100644
+--- a/daemon/automount.c
++++ b/daemon/automount.c
+@@ -1195,7 +1195,7 @@ static int handle_packet(struct autofs_point *ap)
+ 	return -1;
+ }
+ 
+-static void become_daemon(unsigned foreground, unsigned daemon_check)
++static void become_daemon(unsigned int flags)
+ {
+ 	FILE *pidfp;
+ 	char buf[MAX_ERR_BUF];
+@@ -1210,8 +1210,8 @@ static void become_daemon(unsigned foreground, unsigned daemon_check)
+ 	}
+ 
+ 	/* Detach from foreground process */
+-	if (foreground) {
+-		if (daemon_check && !aquire_flag_file()) {
++	if (flags & DAEMON_FLAGS_FOREGROUND) {
++		if ((flags & DAEMON_FLAGS_CHECK_DAEMON) && !aquire_flag_file()) {
+ 			fprintf(stderr, "%s: program is already running.\n",
+ 				program);
+ 			exit(1);
+@@ -1238,7 +1238,7 @@ static void become_daemon(unsigned foreground, unsigned daemon_check)
+ 		}
+ 		close(start_pipefd[0]);
+ 
+-		if (daemon_check && !aquire_flag_file()) {
++		if ((flags & DAEMON_FLAGS_CHECK_DAEMON) && !aquire_flag_file()) {
+ 			fprintf(stderr, "%s: program is already running.\n",
+ 				program);
+ 			/* Return success if already running */
+@@ -2158,8 +2158,8 @@ int main(int argc, char *argv[])
+ {
+ 	int res, opt, status;
+ 	int logpri = -1;
+-	unsigned ghost, logging, daemon_check;
+-	unsigned dumpmaps, foreground, have_global_options;
++	unsigned int flags;
++	unsigned int logging;
+ 	unsigned master_read;
+ 	int master_wait;
+ 	time_t timeout;
+@@ -2202,17 +2202,15 @@ int main(int argc, char *argv[])
+ 
+ 	nfs_mount_uses_string_options = check_nfs_mount_version(&vers, &check);
+ 
++	flags = defaults_get_browse_mode() ? DAEMON_FLAGS_GHOST : 0;
++	flags |= DAEMON_FLAGS_CHECK_DAEMON;
++
+ 	kpkt_len = get_kpkt_len();
+ 	master_wait = defaults_get_master_wait();
+ 	timeout = defaults_get_timeout();
+-	ghost = defaults_get_browse_mode();
+ 	logging = defaults_get_logging();
+ 	global_selection_options = 0;
+ 	global_options = NULL;
+-	have_global_options = 0;
+-	foreground = 0;
+-	dumpmaps = 0;
+-	daemon_check = 1;
+ 
+ 	remove_empty_args(argv, &argc);
+ 
+@@ -2244,7 +2242,7 @@ int main(int argc, char *argv[])
+ 			break;
+ 
+ 		case 'f':
+-			foreground = 1;
++			flags |= DAEMON_FLAGS_FOREGROUND;
+ 			break;
+ 
+ 		case 'V':
+@@ -2260,7 +2258,7 @@ int main(int argc, char *argv[])
+ 			break;
+ 
+ 		case 'm':
+-			dumpmaps = 1;
++			flags |= DAEMON_FLAGS_DUMP_MAPS;
+ 			break;
+ 
+ 		case 'M':
+@@ -2268,9 +2266,9 @@ int main(int argc, char *argv[])
+ 			break;
+ 
+ 		case 'O':
+-			if (!have_global_options) {
++			if (!(flags & DAEMON_FLAGS_HAVE_GLOBAL_OPTIONS)) {
+ 				global_options = strdup(optarg);
+-				have_global_options = 1;
++				flags |= DAEMON_FLAGS_HAVE_GLOBAL_OPTIONS;
+ 				break;
+ 			}
+ 			printf("%s: global options already specified.\n",
+@@ -2295,7 +2293,7 @@ int main(int argc, char *argv[])
+ 			break;
+ 
+ 		case 'C':
+-			daemon_check = 0;
++			flags &= ~DAEMON_FLAGS_CHECK_DAEMON;
+ 			break;
+ 
+ 		case 'F':
+@@ -2346,7 +2344,8 @@ int main(int argc, char *argv[])
+ 	}
+ 
+ 	/* Don't need the kernel module just to look at the configured maps */
+-	if (!dumpmaps && (!query_kproto_ver() || get_kver_major() < 5)) {
++	if (!(flags & DAEMON_FLAGS_DUMP_MAPS) &&
++	   (!query_kproto_ver() || get_kver_major() < 5)) {
+ 		fprintf(stderr,
+ 			"%s: test mount forbidden or "
+ 			"incorrect kernel protocol version, "
+@@ -2377,7 +2376,7 @@ int main(int argc, char *argv[])
+ 	/* Get processor information for predefined escapes */
+ 	macro_init();
+ 
+-	if (dumpmaps) {
++	if (flags & DAEMON_FLAGS_DUMP_MAPS) {
+ 		struct master_mapent *entry;
+ 		struct list_head *head, *p;
+ 		struct mapent_cache *nc;
+@@ -2395,9 +2394,9 @@ int main(int argc, char *argv[])
+ 		}
+ 
+ 		if (master)
+-			master_list = master_new(NULL, timeout, ghost);
++			master_list = master_new(NULL, timeout, flags);
+ 		else
+-			master_list = master_new(master, timeout, ghost);
++			master_list = master_new(master, timeout, flags);
+ 		if (!master_list) {
+ 			printf("%s: can't create master map", program);
+ 			macro_free_global_table();
+@@ -2443,9 +2442,9 @@ int main(int argc, char *argv[])
+ 	}
+ 
+ 	if (argc == 0)
+-		master_list = master_new(NULL, timeout, ghost);
++		master_list = master_new(NULL, timeout, flags);
+ 	else
+-		master_list = master_new(argv[0], timeout, ghost);
++		master_list = master_new(argv[0], timeout, flags);
+ 
+ 	if (!master_list) {
+ 		printf("%s: can't create master map %s", program, argv[0]);
+@@ -2453,7 +2452,7 @@ int main(int argc, char *argv[])
+ 		exit(1);
+ 	}
+ 
+-	become_daemon(foreground, daemon_check);
++	become_daemon(flags);
+ 
+ 	if (pthread_attr_init(&th_attr)) {
+ 		logerr("%s: failed to init thread attribute struct!",
+diff --git a/include/automount.h b/include/automount.h
+index eccd16aa..848fd0be 100644
+--- a/include/automount.h
++++ b/include/automount.h
+@@ -66,6 +66,12 @@
+ #define SLOPPY
+ #endif
+ 
++#define DAEMON_FLAGS_FOREGROUND			0x0001
++#define DAEMON_FLAGS_HAVE_GLOBAL_OPTIONS	0x0004
++#define DAEMON_FLAGS_GHOST			0x0008
++#define DAEMON_FLAGS_CHECK_DAEMON		0x0010
++#define DAEMON_FLAGS_DUMP_MAPS			0x0020
++
+ #define AUTOFS_SUPER_MAGIC 0x00000187L
+ #define SMB_SUPER_MAGIC    0x0000517BL
+ #define CIFS_MAGIC_NUMBER  0xFF534D42L
+diff --git a/lib/master.c b/lib/master.c
+index 76717d57..ba5272f0 100644
+--- a/lib/master.c
++++ b/lib/master.c
+@@ -922,7 +922,7 @@ void master_free_mapent(struct master_mapent *entry)
+ 	return;
+ }
+ 
+-struct master *master_new(const char *name, unsigned int timeout, unsigned int ghost)
++struct master *master_new(const char *name, unsigned int timeout, unsigned int flags)
+ {
+ 	struct master *master;
+ 	char *tmp;
+@@ -948,7 +948,7 @@ struct master *master_new(const char *name, unsigned int timeout, unsigned int g
+ 	master->depth = 0;
+ 	master->reading = 0;
+ 	master->read_fail = 0;
+-	master->default_ghost = ghost;
++	master->default_ghost = flags & DAEMON_FLAGS_GHOST;
+ 	master->default_timeout = timeout;
+ 	master->default_logging = defaults_get_logging();
+ 	master->logopt = master->default_logging;

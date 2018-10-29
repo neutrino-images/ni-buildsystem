@@ -1,0 +1,45 @@
+autofs-5.1.4 - update build info with systemd
+
+From: Ian Kent <raven@themaw.net>
+
+Update the show_build_info() function to include systemd
+build info.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG          |    1 +
+ daemon/automount.c |    9 +++++++++
+ 2 files changed, 10 insertions(+)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index ad9932a2..b30e52c6 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -44,6 +44,7 @@ xx/xx/2018 autofs-5.1.5
+ - fix indent in automount(8) man page.
+ - remove autofs4 module load code.
+ - add NULL check in prepare_attempt_prefix().
++- update build info with systemd.
+ 
+ 19/12/2017 autofs-5.1.4
+ - fix spec file url.
+diff --git a/daemon/automount.c b/daemon/automount.c
+index 2c0def54..a99d6b33 100644
+--- a/daemon/automount.c
++++ b/daemon/automount.c
+@@ -1951,6 +1951,15 @@ static void show_build_info(void)
+ 	}
+ #endif
+ 
++#ifdef WITH_SYSTEMD
++	printf("WITH_SYSTEMD ");
++	count = count + 13;
++
++	if (count > 60) {
++		printf("\n  ");
++		count = 0;
++	}
++#endif
+ 
+ #ifdef WITH_HESIOD
+ 	printf("WITH_HESIOD ");

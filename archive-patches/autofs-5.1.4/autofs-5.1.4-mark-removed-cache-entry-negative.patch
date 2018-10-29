@@ -1,0 +1,68 @@
+autofs-5.1.4 - mark removed cache entry negative
+
+From: Ian Kent <raven@themaw.net>
+
+When re-reading a map, entries that have been removed are detected
+and deleted from the map entry cache by lookup_prune_cache().
+
+If a removed map entry is mounted at the time lookup_prune_cache()
+is called the map entry is skipped. This is done becuase the next
+lookup (following the mount expire, which needs the cache entry to
+remain) will detect the stale cache entry and a map update done
+resulting in the stale entry being removed.
+
+But if a map re-read is performed while the cache entry is mounted
+the cache will appear to up to date so the removed entry will remain
+valid even after it has expired.
+
+To cover this case it's sufficient to mark the mounted cache entry
+negative during the cache prune which prevents further lookups from
+using the stale entry.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG       |    1 +
+ daemon/lookup.c |   12 +++++++++---
+ 2 files changed, 10 insertions(+), 3 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index f126de66..42950d51 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -33,6 +33,7 @@ xx/xx/2018 autofs-5.1.5
+ - fix age setting at startup.
+ - fix update_negative_cache() map source usage.
+ - fix program usage message.
++- mark removed cache entry negative.
+ 
+ 19/12/2017 autofs-5.1.4
+ - fix spec file url.
+diff --git a/daemon/lookup.c b/daemon/lookup.c
+index 418f01cb..18df9352 100644
+--- a/daemon/lookup.c
++++ b/daemon/lookup.c
+@@ -1417,15 +1417,21 @@ void lookup_prune_one_cache(struct autofs_point *ap, struct mapent_cache *mc, ti
+ 		if (valid && valid->mc == mc) {
+ 			 /*
+ 			  * We've found a map entry that has been removed from
+-			  * the current cache so it isn't really valid.
++			  * the current cache so it isn't really valid. Set the
++			  * mapent negative to prevent further mount requests
++			  * using the cache entry.
+ 			  */
++			debug(ap->logopt, "removed map entry detected, mark negative");
++			if (valid->mapent) {
++				free(valid->mapent);
++				valid->mapent = NULL;
++			}
+ 			cache_unlock(valid->mc);
+ 			valid = NULL;
+ 		}
+ 		if (!valid &&
+ 		    is_mounted(_PATH_MOUNTED, path, MNTS_REAL)) {
+-			debug(ap->logopt,
+-			      "prune check posponed, %s mounted", path);
++			debug(ap->logopt, "prune posponed, %s mounted", path);
+ 			free(key);
+ 			free(path);
+ 			continue;

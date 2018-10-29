@@ -1,0 +1,38 @@
+autofs-5.1.4 - fix use after free in parse_ldap_config()
+
+From: Ian Kent <raven@themaw.net>
+
+Commit a4a2af5f30 (covarity fixes) incorrecly frees local variable
+authtype after assigning it to a lookup context structure member.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG             |    1 +
+ modules/lookup_ldap.c |    2 --
+ 2 files changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index 4765a66e..3bf86e84 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -36,6 +36,7 @@ xx/xx/2018 autofs-5.1.5
+ - mark removed cache entry negative.
+ - set bind mount as propagation slave.
+ - add master map pseudo options for mount propagation.
++- fix use after free in parse_ldap_config().
+ 
+ 19/12/2017 autofs-5.1.4
+ - fix spec file url.
+diff --git a/modules/lookup_ldap.c b/modules/lookup_ldap.c
+index 06c96973..911a34a5 100644
+--- a/modules/lookup_ldap.c
++++ b/modules/lookup_ldap.c
+@@ -1383,8 +1383,6 @@ auth_fail:
+ 		      user, secret ? "specified" : "unspecified",
+ 		      client_princ, client_cc);
+ 	}
+-	if (authtype)
+-		free(authtype);
+ out:
+ 	xmlFreeDoc(doc);
+ 	if (auth_conf)

@@ -1,0 +1,57 @@
+autofs-5.1.4 - remove unused function dump_state_queue()
+
+From: Ian Kent <raven@themaw.net>
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG      |    1 +
+ daemon/state.c |   24 ------------------------
+ 2 files changed, 1 insertion(+), 24 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index 32e34e35..2a551426 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -50,6 +50,7 @@ xx/xx/2018 autofs-5.1.5
+ - add systemd service command line option.
+ - refactor negative map entry check.
+ - remove unused function dump_master().
++- remove unused function dump_state_queue().
+ 
+ 19/12/2017 autofs-5.1.4
+ - fix spec file url.
+diff --git a/daemon/state.c b/daemon/state.c
+index 3d91f5b1..ca9534c4 100644
+--- a/daemon/state.c
++++ b/daemon/state.c
+@@ -52,30 +52,6 @@ void st_mutex_unlock(void)
+ 		fatal(status);
+ }
+ 
+-void dump_state_queue(void)
+-{
+-	struct list_head *head = &state_queue;
+-	struct list_head *p, *q;
+-
+-	logmsg("dumping queue");
+-
+-	list_for_each(p, head) {
+-		struct state_queue *entry;
+-
+-		entry = list_entry(p, struct state_queue, list);
+-		logmsg("queue list head path %s state %d busy %d",
+-		      entry->ap->path, entry->state, entry->busy);
+-
+-		list_for_each(q, &entry->pending) {
+-			struct state_queue *this;
+-
+-			this = list_entry(q, struct state_queue, pending);
+-			logmsg("queue list entry path %s state %d busy %d",
+-			      this->ap->path, this->state, this->busy);
+-		}
+-	}
+-}
+-
+ void nextstate(int statefd, enum states next)
+ {
+ 	char buf[MAX_ERR_BUF];

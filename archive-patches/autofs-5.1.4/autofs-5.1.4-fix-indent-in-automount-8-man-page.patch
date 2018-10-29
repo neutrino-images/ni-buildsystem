@@ -1,0 +1,39 @@
+autofs-5.1.4 - fix indent in automount(8) man page
+
+From: Ian Kent <raven@themaw.net>
+
+The .P paragraph directive resets paragraph indentation but
+the following sentence belongs to the comand line option
+above.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG       |    1 +
+ man/automount.8 |    2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index 8e9bd665..1a9296f5 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -41,6 +41,7 @@ xx/xx/2018 autofs-5.1.5
+ - fix amd parser opts option handling.
+ - fix possible NULL pointer dereference in get_defaults_entry().
+ - better handle hesiod support not built in.
++- fix indent in automount(8) man page.
+ 
+ 19/12/2017 autofs-5.1.4
+ - fix spec file url.
+diff --git a/man/automount.8 b/man/automount.8
+index 1e15ecd2..68d2aaa3 100644
+--- a/man/automount.8
++++ b/man/automount.8
+@@ -106,7 +106,7 @@ will lead to everything (debug logging) being logged witch can then also
+ be disabled, returning the daemon to verbose logging. This option can be
+ specified to change the logging priority of an already running automount
+ process.
+-.P
++
+ The \fIpath\fP argument corresponds to the automounted
+ path name as specified in the master map.
+ .TP

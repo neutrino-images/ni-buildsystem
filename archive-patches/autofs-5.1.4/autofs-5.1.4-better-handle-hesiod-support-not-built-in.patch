@@ -1,0 +1,138 @@
+autofs-5.1.4 - better handle hesiod support not built in
+
+From: Ian Kent <raven@themaw.net>
+
+The configure option --without-hesiod is not handled well.
+
+If this option is given and hesiod is seen in the master
+map parser or the amd map parser issue a message telling
+the user hesiod support isn't built in.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG           |    1 +
+ lib/master_parse.y  |   18 ++++++++++++++++--
+ modules/amd_parse.y |    7 +++++++
+ modules/parse_amd.c |   28 +++++++++++++++++++++++++---
+ 4 files changed, 49 insertions(+), 5 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index 5a317f12..8e9bd665 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -40,6 +40,7 @@ xx/xx/2018 autofs-5.1.5
+ - fix incorrect locking in sss lookup.
+ - fix amd parser opts option handling.
+ - fix possible NULL pointer dereference in get_defaults_entry().
++- better handle hesiod support not built in.
+ 
+ 19/12/2017 autofs-5.1.4
+ - fix spec file url.
+diff --git a/lib/master_parse.y b/lib/master_parse.y
+index 84ca5ca1..9aa57327 100644
+--- a/lib/master_parse.y
++++ b/lib/master_parse.y
+@@ -171,7 +171,14 @@ line:
+ 
+ 		if ((tmp = strchr($2, ',')))
+ 			*tmp++ = '\0';
+-
++#ifndef WITH_HESIOD
++		/* Map type or or map type parser is hesiod */
++		if (!strcmp($2, "hesiod") || !strcmp(tmp, "hesiod")) {
++			master_error("hesiod support not built in");
++			local_free_vars();
++			YYABORT;
++		}
++#endif
+ 		if (type)
+ 			free(type);
+ 		type = master_strdup($2);
+@@ -352,7 +359,14 @@ map:	PATH
+ 
+ 		if ((tmp = strchr($1, ',')))
+ 			*tmp++ = '\0';
+-
++#ifndef WITH_HESIOD
++		/* Map type or or map type parser is hesiod */
++		if (!strcmp($1, "hesiod") || !strcmp(tmp, "hesiod")) {
++			master_error("hesiod support not built in");
++			local_free_vars();
++			YYABORT;
++		}
++#endif
+ 		if (type)
+ 			free(type);
+ 		if (strcmp($1, "exec"))
+diff --git a/modules/amd_parse.y b/modules/amd_parse.y
+index be923c2f..17fd9b20 100644
+--- a/modules/amd_parse.y
++++ b/modules/amd_parse.y
+@@ -574,6 +574,13 @@ static int match_map_option_map_type(char *map_option, char *type)
+ 	    !strcmp(map_type, "nisplus") ||
+ 	    !strcmp(map_type, "ldap") ||
+ 	    !strcmp(map_type, "hesiod")) {
++#ifndef WITH_HESIOD
++		if (!strcmp(map_type, "hesiod")) {
++			amd_msg("hesiod support not built in");
++			free(map_type);
++			return 0;
++		}
++#endif
+ 		amd_set_value(&entry.map_type, map_type);
+ 	} else if (!strcmp(map_type, "exec")) {
+ 		/* autofs uses "program" for "exec" map type */
+diff --git a/modules/parse_amd.c b/modules/parse_amd.c
+index 7399d19e..0e48e5ce 100644
+--- a/modules/parse_amd.c
++++ b/modules/parse_amd.c
+@@ -1871,15 +1871,25 @@ struct amd_entry *make_default_entry(struct autofs_point *ap,
+ 	if (amd_parse_list(ap, defaults, &dflts, &sv))
+ 		return NULL;
+ 	defaults_entry = list_entry(dflts.next, struct amd_entry, list);
+-	list_del_init(&defaults_entry->list);
+ 	/*
+ 	 * If map type isn't given try to inherit from
+ 	 * parent. A NULL map type is valid and means
+ 	 * use configured nss sources.
+ 	 */
+ 	map_type = conf_amd_get_map_type(ap->path);
+-	if (map_type)
++	if (map_type) {
+ 		defaults_entry->map_type = map_type;
++#ifndef HAVE_HESIOD
++		if (!strcmp(map_type, "hesiod")) {
++			warn(ap->logopt, MODPREFIX
++			     "hesiod support not built in, "
++			     "defaults map entry not set");
++			defaults_entry = NULL;
++		}
++#endif
++	}
++	if (defaults_entry)
++		list_del_init(&defaults_entry->list);
+ 	/* The list should now be empty .... */
+ 	free_amd_entry_list(&dflts);
+ 	return defaults_entry;
+@@ -2005,8 +2015,20 @@ static struct amd_entry *get_defaults_entry(struct autofs_point *ap,
+ 			 * use configured nss sources.
+ 			 */
+ 			char *map_type = conf_amd_get_map_type(ap->path);
+-			if (map_type)
++			if (map_type) {
+ 				entry->map_type = map_type;
++#ifndef HAVE_HESIOD
++				if (!strcmp(map_type, "hesiod")) {
++					warn(ap->logopt, MODPREFIX
++					     "hesiod support not built in, "
++					     "attempting to use internal "
++					     "default");
++					free_amd_entry(entry);
++					free(expand);
++					goto out;
++				}
++#endif
++			}
+ 		}
+ 		free(expand);
+ 	}

@@ -1,0 +1,191 @@
+autofs-5.1.4 - add master map pseudo options for mount propagation
+
+From: Ian Kent <raven@themaw.net>
+
+Add master map entry pseudo mount option of "slave" or "private" to
+allow mount propagation of bind mounts to be set to either "slave" or
+"private".
+
+This option may be needed when using multi-mounts that have bind mounts
+that bind to a file system that is propagation shared. This is becuase
+the bind mount will have the same properties as its target which causes
+problems for offset mounts. When this happens an unwanted offset mount
+is propagated back to the target file system resulting in a deadlock
+when attempting to access the offset.
+
+By default bind mounts will inherit the mount propagation of the target
+file system.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG            |    1 +
+ include/automount.h  |    4 ++++
+ lib/master_parse.y   |   13 +++++++++++++
+ lib/master_tok.l     |    2 ++
+ man/auto.master.5.in |   12 ++++++++++++
+ modules/mount_bind.c |   30 +++++++++++++++++++-----------
+ 6 files changed, 51 insertions(+), 11 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index 88829564..4765a66e 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -35,6 +35,7 @@ xx/xx/2018 autofs-5.1.5
+ - fix program usage message.
+ - mark removed cache entry negative.
+ - set bind mount as propagation slave.
++- add master map pseudo options for mount propagation.
+ 
+ 19/12/2017 autofs-5.1.4
+ - fix spec file url.
+diff --git a/include/automount.h b/include/automount.h
+index e5c19d23..417dacbb 100644
+--- a/include/automount.h
++++ b/include/automount.h
+@@ -549,6 +549,10 @@ struct kernel_mod_version {
+ /* Read amd map even if it's not to be ghosted (browsable) */
+ #define MOUNT_FLAG_AMD_CACHE_ALL	0x0080
+ 
++/* Set mount propagation for bind mounts */
++#define MOUNT_FLAG_SLAVE		0x0100
++#define MOUNT_FLAG_PRIVATE		0x0200
++
+ struct autofs_point {
+ 	pthread_t thid;
+ 	char *path;			/* Mount point name */
+diff --git a/lib/master_parse.y b/lib/master_parse.y
+index 5d687a70..84ca5ca1 100644
+--- a/lib/master_parse.y
++++ b/lib/master_parse.y
+@@ -58,6 +58,8 @@ static char *format;
+ static long timeout;
+ static long negative_timeout;
+ static unsigned symlnk;
++static unsigned slave;
++static unsigned private;
+ static unsigned nobind;
+ static unsigned ghost;
+ extern unsigned global_selection_options;
+@@ -103,6 +105,7 @@ static int master_fprintf(FILE *, char *, ...);
+ %token MAP
+ %token OPT_TIMEOUT OPT_NTIMEOUT OPT_NOBIND OPT_NOGHOST OPT_GHOST OPT_VERBOSE
+ %token OPT_DEBUG OPT_RANDOM OPT_USE_WEIGHT OPT_SYMLINK OPT_MODE
++%token OPT_SLAVE OPT_PRIVATE
+ %token COLON COMMA NL DDASH
+ %type <strtype> map
+ %type <strtype> options
+@@ -196,6 +199,8 @@ line:
+ 	| PATH OPT_DEBUG { master_notify($1); YYABORT; }
+ 	| PATH OPT_TIMEOUT { master_notify($1); YYABORT; }
+ 	| PATH OPT_SYMLINK { master_notify($1); YYABORT; }
++	| PATH OPT_SLAVE { master_notify($1); YYABORT; }
++	| PATH OPT_PRIVATE { master_notify($1); YYABORT; }
+ 	| PATH OPT_NOBIND { master_notify($1); YYABORT; }
+ 	| PATH OPT_GHOST { master_notify($1); YYABORT; }
+ 	| PATH OPT_NOGHOST { master_notify($1); YYABORT; }
+@@ -600,6 +605,8 @@ option: daemon_option
+ daemon_option: OPT_TIMEOUT NUMBER { timeout = $2; }
+ 	| OPT_NTIMEOUT NUMBER { negative_timeout = $2; }
+ 	| OPT_SYMLINK	{ symlnk = 1; }
++	| OPT_SLAVE	{ slave = 1; }
++	| OPT_PRIVATE	{ private = 1; }
+ 	| OPT_NOBIND	{ nobind = 1; }
+ 	| OPT_NOGHOST	{ ghost = 0; }
+ 	| OPT_GHOST	{ ghost = 1; }
+@@ -672,6 +679,8 @@ static void local_init_vars(void)
+ 	timeout = -1;
+ 	negative_timeout = 0;
+ 	symlnk = 0;
++	slave = 0;
++	private = 0;
+ 	nobind = 0;
+ 	ghost = defaults_get_browse_mode();
+ 	random_selection = global_selection_options & MOUNT_FLAG_RANDOM_SELECT;
+@@ -878,6 +887,10 @@ int master_parse_entry(const char *buffer, unsigned int default_timeout, unsigne
+ 		entry->ap->flags |= MOUNT_FLAG_USE_WEIGHT_ONLY;
+ 	if (symlnk)
+ 		entry->ap->flags |= MOUNT_FLAG_SYMLINK;
++	if (slave)
++		entry->ap->flags |= MOUNT_FLAG_SLAVE;
++	if (private)
++		entry->ap->flags |= MOUNT_FLAG_PRIVATE;
+ 	if (negative_timeout)
+ 		entry->ap->negative_timeout = negative_timeout;
+ 	if (mode && mode < LONG_MAX)
+diff --git a/lib/master_tok.l b/lib/master_tok.l
+index 41ac4995..f4e940ce 100644
+--- a/lib/master_tok.l
++++ b/lib/master_tok.l
+@@ -389,6 +389,8 @@ MODE		(--mode{OPTWS}|--mode{OPTWS}={OPTWS})
+ 	-?symlink		{ return(OPT_SYMLINK); }
+ 	-?nobind		{ return(OPT_NOBIND); }
+ 	-?nobrowse		{ return(OPT_NOGHOST); }
++	-?slave			{ return(OPT_SLAVE); }
++	-?private		{ return(OPT_PRIVATE); }
+ 	-g|--ghost|-?browse	{ return(OPT_GHOST); }
+ 	-v|--verbose		{ return(OPT_VERBOSE); }
+ 	-d|--debug		{ return(OPT_DEBUG); }
+diff --git a/man/auto.master.5.in b/man/auto.master.5.in
+index e9afb97f..68242d45 100644
+--- a/man/auto.master.5.in
++++ b/man/auto.master.5.in
+@@ -199,6 +199,18 @@ entries only, either in the master map (so it effects all map entries)
+ or with individual map entries. The option is ignored for direct mounts
+ and non-root offest mount entries.
+ .TP
++.I slave \fPor\fI private
++This option allows mount propagation of bind mounts to be set to
++either \fIslave\fP or \fIprivate\fP. This option may be needed when using
++multi-mounts that have bind mounts that bind to a file system that is
++propagation shared. This is becuase the bind mount will have the same
++properties as its target which causes problems for offset mounts. When
++this happens an unwanted offset mount is propagated back to the target
++file system resulting in a deadlock when attempting to access the offset.
++This option is a an autofs pseudo mount option that can be used in the
++master map only. By default bind mounts will inherit the mount propagation
++of the target file system.
++.TP
+ .I "\-r, \-\-random-multimount-selection"
+ Enables the use of random selection when choosing a host from a
+ list of replicated servers. This option is applied to this mount
+diff --git a/modules/mount_bind.c b/modules/mount_bind.c
+index fe1ad9b6..b64cdccc 100644
+--- a/modules/mount_bind.c
++++ b/modules/mount_bind.c
+@@ -186,17 +186,25 @@ int mount_mount(struct autofs_point *ap, const char *root, const char *name, int
+ 			      what, fstype, fullpath);
+ 		}
+ 
+-		/* The bind mount has succeeded but if the target
+-		 * mount is propagation shared propagation of child
+-		 * mounts (autofs offset mounts for example) back to
+-		 * the target of the bind mount must be avoided or
+-		 * autofs trigger mounts will deadlock.
+-		 */
+-		err = mount(NULL, fullpath, NULL, MS_SLAVE, NULL);
+-		if (err)
+-			warn(ap->logopt,
+-			     "failed to set propagation type for %s",
+-			     fullpath);
++		if (ap->flags & (MOUNT_FLAG_SLAVE | MOUNT_FLAG_PRIVATE)) {
++			int flags = MS_SLAVE;
++
++			if (ap->flags & MOUNT_FLAG_PRIVATE)
++				flags = MS_PRIVATE;
++
++			/* The bind mount has succeeded but if the target
++			 * mount is propagation shared propagation of child
++			 * mounts (autofs offset mounts for example) back to
++			 * the target of the bind mount must be avoided or
++			 * autofs trigger mounts will deadlock.
++			 */
++			err = mount(NULL, fullpath, NULL, flags, NULL);
++			if (err) {
++				warn(ap->logopt,
++				     "failed to set propagation for %s",
++				     fullpath, root);
++			}
++		}
+ 
+ 		return 0;
+ 	} else {

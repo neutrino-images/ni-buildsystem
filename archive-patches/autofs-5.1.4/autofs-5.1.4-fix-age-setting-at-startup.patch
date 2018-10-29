@@ -1,0 +1,46 @@
+autofs-5.1.4 - fix age setting at startup
+
+From: Ian Kent <raven@themaw.net>
+
+Commit 2b567ace7d, which resets the master map list on startup
+before retrying a read, incorrectly sets age using time() when
+it should use monotonic_time().
+
+This causes lookup failures for submounts in cases where a master
+map read retry was needed.
+
+The failure happens because the mount entry age is greater than
+the map entry age which is meant to indicate the map is no longer
+valid which is not the case.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG          |    1 +
+ daemon/automount.c |    2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index 740f804f..c39aa0e5 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -30,6 +30,7 @@ xx/xx/2018 autofs-5.1.5
+ - change expire type naming to better reflect usage.
+ - use defines for expire type.
+ - enable SIGUSR2 handling in rpm spec file.
++- fix age setting at startup.
+ 
+ 19/12/2017 autofs-5.1.4
+ - fix spec file url.
+diff --git a/daemon/automount.c b/daemon/automount.c
+index 3fbfb9aa..99534295 100644
+--- a/daemon/automount.c
++++ b/daemon/automount.c
+@@ -2606,7 +2606,7 @@ int main(int argc, char *argv[])
+ 			 * we have anyway.
+ 			 */
+ 			do_master_list_reset(master_list);
+-			age = time(NULL);
++			age = monotonic_time(NULL);
+ 			master_read_master(master_list, age, 1);
+ 		}
+ 	}
