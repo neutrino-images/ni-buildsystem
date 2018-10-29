@@ -309,6 +309,7 @@ $(D)/ushare: $(ARCHIVE)/ushare-$(USHARE_VER).tar.bz2 $(D)/libupnp | $(TARGET_DIR
 		$(MAKE); \
 		$(MAKE) install; \
 		install -D -m 0644 $(IMAGEFILES)/scripts/ushare.conf $(TARGET_DIR)/etc/ushare.conf
+		sed -i 's|%(BOXTYPE)|$(BOXTYPE)|; s|%(BOXMODEL)|$(BOXMODEL)|' $(TARGET_DIR)/etc/ushare.conf
 		install -D -m 0755 $(IMAGEFILES)/scripts/ushare.init $(TARGET_DIR)/etc/init.d/ushare
 		ln -sf ushare $(TARGET_DIR)/etc/init.d/S99ushare
 		ln -sf ushare $(TARGET_DIR)/etc/init.d/K01ushare
