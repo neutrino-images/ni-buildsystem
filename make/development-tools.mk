@@ -6,6 +6,11 @@ valgrind: valgrind-$(BOXSERIES)
 
 # -----------------------------------------------------------------------------
 
+VALGRIND_VER = 3.13.0
+
+$(ARCHIVE)/valgrind-$(VALGRIND_VER).tar.bz2:
+	$(WGET) ftp://sourceware.org/pub/valgrind/valgrind-$(VALGRIND_VER).tar.bz2
+
 VALGRIND_PATCH  = valgrind-fix-$(BOXSERIES)-build.patch
 
 $(D)/valgrind-hd51 \
@@ -59,6 +64,11 @@ $(D)/valgrind-hd1:
 
 # -----------------------------------------------------------------------------
 
+STRACE_VER = 4.21
+
+$(ARCHIVE)/strace-$(STRACE_VER).tar.xz:
+	$(WGET) http://sourceforge.net/projects/strace/files/strace/$(STRACE_VER)/strace-$(STRACE_VER).tar.xz
+
 $(D)/strace: $(ARCHIVE)/strace-$(STRACE_VER).tar.xz | $(TARGET_DIR)
 	$(REMOVE)/strace-$(STRACE_VER)
 	$(UNTAR)/strace-$(STRACE_VER).tar.xz
@@ -76,6 +86,11 @@ $(D)/strace: $(ARCHIVE)/strace-$(STRACE_VER).tar.xz | $(TARGET_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
+
+GDB_VER = 8.1.1
+
+$(ARCHIVE)/gdb-$(GDB_VER).tar.xz:
+	$(WGET) http://ftp.gnu.org/gnu/gdb/gdb-$(GDB_VER).tar.xz
 
 $(D)/gdb: $(D)/zlib $(D)/libncurses $(ARCHIVE)/gdb-$(GDB_VER).tar.xz | $(TARGET_DIR)
 	$(REMOVE)/gdb-$(GDB_VER)

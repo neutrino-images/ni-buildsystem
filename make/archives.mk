@@ -32,10 +32,6 @@ LIBTIRPC_VER=1.0.2
 $(ARCHIVE)/libtirpc-$(LIBTIRPC_VER).tar.bz2:
 	$(WGET) http://sourceforge.net/projects/libtirpc/files/libtirpc/$(LIBTIRPC_VER)/libtirpc-$(LIBTIRPC_VER).tar.bz2
 
-STRACE_VER=4.21
-$(ARCHIVE)/strace-$(STRACE_VER).tar.xz:
-	$(WGET) http://sourceforge.net/projects/strace/files/strace/$(STRACE_VER)/strace-$(STRACE_VER).tar.xz
-
 MTD-UTILS_VER=2.0.2
 $(ARCHIVE)/mtd-utils-$(MTD-UTILS_VER).tar.bz2:
 	$(WGET) ftp://ftp.infradead.org/pub/mtd-utils/mtd-utils-$(MTD-UTILS_VER).tar.bz2
@@ -223,10 +219,6 @@ SMARTMON_VER=6.6
 $(ARCHIVE)/smartmontools-$(SMARTMON_VER).tar.gz:
 	$(WGET) http://downloads.sourceforge.net/project/smartmontools/smartmontools/$(SMARTMON_VER)/smartmontools-$(SMARTMON_VER).tar.gz
 
-GDB_VER=8.1.1
-$(ARCHIVE)/gdb-$(GDB_VER).tar.xz:
-	$(WGET) http://ftp.gnu.org/gnu/gdb/gdb-$(GDB_VER).tar.xz
-
 NANO_VER_MAJOR=3
 NANO_VER=$(NANO_VER_MAJOR).1
 $(ARCHIVE)/nano-$(NANO_VER).tar.gz:
@@ -301,10 +293,6 @@ ifneq ($(BASH_MICRO), 0)
 endif
 $(ARCHIVE)/bash-$(BASH_VER).tar.gz:
 	$(WGET) http://ftp.gnu.org/gnu/bash/bash-$(BASH_VER).tar.gz
-
-VALGRIND_VER=3.13.0
-$(ARCHIVE)/valgrind-$(VALGRIND_VER).tar.bz2:
-	$(WGET) ftp://sourceware.org/pub/valgrind/valgrind-$(VALGRIND_VER).tar.bz2
 
 CORTEX-STRINGS_VER=48fd30c346ff2ab14ca574b770b5c1bcbefadba8
 $(ARCHIVE)/cortex-strings-$(CORTEX-STRINGS_VER).tar.bz2:
