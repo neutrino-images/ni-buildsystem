@@ -447,7 +447,7 @@ $(D)/gnutls: $(D)/nettle $(D)/ca-bundle $(ARCHIVE)/$(GNUTLS_SOURCE)
 			--enable-local-libopts \
 			--with-libpthread-prefix=$(TARGET_DIR) \
 			--with-included-unistring \
-			--with-default-trust-store-dir=$(CA_BUNDLE_DIR)/ \
+			--with-default-trust-store-dir=$(CA-BUNDLE_DIR)/ \
 			--disable-guile \
 			--disable-doc \
 			--without-p11-kit \

@@ -161,8 +161,8 @@ TARGET_LIB_DIR = $(TARGET_DIR)/lib
 TARGET_INCLUDE_DIR = $(TARGET_DIR)/include
 
 # ca-certificates
-CA_BUNDLE	= ca-certificates.crt
-CA_BUNDLE_DIR	= /etc/ssl/certs
+CA-BUNDLE	= ca-certificates.crt
+CA-BUNDLE_DIR	= /etc/ssl/certs
 
 # create debug image
 DEBUG ?= no

@@ -147,7 +147,7 @@ $(D)/libcurl: $(D)/zlib $(D)/openssl $(D)/librtmp $(D)/ca-bundle $(ARCHIVE)/curl
 			--disable-ntlm-wb \
 			--disable-ares \
 			--without-libidn \
-			--with-ca-bundle=$(CA_BUNDLE_DIR)/$(CA_BUNDLE) \
+			--with-ca-bundle=$(CA-BUNDLE_DIR)/$(CA-BUNDLE) \
 			--with-random=/dev/urandom \
 			--with-ssl=$(TARGET_DIR) \
 			--with-librtmp=$(TARGET_DIR)/lib \

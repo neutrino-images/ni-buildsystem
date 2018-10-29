@@ -1243,5 +1243,5 @@ $(D)/popt: $(ARCHIVE)/$(POPT_SOURCE) | $(TARGET_DIR)
 # -----------------------------------------------------------------------------
 
 $(D)/ca-bundle: $(ARCHIVE)/cacert.pem | $(TARGET_DIR)
-	install -D -m 644 $(ARCHIVE)/cacert.pem $(TARGET_DIR)/$(CA_BUNDLE_DIR)/$(CA_BUNDLE)
+	install -D -m 644 $(ARCHIVE)/cacert.pem $(TARGET_DIR)/$(CA-BUNDLE_DIR)/$(CA-BUNDLE)
 	$(TOUCH)
