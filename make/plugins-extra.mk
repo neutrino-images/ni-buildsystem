@@ -1,18 +1,5 @@
 # makefile for plugins (currently unused in ni-image)
 
-FritzBoxAction: convert
-	mkdir -p $(VARPLUGINS) && \
-	pushd $(SOURCES)/FritzBoxAction && \
-	cp -f FritzBoxAction $(VARPLUGINS)/ && \
-	mkdir -pv $(FLEX) && \
-	cp -f flex_FritzBoxAction.conf $(FLEX)/
-
-convert: $(BIN)/convert
-$(BIN)/convert:
-	mkdir -p $(BIN) && \
-	pushd $(SOURCES)/FritzBoxAction/convert && \
-	$(TARGET)-gcc $(TARGET_CFLAGS) -o $@ convert.c
-
 #logoview
 logoview: $(SOURCE_DIR)/$(TUXBOX_PLUGINS) $(D)/neutrino $(BIN)/logoview
 $(BIN)/logoview: $(BIN)
