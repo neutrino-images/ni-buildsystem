@@ -78,6 +78,7 @@ $(D)/libupnp: $(ARCHIVE)/libupnp-$(LIBUPNP_VER).tar.bz2 | $(TARGET_DIR)
 # -----------------------------------------------------------------------------
 
 LIBDVBSI_PATCH  = libdvbsi++-content_identifier_descriptor.patch
+LIBDVBSI_PATCH += libdvbsi++-fix-descriptorLenghth.patch
 
 $(D)/libdvbsi: | $(TARGET_DIR)
 	$(REMOVE)/libdvbsi++
