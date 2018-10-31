@@ -793,15 +793,18 @@ $(D)/sg3-utils: $(ARCHIVE)/sg3_utils-$(SG3-UTILS_VER).tar.xz | $(TARGET_DIR)
 FBSHOT_PATCH  = fbshot-32bit_cs_fb.diff
 FBSHOT_PATCH += fbshot_cs_hd2.diff
 
-fbshot: $(TARGET_DIR)/bin/fbshot
-$(TARGET_DIR)/bin/fbshot: $(D)/libpng $(ARCHIVE)/fbshot-$(FBSHOT_VER).tar.gz | $(TARGET_DIR)
+$(D)/fbshot: $(D)/libpng $(ARCHIVE)/fbshot-$(FBSHOT_VER).tar.gz | $(TARGET_DIR)
 	$(REMOVE)/fbshot-$(FBSHOT_VER)
 	$(UNTAR)/fbshot-$(FBSHOT_VER).tar.gz
 	$(CHDIR)/fbshot-$(FBSHOT_VER); \
 		$(call apply_patches, $(FBSHOT_PATCH)); \
-		$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) fbshot.c -lpng -lz -o $@
-	$(REMOVE)/fbshot-$(FBSHOT_VER)
+		sed -i 's|	gcc |	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) |' Makefile; \
+		sed -i '/strip fbshot/d' Makefile; \
+		$(MAKE) all; \
+		install -D -m 755 fbshot $(TARGET_DIR)/bin/fbshot
 	ln -sf fbshot $(TARGET_DIR)/bin/dboxshot
+	$(REMOVE)/fbshot-$(FBSHOT_VER)
+	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
