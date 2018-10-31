@@ -802,7 +802,6 @@ $(D)/fbshot: $(D)/libpng $(ARCHIVE)/fbshot-$(FBSHOT_VER).tar.gz | $(TARGET_DIR)
 		sed -i '/strip fbshot/d' Makefile; \
 		$(MAKE) all; \
 		install -D -m 755 fbshot $(TARGET_DIR)/bin/fbshot
-	ln -sf fbshot $(TARGET_DIR)/bin/dboxshot
 	$(REMOVE)/fbshot-$(FBSHOT_VER)
 	$(TOUCH)
 
