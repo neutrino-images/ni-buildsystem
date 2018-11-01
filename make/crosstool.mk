@@ -3,23 +3,15 @@
 crosstool: crosstool-$(BOXARCH)-$(BOXSERIES)
 
 crosstools:
-	make crosstool-arm-hd1 BOXSERIES=hd1
-	make crosstool-arm-hd2 BOXSERIES=hd2
-	make crosstool-arm-hd51 BOXSERIES=hd51
+	for boxseries in hd1 hd2 hd51; do \
+		make BOXSERIES=$${boxseries} crosstool-arm-$${boxseries} || exit; \
+	done;
 
 crosstools-renew:
-	make ccache-clean BOXSERIES=hd1
-	make static-clean BOXSERIES=hd1
-	rm -rf $(BASE_DIR)/cross/$(BOXARCH)/hd1
-	make ccache-clean BOXSERIES=hd2
-	make static-clean BOXSERIES=hd2
-	rm -rf $(BASE_DIR)/cross/$(BOXARCH)/hd2
-	make ccache-clean BOXSERIES=hd51
-	make static-clean BOXSERIES=hd51
-	rm -rf $(BASE_DIR)/cross/$(BOXARCH)/hd51
-	rm -rf $(HOST_DIR)/bin/arm-*
-	rm -rf $(HOST_DIR)/bin/pkg-config
-	rm -rf $(BASE_DIR)/static
+	for boxseries in hd1 hd2 hd51; do \
+		make BOXSERIES=$${boxseries} ccache-clean static-clean cross-clean || exit; \
+	done;
+	make host-clean
 	make crosstools
 	make bootstrap
 	make clean
@@ -37,7 +29,7 @@ crosstool-arm-hd1: CROSS_DIR-check $(SOURCE_DIR)/$(NI_LINUX-KERNEL)
 			popd && \
 		tar cf linux-$(KERNEL_VERSION).tar --exclude-vcs -C $(SOURCE_DIR)/$(NI_LINUX-KERNEL) . && \
 		mv linux-$(KERNEL_VERSION).tar $(BUILD_TMP)/crosstool-ng/targets/src/ && \
-		cp -a $(CONFIGS)/ct-ng-coolstream_hd1.config .config && \
+		cp -a $(CONFIGS)/ct-ng-$(BOXTYPE)-$(BOXSERIES).config .config && \
 		sed -i "s@^CT_PARALLEL_JOBS=.*@CT_PARALLEL_JOBS=$(NUM_CPUS)@" .config && \
 		export NI_BASE_DIR=$(BASE_DIR) && \
 		export NI_CUSTOM_KERNEL=$(BUILD_TMP)/crosstool-ng/targets/src/linux-$(KERNEL_VERSION).tar && \
@@ -68,7 +60,7 @@ crosstool-arm-hd2: CROSS_DIR-check $(ARCHIVE)/gcc-linaro-$(GCC_VER).tar.xz $(SOU
 			popd && \
 		tar cf linux-$(KERNEL_VERSION).tar --exclude-vcs -C $(SOURCE_DIR)/$(NI_LINUX-KERNEL) . && \
 		mv linux-$(KERNEL_VERSION).tar $(BUILD_TMP)/crosstool-ng/targets/src/ && \
-		cp -a $(CONFIGS)/ct-ng-coolstream_hd2.config .config && \
+		cp -a $(CONFIGS)/ct-ng-$(BOXTYPE)-$(BOXSERIES).config .config && \
 		sed -i "s@^CT_PARALLEL_JOBS=.*@CT_PARALLEL_JOBS=$(NUM_CPUS)@" .config && \
 		export NI_BASE_DIR=$(BASE_DIR) && \
 		export NI_CUSTOM_KERNEL=$(BUILD_TMP)/crosstool-ng/targets/src/linux-$(KERNEL_VERSION).tar && \
@@ -99,7 +91,7 @@ crosstool-arm-hd51: CROSS_DIR-check
 			popd && \
 		tar cf linux-$(KERNEL_VERSION).tar --exclude-vcs -C $(SOURCE_DIR)/$(NI_LINUX-KERNEL) . && \
 		mv linux-$(KERNEL_VERSION).tar $(BUILD_TMP)/crosstool-ng/targets/src/ && \
-		cp -a $(CONFIGS)/ct-ng-armbox_hd51.config .config && \
+		cp -a $(CONFIGS)/ct-ng-$(BOXTYPE)-$(BOXSERIES).config .config && \
 		sed -i "s@^CT_PARALLEL_JOBS=.*@CT_PARALLEL_JOBS=$(NUM_CPUS)@" .config && \
 		export NI_BASE_DIR=$(BASE_DIR) && \
 		export NI_CUSTOM_KERNEL=$(BUILD_TMP)/crosstool-ng/targets/src/linux-$(KERNEL_VERSION).tar && \
