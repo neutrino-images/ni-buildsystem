@@ -13,7 +13,6 @@ crosstools-renew:
 	done;
 	make host-clean
 	make crosstools
-	make bootstrap
 	make clean
 
 crosstool-arm-hd1: CROSS_DIR-check $(SOURCE_DIR)/$(NI_LINUX-KERNEL)
