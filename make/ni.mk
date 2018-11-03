@@ -9,21 +9,25 @@ ifneq ($(DEBUG), yes)
 	BOXSERIES_UPDATE += hd1
 endif
 
+neutrino-update \
 ni-neutrino-update:
 	make u-neutrino
 
+neutrino-updates \
 ni-neutrino-updates:
 	for boxseries in $(BOXSERIES_UPDATE); do \
-		$(MAKE) BOXSERIES=$${boxseries} clean ni-neutrino-update || exit; \
+		$(MAKE) BOXSERIES=$${boxseries} clean neutrino-update || exit; \
 	done;
 	make clean
 
+neutrino-full-update \
 ni-neutrino-full-update:
 	make u-neutrino-full
 
+neutrino-full-updates \
 ni-neutrino-full-updates:
 	for boxseries in $(BOXSERIES_UPDATE); do \
-		$(MAKE) BOXSERIES=$${boxseries} clean ni-neutrino-full-update || exit; \
+		$(MAKE) BOXSERIES=$${boxseries} clean neutrino-full-update || exit; \
 	done;
 	make clean
 
@@ -33,15 +37,17 @@ BOXMODEL_IMAGE = apollo kronos kronos_v2 hd51
 ifneq ($(DEBUG), yes)
 	BOXMODEL_IMAGE += nevis
 endif
+images \
 ni-images:
 	for boxmodel in $(BOXMODEL_IMAGE); do \
-		$(MAKE) BOXMODEL=$${boxmodel} clean ni-image || exit; \
+		$(MAKE) BOXMODEL=$${boxmodel} clean image || exit; \
 	done;
 	make clean
 
 personalized-image:
-	make ni-image PERSONALIZE=yes
+	make image PERSONALIZE=yes
 
+image \
 ni-image:
 	@echo "starting 'make $@' build with "$(NUM_CPUS)" threads!"
 	make -j$(NUM_CPUS) neutrino
@@ -107,7 +113,7 @@ endif
 	make scripts
 	make init-scripts
 	make rootfs
-	make images
+	make flash-image
 	@make done
 
 # -----------------------------------------------------------------------------
@@ -131,11 +137,11 @@ changelogs:
 # -----------------------------------------------------------------------------
 
 PHONY += init
-PHONY += ni-neutrino-update
-PHONY += ni-neutrino-updates
-PHONY += ni-neutrino-full-update
-PHONY += ni-neutrino-full-updates
-PHONY += ni-images
+PHONY += neutrino-update ni-neutrino-update
+PHONY += neutrino-updates ni-neutrino-updates
+PHONY += neutrino-full-update ni-neutrino-full-update
+PHONY += neutrino-full-updates ni-neutrino-full-updates
+PHONY += images ni-images
 PHONY += personalized-image
-PHONY += ni-image
+PHONY += image ni-image
 PHONY += changelogs

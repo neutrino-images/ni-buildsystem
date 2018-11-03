@@ -93,7 +93,7 @@ devtable-remove:
 
 # -----------------------------------------------------------------------------
 
-images:
+flash-image:
 ifeq ($(BOXMODEL), nevis)
 	make flash-image-cst ERASE_SIZE=0x20000 BOXNAME="HD1, BSE, Neo, Neo², Zee"
 endif

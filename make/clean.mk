@@ -11,17 +11,26 @@ staging-clean:
 static-clean:
 	-rm -rf $(STATIC_DIR)
 
+static-base-clean:
+	-rm -rf $(STATIC_BASE)
+
 cross-clean:
 	-rm -rf $(CROSS_DIR)
+
+cross-base-clean:
+	-rm -rf $(CROSS_BASE)
 
 host-clean:
 	-rm -rf $(HOST_DIR)
 
-all-clean: rebuild-clean staging-clean static-clean
-	@echo -e "\n$(TERM_RED_BOLD)Any other key then CTRL-C will now remove CROSS_DIR and HOST_DIR$(TERM_NORMAL)"
+ccache-clean:
+	@echo "Clearing $$CCACHE_DIR"
+	@$(CCACHE) -C
+
+all-clean: rebuild-clean staging-clean host-clean static-base-clean
+	@echo -e "\n$(TERM_RED_BOLD)Any other key then CTRL-C will now remove CROSS_DIR$(TERM_NORMAL)"
 	@read
-	make cross-clean
-	make host-clean
+	make cross-base-clean
 
 %-clean:
 	cd $(D) && find . -name $(subst -clean,,$@) -delete
@@ -33,17 +42,17 @@ clean-all:
 	make staging-clean
 	make clean
 
-ccache-clean:
-	@echo "Clearing $$CCACHE_DIR"
-	@$(CCACHE) -C
-
 # -----------------------------------------------------------------------------
 
 PHONY += rebuild-clean
 PHONY += staging-clean
-PHONY += stytic-clean
+PHONY += static-clean
+PHONY += static-base-clean
+PHONY += cross-clean
+PHONY += cross-base-clean
+PHONY += host-clean
+PHONY += ccache-clean
 PHONY += all-clean
 PHONY += %-clean
 PHONY += clean
 PHONY += clean-all
-PHONY += ccache-clean
