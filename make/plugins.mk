@@ -79,6 +79,7 @@ plugins-hd2: # nothing to do
 plugins-hd51: \
 	links \
 	stb-startup \
+	imgbackup-hd51 \
 	showiframe
 
 ################
@@ -191,6 +192,10 @@ pr-auto-timer: $(LIBPLUGINS) $(VARCONFIG)
 	install -m644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/$@/pr-auto-timer_hint.png $(LIBPLUGINS)/
 	install -m644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/$@/pr-auto-timer.conf.template $(VARCONFIG)/pr-auto-timer.conf
 	install -m644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/$@/pr-auto-timer.rules.template $(VARCONFIG)/pr-auto-timer.rules
+
+imgbackup-hd51: $(LIBPLUGINS)
+	install -m755 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/$@/$@.sh $(LIBPLUGINS)/
+	install -m644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/$@/$@.cfg $(LIBPLUGINS)/
 
 autoreboot: $(LIBPLUGINS)
 	install -m755 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/$@/$@.sh $(LIBPLUGINS)/
