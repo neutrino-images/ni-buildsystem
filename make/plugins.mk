@@ -115,10 +115,10 @@ channellogos: $(SOURCE_DIR)/$(NI_LOGO-STUFF) $(SHAREICONS)
 lcd4linux-all: $(D)/lcd4linux | $(TARGET_DIR)
 	cp -a $(IMAGEFILES)/lcd4linux/* $(TARGET_DIR)/
 
-emmrd: $(SHAREICONS) $(BIN)/emmrd
-$(BIN)/emmrd: $(BIN) $(VARCONFIG) $(ETCINITD)
-	pushd $(SOURCES)/emmrd && \
-	$(TARGET)-g++ -Wall $(TARGET_CFLAGS) $(TARGET_LDFLAGS) $(CORTEX-STRINGS) -o $@ emmremind.cpp  && \
+emmrd: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(BIN)/emmrd
+$(BIN)/emmrd: $(BIN) $(SHAREICONS) $(VARCONFIG) $(ETCINITD)
+	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/emmrd && \
+	$(TARGET)-g++ -Wall $(TARGET_CFLAGS) $(TARGET_LDFLAGS) $(CORTEX-STRINGS) -o $@ emmrd.cpp && \
 	install -m755 emmrd.init $(ETCINITD)/emmrd && \
 	install -m644 hint_emmrd.png $(SHAREICONS)/
 	cd $(ETCINITD) && \
