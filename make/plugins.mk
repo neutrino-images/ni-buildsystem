@@ -195,8 +195,8 @@ pr-auto-timer: $(LIBPLUGINS) $(VARCONFIG)
 	install -m644 $(SOURCES)/pr-auto-timer/pr-auto-timer.rules.template $(VARCONFIG)/pr-auto-timer.rules
 
 autoreboot: $(LIBPLUGINS)
-	install -m755 $(SOURCES)/$@/*.sh $(LIBPLUGINS)/
-	install -m644 $(SOURCES)/$@/*.cfg $(LIBPLUGINS)/
+	install -m755 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/$@/$@.sh $(LIBPLUGINS)/
+	install -m644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/$@/$@.cfg $(LIBPLUGINS)/
 
 logo-addon: $(SOURCE_DIR)/$(NI_LOGO-STUFF) $(LIBPLUGINS)
 	install -m755 $(SOURCE_DIR)/$(NI_LOGO-STUFF)/logo-addon/*.sh $(LIBPLUGINS)/
