@@ -221,10 +221,10 @@ mountpointmanagement: $(LIBPLUGINS)
 	install -m644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/$@/$@.cfg $(LIBPLUGINS)/
 
 EPGfilter: $(LIBPLUGINS)
-	install -m755 $(SOURCES)/EPGfilter/*.sri $(LIBPLUGINS)/
-	install -m755 $(SOURCES)/EPGfilter/*.lua $(LIBPLUGINS)/
-	install -m644 $(SOURCES)/EPGfilter/*.cfg $(LIBPLUGINS)/
-	install -m644 $(SOURCES)/EPGfilter/*.png $(LIBPLUGINS)/
+	install -m755 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/$@/*.sri $(LIBPLUGINS)/
+	install -m755 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/$@/*.lua $(LIBPLUGINS)/
+	install -m644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/$@/*.cfg $(LIBPLUGINS)/
+	install -m644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/$@/*.png $(LIBPLUGINS)/
 
 dropbox_uploader: $(BIN)
 	install -m755 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/$@/*.sh $(BIN)/
