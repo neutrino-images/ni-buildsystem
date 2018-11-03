@@ -214,9 +214,8 @@ doscam-webif-skin: $(VARCONFIG)
 	install -m644 $(SOURCES)/doscam-webif-skin/doscam_ni-dark.css $(TARGET_DIR)/share/doscam/skin
 
 mountpointmanagement: $(LIBPLUGINS)
-	install -m755 $(SOURCES)/mountpointmanagement/*.sh $(LIBPLUGINS)/
-	install -m755 $(SOURCES)/mountpointmanagement/*.so $(LIBPLUGINS)/
-	install -m644 $(SOURCES)/mountpointmanagement/*.cfg $(LIBPLUGINS)/
+	install -m755 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/$@/$@.sh $(LIBPLUGINS)/
+	install -m644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/$@/$@.cfg $(LIBPLUGINS)/
 
 EPGfilter: $(LIBPLUGINS)
 	install -m755 $(SOURCES)/EPGfilter/*.sri $(LIBPLUGINS)/
