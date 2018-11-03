@@ -176,11 +176,13 @@ $(BIN)/vinfo: $(BIN)
 	$(TARGET)-gcc $(TARGET_CFLAGS) -o $@ vinfo.c md5.c
 
 EPGscan: $(LIBPLUGINS) $(VARCONFIG)
-	install -m755 $(SOURCES)/EPGscan/*.sh $(LIBPLUGINS)/
-	install -m755 $(SOURCES)/EPGscan/*.lua $(LIBPLUGINS)/
-	install -m644 $(SOURCES)/EPGscan/*.cfg $(LIBPLUGINS)/
-	install -m644 $(SOURCES)/EPGscan/*_hint.png $(LIBPLUGINS)/
-	install -m644 $(SOURCES)/EPGscan/*.conf $(VARCONFIG)/
+	install -m755 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/$@/$@.sh $(LIBPLUGINS)/
+	install -m644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/$@/$@.cfg $(LIBPLUGINS)/
+	install -m644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/$@/$@_hint.png $(LIBPLUGINS)/
+	install -m644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/$@/$@.conf $(VARCONFIG)/
+	install -m755 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/$@/$@_setup.lua $(LIBPLUGINS)/
+	install -m644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/$@/$@_setup.cfg $(LIBPLUGINS)/
+	install -m644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/$@/$@_setup_hint.png $(LIBPLUGINS)/
 
 pr-auto-timer: $(LIBPLUGINS) $(VARCONFIG)
 	install -m755 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/$@/auto-record-cleaner $(LIBPLUGINS)/
