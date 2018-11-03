@@ -89,20 +89,20 @@ endif
 
 u-pr-auto-timer:
 	$(MAKE) u-init
-	install -m755 $(SOURCES)/pr-auto-timer/update-ctrl/preinstall.sh $(PREINSTALL_SH)
-	install -m755 $(SOURCES)/pr-auto-timer/update-ctrl/postinstall.sh $(POSTINSTALL_SH)
+	install -m755 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/pr-auto-timer/update-ctrl/preinstall.sh $(PREINSTALL_SH)
+	install -m755 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/pr-auto-timer/update-ctrl/postinstall.sh $(POSTINSTALL_SH)
 	mkdir -pv $(UPDATE_INST_DIR)/lib/tuxbox/plugins
-	install -m755 $(SOURCES)/pr-auto-timer/pr-auto-timer.sh $(UPDATE_INST_DIR)/lib/tuxbox/plugins/
-	install -m644 $(SOURCES)/pr-auto-timer/pr-auto-timer.cfg $(UPDATE_INST_DIR)/lib/tuxbox/plugins/
-	install -m755 $(SOURCES)/pr-auto-timer/pr-auto-timer $(UPDATE_INST_DIR)/lib/tuxbox/plugins/
-	install -m755 $(SOURCES)/pr-auto-timer/pr-auto-timer_hint.png $(UPDATE_INST_DIR)/lib/tuxbox/plugins/
-	install -m755 $(SOURCES)/pr-auto-timer/auto-record-cleaner $(UPDATE_INST_DIR)/lib/tuxbox/plugins/
+	install -m755 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/pr-auto-timer/pr-auto-timer.sh $(UPDATE_INST_DIR)/lib/tuxbox/plugins/
+	install -m644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/pr-auto-timer/pr-auto-timer.cfg $(UPDATE_INST_DIR)/lib/tuxbox/plugins/
+	install -m755 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/pr-auto-timer/pr-auto-timer $(UPDATE_INST_DIR)/lib/tuxbox/plugins/
+	install -m755 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/pr-auto-timer/pr-auto-timer_hint.png $(UPDATE_INST_DIR)/lib/tuxbox/plugins/
+	install -m755 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/pr-auto-timer/auto-record-cleaner $(UPDATE_INST_DIR)/lib/tuxbox/plugins/
 	mkdir -pv $(UPDATE_INST_DIR)/var/tuxbox/config
-	install -m644 $(SOURCES)/pr-auto-timer/pr-auto-timer.conf.template $(UPDATE_INST_DIR)/var/tuxbox/config/
-	install -m644 $(SOURCES)/pr-auto-timer/pr-auto-timer.rules.template $(UPDATE_INST_DIR)/var/tuxbox/config/
-	install -m644 $(SOURCES)/pr-auto-timer/auto-record-cleaner.conf.template $(UPDATE_INST_DIR)/var/tuxbox/config/
-	install -m644 $(SOURCES)/pr-auto-timer/auto-record-cleaner.rules.template $(UPDATE_INST_DIR)/var/tuxbox/config/
-	VERSION_STRING=`cat $(SOURCES)/pr-auto-timer/pr-auto-timer | grep '^VERSION' | cut -d= -f2`; \
+	install -m644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/pr-auto-timer/pr-auto-timer.conf.template $(UPDATE_INST_DIR)/var/tuxbox/config/
+	install -m644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/pr-auto-timer/pr-auto-timer.rules.template $(UPDATE_INST_DIR)/var/tuxbox/config/
+	install -m644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/pr-auto-timer/auto-record-cleaner.conf.template $(UPDATE_INST_DIR)/var/tuxbox/config/
+	install -m644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/pr-auto-timer/auto-record-cleaner.rules.template $(UPDATE_INST_DIR)/var/tuxbox/config/
+	VERSION_STRING=`cat $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/pr-auto-timer/pr-auto-timer | grep '^VERSION' | cut -d= -f2`; \
 	$(MAKE) u-update-bin \
 			UPDATE_MD5FILE=pr-auto-timer.txt \
 			UPDATE_URL=$(NI-SERVER)/plugins/pr-auto-timer \

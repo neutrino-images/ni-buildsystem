@@ -182,15 +182,15 @@ EPGscan: $(LIBPLUGINS) $(VARCONFIG)
 	install -m644 $(SOURCES)/EPGscan/*.conf $(VARCONFIG)/
 
 pr-auto-timer: $(LIBPLUGINS) $(VARCONFIG)
-	install -m755 $(SOURCES)/pr-auto-timer/auto-record-cleaner $(LIBPLUGINS)/
-	install -m644 $(SOURCES)/pr-auto-timer/auto-record-cleaner.conf.template $(VARCONFIG)/auto-record-cleaner.conf
-	install -m644 $(SOURCES)/pr-auto-timer/auto-record-cleaner.rules.template $(VARCONFIG)/auto-record-cleaner.rules
-	install -m755 $(SOURCES)/pr-auto-timer/pr-auto-timer.sh $(LIBPLUGINS)/
-	install -m644 $(SOURCES)/pr-auto-timer/pr-auto-timer.cfg $(LIBPLUGINS)/
-	install -m755 $(SOURCES)/pr-auto-timer/pr-auto-timer $(LIBPLUGINS)/
-	install -m644 $(SOURCES)/pr-auto-timer/pr-auto-timer_hint.png $(LIBPLUGINS)/
-	install -m644 $(SOURCES)/pr-auto-timer/pr-auto-timer.conf.template $(VARCONFIG)/pr-auto-timer.conf
-	install -m644 $(SOURCES)/pr-auto-timer/pr-auto-timer.rules.template $(VARCONFIG)/pr-auto-timer.rules
+	install -m755 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/$@/auto-record-cleaner $(LIBPLUGINS)/
+	install -m644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/$@/auto-record-cleaner.conf.template $(VARCONFIG)/auto-record-cleaner.conf
+	install -m644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/$@/auto-record-cleaner.rules.template $(VARCONFIG)/auto-record-cleaner.rules
+	install -m755 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/$@/pr-auto-timer.sh $(LIBPLUGINS)/
+	install -m644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/$@/pr-auto-timer.cfg $(LIBPLUGINS)/
+	install -m755 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/$@/pr-auto-timer $(LIBPLUGINS)/
+	install -m644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/$@/pr-auto-timer_hint.png $(LIBPLUGINS)/
+	install -m644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/$@/pr-auto-timer.conf.template $(VARCONFIG)/pr-auto-timer.conf
+	install -m644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/$@/pr-auto-timer.rules.template $(VARCONFIG)/pr-auto-timer.rules
 
 autoreboot: $(LIBPLUGINS)
 	install -m755 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/$@/$@.sh $(LIBPLUGINS)/
