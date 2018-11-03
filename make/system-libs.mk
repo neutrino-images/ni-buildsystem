@@ -488,6 +488,7 @@ $(D)/expat: $(ARCHIVE)/expat-$(EXPAT_VER).tar.bz2 | $(TARGET_DIR)
 	$(CHDIR)/expat-$(EXPAT_VER); \
 		$(CONFIGURE) \
 			--prefix= \
+			--docdir=/.remove \
 			--mandir=/.remove \
 			--enable-shared \
 			--disable-static \
