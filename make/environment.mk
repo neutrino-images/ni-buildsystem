@@ -151,7 +151,6 @@ CROSS_DIR    ?= $(CROSS_BASE)/$(BOXARCH)/$(BOXSERIES)
 CONFIGS       = $(BASE_DIR)/archive-configs
 PATCHES       = $(BASE_DIR)/archive-patches
 IMAGEFILES    = $(BASE_DIR)/archive-imagefiles
-SOURCES       = $(BASE_DIR)/archive-sources
 SKEL_ROOT     = $(BASE_DIR)/skel-root/$(BOXTYPE)/$(BOXSERIES)
 BUILD        ?= $(shell /usr/share/libtool/config.guess 2>/dev/null || /usr/share/libtool/config/config.guess 2>/dev/null || /usr/share/misc/config.guess)
 CCACHE        = /usr/bin/ccache
