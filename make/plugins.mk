@@ -205,11 +205,11 @@ smarthomeinfo: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(LIBPLUGINS) $(VARCONFIG)
 	cp -a $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/$@/plugin/tuxbox/plugins/* $(LIBPLUGINS)/
 	cp -a $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/$@/plugin/tuxbox/config/* $(VARCONFIG)/
 
-doscam-webif-skin: $(VARCONFIG)
+doscam-webif-skin:
 	mkdir -p $(TARGET_DIR)/share/doscam/tpl/
-	install -m644 $(SOURCES)/doscam-webif-skin/*.tpl $(TARGET_DIR)/share/doscam/tpl/
+	install -m644 $(IMAGEFILES)/$@/*.tpl $(TARGET_DIR)/share/doscam/tpl/
 	mkdir -p $(TARGET_DIR)/share/doscam/skin/
-	install -m644 $(SOURCES)/doscam-webif-skin/doscam_ni-dark.css $(TARGET_DIR)/share/doscam/skin
+	install -m644 $(IMAGEFILES)/$@/*.css $(TARGET_DIR)/share/doscam/skin
 
 mountpointmanagement: $(LIBPLUGINS)
 	install -m755 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/$@/$@.sh $(LIBPLUGINS)/
