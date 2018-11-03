@@ -106,8 +106,6 @@ ifeq ($(BOXSERIES), hd51)
 endif
 	pushd $(BOX)/usr && \
 		ln -sf /share share
-	pushd $(BOX)/usr/bin && \
-		ln -sf /bin/env env
 	pushd $(BOX)/var && \
 		ln -sf /tmp run && \
 		ln -sf /tmp tmp

@@ -13,7 +13,6 @@ SHAREPLUGINS	= $(TARGET_DIR)/share/tuxbox/neutrino/plugins
 SHARETHEMES	= $(TARGET_DIR)/share/tuxbox/neutrino/themes
 SHAREWEBRADIO	= $(TARGET_DIR)/share/tuxbox/neutrino/webradio
 SHAREWEBTV	= $(TARGET_DIR)/share/tuxbox/neutrino/webtv
-USRBIN		= $(TARGET_DIR)/usr/bin
 VARCONFIG	= $(TARGET_DIR)/var/tuxbox/config
 VARINITD	= $(TARGET_DIR)/var/etc/init.d
 VARPLUGINS	= $(TARGET_DIR)/var/tuxbox/plugins
@@ -28,7 +27,6 @@ $(SHAREPLUGINS) \
 $(SHARETHEMES) \
 $(SHAREWEBRADIO) \
 $(SHAREWEBTV) \
-$(USRBIN) \
 $(VARCONFIG) \
 $(VARINITD) \
 $(VARPLUGINS) : | $(TARGET_DIR)
@@ -223,8 +221,8 @@ EPGfilter: $(LIBPLUGINS)
 	install -m644 $(SOURCES)/EPGfilter/*.cfg $(LIBPLUGINS)/
 	install -m644 $(SOURCES)/EPGfilter/*.png $(LIBPLUGINS)/
 
-dropbox_uploader: $(USRBIN)
-	install -m755 $(SOURCES)/$@/*.sh $(USRBIN)/
+dropbox_uploader: $(BIN)
+	install -m755 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/$@/*.sh $(BIN)/
 
 openvpn-setup: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(LIBPLUGINS) $(ETCINITD)
 	cp -a $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/$@/$@* $(LIBPLUGINS)/
