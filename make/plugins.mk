@@ -170,9 +170,9 @@ FritzInfoMonitor_setup: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(LIBPLUGINS)
 	install -m644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/FritzInfoMonitor/FritzInfoMonitor_setup.cfg $(LIBPLUGINS)/
 	install -m644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/FritzInfoMonitor/FritzInfoMonitor_setup_hint.png $(LIBPLUGINS)/
 
-vinfo: $(BIN)/vinfo
+vinfo: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(BIN)/vinfo
 $(BIN)/vinfo: $(BIN)
-	pushd $(SOURCES)/vinfo && \
+	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/vinfo && \
 	$(TARGET)-gcc $(TARGET_CFLAGS) -o $@ vinfo.c md5.c
 
 EPGscan: $(LIBPLUGINS) $(VARCONFIG)
