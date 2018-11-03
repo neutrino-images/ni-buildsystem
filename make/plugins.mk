@@ -55,7 +55,7 @@ plugins-all: $(D)/neutrino \
 	logo-addon \
 	smarthomeinfo \
 	mountpointmanagement \
-	EPGfilter \
+	epgfilter \
 	netzkino \
 	mtv \
 	autoreboot \
@@ -220,11 +220,11 @@ mountpointmanagement: $(LIBPLUGINS)
 	install -m755 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/$@/$@.sh $(LIBPLUGINS)/
 	install -m644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/$@/$@.cfg $(LIBPLUGINS)/
 
-EPGfilter: $(LIBPLUGINS)
-	install -m755 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/$@/*.sri $(LIBPLUGINS)/
-	install -m755 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/$@/*.lua $(LIBPLUGINS)/
-	install -m644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/$@/*.cfg $(LIBPLUGINS)/
-	install -m644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/$@/*.png $(LIBPLUGINS)/
+epgfilter: $(LIBPLUGINS)
+	install -m755 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/$@/$@.sri $(LIBPLUGINS)/
+	install -m755 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/$@/$@.lua $(LIBPLUGINS)/
+	install -m644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/$@/$@.cfg $(LIBPLUGINS)/
+	install -m644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/$@/$@_hint.png $(LIBPLUGINS)/
 
 dropbox_uploader: $(BIN)
 	install -m755 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/$@/*.sh $(BIN)/
