@@ -21,8 +21,8 @@ $(LIBPLUGINS)/blockads.so: $(LIBPLUGINS)
 	install -m644 blockads.cfg $(LIBPLUGINS)/
 
 stbup: $(BIN)/stbup
-$(BIN)/stbup: $(BIN)
-	pushd $(SOURCES)/stbup && \
+$(BIN)/stbup: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(BIN)
+	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/stbup && \
 	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) stbup.c -o $@ && \
 	install -m 644 stbup.conf $(TARGET_DIR)/etc && \
 	install -m 755 stbup.init $(TARGET_DIR)/etc/init.d/stbup
