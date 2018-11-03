@@ -50,7 +50,7 @@ u-FritzCallMonitor:
 			UPDATE_MD5FILE=$(UPDATE_MD5FILE-BOXMODEL) \
 			UPDATE_NAME=FritzCallMonitor-$(BOXMODEL) \
 			UPDATE_DESC=FritzCallMonitor-$(BOXMODEL) \
-			UPDATE_VERSION_STRING=`cat $(SOURCES)/FritzCallMonitor/FritzCallMonitor.h | grep 'define VERSION' | cut -d\" -f2`
+			UPDATE_VERSION_STRING=`cat $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/FritzCallMonitor/FritzCallMonitor.h | grep 'define VERSION' | cut -d\" -f2`
 
 u-FritzInfoMonitor:
 	$(MAKE) u-init
@@ -67,7 +67,7 @@ u-FritzInfoMonitor:
 			UPDATE_MD5FILE=$(UPDATE_MD5FILE-BOXMODEL) \
 			UPDATE_NAME=FritzInfoMonitor-$(BOXMODEL) \
 			UPDATE_DESC=FritzInfoMonitor-$(BOXMODEL) \
-			UPDATE_VERSION_STRING=`cat $(SOURCES)/FritzCallMonitor/FritzInfoMonitor/FritzInfoMonitor.h | grep 'define VERSION' | cut -d\" -f2`
+			UPDATE_VERSION_STRING=`cat $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/FritzCallMonitor/FritzInfoMonitor/FritzInfoMonitor.h | grep 'define VERSION' | cut -d\" -f2`
 
 u-lcd4linux: $(D)/lcd4linux
 ifneq ($(DEBUG), yes)
@@ -153,7 +153,7 @@ u-openvpn-setup:
 	#$(TARGET)-strip $(TARGET_DIR)/sbin/openvpn
 	#mkdir -p $(UPDATE_INST_DIR)/var/sbin  && \
 	#cp -f $(TARGET_DIR)/sbin/openvpn $(UPDATE_INST_DIR)/var/sbin
-	cp -a $(SOURCES)/openvpn-setup/* $(UPDATE_INST_DIR)/
+	cp -a $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/openvpn-setup/* $(UPDATE_INST_DIR)/
 	$(MAKE) u-update-bin \
 			UPDATE_NAME=openvpn-setup-$(BOXSERIES)-v011 \
 			UPDATE_DESC="OpenVPN-Setup" \
