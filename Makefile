@@ -61,17 +61,22 @@ printenv:
 	fi
 
 help:
-	@echo "a few helpful make targets:"
-	@echo "* make preqs             - downloads necessary stuff"
-	@echo "* make crosstool         - build cross toolchain"
-	@echo "* make bootstrap         - prepares for building"
-	@echo "* make neutrino          - builds neutrino"
+	@echo "A few helpful make targets:"
+	@echo " * make preqs      - Downloads necessary stuff"
+	@echo " * make crosstool  - Build cross toolchain"
+	@echo " * make bootstrap  - Prepares for building"
+	@echo " * make neutrino   - Builds Neutrino"
+	@echo " * make image      - Builds our beautiful NI-Image"
 	@echo ""
-	@echo "later, you might find those useful:"
-	@echo "* make update-all        - update buildsystem and all sources"
+	@echo "Later, you might find those useful:"
+	@echo " * make update-all - Update buildsystem and all sources"
 	@echo ""
-	@echo "cleanup:"
-	@echo "* make clean             - cleanup from previous build an prepare for a new one"
+	@echo "Cleanup:"
+	@echo " * make clean      - Clean up from previous build an prepare for a new one"
+	@echo ""
+	@echo "Total renew:"
+	@echo " * make all-clean  - Reset buildsystem to delivery state"
+	@echo "                     but doesn't touch your local stuff"
 
 done:
 	@echo "*************"
