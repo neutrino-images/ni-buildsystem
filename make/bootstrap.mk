@@ -30,6 +30,23 @@ skeleton: | $(TARGET_DIR)
 targetprefix:
 	mkdir -p $(TARGET_DIR)
 	mkdir -p $(TARGET_DIR)/bin
+ifeq ($(BOXSERIES), hd51)
+	mkdir -p $(TARGET_DIR)/boot
+endif
+	mkdir -p $(TARGET_DIR)/dev
+	mkdir -p $(TARGET_DIR)/etc/network/if-{up,pre-up,post-up,down,pre-down,post-down}.d
+	mkdir -p $(TARGET_DIR)/media
+	mkdir -p $(TARGET_DIR)/mnt
+	mkdir -p $(TARGET_DIR)/proc
+	mkdir -p $(TARGET_DIR)/srv
+	mkdir -p $(TARGET_DIR)/sys
+	mkdir -p $(TARGET_DIR)/tmp
+	mkdir -p $(TARGET_DIR)/usr/bin
+	mkdir -p $(TARGET_DIR)/var/bin
+	mkdir -p $(TARGET_DIR)/var/etc/init.d
+	mkdir -p $(TARGET_DIR)/var/keys
+	mkdir -p $(TARGET_DIR)/var/root
+	mkdir -p $(TARGET_DIR)/var/spool/cron/crontabs
 	mkdir -p $(TARGET_INCLUDE_DIR)
 	mkdir -p $(PKG_CONFIG_PATH)
 	make skeleton
