@@ -1,5 +1,6 @@
+#
 # makefile to build gstreamer and all it's dependencies
-
+#
 # -----------------------------------------------------------------------------
 
 # change to activate debug

@@ -14,7 +14,10 @@ local-files: $(eval BOXMODEL = nevis)
 	@mkdir -p local/{root,scripts}
 
 -include config.local
-include make/environment.mk
+include make/environment-build.mk
+include make/environment-image.mk
+include make/environment-target.mk
+include make/environment-update.mk
 -include internal/internal.mk
 
 ############################################################################

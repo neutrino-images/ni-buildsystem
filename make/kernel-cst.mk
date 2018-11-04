@@ -1,4 +1,7 @@
+#
 # makefile to build coolstream kernel
+#
+# -----------------------------------------------------------------------------
 
 DTB		= $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(DRIVERS_DIR)/device-tree-overlay/$(KERNEL_DTB).dtb
 IMAGE		= $(BUILD_TMP)/linux-$(KERNEL_VERSION)/arch/arm/boot/Image

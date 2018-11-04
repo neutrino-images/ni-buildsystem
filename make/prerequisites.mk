@@ -1,4 +1,7 @@
+#
 # makefile for basic prerequisites
+#
+# -----------------------------------------------------------------------------
 
 TOOLCHECK  = find-git find-svn find-gzip find-bzip2 find-patch find-gawk
 TOOLCHECK += find-makeinfo find-automake find-gcc find-libtool find-bison

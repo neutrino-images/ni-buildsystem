@@ -1,4 +1,7 @@
+#
 # custom ni-makefile - just a collection of targets
+#
+# -----------------------------------------------------------------------------
 
 init: preqs crosstools bootstrap
 

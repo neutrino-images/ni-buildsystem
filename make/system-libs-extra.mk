@@ -1,5 +1,6 @@
+#
 # makefile to build system libs (currently unused in ni-image)
-
+#
 # -----------------------------------------------------------------------------
 
 LIBID3TAG_VER=0.15.1b

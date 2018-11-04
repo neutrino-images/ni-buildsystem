@@ -1,5 +1,6 @@
-# makefile to build extra system tools (mostly unused)
-
+#
+# makefile to build system tools (currently unused in ni-image)
+#
 # -----------------------------------------------------------------------------
 
 # usbutils-008 needs udev

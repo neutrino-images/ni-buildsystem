@@ -1,7 +1,9 @@
+#
 # targets to create rootfs
+#
+# -----------------------------------------------------------------------------
 
-# rootfs targets
-rootfs: .version update.urls $(BOX) cleanup strip softlinks
+rootfs: .version update.urls $(ROOTFS) cleanup strip softlinks
 
 .version: $(TARGET_DIR)/.version
 $(TARGET_DIR)/.version:
@@ -32,53 +34,53 @@ $(TARGET_DIR)/var/etc/update.urls:
 	echo "$(CHANNELLISTS_URL)/$(CHANNELLISTS_MD5FILE)"	>> $@
 
 # create filesystem for our images
-$(BOX): | $(TARGET_DIR)
-	rm -rf $(BOX)
-	cp -a $(TARGET_DIR) $(BOX)
+$(ROOTFS): | $(TARGET_DIR)
+	rm -rf $(ROOTFS)
+	cp -a $(TARGET_DIR) $(ROOTFS)
 
 # cleanup filesystem from useless stuff
-cleanup: $(BOX)
-	rm -rf $(BOX)/{include,mymodules}
-	rm -rf $(BOX)/share/{aclocal,gdb,locale,man,doc,info,common-lisp}
-	rm -rf $(BOX)/lib/pkgconfig
-	rm -f $(BOX)/lib/libvorbisenc*
-	rm -rf $(BOX)/lib/sigc++*
-	rm -rf $(BOX)/lib/glib-2.0
-	find $(BOX) \( -name .gitignore -o -name .gitkeep \) -type f -print0 | xargs --no-run-if-empty -0 rm -f
-	find $(BOX)/lib \( -name '*.a' -o -name '*.la' \) -print0 | xargs --no-run-if-empty -0 rm -f
+cleanup: $(ROOTFS)
+	rm -rf $(ROOTFS)/{include,mymodules}
+	rm -rf $(ROOTFS)/share/{aclocal,gdb,locale,man,doc,info,common-lisp}
+	rm -rf $(ROOTFS)/lib/pkgconfig
+	rm -f  $(ROOTFS)/lib/libvorbisenc*
+	rm -rf $(ROOTFS)/lib/sigc++*
+	rm -rf $(ROOTFS)/lib/glib-2.0
+	find $(ROOTFS) \( -name .gitignore -o -name .gitkeep \) -type f -print0 | xargs --no-run-if-empty -0 rm -f
+	find $(ROOTFS)/lib \( -name '*.a' -o -name '*.la' \) -print0 | xargs --no-run-if-empty -0 rm -f
 	@echo -e "$(TERM_YELLOW)"
-	@du -sh $(BOX)
+	@du -sh $(ROOTFS)
 	@echo -e "$(TERM_NORMAL)"
 
 # strip bins and libs in filesystem
-strip: $(BOX)
+strip: $(ROOTFS)
 ifneq ($(DEBUG), yes)
 	@echo "*******************************************************"
 	@echo "*** The following warnings from strip are harmless! ***"
 	@echo "*******************************************************"
-	find $(BOX)/bin -type f -print0 | xargs -0 $(TARGET)-strip || true
-	find $(BOX)/sbin -type f -print0 | xargs -0 $(TARGET)-strip || true
-	find $(BOX)/lib \( \
-			-path $(BOX)/lib/libnexus.so -o \
-			-path $(BOX)/lib/libnxpl.so -o \
-			-path $(BOX)/lib/libv3ddriver.so -o \
+	find $(ROOTFS)/bin -type f -print0 | xargs -0 $(TARGET)-strip || true
+	find $(ROOTFS)/sbin -type f -print0 | xargs -0 $(TARGET)-strip || true
+	find $(ROOTFS)/lib \( \
+			-path $(ROOTFS)/lib/libnexus.so -o \
+			-path $(ROOTFS)/lib/libnxpl.so -o \
+			-path $(ROOTFS)/lib/libv3ddriver.so -o \
 			\
-			-path $(BOX)/lib/modules \) -prune -o \
+			-path $(ROOTFS)/lib/modules \) -prune -o \
 	-type f -print0 | xargs -0 $(TARGET)-strip || true
 ifeq ($(BOXSERIES), hd2)
-	find $(BOX)/lib/modules/$(KERNEL_VERSION_FULL)/kernel -type f -name '*.ko' | xargs -n 1 $(TARGET)-objcopy --strip-unneeded
+	find $(ROOTFS)/lib/modules/$(KERNEL_VERSION_FULL)/kernel -type f -name '*.ko' | xargs -n 1 $(TARGET)-objcopy --strip-unneeded
 endif
 	@echo -e "$(TERM_YELLOW)"
-	@du -sh $(BOX)
+	@du -sh $(ROOTFS)
 	@echo -e "$(TERM_NORMAL)"
 endif
 ifeq ($(DEBUG), yes)
 	@echo "*******************************************************"
 	@echo "*** The following warnings from strip are harmless! ***"
 	@echo "*******************************************************"
-	find $(BOX)/bin -path $(BOX)/bin/neutrino -prune -o -type f -print0 | xargs -0 $(TARGET)-strip || true
-	find $(BOX)/sbin -type f -print0 | xargs -0 $(TARGET)-strip || true
-	find $(BOX)/lib/valgrind -type f -print0 | xargs -0 $(TARGET)-strip || true
+	find $(ROOTFS)/bin -path $(ROOTFS)/bin/neutrino -prune -o -type f -print0 | xargs -0 $(TARGET)-strip || true
+	find $(ROOTFS)/sbin -type f -print0 | xargs -0 $(TARGET)-strip || true
+	find $(ROOTFS)/lib/valgrind -type f -print0 | xargs -0 $(TARGET)-strip || true
 	@echo "*******************************************************"
 	@echo "***        Strip samba for debug image              ***"
 	@echo "*******************************************************"
@@ -90,28 +92,28 @@ ifeq ($(DEBUG), yes)
 	$(TARGET)-strip $(TARGET_DIR)/lib/libtdb.so.1
 	$(TARGET)-strip $(TARGET_DIR)/lib/libtalloc.so.1
 	$(TARGET)-strip $(TARGET_DIR)/lib/libwbclient.so.0
-	find $(BOX)/lib/samba -type f -print0 | xargs -0 $(TARGET)-strip || true
+	find $(ROOTFS)/lib/samba -type f -print0 | xargs -0 $(TARGET)-strip || true
 	@echo -e "$(TERM_YELLOW)"
-	@du -sh $(BOX)
+	@du -sh $(ROOTFS)
 	@echo -e "$(TERM_NORMAL)"
 endif
 
 # create softlinks in filesystem
-softlinks: $(BOX)
-	pushd $(BOX) && \
+softlinks: $(ROOTFS)
+	pushd $(ROOTFS) && \
 		ln -sf /var/root root
 ifeq ($(BOXSERIES), hd51)
-	pushd $(BOX) && \
+	pushd $(ROOTFS) && \
 		ln -sf /var/root home
 endif
-	pushd $(BOX)/usr && \
+	pushd $(ROOTFS)/usr && \
 		ln -sf /share share
-	pushd $(BOX)/var && \
+	pushd $(ROOTFS)/var && \
 		ln -sf /tmp run && \
 		ln -sf /tmp tmp
-	pushd $(BOX)/etc && \
+	pushd $(ROOTFS)/etc && \
 		ln -sf /proc/mounts mtab
-	pushd $(BOX)/etc/init.d && \
+	pushd $(ROOTFS)/etc/init.d && \
 		ln -sf fstab K99fstab && \
 		ln -sf fstab S01fstab && \
 		ln -sf syslogd K98syslogd && \
@@ -120,7 +122,7 @@ endif
 		ln -sf inetd S53inetd && \
 		ln -sf inetd K80inetd
 ifeq ($(BOXSERIES), hd2)
-	pushd $(BOX)/etc && \
+	pushd $(ROOTFS)/etc && \
 		ln -sf /var/etc/exports exports && \
 		ln -sf /var/etc/fstab fstab && \
 		ln -sf /var/etc/hostname hostname && \
@@ -128,20 +130,20 @@ ifeq ($(BOXSERIES), hd2)
 		ln -sf /var/etc/passwd passwd && \
 		ln -sf /var/etc/resolv.conf resolv.conf && \
 		ln -sf /var/etc/wpa_supplicant.conf wpa_supplicant.conf
-	pushd $(BOX)/etc/network && \
+	pushd $(ROOTFS)/etc/network && \
 		ln -sf /var/etc/network/interfaces interfaces
-	pushd $(BOX)/lib && \
+	pushd $(ROOTFS)/lib && \
 		ln -sf libuClibc-$(UCLIBC_VER).so libcrypt.so.0 && \
 		ln -sf libuClibc-$(UCLIBC_VER).so libdl.so.0 && \
 		ln -sf libuClibc-$(UCLIBC_VER).so libpthread.so.0 && \
 		ln -sf libuClibc-$(UCLIBC_VER).so libm.so.0 && \
 		ln -sf libuClibc-$(UCLIBC_VER).so librt.so.0
-  ifeq ($(NEWIMAGE), yes)
-	touch -f $(BOX)/var/etc/.newimage
+  ifeq ($(IMAGE_NEW), yes)
+	touch -f $(ROOTFS)/var/etc/.newimage
   endif
 endif
-	mkdir -p $(BOX)/var/tuxbox/config && \
-	pushd $(BOX)/var/tuxbox/config && \
+	mkdir -p $(ROOTFS)/var/tuxbox/config && \
+	pushd $(ROOTFS)/var/tuxbox/config && \
 	ln -sf /var/keys/SoftCam.Key SoftCam.Key
 
 get-update-info: get-update-info-$(BOXSERIES)
@@ -188,7 +190,7 @@ personalize: | $(TARGET_DIR)
 PHONY += rootfs
 PHONY += .version $(TARGET_DIR)/.version
 PHONY += update.urls $(TARGET_DIR)/var/etc/update.urls
-PHONY += $(BOX)
+PHONY += $(ROOTFS)
 PHONY += cleanup
 PHONY += strip
 PHONY += softlinks

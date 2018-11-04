@@ -1,4 +1,7 @@
-# makefile for plugins (currently unused in ni-image)
+#
+# makefile to build plugins (currently unused in ni-image)
+#
+# -----------------------------------------------------------------------------
 
 #logoview
 logoview: $(SOURCE_DIR)/$(TUXBOX_PLUGINS) $(D)/neutrino $(BIN)/logoview

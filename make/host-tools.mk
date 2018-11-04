@@ -1,4 +1,7 @@
+#
 # makefile to build all needed host-binaries
+#
+# -----------------------------------------------------------------------------
 
 host-preqs: \
 	host_pkg-config \

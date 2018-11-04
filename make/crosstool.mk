@@ -1,4 +1,7 @@
+#
 # makefile to build crosstools
+#
+# -----------------------------------------------------------------------------
 
 crosstool: crosstool-$(BOXARCH)-$(BOXSERIES)
 

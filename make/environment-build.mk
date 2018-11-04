@@ -1,4 +1,7 @@
-# set up environment for other makefiles
+#
+# set up build environment for other makefiles
+#
+# -----------------------------------------------------------------------------
 
 NUM_CPUS=$$(expr `grep -c ^processor /proc/cpuinfo`)
 
@@ -133,6 +136,7 @@ MAINTAINER   ?= NI-Team
 WHOAMI       := $(shell id -un)
 ARCHIVE       = $(BASE_DIR)/download
 BUILD_TMP     = $(BASE_DIR)/build_tmp
+ROOTFS        = $(BUILD_TMP)/rootfs
 D             = $(BASE_DIR)/deps
 DEPDIR        = $(D)
 HOST_DIR      = $(BASE_DIR)/host
@@ -152,6 +156,7 @@ CONFIGS       = $(BASE_DIR)/archive-configs
 PATCHES       = $(BASE_DIR)/archive-patches
 IMAGEFILES    = $(BASE_DIR)/archive-imagefiles
 SKEL_ROOT     = $(BASE_DIR)/skel-root/$(BOXTYPE)/$(BOXSERIES)
+
 BUILD        ?= $(shell /usr/share/libtool/config.guess 2>/dev/null || /usr/share/libtool/config/config.guess 2>/dev/null || /usr/share/misc/config.guess)
 CCACHE        = /usr/bin/ccache
 CCACHE_DIR    = $(HOME)/.ccache-ni-buildsystem-$(BOXARCH)-$(BOXSERIES)
@@ -160,10 +165,6 @@ export CCACHE_DIR
 STATIC_LIB_DIR = $(STATIC_DIR)/lib
 TARGET_LIB_DIR = $(TARGET_DIR)/lib
 TARGET_INCLUDE_DIR = $(TARGET_DIR)/include
-
-# ca-certificates
-CA-BUNDLE	= ca-certificates.crt
-CA-BUNDLE_DIR	= /etc/ssl/certs
 
 # create debug image
 DEBUG ?= no

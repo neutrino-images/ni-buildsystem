@@ -1,53 +1,9 @@
+#
+# makefile to generate images
+#
+# -----------------------------------------------------------------------------
 
-# makefile to generate images; also holds useful variables.
-
-# Release date
-IMAGE_DATE	= $(shell date +%Y%m%d%H%M)
-
-# Version Strings
-IMAGE_VERSION	= 350
-IMAGE_PREFIX	= ni$(IMAGE_VERSION)-$(IMAGE_DATE)
-IMAGE_SUFFIX	= $(BOXTYPE_SC)-$(BOXMODEL)
-
-# Image-Type
-# Release	= 0
-# Beta		= 1
-# Nightly	= 2
-# Selfmade	= 9
-IMAGE_TYPE	?= 9
-
-# JFFS2-Summary
-SUMMARIZE	= yes
-
-# newimage-flag
-NEWIMAGE	= no
-
-# Beta/Release Server
-NI-SERVER	= http://neutrino-images.de/neutrino-images
-ifeq ($(IMAGE_TYPE), 0)
-  # Release
-  NI-SUBDIR	= release
-  IMAGE_TYPE_STRING = release
-else ifeq ($(IMAGE_TYPE), 1)
-  # Beta
-  NI-SUBDIR	= beta
-  IMAGE_TYPE_STRING = beta
-else ifeq ($(IMAGE_TYPE), 2)
-  # Nightly
-  NI-SUBDIR	= nightly
-  IMAGE_TYPE_STRING = nightly
-else
-  # Selfmade; just for compatibility; not needed for our builds
-  NI-SUBDIR	= selfmade
-  IMAGE_TYPE_STRING = selfmade
-endif
-
-IMAGE_URL	= $(NI-SERVER)/$(NI-SUBDIR)
-IMAGE_VERSION_STRING = $(shell echo $(IMAGE_VERSION) | sed -e :a -e 's/\(.*[0-9]\)\([0-9]\{2\}\)/\1.\2/;ta')
-
-BOX		= $(BUILD_TMP)/rootfs
-
-MKFSFLAGS	= -U -D $(BUILD_TMP)/devtable-$(BOXSERIES).txt -r $(BOX)
+MKFSFLAGS	= -U -D $(BUILD_TMP)/devtable-$(BOXSERIES).txt -r $(ROOTFS)
 ifeq ($(BOXSERIES), hd1)
   MKFSFLAGS	+= -p
 endif
@@ -117,12 +73,12 @@ endif
 flash-image-cst: IMAGE_NAME=$(IMAGE_PREFIX)-$(IMAGE_SUFFIX)
 flash-image-cst: IMAGE_DESC="$(BOXNAME) [$(IMAGE_SUFFIX)][$(BOXSERIES)] $(shell echo $(IMAGE_TYPE_STRING) | sed 's/.*/\u&/')"
 flash-image-cst: IMAGE_MD5FILE=$(IMAGE_TYPE_STRING)-$(IMAGE_SUFFIX).txt
-flash-image-cst: IMAGE_DATE=$(shell cat $(BOX)/.version | grep "^version=" | cut -d= -f2 | cut -c 5-)
+flash-image-cst: IMAGE_DATE=$(shell cat $(ROOTFS)/.version | grep "^version=" | cut -d= -f2 | cut -c 5-)
 flash-image-cst:
 	make devtable
 	mkfs.jffs2 -e $(ERASE_SIZE) $(MKFSFLAGS) -o $(IMAGE_DIR)/$(IMAGE_NAME).img
 	make devtable-remove
-ifeq ($(SUMMARIZE), yes)
+ifeq ($(IMAGE_SUMMARIZE), yes)
 	sumtool -e $(ERASE_SIZE) $(SUMFLAGS) -i $(IMAGE_DIR)/$(IMAGE_NAME).img -o $(IMAGE_DIR)/$(IMAGE_NAME)-sum.img
 	rm -f $(IMAGE_DIR)/$(IMAGE_NAME).img
 	mv $(IMAGE_DIR)/$(IMAGE_NAME)-sum.img $(IMAGE_DIR)/$(IMAGE_NAME).img
@@ -159,12 +115,12 @@ flash-image-arm: BOXNAME="AX/Mut@nt"
 flash-image-arm: IMAGE_NAME=$(IMAGE_PREFIX)-$(IMAGE_SUFFIX)
 flash-image-arm: IMAGE_DESC="$(BOXNAME) [$(IMAGE_SUFFIX)] $(shell echo $(IMAGE_TYPE_STRING) | sed 's/.*/\u&/')"
 flash-image-arm: IMAGE_MD5FILE=$(IMAGE_TYPE_STRING)-$(IMAGE_SUFFIX).txt
-flash-image-arm: IMAGE_DATE=$(shell cat $(BOX)/.version | grep "^version=" | cut -d= -f2 | cut -c 5-)
+flash-image-arm: IMAGE_DATE=$(shell cat $(ROOTFS)/.version | grep "^version=" | cut -d= -f2 | cut -c 5-)
 flash-image-arm:
 	mkdir -p $(IMAGE_DIR)/$(BOXMODEL)
 	cp $(ZIMAGE_DTB) $(IMAGE_DIR)/$(BOXMODEL)/kernel.bin
-	cd $(BOX); \
-	tar -cvf $(IMAGE_DIR)/$(BOXMODEL)/rootfs.tar -C $(BOX) .  > /dev/null 2>&1; \
+	cd $(ROOTFS); \
+	tar -cvf $(IMAGE_DIR)/$(BOXMODEL)/rootfs.tar -C $(ROOTFS) .  > /dev/null 2>&1; \
 	bzip2 $(IMAGE_DIR)/$(BOXMODEL)/rootfs.tar
 	# Create minimal image
 	cd $(IMAGE_DIR)/$(BOXMODEL); \
@@ -207,7 +163,7 @@ flash-image-arm-multi:
 	mkdir -p $(HD51_BUILD_TMP)
 	# Create a sparse image block
 	dd if=/dev/zero of=$(HD51_BUILD_TMP)/$(HD51_IMAGE_LINK) seek=$(shell expr $(HD51_IMAGE_ROOTFS_SIZE) \* $(BLOCK_SECTOR)) count=0 bs=$(BLOCK_SIZE)
-	mkfs.ext4 -F $(HD51_BUILD_TMP)/$(HD51_IMAGE_LINK) -d $(BOX)
+	mkfs.ext4 -F $(HD51_BUILD_TMP)/$(HD51_IMAGE_LINK) -d $(ROOTFS)
 	# Error codes 0-3 indicate successfull operation of fsck (no errors or errors corrected)
 	fsck.ext4 -pvfD $(HD51_BUILD_TMP)/$(HD51_IMAGE_LINK) || [ $? -le 3 ]
 	dd if=/dev/zero of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) count=0 seek=$(shell expr $(EMMC_IMAGE_SIZE) \* $(BLOCK_SECTOR))
@@ -243,8 +199,8 @@ flash-image-arm-multi:
 	mkdir -p $(IMAGE_DIR)/$(BOXMODEL)
 	cp $(ZIMAGE_DTB) $(IMAGE_DIR)/$(BOXMODEL)/kernel.bin
 	cp $(EMMC_IMAGE) $(IMAGE_DIR)/$(BOXMODEL)
-	cd $(BOX); \
-	tar -cvf $(IMAGE_DIR)/$(BOXMODEL)/rootfs.tar -C $(BOX) .  > /dev/null 2>&1; \
+	cd $(ROOTFS); \
+	tar -cvf $(IMAGE_DIR)/$(BOXMODEL)/rootfs.tar -C $(ROOTFS) .  > /dev/null 2>&1; \
 	bzip2 $(IMAGE_DIR)/$(BOXMODEL)/rootfs.tar
 	echo $(IMAGE_PREFIX) > $(IMAGE_DIR)/$(BOXMODEL)/imageversion
 	cd $(IMAGE_DIR); \

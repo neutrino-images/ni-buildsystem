@@ -1,4 +1,7 @@
-# helper targets
+#
+# makefile for update targets
+#
+# -----------------------------------------------------------------------------
 
 update-self:
 	export GIT_MERGE_AUTOEDIT=no && \

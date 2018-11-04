@@ -1,5 +1,6 @@
+#
 # makefile to build system tools
-
+#
 # -----------------------------------------------------------------------------
 
 $(D)/openvpn: $(D)/lzo $(D)/openssl $(ARCHIVE)/openvpn-$(OPENVPN_VER).tar.xz | $(TARGET_DIR)

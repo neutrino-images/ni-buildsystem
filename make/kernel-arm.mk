@@ -1,4 +1,7 @@
+#
 # makefile to build armbox kernel
+#
+# -----------------------------------------------------------------------------
 
 DTB		= $(BUILD_TMP)/linux-$(KERNEL_VERSION)/arch/arm/boot/dts/$(KERNEL_DTB).dtb
 ZIMAGE		= $(BUILD_TMP)/linux-$(KERNEL_VERSION)/arch/arm/boot/zImage

@@ -1,4 +1,7 @@
+#
 # makefile for tarball download
+#
+# -----------------------------------------------------------------------------
 
 LIBGCRYPT_VER=1.8.3
 $(ARCHIVE)/libgcrypt-$(LIBGCRYPT_VER).tar.gz:

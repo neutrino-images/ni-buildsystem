@@ -1,4 +1,7 @@
+#
 # makefile to build static libraries
+#
+# -----------------------------------------------------------------------------
 
 STATIC_LIBS =
 ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd51))

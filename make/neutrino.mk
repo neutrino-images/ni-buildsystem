@@ -1,4 +1,7 @@
-# makefile to build NEUTRINO
+#
+# makefile to build Neutrino
+#
+# -----------------------------------------------------------------------------
 
 YOUTUBE_DEV_KEY ?= AIzaSyBLdZe7M3rpNMZqSj-3IEvjbb2hATWJIdM
 OMDB_API_KEY ?= 20711f9e

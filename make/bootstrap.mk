@@ -1,4 +1,7 @@
+#
 # makefile to setup and initialize the final buildsystem
+#
+# -----------------------------------------------------------------------------
 
 BOOTSTRAP  = targetprefix
 BOOTSTRAP += $(D)

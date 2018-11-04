@@ -1,4 +1,7 @@
-# clean all for rebuild (except the toolchain)
+#
+# makefile for clean targets
+#
+# -----------------------------------------------------------------------------
 
 rebuild-clean:
 	-rm -rf $(BUILD_TMP)
