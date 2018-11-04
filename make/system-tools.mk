@@ -252,7 +252,8 @@ $(D)/ntp: $(ARCHIVE)/ntp-$(NTP_VER).tar.gz $(D)/openssl | $(TARGET_DIR)
 			--without-ntpsnmpd \
 			; \
 		$(MAKE)
-	mv -v $(BUILD_TMP)/ntp-$(NTP_VER)/ntpdate/ntpdate $(TARGET_DIR)/sbin/
+	install -D -m755 $(BUILD_TMP)/ntp-$(NTP_VER)/ntpdate/ntpdate $(TARGET_DIR)/sbin/ntpdate
+	install -D -m755 $(IMAGEFILES)/scripts/ntpdate.init $(TARGET_DIR)/etc/init.d/ntpdate
 	$(REMOVE)/ntp-$(NTP_VER)
 	$(TOUCH)
 
