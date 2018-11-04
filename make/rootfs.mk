@@ -29,7 +29,7 @@ endif
 update.urls: $(TARGET_DIR)/var/etc/update.urls
 $(TARGET_DIR)/var/etc/update.urls:
 	echo "$(NI-SERVER)/update.php"				 > $@
-	echo "$(CHANLIST_URL)/$(CHANLIST_MD5FILE)"		>> $@
+	echo "$(CHANNELLISTS_URL)/$(CHANNELLISTS_MD5FILE)"	>> $@
 
 # create filesystem for our images
 $(BOX): | $(TARGET_DIR)
