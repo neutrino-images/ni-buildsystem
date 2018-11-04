@@ -87,27 +87,28 @@ done:
 	@echo "*************"
 
 include make/archives.mk
-include make/prerequisites.mk
-include make/crosstool.mk
 include make/bootstrap.mk
-include make/host-tools.mk
 include make/clean.mk
-include make/update.mk
-include make/kernel-$(BOXTYPE_SC).mk
-include make/ffmpeg-$(BOXTYPE_SC).mk
-include make/static-libs.mk
-include make/system-libs.mk
-include make/system-libs-extra.mk
-include make/system-tools.mk
-include make/system-tools-extra.mk
+include make/crosstool.mk
 include make/development-tools.mk
-include make/neutrino.mk
-include make/plugins.mk
-include make/plugins-extra.mk
-include make/images.mk
-include make/image-update.mk
-include make/rootfs.mk
+include make/ffmpeg-$(BOXTYPE_SC).mk
 include make/gstreamer.mk
+include make/host-tools.mk
+include make/image-update.mk
+include make/images.mk
+include make/kernel-$(BOXTYPE_SC).mk
+include make/neutrino.mk
+include make/plugins-extra.mk
+include make/plugins.mk
+include make/prerequisites.mk
+include make/rootfs.mk
+include make/static-libs.mk
+include make/system-libs-extra.mk
+include make/system-libs.mk
+include make/system-scripts.mk
+include make/system-tools-extra.mk
+include make/system-tools.mk
+include make/update.mk
 
 include make/ni.mk
 
