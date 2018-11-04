@@ -109,6 +109,8 @@ endif
 	pushd $(BOX)/var && \
 		ln -sf /tmp run && \
 		ln -sf /tmp tmp
+	pushd $(BOX)/etc && \
+		ln -sf /proc/mounts mtab
 	pushd $(BOX)/etc/init.d && \
 		ln -sf fstab K99fstab && \
 		ln -sf fstab S01fstab && \
