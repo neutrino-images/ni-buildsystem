@@ -1,45 +1,13 @@
 #
-# custom ni-makefile - just a collection of targets
+# makefile to build ni-images; just a collection of targets
 #
-# -----------------------------------------------------------------------------
-
-init: preqs crosstools bootstrap
-
-# -- wrapper-targets for Neutrino-Updates -------------------------------------
-
-BOXSERIES_UPDATE = hd2 hd51
-ifneq ($(DEBUG), yes)
-	BOXSERIES_UPDATE += hd1
-endif
-
-neutrino-update \
-ni-neutrino-update:
-	make u-neutrino
-
-neutrino-updates \
-ni-neutrino-updates:
-	for boxseries in $(BOXSERIES_UPDATE); do \
-		$(MAKE) BOXSERIES=$${boxseries} clean neutrino-update || exit; \
-	done;
-	make clean
-
-neutrino-full-update \
-ni-neutrino-full-update:
-	make u-neutrino-full
-
-neutrino-full-updates \
-ni-neutrino-full-updates:
-	for boxseries in $(BOXSERIES_UPDATE); do \
-		$(MAKE) BOXSERIES=$${boxseries} clean neutrino-full-update || exit; \
-	done;
-	make clean
-
 # -----------------------------------------------------------------------------
 
 BOXMODEL_IMAGE = apollo kronos kronos_v2 hd51
 ifneq ($(DEBUG), yes)
 	BOXMODEL_IMAGE += nevis
 endif
+
 images \
 ni-images:
 	for boxmodel in $(BOXMODEL_IMAGE); do \
@@ -140,10 +108,6 @@ changelogs:
 # -----------------------------------------------------------------------------
 
 PHONY += init
-PHONY += neutrino-update ni-neutrino-update
-PHONY += neutrino-updates ni-neutrino-updates
-PHONY += neutrino-full-update ni-neutrino-full-update
-PHONY += neutrino-full-updates ni-neutrino-full-updates
 PHONY += images ni-images
 PHONY += personalized-image
 PHONY += image ni-image

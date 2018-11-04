@@ -3,6 +3,35 @@
 #
 # -----------------------------------------------------------------------------
 
+BOXSERIES_UPDATE = hd2 hd51
+ifneq ($(DEBUG), yes)
+	BOXSERIES_UPDATE += hd1
+endif
+
+neutrino-update \
+ni-neutrino-update:
+	make u-neutrino
+
+neutrino-updates \
+ni-neutrino-updates:
+	for boxseries in $(BOXSERIES_UPDATE); do \
+		$(MAKE) BOXSERIES=$${boxseries} clean neutrino-update || exit; \
+	done;
+	make clean
+
+neutrino-full-update \
+ni-neutrino-full-update:
+	make u-neutrino-full
+
+neutrino-full-updates \
+ni-neutrino-full-updates:
+	for boxseries in $(BOXSERIES_UPDATE); do \
+		$(MAKE) BOXSERIES=$${boxseries} clean neutrino-full-update || exit; \
+	done;
+	make clean
+
+# -----------------------------------------------------------------------------
+
 u-neutrino: neutrino-clean
 	$(MAKE) u-init
 	echo "killall start_neutrino neutrino; sleep 5"	>> $(PREINSTALL_SH)
@@ -165,6 +194,11 @@ u-update-bin:
 	$(MAKE) u-clean
 
 # -----------------------------------------------------------------------------
+
+PHONY += neutrino-update ni-neutrino-update
+PHONY += neutrino-updates ni-neutrino-updates
+PHONY += neutrino-full-update ni-neutrino-full-update
+PHONY += neutrino-full-updates ni-neutrino-full-updates
 
 PHONY += u-neutrino
 PHONY += u-neutrino-full

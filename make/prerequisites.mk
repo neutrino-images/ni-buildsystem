@@ -3,6 +3,10 @@
 #
 # -----------------------------------------------------------------------------
 
+init: preqs crosstools bootstrap
+
+# -----------------------------------------------------------------------------
+
 TOOLCHECK  = find-git find-svn find-gzip find-bzip2 find-patch find-gawk
 TOOLCHECK += find-makeinfo find-automake find-gcc find-libtool find-bison
 TOOLCHECK += find-yacc find-flex find-tic find-pkg-config find-help2man
