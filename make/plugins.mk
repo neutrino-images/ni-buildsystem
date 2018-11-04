@@ -86,8 +86,11 @@ plugins-hd51: \
 ### scripts  ###
 ################
 
-scripts:
+scripts: $(SBIN)
 	install -m755 $(IMAGEFILES)/scripts/service $(SBIN)
+ifeq ($(BOXTYPE), coolstream)
+	install -m755 $(IMAGEFILES)/scripts/flash_eraseall $(SBIN)
+endif
 
 #####################
 ### init-scripts  ###
