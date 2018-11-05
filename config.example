@@ -1,4 +1,7 @@
-# config.local
+#
+# Local config file
+#
+# -----------------------------------------------------------------------------
 
 # Change it to your name.
 #MAINTAINER = NI-Team

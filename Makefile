@@ -1,4 +1,7 @@
-#master makefile
+#
+# Master makefile
+#
+# -----------------------------------------------------------------------------
 
 UID := $(shell id -u)
 ifeq ($(UID), 0)
@@ -7,10 +10,13 @@ warn:
 	@echo "Refusing to build. Good bye."
 else
 
+# first target is default ...
+default: all
+
 # workaround unset variables at first start
 local-files: $(eval BOXMODEL = nevis)
 	@test -e config.local || cp config.example config.local
-	@touch Makefile.local
+	@test -e Makefile.local || cp Makefile.example Makefile.local
 	@mkdir -p local/{root,scripts}
 
 -include config.local
@@ -20,11 +26,6 @@ include make/environment-target.mk
 include make/environment-update.mk
 -include internal/internal.mk
 
-############################################################################
-#  A print out of environment variables
-#
-# maybe a help about all supported targets would be nice here, too...
-#
 printenv:
 	@echo '============================================================================== '
 	@echo "Build Environment Varibles:"
@@ -82,6 +83,7 @@ help:
 	@echo "                     but doesn't touch your local stuff"
 
 done:
+# -----------------------------------------------------------------------------
 	@echo "*************"
 	@echo -e "*** $(TERM_GREEN)Done!$(TERM_NORMAL) ***"
 	@echo "*************"
