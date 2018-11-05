@@ -37,7 +37,7 @@ ifeq ($(NI_ADMIN), true)
 		git pull upstream master && \
 		git fetch upstream
 	cd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) && \
-		make update-tuxbox-remotes
+		./update-tuxbox-remotes.sh
 endif
 
 # rebase of ffmpeg/kernel repos forces us to force push into git repo
