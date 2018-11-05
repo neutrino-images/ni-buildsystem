@@ -49,6 +49,11 @@ if [ -e /var/backup_flash.tar.gz ]; then
 	/bin/restore_flash.sh
 fi
 
+# update system
+if [ -x /etc/init.d/sys_update.sh ]; then
+	/etc/init.d/sys_update.sh
+fi
+
 service hostname start
 
 # logging as much as possible
