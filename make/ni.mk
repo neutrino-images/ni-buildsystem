@@ -78,11 +78,11 @@ ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd51))
 endif
 	make -j$(NUM_CPUS) kernel-$(BOXTYPE_SC)-modules
 	make autofs5
+	make scripts
+	make init-scripts
 ifeq ($(PERSONALIZE), yes)
 	make personalize
 endif
-	make scripts
-	make init-scripts
 	make rootfs
 	make flash-image
 	@make done
