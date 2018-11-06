@@ -181,8 +181,10 @@ logo-addon: $(SOURCE_DIR)/$(NI_LOGO-STUFF) $(LIBPLUGINS)
 # -----------------------------------------------------------------------------
 
 smarthomeinfo: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(LIBPLUGINS) $(VARCONFIG)
-	cp -a $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/$@/plugin/tuxbox/plugins/* $(LIBPLUGINS)/
-	cp -a $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/$@/plugin/tuxbox/config/* $(VARCONFIG)/
+	install -m755 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/$@/$@.so $(LIBPLUGINS)/
+	install -m644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/$@/$@.cfg $(LIBPLUGINS)/
+	install -m644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/$@/$@_hint.png $(LIBPLUGINS)/
+	install -m644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/$@/$@.conf $(VARCONFIG)/
 
 # -----------------------------------------------------------------------------
 
