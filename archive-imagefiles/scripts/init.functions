@@ -1,4 +1,7 @@
-# functions that are used by init scripts...
+#
+# /etc/init.d/functions - global functions that are used by scripts
+#
+# -----------------------------------------------------------------------------
 
 . /etc/init.d/globals
 
@@ -66,4 +69,9 @@ load_module()
 		LOGINFO "Loading ${module##*/} "
 		insmod $module $params
 	fi
+}
+
+get_setting()
+{
+	test -e $NEUTRINO_CONF && grep "^${1}=" $NEUTRINO_CONF | cut -d'=' -f2
 }

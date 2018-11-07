@@ -4,7 +4,12 @@
 # -----------------------------------------------------------------------------
 
 init-scripts: \
+	init-helpers \
 	init-camd
+
+init-helpers:
+	install -m644 $(IMAGEFILES)/scripts/init.globals $(ETCINITD)/globals
+	install -m644 $(IMAGEFILES)/scripts/init.functions $(ETCINITD)/functions
 
 init-camd: $(ETCINITD)
 	install -m755 $(IMAGEFILES)/scripts/camd.init $(ETCINITD)/camd

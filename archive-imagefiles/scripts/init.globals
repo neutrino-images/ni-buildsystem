@@ -1,7 +1,11 @@
-# global variables and functions that are used by our scripts...
+#
+# /etc/init.d/globals - global variables and aliases that are used by scripts
+#
+# -----------------------------------------------------------------------------
 
 HOSTNAME=$(hostname)
 BASENAME=${0##*/}
+NEUTRINO_CONF="/var/tuxbox/config/neutrino.conf"
 
 alias LOGINFO='logger -p user.info -t ${BASENAME}[${$}]'
 alias LOGWARN='logger -p user.warn -t ${BASENAME}[${$}]'
@@ -12,10 +16,3 @@ alias SHOWINFO='echo $(date +"%b %d %H:%M:%S") ${HOSTNAME%%.*} user.info ${BASEN
 alias SHOWWARN='echo $(date +"%b %d %H:%M:%S") ${HOSTNAME%%.*} user.warn ${BASENAME}[${$}]:'
 alias SHOWDEBUG='echo $(date +"%b %d %H:%M:%S") ${HOSTNAME%%.*} user.debug ${BASENAME}[${$}]:'
 alias SHOWERROR='echo $(date +"%b %d %H:%M:%S") ${HOSTNAME%%.*} user.error ${BASENAME}[${$}]:'
-
-NEUTRINO_CONF="/var/tuxbox/config/neutrino.conf"
-
-get_setting()
-{
-	test -e $NEUTRINO_CONF && grep "^${1}=" $NEUTRINO_CONF | cut -d'=' -f2
-}
