@@ -748,7 +748,7 @@ $(D)/libaacs: $(ARCHIVE)/libaacs-$(LIBAACS_VER).tar.bz2 $(D)/libgcrypt | $(TARGE
 	$(REWRITE_LIBTOOL)/libaacs.la
 	$(REMOVE)/libaacs-$(LIBAACS_VER)
 	cd $(TARGET_DIR); \
-	mkdir -p .config/aacs .cache/aacs/vuk
+		mkdir -p .config/aacs .cache/aacs/vuk
 	cp $(IMAGEFILES)/libaacs/KEYDB.cfg $(TARGET_DIR)/.config/aacs
 	$(TOUCH)
 
@@ -772,7 +772,7 @@ $(D)/libbdplus: $(ARCHIVE)/libbdplus-$(LIBBDPLUS_VER).tar.bz2 $(D)/libaacs | $(T
 	$(REWRITE_LIBTOOL)/libbdplus.la
 	$(REMOVE)/libbdplus-$(LIBBDPLUS_VER)
 	cd $(TARGET_DIR); \
-	mkdir -p .config/bdplus/vm0
+		mkdir -p .config/bdplus/vm0
 	cp -f $(IMAGEFILES)/libbdplus/* $(TARGET_DIR)/.config/bdplus/vm0
 	$(TOUCH)
 
