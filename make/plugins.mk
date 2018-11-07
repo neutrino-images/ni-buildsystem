@@ -363,13 +363,13 @@ $(BIN)/tuxcald: $(D)/freetype $(BIN) $(ETCINITD) $(VARCONFIG)
 		tuxcald.c \
 		\
 		-o $@ && \
-	install -m755 $(IMAGEFILES)/scripts/tuxcald.init $(ETCINITD)/tuxcald && \
+	install -m755 tuxcald $(ETCINITD)/
 	cd $(ETCINITD) && \
-	ln -sf tuxcald S99tuxcald && \
-	ln -sf tuxcald K01tuxcald && \
-	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/tuxcal && \
-	mkdir -p $(VARCONFIG)/tuxcal && \
-	install -m644 tuxcal.conf $(VARCONFIG)/tuxcal/
+		ln -sf tuxcald S99tuxcald && \
+		ln -sf tuxcald K01tuxcald
+	install -d $(VARCONFIG)/tuxcal
+	install -m644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/tuxcal/tuxcal.conf $(VARCONFIG)/tuxcal/
+	install -m755 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/tuxcal/tuxcal.notify $(VARCONFIG)/tuxcal/
 
 $(LIBPLUGINS)/tuxcal.so: $(LIBPLUGINS)
 	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/tuxcal && \
@@ -416,15 +416,13 @@ $(BIN)/tuxmaild: $(D)/freetype $(D)/openssl $(BIN) $(ETCINITD) $(VARCONFIG)
 		tuxmaild.c \
 		\
 		-o $@ && \
-	install -m755 $(IMAGEFILES)/scripts/tuxmaild.init $(ETCINITD)/tuxmaild && \
+	install -m755 tuxmaild $(ETCINITD)/
 	cd $(ETCINITD) && \
-	ln -sf tuxmaild S99tuxmaild && \
-	ln -sf tuxmaild K01tuxmaild && \
-	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/tuxmail && \
-	mkdir -p $(VARCONFIG)/tuxmail && \
-	install -m644 tuxmail.conf $(VARCONFIG)/tuxmail/ && \
-	pushd $(IMAGEFILES)/scripts && \
-	install -m755 tuxmail.onreadmail $(VARCONFIG)/tuxmail/
+		ln -sf tuxmaild S99tuxmaild && \
+		ln -sf tuxmaild K01tuxmaild
+	install -d $(VARCONFIG)/tuxmail
+	install -m644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/tuxmail/tuxmail.conf $(VARCONFIG)/tuxmail/
+	install -m755 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/tuxmail/tuxmail.onreadmail $(VARCONFIG)/tuxmail/
 
 $(LIBPLUGINS)/tuxmail.so: $(LIBPLUGINS)
 	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/tuxmail && \
