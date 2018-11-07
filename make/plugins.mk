@@ -508,9 +508,9 @@ $(LIBPLUGINS)/oscammon.so: $(LIBPLUGINS) $(VARCONFIG)
 		oscammon.c \
 		\
 		-o $@ && \
-	cp -f oscammon.conf $(VARCONFIG)/ && \
-	cp -f oscammon.cfg $(LIBPLUGINS)/ && \
-	cp -f oscammon_hint.png $(LIBPLUGINS)/
+	install -m644 oscammon.conf $(VARCONFIG)/ && \
+	install -m644 oscammon.cfg $(LIBPLUGINS)/ && \
+	install -m644 oscammon_hint.png $(LIBPLUGINS)/
 
 # -----------------------------------------------------------------------------
 

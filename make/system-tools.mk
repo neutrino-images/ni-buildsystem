@@ -648,8 +648,8 @@ $(D)/samba-hd1: $(D)/zlib $(ARCHIVE)/samba-$(SAMBA33_VER).tar.gz | $(TARGET_DIR)
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	mkdir -p $(TARGET_DIR)/var/samba/locks
-	install $(IMAGEFILES)/scripts/smb3.conf $(TARGET_DIR)/etc/samba/smb.conf
-	install -m 755 $(IMAGEFILES)/scripts/samba3.init $(TARGET_DIR)/etc/init.d/samba
+	install -m644 $(IMAGEFILES)/scripts/smb3.conf $(TARGET_DIR)/etc/samba/smb.conf
+	install -m755 $(IMAGEFILES)/scripts/samba3.init $(TARGET_DIR)/etc/init.d/samba
 	ln -sf samba $(TARGET_DIR)/etc/init.d/S99samba
 	ln -sf samba $(TARGET_DIR)/etc/init.d/K01samba
 	rm -rf $(TARGET_DIR)/bin/testparm
@@ -952,7 +952,7 @@ $(D)/nfs-utils: $(D)/rpcbind $(ARCHIVE)/nfs-utils-$(NFS-UTILS_VER).tar.bz2 | $(T
 	rm -rf $(TARGET_DIR)/sbin/umount.nfs*
 	rm -rf $(TARGET_DIR)/sbin/showmount
 	rm -rf $(TARGET_DIR)/sbin/rpcdebug
-	install -m 755 -D $(IMAGEFILES)/scripts/nfsd.init $(TARGET_DIR)/etc/init.d/nfsd
+	install -D -m755 $(IMAGEFILES)/scripts/nfsd.init $(TARGET_DIR)/etc/init.d/nfsd
 	ln -s nfsd $(TARGET_DIR)/etc/init.d/S60nfsd
 	ln -s nfsd $(TARGET_DIR)/etc/init.d/K01nfsd
 	$(REMOVE)/nfs-utils-$(NFS-UTILS_VER)
