@@ -48,7 +48,11 @@ update-ni-force:
 	make ni-sources
 	make update-ni-sources
 
+pull \
 update-ni-sources: ni-sources
+ifeq ($(HAS_INTERNALS), yes)
+	cd $(BASE_DIR)/$(NI_INTERNALS) && git pull
+endif
 	cd $(BUILD-GENERIC-PC) && git pull
 	cd $(SOURCE_DIR)/$(NI_DRIVERS-BIN) && git pull
 	cd $(SOURCE_DIR)/$(NI_FFMPEG) && git pull --all && git checkout $(NI_FFMPEG_BRANCH)
@@ -77,7 +81,6 @@ push:
 ifeq ($(HAS_INTERNALS), yes)
 	cd $(BASE_DIR)/$(NI_INTERNALS) && git push
 endif
-	cd $(SOURCE_DIR)/$(NI_NEUTRINO) && git push
 	cd $(BUILD-GENERIC-PC) && git push
 	cd $(SOURCE_DIR)/$(NI_DRIVERS-BIN) && git push
 	cd $(SOURCE_DIR)/$(NI_FFMPEG) && git push
@@ -88,6 +91,7 @@ endif
 	cd $(SOURCE_DIR)/$(NI_LIBSTB-HAL-NEXT) && git push
 	cd $(SOURCE_DIR)/$(NI_LINUX-KERNEL) && git push --all
 	cd $(SOURCE_DIR)/$(NI_LOGO-STUFF) && git push
+	cd $(SOURCE_DIR)/$(NI_NEUTRINO) && git push
 	cd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) && git push
 	cd $(SOURCE_DIR)/$(NI_OFGWRITE) && git push
 	cd $(SOURCE_DIR)/$(NI_OPENTHREADS) && git push
@@ -100,6 +104,7 @@ PHONY += update-self
 PHONY += update-neutrino
 PHONY += update-remotes
 PHONY += update-ni-force
+PHONY += pull
 PHONY += update-ni-sources
 PHONY += update-ni
 PHONY += update-all
