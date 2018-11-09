@@ -10,6 +10,27 @@ crosstools:
 		make BOXSERIES=$${boxseries} crosstool-arm-$${boxseries} || exit; \
 	done;
 
+# -----------------------------------------------------------------------------
+
+CROSSTOOL_BACKUP = $(ARCHIVE)/crosstool-$(BOXARCH)-$(BOXSERIES)-backup.tar.gz
+
+$(CROSSTOOL_BACKUP):
+	@make line
+	@echo "CROSSTOOL_BACKUP does not exist. You probably need to run 'make crosstool-backup' first."
+	@make line
+	@false
+
+crosstool-backup:
+	cd $(CROSS_DIR); \
+		tar -czvf $(CROSSTOOL_BACKUP) *
+
+crosstool-restore: $(CROSSTOOL_BACKUP)
+	make cross-clean
+	mkdir -p $(CROSS_DIR)
+	tar -xzvf $(CROSSTOOL_BACKUP) -C $(CROSS_DIR)
+
+# -----------------------------------------------------------------------------
+
 crosstools-renew:
 	for boxseries in hd1 hd2 hd51; do \
 		make BOXSERIES=$${boxseries} ccache-clean static-clean cross-clean || exit; \
@@ -17,6 +38,8 @@ crosstools-renew:
 	make host-clean
 	make crosstools
 	make clean
+
+# -----------------------------------------------------------------------------
 
 crosstool-arm-hd1: CROSS_DIR-check $(SOURCE_DIR)/$(NI_LINUX-KERNEL)
 	make $(BUILD_TMP)
@@ -112,12 +135,11 @@ crosstool-arm-hd51: CROSS_DIR-check
 
 CROSS_DIR-check:
 ifneq ($(wildcard $(CROSS_DIR)),)
+	@make line
+	@echo "Crosstool directory already present."
 	@echo
-	@echo "Crosstool directory already present:"
-	@echo "===================================="
-	@echo "You need to remove the directory $(CROSS_DIR)"
-	@echo "if you really want to build a new crosstool."
-	@echo
+	@echo "You need to run 'make cross-clean' first if you really want to build a new crosstool."
+	@make line
 	@false
 endif
 
