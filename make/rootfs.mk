@@ -67,32 +67,9 @@ ifneq ($(DEBUG), yes)
 			\
 			-path $(ROOTFS)/lib/modules \) -prune -o \
 	-type f -print0 | xargs -0 $(TARGET)-strip || true
-ifeq ($(BOXSERIES), hd2)
+  ifeq ($(BOXSERIES), hd2)
 	find $(ROOTFS)/lib/modules/$(KERNEL_VERSION_FULL)/kernel -type f -name '*.ko' | xargs -n 1 $(TARGET)-objcopy --strip-unneeded
-endif
-	@echo -e "$(TERM_YELLOW)"
-	@du -sh $(ROOTFS)
-	@echo -e "$(TERM_NORMAL)"
-endif
-ifeq ($(DEBUG), yes)
-	@make line
-	@echo "The following warnings from strip are harmless!"
-	@make line
-	find $(ROOTFS)/bin -path $(ROOTFS)/bin/neutrino -prune -o -type f -print0 | xargs -0 $(TARGET)-strip || true
-	find $(ROOTFS)/sbin -type f -print0 | xargs -0 $(TARGET)-strip || true
-	find $(ROOTFS)/lib/valgrind -type f -print0 | xargs -0 $(TARGET)-strip || true
-	@make line
-	@echo "Strip samba for debug image"
-	@make line
-	$(TARGET)-strip $(TARGET_DIR)/bin/smbclient
-	$(TARGET)-strip $(TARGET_DIR)/bin/smbpasswd
-	$(TARGET)-strip $(TARGET_DIR)/lib/libsmbsharemodes.so.0
-	$(TARGET)-strip $(TARGET_DIR)/lib/libsmbclient.so.0
-	$(TARGET)-strip $(TARGET_DIR)/lib/libnetapi.so.0
-	$(TARGET)-strip $(TARGET_DIR)/lib/libtdb.so.1
-	$(TARGET)-strip $(TARGET_DIR)/lib/libtalloc.so.1
-	$(TARGET)-strip $(TARGET_DIR)/lib/libwbclient.so.0
-	find $(ROOTFS)/lib/samba -type f -print0 | xargs -0 $(TARGET)-strip || true
+  endif
 	@echo -e "$(TERM_YELLOW)"
 	@du -sh $(ROOTFS)
 	@echo -e "$(TERM_NORMAL)"
