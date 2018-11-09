@@ -55,9 +55,9 @@ cleanup: $(ROOTFS)
 # strip bins and libs in filesystem
 strip: $(ROOTFS)
 ifneq ($(DEBUG), yes)
-	@echo "*******************************************************"
-	@echo "*** The following warnings from strip are harmless! ***"
-	@echo "*******************************************************"
+	@make line
+	@echo "The following warnings from strip are harmless!"
+	@make line
 	find $(ROOTFS)/bin -type f -print0 | xargs -0 $(TARGET)-strip || true
 	find $(ROOTFS)/sbin -type f -print0 | xargs -0 $(TARGET)-strip || true
 	find $(ROOTFS)/lib \( \
@@ -75,15 +75,15 @@ endif
 	@echo -e "$(TERM_NORMAL)"
 endif
 ifeq ($(DEBUG), yes)
-	@echo "*******************************************************"
-	@echo "*** The following warnings from strip are harmless! ***"
-	@echo "*******************************************************"
+	@make line
+	@echo "The following warnings from strip are harmless!"
+	@make line
 	find $(ROOTFS)/bin -path $(ROOTFS)/bin/neutrino -prune -o -type f -print0 | xargs -0 $(TARGET)-strip || true
 	find $(ROOTFS)/sbin -type f -print0 | xargs -0 $(TARGET)-strip || true
 	find $(ROOTFS)/lib/valgrind -type f -print0 | xargs -0 $(TARGET)-strip || true
-	@echo "*******************************************************"
-	@echo "***        Strip samba for debug image              ***"
-	@echo "*******************************************************"
+	@make line
+	@echo "Strip samba for debug image"
+	@make line
 	$(TARGET)-strip $(TARGET_DIR)/bin/smbclient
 	$(TARGET)-strip $(TARGET_DIR)/bin/smbpasswd
 	$(TARGET)-strip $(TARGET_DIR)/lib/libsmbsharemodes.so.0
@@ -149,9 +149,9 @@ endif
 get-update-info: get-update-info-$(BOXSERIES)
 
 get-update-info-hd2:
-	@echo " ============================================================================== "
-	@echo "                    Get update info for model $(shell echo $(BOXMODEL) | sed 's/.*/\u&/')"
-	@echo ""
+	@make line
+	@echo "Get update info for model $(shell echo $(BOXMODEL) | sed 's/.*/\u&/')"
+	@echo
 	@cd $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(DRIVERS_DIR); \
 	test -e ./u-boot.bin && ( \
 		strings u-boot.bin | grep -m1 "U-Boot "; \
@@ -164,18 +164,18 @@ get-update-info-hd2:
 		dd if=./vmlinux.ub.gz bs=1 skip=$$(LC_ALL=C grep -a -b -o $$'\x1f\x8b\x08\x00\x00\x00\x00\x00' ./vmlinux.ub.gz \
 		| cut -d ':' -f 1) | zcat | grep -a "Linux version"; \
 	);
-	@echo " ============================================================================== "
+	@make line
 
 get-update-info-hd1:
-	@echo " ============================================================================== "
-	@echo "                    Get update info for model $(shell echo $(BOXMODEL) | sed 's/.*/\u&/')"
-	@echo ""
+	@make line
+	@echo "Get update info for model $(shell echo $(BOXMODEL) | sed 's/.*/\u&/')"
+	@echo
 	@cd $(BASE_DIR)/root/var/update; \
 	test -e ./zImage && ( \
 		dd if=./zImage bs=1 skip=$$(LC_ALL=C grep -a -b -o $$'\x1f\x8b\x08\x00\x00\x00\x00\x00' ./zImage \
 		| cut -d ':' -f 1) | zcat | grep -a "Linux version"; \
 	);
-	@echo " ============================================================================== "
+	@make line
 
 personalize: | $(TARGET_DIR)
 	$(call local-script,$(notdir $@),start)

@@ -24,10 +24,9 @@ include make/environment-build.mk
 include make/environment-image.mk
 include make/environment-target.mk
 include make/environment-update.mk
--include internal/internal.mk
 
 printenv:
-	@echo '============================================================================== '
+	@make line
 	@echo "Build Environment Varibles:"
 	@echo "CROSS_DIR:   $(CROSS_DIR)"
 	@echo "TARGET:      $(TARGET)"
@@ -39,7 +38,7 @@ printenv:
 	@echo "BOXTYPE:     $(BOXTYPE)"
 	@echo "BOXSERIES:   $(BOXSERIES)"
 	@echo "BOXMODEL:    $(BOXMODEL)"
-	@echo '============================================================================== '
+	@make line
 	@echo ""
 	@echo "'make help' lists useful targets."
 	@echo ""
@@ -65,6 +64,7 @@ printenv:
 	fi
 
 help:
+	@make line
 	@echo "A few helpful make targets:"
 	@echo " * make preqs      - Downloads necessary stuff"
 	@echo " * make crosstool  - Build cross toolchain"
@@ -81,12 +81,11 @@ help:
 	@echo "Total renew:"
 	@echo " * make all-clean  - Reset buildsystem to delivery state"
 	@echo "                     but doesn't touch your local stuff"
+	@make line
 
-done:
 # -----------------------------------------------------------------------------
-	@echo "*************"
-	@echo -e "*** $(TERM_GREEN)Done!$(TERM_NORMAL) ***"
-	@echo "*************"
+
+-include internal/internal.mk
 
 include make/archives.mk
 include make/bootstrap.mk
@@ -114,15 +113,24 @@ include make/update.mk
 
 include make/ni.mk
 
+# for your local extensions, e.g. special plugins or similar ...
+# put them into $(BASE_DIR)/local since that is ignored in .gitignore
+-include ./Makefile.local
+
 all:
 	@echo "'make all' is not a valid target. Please read the documentation."
 
+line:
+	@for i in $$(seq 1 1 $$(tput cols)); do printf -; done
+	@echo
+
+done:
+	@make line
+	@echo -e "$(TERM_GREEN)Done$(TERM_NORMAL)"
+	@make line
+
 # target for testing only. not useful otherwise
 everything: $(shell sed -n 's/^\$$.D.\/\(.*\):.*/\1/p' make/*.mk)
-
-# for local extensions, e.g. special plugins or similar...
-# put them into $(BASE_DIR)/local since that is ignored in .gitignore
--include ./Makefile.local
 
 .print-phony:
 	@echo $(PHONY)

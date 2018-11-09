@@ -22,7 +22,9 @@ ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd51))
 endif
 
 bootstrap: $(BOOTSTRAP)
+	@make line
 	@echo -e "$(TERM_YELLOW)Bootstrapped for $(shell echo $(BOXTYPE) | sed 's/.*/\u&/') $(BOXMODEL)$(TERM_NORMAL)"
+	@make line
 
 skeleton: | $(TARGET_DIR)
 	cp --remove-destination -a $(SKEL_ROOT)/* $(TARGET_DIR)/
@@ -55,10 +57,9 @@ endif
 	make skeleton
 
 $(TARGET_DIR):
-	@echo "**********************************************************************"
+	@make line
 	@echo "TARGET_DIR does not exist. You probably need to run 'make bootstrap'"
-	@echo "**********************************************************************"
-	@echo ""
+	@make line
 	@false
 
 $(D) \

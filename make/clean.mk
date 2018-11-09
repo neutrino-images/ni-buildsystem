@@ -31,7 +31,7 @@ ccache-clean:
 	@$(CCACHE) -C
 
 all-clean: rebuild-clean staging-clean host-clean static-base-clean
-	@echo -e "\n$(TERM_RED_BOLD)Any other key then CTRL-C will now remove CROSS_DIR$(TERM_NORMAL)"
+	@echo -e "\n$(TERM_RED_BOLD)Any other key then CTRL-C will now remove CROSS_BASE$(TERM_NORMAL)"
 	@read
 	make cross-base-clean
 

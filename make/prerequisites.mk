@@ -16,27 +16,20 @@ TOOLCHECK += find-lzma find-gperf find-gettext find-bc
 preqs: download ni-git
 
 $(CCACHE):
-	@echo
+	@make line
 	@echo "ccache package on host missing."
-	@echo "==============================="
-	@echo
+	@make line
 	@false
 
 download:
+	@make line
+	@echo "Download directory missing."
 	@echo
-	@echo "Download directory missing:"
-	@echo "==========================="
-	@echo "You need to make a directory named 'download' by executing 'mkdir download'"
-	@echo "or create a symlink to the directory where you keep your sources, e.g. by"
-	@echo "typing 'ln -s /path/to/my/Archive download'."
-	@echo
+	@echo "You need to make a directory named 'download' by executing 'mkdir download' or create a symlink to the directory where you keep your sources, e.g. by typing 'ln -s /path/to/my/Archive download'."
+	@make line
 	@false
 
 $(SOURCE_DIR)/$(NI_NEUTRINO):
-	@echo ' ============================================================================== '
-	@echo "                          Cloning ni-neutrino-hd git repo"
-	@echo "                 	and creating remote repo '$(TUXBOX_REMOTE_REPO)'"
-	@echo ' ============================================================================== '
 	mkdir -p $(SOURCE_DIR)
 	cd $(SOURCE_DIR) && \
 		git clone $(NI_GIT)/$(notdir $@).git
