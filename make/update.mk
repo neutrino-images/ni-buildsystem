@@ -45,10 +45,10 @@ endif
 update-ni-force:
 	#rm -rf $(SOURCE_DIR)/$(NI_LINUX-KERNEL)
 	rm -rf $(SOURCE_DIR)/$(NI_FFMPEG)
-	make ni-git
-	make update-ni-git
+	make ni-sources
+	make update-ni-sources
 
-update-ni-git: ni-git
+update-ni-sources: ni-sources
 	cd $(BUILD-GENERIC-PC) && git pull
 	cd $(SOURCE_DIR)/$(NI_DRIVERS-BIN) && git pull
 	cd $(SOURCE_DIR)/$(NI_FFMPEG) && git pull --all && git checkout $(NI_FFMPEG_BRANCH)
@@ -68,7 +68,7 @@ endif
 update-ni:
 	make update-self
 	make update-neutrino
-	make update-ni-git
+	make update-ni-sources
 
 update-all: update-ni update-remotes
 
@@ -100,7 +100,7 @@ PHONY += update-self
 PHONY += update-neutrino
 PHONY += update-remotes
 PHONY += update-ni-force
-PHONY += update-ni-git
+PHONY += update-ni-sources
 PHONY += update-ni
 PHONY += update-all
 PHONY += push

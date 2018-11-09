@@ -13,7 +13,7 @@ TOOLCHECK += find-yacc find-flex find-tic find-pkg-config find-help2man
 TOOLCHECK += find-cmake find-ccache find-autopoint find-python find-curl
 TOOLCHECK += find-lzma find-gperf find-gettext find-bc
 
-preqs: download ni-git
+preqs: download ni-sources
 
 $(CCACHE):
 	@make line
@@ -29,8 +29,10 @@ download:
 	@make line
 	@false
 
+$(SOURCE_DIR):
+	mkdir -p $@
+
 $(SOURCE_DIR)/$(NI_NEUTRINO):
-	mkdir -p $(SOURCE_DIR)
 	cd $(SOURCE_DIR) && \
 		git clone $(NI_GIT)/$(notdir $@).git
 	pushd $@ && \
@@ -175,13 +177,12 @@ patches-info:
 
 find-%:
 	@TOOL=$(patsubst find-%,%,$@); \
-		type -p $$TOOL >/dev/null || \
-		{ echo "required tool $$TOOL missing."; false; }
+	type -p $$TOOL >/dev/null || { echo "required tool $$TOOL missing."; false; }
 
 toolcheck: $(TOOLCHECK)
 	@echo "All required tools seem to be installed."
 
-ni-git: \
+ni-sources: $(SOURCE_DIR) \
 	$(BUILD-GENERIC-PC) \
 	$(SOURCE_DIR)/$(NI_DRIVERS-BIN) \
 	$(SOURCE_DIR)/$(NI_FFMPEG) \
