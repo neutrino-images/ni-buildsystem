@@ -844,8 +844,8 @@ $(D)/wpa_supplicant: $(D)/openssl $(ARCHIVE)/wpa_supplicant-$(WPA_SUPP_VER).tar.
 	install -D -m755 $(BUILD_TMP)/wpa_supplicant-$(WPA_SUPP_VER)/wpa_supplicant/wpa_cli $(TARGET_DIR)/sbin/wpa_cli
 	install -D -m755 $(BUILD_TMP)/wpa_supplicant-$(WPA_SUPP_VER)/wpa_supplicant/wpa_passphrase $(TARGET_DIR)/sbin/wpa_passphrase
 	install -D -m755 $(BUILD_TMP)/wpa_supplicant-$(WPA_SUPP_VER)/wpa_supplicant/wpa_supplicant $(TARGET_DIR)/sbin/wpa_supplicant
-	install -D -m755 $(IMAGEFILES)/scripts/pre-wlan0.sh $(TARGET_DIR)/etc/init.d/pre-wlan0.sh
-	install -D -m755 $(IMAGEFILES)/scripts/post-wlan0.sh $(TARGET_DIR)/etc/init.d/post-wlan0.sh
+	install -D -m755 $(IMAGEFILES)/scripts/pre-wlan0.sh $(TARGET_DIR)/etc/network/pre-wlan0.sh
+	install -D -m755 $(IMAGEFILES)/scripts/post-wlan0.sh $(TARGET_DIR)/etc/network/post-wlan0.sh
 	$(REMOVE)/wpa_supplicant-$(WPA_SUPP_VER)
 	$(TOUCH)
 
