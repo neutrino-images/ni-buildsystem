@@ -11,6 +11,7 @@ BOOTSTRAP += $(STAGING_DIR)
 BOOTSTRAP += $(IMAGE_DIR)
 BOOTSTRAP += $(UPDATE_DIR)
 BOOTSTRAP += $(HOST_DIR)/bin
+BOOTSTRAP += includes
 BOOTSTRAP += libs
 BOOTSTRAP += firmware
 BOOTSTRAP += modules
@@ -52,7 +53,6 @@ endif
 	mkdir -p $(TARGET_DIR)/var/keys
 	mkdir -p $(TARGET_DIR)/var/root
 	mkdir -p $(TARGET_DIR)/var/spool/cron/crontabs
-	mkdir -p $(TARGET_INCLUDE_DIR)
 	mkdir -p $(PKG_CONFIG_PATH)
 	make skeleton
 
@@ -72,6 +72,9 @@ $(HOST_DIR):
 	mkdir -p $@
 
 $(HOST_DIR)/bin: $(HOST_DIR)
+	mkdir -p $@
+
+$(TARGET_INCLUDE_DIR): | $(TARGET_DIR)
 	mkdir -p $@
 
 $(TARGET_LIB_DIR): | $(TARGET_DIR)
@@ -116,6 +119,8 @@ ifeq ($(BOXTYPE), coolstream)
   endif
 endif
 
+includes: $(TARGET_INCLUDE_DIR)
+
 libs: $(TARGET_LIB_DIR) static-libs $(STATIC_LIB_DIR)
 
 firmware: $(TARGET_LIB_DIR)/firmware
@@ -127,6 +132,7 @@ blobs: $(TARGET_DIR)/var/update
 # -----------------------------------------------------------------------------
 
 # hack to make sure they are always copied
+PHONY += $(TARGET_INCLUDE_DIR)
 PHONY += $(TARGET_LIB_DIR)
 PHONY += $(TARGET_LIB_DIR)/firmware
 PHONY += $(TARGET_LIB_DIR)/modules
@@ -138,6 +144,7 @@ PHONY += $(STATIC_LIB_DIR)
 PHONY += bootstrap
 PHONY += skeleton
 PHONY += targetprefix
+PHONY += includes
 PHONY += libs
 PHONY += firmware
 PHONY += modules
