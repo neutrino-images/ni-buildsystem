@@ -229,7 +229,23 @@ $(D)/freetype: $(D)/zlib $(D)/libpng $(ARCHIVE)/freetype-$(FREETYPE_VER).tar.bz2
 
 # -----------------------------------------------------------------------------
 
-$(D)/libjpeg: $(ARCHIVE)/libjpeg-turbo-$(LIBJPEG-TURBO_VER).tar.gz | $(TARGET_DIR)
+ifeq ($(BOXTYPE), armbox)
+  LIBJPEG-TURBO = libjpeg-turbo2
+else
+  LIBJPEG-TURBO = libjpeg-turbo
+endif
+
+$(D)/libjpeg: $(LIBJPEG-TURBO)
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
+LIBJPEG-TURBO_VER = 1.5.3
+
+$(ARCHIVE)/libjpeg-turbo-$(LIBJPEG-TURBO_VER).tar.gz:
+	$(WGET) https://sourceforge.net/projects/libjpeg-turbo/files/$(LIBJPEG-TURBO_VER)/libjpeg-turbo-$(LIBJPEG-TURBO_VER).tar.gz
+
+$(D)/libjpeg-turbo: $(ARCHIVE)/libjpeg-turbo-$(LIBJPEG-TURBO_VER).tar.gz | $(TARGET_DIR)
 	$(REMOVE)/libjpeg-turbo-$(LIBJPEG-TURBO_VER)
 	$(UNTAR)/libjpeg-turbo-$(LIBJPEG-TURBO_VER).tar.gz
 	$(CHDIR)/libjpeg-turbo-$(LIBJPEG-TURBO_VER); \
@@ -248,6 +264,31 @@ $(D)/libjpeg: $(ARCHIVE)/libjpeg-turbo-$(LIBJPEG-TURBO_VER).tar.gz | $(TARGET_DI
 	$(REWRITE_LIBTOOL)/libjpeg.la
 	rm -f $(TARGET_LIB_DIR)/libturbojpeg* $(TARGET_INCLUDE_DIR)/turbojpeg.h
 	$(REMOVE)/libjpeg-turbo-$(LIBJPEG-TURBO_VER)
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
+LIBJPEG-TURBO2_VER = 2.0.0
+LIBJPEG-TURBO2_SOURCE = libjpeg-turbo-$(LIBJPEG-TURBO2_VER).tar.gz
+
+$(ARCHIVE)/$(LIBJPEG-TURBO2_SOURCE):
+	$(WGET) https://sourceforge.net/projects/libjpeg-turbo/files/$(LIBJPEG-TURBO2_VER)/$(LIBJPEG-TURBO2_SOURCE)
+
+LIBJPEG-TURBO2_PATCH = libjpeg-turbo-tiff-ojpeg.patch
+
+$(D)/libjpeg-turbo2: $(ARCHIVE)/$(LIBJPEG-TURBO2_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/libjpeg-turbo-$(LIBJPEG-TURBO2_VER)
+	$(UNTAR)/$(LIBJPEG-TURBO2_SOURCE)
+	$(CHDIR)/libjpeg-turbo-$(LIBJPEG-TURBO2_VER); \
+		$(call apply_patches,$(LIBJPEG-TURBO2_PATCH)); \
+		$(CMAKE) \
+			-DWITH_SIMD=False \
+			-DENABLE_STATIC=OFF \
+			; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	rm -f $(addprefix $(TARGET_DIR)/bin/,cjpeg djpeg jpegtran rdjpgcom wrjpgcom tjbench)
+	$(REMOVE)/libjpeg-turbo-$(LIBJPEG-TURBO2_VER)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------

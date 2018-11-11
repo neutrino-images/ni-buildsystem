@@ -154,10 +154,6 @@ LIBICONV_VER=1.13.1
 $(ARCHIVE)/libiconv-$(LIBICONV_VER).tar.gz:
 	$(WGET) http://ftp.gnu.org/gnu/libiconv/libiconv-$(LIBICONV_VER).tar.gz
 
-LIBJPEG-TURBO_VER=1.5.3
-$(ARCHIVE)/libjpeg-turbo-$(LIBJPEG-TURBO_VER).tar.gz:
-	$(WGET) https://sourceforge.net/projects/libjpeg-turbo/files/$(LIBJPEG-TURBO_VER)/libjpeg-turbo-$(LIBJPEG-TURBO_VER).tar.gz
-
 GIFLIB_VER=5.1.4
 $(ARCHIVE)/giflib-$(GIFLIB_VER).tar.bz2:
 	$(WGET) http://sourceforge.net/projects/giflib/files/giflib-$(GIFLIB_VER).tar.bz2
