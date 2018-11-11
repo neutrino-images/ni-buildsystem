@@ -132,12 +132,6 @@ ifeq ($(BOXSERIES), hd2)
 		ln -sf /var/etc/wpa_supplicant.conf wpa_supplicant.conf
 	pushd $(ROOTFS)/etc/network && \
 		ln -sf /var/etc/network/interfaces interfaces
-	pushd $(ROOTFS)/lib && \
-		ln -sf libuClibc-$(UCLIBC_VER).so libcrypt.so.0 && \
-		ln -sf libuClibc-$(UCLIBC_VER).so libdl.so.0 && \
-		ln -sf libuClibc-$(UCLIBC_VER).so libpthread.so.0 && \
-		ln -sf libuClibc-$(UCLIBC_VER).so libm.so.0 && \
-		ln -sf libuClibc-$(UCLIBC_VER).so librt.so.0
   ifeq ($(IMAGE_NEW), yes)
 	touch -f $(ROOTFS)/var/etc/.newimage
   endif

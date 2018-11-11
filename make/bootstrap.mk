@@ -6,17 +6,16 @@
 BOOTSTRAP  = targetprefix
 BOOTSTRAP += $(D)
 BOOTSTRAP += $(BUILD_TMP)
-BOOTSTRAP += $(CROSS_DIR)
 BOOTSTRAP += $(STAGING_DIR)
 BOOTSTRAP += $(IMAGE_DIR)
 BOOTSTRAP += $(UPDATE_DIR)
 BOOTSTRAP += $(HOST_DIR)/bin
+BOOTSTRAP += cross-libs
 BOOTSTRAP += includes
 BOOTSTRAP += libs
 BOOTSTRAP += firmware
 BOOTSTRAP += modules
 BOOTSTRAP += host-preqs
-BOOTSTRAP += $(TARGET_LIB_DIR)/libc.so.6
 
 ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd51))
   BOOTSTRAP += blobs
@@ -64,7 +63,6 @@ $(TARGET_DIR):
 
 $(D) \
 $(BUILD_TMP) \
-$(CROSS_DIR) \
 $(STAGING_DIR) \
 $(IMAGE_DIR) \
 $(UPDATE_DIR) \
@@ -95,13 +93,6 @@ $(TARGET_LIB_DIR)/modules: | $(TARGET_DIR)
 	mkdir -p $@
 	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(DRIVERS_DIR)/drivers/$(KERNEL_VERSION_FULL) $@/
 
-$(TARGET_LIB_DIR)/libc.so.6: | $(TARGET_DIR)
-	if test -e $(CROSS_DIR)/$(TARGET)/sys-root/lib; then \
-		cp -a $(CROSS_DIR)/$(TARGET)/sys-root/lib/*so* $(TARGET_LIB_DIR); \
-	else \
-		cp -a $(CROSS_DIR)/$(TARGET)/lib/*so* $(TARGET_LIB_DIR); \
-	fi
-
 $(STATIC_LIB_DIR): | $(TARGET_DIR)
 	mkdir -p $@
 	if [ -d $(STATIC_DIR)/ ]; then \
@@ -117,6 +108,23 @@ ifeq ($(BOXTYPE), coolstream)
   else
 	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(DRIVERS_DIR)/u-boot.bin $@/
   endif
+endif
+
+cross-libs: | $(TARGET_DIR)
+	if [ -d $(CROSS_DIR)/$(TARGET)/sys-root/lib/ ]; then \
+		cp -a $(CROSS_DIR)/$(TARGET)/sys-root/lib/*so* $(TARGET_LIB_DIR); \
+	elif [ -d $(CROSS_DIR)/$(TARGET)/lib/ ]; then \
+		cp -a $(CROSS_DIR)/$(TARGET)/lib/*so* $(TARGET_LIB_DIR); \
+	else \
+		false; \
+	fi
+ifeq ($(BOXSERIES), hd2)
+	cd $(TARGET_LIB_DIR) && \
+		ln -sf libuClibc-$(UCLIBC_VER).so libcrypt.so.0 && \
+		ln -sf libuClibc-$(UCLIBC_VER).so libdl.so.0 && \
+		ln -sf libuClibc-$(UCLIBC_VER).so libm.so.0 && \
+		ln -sf libuClibc-$(UCLIBC_VER).so libpthread.so.0 && \
+		ln -sf libuClibc-$(UCLIBC_VER).so librt.so.0
 endif
 
 includes: $(TARGET_INCLUDE_DIR)
@@ -144,6 +152,7 @@ PHONY += $(STATIC_LIB_DIR)
 PHONY += bootstrap
 PHONY += skeleton
 PHONY += targetprefix
+PHONY += cross-libs
 PHONY += includes
 PHONY += libs
 PHONY += firmware
