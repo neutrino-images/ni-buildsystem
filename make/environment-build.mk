@@ -272,9 +272,6 @@ MKDIR = mkdir -p $(BUILD_TMP)
 TOUCH = @touch $@
 STRIP = $(TARGET)-strip
 
-CONFIGURE_OPTS = \
-	--build=$(BUILD) --host=$(TARGET)
-
 BUILDENV = \
 	CC=$(TARGET)-gcc \
 	CXX=$(TARGET)-g++ \
@@ -294,10 +291,36 @@ BUILDENV = \
 	LDFLAGS="$(TARGET_LDFLAGS)" \
 	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH)
 
+CONFIGURE_OPTS = \
+	--build=$(BUILD) \
+	--host=$(TARGET)
+
 CONFIGURE = \
 	test -f ./configure || ./autogen.sh && \
 	$(BUILDENV) \
 	./configure $(CONFIGURE_OPTS)
+
+CMAKEENV = \
+	-DCMAKE_BUILD_TYPE="None" \
+	-DCMAKE_SYSTEM_NAME="Linux" \
+	-DCMAKE_SYSTEM_PROCESSOR="arm" \
+	-DCMAKE_INSTALL_PREFIX="" \
+	-DCMAKE_INSTALL_DOCDIR=/.remove \
+	-DCMAKE_INSTALL_MANDIR=/.remove \
+	-DCMAKE_C_COMPILER="$(TARGET)-gcc" \
+	-DCMAKE_C_FLAGS="$(TARGET_CFLAGS) -DNDEBUG" \
+	-DCMAKE_CXX_COMPILER="$(TARGET)-g++" \
+	-DCMAKE_CXX_FLAGS="$(TARGET_CFLAGS) -DNDEBUG" \
+	-DCMAKE_LINKER="$(TARGET)-ld" \
+	-DCMAKE_AR="$(TARGET)-ar" \
+	-DCMAKE_NM="$(TARGET)-nm" \
+	-DCMAKE_OBJDUMP="$(TARGET)-objdump" \
+	-DCMAKE_RANLIB="$(TARGET)-ranlib" \
+	-DCMAKE_STRIP="$(TARGET)-strip" \
+
+CMAKE = \
+	rm -f CMakeCache.txt; \
+	cmake $(CMAKEENV)
 
 GITHUB			= https://github.com
 BITBUCKET		= https://bitbucket.org
