@@ -5,8 +5,10 @@
 
 rootfs: .version update.urls $(ROOTFS) rootfs-cleanup rootfs-strip rootfs-softlinks
 
+# -----------------------------------------------------------------------------
+
 .version: $(TARGET_DIR)/.version
-$(TARGET_DIR)/.version:
+$(TARGET_DIR)/.version: | $(TARGET_DIR)
 	echo "version="$(IMAGE_TYPE)$(IMAGE_VERSION)$(IMAGE_DATE) > $@
 	# determinate last NI-tag an use this to git describe
 	GITTAG=`cd $(SOURCE_DIR)/$(NI_NEUTRINO); git tag -l "NI-*" | tail -n1`; \
@@ -29,15 +31,31 @@ else
 endif
 	echo "homepage=www.neutrino-images.de"			>> $@
 
+# -----------------------------------------------------------------------------
+
 update.urls: $(TARGET_DIR)/var/etc/update.urls
-$(TARGET_DIR)/var/etc/update.urls:
+$(TARGET_DIR)/var/etc/update.urls: | $(TARGET_DIR)
 	echo "$(NI-SERVER)/update.php"				 > $@
 	echo "$(CHANNELLISTS_URL)/$(CHANNELLISTS_MD5FILE)"	>> $@
+
+# -----------------------------------------------------------------------------
+
+personalize: | $(TARGET_DIR)
+	$(call local-script,$(notdir $@),start)
+	@LOCAL_ROOT=$(LOCAL_DIR)/root; \
+	if [ -n "$$(ls -A $$LOCAL_ROOT)" ]; then \
+		cp -a -v $$LOCAL_ROOT/* $(TARGET_DIR)/; \
+	fi
+	$(call local-script,$(notdir $@),stop)
+
+# -----------------------------------------------------------------------------
 
 # create filesystem for our images
 $(ROOTFS): | $(TARGET_DIR)
 	rm -rf $(ROOTFS)
 	cp -a $(TARGET_DIR) $(ROOTFS)
+
+# -----------------------------------------------------------------------------
 
 # cleanup root filesystem from useless stuff
 rootfs-cleanup: $(ROOTFS)
@@ -52,6 +70,8 @@ rootfs-cleanup: $(ROOTFS)
 	@echo -e "$(TERM_YELLOW)"
 	@du -sh $(ROOTFS)
 	@echo -e "$(TERM_NORMAL)"
+
+# -----------------------------------------------------------------------------
 
 # strip bins and libs in root filesystem
 rootfs-strip: $(ROOTFS)
@@ -75,6 +95,8 @@ ifneq ($(DEBUG), yes)
 	@du -sh $(ROOTFS)
 	@echo -e "$(TERM_NORMAL)"
 endif
+
+# -----------------------------------------------------------------------------
 
 # create softlinks in root filesystem
 rootfs-softlinks: $(ROOTFS)
@@ -124,6 +146,8 @@ endif
 	pushd $(ROOTFS)/var/tuxbox/config && \
 	ln -sf /var/keys/SoftCam.Key SoftCam.Key
 
+# -----------------------------------------------------------------------------
+
 get-update-info: get-update-info-$(BOXSERIES)
 
 get-update-info-hd2:
@@ -137,7 +161,7 @@ get-update-info-hd2:
 	test -e ./uldr.bin && ( \
 		strings uldr.bin | grep -m1 "Microloader "; \
 	); \
-	cd $(BASE_DIR)/root/var/update; \
+	cd $(TARGET_DIR)/var/update; \
 	test -e ./vmlinux.ub.gz	&& ( \
 		dd if=./vmlinux.ub.gz bs=1 skip=$$(LC_ALL=C grep -a -b -o $$'\x1f\x8b\x08\x00\x00\x00\x00\x00' ./vmlinux.ub.gz \
 		| cut -d ':' -f 1) | zcat | grep -a "Linux version"; \
@@ -148,28 +172,20 @@ get-update-info-hd1:
 	@make line
 	@echo "Get update info for model $(shell echo $(BOXMODEL) | sed 's/.*/\u&/')"
 	@echo
-	@cd $(BASE_DIR)/root/var/update; \
+	@cd $(TARGET_DIR)/var/update; \
 	test -e ./zImage && ( \
 		dd if=./zImage bs=1 skip=$$(LC_ALL=C grep -a -b -o $$'\x1f\x8b\x08\x00\x00\x00\x00\x00' ./zImage \
 		| cut -d ':' -f 1) | zcat | grep -a "Linux version"; \
 	);
 	@make line
 
-personalize: | $(TARGET_DIR)
-	$(call local-script,$(notdir $@),start)
-	@LOCAL_ROOT=$(LOCAL_DIR)/root; \
-	if [ -n "$$(ls -A $$LOCAL_ROOT)" ]; then \
-		cp -a -v $$LOCAL_ROOT/* $(TARGET_DIR)/; \
-	fi
-	$(call local-script,$(notdir $@),stop)
-
 # -----------------------------------------------------------------------------
 
 PHONY += rootfs
 PHONY += .version $(TARGET_DIR)/.version
 PHONY += update.urls $(TARGET_DIR)/var/etc/update.urls
+PHONY += personalize
 PHONY += $(ROOTFS)
 PHONY += rootfs-cleanup
 PHONY += rootfs-strip
 PHONY += rootfs-softlinks
-PHONY += personalize
