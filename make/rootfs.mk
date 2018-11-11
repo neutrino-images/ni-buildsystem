@@ -3,7 +3,7 @@
 #
 # -----------------------------------------------------------------------------
 
-rootfs: .version update.urls $(ROOTFS) cleanup strip softlinks
+rootfs: .version update.urls $(ROOTFS) rootfs-cleanup rootfs-strip rootfs-softlinks
 
 .version: $(TARGET_DIR)/.version
 $(TARGET_DIR)/.version:
@@ -39,8 +39,8 @@ $(ROOTFS): | $(TARGET_DIR)
 	rm -rf $(ROOTFS)
 	cp -a $(TARGET_DIR) $(ROOTFS)
 
-# cleanup filesystem from useless stuff
-cleanup: $(ROOTFS)
+# cleanup root filesystem from useless stuff
+rootfs-cleanup: $(ROOTFS)
 	rm -rf $(ROOTFS)/{include,mymodules}
 	rm -rf $(ROOTFS)/share/{aclocal,gdb,locale,man,doc,info,common-lisp}
 	rm -rf $(ROOTFS)/lib/pkgconfig
@@ -53,8 +53,8 @@ cleanup: $(ROOTFS)
 	@du -sh $(ROOTFS)
 	@echo -e "$(TERM_NORMAL)"
 
-# strip bins and libs in filesystem
-strip: $(ROOTFS)
+# strip bins and libs in root filesystem
+rootfs-strip: $(ROOTFS)
 ifneq ($(DEBUG), yes)
 	@make line
 	@echo "The following warnings from strip are harmless!"
@@ -76,8 +76,8 @@ ifneq ($(DEBUG), yes)
 	@echo -e "$(TERM_NORMAL)"
 endif
 
-# create softlinks in filesystem
-softlinks: $(ROOTFS)
+# create softlinks in root filesystem
+rootfs-softlinks: $(ROOTFS)
 	pushd $(ROOTFS) && \
 		ln -sf /var/root root
 ifeq ($(BOXSERIES), hd51)
@@ -169,7 +169,7 @@ PHONY += rootfs
 PHONY += .version $(TARGET_DIR)/.version
 PHONY += update.urls $(TARGET_DIR)/var/etc/update.urls
 PHONY += $(ROOTFS)
-PHONY += cleanup
-PHONY += strip
-PHONY += softlinks
+PHONY += rootfs-cleanup
+PHONY += rootfs-strip
+PHONY += rootfs-softlinks
 PHONY += personalize
