@@ -3,7 +3,7 @@
 #
 # -----------------------------------------------------------------------------
 
-BOOTSTRAP  = targetprefix
+BOOTSTRAP  = target-dir
 BOOTSTRAP += $(D)
 BOOTSTRAP += $(BUILD_TMP)
 BOOTSTRAP += $(STAGING_DIR)
@@ -32,7 +32,7 @@ skeleton: | $(TARGET_DIR)
 		cp -a $(SKEL_ROOT)-$(BOXFAMILY)/* $(TARGET_DIR)/; \
 	fi
 
-targetprefix:
+target-dir:
 	mkdir -p $(TARGET_DIR)
 	mkdir -p $(TARGET_DIR)/bin
 ifeq ($(BOXSERIES), hd51)
@@ -156,7 +156,7 @@ PHONY += $(STATIC_LIB_DIR)
 
 PHONY += bootstrap
 PHONY += skeleton
-PHONY += targetprefix
+PHONY += target-dir
 PHONY += cross-libs
 PHONY += includes
 PHONY += libs
