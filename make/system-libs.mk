@@ -346,21 +346,7 @@ $(D)/openthreads: $(SOURCE_DIR)/$(NI_OPENTHREADS) | $(TARGET_DIR)
 	$(REMOVE)/$(NI_OPENTHREADS)
 	tar -C $(SOURCE_DIR) -cp $(NI_OPENTHREADS) --exclude-vcs | tar -C $(BUILD_TMP) -x
 	$(CHDIR)/$(NI_OPENTHREADS)/; \
-		rm -f CMakeCache.txt; \
-		cmake \
-			-DCMAKE_BUILD_TYPE="None" \
-			-DCMAKE_SYSTEM_NAME="Linux" \
-			-DCMAKE_SYSTEM_PROCESSOR="arm" \
-			-DCMAKE_CXX_FLAGS="$(TARGET_CFLAGS) -DNDEBUG" \
-			-DCMAKE_INSTALL_PREFIX="" \
-			-DCMAKE_C_COMPILER="$(TARGET)-gcc" \
-			-DCMAKE_CXX_COMPILER="$(TARGET)-g++" \
-			-DCMAKE_LINKER="$(TARGET)-ld" \
-			-DCMAKE_RANLIB="$(TARGET)-ranlib" \
-			-DCMAKE_AR="$(TARGET)-ar" \
-			-DCMAKE_NM="$(TARGET)-nm" \
-			-DCMAKE_OBJDUMP="$(TARGET)-objdump" \
-			-DCMAKE_STRIP="$(TARGET)-strip" \
+		$(CMAKE) \
 			-DCMAKE_SUPPRESS_DEVELOPER_WARNINGS="1" \
 			-D_OPENTHREADS_ATOMIC_USE_GCC_BUILTINS_EXITCODE="0" \
 			; \
@@ -817,23 +803,9 @@ $(D)/pugixml: $(ARCHIVE)/pugixml-$(PUGIXML_VER).tar.gz | $(TARGET_DIR)
 	$(UNTAR)/pugixml-$(PUGIXML_VER).tar.gz
 	$(CHDIR)/pugixml-$(PUGIXML_VER); \
 		$(call apply_patches, $(PUGIXML_PATCH)); \
-		rm -f CMakeCache.txt; \
-		cmake \
+		$(CMAKE) \
 			--no-warn-unused-cli \
 			-DBUILD_SHARED_LIBS="ON" \
-			-DCMAKE_CXX_FLAGS="$(TARGET_CFLAGS) -DNDEBUG" \
-			-DCMAKE_INSTALL_PREFIX="" \
-			-DCMAKE_BUILD_TYPE="None" \
-			-DCMAKE_SYSTEM_NAME="Linux" \
-			-DCMAKE_SYSTEM_PROCESSOR="arm" \
-			-DCMAKE_C_COMPILER="$(TARGET)-gcc" \
-			-DCMAKE_CXX_COMPILER="$(TARGET)-g++" \
-			-DCMAKE_LINKER="$(TARGET)-ld" \
-			-DCMAKE_RANLIB="$(TARGET)-ranlib" \
-			-DCMAKE_AR="$(TARGET)-ar" \
-			-DCMAKE_NM="$(TARGET)-nm" \
-			-DCMAKE_OBJDUMP="$(TARGET)-objdump" \
-			-DCMAKE_STRIP="$(TARGET)-strip" \
 			; \
 		$(MAKE); \
 		make install DESTDIR=$(TARGET_DIR)
