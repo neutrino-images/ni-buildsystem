@@ -132,13 +132,10 @@ ifeq ($(BOXSERIES), hd2)
 		ln -sf /var/etc/wpa_supplicant.conf wpa_supplicant.conf
 	pushd $(ROOTFS)/etc/network && \
 		ln -sf /var/etc/network/interfaces interfaces
-  ifeq ($(IMAGE_NEW), yes)
-	touch -f $(ROOTFS)/var/etc/.newimage
-  endif
 endif
-	mkdir -p $(ROOTFS)/var/tuxbox/config && \
+	mkdir -p $(ROOTFS)/var/tuxbox/config
 	pushd $(ROOTFS)/var/tuxbox/config && \
-	ln -sf /var/keys/SoftCam.Key SoftCam.Key
+		ln -sf /var/keys/SoftCam.Key SoftCam.Key
 
 # -----------------------------------------------------------------------------
 
