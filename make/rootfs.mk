@@ -1,9 +1,9 @@
 #
-# targets to create rootfs
+# targets to finish TARGET_DIR and create rootfs
 #
 # -----------------------------------------------------------------------------
 
-rootfs: .version update.urls $(ROOTFS) rootfs-cleanup rootfs-strip rootfs-softlinks
+target-finish: .version update.urls
 
 # -----------------------------------------------------------------------------
 
@@ -47,6 +47,10 @@ personalize: | $(TARGET_DIR)
 		cp -a -v $$LOCAL_ROOT/* $(TARGET_DIR)/; \
 	fi
 	$(call local-script,$(notdir $@),stop)
+
+# -----------------------------------------------------------------------------
+
+rootfs: target-finish $(ROOTFS) rootfs-cleanup rootfs-strip rootfs-softlinks
 
 # -----------------------------------------------------------------------------
 
@@ -172,10 +176,12 @@ get-update-info-hd1:
 
 # -----------------------------------------------------------------------------
 
-PHONY += rootfs
+PHONY += target-finish
 PHONY += .version $(TARGET_DIR)/.version
 PHONY += update.urls $(TARGET_DIR)/var/etc/update.urls
 PHONY += personalize
+
+PHONY += rootfs
 PHONY += $(ROOTFS)
 PHONY += rootfs-cleanup
 PHONY += rootfs-strip
