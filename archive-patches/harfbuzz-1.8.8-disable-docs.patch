@@ -1,0 +1,12 @@
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -4,7 +4,7 @@
+ 
+ ACLOCAL_AMFLAGS = -I m4
+ 
+-SUBDIRS = src util test docs
++SUBDIRS = src util test
+ 
+ EXTRA_DIST = \
+ 	autogen.sh \
+
