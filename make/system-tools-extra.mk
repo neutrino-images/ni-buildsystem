@@ -53,8 +53,8 @@ $(D)/binutils: $(ARCHIVE)/binutils-$(BINUTILS_VER).tar.bz2 | $(TARGET_DIR)
 			--disable-gdb \
 			; \
 		$(MAKE)
-		install -m755 $(BUILD_TMP)/binutils-$(BINUTILS_VER)/binutils/objdump $(BIN)/
-		install -m755 $(BUILD_TMP)/binutils-$(BINUTILS_VER)/binutils/objcopy $(BIN)/
+		install -m 0755 $(BUILD_TMP)/binutils-$(BINUTILS_VER)/binutils/objdump $(BIN)/
+		install -m 0755 $(BUILD_TMP)/binutils-$(BINUTILS_VER)/binutils/objcopy $(BIN)/
 	$(REMOVE)/binutils-$(BINUTILS_VER)
 	$(TOUCH)
 
@@ -78,7 +78,7 @@ $(D)/util-linux: $(D)/libncurses $(ARCHIVE)/util-linux-$(UTIL-LINUX_VER).tar.xz 
 			--mandir=/.remove \
 			; \
 		$(MAKE) sfdisk; \
-		install -m755 sfdisk $(TARGET_DIR)/sbin/sfdisk
+		install -m 0755 sfdisk $(TARGET_DIR)/sbin/sfdisk
 	$(REMOVE)/util-linux-$(UTIL-LINUX_VER)
 	$(TOUCH)
 
@@ -186,7 +186,7 @@ $(D)/python: $(ARCHIVE)/Python-$(PYTHON_VER).tgz | $(TARGET_DIR)
 		cp -a $(BUILD_TMP)/Python-$(PYTHON_VER)/_install/lib/python* $(TARGET_LIB_DIR)/
 		cp -a $(BUILD_TMP)/Python-$(PYTHON_VER)/_install/lib/libpython* $(TARGET_LIB_DIR)/
 		chmod +w $(TARGET_LIB_DIR)/libpython*
-		install -m755 $(BUILD_TMP)/Python-$(PYTHON_VER)/_install/bin/python $(TARGET_DIR)/bin/
+		install -m 0755 $(BUILD_TMP)/Python-$(PYTHON_VER)/_install/bin/python $(TARGET_DIR)/bin/
 	$(REMOVE)/Python-$(PYTHON_VER)
 	$(TOUCH)
 
@@ -225,6 +225,6 @@ $(D)/iozone3: $(ARCHIVE)/$(IOZONE_SOURCE) | $(TARGET_DIR)
 		sed -i -e "s/= cc/= $(TARGET)-cc/" makefile; \
 		$(BUILDENV) \
 		$(MAKE) linux-arm; \
-		install -m 755 iozone $(TARGET_DIR)/bin
+		install -m 0755 iozone $(TARGET_DIR)/bin
 	$(REMOVE)/iozone3_$(IOZONE_VER)
 	$(TOUCH)

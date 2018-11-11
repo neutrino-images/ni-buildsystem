@@ -8,12 +8,12 @@ init-scripts: \
 	init-camd
 
 init-helpers: $(ETCINITD)
-	install -m644 $(IMAGEFILES)/scripts/init.globals $(ETCINITD)/globals
-	install -m644 $(IMAGEFILES)/scripts/init.functions $(ETCINITD)/functions
+	install -m 0644 $(IMAGEFILES)/scripts/init.globals $(ETCINITD)/globals
+	install -m 0644 $(IMAGEFILES)/scripts/init.functions $(ETCINITD)/functions
 
 init-camd: $(ETCINITD)
-	install -m755 $(IMAGEFILES)/scripts/camd.init $(ETCINITD)/camd
-	install -m755 $(IMAGEFILES)/scripts/camd_datefix.init $(ETCINITD)/camd_datefix
+	install -m 0755 $(IMAGEFILES)/scripts/camd.init $(ETCINITD)/camd
+	install -m 0755 $(IMAGEFILES)/scripts/camd_datefix.init $(ETCINITD)/camd_datefix
 	set -e; cd $(ETCINITD); \
 		ln -sf camd S99camd; \
 		ln -sf camd K01camd
@@ -21,7 +21,7 @@ init-camd: $(ETCINITD)
 # -----------------------------------------------------------------------------
 
 scripts: $(SBIN)
-	install -m755 $(IMAGEFILES)/scripts/service $(SBIN)
+	install -m 0755 $(IMAGEFILES)/scripts/service $(SBIN)
 ifeq ($(BOXTYPE), coolstream)
-	install -m755 $(IMAGEFILES)/scripts/flash_eraseall $(SBIN)
+	install -m 0755 $(IMAGEFILES)/scripts/flash_eraseall $(SBIN)
 endif
