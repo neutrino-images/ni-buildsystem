@@ -37,7 +37,6 @@ u-neutrino: neutrino-clean
 	echo "killall start_neutrino neutrino; sleep 5"	>> $(PREINSTALL_SH)
 	echo "sync; /bin/busybox reboot"		>> $(POSTINSTALL_SH)
 	$(MAKE) neutrino
-	install -D -m 0644 $(TARGET_DIR)/.version $(UPDATE_INST_DIR)/.version
 	install -D -m 0755 $(TARGET_DIR)/etc/init.d/start_neutrino $(UPDATE_INST_DIR)/etc/init.d/start_neutrino
 	install -D -m 0755 $(TARGET_DIR)/bin/neutrino $(UPDATE_INST_DIR)/bin/neutrino
 	install -D -m 0644 $(TARGET_DIR)/share/tuxbox/neutrino/locale/deutsch.locale $(UPDATE_INST_DIR)/share/tuxbox/neutrino/locale/deutsch.locale
@@ -55,7 +54,6 @@ u-neutrino-full: neutrino-clean
 	echo "killall start_neutrino neutrino; sleep 5"	>> $(PREINSTALL_SH)
 	echo "sync; /bin/busybox reboot"		>> $(POSTINSTALL_SH)
 	$(MAKE) neutrino NEUTRINO_INST_DIR=$(UPDATE_INST_DIR)
-	install -D -m 0644 $(TARGET_DIR)/.version $(UPDATE_INST_DIR)/.version
 	install -D -m 0755 $(TARGET_DIR)/etc/init.d/start_neutrino $(UPDATE_INST_DIR)/etc/init.d/start_neutrino
 ifneq ($(DEBUG), yes)
 	find $(UPDATE_INST_DIR)/bin -type f ! -name *.sh -print0 | xargs -0 $(TARGET)-strip || true

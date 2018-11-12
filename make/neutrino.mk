@@ -111,7 +111,6 @@ $(N_OBJDIR)/config.status: $(N_DEPS) $(MAKE_DIR)/neutrino.mk
 		git checkout $(NI_NEUTRINO_BRANCH)
 	$(SOURCE_DIR)/$(NI_NEUTRINO)/autogen.sh
 	pushd $(N_OBJDIR) && \
-		test -e version.h || touch version.h && \
 		export PKG_CONFIG=$(PKG_CONFIG) && \
 		export PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) && \
 		$(N_BUILDENV) \
@@ -182,7 +181,6 @@ $(D)/neutrino: $(N_OBJDIR)/config.status
 	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
 	$(MAKE) -C $(N_OBJDIR) all     DESTDIR=$(TARGET_DIR)
 	$(MAKE) -C $(N_OBJDIR) install DESTDIR=$(NEUTRINO_INST_DIR)
-	make $(TARGET_DIR)/.version
 	$(TOUCH)
 
 $(D)/libstb-hal: $(LH_OBJDIR)/config.status
