@@ -9,27 +9,12 @@ target-finish: .version update.urls
 
 .version: $(TARGET_DIR)/.version
 $(TARGET_DIR)/.version: | $(TARGET_DIR)
-	echo "version="$(IMAGE_TYPE)$(IMAGE_VERSION)$(IMAGE_DATE) > $@
-	# determinate last NI-tag an use this to git describe
-	GITTAG=`cd $(SOURCE_DIR)/$(NI_NEUTRINO); git tag -l "NI-*" | tail -n1`; \
-	GITDESCRIBE=`cd $(SOURCE_DIR)/$(NI_NEUTRINO); git describe --always --dirty --tags --match $$GITTAG`; \
-	GITDESCRIBE=$${GITDESCRIBE%-dirty}; \
-	GITREVLIST=`git rev-list $$GITTAG.. --count`; \
-	echo "describe="$$GITDESCRIBE.$$GITREVLIST		>> $@
-	# determinate current branch in origin repo
-	BRANCH=`cd $(SOURCE_DIR)/$(NI_NEUTRINO); git branch --no-color 2>/dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'`; \
-	echo "branch="$$BRANCH					>> $@
-	# determinate last commit in origin repo
-	COMMIT=`cd $(SOURCE_DIR)/$(NI_NEUTRINO); git fetch origin; git show origin/$(NI_NEUTRINO_BRANCH) --stat | grep ^commit | cut -d' ' -f2 | cut -c1-7`; \
-	echo "commit="$$COMMIT					>> $@
-	echo "builddate="`date`					>> $@
-	echo "creator=$(MAINTAINER)"				>> $@
-ifeq ($(USE_LIBSTB-HAL), yes)
-	echo "imagename=NI-Neutrino-MP"				>> $@
-else
-	echo "imagename=NI-Neutrino-HD"				>> $@
-endif
-	echo "homepage=www.neutrino-images.de"			>> $@
+	echo "imagename=NI \o/ Neutrino-Image"					 > $@
+	echo "version=$(IMAGE_TYPE)$(IMAGE_VERSION)$(IMAGE_DATE)" 		>> $@
+	echo "describe=$$(git describe --always --long --tags | sed 's/-/./2')"	>> $@
+	echo "builddate=$$(date)"						>> $@
+	echo "creator=$(MAINTAINER)"						>> $@
+	echo "homepage=www.neutrino-images.de"					>> $@
 
 # -----------------------------------------------------------------------------
 
