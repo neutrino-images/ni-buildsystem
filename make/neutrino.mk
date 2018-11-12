@@ -210,19 +210,19 @@ endif
 neutrino-clean:
 	-make -C $(N_OBJDIR) uninstall
 	-make -C $(N_OBJDIR) distclean
-	-rm $(N_OBJDIR)/config.status
-	-rm $(D)/neutrino
+	rm -f $(N_OBJDIR)/config.status
+	rm -f $(D)/neutrino
 
 neutrino-clean-all: neutrino-clean
-	-rm -r $(N_OBJDIR)
+	rm -rf $(N_OBJDIR)
 
 libstb-hal-clean:
 	-make -C $(LH_OBJDIR) clean
-	-rm $(LH_OBJDIR)/config.status
-	-rm $(D)/libstb-hal
+	rm -f $(LH_OBJDIR)/config.status
+	rm -f $(D)/libstb-hal
 
 libstb-hal-clean-all: libstb-hal-clean
-	-rm -r $(LH_OBJDIR)
+	rm -rf $(LH_OBJDIR)
 
 # -----------------------------------------------------------------------------
 
