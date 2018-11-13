@@ -44,7 +44,11 @@ plugins-all: $(D)/neutrino \
 	shellexec
 
 plugins-hd1: # nothing to do
-plugins-hd2: # nothing to do
+
+plugins-hd2:
+  ifneq ($(BOXMODEL), kronos_v2)
+	make links
+  endif
 
 plugins-hd51: \
 	links \
