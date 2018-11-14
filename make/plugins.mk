@@ -568,6 +568,11 @@ endif
 $(D)/links: $(D)/libpng $(D)/libjpeg $(D)/openssl $(ARCHIVE)/links-$(LINKS_VER).tar.bz2 $(LIBPLUGINS) | $(TARGET_DIR)
 	$(REMOVE)/links-$(LINKS_VER)
 	$(UNTAR)/links-$(LINKS_VER).tar.bz2
+	$(CHDIR)/links-$(LINKS_VER)/intl; \
+		sed -i -e 's|^T_SAVE_HTML_OPTIONS,.*|T_SAVE_HTML_OPTIONS, "HTML-Optionen speichern",|' german.lng; \
+		echo "english" > index.txt; \
+		echo "german" >> index.txt; \
+		./gen-intl
 	$(CHDIR)/links-$(LINKS_VER); \
 		$(call apply_patches,$(LINKS_PATCH)); \
 		autoreconf -vfi; \
