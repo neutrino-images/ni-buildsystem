@@ -172,7 +172,8 @@ $(LH_OBJDIR)/config.status: $(LH_DEPS)
 			$(LH_CONFIGURE_GSTREAMER) \
 			\
 			--with-target=cdk \
-			--with-boxtype=$(BOXMODEL)
+			--with-boxtype=$(BOXTYPE) \
+			--with-boxmodel=$(BOXSERIES)
 
 # -----------------------------------------------------------------------------
 
