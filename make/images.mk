@@ -51,17 +51,17 @@ devtable-remove:
 
 flash-image:
 ifeq ($(BOXMODEL), nevis)
-	make flash-image-cst ERASE_SIZE=0x20000 BOXNAME="HD1, BSE, Neo, Neo², Zee"
+	make flash-image-coolstream ERASE_SIZE=0x20000 BOXNAME="HD1, BSE, Neo, Neo², Zee"
 endif
 ifeq ($(BOXFAMILY), apollo)
-	make flash-image-cst ERASE_SIZE=0x40000 BOXNAME="Tank"    IMAGE_SUFFIX=$(BOXTYPE_SC)-apollo
-	make flash-image-cst ERASE_SIZE=0x20000 BOXNAME="Trinity" IMAGE_SUFFIX=$(BOXTYPE_SC)-shiner
+	make flash-image-coolstream ERASE_SIZE=0x40000 BOXNAME="Tank"    IMAGE_SUFFIX=$(BOXTYPE_SC)-apollo
+	make flash-image-coolstream ERASE_SIZE=0x20000 BOXNAME="Trinity" IMAGE_SUFFIX=$(BOXTYPE_SC)-shiner
 endif
 ifeq ($(BOXMODEL), kronos)
-	make flash-image-cst ERASE_SIZE=0x20000 BOXNAME="Zee², Trinity V2"
+	make flash-image-coolstream ERASE_SIZE=0x20000 BOXNAME="Zee², Trinity V2"
 endif
 ifeq ($(BOXMODEL), kronos_v2)
-	make flash-image-cst ERASE_SIZE=0x20000 BOXNAME="Link, Trinity Duo"
+	make flash-image-coolstream ERASE_SIZE=0x20000 BOXNAME="Link, Trinity Duo"
 endif
 ifeq ($(BOXMODEL), hd51)
 	make flash-image-arm
@@ -70,11 +70,11 @@ endif
 
 # -----------------------------------------------------------------------------
 
-flash-image-cst: IMAGE_NAME=$(IMAGE_PREFIX)-$(IMAGE_SUFFIX)
-flash-image-cst: IMAGE_DESC="$(BOXNAME) [$(IMAGE_SUFFIX)][$(BOXSERIES)] $(shell echo $(IMAGE_TYPE_STRING) | sed 's/.*/\u&/')"
-flash-image-cst: IMAGE_MD5FILE=$(IMAGE_TYPE_STRING)-$(IMAGE_SUFFIX).txt
-flash-image-cst: IMAGE_DATE=$(shell cat $(ROOTFS)/.version | grep "^version=" | cut -d= -f2 | cut -c 5-)
-flash-image-cst:
+flash-image-coolstream: IMAGE_NAME=$(IMAGE_PREFIX)-$(IMAGE_SUFFIX)
+flash-image-coolstream: IMAGE_DESC="$(BOXNAME) [$(IMAGE_SUFFIX)][$(BOXSERIES)] $(shell echo $(IMAGE_TYPE_STRING) | sed 's/.*/\u&/')"
+flash-image-coolstream: IMAGE_MD5FILE=$(IMAGE_TYPE_STRING)-$(IMAGE_SUFFIX).txt
+flash-image-coolstream: IMAGE_DATE=$(shell cat $(ROOTFS)/.version | grep "^version=" | cut -d= -f2 | cut -c 5-)
+flash-image-coolstream:
 	make devtable
 	mkfs.jffs2 -e $(ERASE_SIZE) $(MKFSFLAGS) -o $(IMAGE_DIR)/$(IMAGE_NAME).img
 	make devtable-remove
@@ -214,7 +214,7 @@ flash-image-arm-multi:
 PHONY += devtable
 PHONY += devtable-remove
 PHONY += images
-PHONY += flash-image-cst
+PHONY += flash-image-coolstream
 PHONY += check-image-size
 PHONY += flash-image-arm
 PHONY += flash-image-arm-multi

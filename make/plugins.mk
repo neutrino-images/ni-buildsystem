@@ -561,7 +561,7 @@ $(LIBPLUGINS)/shellexec.so: $(D)/freetype $(LIBPLUGINS) $(SHAREFLEX) $(VARCONFIG
 
 LINKS_PATCH  = links-$(LINKS_VER).patch
 LINKS_PATCH += links-$(LINKS_VER)-ac-prog-cxx.patch
-LINKS_PATCH += links-$(LINKS_VER)-input-$(BOXTYPE_SC).patch
+LINKS_PATCH += links-$(LINKS_VER)-input-$(BOXTYPE).patch
 
 $(D)/links: $(D)/libpng $(D)/libjpeg $(D)/openssl $(ARCHIVE)/links-$(LINKS_VER).tar.bz2 $(LIBPLUGINS) | $(TARGET_DIR)
 	$(REMOVE)/links-$(LINKS_VER)

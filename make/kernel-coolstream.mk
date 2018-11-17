@@ -16,21 +16,21 @@ else
   KERNEL_DESTDIR = $(SKEL_ROOT)/var/update
 endif
 
-kernel-cst: kernel-cst-$(BOXSERIES)
-kernel-cst-install: kernel-cst-install-$(BOXSERIES)
+kernel-coolstream: kernel-coolstream-$(BOXSERIES)
+kernel-coolstream-install: kernel-coolstream-install-$(BOXSERIES)
 
-kernel-cst-install-all:
+kernel-coolstream-install-all:
 	make clean BOXFAMILY=nevis
-	make -j$(NUM_CPUS) kernel-cst-hd1 BOXFAMILY=nevis
-	make kernel-cst-install-hd1 BOXFAMILY=nevis
+	make -j$(NUM_CPUS) kernel-coolstream-hd1 BOXFAMILY=nevis
+	make kernel-coolstream-install-hd1 BOXFAMILY=nevis
 	#
 	make clean BOXFAMILY=apollo
-	make -j$(NUM_CPUS) kernel-cst-hd2 BOXFAMILY=apollo
-	make kernel-cst-install-hd2 BOXFAMILY=apollo
+	make -j$(NUM_CPUS) kernel-coolstream-hd2 BOXFAMILY=apollo
+	make kernel-coolstream-install-hd2 BOXFAMILY=apollo
 	#
 	make clean BOXFAMILY=kronos
-	make -j$(NUM_CPUS) kernel-cst-hd2 BOXFAMILY=kronos
-	make kernel-cst-install-hd2 BOXFAMILY=kronos
+	make -j$(NUM_CPUS) kernel-coolstream-hd2 BOXFAMILY=kronos
+	make kernel-coolstream-install-hd2 BOXFAMILY=kronos
 	#
 	make clean BOXFAMILY=nevis > /dev/null 2>&1
 	make get-update-info-hd1 BOXFAMILY=nevis
@@ -43,7 +43,7 @@ kernel-cst-install-all:
 	#
 	make clean > /dev/null 2>&1
 
-$(D)/kernel-cst-hd2: $(SOURCE_DIR)/$(NI_LINUX-KERNEL) $(SOURCE_DIR)/$(NI_DRIVERS-BIN) | $(TARGET_DIR)
+$(D)/kernel-coolstream-hd2: $(SOURCE_DIR)/$(NI_LINUX-KERNEL) $(SOURCE_DIR)/$(NI_DRIVERS-BIN) | $(TARGET_DIR)
 	$(REMOVE)/linux-$(KERNEL_VERSION)
 	cd $(SOURCE_DIR)/$(NI_LINUX-KERNEL); \
 		git checkout $(KERNEL_BRANCH)
@@ -70,10 +70,10 @@ ifeq ($(BOXFAMILY), apollo)
 endif
 	$(TOUCH)
 
-kernel-cst-install-hd2: $(D)/kernel-cst-hd2
+kernel-coolstream-install-hd2: $(D)/kernel-coolstream-hd2
 	cp -af $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-vmlinux.ub.gz $(KERNEL_DESTDIR)/vmlinux.ub.gz
 
-$(D)/kernel-cst-hd1: $(SOURCE_DIR)/$(NI_LINUX-KERNEL) | $(TARGET_DIR)
+$(D)/kernel-coolstream-hd1: $(SOURCE_DIR)/$(NI_LINUX-KERNEL) | $(TARGET_DIR)
 	$(REMOVE)/linux-$(KERNEL_VERSION)
 	cd $(SOURCE_DIR)/$(NI_LINUX-KERNEL); \
 		git checkout $(KERNEL_BRANCH)
@@ -93,12 +93,12 @@ $(D)/kernel-cst-hd1: $(SOURCE_DIR)/$(NI_LINUX-KERNEL) | $(TARGET_DIR)
 		mkimage -A arm -O linux -T kernel -C none -a 0x48000 -e 0x48000 -n "$(KERNEL_NAME)" -d $(ZIMAGE) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-zImage.img
 	$(TOUCH)
 
-kernel-cst-install-hd1: $(D)/kernel-cst-hd1
+kernel-coolstream-install-hd1: $(D)/kernel-coolstream-hd1
 	cp -af $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-zImage.img $(KERNEL_DESTDIR)/zImage
 
-kernel-cst-modules: kernel-cst-modules-$(BOXSERIES)
+kernel-coolstream-modules: kernel-coolstream-modules-$(BOXSERIES)
 
-kernel-cst-modules-hd1: kernel-cst
+kernel-coolstream-modules-hd1: kernel-coolstream
 	$(TARGET)-objcopy --strip-unneeded $(MODULES_DIR)/kernel/drivers/mtd/devices/mtdram.ko
 	cp -af $(MODULES_DIR)/kernel/drivers/mtd/devices/mtdram.ko $(TARGET_MODULES_DIR)
 	$(TARGET)-objcopy --strip-unneeded $(MODULES_DIR)/kernel/drivers/mtd/devices/block2mtd.ko
@@ -122,8 +122,8 @@ kernel-cst-modules-hd1: kernel-cst
 	rm -rf $(TARGET_MODULES_DIR)/usb-storage.ko # builtin already
 	make depmod-hd1
 
-kernel-cst-modules-hd2: kernel-cst
-	rm -rf $(TARGET_MODULES_DIR)/kernel # nuke cst kernel-drivers but leave cst extra-drivers
+kernel-coolstream-modules-hd2: kernel-coolstream
+	rm -rf $(TARGET_MODULES_DIR)/kernel # nuke coolstream kernel-drivers but leave coolstream extra-drivers
 	cp -a $(MODULES_DIR)/kernel $(TARGET_MODULES_DIR) # copy own kernel-drivers
 	cp -a $(MODULES_DIR)/modules.builtin $(TARGET_MODULES_DIR)
 	cp -a $(MODULES_DIR)/modules.order $(TARGET_MODULES_DIR)

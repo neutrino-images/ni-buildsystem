@@ -92,12 +92,12 @@ include make/bootstrap.mk
 include make/clean.mk
 include make/crosstool.mk
 include make/development-tools.mk
-include make/ffmpeg-$(BOXTYPE_SC).mk
+include make/ffmpeg-$(BOXTYPE).mk
 include make/gstreamer.mk
 include make/host-tools.mk
 include make/image-update.mk
 include make/images.mk
-include make/kernel-$(BOXTYPE_SC).mk
+include make/kernel-$(BOXTYPE).mk
 include make/neutrino.mk
 include make/plugins-extra.mk
 include make/plugins.mk

@@ -10,7 +10,7 @@ MODULES_DIR	= $(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules/lib/modules/$(KERNEL_
 
 TARGET_MODULES_DIR = $(TARGET_LIB_DIR)/modules/$(KERNEL_VERSION_FULL)
 
-$(D)/kernel-arm: $(SOURCE_DIR)/$(NI_LINUX-KERNEL) | $(TARGET_DIR)
+$(D)/kernel-armbox: $(SOURCE_DIR)/$(NI_LINUX-KERNEL) | $(TARGET_DIR)
 	$(REMOVE)/linux-$(KERNEL_VERSION)
 	cd $(SOURCE_DIR)/$(NI_LINUX-KERNEL); \
 		git checkout $(KERNEL_BRANCH)
@@ -29,11 +29,11 @@ $(D)/kernel-arm: $(SOURCE_DIR)/$(NI_LINUX-KERNEL) | $(TARGET_DIR)
 		$(MAKE) ARCH=arm CROSS_COMPILE=$(TARGET)- INSTALL_MOD_PATH=$(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules modules_install
 	$(TOUCH)
 
-kernel-arm-modules: $(D)/kernel-arm
+kernel-armbox-modules: $(D)/kernel-armbox
 	cp -a $(MODULES_DIR)/kernel $(TARGET_MODULES_DIR)
 	cp -a $(MODULES_DIR)/modules.builtin $(TARGET_MODULES_DIR)
 	cp -a $(MODULES_DIR)/modules.order $(TARGET_MODULES_DIR)
-	make depmod-arm
+	make depmod-armbox
 
-depmod-arm:
+depmod-armbox:
 	PATH=$(PATH):/sbin:/usr/sbin depmod -b $(TARGET_DIR) $(KERNEL_VERSION_FULL)

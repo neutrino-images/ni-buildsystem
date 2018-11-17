@@ -76,7 +76,7 @@ ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd51))
 	make -j$(NUM_CPUS) gdb
   endif
 endif
-	make -j$(NUM_CPUS) kernel-$(BOXTYPE_SC)-modules
+	make -j$(NUM_CPUS) kernel-$(BOXTYPE)-modules
 	make autofs5
 	make scripts
 	make init-scripts
