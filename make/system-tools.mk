@@ -1032,7 +1032,7 @@ $(D)/streamripper: $(D)/libvorbisidec $(D)/libmad $(D)/libglib2 | $(TARGET_DIR)
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--prefix= \
-			--includedir=$(TARGET_DIR)/include \
+			--includedir=$(TARGET_INCLUDE_DIR) \
 			--datarootdir=/.remove \
 			--with-included-argv=yes \
 			--with-included-libmad=no \

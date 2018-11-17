@@ -93,7 +93,7 @@ $(D)/gst_plugins_base: $(D)/zlib $(D)/libglib2 $(D)/orc $(D)/gstreamer $(D)/alsa
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	for i in `cd $(TARGET_DIR)/lib/gstreamer-1.0; echo *.la`; do \
+	for i in `cd $(TARGET_LIB_DIR)/gstreamer-1.0; echo *.la`; do \
 		$(REWRITE_LIBTOOL)/gstreamer-1.0/$$i; \
 	done
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-allocators-1.0.pc
@@ -160,7 +160,7 @@ $(D)/gst_plugins_good: $(D)/libpng $(D)/libjpeg $(D)/gstreamer $(D)/gst_plugins_
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	for i in `cd $(TARGET_DIR)/lib/gstreamer-1.0; echo *.la`; do \
+	for i in `cd $(TARGET_LIB_DIR)/gstreamer-1.0; echo *.la`; do \
 		$(REWRITE_LIBTOOL)/gstreamer-1.0/$$i; \
 	done
 	$(REMOVE)/gst-plugins-good-$(GST_PLUGINS_GOOD_VER)
@@ -201,7 +201,7 @@ $(D)/gst_plugins_bad: $(D)/libass $(D)/libcurl $(D)/libxml2 $(D)/openssl $(D)/li
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	for i in `cd $(TARGET_DIR)/lib/gstreamer-1.0; echo *.la`; do \
+	for i in `cd $(TARGET_LIB_DIR)/gstreamer-1.0; echo *.la`; do \
 		$(REWRITE_LIBTOOL)/gstreamer-1.0/$$i; \
 	done
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-codecparsers-1.0.pc
@@ -253,7 +253,7 @@ $(D)/gst_plugins_ugly: $(D)/gstreamer $(D)/gst_plugins_base $(ARCHIVE)/$(GST_PLU
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	for i in `cd $(TARGET_DIR)/lib/gstreamer-1.0; echo *.la`; do \
+	for i in `cd $(TARGET_LIB_DIR)/gstreamer-1.0; echo *.la`; do \
 		$(REWRITE_LIBTOOL)/gstreamer-1.0/$$i; \
 	done
 	$(REMOVE)/gst-plugins-ugly-$(GST_PLUGINS_UGLY_VER)
@@ -282,7 +282,7 @@ $(D)/gst_plugin_subsink: $(D)/gstreamer $(D)/gst_plugins_base $(D)/gst_plugins_g
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	for i in `cd $(TARGET_DIR)/lib/gstreamer-1.0; echo *.la`; do \
+	for i in `cd $(TARGET_LIB_DIR)/gstreamer-1.0; echo *.la`; do \
 		$(REWRITE_LIBTOOL)/gstreamer-1.0/$$i; \
 	done
 	$(REMOVE)/gstreamer$(GST_PLUGIN_SUBSINK_VER)-plugin-subsink
@@ -322,7 +322,7 @@ $(D)/gst_plugins_dvbmediasink: $(D)/gstreamer $(D)/gst_plugins_base $(D)/gst_plu
 			; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	for i in `cd $(TARGET_DIR)/lib/gstreamer-1.0; echo *.la`; do \
+	for i in `cd $(TARGET_LIB_DIR)/gstreamer-1.0; echo *.la`; do \
 		$(REWRITE_LIBTOOL)/gstreamer-1.0/$$i; \
 	done
 	$(REMOVE)/gstreamer$(GST_PLUGINS_DVBMEDIASINK_VER)-plugin-dvbmediasink

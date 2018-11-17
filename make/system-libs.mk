@@ -152,7 +152,7 @@ $(D)/libcurl: $(D)/zlib $(D)/openssl $(D)/librtmp $(D)/ca-bundle $(ARCHIVE)/curl
 			--with-ca-bundle=$(CA-BUNDLE_DIR)/$(CA-BUNDLE) \
 			--with-random=/dev/urandom \
 			--with-ssl=$(TARGET_DIR) \
-			--with-librtmp=$(TARGET_DIR)/lib \
+			--with-librtmp=$(TARGET_LIB_DIR) \
 			$(CURL_IPV6) \
 			--enable-optimize \
 			; \
@@ -283,11 +283,11 @@ $(D)/libjpeg-turbo2: $(ARCHIVE)/$(LIBJPEG-TURBO2_SOURCE) | $(TARGET_DIR)
 		$(call apply_patches,$(LIBJPEG-TURBO2_PATCH)); \
 		$(CMAKE) \
 			-DWITH_SIMD=False \
-			-DENABLE_STATIC=OFF \
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	rm -f $(addprefix $(TARGET_DIR)/bin/,cjpeg djpeg jpegtran rdjpgcom wrjpgcom tjbench)
+	rm -f $(TARGET_LIB_DIR)/cmake
 	$(REMOVE)/libjpeg-turbo-$(LIBJPEG-TURBO2_VER)
 	$(TOUCH)
 
@@ -393,6 +393,7 @@ $(D)/openthreads: $(SOURCE_DIR)/$(NI_OPENTHREADS) | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		make install DESTDIR=$(TARGET_DIR)
+	rm -f $(TARGET_LIB_DIR)/cmake
 	$(REMOVE)/$(NI_OPENTHREADS)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/openthreads.pc
 	$(TOUCH)
@@ -844,13 +845,10 @@ $(D)/pugixml: $(ARCHIVE)/pugixml-$(PUGIXML_VER).tar.gz | $(TARGET_DIR)
 	$(UNTAR)/pugixml-$(PUGIXML_VER).tar.gz
 	$(CHDIR)/pugixml-$(PUGIXML_VER); \
 		$(call apply_patches, $(PUGIXML_PATCH)); \
-		$(CMAKE) \
-			--no-warn-unused-cli \
-			-DBUILD_SHARED_LIBS="ON" \
-			; \
+		$(CMAKE); \
 		$(MAKE); \
 		make install DESTDIR=$(TARGET_DIR)
-	rm -rf $(TARGET_DIR)/lib/cmake
+	rm -rf $(TARGET_LIB_DIR)/cmake
 	$(REMOVE)/pugixml-$(PUGIXML_VER)
 	$(TOUCH)
 
@@ -860,7 +858,7 @@ $(D)/librtmp: $(D)/zlib $(D)/openssl $(SOURCE_DIR)/$(NI_RTMPDUMP) | $(TARGET_DIR
 	$(REMOVE)/$(NI_RTMPDUMP)
 	tar -C $(SOURCE_DIR) -cp $(NI_RTMPDUMP) --exclude-vcs | tar -C $(BUILD_TMP) -x
 	$(CHDIR)/$(NI_RTMPDUMP); \
-		make CROSS_COMPILE=$(TARGET)- XCFLAGS="-I$(TARGET_DIR)/include -L$(TARGET_DIR)/lib" LDFLAGS="-L$(TARGET_DIR)/lib" prefix=$(TARGET_DIR);\
+		make CROSS_COMPILE=$(TARGET)- XCFLAGS="-I$(TARGET_INCLUDE_DIR) -L$(TARGET_LIB_DIR)" LDFLAGS="-L$(TARGET_LIB_DIR)" prefix=$(TARGET_DIR);\
 		make install DESTDIR=$(TARGET_DIR) prefix="" mandir=/.remove
 	rm -rf $(TARGET_DIR)/sbin/rtmpgw
 	rm -rf $(TARGET_DIR)/sbin/rtmpsrv
