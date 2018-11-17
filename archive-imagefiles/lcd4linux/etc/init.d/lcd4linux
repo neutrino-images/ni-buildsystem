@@ -7,7 +7,7 @@
 
 configfile() {
 	read layout < /tmp/lcd/layout
-	test $layout = user && CONF_DIR=/var/etc || CONF_DIR=/etc
+	test ${layout##*_} = user && CONF_DIR=/var/etc || CONF_DIR=/etc
 
 	chmod 600 ${CONF_DIR}/lcd4linux.conf
 	chown 0:0 ${CONF_DIR}/lcd4linux.conf
