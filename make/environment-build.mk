@@ -185,9 +185,8 @@ ifeq ($(BOXSERIES), hd1)
   TARGET_EXTRA_CFLAGS    = -fdata-sections -ffunction-sections
   TARGET_EXTRA_LDFLAGS   = -Wl,--gc-sections
   CXX11_ABI              =
-endif
 
-ifeq ($(BOXSERIES), hd2)
+else ifeq ($(BOXSERIES), hd2)
   KERNEL_VERSION         = 3.10.93
   KERNEL_VERSION_MAJOR   = 3.10
   KERNEL_VERSION_FULL    = $(KERNEL_VERSION)
@@ -212,9 +211,8 @@ ifeq ($(BOXSERIES), hd2)
     TARGET_EXTRA_LDFLAGS = -Wl,--gc-sections
   endif
   CXX11_ABI              = -D_GLIBCXX_USE_CXX11_ABI=0
-endif
 
-ifeq ($(BOXSERIES), hd51)
+else ifeq ($(BOXSERIES), hd51)
   KERNEL_VERSION_MAJOR   = 4.10
   KERNEL_VERSION         = 4.10.12
   KERNEL_VERSION_FULL    = $(KERNEL_VERSION)
