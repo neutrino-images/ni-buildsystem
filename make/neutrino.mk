@@ -105,7 +105,7 @@ N_BUILDENV = \
 N_OBJDIR = $(BUILD_TMP)/$(NI_NEUTRINO)
 LH_OBJDIR = $(BUILD_TMP)/$(NI_LIBSTB-HAL-NEXT)
 
-$(N_OBJDIR)/config.status: $(N_DEPS) $(MAKE_DIR)/neutrino.mk
+$(N_OBJDIR)/config.status: $(N_DEPS)
 	test -d $(N_OBJDIR) || mkdir -p $(N_OBJDIR)
 	cd $(SOURCE_DIR)/$(NI_NEUTRINO) && \
 		git checkout $(NI_NEUTRINO_BRANCH)
