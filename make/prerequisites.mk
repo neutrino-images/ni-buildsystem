@@ -7,11 +7,47 @@ init: preqs crosstools bootstrap
 
 # -----------------------------------------------------------------------------
 
-TOOLCHECK  = find-git find-svn find-gzip find-bzip2 find-patch find-gawk
-TOOLCHECK += find-makeinfo find-automake find-gcc find-libtool find-bison
-TOOLCHECK += find-yacc find-flex find-tic find-pkg-config find-help2man
-TOOLCHECK += find-cmake find-ccache find-autopoint find-python find-curl
-TOOLCHECK += find-lzma find-gperf find-gettext find-bc
+TOOLCHECK  =
+TOOLCHECK += find-automake
+TOOLCHECK += find-autopoint
+TOOLCHECK += find-bc
+TOOLCHECK += find-bison
+TOOLCHECK += find-bzip2
+TOOLCHECK += find-ccache
+TOOLCHECK += find-cmake
+TOOLCHECK += find-curl
+TOOLCHECK += find-flex
+TOOLCHECK += find-gawk
+TOOLCHECK += find-gcc
+TOOLCHECK += find-gettext
+TOOLCHECK += find-git
+TOOLCHECK += find-gperf
+TOOLCHECK += find-gzip
+TOOLCHECK += find-help2man
+TOOLCHECK += find-libtool
+TOOLCHECK += find-lzma
+TOOLCHECK += find-makeinfo
+TOOLCHECK += find-patch
+TOOLCHECK += find-pkg-config
+TOOLCHECK += find-python
+TOOLCHECK += find-svn
+TOOLCHECK += find-tic
+TOOLCHECK += find-yacc
+
+find-%:
+	@TOOL=$(patsubst find-%,%,$@); \
+	type -p $$TOOL >/dev/null || { echo "required tool $$TOOL missing."; false; }
+
+toolcheck: $(TOOLCHECK)
+	@echo "All required tools seem to be installed."
+	@make bashcheck
+
+bashcheck:
+	@if test "$(subst /bin/,,$(shell readlink /bin/sh))" != "bash"; then \
+		echo -e "$(TERM_YELLOW)WARNING$(TERM_NORMAL): /bin/sh is not linked to bash."; \
+	fi
+
+# -----------------------------------------------------------------------------
 
 preqs: download ni-sources
 
@@ -28,6 +64,8 @@ download:
 	@echo "You need to make a directory named 'download' by executing 'mkdir download' or create a symlink to the directory where you keep your sources, e.g. by typing 'ln -s /path/to/my/Archive download'."
 	@make line
 	@false
+
+# -----------------------------------------------------------------------------
 
 $(SOURCE_DIR):
 	mkdir -p $@
@@ -98,6 +136,24 @@ $(SOURCE_DIR)/$(NI_RTMPDUMP) \
 $(SOURCE_DIR)/$(NI_STREAMRIPPER):
 	cd $(SOURCE_DIR) && \
 		git clone $(NI_GIT)/$(notdir $@).git
+
+ni-sources: $(SOURCE_DIR) \
+	$(BUILD-GENERIC-PC) \
+	$(SOURCE_DIR)/$(NI_DRIVERS-BIN) \
+	$(SOURCE_DIR)/$(NI_FFMPEG) \
+	$(SOURCE_DIR)/$(NI_LIBCOOLSTREAM) \
+	$(SOURCE_DIR)/$(NI_LIBSTB-HAL-NEXT) \
+	$(SOURCE_DIR)/$(NI_LIBSTB-HAL) \
+	$(SOURCE_DIR)/$(NI_LINUX-KERNEL) \
+	$(SOURCE_DIR)/$(NI_LOGO-STUFF) \
+	$(SOURCE_DIR)/$(NI_NEUTRINO) \
+	$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) \
+	$(SOURCE_DIR)/$(NI_OFGWRITE) \
+	$(SOURCE_DIR)/$(NI_OPENTHREADS) \
+	$(SOURCE_DIR)/$(NI_RTMPDUMP) \
+	$(SOURCE_DIR)/$(NI_STREAMRIPPER)
+
+# -----------------------------------------------------------------------------
 
 archives-list:
 	@rm -f $(BUILD_TMP)/$@
@@ -174,26 +230,3 @@ patches-info:
 			echo -e "[$(TERM_RED) !! $(TERM_NORMAL)] $$patch"; \
 		fi; \
 	done;
-
-find-%:
-	@TOOL=$(patsubst find-%,%,$@); \
-	type -p $$TOOL >/dev/null || { echo "required tool $$TOOL missing."; false; }
-
-toolcheck: $(TOOLCHECK)
-	@echo "All required tools seem to be installed."
-
-ni-sources: $(SOURCE_DIR) \
-	$(BUILD-GENERIC-PC) \
-	$(SOURCE_DIR)/$(NI_DRIVERS-BIN) \
-	$(SOURCE_DIR)/$(NI_FFMPEG) \
-	$(SOURCE_DIR)/$(NI_LIBCOOLSTREAM) \
-	$(SOURCE_DIR)/$(NI_LIBSTB-HAL-NEXT) \
-	$(SOURCE_DIR)/$(NI_LIBSTB-HAL) \
-	$(SOURCE_DIR)/$(NI_LINUX-KERNEL) \
-	$(SOURCE_DIR)/$(NI_LOGO-STUFF) \
-	$(SOURCE_DIR)/$(NI_NEUTRINO) \
-	$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) \
-	$(SOURCE_DIR)/$(NI_OFGWRITE) \
-	$(SOURCE_DIR)/$(NI_OPENTHREADS) \
-	$(SOURCE_DIR)/$(NI_RTMPDUMP) \
-	$(SOURCE_DIR)/$(NI_STREAMRIPPER)
