@@ -18,7 +18,7 @@ BOOTSTRAP += modules
 BOOTSTRAP += host-preqs
 
 ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd51))
-  BOOTSTRAP += blobs
+  BOOTSTRAP += var-update
 endif
 
 bootstrap: $(BOOTSTRAP)
@@ -141,7 +141,7 @@ firmware: $(TARGET_LIB_DIR)/firmware
 
 modules: $(TARGET_LIB_DIR)/modules
 
-blobs: $(TARGET_DIR)/var/update
+var-update: $(TARGET_DIR)/var/update
 
 # -----------------------------------------------------------------------------
 
@@ -163,4 +163,4 @@ PHONY += includes
 PHONY += libs
 PHONY += firmware
 PHONY += modules
-PHONY += blobs
+PHONY += var-update
