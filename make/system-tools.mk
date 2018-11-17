@@ -3,6 +3,48 @@
 #
 # -----------------------------------------------------------------------------
 
+# Link busybox against libtirpc so that we can leverage its RPC support for NFS
+# mounting with BusyBox
+BUSYBOX_CFLAGS = $(TARGET_CFLAGS)
+BUSYBOX_CFLAGS += "`$(PKG_CONFIG) --cflags libtirpc`"
+# Don't use LDFLAGS for -ltirpc, because LDFLAGS is used for the non-final link
+# of modules as well.
+BUSYBOX_CFLAGS_busybox = "`$(PKG_CONFIG) --libs libtirpc`"
+
+# Allows the buildsystem to tweak CFLAGS
+BUSYBOX_MAKE_ENV = \
+	CFLAGS="$(BUSYBOX_CFLAGS)" \
+	CFLAGS_busybox="$(BUSYBOX_CFLAGS_busybox)"
+
+BUSYBOX_MAKE_OPTS = \
+	CC="$(TARGET)-gcc" \
+	LD="$(TARGET)-ld" \
+	AR="$(TARGET)-ar" \
+	RANLIB="$(TARGET)-ranlib" \
+	CROSS_COMPILE="$(TARGET)-" \
+	CFLAGS_EXTRA="$(TARGET_CFLAGS)" \
+	EXTRA_LDFLAGS="$(TARGET_LDFLAGS)" \
+	CONFIG_PREFIX="$(TARGET_DIR)"
+
+BUSYBOX_PATCH  = busybox-fix-config-header.diff
+BUSYBOX_PATCH += busybox-insmod-hack.patch
+BUSYBOX_PATCH += busybox-mount-use-var-etc-fstab.patch
+BUSYBOX_PATCH += busybox-fix-partition-size.patch
+
+$(D)/busybox: $(D)/libtirpc $(ARCHIVE)/$(BUSYBOX_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/busybox-$(BUSYBOX_VER)
+	$(UNTAR)/$(BUSYBOX_SOURCE)
+	$(CHDIR)/busybox-$(BUSYBOX_VER); \
+		$(call apply_patches, $(BUSYBOX_PATCH)); \
+		cp $(CONFIGS)/busybox-$(BOXSERIES).config .config; \
+		sed -i -e 's|^CONFIG_PREFIX=.*|CONFIG_PREFIX="$(TARGET_DIR)"|' .config; \
+		$(BUSYBOX_MAKE_ENV) $(MAKE) busybox $(BUSYBOX_MAKE_OPTS); \
+		$(BUSYBOX_MAKE_ENV) $(MAKE) install $(BUSYBOX_MAKE_OPTS)
+	$(REMOVE)/busybox-$(BUSYBOX_VER)
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
 $(D)/openvpn: $(D)/lzo $(D)/openssl $(ARCHIVE)/openvpn-$(OPENVPN_VER).tar.xz | $(TARGET_DIR)
 	$(REMOVE)/openvpn-$(OPENVPN_VER)
 	$(UNTAR)/openvpn-$(OPENVPN_VER).tar.xz
@@ -436,48 +478,6 @@ $(D)/minicom: $(D)/libncurses $(ARCHIVE)/minicom-$(MINICOM_VER).tar.gz | $(TARGE
 		$(MAKE); \
 		install -m 0755 src/minicom $(TARGET_DIR)/bin
 	$(REMOVE)/minicom-$(MINICOM_VER)
-	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
-# Link against libtirpc so that we can leverage its RPC
-# support for NFS mounting with BusyBox
-BUSYBOX_CFLAGS = $(TARGET_CFLAGS)
-BUSYBOX_CFLAGS += "`$(PKG_CONFIG) --cflags libtirpc`"
-# Don't use LDFLAGS for -ltirpc, because LDFLAGS is used for
-# the non-final link of modules as well.
-BUSYBOX_CFLAGS_busybox = "`$(PKG_CONFIG) --libs libtirpc`"
-
-# Allows the build system to tweak CFLAGS
-BUSYBOX_MAKE_ENV = \
-	CFLAGS="$(BUSYBOX_CFLAGS)" \
-	CFLAGS_busybox="$(BUSYBOX_CFLAGS_busybox)"
-
-BUSYBOX_MAKE_OPTS = \
-	CC="$(TARGET)-gcc" \
-	LD="$(TARGET)-ld" \
-	AR="$(TARGET)-ar" \
-	RANLIB="$(TARGET)-ranlib" \
-	CROSS_COMPILE="$(TARGET)-" \
-	CFLAGS_EXTRA="$(TARGET_CFLAGS)" \
-	EXTRA_LDFLAGS="$(TARGET_LDFLAGS)" \
-	CONFIG_PREFIX="$(TARGET_DIR)"
-
-BUSYBOX_PATCH  = busybox-fix-config-header.diff
-BUSYBOX_PATCH += busybox-insmod-hack.patch
-BUSYBOX_PATCH += busybox-mount-use-var-etc-fstab.patch
-BUSYBOX_PATCH += busybox-fix-partition-size.patch
-
-$(D)/busybox: $(D)/libtirpc $(ARCHIVE)/$(BUSYBOX_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/busybox-$(BUSYBOX_VER)
-	$(UNTAR)/$(BUSYBOX_SOURCE)
-	$(CHDIR)/busybox-$(BUSYBOX_VER); \
-		$(call apply_patches, $(BUSYBOX_PATCH)); \
-		cp $(CONFIGS)/busybox-$(BOXSERIES).config .config; \
-		sed -i -e 's|^CONFIG_PREFIX=.*|CONFIG_PREFIX="$(TARGET_DIR)"|' .config; \
-		$(BUSYBOX_MAKE_ENV) $(MAKE) busybox $(BUSYBOX_MAKE_OPTS); \
-		$(BUSYBOX_MAKE_ENV) $(MAKE) install $(BUSYBOX_MAKE_OPTS)
-	$(REMOVE)/busybox-$(BUSYBOX_VER)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
