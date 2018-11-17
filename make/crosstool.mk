@@ -15,9 +15,9 @@ crosstools:
 CROSSTOOL_BACKUP = $(ARCHIVE)/crosstool-$(BOXARCH)-$(BOXSERIES)-backup.tar.gz
 
 $(CROSSTOOL_BACKUP):
-	@make line
+	$(call draw_line);
 	@echo "CROSSTOOL_BACKUP does not exist. You probably need to run 'make crosstool-backup' first."
-	@make line
+	$(call draw_line);
 	@false
 
 crosstool-backup:
@@ -135,11 +135,11 @@ crosstool-arm-hd51: CROSS_DIR-check
 
 CROSS_DIR-check:
 ifneq ($(wildcard $(CROSS_DIR)),)
-	@make line
+	$(call draw_line);
 	@echo "Crosstool directory already present."
 	@echo
 	@echo "You need to run 'make cross-clean' first if you really want to build a new crosstool."
-	@make line
+	$(call draw_line);
 	@false
 endif
 

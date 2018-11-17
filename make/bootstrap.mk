@@ -23,9 +23,9 @@ endif
 
 bootstrap: $(BOOTSTRAP)
 	@touch $(BUILD_TMP)/.$(BOXTYPE)-$(BOXMODEL)
-	@make line
+	$(call draw_line);
 	@echo -e "$(TERM_YELLOW)Bootstrapped for $(shell echo $(BOXTYPE) | sed 's/.*/\u&/') $(BOXMODEL)$(TERM_NORMAL)"
-	@make line
+	$(call draw_line);
 
 skeleton: | $(TARGET_DIR)
 	cp --remove-destination -a $(SKEL_ROOT)/* $(TARGET_DIR)/
@@ -62,9 +62,9 @@ ifeq ($(BOXSERIES), hd2)
 endif
 
 $(TARGET_DIR):
-	@make line
+	$(call draw_line);
 	@echo "TARGET_DIR does not exist. You probably need to run 'make bootstrap'"
-	@make line
+	$(call draw_line);
 	@false
 
 $(D) \

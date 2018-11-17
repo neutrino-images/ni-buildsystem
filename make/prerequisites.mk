@@ -52,17 +52,17 @@ bashcheck:
 preqs: download ni-sources
 
 $(CCACHE):
-	@make line
+	$(call draw_line);
 	@echo "ccache package on host missing."
-	@make line
+	$(call draw_line);
 	@false
 
 download:
-	@make line
+	$(call draw_line);
 	@echo "Download directory missing."
 	@echo
 	@echo "You need to make a directory named 'download' by executing 'mkdir download' or create a symlink to the directory where you keep your sources, e.g. by typing 'ln -s /path/to/my/Archive download'."
-	@make line
+	$(call draw_line);
 	@false
 
 # -----------------------------------------------------------------------------

@@ -65,9 +65,9 @@ rootfs-cleanup: $(ROOTFS)
 # strip bins and libs in root filesystem
 rootfs-strip: $(ROOTFS)
 ifneq ($(DEBUG), yes)
-	@make line
+	$(call draw_line);
 	@echo "The following warnings from strip are harmless!"
-	@make line
+	$(call draw_line);
 	find $(ROOTFS)/bin -type f -print0 | xargs -0 $(TARGET)-strip || true
 	find $(ROOTFS)/sbin -type f -print0 | xargs -0 $(TARGET)-strip || true
 	find $(ROOTFS)/lib \( \
@@ -131,7 +131,7 @@ endif
 get-update-info: get-update-info-$(BOXSERIES)
 
 get-update-info-hd2:
-	@make line
+	$(call draw_line);
 	@echo "Get update info for model $(shell echo $(BOXMODEL) | sed 's/.*/\u&/')"
 	@echo
 	@cd $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(DRIVERS_DIR); \
@@ -146,10 +146,10 @@ get-update-info-hd2:
 		dd if=./vmlinux.ub.gz bs=1 skip=$$(LC_ALL=C grep -a -b -o $$'\x1f\x8b\x08\x00\x00\x00\x00\x00' ./vmlinux.ub.gz \
 		| cut -d ':' -f 1) | zcat | grep -a "Linux version"; \
 	);
-	@make line
+	$(call draw_line);
 
 get-update-info-hd1:
-	@make line
+	$(call draw_line);
 	@echo "Get update info for model $(shell echo $(BOXMODEL) | sed 's/.*/\u&/')"
 	@echo
 	@cd $(TARGET_DIR)/var/update; \
@@ -157,7 +157,7 @@ get-update-info-hd1:
 		dd if=./zImage bs=1 skip=$$(LC_ALL=C grep -a -b -o $$'\x1f\x8b\x08\x00\x00\x00\x00\x00' ./zImage \
 		| cut -d ':' -f 1) | zcat | grep -a "Linux version"; \
 	);
-	@make line
+	$(call draw_line);
 
 # -----------------------------------------------------------------------------
 

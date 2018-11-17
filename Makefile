@@ -26,7 +26,7 @@ include make/environment-target.mk
 include make/environment-update.mk
 
 printenv:
-	@make line
+	$(call draw_line);
 	@echo "Build Environment Varibles:"
 	@echo "CROSS_DIR:   $(CROSS_DIR)"
 	@echo "TARGET:      $(TARGET)"
@@ -38,7 +38,7 @@ printenv:
 	@echo "BOXTYPE:     $(BOXTYPE)"
 	@echo "BOXSERIES:   $(BOXSERIES)"
 	@echo "BOXMODEL:    $(BOXMODEL)"
-	@make line
+	$(call draw_line);
 	@echo ""
 	@echo "'make help' lists useful targets."
 	@echo ""
@@ -64,7 +64,7 @@ printenv:
 	fi
 
 help:
-	@make line
+	$(call draw_line);
 	@echo "A few helpful make targets:"
 	@echo " * make preqs      - Downloads necessary stuff"
 	@echo " * make crosstool  - Build cross toolchain"
@@ -81,7 +81,7 @@ help:
 	@echo "Total renew:"
 	@echo " * make all-clean  - Reset buildsystem to delivery state"
 	@echo "                     but doesn't touch your local stuff"
-	@make line
+	$(call draw_line);
 
 # -----------------------------------------------------------------------------
 
@@ -120,14 +120,10 @@ include make/ni.mk
 all:
 	@echo "'make all' is not a valid target. Please read the documentation."
 
-line:
-	@for i in $$(seq 1 1 $$(tput cols)); do printf -; done
-	@echo
-
 done:
-	@make line
+	$(call draw_line);
 	@echo -e "$(TERM_GREEN)Done$(TERM_NORMAL)"
-	@make line
+	$(call draw_line);
 
 # target for testing only. not useful otherwise
 everything: $(shell sed -n 's/^\$$.D.\/\(.*\):.*/\1/p' make/*.mk)
@@ -139,6 +135,38 @@ PHONY += local-files
 PHONY += printenv help done all everything
 PHONY += .print-phony
 .PHONY: $(PHONY)
+
+#
+# $(1) = title
+# $(2) = color
+#	0 - Black
+#	1 - Red
+#	2 - Green
+#	3 - Yellow
+#	4 - Blue
+#	5 - Magenta
+#	6 - Cyan
+#	7 - White
+# $(3) = left|center|right
+#
+define draw_line
+	@ \
+	printf '%.0s-' {1..$(shell tput cols)}; \
+	if test "$(1)"; then \
+		cols=$(shell tput cols); \
+		length=$(shell echo $(1) | awk '{print length}'); \
+		case "$(3)" in \
+			*right)  let indent="length + 1" ;; \
+			*center) let indent="cols - (cols - length) / 2" ;; \
+			*left|*) let indent="cols" ;; \
+		esac; \
+		tput cub $$indent; \
+		test "$(2)" && printf $$(tput setaf $(2)); \
+		printf '$(1)'; \
+		test "$(2)" && printf $$(tput sgr0); \
+	fi; \
+	echo
+endef
 
 # this makes sure we do not build top-level dependencies in parallel
 # (which would not be too helpful anyway, running many configure and
