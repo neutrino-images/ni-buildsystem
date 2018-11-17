@@ -53,7 +53,7 @@ u-neutrino-full: neutrino-clean
 	$(MAKE) u-init
 	echo "killall start_neutrino neutrino; sleep 5"	>> $(PREINSTALL_SH)
 	echo "sync; /bin/busybox reboot"		>> $(POSTINSTALL_SH)
-	$(MAKE) neutrino NEUTRINO_INST_DIR=$(UPDATE_INST_DIR)
+	$(MAKE) neutrino N_INST_DIR=$(UPDATE_INST_DIR)
 	install -D -m 0755 $(TARGET_DIR)/etc/init.d/start_neutrino $(UPDATE_INST_DIR)/etc/init.d/start_neutrino
 ifneq ($(DEBUG), yes)
 	find $(UPDATE_INST_DIR)/bin -type f ! -name *.sh -print0 | xargs -0 $(TARGET)-strip || true

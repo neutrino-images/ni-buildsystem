@@ -1,86 +1,113 @@
 #
-# makefile to build Neutrino
+# makefile to build libstb-hal and neutrino
 #
 # -----------------------------------------------------------------------------
 
-YOUTUBE_DEV_KEY ?= AIzaSyBLdZe7M3rpNMZqSj-3IEvjbb2hATWJIdM
-OMDB_API_KEY ?= 20711f9e
-TMDB_DEV_KEY ?= 7270f1b571c4ecbb5b204ddb7f8939b1
-SHOUTCAST_DEV_KEY ?= fa1669MuiRPorUBw
+N_INST_DIR ?= $(TARGET_DIR)
+N_OBJ_DIR = $(BUILD_TMP)/$(NI_NEUTRINO)
 
-N_DEPS = libcurl freetype libjpeg giflib ffmpeg openthreads openssl libdvbsi ntp libsigc++ luaposix pugixml libfribidi zlib
+# -----------------------------------------------------------------------------
 
-LH_DEPS = ffmpeg openthreads
+N_DEPS  =
+N_DEPS += ffmpeg
+N_DEPS += freetype
+N_DEPS += giflib
+N_DEPS += libcurl
+N_DEPS += libdvbsi
+N_DEPS += libfribidi
+N_DEPS += libjpeg
+N_DEPS += libsigc++
+N_DEPS += luaposix
+N_DEPS += ntp
+N_DEPS += openssl
+N_DEPS += openthreads
+N_DEPS += pugixml
+N_DEPS += zlib
 
 ifeq ($(BOXTYPE)-$(HAS_LIBCS), coolstream-yes)
-	N_DEPS += libcoolstream
+  N_DEPS += libcoolstream
 endif
 
 ifeq ($(USE_LIBSTB-HAL), yes)
-	N_DEPS += libstb-hal
+  N_DEPS += libstb-hal
 endif
 
-USE_GSTREAMER = no
-ifeq ($(BOXSERIES), hd51)
-  ifeq ($(USE_GSTREAMER), yes)
-	LH_DEPS += gst_plugins_dvbmediasink
-  endif
-endif
+# uncomment next lines to build neutrino without --enable-ffmpegdec
+#N_DEPS += libFLAC
+#N_DEPS += libid3tag
+#N_DEPS += libmad
+#N_DEPS += libvorbisidec
 
-# uncomment next line to build neutrino without --enable-ffmpegdec
-#N_DEPS += libvorbisidec libid3tag libmad libFLAC
+# -----------------------------------------------------------------------------
 
 N_CFLAGS = -Wall -W -Wshadow -D__STDC_CONSTANT_MACROS -DENABLE_FREESATEPG
 ifeq ($(BOXSERIES), hd1)
-	N_CFLAGS += -DCPU_FREQ
+  N_CFLAGS += -DCPU_FREQ
 endif
 ifeq ($(BOXSERIES), hd2)
-	N_CFLAGS += -DFB_HW_ACCELERATION
+  N_CFLAGS += -DFB_HW_ACCELERATION
 endif
 
 ifeq ($(BOXSERIES), hd51)
   ifeq ($(USE_GSTREAMER), yes)
-	N_CFLAGS += $(shell $(PKG_CONFIG) --cflags --libs gstreamer-1.0)
-	N_CFLAGS += $(shell $(PKG_CONFIG) --cflags --libs gstreamer-audio-1.0)
-	N_CFLAGS += $(shell $(PKG_CONFIG) --cflags --libs gstreamer-video-1.0)
-	N_CFLAGS += $(shell $(PKG_CONFIG) --cflags --libs glib-2.0)
+    N_CFLAGS += $(shell $(PKG_CONFIG) --cflags --libs gstreamer-1.0)
+    N_CFLAGS += $(shell $(PKG_CONFIG) --cflags --libs gstreamer-audio-1.0)
+    N_CFLAGS += $(shell $(PKG_CONFIG) --cflags --libs gstreamer-video-1.0)
+    N_CFLAGS += $(shell $(PKG_CONFIG) --cflags --libs glib-2.0)
   endif
 endif
 
 ifeq ($(DEBUG), yes)
-	N_CFLAGS += -ggdb3 -rdynamic -I$(TARGET_INCLUDE_DIR)
+  N_CFLAGS += -ggdb3 -rdynamic -I$(TARGET_INCLUDE_DIR)
 else
-	N_CFLAGS += $(TARGET_CFLAGS)
+  N_CFLAGS += $(TARGET_CFLAGS)
 endif
+
+# -----------------------------------------------------------------------------
 
 N_LDFLAGS = -lcrypto -ldl -lz $(CORTEX-STRINGS) -L$(TARGET_LIB_DIR)
 ifeq ($(DEBUG), yes)
-	N_LDFLAGS += -Wl,-rpath-link,$(TARGET_LIB_DIR)
+  N_LDFLAGS += -Wl,-rpath-link,$(TARGET_LIB_DIR)
 else
-	N_LDFLAGS += -Wl,-O1 -Wl,-rpath-link,$(TARGET_LIB_DIR) $(TARGET_EXTRA_LDFLAGS)
+  N_LDFLAGS += -Wl,-O1 -Wl,-rpath-link,$(TARGET_LIB_DIR) $(TARGET_EXTRA_LDFLAGS)
 endif
+
+# -----------------------------------------------------------------------------
 
 N_CONFIGURE_DEBUG =
 ifeq ($(HAS_LIBCS), yes)
   ifeq ($(DEBUG), yes)
-	N_CONFIGURE_DEBUG += \
+    N_CONFIGURE_DEBUG += \
 		--enable-libcoolstream-static \
 		--with-libcoolstream-static-dir=$(TARGET_LIB_DIR)
   endif
 endif
 
+# -----------------------------------------------------------------------------
+
 N_CONFIGURE_LIBSTB-HAL =
 ifeq ($(USE_LIBSTB-HAL), yes)
-	N_CONFIGURE_LIBSTB-HAL += \
-		--with-stb-hal-includes=$(LH_OBJDIR)/include \
-		--with-stb-hal-build=$(LH_OBJDIR)
+  N_CONFIGURE_LIBSTB-HAL += \
+		--with-stb-hal-includes=$(LH_OBJ_DIR)/include \
+		--with-stb-hal-build=$(LH_OBJ_DIR)
 endif
+
+# -----------------------------------------------------------------------------
 
 N_CONFIGURE_ADDITIONS =
 ifeq ($(BOXSERIES), hd51)
-	N_CONFIGURE_ADDITIONS += \
+  N_CONFIGURE_ADDITIONS += \
 		--enable-reschange
 endif
+
+# -----------------------------------------------------------------------------
+
+N_OMDB_API_KEY ?= 20711f9e
+N_SHOUTCAST_DEV_KEY ?= fa1669MuiRPorUBw
+N_TMDB_DEV_KEY ?= 7270f1b571c4ecbb5b204ddb7f8939b1
+N_YOUTUBE_DEV_KEY ?= AIzaSyBLdZe7M3rpNMZqSj-3IEvjbb2hATWJIdM
+
+# -----------------------------------------------------------------------------
 
 N_BUILDENV = \
 	CC=$(TARGET)-gcc \
@@ -102,15 +129,12 @@ N_BUILDENV = \
 
 # -----------------------------------------------------------------------------
 
-N_OBJDIR = $(BUILD_TMP)/$(NI_NEUTRINO)
-LH_OBJDIR = $(BUILD_TMP)/$(NI_LIBSTB-HAL-NEXT)
-
-$(N_OBJDIR)/config.status: $(N_DEPS)
-	test -d $(N_OBJDIR) || mkdir -p $(N_OBJDIR)
+$(N_OBJ_DIR)/config.status: $(N_DEPS)
+	test -d $(N_OBJ_DIR) || mkdir -p $(N_OBJ_DIR)
 	cd $(SOURCE_DIR)/$(NI_NEUTRINO) && \
 		git checkout $(NI_NEUTRINO_BRANCH)
 	$(SOURCE_DIR)/$(NI_NEUTRINO)/autogen.sh
-	pushd $(N_OBJDIR) && \
+	pushd $(N_OBJ_DIR) && \
 		export PKG_CONFIG=$(PKG_CONFIG) && \
 		export PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) && \
 		$(N_BUILDENV) \
@@ -132,10 +156,10 @@ $(N_OBJDIR)/config.status: $(N_DEPS)
 			--enable-pip \
 			--enable-pugixml \
 			\
-			--with-youtube-dev-key="$(YOUTUBE_DEV_KEY)" \
-			--with-omdb-api-key="$(OMDB_API_KEY)" \
-			--with-tmdb-dev-key="$(TMDB_DEV_KEY)" \
-			--with-shoutcast-dev-key="$(SHOUTCAST_DEV_KEY)" \
+			--with-omdb-api-key="$(N_OMDB_API_KEY)" \
+			--with-shoutcast-dev-key="$(N_SHOUTCAST_DEV_KEY)" \
+			--with-tmdb-dev-key="$(N_TMDB_DEV_KEY)" \
+			--with-youtube-dev-key="$(N_YOUTUBE_DEV_KEY)" \
 			\
 			$(N_CONFIGURE_LIBSTB-HAL) \
 			--with-tremor \
@@ -144,18 +168,47 @@ $(N_OBJDIR)/config.status: $(N_DEPS)
 			--with-boxtype=$(BOXTYPE) \
 			--with-boxmodel=$(BOXSERIES)
 
+# -----------------------------------------------------------------------------
+
+$(D)/neutrino: $(N_OBJ_DIR)/config.status
+	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
+	$(MAKE) -C $(N_OBJ_DIR) all     DESTDIR=$(TARGET_DIR)
+	$(MAKE) -C $(N_OBJ_DIR) install DESTDIR=$(N_INST_DIR)
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
+LH_OBJ_DIR = $(BUILD_TMP)/$(NI_LIBSTB-HAL-NEXT)
+
+# -----------------------------------------------------------------------------
+
+LH_DEPS  =
+LH_DEPS += ffmpeg
+LH_DEPS += openthreads
+
+USE_GSTREAMER = no
+ifeq ($(BOXSERIES), hd51)
+  ifeq ($(USE_GSTREAMER), yes)
+    LH_DEPS += gst_plugins_dvbmediasink
+  endif
+endif
+
+# -----------------------------------------------------------------------------
+
 LH_CONFIGURE_GSTREAMER =
 ifeq ($(BOXSERIES), hd51)
   ifeq ($(USE_GSTREAMER), yes)
-	LH_CONFIGURE_GSTREAMER += \
+    LH_CONFIGURE_GSTREAMER += \
 			--enable-gstreamer_10
   endif
 endif
 
-$(LH_OBJDIR)/config.status: $(LH_DEPS)
-	rm -rf $(LH_OBJDIR)
+# -----------------------------------------------------------------------------
+
+$(LH_OBJ_DIR)/config.status: $(LH_DEPS)
+	rm -rf $(LH_OBJ_DIR)
 	tar -C $(SOURCE_DIR) -cp $(NI_LIBSTB-HAL-NEXT) --exclude-vcs | tar -C $(BUILD_TMP) -x
-	pushd $(LH_OBJDIR) && \
+	pushd $(LH_OBJ_DIR) && \
 		./autogen.sh && \
 		\
 		export PKG_CONFIG=$(PKG_CONFIG) && \
@@ -177,17 +230,10 @@ $(LH_OBJDIR)/config.status: $(LH_DEPS)
 
 # -----------------------------------------------------------------------------
 
-NEUTRINO_INST_DIR ?= $(TARGET_DIR)
-$(D)/neutrino: $(N_OBJDIR)/config.status
+$(D)/libstb-hal: $(LH_OBJ_DIR)/config.status
 	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
-	$(MAKE) -C $(N_OBJDIR) all     DESTDIR=$(TARGET_DIR)
-	$(MAKE) -C $(N_OBJDIR) install DESTDIR=$(NEUTRINO_INST_DIR)
-	$(TOUCH)
-
-$(D)/libstb-hal: $(LH_OBJDIR)/config.status
-	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
-	$(MAKE) -C $(LH_OBJDIR) all     DESTDIR=$(TARGET_DIR)
-	$(MAKE) -C $(LH_OBJDIR) install DESTDIR=$(NEUTRINO_INST_DIR)
+	$(MAKE) -C $(LH_OBJ_DIR) all     DESTDIR=$(TARGET_DIR)
+	$(MAKE) -C $(LH_OBJ_DIR) install DESTDIR=$(N_INST_DIR)
 	$(REWRITE_LIBTOOL)/libstb-hal.la
 	$(TOUCH)
 
@@ -197,10 +243,10 @@ neutrino-bin:
 ifeq ($(CLEAN), yes)
 	$(MAKE) neutrino-clean
 endif
-	$(MAKE) $(N_OBJDIR)/config.status
+	$(MAKE) $(N_OBJ_DIR)/config.status
 	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
-	$(MAKE) -C $(N_OBJDIR) all DESTDIR=$(TARGET_DIR)
-	install -D -m 0755 $(N_OBJDIR)/src/neutrino $(TARGET_DIR)/bin/neutrino
+	$(MAKE) -C $(N_OBJ_DIR) all DESTDIR=$(TARGET_DIR)
+	install -D -m 0755 $(N_OBJ_DIR)/src/neutrino $(TARGET_DIR)/bin/neutrino
 ifneq ($(DEBUG), yes)
 	$(TARGET)-strip $(TARGET_DIR)/bin/neutrino
 endif
@@ -209,21 +255,21 @@ endif
 # -----------------------------------------------------------------------------
 
 neutrino-clean:
-	-make -C $(N_OBJDIR) uninstall
-	-make -C $(N_OBJDIR) distclean
-	rm -f $(N_OBJDIR)/config.status
+	-make -C $(N_OBJ_DIR) uninstall
+	-make -C $(N_OBJ_DIR) distclean
+	rm -f $(N_OBJ_DIR)/config.status
 	rm -f $(D)/neutrino
 
 neutrino-clean-all: neutrino-clean
-	rm -rf $(N_OBJDIR)
+	rm -rf $(N_OBJ_DIR)
 
 libstb-hal-clean:
-	-make -C $(LH_OBJDIR) clean
-	rm -f $(LH_OBJDIR)/config.status
+	-make -C $(LH_OBJ_DIR) clean
+	rm -f $(LH_OBJ_DIR)/config.status
 	rm -f $(D)/libstb-hal
 
 libstb-hal-clean-all: libstb-hal-clean
-	rm -rf $(LH_OBJDIR)
+	rm -rf $(LH_OBJ_DIR)
 
 # -----------------------------------------------------------------------------
 

@@ -213,7 +213,6 @@ flash-image-arm-multi:
 
 PHONY += devtable
 PHONY += devtable-remove
-PHONY += images
 PHONY += flash-image-coolstream
 PHONY += check-image-size
 PHONY += flash-image-arm
