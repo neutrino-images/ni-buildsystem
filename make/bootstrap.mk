@@ -22,6 +22,7 @@ ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd51))
 endif
 
 bootstrap: $(BOOTSTRAP)
+	@touch $(BUILD_TMP)/.$(BOXTYPE)-$(BOXMODEL)
 	@make line
 	@echo -e "$(TERM_YELLOW)Bootstrapped for $(shell echo $(BOXTYPE) | sed 's/.*/\u&/') $(BOXMODEL)$(TERM_NORMAL)"
 	@make line
