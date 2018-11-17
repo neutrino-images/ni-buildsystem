@@ -173,6 +173,7 @@ KERNEL_NAME = NI $(shell echo $(BOXMODEL) | sed 's/.*/\u&/') Kernel
 
 ifeq ($(BOXSERIES), hd1)
   KERNEL_VERSION         = 2.6.34.13
+  KERNEL_VERSION_MAJOR   = 2.6.34
   KERNEL_VERSION_FULL    = $(KERNEL_VERSION)-$(BOXMODEL)
   KERNEL_BRANCH          = ni/2.6.34.x
   KERNEL_DTB             =
@@ -188,6 +189,7 @@ endif
 
 ifeq ($(BOXSERIES), hd2)
   KERNEL_VERSION         = 3.10.93
+  KERNEL_VERSION_MAJOR   = 3.10
   KERNEL_VERSION_FULL    = $(KERNEL_VERSION)
   KERNEL_BRANCH          = ni/3.10.x
   ifeq ($(BOXFAMILY), apollo)
@@ -213,6 +215,7 @@ ifeq ($(BOXSERIES), hd2)
 endif
 
 ifeq ($(BOXSERIES), hd51)
+  KERNEL_VERSION_MAJOR   = 4.10
   KERNEL_VERSION         = 4.10.12
   KERNEL_VERSION_FULL    = $(KERNEL_VERSION)
   KERNEL_BRANCH          = ni/4.10.x

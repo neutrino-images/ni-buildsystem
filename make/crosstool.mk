@@ -7,7 +7,7 @@ crosstool: crosstool-$(BOXARCH)-$(BOXSERIES)
 
 crosstools:
 	for boxseries in hd1 hd2 hd51; do \
-		make BOXSERIES=$${boxseries} crosstool-arm-$${boxseries} || exit; \
+		make BOXSERIES=$${boxseries} crosstool-$(BOXARCH)-$${boxseries} || exit; \
 	done;
 
 # -----------------------------------------------------------------------------

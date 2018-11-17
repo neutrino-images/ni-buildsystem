@@ -3,9 +3,9 @@
 #
 # -----------------------------------------------------------------------------
 
-DTB		= $(BUILD_TMP)/linux-$(KERNEL_VERSION)/arch/arm/boot/dts/$(KERNEL_DTB).dtb
-ZIMAGE		= $(BUILD_TMP)/linux-$(KERNEL_VERSION)/arch/arm/boot/zImage
-ZIMAGE_DTB	= $(BUILD_TMP)/linux-$(KERNEL_VERSION)/arch/arm/boot/zImage_DTB
+DTB		= $(BUILD_TMP)/linux-$(KERNEL_VERSION)/arch/$(BOXARCH)/boot/dts/$(KERNEL_DTB).dtb
+ZIMAGE		= $(BUILD_TMP)/linux-$(KERNEL_VERSION)/arch/$(BOXARCH)/boot/zImage
+ZIMAGE_DTB	= $(BUILD_TMP)/linux-$(KERNEL_VERSION)/arch/$(BOXARCH)/boot/zImage_DTB
 MODULES_DIR	= $(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules/lib/modules/$(KERNEL_VERSION_FULL)
 
 TARGET_MODULES_DIR = $(TARGET_LIB_DIR)/modules/$(KERNEL_VERSION_FULL)
@@ -19,14 +19,14 @@ $(D)/kernel-armbox: $(SOURCE_DIR)/$(NI_LINUX-KERNEL) | $(TARGET_DIR)
 		mv $(NI_LINUX-KERNEL) linux-$(KERNEL_VERSION)
 	$(CHDIR)/linux-$(KERNEL_VERSION); \
 		touch .scmversion; \
-		cp $(CONFIGS)/kernel-4.10-$(BOXFAMILY).config $(BUILD_TMP)/linux-$(KERNEL_VERSION)/.config; \
+		cp $(CONFIGS)/kernel-$(KERNEL_VERSION_MAJOR)-$(BOXFAMILY).config $(BUILD_TMP)/linux-$(KERNEL_VERSION)/.config; \
 		$(MKDIR)/linux-$(KERNEL_VERSION)-modules; \
-		$(MAKE) ARCH=arm CROSS_COMPILE=$(TARGET)- INSTALL_MOD_PATH=$(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules silentoldconfig; \
-		$(MAKE) ARCH=arm CROSS_COMPILE=$(TARGET)- INSTALL_MOD_PATH=$(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules $(DTB_VER); \
-		$(MAKE) ARCH=arm CROSS_COMPILE=$(TARGET)- INSTALL_MOD_PATH=$(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules zImage; \
+		$(MAKE) ARCH=$(BOXARCH) CROSS_COMPILE=$(TARGET)- INSTALL_MOD_PATH=$(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules silentoldconfig; \
+		$(MAKE) ARCH=$(BOXARCH) CROSS_COMPILE=$(TARGET)- INSTALL_MOD_PATH=$(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules $(DTB_VER); \
+		$(MAKE) ARCH=$(BOXARCH) CROSS_COMPILE=$(TARGET)- INSTALL_MOD_PATH=$(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules zImage; \
 		cat $(ZIMAGE) $(DTB) > $(ZIMAGE_DTB); \
-		$(MAKE) ARCH=arm CROSS_COMPILE=$(TARGET)- INSTALL_MOD_PATH=$(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules modules; \
-		$(MAKE) ARCH=arm CROSS_COMPILE=$(TARGET)- INSTALL_MOD_PATH=$(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules modules_install
+		$(MAKE) ARCH=$(BOXARCH) CROSS_COMPILE=$(TARGET)- INSTALL_MOD_PATH=$(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules modules; \
+		$(MAKE) ARCH=$(BOXARCH) CROSS_COMPILE=$(TARGET)- INSTALL_MOD_PATH=$(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules modules_install
 	$(TOUCH)
 
 kernel-armbox-modules: $(D)/kernel-armbox
