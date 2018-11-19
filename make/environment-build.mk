@@ -137,6 +137,7 @@ PARALLEL_JOBS := $$(expr `grep -c ^processor /proc/cpuinfo`)
 override MAKE = make $(if $(findstring j,$(filter-out --%,$(MAKEFLAGS))),,-j$(PARALLEL_JOBS))
 
 MAKEFLAGS += --no-print-directory
+#MAKEFLAGS += --silent
 
 # -----------------------------------------------------------------------------
 
@@ -146,8 +147,8 @@ WHOAMI       := $(shell id -un)
 ARCHIVE       = $(BASE_DIR)/download
 BUILD_TMP     = $(BASE_DIR)/build_tmp
 ROOTFS        = $(BUILD_TMP)/rootfs
-D             = $(BASE_DIR)/deps
-DEPDIR        = $(D)
+DEPS_DIR      = $(BASE_DIR)/deps
+D             = $(DEPS_DIR)
 HOST_DIR      = $(BASE_DIR)/host
 TARGET_DIR   ?= $(BASE_DIR)/root
 SOURCE_DIR    = $(BASE_DIR)/source
