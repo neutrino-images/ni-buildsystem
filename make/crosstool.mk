@@ -55,7 +55,7 @@ crosstool-arm-hd1: CROSS_DIR-check $(SOURCE_DIR)/$(NI_LINUX-KERNEL)
 		tar cf linux-$(KERNEL_VERSION).tar --exclude-vcs -C $(SOURCE_DIR)/$(NI_LINUX-KERNEL) . && \
 		mv linux-$(KERNEL_VERSION).tar $(BUILD_TMP)/crosstool-ng/targets/src/ && \
 		cp -a $(CONFIGS)/ct-ng-$(BOXTYPE)-$(BOXSERIES).config .config && \
-		sed -i "s@^CT_PARALLEL_JOBS=.*@CT_PARALLEL_JOBS=$(NUM_CPUS)@" .config && \
+		sed -i "s@^CT_PARALLEL_JOBS=.*@CT_PARALLEL_JOBS=$(PARALLEL_JOBS)@" .config && \
 		export NI_BASE_DIR=$(BASE_DIR) && \
 		export NI_CUSTOM_KERNEL=$(BUILD_TMP)/crosstool-ng/targets/src/linux-$(KERNEL_VERSION).tar && \
 		export NI_CUSTOM_KERNEL_VERSION=$(KERNEL_VERSION) && \
@@ -86,7 +86,7 @@ crosstool-arm-hd2: CROSS_DIR-check $(ARCHIVE)/gcc-linaro-$(GCC_VER).tar.xz $(SOU
 		tar cf linux-$(KERNEL_VERSION).tar --exclude-vcs -C $(SOURCE_DIR)/$(NI_LINUX-KERNEL) . && \
 		mv linux-$(KERNEL_VERSION).tar $(BUILD_TMP)/crosstool-ng/targets/src/ && \
 		cp -a $(CONFIGS)/ct-ng-$(BOXTYPE)-$(BOXSERIES).config .config && \
-		sed -i "s@^CT_PARALLEL_JOBS=.*@CT_PARALLEL_JOBS=$(NUM_CPUS)@" .config && \
+		sed -i "s@^CT_PARALLEL_JOBS=.*@CT_PARALLEL_JOBS=$(PARALLEL_JOBS)@" .config && \
 		export NI_BASE_DIR=$(BASE_DIR) && \
 		export NI_CUSTOM_KERNEL=$(BUILD_TMP)/crosstool-ng/targets/src/linux-$(KERNEL_VERSION).tar && \
 		export NI_CUSTOM_KERNEL_VERSION=$(KERNEL_VERSION) && \
@@ -117,7 +117,7 @@ crosstool-arm-hd51: CROSS_DIR-check
 		tar cf linux-$(KERNEL_VERSION).tar --exclude-vcs -C $(SOURCE_DIR)/$(NI_LINUX-KERNEL) . && \
 		mv linux-$(KERNEL_VERSION).tar $(BUILD_TMP)/crosstool-ng/targets/src/ && \
 		cp -a $(CONFIGS)/ct-ng-$(BOXTYPE)-$(BOXSERIES).config .config && \
-		sed -i "s@^CT_PARALLEL_JOBS=.*@CT_PARALLEL_JOBS=$(NUM_CPUS)@" .config && \
+		sed -i "s@^CT_PARALLEL_JOBS=.*@CT_PARALLEL_JOBS=$(PARALLEL_JOBS)@" .config && \
 		export NI_BASE_DIR=$(BASE_DIR) && \
 		export NI_CUSTOM_KERNEL=$(BUILD_TMP)/crosstool-ng/targets/src/linux-$(KERNEL_VERSION).tar && \
 		export NI_CUSTOM_KERNEL_VERSION=$(KERNEL_VERSION) && \

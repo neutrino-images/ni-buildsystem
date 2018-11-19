@@ -20,63 +20,63 @@ personalized-image:
 
 image \
 ni-image:
-	@echo "starting 'make $@' build with "$(NUM_CPUS)" threads!"
-	make -j$(NUM_CPUS) neutrino
+	@echo "starting 'make $@' build with "$(PARALLEL_JOBS)" threads!"
+	$(MAKE) neutrino
 	make plugins-all
 	make plugins-$(BOXSERIES)
 	make fbshot
-	make -j$(NUM_CPUS) luacurl
-	make -j$(NUM_CPUS) timezone
-	make -j$(NUM_CPUS) smartmontools
-	make -j$(NUM_CPUS) sg3-utils
-	make -j$(NUM_CPUS) nfs-utils
-	make -j$(NUM_CPUS) procps-ng
-	make -j$(NUM_CPUS) nano
+	$(MAKE) luacurl
+	$(MAKE) timezone
+	$(MAKE) smartmontools
+	$(MAKE) sg3-utils
+	$(MAKE) nfs-utils
+	$(MAKE) procps-ng
+	$(MAKE) nano
 	make hd-idle
-	make -j$(NUM_CPUS) e2fsprogs
-	make -j$(NUM_CPUS) ntfs-3g
-	make -j$(NUM_CPUS) exfat-utils
-	make -j$(NUM_CPUS) vsftpd
-	make -j$(NUM_CPUS) djmount
-	make -j$(NUM_CPUS) ushare
-	make -j$(NUM_CPUS) xupnpd
+	$(MAKE) e2fsprogs
+	$(MAKE) ntfs-3g
+	$(MAKE) exfat-utils
+	$(MAKE) vsftpd
+	$(MAKE) djmount
+	$(MAKE) ushare
+	$(MAKE) xupnpd
 	make inadyn
-	make -j$(NUM_CPUS) samba
+	$(MAKE) samba
 	make dropbear
-	make -j$(NUM_CPUS) hdparm
-	make -j$(NUM_CPUS) busybox
-	make -j$(NUM_CPUS) coreutils
-	make -j$(NUM_CPUS) dosfstools
-	make -j$(NUM_CPUS) wpa_supplicant
-	make -j$(NUM_CPUS) mtd-utils
-	make -j$(NUM_CPUS) wget
-	make -j$(NUM_CPUS) iconv
-	make -j$(NUM_CPUS) streamripper
+	$(MAKE) hdparm
+	$(MAKE) busybox
+	$(MAKE) coreutils
+	$(MAKE) dosfstools
+	$(MAKE) wpa_supplicant
+	$(MAKE) mtd-utils
+	$(MAKE) wget
+	$(MAKE) iconv
+	$(MAKE) streamripper
 ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd51))
 	make channellogos
-	make -j$(NUM_CPUS) less
-	make -j$(NUM_CPUS) parted
-	make -j$(NUM_CPUS) openvpn
-	make -j$(NUM_CPUS) openssh
-	make -j$(NUM_CPUS) ethtool
+	$(MAKE) less
+	$(MAKE) parted
+	$(MAKE) openvpn
+	$(MAKE) openssh
+	$(MAKE) ethtool
   ifneq ($(BOXMODEL), kronos_v2)
-	make -j$(NUM_CPUS) bash
-	make -j$(NUM_CPUS) iperf
-	make -j$(NUM_CPUS) minicom
-	make -j$(NUM_CPUS) mc
+	$(MAKE) bash
+	$(MAKE) iperf
+	$(MAKE) minicom
+	$(MAKE) mc
   endif
   ifeq ($(BOXSERIES), hd51)
-	make -j$(NUM_CPUS) ofgwrite
-	make -j$(NUM_CPUS) aio-grab
-	make -j$(NUM_CPUS) dvbsnoop
+	$(MAKE) ofgwrite
+	$(MAKE) aio-grab
+	$(MAKE) dvbsnoop
   endif
   ifeq ($(DEBUG), yes)
-	make -j$(NUM_CPUS) strace
-	make -j$(NUM_CPUS) valgrind
-	make -j$(NUM_CPUS) gdb
+	$(MAKE) strace
+	$(MAKE) valgrind
+	$(MAKE) gdb
   endif
 endif
-	make -j$(NUM_CPUS) kernel-$(BOXTYPE)-modules
+	$(MAKE) kernel-$(BOXTYPE)-modules
 	make autofs5
 	make scripts
 	make init-scripts

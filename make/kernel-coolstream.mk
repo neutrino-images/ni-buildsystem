@@ -21,15 +21,15 @@ kernel-coolstream-install: kernel-coolstream-install-$(BOXSERIES)
 
 kernel-coolstream-install-all:
 	make clean BOXFAMILY=nevis
-	make -j$(NUM_CPUS) kernel-coolstream-hd1 BOXFAMILY=nevis
+	$(MAKE) kernel-coolstream-hd1 BOXFAMILY=nevis
 	make kernel-coolstream-install-hd1 BOXFAMILY=nevis
 	#
 	make clean BOXFAMILY=apollo
-	make -j$(NUM_CPUS) kernel-coolstream-hd2 BOXFAMILY=apollo
+	$(MAKE) kernel-coolstream-hd2 BOXFAMILY=apollo
 	make kernel-coolstream-install-hd2 BOXFAMILY=apollo
 	#
 	make clean BOXFAMILY=kronos
-	make -j$(NUM_CPUS) kernel-coolstream-hd2 BOXFAMILY=kronos
+	$(MAKE) kernel-coolstream-hd2 BOXFAMILY=kronos
 	make kernel-coolstream-install-hd2 BOXFAMILY=kronos
 	#
 	make clean BOXFAMILY=nevis > /dev/null 2>&1

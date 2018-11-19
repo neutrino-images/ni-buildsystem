@@ -3,8 +3,6 @@
 #
 # -----------------------------------------------------------------------------
 
-NUM_CPUS=$$(expr `grep -c ^processor /proc/cpuinfo`)
-
 CONFIG_SITE =
 export CONFIG_SITE
 
@@ -13,7 +11,7 @@ export LD_LIBRARY_PATH
 
 SHELL := /bin/bash
 
-BASE_DIR    := $(shell pwd)
+# -----------------------------------------------------------------------------
 
 # assign box environment
 
@@ -111,6 +109,8 @@ else ifeq ($(BOXTYPE), armbox)
   BOXARCH = arm
 endif
 
+# -----------------------------------------------------------------------------
+
 ifndef BOXTYPE
   $(error BOXTYPE not set)
 endif
@@ -130,8 +130,17 @@ ifndef BOXMODEL
   $(error BOXMODEL not set)
 endif
 
+# -----------------------------------------------------------------------------
+
+# set up default parallelism
+PARALLEL_JOBS := $$(expr `grep -c ^processor /proc/cpuinfo`)
+override MAKE = make $(if $(findstring j,$(filter-out --%,$(MAKEFLAGS))),,-j$(PARALLEL_JOBS))
+
 MAKEFLAGS += --no-print-directory
 
+# -----------------------------------------------------------------------------
+
+BASE_DIR     := $(shell pwd)
 MAINTAINER   ?= NI-Team
 WHOAMI       := $(shell id -un)
 ARCHIVE       = $(BASE_DIR)/download
@@ -168,6 +177,8 @@ TARGET_INCLUDE_DIR = $(TARGET_DIR)/include
 
 # create debug image
 DEBUG ?= no
+
+# -----------------------------------------------------------------------------
 
 KERNEL_NAME = NI $(shell echo $(BOXMODEL) | sed 's/.*/\u&/') Kernel
 
