@@ -15,6 +15,8 @@ SHOWINFO "start update of var-partition"
 
 # do always upgrade update.urls
 cp -a /var_init/etc/update.urls /var/etc/update.urls
+# and migration.sh too
+cp -a /var_init/tuxbox/config/migration.sh /var/tuxbox/config/migration.sh
 
 # cleanup (remove me in the future...)
 rm -f /var/etc/.cooliptv
@@ -39,9 +41,6 @@ fi
 if [ ! -e /var/etc/auto.net ]; then
 	cp -a /var_init/etc/auto.net /var/etc/auto.net
 fi
-
-# force new root default password "ni" as of 29.06.2017
-grep "root::0:0::" /var/etc/passwd && cp -af /var_init/etc/passwd /var/etc/passwd
 
 if [ ! -e /var/tuxbox/config/rssreader.conf ]; then
 	cp -a /var_init/tuxbox/config/rssreader.conf /var/tuxbox/config/rssreader.conf
@@ -69,7 +68,10 @@ for f in cfg feeds playlist; do
 	fi
 done
 
-SHOWINFO "change shell for root"
+# force new root default password "ni" as of 29.06.2017
+grep "root::0:0::" /var/etc/passwd && cp -af /var_init/etc/passwd /var/etc/passwd
+
+# change shell for root
 sed -i '/^root/ s:/bin/bash:/bin/sh:g' /var/etc/passwd
 cd /var/root
 test -e .bash_history && mv .bash_history .ash_history
