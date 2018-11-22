@@ -132,6 +132,10 @@ ifeq ($(BOXSERIES), hd2)
 		ln -sf libuClibc-$(UCLIBC_VER).so libpthread.so.0 && \
 		ln -sf libuClibc-$(UCLIBC_VER).so librt.so.0
 endif
+ifeq ($(BOXSERIES), hd51)
+	cd $(TARGET_LIB_DIR) && \
+		ln -sf ld-2.23.so ld-linux.so.3
+endif
 
 includes: $(TARGET_INCLUDE_DIR)
 
