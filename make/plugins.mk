@@ -235,8 +235,15 @@ neutrino-mediathek: $(LIBPLUGINS)
 
 # -----------------------------------------------------------------------------
 
+LocalTV : $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(LIBPLUGINS) $(SHAREWEBTV)
+	install -m 0644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/$@/$@.cfg $(LIBPLUGINS)/
+	install -m 0644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/$@/$@.lua $(LIBPLUGINS)/
+	install -m 0644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/$@/$@_hint.png $(LIBPLUGINS)/
+	install -m 0644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/$@/$@Epg.lua $(SHAREWEBTV)/
+
+# -----------------------------------------------------------------------------
+
 add-locale \
-LocalTV \
 userbouquets \
 stb-startup \
 netzkino \
@@ -247,10 +254,10 @@ favorites2bin: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(LIBPLUGINS)
 # -----------------------------------------------------------------------------
 
 webradio: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(SHAREWEBRADIO)
-	install -m 0755 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/webradio/* $(SHAREWEBRADIO)/
+	install -m 0644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/webradio/* $(SHAREWEBRADIO)/
 
 webtv: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(SHAREWEBTV)
-	install -m 0755 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/webtv/* $(SHAREWEBTV)/
+	install -m 0644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/webtv/* $(SHAREWEBTV)/
 
 # -----------------------------------------------------------------------------
 
