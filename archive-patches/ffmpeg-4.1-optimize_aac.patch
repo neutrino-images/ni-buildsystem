@@ -30,7 +30,7 @@
      LOCAL_ALIGNED_16(INTFLOAT, transient_gain, [34], [PS_QMF_TIME_SLOTS]);
 --- a/libavcodec/fft_template.c
 +++ b/libavcodec/fft_template.c
-@@ -536,7 +536,7 @@
+@@ -538,7 +538,7 @@
      pass(z,FFT_NAME(ff_cos_##n),n4/2);\
  }
  
@@ -39,7 +39,7 @@
  {
      FFTDouble t1, t2, t3, t4, t5, t6, t7, t8;
  
-@@ -550,7 +550,7 @@
+@@ -552,7 +552,7 @@
      BF(z[2].im, z[0].im, t2, t5);
  }
  
