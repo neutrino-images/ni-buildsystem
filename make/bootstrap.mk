@@ -28,9 +28,9 @@ bootstrap: $(BOOTSTRAP)
 	$(call draw_line);
 
 skeleton: | $(TARGET_DIR)
-	cp --remove-destination -a $(SKEL_ROOT)/* $(TARGET_DIR)/
+	cp --remove-destination -a $(SKEL_ROOT)/. $(TARGET_DIR)/
 	if [ -d $(SKEL_ROOT)-$(BOXFAMILY)/ ]; then \
-		cp -a $(SKEL_ROOT)-$(BOXFAMILY)/* $(TARGET_DIR)/; \
+		cp -a $(SKEL_ROOT)-$(BOXFAMILY)/. $(TARGET_DIR)/; \
 	fi
 
 target-dir:
@@ -80,12 +80,15 @@ $(HOST_DIR)/bin: $(HOST_DIR)
 
 $(TARGET_INCLUDE_DIR): | $(TARGET_DIR)
 	mkdir -p $@
+ifeq ($(BOXTYPE), armbox)
+	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/include/. $@
+endif
 
 $(TARGET_LIB_DIR): | $(TARGET_DIR)
 	mkdir -p $@
-	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(DRIVERS_DIR)/libs/* $@
+	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/lib/. $@
 ifeq ($(BOXTYPE), coolstream)
-	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(DRIVERS_DIR)/libcoolstream/$(shell echo -n $(NI_FFMPEG_BRANCH) | sed 's,/,-,g')/* $@
+	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/libcoolstream/$(shell echo -n $(NI_FFMPEG_BRANCH) | sed 's,/,-,g')/. $@
   ifeq ($(BOXSERIES), hd1)
 	ln -sf libnxp.so $@/libconexant.so
   endif
@@ -93,26 +96,26 @@ endif
 
 $(TARGET_LIB_DIR)/firmware: | $(TARGET_DIR)
 	mkdir -p $@
-	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(DRIVERS_DIR)/firmware/* $@/
+	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/lib-firmware/. $@
 
 $(TARGET_LIB_DIR)/modules: | $(TARGET_DIR)
 	mkdir -p $@
-	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(DRIVERS_DIR)/drivers/$(KERNEL_VERSION_FULL) $@/
+	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/lib-modules/$(KERNEL_VERSION_FULL) $@
 
 $(STATIC_LIB_DIR): | $(TARGET_DIR)
 	mkdir -p $@
 	if [ -d $(STATIC_DIR)/ ]; then \
-		cp -a $(STATIC_DIR)/* $(TARGET_DIR)/; \
+		cp -a $(STATIC_DIR)/. $(TARGET_DIR)/; \
 	fi
 
 $(TARGET_DIR)/var/update: | $(TARGET_DIR)
 	mkdir -p $@
 ifeq ($(BOXTYPE), coolstream)
-	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(DRIVERS_DIR)/uldr.bin $@/
+	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/uldr.bin $@
   ifeq ($(BOXMODEL), kronos_v2)
-	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(DRIVERS_DIR)/u-boot.bin.link $@/u-boot.bin
+	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/u-boot.bin.kronos_v2 $@/u-boot.bin
   else
-	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(DRIVERS_DIR)/u-boot.bin $@/
+	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/u-boot.bin $@
   endif
 endif
 

@@ -134,7 +134,7 @@ get-update-info-hd2:
 	$(call draw_line);
 	@echo "Get update info for model $(shell echo $(BOXMODEL) | sed 's/.*/\u&/')"
 	@echo
-	@cd $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(DRIVERS_DIR); \
+	@cd $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR); \
 	test -e ./u-boot.bin && ( \
 		strings u-boot.bin | grep -m1 "U-Boot "; \
 	); \
