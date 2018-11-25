@@ -353,7 +353,7 @@ ALSA-LIB_SOURCE = alsa-lib-$(ALSA-LIB_VER).tar.bz2
 $(ARCHIVE)/$(ALSA-LIB_SOURCE):
 	$(WGET) ftp://ftp.alsa-project.org/pub/lib/$(ALSA-LIB_SOURCE)
 
-ETHTOOL_VER = 4.17
+ETHTOOL_VER = 4.19
 ETHTOOL_SOURCE = ethtool-$(ETHTOOL_VER).tar.xz
 $(ARCHIVE)/$(ETHTOOL_SOURCE):
 	$(WGET) https://www.kernel.org/pub/software/network/ethtool/$(ETHTOOL_SOURCE)
