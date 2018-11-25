@@ -19,6 +19,7 @@ FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-optimize_aac.patch
 FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-fix_edit_list_parsing.patch
 # ffmpeg exteplayer3 patches
 FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-fix_mpegts.patch
+FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-allow_to_choose_rtmp_impl_at_runtime.patch
 FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-hls_replace_key_uri.patch
 
 # -----------------------------------------------------------------------------
