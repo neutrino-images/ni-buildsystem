@@ -827,7 +827,7 @@ $(D)/lcd4linux: $(D)/libncurses $(D)/libgd2 $(D)/libdpf | $(TARGET_DIR)
 			--docdir=/.remove \
 			--infodir=/.remove \
 			--with-ncurses=$(TARGET_LIB_DIR) \
-			--with-drivers='DPF, SamsungSPF' \
+			--with-drivers='DPF, SamsungSPF, PNG' \
 			--with-plugins='all,!dbus,!mpris_dbus,!asterisk,!isdn,!pop3,!ppp,!seti,!huawei,!imon,!kvv,!sample,!w1retap,!wireless,!xmms,!gps,!mpd,!mysql,!qnaplog,!iconv' \
 			; \
 		$(MAKE) vcs_version; \
