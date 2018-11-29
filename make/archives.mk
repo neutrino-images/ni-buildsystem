@@ -174,7 +174,7 @@ FREETYPE_VER=2.9.1
 $(ARCHIVE)/freetype-$(FREETYPE_VER).tar.bz2:
 	$(WGET) https://sourceforge.net/projects/freetype/files/freetype2/$(FREETYPE_VER)/freetype-$(FREETYPE_VER).tar.bz2
 
-OPENSSL_VER=1.0.2p
+OPENSSL_VER=1.0.2q
 $(ARCHIVE)/openssl-$(OPENSSL_VER).tar.gz:
 	$(WGET) http://www.openssl.org/source/openssl-$(OPENSSL_VER).tar.gz
 
