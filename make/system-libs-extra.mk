@@ -225,6 +225,7 @@ $(D)/harfbuzz: $(D)/fontconfig $(D)/libglib2 $(D)/cairo $(D)/freetype $(ARCHIVE)
 	$(UNTAR)/$(HARFBUZZ_SOURCE)
 	$(CHDIR)/harfbuzz-$(HARFBUZZ_VER); \
 		$(call apply_patches,$(HARFBUZZ_PATCH)); \
+		autoreconf -fi; \
 		$(CONFIGURE) \
 			--prefix= \
 			--with-cairo \
