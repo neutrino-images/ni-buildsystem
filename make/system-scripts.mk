@@ -25,3 +25,4 @@ scripts: $(SBIN)
 ifeq ($(BOXTYPE), coolstream)
 	install -m 0755 $(IMAGEFILES)/scripts/flash_eraseall $(SBIN)
 endif
+	install -D -m 0755 $(IMAGEFILES)/scripts/udhcpc-default.script $(TARGET_DIR)/share/udhcpc/default.script
