@@ -41,7 +41,7 @@ while true; do
 	dt -t"NEUTRINO: $RET"
 
 	# report errors on external display
-	if [ -e /tmp/.lcd-usbdev?.? ]; then
+	if [ -e /tmp/.lcd-* ]; then
 		echo "0"		> /tmp/lcd/mode_logo
 		echo "Neutrino"		> /tmp/lcd/service
 		echo "Error: $RET"	> /tmp/lcd/event
