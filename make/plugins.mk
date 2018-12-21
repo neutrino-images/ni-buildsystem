@@ -64,8 +64,8 @@ channellogos: $(SOURCE_DIR)/$(NI_LOGO-STUFF) $(SHAREICONS)
 	install -m 0644 $(SOURCE_DIR)/$(NI_LOGO-STUFF)/logos/* $(SHAREICONS)/logo
 	mkdir -p $(SHAREICONS)/logo/events
 	install -m 0644 $(SOURCE_DIR)/$(NI_LOGO-STUFF)/logos-events/* $(SHAREICONS)/logo/events
-	pushd $(SOURCE_DIR)/$(NI_LOGO-STUFF)/ && \
-	./logo_linker.sh complete.db $(SHAREICONS)/logo
+	cd $(SOURCE_DIR)/$(NI_LOGO-STUFF)/logo-links && \
+		./logo-linker.sh logo-links.db $(SHAREICONS)/logo
 
 # -----------------------------------------------------------------------------
 
