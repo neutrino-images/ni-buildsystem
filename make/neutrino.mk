@@ -178,7 +178,7 @@ $(D)/neutrino: $(N_OBJ_DIR)/config.status
 
 # -----------------------------------------------------------------------------
 
-LH_OBJ_DIR = $(BUILD_TMP)/$(NI_LIBSTB-HAL-NEXT)
+LH_OBJ_DIR = $(BUILD_TMP)/$(NI_LIBSTB-HAL)
 
 # -----------------------------------------------------------------------------
 
@@ -207,7 +207,7 @@ endif
 
 $(LH_OBJ_DIR)/config.status: $(LH_DEPS)
 	rm -rf $(LH_OBJ_DIR)
-	tar -C $(SOURCE_DIR) -cp $(NI_LIBSTB-HAL-NEXT) --exclude-vcs | tar -C $(BUILD_TMP) -x
+	tar -C $(SOURCE_DIR) -cp $(NI_LIBSTB-HAL) --exclude-vcs | tar -C $(BUILD_TMP) -x
 	pushd $(LH_OBJ_DIR) && \
 		./autogen.sh && \
 		\

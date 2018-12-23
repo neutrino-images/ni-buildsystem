@@ -26,10 +26,6 @@ ifeq ($(NI_ADMIN), true)
 		git fetch $(TUXBOX_REMOTE_REPO)
 	cd $(SOURCE_DIR)/$(NI_LIBSTB-HAL) && \
 		git checkout master && \
-		git pull $(TUXBOX_REMOTE_REPO) master && \
-		git fetch $(TUXBOX_REMOTE_REPO)
-	cd $(SOURCE_DIR)/$(NI_LIBSTB-HAL-NEXT) && \
-		git checkout master && \
 		git pull $(TANGO_REMOTE_REPO) master && \
 		git fetch $(TANGO_REMOTE_REPO)
 	cd $(SOURCE_DIR)/$(NI_OFGWRITE) && \
@@ -60,7 +56,6 @@ ifeq ($(HAS_LIBCS), yes)
 	cd $(SOURCE_DIR)/$(NI_LIBCOOLSTREAM) && git pull --all && git checkout $(NI_LIBCOOLSTREAM_BRANCH)
 endif
 	cd $(SOURCE_DIR)/$(NI_LIBSTB-HAL) && git pull
-	cd $(SOURCE_DIR)/$(NI_LIBSTB-HAL-NEXT) && git pull
 	cd $(SOURCE_DIR)/$(NI_LINUX-KERNEL) && git pull --all && git checkout $(KERNEL_BRANCH)
 	cd $(SOURCE_DIR)/$(NI_LOGO-STUFF) && git pull
 	cd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) && git pull
@@ -88,7 +83,6 @@ ifeq ($(HAS_LIBCS), yes)
 	cd $(SOURCE_DIR)/$(NI_LIBCOOLSTREAM) && git push --all
 endif
 	cd $(SOURCE_DIR)/$(NI_LIBSTB-HAL) && git push
-	cd $(SOURCE_DIR)/$(NI_LIBSTB-HAL-NEXT) && git push
 	cd $(SOURCE_DIR)/$(NI_LINUX-KERNEL) && git push --all
 	cd $(SOURCE_DIR)/$(NI_LOGO-STUFF) && git push
 	cd $(SOURCE_DIR)/$(NI_NEUTRINO) && git push

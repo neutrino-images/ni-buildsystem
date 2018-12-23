@@ -102,7 +102,7 @@ changelogs:
 	$(call make-changelog) > $(STAGING_DIR)/changelog-buildsystem
 	pushd $(SOURCE_DIR)/$(NI_NEUTRINO); \
 		$(call make-changelog) > $(STAGING_DIR)/changelog-neutrino
-	pushd $(SOURCE_DIR)/$(NI_LIBSTB-HAL-NEXT); \
+	pushd $(SOURCE_DIR)/$(NI_LIBSTB-HAL); \
 		$(call make-changelog) > $(STAGING_DIR)/changelog-libstb-hal
 
 # -----------------------------------------------------------------------------
