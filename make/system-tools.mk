@@ -1252,7 +1252,14 @@ $(D)/popt: $(ARCHIVE)/$(POPT_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-$(D)/ca-bundle: $(ARCHIVE)/cacert.pem | $(TARGET_DIR)
-	curl --remote-name --time-cond $(ARCHIVE)/cacert.pem https://curl.haxx.se/ca/cacert.pem
-	install -D -m 0644 $(ARCHIVE)/cacert.pem $(TARGET_DIR)/$(CA-BUNDLE_DIR)/$(CA-BUNDLE)
+CA-BUNDLE_SOURCE = cacert.pem
+CA-BUNDLE_URL = https://curl.haxx.se/ca/$(CA-BUNDLE_SOURCE)
+
+$(ARCHIVE)/$(CA-BUNDLE_SOURCE):
+	$(WGET) $(CA-BUNDLE_URL)
+
+$(D)/ca-bundle: $(ARCHIVE)/$(CA-BUNDLE_SOURCE) | $(TARGET_DIR)
+	cd $(ARCHIVE); \
+		curl --remote-name --time-cond $(CA-BUNDLE_SOURCE) $(CA-BUNDLE_URL)
+	install -D -m 0644 $(ARCHIVE)/$(CA-BUNDLE_SOURCE) $(TARGET_DIR)/$(CA-BUNDLE_DIR)/$(CA-BUNDLE)
 	$(TOUCH)

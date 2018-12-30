@@ -376,6 +376,3 @@ $(ARCHIVE)/$(LIBDPF_SOURCE):
 LINKS_VER = 2.17
 $(ARCHIVE)/links-$(LINKS_VER).tar.bz2:
 	$(WGET) http://links.twibright.com/download/links-$(LINKS_VER).tar.bz2
-
-$(ARCHIVE)/cacert.pem:
-	$(WGET) https://curl.haxx.se/ca/cacert.pem
