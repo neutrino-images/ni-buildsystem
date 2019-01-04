@@ -71,6 +71,12 @@ channellogos: $(SOURCE_DIR)/$(NI_LOGO-STUFF) $(SHAREICONS)
 
 lcd4linux-all: $(D)/lcd4linux | $(TARGET_DIR)
 	cp -a $(IMAGEFILES)/lcd4linux/* $(TARGET_DIR)/
+	$(REMOVE)/SamsungLCD4Linux
+	git clone https://github.com/horsti58/SamsungLCD4Linux $(BUILD_TMP)/SamsungLCD4Linux
+	$(CHDIR)/SamsungLCD4Linux/ni; \
+		install -m 0600 etc/lcd4linux.conf $(TARGET_DIR)/etc; \
+		cp -a share/* $(TARGET_DIR)/share
+	#$(REMOVE)/SamsungLCD4Linux
 
 # -----------------------------------------------------------------------------
 
