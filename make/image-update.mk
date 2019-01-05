@@ -126,11 +126,11 @@ pathauf_HD-19:
 	done
 	# sync sat-names with current satellites.xml
 	# Astra 19.2
-	A192=`grep 'position=\"192\"' $(SOURCE_DIR)/$(NI_NEUTRINO)/data/satellites.xml`; \
+	A192=`grep 'position=\"192\"' $(SOURCE_DIR)/$(NI_NEUTRINO)/data/config/satellites.xml`; \
 	A192=`echo $$A192`; \
 	sed -i "/position=\"192\"/c\	$$A192" $(UPDATE_INST_DIR)/var/tuxbox/config/zapit/services.xml
 	# Hotbird 13.0
-	H130=`grep 'position=\"130\"' $(SOURCE_DIR)/$(NI_NEUTRINO)/data/satellites.xml`; \
+	H130=`grep 'position=\"130\"' $(SOURCE_DIR)/$(NI_NEUTRINO)/data/config/satellites.xml`; \
 	H130=`echo $$H130`; \
 	sed -i "/position=\"130\"/c\	$$H130" $(UPDATE_INST_DIR)/var/tuxbox/config/zapit/services.xml
 	#
