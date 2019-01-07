@@ -339,6 +339,8 @@
 			<S i="2887" n="tagesschau24 HD" t="19" s="0" num="0" f="0"/>
 			<S i="2888" n="ONE HD" t="19" s="0" num="0" f="0"/>
 			<S i="288a" n="SR Fernsehen HD" t="19" s="0" num="0" f="0"/>
+			<S i="2889" n="ARD-alpha HD" t="19" s="0" num="0" f="1"/>
+			<S i="288b" n="Radio Bremen HD" t="19" s="0" num="0" f="1"/>
 		</TS>
 		<TS id="0410" on="0001" frq="11067000" inv="2" sr="22000000" fec="5" pol="1" mod="0" sys="0">
 			<S i="7a45" n="TV Record SD" t="1" s="0" num="0" f="0"/>

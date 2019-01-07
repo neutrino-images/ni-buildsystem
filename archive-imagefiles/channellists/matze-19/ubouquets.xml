@@ -9,7 +9,7 @@
 		<S i="2ba2" n="ZDFinfo HD" t="3f2" on="1" s="192" frq="11347" l="0"/>
 		<S i="2b8e" n="3sat HD" t="3f2" on="1" s="192" frq="11347" l="0"/>
 		<S i="283e" n="arte HD" t="3fb" on="1" s="192" frq="11493" l="0"/>
-		<S i="6f47" n="ARD-alpha" t="445" on="1" s="192" frq="12265" l="0"/>
+		<S i="2889" n="ARD-alpha HD" t="40f" on="1" s="192" frq="11052" l="0"/>
 		<S i="285b" n="PHOENIX HD" t="401" on="1" s="192" frq="11582" l="0"/>
 		<S i="2b98" n="KiKA HD" t="3f2" on="1" s="192" frq="11347" l="0"/>
 		<S i="6dca" n="Das Erste" t="44d" on="1" s="192" frq="11836" l="0"/>
@@ -20,6 +20,7 @@
 		<S i="6d6e" n="zdf_neo" t="437" on="1" s="192" frq="11953" l="0"/>
 		<S i="6d67" n="3sat" t="437" on="1" s="192" frq="11953" l="0"/>
 		<S i="7034" n="arte" t="41b" on="1" s="192" frq="10743" l="0"/>
+		<S i="6f47" n="ARD-alpha" t="445" on="1" s="192" frq="12265" l="0"/>
 		<S i="6d68" n="KiKA" t="437" on="1" s="192" frq="11953" l="0"/>
 		<S i="7035" n="PHOENIX" t="41b" on="1" s="192" frq="10743" l="0"/>
 	</Bouquet>
@@ -50,6 +51,7 @@
 		<S i="2871" n="MDR S-Anhalt HD" t="425" on="1" s="192" frq="10891" l="0"/>
 		<S i="2872" n="MDR Thüringen HD" t="425" on="1" s="192" frq="10891" l="0"/>
 		<S i="2873" n="hr-fernsehen HD" t="425" on="1" s="192" frq="10891" l="0"/>
+		<S i="288b" n="Radio Bremen HD" t="40f" on="1" s="192" frq="11052" l="0"/>
 		<S i="6e2e" n="rbb Berlin" t="431" on="1" s="192" frq="12109" l="0"/>
 		<S i="6e2d" n="rbb Brandenburg" t="431" on="1" s="192" frq="12109" l="0"/>
 		<S i="6f46" n="SR Fernsehen" t="445" on="1" s="192" frq="12265" l="0"/>
