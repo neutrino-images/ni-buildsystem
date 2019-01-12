@@ -591,7 +591,7 @@ $(D)/links: $(D)/libpng $(D)/libjpeg $(D)/openssl $(ARCHIVE)/links-$(LINKS_VER).
 		autoreconf -vfi; \
 		$(CONFIGURE) \
 			--prefix= \
-			--mandir=$(BUILD_TMP)/.remove \
+			--mandir=/.remove \
 			--enable-graphics \
 			--with-fb \
 			--with-libjpeg \
