@@ -55,6 +55,7 @@ rootfs-cleanup: $(ROOTFS)
 	rm -rf $(ROOTFS)/lib/sigc++*
 	rm -rf $(ROOTFS)/lib/glib-2.0
 	find $(ROOTFS) \( -name .gitignore -o -name .gitkeep \) -type f -print0 | xargs --no-run-if-empty -0 rm -f
+	find $(ROOTFS) \( -name Makefile.am \) -type f -print0 | xargs --no-run-if-empty -0 rm -f
 	find $(ROOTFS)/lib \( -name '*.a' -o -name '*.la' \) -print0 | xargs --no-run-if-empty -0 rm -f
 	@echo -e "$(TERM_YELLOW)"
 	@du -sh $(ROOTFS)
