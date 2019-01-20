@@ -106,11 +106,11 @@ u-pr-auto-timer:
 CHANNELLISTS_URL = $(NI-SERVER)/channellists
 CHANNELLISTS_MD5FILE = lists.txt
 
-channellists: matze-19 matze-19-13 pathauf_HD-19
+channellists: matze-192 matze-192-130 pathauf-192
 
-matze-19 \
-matze-19-13 \
-pathauf_HD-19:
+matze-192 \
+matze-192-130 \
+pathauf-192:
 	$(MAKE) u-init
 	install -m 0755 $(IMAGEFILES)/channellists/update-ctrl/preinstall.sh $(PREINSTALL_SH)
 	install -m 0755 $(IMAGEFILES)/channellists/update-ctrl/postinstall.sh $(POSTINSTALL_SH)
@@ -137,9 +137,9 @@ pathauf_HD-19:
 	# we should try to keep this array table up-to-date ;-)
 	#
 	DIR[0]="#directory"	&& DESC[0]="#description"			&& DATE[0]="#date"	 ; \
-	DIR[1]="matze-19"	&& DESC[1]="Matze-Settings 19.2"		&& DATE[1]="20.01.2019"	 ; \
-	DIR[2]="matze-19-13"	&& DESC[2]="Matze-Settings 19.2, 13.0"		&& DATE[2]="20.01.2019"	 ; \
-	DIR[3]="pathauf_HD-19"	&& DESC[3]="pathAuf-HD+-Settings 19.2"		&& DATE[3]="01.12.2018"	 ; \
+	DIR[1]="matze-192"	&& DESC[1]="Matze-Settings 19.2"		&& DATE[1]="20.01.2019"	 ; \
+	DIR[2]="matze-192-130"	&& DESC[2]="Matze-Settings 19.2, 13.0"		&& DATE[2]="20.01.2019"	 ; \
+	DIR[3]="pathauf-192"	&& DESC[3]="pathAuf-HD+-Settings 19.2"		&& DATE[3]="01.12.2018"	 ; \
 	#; \
 	i=0; \
 	for dir in $${DIR[*]}; do \
@@ -203,9 +203,9 @@ PHONY += u-neutrino-full
 PHONY += u-update.urls
 PHONY += u-pr-auto-timer
 PHONY += channellists
-PHONY += matze-19
-PHONY += matze-19-13
-PHONY += pathauf_HD-19
+PHONY += matze-192
+PHONY += matze-192-130
+PHONY += pathauf-192
 PHONY += u-custom
 PHONY += u-init
 PHONY += u-clean
