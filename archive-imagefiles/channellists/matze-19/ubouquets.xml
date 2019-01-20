@@ -116,7 +116,7 @@
 		<S i="308" n="SIXX" t="5" on="85" s="192" frq="12460" l="0"/>
 		<S i="304" n="TLC" t="5" on="85" s="192" frq="12460" l="0"/>
 		<S i="23" n="Zee One" t="f" on="85" s="192" frq="10920" l="0"/>
-		<S i="21" n="Family TV" t="f" on="85" s="192" frq="10920" l="0"/>
+		<S i="21" n="tm3" t="f" on="85" s="192" frq="10920" l="0"/>
 		<S i="3f" n="DMAX" t="21" on="85" s="192" frq="12480" l="0"/>
 		<S i="3336" n="ServusTV Deutschland" t="45b" on="1" s="192" frq="12662" l="0"/>
 		<S i="332f" n="Welt der Wunder" t="45b" on="1" s="192" frq="12662" l="0"/>
@@ -145,7 +145,7 @@
 	</Bouquet>
 	<Bouquet name="musik" hidden="0" locked="0">
 		<S i="3c" n="Comedy Central Austria" t="7" on="85" s="192" frq="12148" l="0"/>
-		<S i="7004" n="Comedy Central/VIVA" t="436" on="1" s="192" frq="11973" l="0"/>
+		<S i="7004" n="Comedy Central" t="436" on="1" s="192" frq="11973" l="0"/>
 		<S i="41" n="DELUXE MUSIC" t="7" on="85" s="192" frq="12148" l="0"/>
 		<S i="3404" n="gotv neu" t="3ed" on="1" s="192" frq="11273" l="0"/>
 		<S i="3405" n="Melodie TV NEU" t="3ed" on="1" s="192" frq="11273" l="0"/>
@@ -348,7 +348,7 @@
 		<S i="2b" n="Sky Cinema +24" t="6" on="85" s="192" frq="11914" l="0"/>
 		<S i="197" n="Sky Cinema Family" t="4" on="85" s="192" frq="12031" l="0"/>
 		<S i="9" n="Sky Cinema Action" t="3" on="85" s="192" frq="11719" l="0"/>
-		<S i="29" n="Sky Cinema Best Of 2018" t="2" on="85" s="192" frq="11758" l="0"/>
+		<S i="29" n="Sky Cinema Hits" t="2" on="85" s="192" frq="11758" l="0"/>
 		<S i="204" n="Sky Cinema Nostalgie" t="4" on="85" s="192" frq="12031" l="0"/>
 		<S i="8" n="Sky Cinema Comedy" t="3" on="85" s="192" frq="11719" l="0"/>
 		<S i="14" n="Sky Cinema Emotion" t="4" on="85" s="192" frq="12031" l="0"/>
@@ -359,7 +359,7 @@
 		<S i="8b" n="Sky Cinema Family HD" t="2" on="85" s="192" frq="11758" l="0"/>
 		<S i="74" n="Sky Cinema Action HD" t="9" on="85" s="192" frq="11170" l="0"/>
 		<S i="6f" n="Disney Cinemagic HD" t="d" on="85" s="192" frq="11992" l="0"/>
-		<S i="6b" n="Sky Cinema Best Of 2018 HD" t="c" on="85" s="192" frq="12304" l="0"/>
+		<S i="6b" n="Sky Cinema Hits HD" t="c" on="85" s="192" frq="12304" l="0"/>
 		<S i="8c" n="TNT Film HD" t="4" on="85" s="192" frq="12031" l="0"/>
 	</Bouquet>
 	<Bouquet name="Sky Kids" hidden="0" locked="0">
@@ -515,15 +515,15 @@
 		<S i="301" n="Channel21" t="7" on="85" s="192" frq="12148" l="0"/>
 		<S i="315c" n="freenet Shopping" t="459" on="1" s="192" frq="12633" l="0"/>
 		<S i="313c" n="Deutsches Musik Fernsehen" t="459" on="1" s="192" frq="12633" l="0"/>
+		<S i="36" n="Genius exklusiv" t="7" on="85" s="192" frq="12148" l="0"/>
+		<S i="5279" n="Genius Plus" t="41d" on="1" s="192" frq="10773" l="0"/>
 		<S i="33ff" n="Aristo.TV" t="3ed" on="1" s="192" frq="11273" l="0"/>
 		<S i="381" n="e8 television" t="21" on="85" s="192" frq="12480" l="0"/>
 		<S i="202" n="Immer etwas Neues TV" t="7" on="85" s="192" frq="12148" l="0"/>
 		<S i="20" n="Sonnenklar TV" t="21" on="85" s="192" frq="12480" l="0"/>
 		<S i="3159" n="LEGENDEN TV" t="459" on="1" s="192" frq="12633" l="0"/>
 		<S i="293" n="Sparhandy TV" t="5" on="85" s="192" frq="12460" l="0"/>
-		<S i="5279" n="Genius Plus" t="41d" on="1" s="192" frq="10773" l="0"/>
 		<S i="32d7" n="Mei Musi TV" t="45d" on="1" s="192" frq="12692" l="0"/>
-		<S i="36" n="." t="7" on="85" s="192" frq="12148" l="0"/>
 		<S i="1016" n="TV GAMES" t="451" on="35" s="192" frq="12515" l="0"/>
 		<S i="526f" n="QVC HD" t="41d" on="1" s="192" frq="10773" l="0"/>
 		<S i="1580" n="QVC2 HD" t="41f" on="1" s="192" frq="10802" l="0"/>
@@ -543,7 +543,7 @@
 		<S i="3150" n="Fotohandy" t="459" on="1" s="192" frq="12633" l="0"/>
 		<S i="313e" n="nice temp" t="459" on="1" s="192" frq="12633" l="0"/>
 		<S i="3144" n="GayBoys LIVE" t="459" on="1" s="192" frq="12633" l="0"/>
-		<S i="3147" n="Deutsche Girls 24 TV" t="459" on="1" s="192" frq="12633" l="0"/>
+		<S i="3147" n="Deutsche Girls 24 TV " t="459" on="1" s="192" frq="12633" l="0"/>
 		<S i="314a" n="Dreamgirls24 TV temp" t="459" on="1" s="192" frq="12633" l="0"/>
 		<S i="314b" n="Erotiksat24 TV temp" t="459" on="1" s="192" frq="12633" l="0"/>
 		<S i="3148" n="JuweloTV" t="459" on="1" s="192" frq="12633" l="0"/>
@@ -723,7 +723,7 @@
 		<S i="7853" n="10729V SID 0x7853" t="41a" on="1" s="192" frq="10729" l="0"/>
 	</Bouquet>
 	<Bouquet name="MTV Networks" hidden="0" locked="0">
-		<S i="7004" n="Comedy Central/VIVA" t="436" on="1" s="192" frq="11973" l="0"/>
+		<S i="7004" n="Comedy Central" t="436" on="1" s="192" frq="11973" l="0"/>
 		<S i="7008" n="NICK/MTV+" t="436" on="1" s="192" frq="11973" l="0"/>
 		<S i="6ff9" n="Nick Junior Global" t="42a" on="1" s="192" frq="11739" l="0"/>
 		<S i="6fef" n="MTV Dance" t="436" on="1" s="192" frq="11973" l="0"/>
@@ -811,17 +811,17 @@
 		<S i="74ff" n="BEINLALIGA1" t="420" on="1" s="192" frq="10817" l="0"/>
 		<S i="78b6" n="M.Seriesmania HD" t="3ec" on="1" s="192" frq="11258" l="0"/>
 		<S i="78b7" n="M. GOLF HD" t="3ec" on="1" s="192" frq="11258" l="0"/>
-		<S i="7532" n="M.MOTOGPHD" t="426" on="1" s="192" frq="10906" l="0"/>
+		<S i="7532" n="TEST GHD" t="426" on="1" s="192" frq="10906" l="0"/>
 		<S i="7531" n="M.FORMULA1HD" t="426" on="1" s="192" frq="10906" l="0"/>
 		<S i="74a4" n="M.FORMULA1" t="41c" on="1" s="192" frq="10758" l="0"/>
-		<S i="7739" n="M. MOTOGP" t="416" on="1" s="192" frq="11156" l="0"/>
+		<S i="7739" n="TEST G" t="416" on="1" s="192" frq="11156" l="0"/>
 		<S i="74d5" n="M.ESTRENOSHD" t="3f8" on="1" s="192" frq="11435" l="0"/>
 		<S i="74d8" n="M.CineDoc&amp;Roll" t="3f8" on="1" s="192" frq="11435" l="0"/>
 		<S i="77c6" n="M.CineDoc&amp;Roll" t="40a" on="1" s="192" frq="10979" l="0"/>
 		<S i="7789" n="M. GOLF" t="424" on="1" s="192" frq="10876" l="0"/>
 		<S i="769c" n="M.Partidazo" t="41e" on="1" s="192" frq="10788" l="0"/>
 		<S i="749d" n="M. DISNEY" t="41c" on="1" s="192" frq="10758" l="0"/>
-		<S i="7607" n="M.NavidadDisney" t="408" on="1" s="192" frq="11685" l="0"/>
+		<S i="7607" n="TESTP" t="408" on="1" s="192" frq="11685" l="0"/>
 		<S i="778e" n="M. FÚTBOL" t="424" on="1" s="192" frq="10876" l="0"/>
 		<S i="772e" n="NICKELODEON" t="416" on="1" s="192" frq="11156" l="0"/>
 		<S i="7570" n="TOROS" t="412" on="1" s="192" frq="11097" l="0"/>
