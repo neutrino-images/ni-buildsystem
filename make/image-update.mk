@@ -136,10 +136,10 @@ pathauf-192:
 	#
 	# we should try to keep this array table up-to-date ;-)
 	#
-	DIR[0]="#directory"	&& DESC[0]="#description"			&& DATE[0]="#date"	 ; \
-	DIR[1]="matze-192"	&& DESC[1]="Matze-Settings 19.2"		&& DATE[1]="20.01.2019"	 ; \
-	DIR[2]="matze-192-130"	&& DESC[2]="Matze-Settings 19.2, 13.0"		&& DATE[2]="20.01.2019"	 ; \
-	DIR[3]="pathauf-192"	&& DESC[3]="pathAuf-HD+-Settings 19.2"		&& DATE[3]="01.12.2018"	 ; \
+	DIR[0]="#directory"	&& DESC[0]="#description"		&& DATE[0]="#date"	 ; \
+	DIR[1]="matze-192"	&& DESC[1]="matze-Settings 19.2"	&& DATE[1]="20.01.2019"	 ; \
+	DIR[2]="matze-192-130"	&& DESC[2]="matze-Settings 19.2, 13.0"	&& DATE[2]="20.01.2019"	 ; \
+	DIR[3]="pathauf-192"	&& DESC[3]="pathAuf-Settings 19.2"	&& DATE[3]="01.12.2018"	 ; \
 	#; \
 	i=0; \
 	for dir in $${DIR[*]}; do \
