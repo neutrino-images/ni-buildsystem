@@ -52,7 +52,7 @@ plugins-hd2:
 
 plugins-hd51: \
 	links \
-	stb-startup \
+	stb_startup \
 	imgbackup-hd51 \
 	showiframe
 
@@ -253,7 +253,7 @@ LocalTV : $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(LIBPLUGINS) $(SHAREWEBTV)
 
 add-locale \
 userbouquets \
-stb-startup \
+stb_startup \
 netzkino \
 mtv \
 favorites2bin: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(LIBPLUGINS)
