@@ -22,17 +22,18 @@ ifeq ($(NI_ADMIN), true)
 	export GIT_MERGE_AUTOEDIT=no && \
 	cd $(SOURCE_DIR)/$(NI_NEUTRINO) && \
 		git checkout $(NI_NEUTRINO_BRANCH) && \
-		#git pull $(TUXBOX_REMOTE_REPO) $(TUXBOX_NEUTRINO_BRANCH) && \
-		git fetch $(TUXBOX_REMOTE_REPO)
+		git fetch --all
 	cd $(SOURCE_DIR)/$(NI_LIBSTB-HAL) && \
 		git checkout master && \
-		git pull $(TANGO_REMOTE_REPO) master && \
-		git fetch $(TANGO_REMOTE_REPO)
+		git fetch --all && \
+		git pull $(TANGO_REMOTE_REPO) master
 	cd $(SOURCE_DIR)/$(NI_OFGWRITE) && \
 		git checkout master && \
-		git pull upstream master && \
-		git fetch upstream
+		git fetch --all && \
+		git pull upstream master
 	cd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) && \
+		git checkout master && \
+		git fetch --all && \
 		./update-tuxbox-remotes.sh
 endif
 
@@ -44,11 +45,7 @@ update-ni-force:
 	make ni-sources
 	make update-ni-sources
 
-pull \
 update-ni-sources: ni-sources
-ifeq ($(HAS_INTERNALS), yes)
-	cd $(BASE_DIR)/$(NI_INTERNALS) && git pull
-endif
 	cd $(BUILD-GENERIC-PC) && git pull
 	cd $(SOURCE_DIR)/$(NI_DRIVERS-BIN) && git pull
 	cd $(SOURCE_DIR)/$(NI_FFMPEG) && git pull --all && git checkout $(NI_FFMPEG_BRANCH)
@@ -69,6 +66,7 @@ update-ni:
 	make update-neutrino
 	make update-ni-sources
 
+pull \
 update-all: update-ni update-remotes
 
 push:
@@ -78,7 +76,7 @@ ifeq ($(HAS_INTERNALS), yes)
 endif
 	cd $(BUILD-GENERIC-PC) && git push
 	cd $(SOURCE_DIR)/$(NI_DRIVERS-BIN) && git push
-	cd $(SOURCE_DIR)/$(NI_FFMPEG) && git push
+	cd $(SOURCE_DIR)/$(NI_FFMPEG) && git push --all
 ifeq ($(HAS_LIBCS), yes)
 	cd $(SOURCE_DIR)/$(NI_LIBCOOLSTREAM) && git push --all
 endif
