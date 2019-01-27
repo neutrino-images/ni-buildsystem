@@ -37,8 +37,8 @@ else
 		SHOWINFO "failed to mount /var"
 		rmdir /var && mv /var_init /var
 	else
-		if [ ! -f /var/tuxbox/config/flash.start ]; then
-			SHOWINFO "NI image not found! Initializing factory reset..."
+		if ! grep -q "neutrino-images" /var/etc/update.urls; then
+			SHOWINFO "Seems not to be NI. Initializing factory reset..."
 			SHOWINFO "unmount var-partition..."
 			umount -lf /dev/mtdblock$VARBLOCK
 			SHOWINFO "erase var-partition /dev/$VARDEV"
