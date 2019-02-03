@@ -124,7 +124,7 @@ N_BUILDENV = \
 	READELF=$(TARGET)-readelf \
 	CFLAGS="$(N_CFLAGS)" \
 	CPPFLAGS="$(N_CFLAGS)" \
-	CXXFLAGS="$(N_CFLAGS)" \
+	CXXFLAGS="$(N_CFLAGS) -std=c++11" \
 	LDFLAGS="$(N_LDFLAGS)"
 
 # -----------------------------------------------------------------------------
