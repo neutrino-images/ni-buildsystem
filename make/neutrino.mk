@@ -40,7 +40,7 @@ endif
 
 # -----------------------------------------------------------------------------
 
-N_CFLAGS = -Wall -W -Wshadow -D__STDC_CONSTANT_MACROS -DENABLE_FREESATEPG
+N_CFLAGS = -Wall -W -Wshadow -D__STDC_CONSTANT_MACROS
 ifeq ($(BOXSERIES), hd1)
   N_CFLAGS += -DCPU_FREQ
 endif
@@ -149,6 +149,7 @@ $(N_OBJ_DIR)/config.status: $(N_DEPS)
 			$(N_CONFIGURE_ADDITIONS) \
 			--enable-ffmpegdec \
 			--enable-flac \
+			--enable-freesatepg \
 			--enable-fribidi \
 			--enable-giflib \
 			--enable-lua \
