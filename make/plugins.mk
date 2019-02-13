@@ -587,7 +587,7 @@ $(D)/links: $(D)/libpng $(D)/libjpeg $(D)/openssl $(ARCHIVE)/links-$(LINKS_VER).
 		echo "german" >> index.txt; \
 		./gen-intl
 	$(CHDIR)/links-$(LINKS_VER); \
-		$(call apply_patches,$(LINKS_PATCH)); \
+		$(call apply_patches, $(LINKS_PATCH)); \
 		autoreconf -vfi; \
 		$(CONFIGURE) \
 			--prefix= \

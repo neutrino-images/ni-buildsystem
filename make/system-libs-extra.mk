@@ -144,7 +144,7 @@ $(D)/pixman: $(D)/zlib $(D)/libpng $(ARCHIVE)/$(PIXMAN_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/pixman-$(PIXMAN_VER)
 	$(UNTAR)/$(PIXMAN_SOURCE)
 	$(CHDIR)/pixman-$(PIXMAN_VER); \
-		$(call apply_patches,$(PIXMAN_PATCH)); \
+		$(call apply_patches, $(PIXMAN_PATCH)); \
 		$(CONFIGURE) \
 			--prefix= \
 			--disable-gtk \
@@ -173,7 +173,7 @@ $(D)/cairo: $(D)/fontconfig $(D)/libglib2 $(D)/libpng $(D)/pixman $(D)/zlib $(AR
 	$(REMOVE)/cairo-$(CAIRO_VER)
 	$(UNTAR)/$(CAIRO_SOURCE)
 	$(CHDIR)/cairo-$(CAIRO_VER); \
-		$(call apply_patches,$(CAIRO_PATCH)); \
+		$(call apply_patches, $(CAIRO_PATCH)); \
 		$(BUILDENV) \
 		ax_cv_c_float_words_bigendian="no" \
 		./configure $(CONFIGURE_OPTS) \
@@ -224,7 +224,7 @@ $(D)/harfbuzz: $(D)/fontconfig $(D)/libglib2 $(D)/cairo $(D)/freetype $(ARCHIVE)
 	$(REMOVE)/harfbuzz-$(HARFBUZZ_VER)
 	$(UNTAR)/$(HARFBUZZ_SOURCE)
 	$(CHDIR)/harfbuzz-$(HARFBUZZ_VER); \
-		$(call apply_patches,$(HARFBUZZ_PATCH)); \
+		$(call apply_patches, $(HARFBUZZ_PATCH)); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--prefix= \

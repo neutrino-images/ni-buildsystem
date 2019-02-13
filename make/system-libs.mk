@@ -280,7 +280,7 @@ $(D)/libjpeg-turbo2: $(ARCHIVE)/$(LIBJPEG-TURBO2_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/libjpeg-turbo-$(LIBJPEG-TURBO2_VER)
 	$(UNTAR)/$(LIBJPEG-TURBO2_SOURCE)
 	$(CHDIR)/libjpeg-turbo-$(LIBJPEG-TURBO2_VER); \
-		$(call apply_patches,$(LIBJPEG-TURBO2_PATCH)); \
+		$(call apply_patches, $(LIBJPEG-TURBO2_PATCH)); \
 		$(CMAKE) \
 			-DWITH_SIMD=False \
 			; \
