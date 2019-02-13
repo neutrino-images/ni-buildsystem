@@ -46,3 +46,5 @@ endif
 
 IMAGE_URL = $(NI-SERVER)/$(NI-SUBDIR)
 IMAGE_VERSION_STRING = $(shell echo $(IMAGE_VERSION) | sed -e :a -e 's/\(.*[0-9]\)\([0-9]\{2\}\)/\1.\2/;ta')
+
+IMAGE_BUILD_TMP = $(BUILD_TMP)/image-build
