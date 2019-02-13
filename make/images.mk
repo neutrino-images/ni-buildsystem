@@ -64,8 +64,8 @@ ifeq ($(BOXMODEL), kronos_v2)
 	make flash-image-coolstream ERASE_SIZE=0x20000 BOXNAME="Link, Trinity Duo"
 endif
 ifeq ($(BOXMODEL), hd51)
-	make flash-image-arm
-	make flash-image-arm-multi
+	make flash-image-armbox BOXNAME="AX/Mut@nt HD51"
+	make flash-image-armbox-multi
 endif
 
 # -----------------------------------------------------------------------------
@@ -111,12 +111,11 @@ endif
 
 # -----------------------------------------------------------------------------
 
-flash-image-arm: BOXNAME="AX/Mut@nt"
-flash-image-arm: IMAGE_NAME=$(IMAGE_PREFIX)-$(IMAGE_SUFFIX)
-flash-image-arm: IMAGE_DESC="$(BOXNAME) [$(IMAGE_SUFFIX)] $(shell echo $(IMAGE_TYPE_STRING) | sed 's/.*/\u&/')"
-flash-image-arm: IMAGE_MD5FILE=$(IMAGE_TYPE_STRING)-$(IMAGE_SUFFIX).txt
-flash-image-arm: IMAGE_DATE=$(shell cat $(ROOTFS)/.version | grep "^version=" | cut -d= -f2 | cut -c 5-)
-flash-image-arm:
+flash-image-armbox: IMAGE_NAME=$(IMAGE_PREFIX)-$(IMAGE_SUFFIX)
+flash-image-armbox: IMAGE_DESC="$(BOXNAME) [$(IMAGE_SUFFIX)] $(shell echo $(IMAGE_TYPE_STRING) | sed 's/.*/\u&/')"
+flash-image-armbox: IMAGE_MD5FILE=$(IMAGE_TYPE_STRING)-$(IMAGE_SUFFIX).txt
+flash-image-armbox: IMAGE_DATE=$(shell cat $(ROOTFS)/.version | grep "^version=" | cut -d= -f2 | cut -c 5-)
+flash-image-armbox:
 	mkdir -p $(IMAGE_DIR)/$(BOXMODEL)
 	cp $(ZIMAGE_DTB) $(IMAGE_DIR)/$(BOXMODEL)/kernel.bin
 	cd $(ROOTFS); \
@@ -159,7 +158,7 @@ FOURTH_KERNEL_PARTITION_OFFSET = $(shell expr $(THIRD_ROOTFS_PARTITION_OFFSET) \
 FOURTH_ROOTFS_PARTITION_OFFSET = $(shell expr $(FOURTH_KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))
 SWAP_PARTITION_OFFSET = $(shell expr $(FOURTH_ROOTFS_PARTITION_OFFSET) \+ $(ROOTFS_PARTITION_SIZE_MULTI))
 
-flash-image-arm-multi:
+flash-image-armbox-multi:
 	mkdir -p $(HD51_BUILD_TMP)
 	# Create a sparse image block
 	dd if=/dev/zero of=$(HD51_BUILD_TMP)/$(HD51_IMAGE_LINK) seek=$(shell expr $(HD51_IMAGE_ROOTFS_SIZE) \* $(BLOCK_SECTOR)) count=0 bs=$(BLOCK_SIZE)
@@ -215,5 +214,5 @@ PHONY += devtable
 PHONY += devtable-remove
 PHONY += flash-image-coolstream
 PHONY += check-image-size
-PHONY += flash-image-arm
-PHONY += flash-image-arm-multi
+PHONY += flash-image-armbox
+PHONY += flash-image-armbox-multi
