@@ -37,6 +37,13 @@ KERNEL_MAKEVARS := \
 	LOCALVERSION= \
 	O=$(BUILD_TMP)/$(KERNEL_OBJ)
 
+KERNEL_MAKEOPTS = $(EMPTY)
+ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd1 hd2))
+  KERNEL_MAKEOPTS = zImage modules
+else ifeq ($(BOXSERIES), hd51)
+  KERNEL_MAKEOPTS = zImage modules $(notdir $(KERNEL_DTB))
+endif
+
 # -----------------------------------------------------------------------------
 
 kernel.do_checkout: $(SOURCE_DIR)/$(NI_LINUX-KERNEL)
@@ -63,7 +70,7 @@ endif
 $(D)/kernel.do_compile: $(D)/kernel.do_prepare
 	$(CHDIR)/$(KERNEL_SRC); \
 		$(MAKE) $(KERNEL_MAKEVARS) silentoldconfig; \
-		$(MAKE) $(KERNEL_MAKEVARS); \
+		$(MAKE) $(KERNEL_MAKEVARS) $(KERNEL_MAKEOPTS); \
 		$(MAKE) $(KERNEL_MAKEVARS) modules_install
 ifneq ($(KERNEL_DTB), $(EMPTY))
 	cat $(KERNEL_ZIMAGE) $(KERNEL_DTB) > $(KERNEL_ZIMAGE_DTB)
