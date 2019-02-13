@@ -275,6 +275,7 @@ REWRITE_PKGCONF        = sed -i "s,^prefix=.*,prefix='$(TARGET_DIR)',"
 
 # unpack tarballs, clean up
 UNTAR = tar -C $(BUILD_TMP) -xf $(ARCHIVE)
+UNZIP = unzip -d $(BUILD_TMP) -o $(ARCHIVE)
 REMOVE = rm -rf $(BUILD_TMP)/.remove $(TARGET_DIR)/.remove $(BUILD_TMP)
 PATCH = patch -p1 -i $(PATCHES)
 
