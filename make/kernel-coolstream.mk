@@ -14,6 +14,13 @@ else
   KERNEL_DESTDIR = $(SKEL_ROOT)/var/update
 endif
 
+KERNEL_MAKEVARS := \
+	ARCH=$(BOXARCH) \
+	CROSS_COMPILE=$(TARGET)- \
+	INSTALL_MOD_PATH=$(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules
+
+# -----------------------------------------------------------------------------
+
 kernel-coolstream: kernel-coolstream-$(BOXSERIES)
 kernel-coolstream-install: kernel-coolstream-install-$(BOXSERIES)
 
@@ -53,10 +60,10 @@ $(D)/kernel-coolstream-hd2: $(SOURCE_DIR)/$(NI_LINUX-KERNEL) $(SOURCE_DIR)/$(NI_
 		cp $(CONFIGS)/kernel-$(KERNEL_VERSION_MAJOR)-$(BOXFAMILY).config $(BUILD_TMP)/linux-$(KERNEL_VERSION)/.config; \
 		sed -i -e 's/SUBLEVEL = 108/SUBLEVEL = 93/g' Makefile; \
 		$(MKDIR)/linux-$(KERNEL_VERSION)-modules; \
-		$(MAKE) ARCH=$(BOXARCH) CROSS_COMPILE=$(TARGET)- INSTALL_MOD_PATH=$(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules silentoldconfig; \
-		$(MAKE) ARCH=$(BOXARCH) CROSS_COMPILE=$(TARGET)- INSTALL_MOD_PATH=$(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules zImage; \
-		$(MAKE) ARCH=$(BOXARCH) CROSS_COMPILE=$(TARGET)- INSTALL_MOD_PATH=$(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules modules; \
-		$(MAKE) ARCH=$(BOXARCH) CROSS_COMPILE=$(TARGET)- INSTALL_MOD_PATH=$(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules modules_install; \
+		$(MAKE) $(KERNEL_MAKEVARS) silentoldconfig; \
+		$(MAKE) $(KERNEL_MAKEVARS) zImage; \
+		$(MAKE) $(KERNEL_MAKEVARS) modules; \
+		$(MAKE) $(KERNEL_MAKEVARS) modules_install; \
 		cat $(ZIMAGE) $(DTB) > zImage_DTB; \
 		mkimage -A $(BOXARCH) -O linux -T kernel -C none -a 0x8000 -e 0x8000 -n "$(KERNEL_NAME)" -d zImage_DTB $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-vmlinux.ub.gz
 ifeq ($(BOXFAMILY), apollo)
@@ -83,10 +90,10 @@ $(D)/kernel-coolstream-hd1: $(SOURCE_DIR)/$(NI_LINUX-KERNEL) | $(TARGET_DIR)
 		cp $(CONFIGS)/kernel-$(KERNEL_VERSION_MAJOR)-$(BOXFAMILY).config $(BUILD_TMP)/linux-$(KERNEL_VERSION)/.config; \
 		sed -i -e 's/EXTRAVERSION = .15/EXTRAVERSION = .13/g' Makefile; \
 		$(MKDIR)/linux-$(KERNEL_VERSION)-modules; \
-		$(MAKE) ARCH=$(BOXARCH) CROSS_COMPILE=$(TARGET)- INSTALL_MOD_PATH=$(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules silentoldconfig; \
-		$(MAKE) ARCH=$(BOXARCH) CROSS_COMPILE=$(TARGET)- INSTALL_MOD_PATH=$(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules zImage; \
-		$(MAKE) ARCH=$(BOXARCH) CROSS_COMPILE=$(TARGET)- INSTALL_MOD_PATH=$(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules modules; \
-		$(MAKE) ARCH=$(BOXARCH) CROSS_COMPILE=$(TARGET)- INSTALL_MOD_PATH=$(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules modules_install; \
+		$(MAKE) $(KERNEL_MAKEVARS) silentoldconfig; \
+		$(MAKE) $(KERNEL_MAKEVARS) zImage; \
+		$(MAKE) $(KERNEL_MAKEVARS) modules; \
+		$(MAKE) $(KERNEL_MAKEVARS) modules_install; \
 		mkimage -A $(BOXARCH) -O linux -T kernel -C none -a 0x48000 -e 0x48000 -n "$(KERNEL_NAME)" -d $(IMAGE) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-uImage.img; \
 		mkimage -A $(BOXARCH) -O linux -T kernel -C none -a 0x48000 -e 0x48000 -n "$(KERNEL_NAME)" -d $(ZIMAGE) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-zImage.img
 	$(TOUCH)

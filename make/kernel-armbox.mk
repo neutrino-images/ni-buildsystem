@@ -8,6 +8,13 @@ ZIMAGE		= $(BUILD_TMP)/linux-$(KERNEL_VERSION)/arch/$(BOXARCH)/boot/zImage
 ZIMAGE_DTB	= $(BUILD_TMP)/linux-$(KERNEL_VERSION)/arch/$(BOXARCH)/boot/zImage_DTB
 MODULES_DIR	= $(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules/lib/modules/$(KERNEL_VERSION_FULL)
 
+KERNEL_MAKEVARS := \
+	ARCH=$(BOXARCH) \
+	CROSS_COMPILE=$(TARGET)- \
+	INSTALL_MOD_PATH=$(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules
+
+# -----------------------------------------------------------------------------
+
 $(D)/kernel-armbox: $(SOURCE_DIR)/$(NI_LINUX-KERNEL) | $(TARGET_DIR)
 	$(REMOVE)/linux-$(KERNEL_VERSION)
 	cd $(SOURCE_DIR)/$(NI_LINUX-KERNEL); \
@@ -19,12 +26,12 @@ $(D)/kernel-armbox: $(SOURCE_DIR)/$(NI_LINUX-KERNEL) | $(TARGET_DIR)
 		touch .scmversion; \
 		cp $(CONFIGS)/kernel-$(KERNEL_VERSION_MAJOR)-$(BOXFAMILY).config $(BUILD_TMP)/linux-$(KERNEL_VERSION)/.config; \
 		$(MKDIR)/linux-$(KERNEL_VERSION)-modules; \
-		$(MAKE) ARCH=$(BOXARCH) CROSS_COMPILE=$(TARGET)- INSTALL_MOD_PATH=$(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules silentoldconfig; \
-		$(MAKE) ARCH=$(BOXARCH) CROSS_COMPILE=$(TARGET)- INSTALL_MOD_PATH=$(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules $(DTB_VER); \
-		$(MAKE) ARCH=$(BOXARCH) CROSS_COMPILE=$(TARGET)- INSTALL_MOD_PATH=$(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules zImage; \
+		$(MAKE) $(KERNEL_MAKEVARS) silentoldconfig; \
+		$(MAKE) $(KERNEL_MAKEVARS) $(DTB_VER); \
+		$(MAKE) $(KERNEL_MAKEVARS) zImage; \
 		cat $(ZIMAGE) $(DTB) > $(ZIMAGE_DTB); \
-		$(MAKE) ARCH=$(BOXARCH) CROSS_COMPILE=$(TARGET)- INSTALL_MOD_PATH=$(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules modules; \
-		$(MAKE) ARCH=$(BOXARCH) CROSS_COMPILE=$(TARGET)- INSTALL_MOD_PATH=$(BUILD_TMP)/linux-$(KERNEL_VERSION)-modules modules_install
+		$(MAKE) $(KERNEL_MAKEVARS) modules; \
+		$(MAKE) $(KERNEL_MAKEVARS) modules_install
 	$(TOUCH)
 
 kernel-armbox-modules: $(D)/kernel-armbox
