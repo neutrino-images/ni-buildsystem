@@ -17,7 +17,6 @@ VARCONFIG	= $(TARGET_DIR)/var/tuxbox/config
 VARINITD	= $(TARGET_DIR)/var/etc/init.d
 VARPLUGINS	= $(TARGET_DIR)/var/tuxbox/plugins
 
-$(BIN) \
 $(ETCINITD) \
 $(LIBPLUGINS) \
 $(SBIN) \

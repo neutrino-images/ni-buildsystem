@@ -11,6 +11,7 @@ BOOTSTRAP += $(IMAGE_DIR)
 BOOTSTRAP += $(UPDATE_DIR)
 BOOTSTRAP += $(HOST_DIR)/bin
 BOOTSTRAP += cross-libs
+BOOTSTRAP += bins
 BOOTSTRAP += includes
 BOOTSTRAP += libs
 BOOTSTRAP += firmware
@@ -35,7 +36,6 @@ skeleton: | $(TARGET_DIR)
 
 target-dir:
 	mkdir -p $(TARGET_DIR)
-	mkdir -p $(TARGET_DIR)/bin
 ifeq ($(BOXSERIES), hd51)
 	mkdir -p $(TARGET_DIR)/boot
 endif
@@ -76,6 +76,9 @@ $(HOST_DIR):
 	mkdir -p $@
 
 $(HOST_DIR)/bin: $(HOST_DIR)
+	mkdir -p $@
+
+$(TARGET_BIN_DIR): | $(TARGET_DIR)
 	mkdir -p $@
 
 $(TARGET_INCLUDE_DIR): | $(TARGET_DIR)
@@ -140,6 +143,8 @@ ifeq ($(BOXSERIES), hd51)
 		ln -sf ld-2.23.so ld-linux.so.3
 endif
 
+bins: $(TARGET_BIN_DIR)
+
 includes: $(TARGET_INCLUDE_DIR)
 
 libs: $(TARGET_LIB_DIR) static-libs $(STATIC_LIB_DIR)
@@ -153,6 +158,7 @@ var-update: $(TARGET_DIR)/var/update
 # -----------------------------------------------------------------------------
 
 # hack to make sure they are always copied
+PHONY += $(TARGET_BIN_DIR)
 PHONY += $(TARGET_INCLUDE_DIR)
 PHONY += $(TARGET_LIB_DIR)
 PHONY += $(TARGET_LIB_DIR)/firmware
@@ -166,6 +172,7 @@ PHONY += bootstrap
 PHONY += skeleton
 PHONY += target-dir
 PHONY += cross-libs
+PHONY += bins
 PHONY += includes
 PHONY += libs
 PHONY += firmware
