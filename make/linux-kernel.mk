@@ -92,6 +92,7 @@ endif
 	$(TOUCH)
 
 $(D)/kernel-armbox: $(D)/kernel.do_compile
+	cp -a $(KERNEL_ZIMAGE_DTB) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL).bin
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
