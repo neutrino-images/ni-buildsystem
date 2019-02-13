@@ -76,7 +76,7 @@ ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd51))
 	$(MAKE) gdb
   endif
 endif
-	$(MAKE) kernel-$(BOXTYPE)-modules
+	$(MAKE) kernel-modules-$(BOXTYPE)
 	make autofs5
 	make scripts
 	make init-scripts

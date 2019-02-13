@@ -177,14 +177,11 @@ DEBUG ?= no
 
 # -----------------------------------------------------------------------------
 
-KERNEL_NAME = NI $(shell echo $(BOXMODEL) | sed 's/.*/\u&/') Kernel
-
 ifeq ($(BOXSERIES), hd1)
-  KERNEL_VERSION         = 2.6.34.13
   KERNEL_VERSION_MAJOR   = 2.6.34
+  KERNEL_VERSION         = 2.6.34.13
   KERNEL_VERSION_FULL    = $(KERNEL_VERSION)-$(BOXMODEL)
-  KERNEL_BRANCH          = ni/2.6.34.x
-  KERNEL_DTB             =
+
   DRIVERS_DIR            = nevis
   CORTEX-STRINGS         =
   TARGET                 = arm-cx2450x-linux-gnueabi
@@ -195,16 +192,14 @@ ifeq ($(BOXSERIES), hd1)
   CXX11_ABI              =
 
 else ifeq ($(BOXSERIES), hd2)
-  KERNEL_VERSION         = 3.10.93
   KERNEL_VERSION_MAJOR   = 3.10
+  KERNEL_VERSION         = 3.10.93
   KERNEL_VERSION_FULL    = $(KERNEL_VERSION)
-  KERNEL_BRANCH          = ni/3.10.x
+
   ifeq ($(BOXFAMILY), apollo)
-    KERNEL_DTB           = hd849x
     DRIVERS_DIR          = apollo
   endif
   ifeq ($(BOXFAMILY), kronos)
-    KERNEL_DTB           = en75x1
     DRIVERS_DIR          = kronos
   endif
   CORTEX-STRINGS         = -lcortex-strings
@@ -224,8 +219,7 @@ else ifeq ($(BOXSERIES), hd51)
   KERNEL_VERSION_MAJOR   = 4.10
   KERNEL_VERSION         = 4.10.12
   KERNEL_VERSION_FULL    = $(KERNEL_VERSION)
-  KERNEL_BRANCH          = ni/4.10.x
-  KERNEL_DTB             = bcm7445-bcm97445svmb
+
   DRIVERS_DIR            = hd51
   CORTEX-STRINGS         = -lcortex-strings
   TARGET                 = arm-cortex-linux-gnueabihf
@@ -234,6 +228,7 @@ else ifeq ($(BOXSERIES), hd51)
   TARGET_EXTRA_CFLAGS    =
   TARGET_EXTRA_LDFLAGS   =
   CXX11_ABI              =
+
 endif
 
 STATIC_LIB_DIR = $(STATIC_DIR)/lib
@@ -287,6 +282,9 @@ CHDIR = set -e; cd $(BUILD_TMP)
 MKDIR = mkdir -p $(BUILD_TMP)
 TOUCH = @touch $@
 STRIP = $(TARGET)-strip
+
+# empty variable EMPTY for smoother comparisons
+EMPTY =
 
 BUILDENV = \
 	CC=$(TARGET)-gcc \

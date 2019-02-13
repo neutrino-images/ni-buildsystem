@@ -97,7 +97,7 @@ include make/gstreamer.mk
 include make/host-tools.mk
 include make/image-update.mk
 include make/images.mk
-include make/kernel-$(BOXTYPE).mk
+include make/linux-kernel.mk
 include make/neutrino.mk
 include make/plugins-extra.mk
 include make/plugins.mk
