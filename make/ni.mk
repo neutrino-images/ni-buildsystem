@@ -21,6 +21,7 @@ personalized-image:
 image \
 ni-image:
 	@echo "starting 'make $@' build with "$(PARALLEL_JOBS)" threads!"
+	$(MAKE) kernel-modules-$(BOXTYPE)
 	$(MAKE) neutrino
 	make plugins-all
 	make plugins-$(BOXSERIES)
@@ -76,7 +77,6 @@ ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd51))
 	$(MAKE) gdb
   endif
 endif
-	$(MAKE) kernel-modules-$(BOXTYPE)
 	make autofs5
 	make scripts
 	make init-scripts
