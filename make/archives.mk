@@ -186,7 +186,7 @@ NTFS3G_VER=2017.3.23
 $(ARCHIVE)/ntfs-3g_ntfsprogs-$(NTFS3G_VER).tgz:
 	$(WGET) https://tuxera.com/opensource/ntfs-3g_ntfsprogs-$(NTFS3G_VER).tgz
 
-PROCPS-NG_VER=3.3.12
+PROCPS-NG_VER=3.3.15
 $(ARCHIVE)/procps-ng-$(PROCPS-NG_VER).tar.xz:
 	$(WGET) http://sourceforge.net/projects/procps-ng/files/Production/procps-ng-$(PROCPS-NG_VER).tar.xz
 

@@ -443,8 +443,8 @@ $(D)/procps-ng: $(D)/libncurses $(ARCHIVE)/procps-ng-$(PROCPS-NG_VER).tar.xz | $
 			; \
 		$(MAKE); \
 		rm -f $(TARGET_DIR)/bin/ps $(TARGET_DIR)/bin/top; \
-		install -D -m 0755 top/.libs/top $(TARGET_DIR)/bin/top; \
 		install -D -m 0755 ps/.libs/pscommand $(TARGET_DIR)/bin/ps; \
+		install -D -m 0755 top/.libs/top $(TARGET_DIR)/bin/top; \
 		cp -a proc/.libs/libprocps.so* $(TARGET_LIB_DIR)
 	$(REMOVE)/procps-ng-$(PROCPS-NG_VER)
 	$(TOUCH)
