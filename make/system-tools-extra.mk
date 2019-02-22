@@ -228,3 +228,27 @@ $(D)/iozone3: $(ARCHIVE)/$(IOZONE_SOURCE) | $(TARGET_DIR)
 		install -m 0755 iozone $(TARGET_DIR)/bin
 	$(REMOVE)/iozone3_$(IOZONE_VER)
 	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
+RSYNC_VER = 3.1.3
+RSYNC_SOURCE = rsync-$(RSYNC_VER).tar.gz
+
+$(ARCHIVE)/$(RSYNC_SOURCE):
+	$(WGET) https://ftp.samba.org/pub/rsync/$(RSYNC_SOURCE)
+
+$(D)/rsync: $(ARCHIVE)/$(RSYNC_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/rsync-$(RSYNC_VER)
+	$(UNTAR)/$(RSYNC_SOURCE)
+	$(CHDIR)/rsync-$(RSYNC_VER); \
+		$(CONFIGURE) \
+			--prefix= \
+			--mandir=/.remove \
+			--sysconfdir=/etc \
+			--disable-debug \
+			--disable-locale \
+			; \
+		$(MAKE) all; \
+		$(MAKE) install-all DESTDIR=$(TARGET_DIR)
+	$(REMOVE)/rsync-$(RSYNC_VER)
+	$(TOUCH)
