@@ -134,7 +134,7 @@ ZLIB_VER=1.2.11
 $(ARCHIVE)/zlib-$(ZLIB_VER).tar.gz:
 	$(WGET) http://zlib.net/zlib-$(ZLIB_VER).tar.gz
 
-LIBPNG_VER=1.6.35
+LIBPNG_VER=1.6.36
 $(ARCHIVE)/libpng-$(LIBPNG_VER).tar.xz:
 	$(WGET) http://sourceforge.net/projects/libpng/files/libpng16/$(LIBPNG_VER)/libpng-$(LIBPNG_VER).tar.xz
 
