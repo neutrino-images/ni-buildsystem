@@ -325,7 +325,7 @@ FRIBIDI_VER = 1.0.4
 $(ARCHIVE)/fribidi-$(FRIBIDI_VER).tar.bz2:
 	$(WGET) https://download.videolan.org/contrib/fribidi/fribidi-$(FRIBIDI_VER).tar.bz2
 
-MC_VER=4.8.21
+MC_VER=4.8.22
 $(ARCHIVE)/mc-$(MC_VER).tar.xz:
 	$(WGET) http://ftp.midnight-commander.org/mc-$(MC_VER).tar.xz
 

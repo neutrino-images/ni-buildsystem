@@ -1093,6 +1093,7 @@ $(D)/mc: $(ARCHIVE)/mc-$(MC_VER).tar.xz $(D)/libglib2 $(D)/libncurses | $(TARGET
 			--disable-vfs-sftp \
 			--with-screen=ncurses \
 			--without-diff-viewer \
+			--without-gpm-mouse \
 			--without-x \
 			; \
 		$(MAKE) all; \
