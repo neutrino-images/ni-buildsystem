@@ -283,8 +283,8 @@ LIBAACS_VER=0.9.0
 $(ARCHIVE)/libaacs-$(LIBAACS_VER).tar.bz2:
 	$(WGET) ftp://ftp.videolan.org/pub/videolan/libaacs/$(LIBAACS_VER)/libaacs-$(LIBAACS_VER).tar.bz2
 
-BASH_MAJOR=4
-BASH_MINOR=4
+BASH_MAJOR=5
+BASH_MINOR=0
 BASH_MICRO=0
 BASH_VER=$(BASH_MAJOR).$(BASH_MINOR)
 ifneq ($(BASH_MICRO), 0)
