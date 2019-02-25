@@ -206,7 +206,7 @@ SAMBA36_VER=3.6.25
 $(ARCHIVE)/samba-$(SAMBA36_VER).tar.gz:
 	$(WGET) https://download.samba.org/pub/samba/stable/samba-$(SAMBA36_VER).tar.gz
 
-E2FSPROGS_VER=1.44.4
+E2FSPROGS_VER=1.44.5
 ifeq ($(BOXTYPE), coolstream)
 # formatting ext4 failes with newer versions
 E2FSPROGS_VER=1.43.8
