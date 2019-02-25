@@ -267,7 +267,7 @@ $(D)/libjpeg-turbo: $(ARCHIVE)/libjpeg-turbo-$(LIBJPEG-TURBO_VER).tar.gz | $(TAR
 
 # -----------------------------------------------------------------------------
 
-LIBJPEG-TURBO2_VER = 2.0.0
+LIBJPEG-TURBO2_VER = 2.0.2
 LIBJPEG-TURBO2_SOURCE = libjpeg-turbo-$(LIBJPEG-TURBO2_VER).tar.gz
 
 $(ARCHIVE)/$(LIBJPEG-TURBO2_SOURCE):
@@ -282,11 +282,15 @@ $(D)/libjpeg-turbo2: $(ARCHIVE)/$(LIBJPEG-TURBO2_SOURCE) | $(TARGET_DIR)
 		$(call apply_patches, $(LIBJPEG-TURBO2_PATCH)); \
 		$(CMAKE) \
 			-DWITH_SIMD=False \
+			-DWITH_JPEG8=80 \
+			-DCMAKE_INSTALL_DOCDIR=/.remove \
+			-DCMAKE_INSTALL_MANDIR=/.remove \
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	rm -f $(addprefix $(TARGET_DIR)/bin/,cjpeg djpeg jpegtran rdjpgcom wrjpgcom tjbench)
-	rm -f $(TARGET_LIB_DIR)/cmake
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libturbojpeg.pc
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libjpeg.pc
+	rm -f $(addprefix $(TARGET_DIR)/bin/,cjpeg djpeg jpegtran rdjpgcom tjbench wrjpgcom)
 	$(REMOVE)/libjpeg-turbo-$(LIBJPEG-TURBO2_VER)
 	$(TOUCH)
 
