@@ -1127,8 +1127,8 @@ $(D)/libglib2: $(ARCHIVE)/glib-$(GLIB_VER).tar.xz $(D)/zlib $(LIBGLIB2_DEPS) $(D
 
 # -----------------------------------------------------------------------------
 
-ALSA-LIB_PATCH  = alsa-lib-$(ALSA-LIB_VER)-link_fix.patch
-ALSA-LIB_PATCH += alsa-lib-$(ALSA-LIB_VER).patch
+ALSA-LIB_PATCH  = alsa-lib.patch
+ALSA-LIB_PATCH += alsa-lib-link_fix.patch
 
 $(D)/alsa-lib: $(ARCHIVE)/$(ALSA-LIB_SOURCE)
 	$(REMOVE)/alsa-lib-$(ALSA-LIB_VER)

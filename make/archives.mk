@@ -348,7 +348,7 @@ WGET_VER=1.19.2
 $(ARCHIVE)/wget-$(WGET_VER).tar.gz:
 	$(WGET) http://ftp.gnu.org/gnu/wget/wget-$(WGET_VER).tar.gz
 
-ALSA-LIB_VER = 1.1.7
+ALSA-LIB_VER = 1.1.8
 ALSA-LIB_SOURCE = alsa-lib-$(ALSA-LIB_VER).tar.bz2
 $(ARCHIVE)/$(ALSA-LIB_SOURCE):
 	$(WGET) ftp://ftp.alsa-project.org/pub/lib/$(ALSA-LIB_SOURCE)
