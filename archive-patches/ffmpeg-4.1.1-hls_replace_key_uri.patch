@@ -1,5 +1,5 @@
---- a/libavformat/hls.c	2018-08-17 13:16:57.721007600 +0200
-+++ b/libavformat/hls.c	2018-08-17 13:33:57.530170057 +0200
+--- a/libavformat/hls.c
++++ b/libavformat/hls.c
 @@ -208,6 +208,8 @@
      int max_reload;
      int http_persistent;

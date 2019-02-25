@@ -1,5 +1,3 @@
-diff --git a/libavformat/avio.h b/libavformat/avio.h
-index 75912ce..56f0a4d 100644
 --- a/libavformat/avio.h
 +++ b/libavformat/avio.h
 @@ -290,12 +290,6 @@ typedef struct AVIOContext {
@@ -15,8 +13,6 @@ index 75912ce..56f0a4d 100644
  
      /**
       * Threshold to favor readahead over seek.
-diff --git a/libavformat/aviobuf.c b/libavformat/aviobuf.c
-index e752d0e..108f089 100644
 --- a/libavformat/aviobuf.c
 +++ b/libavformat/aviobuf.c
 @@ -33,7 +33,7 @@
@@ -65,8 +61,6 @@ index e752d0e..108f089 100644
      s->buffer_size = buf_size;
      s->buf_ptr = s->buf_ptr_max = buffer;
      url_resetbuf(s, s->write_flag ? AVIO_FLAG_WRITE : AVIO_FLAG_READ);
-diff --git a/libavformat/utils.c b/libavformat/utils.c
-index c25eab4..02ce5e2 100644
 --- a/libavformat/utils.c
 +++ b/libavformat/utils.c
 @@ -138,6 +138,25 @@ FF_ENABLE_DEPRECATION_WARNINGS

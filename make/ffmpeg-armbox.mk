@@ -3,7 +3,7 @@
 #
 # -----------------------------------------------------------------------------
 
-FFMPEG_VER = 4.1
+FFMPEG_VER = 4.1.1
 FFMPEG_SOURCE = ffmpeg-$(FFMPEG_VER).tar.xz
 
 $(ARCHIVE)/$(FFMPEG_SOURCE):

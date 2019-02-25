@@ -9,16 +9,8 @@
  {
      int k, n8, n4, n2, n, j;
      const uint16_t *revtab = s->revtab;
-@@ -110,7 +110,6 @@ void ff_imdct_half_c(FFTContext *s, FFTSample *output, const FFTSample *input)
-     const FFTSample *tsin = s->tsin;
-     const FFTSample *in1, *in2;
-     FFTComplex *z = (FFTComplex *)output;
--
-     n = 1 << s->mdct_bits;
-     n2 = n >> 1;
-     n4 = n >> 2;
---- a/libavcodec/aacps.c	2016-01-16 14:08:47.122752224 +0200
-+++ b/libavcodec/aacps.c	2016-01-16 14:15:59.300895278 +0200
+--- a/libavcodec/aacps.c
++++ b/libavcodec/aacps.c
 @@ -659,7 +659,7 @@
      par[ 1] = AAC_HALF_SUM(par[ 0], par[ 1]);
  }
@@ -48,8 +40,8 @@
  {
      FFTDouble t1, t2, t3, t4, t5, t6;
  
---- a/libavcodec/aacdec_template.c	2018-02-16 09:57:05.180695169 +0100
-+++ b/libavcodec/aacdec_template.c	2018-02-16 09:56:13.430147406 +0100
+--- a/libavcodec/aacdec_template.c
++++ b/libavcodec/aacdec_template.c
 @@ -2483,7 +2483,7 @@
   * @param   decode  1 if tool is used normally, 0 if tool is used in LTP.
   * @param   coef    spectral coefficients
