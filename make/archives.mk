@@ -263,10 +263,6 @@ LUAEXPAT_VER=1.3.0
 $(ARCHIVE)/luaexpat-$(LUAEXPAT_VER).tar.gz:
 	$(WGET) http://matthewwild.co.uk/projects/luaexpat/luaexpat-$(LUAEXPAT_VER).tar.gz
 
-LUACURL_VER=v3
-$(ARCHIVE)/Lua-cURL$(LUACURL_VER).tar.xz:
-	$(WGET) http://neutrino-images.de/neutrino-images/archives/Lua-cURL$(LUACURL_VER).tar.xz
-
 LIBBLURAY_VER=0.9.2
 $(ARCHIVE)/libbluray-$(LIBBLURAY_VER).tar.bz2:
 	$(WGET) ftp://ftp.videolan.org/pub/videolan/libbluray/$(LIBBLURAY_VER)/libbluray-$(LIBBLURAY_VER).tar.bz2
