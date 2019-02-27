@@ -549,30 +549,26 @@ $(D)/luaexpat: $(D)/expat $(D)/lua $(ARCHIVE)/luaexpat-$(LUAEXPAT_VER).tar.gz | 
 
 # -----------------------------------------------------------------------------
 
-LUACURL_VER = e0b1d2e
-LUACURL_SOURCE = luacurl-$(LUACURL_VER).tar.bz2
-LUACURL_URL = git://github.com/Lua-cURL/Lua-cURLv3.git
-
-$(ARCHIVE)/$(LUACURL_SOURCE):
-	get-git-archive.sh $(LUACURL_URL) $(LUACURL_VER) $(notdir $@) $(ARCHIVE)
-
 LUACURL_PATCH  = lua-curl-Makefile.diff
 
-$(D)/luacurl: $(D)/libcurl $(D)/lua $(ARCHIVE)/$(LUACURL_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/luacurl-$(LUACURL_VER)
-	$(UNTAR)/$(LUACURL_SOURCE)
-	$(CHDIR)/luacurl-$(LUACURL_VER); \
+$(D)/luacurl: $(D)/libcurl $(D)/lua $(ARCHIVE)/Lua-cURL$(LUACURL_VER).tar.xz | $(TARGET_DIR)
+	$(REMOVE)/Lua-cURL$(LUACURL_VER)
+	$(UNTAR)/Lua-cURL$(LUACURL_VER).tar.xz
+	$(CHDIR)/Lua-cURL$(LUACURL_VER); \
 		$(call apply_patches, $(LUACURL_PATCH)); \
-		$(MAKE) CC=$(TARGET)-gcc \
-			LIBDIR=$(TARGET_LIB_DIR) \
-			LUA_INC=$(TARGET_INCLUDE_DIR) \
-			CURL_LIBS="$(TARGET_LDFLAGS) -lcurl" \
-			; \
-		$(MAKE) install DESTDIR=$(TARGET_DIR) \
-			LUA_CMOD=/lib/lua/$(LUA_ABIVER) \
-			LUA_LMOD=/share/lua/$(LUA_ABIVER) \
-			;
-	$(REMOVE)/luacurl-$(LUACURL_VER)
+		$(BUILDENV) \
+		CC=$(TARGET)-gcc \
+		LUA_CMOD=/lib/lua/$(LUA_ABIVER) \
+		LUA_LMOD=/share/lua/$(LUA_ABIVER) \
+		LIBDIR=$(TARGET_LIB_DIR) \
+		LUA_INC=$(TARGET_INCLUDE_DIR) \
+		CURL_LIBS="$(TARGET_LDFLAGS) -lcurl" \
+		$(MAKE); \
+		LUA_CMOD=/lib/lua/$(LUA_ABIVER) \
+		LUA_LMOD=/share/lua/$(LUA_ABIVER) \
+		DESTDIR=$(TARGET_DIR) \
+		$(MAKE) install
+	$(REMOVE)/Lua-cURL$(LUACURL_VER)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
