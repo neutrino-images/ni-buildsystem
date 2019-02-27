@@ -133,6 +133,7 @@ $(D)/libcurl: $(D)/zlib $(D)/openssl $(D)/librtmp $(D)/ca-bundle $(ARCHIVE)/curl
 			--prefix=  \
 			--mandir=/.remove \
 			--datarootdir=/.remove \
+			--disable-manual \
 			--disable-file \
 			--disable-rtsp \
 			--disable-dict \
