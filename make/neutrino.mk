@@ -95,9 +95,9 @@ endif
 # -----------------------------------------------------------------------------
 
 N_CONFIGURE_ADDITIONS =
-ifeq ($(BOXSERIES), hd51)
+ifeq ($(BOXTYPE), coolstream)
   N_CONFIGURE_ADDITIONS += \
-		--enable-reschange
+		--enable-pip
 endif
 
 # -----------------------------------------------------------------------------
@@ -154,7 +154,6 @@ $(N_OBJ_DIR)/config.status: $(N_DEPS)
 			--enable-giflib \
 			--enable-lua \
 			--enable-mdev \
-			--enable-pip \
 			--enable-pugixml \
 			\
 			--with-omdb-api-key="$(N_OMDB_API_KEY)" \
