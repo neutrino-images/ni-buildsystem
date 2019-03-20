@@ -106,6 +106,7 @@ N_OMDB_API_KEY ?= 20711f9e
 N_SHOUTCAST_DEV_KEY ?= fa1669MuiRPorUBw
 N_TMDB_DEV_KEY ?= 7270f1b571c4ecbb5b204ddb7f8939b1
 N_YOUTUBE_DEV_KEY ?= AIzaSyBLdZe7M3rpNMZqSj-3IEvjbb2hATWJIdM
+N_WEATHER_DEV_KEY ?=
 
 # -----------------------------------------------------------------------------
 
@@ -160,6 +161,7 @@ $(N_OBJ_DIR)/config.status: $(N_DEPS)
 			--with-shoutcast-dev-key="$(N_SHOUTCAST_DEV_KEY)" \
 			--with-tmdb-dev-key="$(N_TMDB_DEV_KEY)" \
 			--with-youtube-dev-key="$(N_YOUTUBE_DEV_KEY)" \
+			--with-weather-dev-key="$(N_WEATHER_DEV_KEY)" \
 			\
 			$(N_CONFIGURE_LIBSTB-HAL) \
 			--with-tremor \
