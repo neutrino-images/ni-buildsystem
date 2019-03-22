@@ -17,6 +17,13 @@
 # AX/Mutant
 #BOXMODEL = hd51
 
+# Neutrino API keys
+#N_OMDB_API_KEY =
+#N_SHOUTCAST_DEV_KEY =
+#N_TMDB_DEV_KEY =
+#N_YOUTUBE_DEV_KEY =
+#N_WEATHER_DEV_KEY =
+
 # Create debug-image. Not useful in real life.
 #DEBUG = yes
 
