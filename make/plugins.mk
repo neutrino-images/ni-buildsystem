@@ -494,7 +494,6 @@ $(LIBPLUGINS)/tuxwetter.so: $(D)/freetype $(D)/libcurl $(D)/giflib $(D)/libjpeg 
 		\
 		-lfreetype -lz -lcrypto -lssl -lcurl -ljpeg -lpng -lgif -lm \
 		\
-		-DWWEATHER \
 		-DHAVE_CONFIG_H \
 		\
 		fb_display.c \
