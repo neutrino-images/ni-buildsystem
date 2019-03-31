@@ -101,6 +101,8 @@ $(BIN)/FritzCallMonitor: $(D)/openssl $(D)/libcurl $(BIN) $(VARCONFIG) $(ETCINIT
 		\
 		-lstdc++ -lcrypto -pthread -lcurl \
 		\
+		-DHAVE_CONFIG_H \
+		\
 		connect.cpp \
 		FritzCallMonitor.cpp \
 		\
@@ -123,6 +125,8 @@ $(LIBPLUGINS)/FritzInfoMonitor.so: $(D)/freetype $(D)/openssl $(D)/libcurl $(LIB
 		-I$(TARGET_INCLUDE_DIR)/freetype2 \
 		\
 		-lfreetype -lz -lstdc++ -lcrypto -lcurl \
+		\
+		-DHAVE_CONFIG_H \
 		\
 		connect.cpp \
 		framebuffer.cpp \
@@ -277,6 +281,8 @@ $(BIN)/getrc: $(BIN)
 	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) \
 		-I$(N_OBJ_DIR) -I$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/include \
 		\
+		-DHAVE_CONFIG_H \
+		\
 		getrc.c \
 		io.c \
 		\
@@ -292,6 +298,8 @@ $(BIN)/input: $(D)/freetype $(BIN)
 		-I$(TARGET_INCLUDE_DIR)/freetype2 \
 		\
 		-lfreetype -lz -lpng \
+		\
+		-DHAVE_CONFIG_H \
 		\
 		fb_display.c \
 		gfx.c \
@@ -313,6 +321,8 @@ $(BIN)/logomask: $(BIN)
 	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) \
 		-I$(N_OBJ_DIR) -I$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/include \
 		\
+		-DHAVE_CONFIG_H \
+		\
 		gfx.c \
 		logomask.c \
 		\
@@ -327,6 +337,8 @@ $(LIBPLUGINS)/logoset.so: $(D)/freetype $(LIBPLUGINS)
 		\
 		-lfreetype -lz \
 		\
+		-DHAVE_CONFIG_H \
+		\
 		gfx.c \
 		io.c \
 		logoset.c \
@@ -340,6 +352,8 @@ $(LIBPLUGINS)/logomask.so: $(LIBPLUGINS) $(BIN)
 	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/logomask && \
 	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) \
 		-I$(N_OBJ_DIR) -I$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/include \
+		\
+		-DHAVE_CONFIG_H \
 		\
 		starter_logomask.c \
 		\
@@ -357,6 +371,8 @@ $(BIN)/msgbox: $(D)/freetype $(BIN)
 		-I$(TARGET_INCLUDE_DIR)/freetype2 \
 		\
 		-lfreetype -lz -lpng \
+		\
+		-DHAVE_CONFIG_H \
 		\
 		fb_display.c \
 		gfx.c \
@@ -380,6 +396,8 @@ $(BIN)/tuxcald: $(D)/freetype $(BIN) $(ETCINITD) $(VARCONFIG)
 		-I$(TARGET_INCLUDE_DIR)/freetype2 \
 		\
 		-lfreetype -lz -lpthread \
+		\
+		-DHAVE_CONFIG_H \
 		\
 		tuxcald.c \
 		\
@@ -417,6 +435,8 @@ $(LIBPLUGINS)/tuxcom.so: $(D)/freetype $(LIBPLUGINS)
 		\
 		-lfreetype -lz \
 		\
+		-DHAVE_CONFIG_H \
+		\
 		tuxcom.c \
 		\
 		-o $@ && \
@@ -433,6 +453,8 @@ $(BIN)/tuxmaild: $(D)/freetype $(D)/openssl $(BIN) $(ETCINITD) $(VARCONFIG)
 		-I$(TARGET_INCLUDE_DIR)/freetype2 \
 		\
 		-lfreetype -lz -lcrypto -lssl -lpthread \
+		\
+		-DHAVE_CONFIG_H \
 		\
 		tuxmaild.c \
 		\
@@ -453,6 +475,8 @@ $(LIBPLUGINS)/tuxmail.so: $(LIBPLUGINS)
 		\
 		-lfreetype -lz \
 		\
+		-DHAVE_CONFIG_H \
+		\
 		tuxmail.c \
 		\
 		-o $@ && \
@@ -468,9 +492,10 @@ $(LIBPLUGINS)/tuxwetter.so: $(D)/freetype $(D)/libcurl $(D)/giflib $(D)/libjpeg 
 		-I$(N_OBJ_DIR) -I$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/include \
 		-I$(TARGET_INCLUDE_DIR)/freetype2 \
 		\
-		-lfreetype -lz -lcrypto -lssl -lcurl -ljpeg -lpng -lgif \
+		-lfreetype -lz -lcrypto -lssl -lcurl -ljpeg -lpng -lgif -lm \
 		\
 		-DWWEATHER \
+		-DHAVE_CONFIG_H \
 		\
 		fb_display.c \
 		gfx.c \
