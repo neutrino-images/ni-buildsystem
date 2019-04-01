@@ -98,6 +98,7 @@ FritzCallMonitor: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(BIN)/FritzCallMonitor
 $(BIN)/FritzCallMonitor: $(D)/openssl $(D)/libcurl $(BIN) $(VARCONFIG) $(ETCINITD) $(SHAREICONS)
 	pushd $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/FritzCallMonitor && \
 	$(TARGET)-gcc -Wall $(TARGET_CFLAGS) $(TARGET_LDFLAGS) \
+		-I$(N_OBJ_DIR) -I$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/include \
 		\
 		-lstdc++ -lcrypto -pthread -lcurl \
 		\
