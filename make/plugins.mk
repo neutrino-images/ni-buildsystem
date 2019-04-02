@@ -516,8 +516,6 @@ $(LIBPLUGINS)/tuxwetter.so: $(D)/freetype $(D)/libcurl $(D)/giflib $(D)/libjpeg 
 		-o $@; \
 	mkdir -p $(VARCONFIG)/tuxwetter/ && \
 	install -m 0644 tuxwetter.mcfg $(VARCONFIG)/tuxwetter/ && \
-	key=4cf30427c97b3bc5; \
-	sed -i "s|^LicenseKey=.*|LicenseKey=$$key|" $(VARCONFIG)/tuxwetter/tuxwetter.mcfg && \
 	install -m 0644 tuxwetter.conf $(VARCONFIG)/tuxwetter/ && \
 	install -m 0644 tuxwetter.png $(VARCONFIG)/tuxwetter/ && \
 	install -m 0644 convert.list $(VARCONFIG)/tuxwetter/ && \
