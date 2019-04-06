@@ -403,7 +403,7 @@ $(BIN)/tuxcald: $(D)/freetype $(BIN) $(ETCINITD) $(VARCONFIG)
 		tuxcald.c \
 		\
 		-o $@ && \
-	install -m 0755 tuxcald $(ETCINITD)/
+	install -m 0755 tuxcald.init $(ETCINITD)/tuxcald
 	cd $(ETCINITD) && \
 		ln -sf tuxcald S99tuxcald && \
 		ln -sf tuxcald K01tuxcald
@@ -460,7 +460,7 @@ $(BIN)/tuxmaild: $(D)/freetype $(D)/openssl $(BIN) $(ETCINITD) $(VARCONFIG)
 		tuxmaild.c \
 		\
 		-o $@ && \
-	install -m 0755 tuxmaild $(ETCINITD)/
+	install -m 0755 tuxmaild.init $(ETCINITD)/tuxmaild
 	cd $(ETCINITD) && \
 		ln -sf tuxmaild S99tuxmaild && \
 		ln -sf tuxmaild K01tuxmaild
