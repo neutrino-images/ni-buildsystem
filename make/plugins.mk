@@ -26,6 +26,7 @@ plugins-all: $(D)/neutrino \
 	logo-addon \
 	smarthomeinfo \
 	mountpointmanagement \
+	heizoelpreise \
 	epgfilter \
 	netzkino \
 	mtv \
@@ -221,6 +222,13 @@ doscam-webif-skin:
 mountpointmanagement: $(LIBPLUGINS)
 	install -m 0755 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/$@/$@.sh $(LIBPLUGINS)/
 	install -m 0644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/$@/$@.cfg $(LIBPLUGINS)/
+
+# -----------------------------------------------------------------------------
+
+heizoelpreise: $(LIBPLUGINS)
+	install -m 0644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/$@/$@.lua $(LIBPLUGINS)/
+	install -m 0644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/$@/$@.cfg $(LIBPLUGINS)/
+	install -m 0644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/$@/$@_hint.png $(LIBPLUGINS)/
 
 # -----------------------------------------------------------------------------
 
