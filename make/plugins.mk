@@ -18,9 +18,10 @@ plugins-all: $(D)/neutrino \
 	emmrd \
 	FritzCallMonitor \
 	FritzInfoMonitor \
-	FritzInfoMonitor_setup \
+	FritzInfoMonitor-setup \
 	vinfo \
 	EPGscan \
+	EPGscan-setup \
 	pr-auto-timer \
 	logo-addon \
 	smarthomeinfo \
@@ -142,10 +143,10 @@ $(LIBPLUGINS)/FritzInfoMonitor.so: $(D)/freetype $(D)/openssl $(D)/libcurl $(LIB
 	install -m 0644 FritzInfoMonitor.cfg $(LIBPLUGINS)/ && \
 	install -m 0644 FritzInfoMonitor_hint.png $(LIBPLUGINS)/
 
-FritzInfoMonitor_setup: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(LIBPLUGINS)
-	install -m 0755 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/FritzInfoMonitor/FritzInfoMonitor_setup.lua $(LIBPLUGINS)/
-	install -m 0644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/FritzInfoMonitor/FritzInfoMonitor_setup.cfg $(LIBPLUGINS)/
-	install -m 0644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/FritzInfoMonitor/FritzInfoMonitor_setup_hint.png $(LIBPLUGINS)/
+FritzInfoMonitor-setup: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) $(LIBPLUGINS)
+	install -m 0644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/$@/$@.lua $(LIBPLUGINS)/
+	install -m 0644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/$@/$@.cfg $(LIBPLUGINS)/
+	install -m 0644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/$@/$@_hint.png $(LIBPLUGINS)/
 
 # -----------------------------------------------------------------------------
 
@@ -157,13 +158,15 @@ $(BIN)/vinfo: $(BIN)
 # -----------------------------------------------------------------------------
 
 EPGscan: $(LIBPLUGINS) $(VARCONFIG)
-	install -m 0755 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/$@/$@.sh $(LIBPLUGINS)/
+	install -m 0755 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/$@/$@.sh $(LIBPLUGINS)/
+	install -m 0644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/$@/$@.cfg $(LIBPLUGINS)/
+	install -m 0644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/$@/$@_hint.png $(LIBPLUGINS)/
+	install -m 0644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/$@/$@.conf $(VARCONFIG)/
+
+EPGscan-setup: $(LIBPLUGINS)
+	install -m 0644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/$@/$@.lua $(LIBPLUGINS)/
 	install -m 0644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/$@/$@.cfg $(LIBPLUGINS)/
 	install -m 0644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/$@/$@_hint.png $(LIBPLUGINS)/
-	install -m 0644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/$@/$@.conf $(VARCONFIG)/
-	install -m 0755 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/$@/$@_setup.lua $(LIBPLUGINS)/
-	install -m 0644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/$@/$@_setup.cfg $(LIBPLUGINS)/
-	install -m 0644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/plugins/$@/$@_setup_hint.png $(LIBPLUGINS)/
 
 # -----------------------------------------------------------------------------
 
