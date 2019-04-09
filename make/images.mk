@@ -179,11 +179,11 @@ flash-image-armbox-multi:
 	parted -s $(EMMC_IMAGE) unit KiB mkpart swap linux-swap $(SWAP_PARTITION_OFFSET) $(shell expr $(EMMC_IMAGE_SIZE) \- 1024)
 	dd if=/dev/zero of=$(IMAGE_BUILD_TMP)/$(HD51_BOOT_IMAGE) bs=$(BLOCK_SIZE) count=$(shell expr $(BOOT_PARTITION_SIZE) \* $(BLOCK_SECTOR))
 	mkfs.msdos -S 512 $(IMAGE_BUILD_TMP)/$(HD51_BOOT_IMAGE)
-	echo "boot emmcflash0.kernel1 'brcm_cma=520M@248M brcm_cma=200M@768M root=/dev/mmcblk0p3 rw rootwait $(BOXMODEL)_4.boxmode=12'" > $(IMAGE_BUILD_TMP)/STARTUP
-	echo "boot emmcflash0.kernel1 'brcm_cma=520M@248M brcm_cma=200M@768M root=/dev/mmcblk0p3 rw rootwait $(BOXMODEL)_4.boxmode=12'" > $(IMAGE_BUILD_TMP)/STARTUP_1
-	echo "boot emmcflash0.kernel2 'brcm_cma=520M@248M brcm_cma=200M@768M root=/dev/mmcblk0p5 rw rootwait $(BOXMODEL)_4.boxmode=12'" > $(IMAGE_BUILD_TMP)/STARTUP_2
-	echo "boot emmcflash0.kernel3 'brcm_cma=520M@248M brcm_cma=200M@768M root=/dev/mmcblk0p7 rw rootwait $(BOXMODEL)_4.boxmode=12'" > $(IMAGE_BUILD_TMP)/STARTUP_3
-	echo "boot emmcflash0.kernel4 'brcm_cma=520M@248M brcm_cma=200M@768M root=/dev/mmcblk0p9 rw rootwait $(BOXMODEL)_4.boxmode=12'" > $(IMAGE_BUILD_TMP)/STARTUP_4
+	echo "boot emmcflash0.kernel1 'brcm_cma=440M@328M brcm_cma=192M@768M root=/dev/mmcblk0p3 rw rootwait $(BOXMODEL)_4.boxmode=1'" > $(IMAGE_BUILD_TMP)/STARTUP
+	echo "boot emmcflash0.kernel1 'brcm_cma=440M@328M brcm_cma=192M@768M root=/dev/mmcblk0p3 rw rootwait $(BOXMODEL)_4.boxmode=1'" > $(IMAGE_BUILD_TMP)/STARTUP_1
+	echo "boot emmcflash0.kernel2 'brcm_cma=440M@328M brcm_cma=192M@768M root=/dev/mmcblk0p5 rw rootwait $(BOXMODEL)_4.boxmode=1'" > $(IMAGE_BUILD_TMP)/STARTUP_2
+	echo "boot emmcflash0.kernel3 'brcm_cma=440M@328M brcm_cma=192M@768M root=/dev/mmcblk0p7 rw rootwait $(BOXMODEL)_4.boxmode=1'" > $(IMAGE_BUILD_TMP)/STARTUP_3
+	echo "boot emmcflash0.kernel4 'brcm_cma=440M@328M brcm_cma=192M@768M root=/dev/mmcblk0p9 rw rootwait $(BOXMODEL)_4.boxmode=1'" > $(IMAGE_BUILD_TMP)/STARTUP_4
 	mcopy -i $(IMAGE_BUILD_TMP)/$(HD51_BOOT_IMAGE) -v $(IMAGE_BUILD_TMP)/STARTUP ::
 	mcopy -i $(IMAGE_BUILD_TMP)/$(HD51_BOOT_IMAGE) -v $(IMAGE_BUILD_TMP)/STARTUP_1 ::
 	mcopy -i $(IMAGE_BUILD_TMP)/$(HD51_BOOT_IMAGE) -v $(IMAGE_BUILD_TMP)/STARTUP_2 ::
