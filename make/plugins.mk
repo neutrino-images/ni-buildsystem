@@ -98,7 +98,7 @@ neutrino-plugin-%: $(NP_OBJ_DIR)/config.status
 
 # -----------------------------------------------------------------------------
 
-channellogos: $(SOURCE_DIR)/$(NI_LOGO-STUFF) $(SHAREICONS)
+$(D)/channellogos: $(SOURCE_DIR)/$(NI_LOGO-STUFF) $(SHAREICONS)
 	rm -rf $(SHAREICONS)/logo
 	mkdir -p $(SHAREICONS)/logo
 	install -m 0644 $(SOURCE_DIR)/$(NI_LOGO-STUFF)/logos/* $(SHAREICONS)/logo
@@ -106,18 +106,21 @@ channellogos: $(SOURCE_DIR)/$(NI_LOGO-STUFF) $(SHAREICONS)
 	install -m 0644 $(SOURCE_DIR)/$(NI_LOGO-STUFF)/logos-events/* $(SHAREICONS)/logo/events
 	cd $(SOURCE_DIR)/$(NI_LOGO-STUFF)/logo-links && \
 		./logo-linker.sh logo-links.db $(SHAREICONS)/logo
+	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
-logo-addon: $(SOURCE_DIR)/$(NI_LOGO-STUFF) $(LIBPLUGINS)
+$(D)/logo-addon: $(SOURCE_DIR)/$(NI_LOGO-STUFF) $(LIBPLUGINS)
 	install -m 0755 $(SOURCE_DIR)/$(NI_LOGO-STUFF)/logo-addon/*.sh $(LIBPLUGINS)/
 	install -m 0644 $(SOURCE_DIR)/$(NI_LOGO-STUFF)/logo-addon/*.cfg $(LIBPLUGINS)/
 	install -m 0644 $(SOURCE_DIR)/$(NI_LOGO-STUFF)/logo-addon/*.png $(LIBPLUGINS)/
+	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
-lcd4linux-all: $(D)/lcd4linux | $(TARGET_DIR)
+$(D)/lcd4linux-all: $(D)/lcd4linux | $(TARGET_DIR)
 	cp -a $(IMAGEFILES)/lcd4linux/* $(TARGET_DIR)/
+	$(TOUCH)
 
 lcd4linux-inactive:
 	$(REMOVE)/SamsungLCD4Linux
@@ -129,21 +132,23 @@ lcd4linux-inactive:
 
 # -----------------------------------------------------------------------------
 
-doscam-webif-skin:
+$(D)/doscam-webif-skin:
 	mkdir -p $(TARGET_DIR)/share/doscam/tpl/
 	install -m 0644 $(IMAGEFILES)/$@/*.tpl $(TARGET_DIR)/share/doscam/tpl/
 	mkdir -p $(TARGET_DIR)/share/doscam/skin/
 	install -m 0644 $(IMAGEFILES)/$@/*.css $(TARGET_DIR)/share/doscam/skin
+	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
-neutrino-mediathek: $(LIBPLUGINS)
+$(D)/neutrino-mediathek: $(LIBPLUGINS)
 	$(REMOVE)/$@
 	git clone https://github.com/neutrino-mediathek/mediathek.git $(BUILD_TMP)/$@
 	$(CHDIR)/$@; \
 		cp -a plugins/* $(LIBPLUGINS)/; \
 		cp -a share $(TARGET_DIR)
 	$(REMOVE)/$@
+	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
