@@ -54,7 +54,6 @@ ni-image:
 	$(MAKE) iconv
 	$(MAKE) streamripper
 ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd51))
-	make channellogos
 	$(MAKE) less
 	$(MAKE) parted
 	$(MAKE) openvpn
