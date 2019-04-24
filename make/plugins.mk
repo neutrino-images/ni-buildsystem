@@ -183,3 +183,13 @@ $(D)/links: $(D)/libpng $(D)/libjpeg $(D)/openssl $(ARCHIVE)/links-$(LINKS_VER).
 	cp -a $(IMAGEFILES)/links/* $(TARGET_DIR)/
 	$(REMOVE)/links-$(LINKS_VER)
 	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
+PHONY += plugins-all
+PHONY += plugins-hd1
+PHONY += plugins-hd2
+PHONY += plugins-hd51
+PHONY += neutrino-plugins-uninstall neutrino-plugins-distclean
+PHONY += neutrino-plugins-clean neutrino-plugins-clean-all
+PHONY += neutrino-plugin-%
