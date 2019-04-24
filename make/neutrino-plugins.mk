@@ -1,5 +1,5 @@
 #
-# makefile to build plugins
+# makefile to build neutrino-plugins
 #
 # -----------------------------------------------------------------------------
 

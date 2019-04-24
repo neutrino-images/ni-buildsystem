@@ -99,8 +99,7 @@ include make/image-update.mk
 include make/images.mk
 include make/linux-kernel.mk
 include make/neutrino.mk
-include make/plugins-extra.mk
-include make/plugins.mk
+include make/neutrino-plugins.mk
 include make/prerequisites.mk
 include make/rootfs.mk
 include make/static-libs.mk
