@@ -88,7 +88,7 @@ endif
 N_CONFIGURE_LIBSTB-HAL =
 ifeq ($(USE_LIBSTB-HAL), yes)
   N_CONFIGURE_LIBSTB-HAL += \
-		--with-stb-hal-includes=$(LH_OBJ_DIR)/include \
+		--with-stb-hal-includes=$(SOURCE_DIR)/$(NI_LIBSTB-HAL)/include \
 		--with-stb-hal-build=$(LH_OBJ_DIR)
 endif
 
@@ -208,15 +208,13 @@ endif
 # -----------------------------------------------------------------------------
 
 $(LH_OBJ_DIR)/config.status: $(LH_DEPS)
-	rm -rf $(LH_OBJ_DIR)
-	tar -C $(SOURCE_DIR) -cp $(NI_LIBSTB-HAL) --exclude-vcs | tar -C $(BUILD_TMP) -x
+	test -d $(LH_OBJ_DIR) || mkdir -p $(LH_OBJ_DIR)
+	$(SOURCE_DIR)/$(NI_LIBSTB-HAL)/autogen.sh
 	pushd $(LH_OBJ_DIR) && \
-		./autogen.sh && \
-		\
 		export PKG_CONFIG=$(PKG_CONFIG) && \
 		export PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) && \
 		$(N_BUILDENV) \
-		./configure \
+		$(SOURCE_DIR)/$(NI_LIBSTB-HAL)/configure \
 			--host=$(TARGET) \
 			--build=$(BUILD) \
 			--prefix= \
