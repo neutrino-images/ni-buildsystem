@@ -89,6 +89,15 @@ neutrino-plugins-clean-all: neutrino-plugins-clean
 
 # -----------------------------------------------------------------------------
 
+# To build single plugins from neutrino-plugins repository call
+# make neutrino-plugin-<subdir>; e.g. make neutrino-plugin-tuxwetter
+
+neutrino-plugin-%: $(NP_OBJ_DIR)/config.status
+	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
+	$(MAKE) -C $(NP_OBJ_DIR)/$(subst neutrino-plugin-,,$@) all install DESTDIR=$(TARGET_DIR)
+
+# -----------------------------------------------------------------------------
+
 channellogos: $(SOURCE_DIR)/$(NI_LOGO-STUFF) $(SHAREICONS)
 	rm -rf $(SHAREICONS)/logo
 	mkdir -p $(SHAREICONS)/logo
