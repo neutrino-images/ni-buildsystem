@@ -254,9 +254,13 @@ endif
 
 # -----------------------------------------------------------------------------
 
-neutrino-clean:
-	-make -C $(N_OBJ_DIR) uninstall
-	-make -C $(N_OBJ_DIR) distclean
+neutrino-uninstall:
+	-make -C $(N_OBJ_DIR) uninstall DESTDIR=$(TARGET_DIR)
+
+neutrino-distclean:
+	-make -C $(N_OBJ_DIR) distclean DESTDIR=$(TARGET_DIR)
+
+neutrino-clean: neutrino-uninstall neutrino-distclean
 	rm -f $(N_OBJ_DIR)/config.status
 	rm -f $(D)/neutrino
 
@@ -274,5 +278,6 @@ libstb-hal-clean-all: libstb-hal-clean
 # -----------------------------------------------------------------------------
 
 PHONY += neutrino-bin
+PHONY += neutrino-uninstall neutrino-distclean
 PHONY += neutrino-clean neutrino-clean-all
 PHONY += libstb-hal-clean libstb-hal-clean-all
