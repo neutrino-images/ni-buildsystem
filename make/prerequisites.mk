@@ -222,3 +222,16 @@ patches-info:
 			echo -e "[$(TERM_RED) !! $(TERM_NORMAL)] $$patch"; \
 		fi; \
 	done;
+
+# -----------------------------------------------------------------------------
+
+PHONY += init
+PHONY += find-%
+PHONY += toolcheck
+PHONY += bashcheck
+PHONY += preqs
+PHONY += download
+PHONY += ni-sources
+PHONY += archives-list
+PHONY += archives-info
+PHONY += patches-info

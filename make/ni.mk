@@ -106,7 +106,6 @@ changelogs:
 
 # -----------------------------------------------------------------------------
 
-PHONY += init
 PHONY += images ni-images
 PHONY += personalized-image
 PHONY += image ni-image
