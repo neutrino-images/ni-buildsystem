@@ -833,7 +833,20 @@ $(D)/lcd4linux: $(D)/libncurses $(D)/libgd2 $(D)/libdpf | $(TARGET_DIR)
 		$(MAKE) vcs_version; \
 		$(MAKE) all; \
 		$(MAKE) install
+	cp -a $(IMAGEFILES)/lcd4linux/* $(TARGET_DIR)/
+	#make samsunglcd4linux
 	$(REMOVE)/lcd4linux
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
+$(D)/samsunglcd4linux:
+	$(REMOVE)/samsunglcd4linux
+	git clone https://github.com/horsti58/SamsungLCD4Linux $(BUILD_TMP)/samsunglcd4linux
+	$(CHDIR)/samsunglcd4linux/ni; \
+		install -m 0600 etc/lcd4linux.conf $(TARGET_DIR)/etc; \
+		cp -a share/* $(TARGET_DIR)/share
+	$(REMOVE)/samsunglcd4linux
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------

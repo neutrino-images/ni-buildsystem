@@ -118,20 +118,6 @@ $(D)/logo-addon: $(SOURCE_DIR)/$(NI_LOGO-STUFF) $(LIBPLUGINS)
 
 # -----------------------------------------------------------------------------
 
-$(D)/lcd4linux-all: $(D)/lcd4linux | $(TARGET_DIR)
-	cp -a $(IMAGEFILES)/lcd4linux/* $(TARGET_DIR)/
-	$(TOUCH)
-
-lcd4linux-inactive:
-	$(REMOVE)/SamsungLCD4Linux
-	git clone https://github.com/horsti58/SamsungLCD4Linux $(BUILD_TMP)/SamsungLCD4Linux
-	$(CHDIR)/SamsungLCD4Linux/ni; \
-		install -m 0600 etc/lcd4linux.conf $(TARGET_DIR)/etc; \
-		cp -a share/* $(TARGET_DIR)/share
-	$(REMOVE)/SamsungLCD4Linux
-
-# -----------------------------------------------------------------------------
-
 $(D)/doscam-webif-skin:
 	mkdir -p $(TARGET_DIR)/share/doscam/tpl/
 	install -m 0644 $(IMAGEFILES)/doscam-webif-skin/*.tpl $(TARGET_DIR)/share/doscam/tpl/
