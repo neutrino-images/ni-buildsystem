@@ -6,7 +6,6 @@
 plugins-all: $(D)/neutrino $(D)/neutrino-plugins \
 	logo-addon \
 	neutrino-mediathek \
-	lcd4linux-all \
 	doscam-webif-skin
 
 plugins-hd1: # nothing to do
