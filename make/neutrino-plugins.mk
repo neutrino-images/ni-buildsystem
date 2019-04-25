@@ -134,9 +134,9 @@ lcd4linux-inactive:
 
 $(D)/doscam-webif-skin:
 	mkdir -p $(TARGET_DIR)/share/doscam/tpl/
-	install -m 0644 $(IMAGEFILES)/$@/*.tpl $(TARGET_DIR)/share/doscam/tpl/
+	install -m 0644 $(IMAGEFILES)/doscam-webif-skin/*.tpl $(TARGET_DIR)/share/doscam/tpl/
 	mkdir -p $(TARGET_DIR)/share/doscam/skin/
-	install -m 0644 $(IMAGEFILES)/$@/*.css $(TARGET_DIR)/share/doscam/skin
+	install -m 0644 $(IMAGEFILES)/doscam-webif-skin/*.css $(TARGET_DIR)/share/doscam/skin
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
