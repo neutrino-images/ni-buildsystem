@@ -26,6 +26,7 @@ ni-image:
 	make plugins-all
 	make plugins-$(BOXSERIES)
 	make fbshot
+	$(MAKE) lcd4linux
 	$(MAKE) luacurl
 	$(MAKE) timezone
 	$(MAKE) smartmontools
