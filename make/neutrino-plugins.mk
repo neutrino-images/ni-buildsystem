@@ -31,6 +31,7 @@ NP_DEPS += freetype
 NP_CONFIGURE_ADDITIONS = \
 		--disable-logoupdater \
 		--disable-logoview \
+		--disable-mountpointmanagement \
 		--disable-stbup
 
 ifneq ($(BOXMODEL), hd51)
