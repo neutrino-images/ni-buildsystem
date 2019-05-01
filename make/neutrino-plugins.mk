@@ -30,7 +30,8 @@ NP_DEPS += freetype
 
 NP_CONFIGURE_ADDITIONS = \
 		--disable-logoupdater \
-		--disable-logoview
+		--disable-logoview \
+		--disable-stbup
 
 ifneq ($(BOXMODEL), hd51)
   NP_CONFIGURE_ADDITIONS += \
