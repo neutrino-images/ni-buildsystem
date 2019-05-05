@@ -120,8 +120,8 @@ $(D)/logo-addon: $(SOURCE_DIR)/$(NI_LOGO-STUFF) $(LIBPLUGINS)
 # -----------------------------------------------------------------------------
 
 $(D)/doscam-webif-skin:
-	install -D -m 0644 $(IMAGEFILES)/doscam-webif-skin/doscam_ni-dark.css $(TARGET_DIR)/share/doscam/tpl/doscam_ni-dark.css
-	install -D -m 0644 $(IMAGEFILES)/doscam-webif-skin/IC_doscam_ni.tpl $(TARGET_DIR)/share/doscam/skin/IC_doscam_ni.tpl
+	install -D -m 0644 $(IMAGEFILES)/doscam-webif-skin/doscam_ni-dark.css $(TARGET_DIR)/share/doscam/skin/doscam_ni-dark.css
+	install -D -m 0644 $(IMAGEFILES)/doscam-webif-skin/IC_doscam_ni.tpl $(TARGET_DIR)/share/doscam/tpl/IC_doscam_ni.tpl
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
