@@ -460,7 +460,13 @@ $(D)/libgd2: $(D)/zlib $(D)/libpng $(D)/libjpeg $(D)/freetype $(ARCHIVE)/libgd-$
 
 # -----------------------------------------------------------------------------
 
-LIBDPF_PATCH  = libdpf-crossbuild.diff
+LIBDPF_VER = 62c8fd0
+LIBDPF_SOURCE = dpf-ax-git-$(LIBDPF_VER).tar.bz2
+
+$(ARCHIVE)/$(LIBDPF_SOURCE):
+	get-git-archive.sh https://bitbucket.org/max_10/dpf-ax $(LIBDPF_VER) $(notdir $@) $(ARCHIVE)
+
+LIBDPF_PATCH  = libdpf-crossbuild.patch
 
 $(D)/libdpf: $(D)/libusb_compat $(ARCHIVE)/$(LIBDPF_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/dpf-ax-git-$(LIBDPF_VER)

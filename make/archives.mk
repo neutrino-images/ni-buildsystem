@@ -368,11 +368,6 @@ POPT_SOURCE = popt-$(POPT_VER).tar.gz
 $(ARCHIVE)/$(POPT_SOURCE):
 	$(WGET) http://rpm5.org/files/popt/$(POPT_SOURCE)
 
-LIBDPF_VER = 62c8fd0
-LIBDPF_SOURCE = dpf-ax-git-$(LIBDPF_VER).tar.bz2
-$(ARCHIVE)/$(LIBDPF_SOURCE):
-	get-git-archive.sh https://github.com/MaxWiesel/dpf-ax.git $(LIBDPF_VER) $(notdir $@) $(ARCHIVE)
-
 LINKS_VER = 2.17
 $(ARCHIVE)/links-$(LINKS_VER).tar.bz2:
 	$(WGET) http://links.twibright.com/download/links-$(LINKS_VER).tar.bz2
