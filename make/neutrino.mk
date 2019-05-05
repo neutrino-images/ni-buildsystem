@@ -126,7 +126,9 @@ N_BUILDENV = \
 	CFLAGS="$(N_CFLAGS)" \
 	CPPFLAGS="$(N_CFLAGS)" \
 	CXXFLAGS="$(N_CFLAGS) -std=c++11" \
-	LDFLAGS="$(N_LDFLAGS)"
+	LDFLAGS="$(N_LDFLAGS)" \
+	PKG_CONFIG=$(PKG_CONFIG) \
+	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH)
 
 # -----------------------------------------------------------------------------
 
@@ -136,8 +138,6 @@ $(N_OBJ_DIR)/config.status: $(N_DEPS)
 		git checkout $(NI_NEUTRINO_BRANCH)
 	$(SOURCE_DIR)/$(NI_NEUTRINO)/autogen.sh
 	pushd $(N_OBJ_DIR) && \
-		export PKG_CONFIG=$(PKG_CONFIG) && \
-		export PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) && \
 		$(N_BUILDENV) \
 		$(SOURCE_DIR)/$(NI_NEUTRINO)/configure \
 			--host=$(TARGET) \
@@ -211,8 +211,6 @@ $(LH_OBJ_DIR)/config.status: $(LH_DEPS)
 	test -d $(LH_OBJ_DIR) || mkdir -p $(LH_OBJ_DIR)
 	$(SOURCE_DIR)/$(NI_LIBSTB-HAL)/autogen.sh
 	pushd $(LH_OBJ_DIR) && \
-		export PKG_CONFIG=$(PKG_CONFIG) && \
-		export PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) && \
 		$(N_BUILDENV) \
 		$(SOURCE_DIR)/$(NI_LIBSTB-HAL)/configure \
 			--host=$(TARGET) \

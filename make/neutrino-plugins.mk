@@ -45,8 +45,6 @@ $(NP_OBJ_DIR)/config.status: $(NP_DEPS)
 	test -d $(NP_OBJ_DIR) || mkdir -p $(NP_OBJ_DIR)
 	$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/autogen.sh
 	pushd $(NP_OBJ_DIR) && \
-		export PKG_CONFIG=$(PKG_CONFIG) && \
-		export PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) && \
 		$(BUILDENV) \
 		$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/configure \
 			--host=$(TARGET) \
