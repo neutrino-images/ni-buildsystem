@@ -79,7 +79,7 @@ neutrino-plugins-uninstall:
 	-make -C $(NP_OBJ_DIR) uninstall DESTDIR=$(TARGET_DIR)
 
 neutrino-plugins-distclean:
-	-make -C $(NP_OBJ_DIR) distclean DESTDIR=$(TARGET_DIR)
+	-make -C $(NP_OBJ_DIR) distclean
 
 neutrino-plugins-clean: neutrino-plugins-uninstall neutrino-plugins-distclean
 	rm -f $(NP_OBJ_DIR)/config.status

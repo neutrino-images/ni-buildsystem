@@ -258,7 +258,7 @@ neutrino-uninstall:
 	-make -C $(N_OBJ_DIR) uninstall DESTDIR=$(TARGET_DIR)
 
 neutrino-distclean:
-	-make -C $(N_OBJ_DIR) distclean DESTDIR=$(TARGET_DIR)
+	-make -C $(N_OBJ_DIR) distclean
 
 neutrino-clean: neutrino-uninstall neutrino-distclean
 	rm -f $(N_OBJ_DIR)/config.status
@@ -267,8 +267,15 @@ neutrino-clean: neutrino-uninstall neutrino-distclean
 neutrino-clean-all: neutrino-clean
 	rm -rf $(N_OBJ_DIR)
 
-libstb-hal-clean:
-	-make -C $(LH_OBJ_DIR) clean
+# -----------------------------------------------------------------------------
+
+libstb-hal-uninstall:
+	-make -C $(LH_OBJ_DIR) uninstall DESTDIR=$(TARGET_DIR)
+
+libstb-hal-distclean:
+	-make -C $(LH_OBJ_DIR) distclean
+
+libstb-hal-clean: libstb-hal-uninstall libstb-hal-distclean
 	rm -f $(LH_OBJ_DIR)/config.status
 	rm -f $(D)/libstb-hal
 
@@ -280,4 +287,6 @@ libstb-hal-clean-all: libstb-hal-clean
 PHONY += neutrino-bin
 PHONY += neutrino-uninstall neutrino-distclean
 PHONY += neutrino-clean neutrino-clean-all
+
+PHONY += libstb-hal-uninstall libstb-hal-distclean
 PHONY += libstb-hal-clean libstb-hal-clean-all
