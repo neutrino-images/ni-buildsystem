@@ -65,7 +65,6 @@ ifeq ($(BOXTYPE)-$(BOXSERIES), coolstream-hd1)
 else ifeq ($(BOXTYPE)-$(BOXSERIES), coolstream-hd2)
 	sed -i -e 's/SUBLEVEL = 108/SUBLEVEL = 93/g' $(BUILD_TMP)/$(KERNEL_SRC)/Makefile
 else ifeq ($(BOXTYPE), armbox)
-	sed -i -e 's/CONFIG_INITRAMFS_SOURCE=""/CONFIG_INITRAMFS_SOURCE="initramfs-subdirboot.cpio.gz"\nCONFIG_INITRAMFS_ROOT_UID=0\nCONFIG_INITRAMFS_ROOT_GID=0/g' $(BUILD_TMP)/$(KERNEL_OBJ)/.config
 	install -m 644 $(PATCHES)/initramfs-subdirboot.cpio.gz $(BUILD_TMP)/$(KERNEL_OBJ)
 endif
 	$(TOUCH)
