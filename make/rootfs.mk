@@ -3,7 +3,7 @@
 #
 # -----------------------------------------------------------------------------
 
-target-finish: .version image-version update.urls
+target-finish: .version image-version issue.net update.urls
 
 # -----------------------------------------------------------------------------
 
@@ -22,6 +22,14 @@ image-version: $(TARGET_DIR)/etc/image-version
 $(TARGET_DIR)/etc/image-version: | $(TARGET_DIR)
 	echo "distro=NI \o/ Neutrino-Image"						 > $@
 	echo "imageversion=$$(git describe --always --long --tags | sed 's/-/./2')"	>> $@
+
+# -----------------------------------------------------------------------------
+
+issue.net: $(TARGET_DIR)/etc/issue
+$(TARGET_DIR)/etc/issue: | $(TARGET_DIR)
+	echo "NI \\\o/ Neutrino-Image $(IMAGE_VERSION_STRING)"	>> $@.net
+	echo ""							>> $@.net
+	cp $@.net $@
 
 # -----------------------------------------------------------------------------
 
