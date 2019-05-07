@@ -3,7 +3,7 @@
 #
 # -----------------------------------------------------------------------------
 
-target-finish: .version update.urls
+target-finish: .version image-version update.urls
 
 # -----------------------------------------------------------------------------
 
@@ -15,6 +15,13 @@ $(TARGET_DIR)/.version: | $(TARGET_DIR)
 	echo "builddate=$$(date)"						>> $@
 	echo "creator=$(MAINTAINER)"						>> $@
 	echo "homepage=www.neutrino-images.de"					>> $@
+
+# -----------------------------------------------------------------------------
+
+image-version: $(TARGET_DIR)/etc/image-version
+$(TARGET_DIR)/etc/image-version: | $(TARGET_DIR)
+	echo "distro=NI \o/ Neutrino-Image"						 > $@
+	echo "imageversion=$$(git describe --always --long --tags | sed 's/-/./2')"	>> $@
 
 # -----------------------------------------------------------------------------
 
@@ -42,6 +49,7 @@ rootfs: target-finish $(ROOTFS) rootfs-cleanup rootfs-strip rootfs-softlinks
 # create filesystem for our images
 $(ROOTFS): | $(TARGET_DIR)
 	rm -rf $(ROOTFS)
+	mkdir -p $(dir $(ROOTFS))
 	cp -a $(TARGET_DIR) $(ROOTFS)
 
 # -----------------------------------------------------------------------------
@@ -126,6 +134,10 @@ endif
 	mkdir -p $(ROOTFS)/var/tuxbox/config
 	pushd $(ROOTFS)/var/tuxbox/config && \
 		ln -sf /var/keys/SoftCam.Key SoftCam.Key
+ifeq ($(BOXTYPE), armbox)
+	pushd $(ROOTFS)/usr/bin && \
+		ln -sf /bin/neutrino enigma2
+endif
 
 # -----------------------------------------------------------------------------
 

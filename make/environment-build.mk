@@ -147,6 +147,9 @@ WHOAMI       := $(shell id -un)
 ARCHIVE       = $(BASE_DIR)/download
 BUILD_TMP     = $(BASE_DIR)/build_tmp
 ROOTFS        = $(BUILD_TMP)/rootfs
+ifeq ($(BOXTYPE), armbox)
+  ROOTFS      = $(BUILD_TMP)/rootfs/linuxrootfs1
+endif
 DEPS_DIR      = $(BASE_DIR)/deps
 D             = $(DEPS_DIR)
 HOST_DIR      = $(BASE_DIR)/host

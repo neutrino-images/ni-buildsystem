@@ -133,7 +133,7 @@ flash-image-armbox:
 HD51_IMAGE_NAME = disk
 HD51_BOOT_IMAGE = boot.img
 HD51_IMAGE_LINK = $(HD51_IMAGE_NAME).ext4
-HD51_IMAGE_ROOTFS_SIZE = 294912
+HD51_IMAGE_ROOTFS_SIZE = 1048576
 
 # emmc image
 EMMC_IMAGE_SIZE = 3817472
@@ -144,46 +144,40 @@ BLOCK_SIZE = 512
 BLOCK_SECTOR = 2
 IMAGE_ROOTFS_ALIGNMENT = 1024
 BOOT_PARTITION_SIZE = 3072
-KERNEL_PARTITION_OFFSET = $(shell expr $(IMAGE_ROOTFS_ALIGNMENT) \+ $(BOOT_PARTITION_SIZE))
+KERNEL_PARTITION_OFFSET = "$(shell expr $(IMAGE_ROOTFS_ALIGNMENT) \+ $(BOOT_PARTITION_SIZE))"
 KERNEL_PARTITION_SIZE = 8192
-ROOTFS_PARTITION_OFFSET = $(shell expr $(KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))
+ROOTFS_PARTITION_OFFSET = "$(shell expr $(KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))"
 
 # partition sizes multi
 ROOTFS_PARTITION_SIZE_MULTI = 819200
-SECOND_KERNEL_PARTITION_OFFSET = $(shell expr $(ROOTFS_PARTITION_OFFSET) \+ $(ROOTFS_PARTITION_SIZE_MULTI))
-SECOND_ROOTFS_PARTITION_OFFSET = $(shell expr $(SECOND_KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))
-THIRD_KERNEL_PARTITION_OFFSET = $(shell expr $(SECOND_ROOTFS_PARTITION_OFFSET) \+ $(ROOTFS_PARTITION_SIZE_MULTI))
-THIRD_ROOTFS_PARTITION_OFFSET = $(shell expr $(THIRD_KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))
-FOURTH_KERNEL_PARTITION_OFFSET = $(shell expr $(THIRD_ROOTFS_PARTITION_OFFSET) \+ $(ROOTFS_PARTITION_SIZE_MULTI))
-FOURTH_ROOTFS_PARTITION_OFFSET = $(shell expr $(FOURTH_KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))
-SWAP_PARTITION_OFFSET = $(shell expr $(FOURTH_ROOTFS_PARTITION_OFFSET) \+ $(ROOTFS_PARTITION_SIZE_MULTI))
+SECOND_KERNEL_PARTITION_OFFSET = "$(shell expr $(ROOTFS_PARTITION_OFFSET) \+ $(ROOTFS_PARTITION_SIZE_MULTI))"
+THIRD_KERNEL_PARTITION_OFFSET = "$(shell expr $(SECOND_KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))"
+FOURTH_KERNEL_PARTITION_OFFSET = "$(shell expr $(THIRD_KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))"
+MULTI_ROOTFS_PARTITION_OFFSET = "$(shell expr $(FOURTH_KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))"
 
 flash-image-armbox-multi:
 	mkdir -p $(IMAGE_BUILD_TMP)
 	# Create a sparse image block
 	dd if=/dev/zero of=$(IMAGE_BUILD_TMP)/$(HD51_IMAGE_LINK) seek=$(shell expr $(HD51_IMAGE_ROOTFS_SIZE) \* $(BLOCK_SECTOR)) count=0 bs=$(BLOCK_SIZE)
-	mkfs.ext4 -F $(IMAGE_BUILD_TMP)/$(HD51_IMAGE_LINK) -d $(ROOTFS)
+	mkfs.ext4 -v -F $(IMAGE_BUILD_TMP)/$(HD51_IMAGE_LINK) -d $(ROOTFS)/..
 	# Error codes 0-3 indicate successfull operation of fsck (no errors or errors corrected)
 	fsck.ext4 -pvfD $(IMAGE_BUILD_TMP)/$(HD51_IMAGE_LINK) || [ $? -le 3 ]
 	dd if=/dev/zero of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) count=0 seek=$(shell expr $(EMMC_IMAGE_SIZE) \* $(BLOCK_SECTOR))
 	parted -s $(EMMC_IMAGE) mklabel gpt
 	parted -s $(EMMC_IMAGE) unit KiB mkpart boot fat16 $(IMAGE_ROOTFS_ALIGNMENT) $(shell expr $(IMAGE_ROOTFS_ALIGNMENT) \+ $(BOOT_PARTITION_SIZE))
-	parted -s $(EMMC_IMAGE) unit KiB mkpart kernel1 $(KERNEL_PARTITION_OFFSET) $(shell expr $(KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))
-	parted -s $(EMMC_IMAGE) unit KiB mkpart rootfs1 ext4 $(ROOTFS_PARTITION_OFFSET) $(shell expr $(ROOTFS_PARTITION_OFFSET) \+ $(ROOTFS_PARTITION_SIZE_MULTI))
-	parted -s $(EMMC_IMAGE) unit KiB mkpart kernel2 $(SECOND_KERNEL_PARTITION_OFFSET) $(shell expr $(SECOND_KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))
-	parted -s $(EMMC_IMAGE) unit KiB mkpart rootfs2 ext4 $(SECOND_ROOTFS_PARTITION_OFFSET) $(shell expr $(SECOND_ROOTFS_PARTITION_OFFSET) \+ $(ROOTFS_PARTITION_SIZE_MULTI))
-	parted -s $(EMMC_IMAGE) unit KiB mkpart kernel3 $(THIRD_KERNEL_PARTITION_OFFSET) $(shell expr $(THIRD_KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))
-	parted -s $(EMMC_IMAGE) unit KiB mkpart rootfs3 ext4 $(THIRD_ROOTFS_PARTITION_OFFSET) $(shell expr $(THIRD_ROOTFS_PARTITION_OFFSET) \+ $(ROOTFS_PARTITION_SIZE_MULTI))
-	parted -s $(EMMC_IMAGE) unit KiB mkpart kernel4 $(FOURTH_KERNEL_PARTITION_OFFSET) $(shell expr $(FOURTH_KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))
-	parted -s $(EMMC_IMAGE) unit KiB mkpart rootfs4 ext4 $(FOURTH_ROOTFS_PARTITION_OFFSET) $(shell expr $(FOURTH_ROOTFS_PARTITION_OFFSET) \+ $(ROOTFS_PARTITION_SIZE_MULTI))
-	parted -s $(EMMC_IMAGE) unit KiB mkpart swap linux-swap $(SWAP_PARTITION_OFFSET) $(shell expr $(EMMC_IMAGE_SIZE) \- 1024)
+	parted -s $(EMMC_IMAGE) unit KiB mkpart linuxkernel $(KERNEL_PARTITION_OFFSET) $(shell expr $(KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))
+	parted -s $(EMMC_IMAGE) unit KiB mkpart linuxrootfs ext4 $(ROOTFS_PARTITION_OFFSET) $(shell expr $(ROOTFS_PARTITION_OFFSET) \+ $(ROOTFS_PARTITION_SIZE_MULTI))
+	parted -s $(EMMC_IMAGE) unit KiB mkpart linuxkernel2 $(SECOND_KERNEL_PARTITION_OFFSET) $(shell expr $(SECOND_KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))
+	parted -s $(EMMC_IMAGE) unit KiB mkpart linuxkernel3 $(THIRD_KERNEL_PARTITION_OFFSET) $(shell expr $(THIRD_KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))
+	parted -s $(EMMC_IMAGE) unit KiB mkpart linuxkernel4 $(FOURTH_KERNEL_PARTITION_OFFSET) $(shell expr $(FOURTH_KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))
+	parted -s $(EMMC_IMAGE) unit KiB mkpart userdata ext4 $(MULTI_ROOTFS_PARTITION_OFFSET) 100%
 	dd if=/dev/zero of=$(IMAGE_BUILD_TMP)/$(HD51_BOOT_IMAGE) bs=$(BLOCK_SIZE) count=$(shell expr $(BOOT_PARTITION_SIZE) \* $(BLOCK_SECTOR))
 	mkfs.msdos -S 512 $(IMAGE_BUILD_TMP)/$(HD51_BOOT_IMAGE)
-	echo "boot emmcflash0.kernel1 'brcm_cma=440M@328M brcm_cma=192M@768M root=/dev/mmcblk0p3 rw rootwait $(BOXMODEL)_4.boxmode=1'" > $(IMAGE_BUILD_TMP)/STARTUP
-	echo "boot emmcflash0.kernel1 'brcm_cma=440M@328M brcm_cma=192M@768M root=/dev/mmcblk0p3 rw rootwait $(BOXMODEL)_4.boxmode=1'" > $(IMAGE_BUILD_TMP)/STARTUP_1
-	echo "boot emmcflash0.kernel2 'brcm_cma=440M@328M brcm_cma=192M@768M root=/dev/mmcblk0p5 rw rootwait $(BOXMODEL)_4.boxmode=1'" > $(IMAGE_BUILD_TMP)/STARTUP_2
-	echo "boot emmcflash0.kernel3 'brcm_cma=440M@328M brcm_cma=192M@768M root=/dev/mmcblk0p7 rw rootwait $(BOXMODEL)_4.boxmode=1'" > $(IMAGE_BUILD_TMP)/STARTUP_3
-	echo "boot emmcflash0.kernel4 'brcm_cma=440M@328M brcm_cma=192M@768M root=/dev/mmcblk0p9 rw rootwait $(BOXMODEL)_4.boxmode=1'" > $(IMAGE_BUILD_TMP)/STARTUP_4
+	echo "boot emmcflash0.linuxkernel  'root=/dev/mmcblk0p3 rootsubdir=linuxrootfs1 rw rootwait $(BOXMODEL)_4.boxmode=1'" > $(IMAGE_BUILD_TMP)/STARTUP
+	echo "boot emmcflash0.linuxkernel  'root=/dev/mmcblk0p3 rootsubdir=linuxrootfs1 rw rootwait $(BOXMODEL)_4.boxmode=1'" > $(IMAGE_BUILD_TMP)/STARTUP_1
+	echo "boot emmcflash0.linuxkernel2 'root=/dev/mmcblk0p7 rootsubdir=linuxrootfs2 rw rootwait $(BOXMODEL)_4.boxmode=1'" > $(IMAGE_BUILD_TMP)/STARTUP_2
+	echo "boot emmcflash0.linuxkernel3 'root=/dev/mmcblk0p7 rootsubdir=linuxrootfs3 rw rootwait $(BOXMODEL)_4.boxmode=1'" > $(IMAGE_BUILD_TMP)/STARTUP_3
+	echo "boot emmcflash0.linuxkernel4 'root=/dev/mmcblk0p7 rootsubdir=linuxrootfs4 rw rootwait $(BOXMODEL)_4.boxmode=1'" > $(IMAGE_BUILD_TMP)/STARTUP_4
 	mcopy -i $(IMAGE_BUILD_TMP)/$(HD51_BOOT_IMAGE) -v $(IMAGE_BUILD_TMP)/STARTUP ::
 	mcopy -i $(IMAGE_BUILD_TMP)/$(HD51_BOOT_IMAGE) -v $(IMAGE_BUILD_TMP)/STARTUP_1 ::
 	mcopy -i $(IMAGE_BUILD_TMP)/$(HD51_BOOT_IMAGE) -v $(IMAGE_BUILD_TMP)/STARTUP_2 ::
@@ -198,12 +192,12 @@ flash-image-armbox-multi:
 	mkdir -p $(IMAGE_DIR)/$(BOXMODEL)
 	cp $(KERNEL_ZIMAGE_DTB) $(IMAGE_DIR)/$(BOXMODEL)/kernel.bin
 	cp $(EMMC_IMAGE) $(IMAGE_DIR)/$(BOXMODEL)
-	cd $(ROOTFS); \
-	tar -cvf $(IMAGE_DIR)/$(BOXMODEL)/rootfs.tar -C $(ROOTFS) .  > /dev/null 2>&1; \
+	cd $(ROOTFS) && \
+		tar -cvf $(IMAGE_DIR)/$(BOXMODEL)/rootfs.tar -C $(ROOTFS) .  > /dev/null 2>&1; \
 	bzip2 $(IMAGE_DIR)/$(BOXMODEL)/rootfs.tar
 	echo $(IMAGE_PREFIX) > $(IMAGE_DIR)/$(BOXMODEL)/imageversion
-	cd $(IMAGE_DIR); \
-	zip -r $(IMAGE_PREFIX)-$(IMAGE_SUFFIX)_multi_usb.zip $(BOXMODEL)/*
+	cd $(IMAGE_DIR) && \
+		zip -r $(IMAGE_PREFIX)-$(IMAGE_SUFFIX)_multi_usb.zip $(BOXMODEL)/*
 	# cleanup
 	rm -rf $(IMAGE_DIR)/$(BOXMODEL)
 	rm -rf $(IMAGE_BUILD_TMP)
