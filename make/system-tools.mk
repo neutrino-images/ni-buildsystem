@@ -507,20 +507,29 @@ $(D)/e2fsprogs: $(ARCHIVE)/e2fsprogs-$(E2FSPROGS_VER).tar.gz | $(TARGET_DIR)
 		$(CONFIGURE) \
 			--target=$(TARGET) \
 			--prefix=/ \
+			--datarootdir=/.remove \
 			--infodir=/.remove \
 			--mandir=/.remove \
 			--disable-nls \
 			--disable-profile \
 			--disable-e2initrd-helper \
+			--disable-backtrace \
+			--disable-bmap-stats \
 			--disable-debugfs \
+			--disable-fuse2fs \
 			--disable-imager \
-			--disable-resizer \
+			--disable-mmp \
+			--disable-rpath \
+			--disable-tdb \
 			--disable-uuidd \
+			--disable-blkid-debug \
+			--disable-jbd-debug \
 			--disable-testio-debug \
 			--disable-defrag \
 			--enable-elf-shlibs \
 			--enable-fsck \
 			--enable-symlink-install \
+			--enable-verbose-makecmds \
 			--enable-symlink-build \
 			--with-gnu-ld \
 			; \

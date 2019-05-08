@@ -25,6 +25,9 @@ mkdir -p /dev/shm/usb
 # mount var-partition
 # FIXME
 
+service partitions-by-name start
+service resizerootfs start
+
 # for nfsd
 mkdir -p /var/lib/nfs
 mount -t tmpfs nfs /var/lib/nfs
