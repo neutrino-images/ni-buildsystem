@@ -28,6 +28,11 @@ case "$ACTION" in
 			LOGINFO "/dev/$MDEV already mounted - not mounting again"
 			exit 0
 		fi
+		if [ "$MDEV" = "mmcblk0p3" ]; then
+			MOUNTPOINT="$MOUNTBASE/linuxrootfs1"
+		elif [ "$MDEV" = "mmcblk0p7" ]; then
+			MOUNTPOINT="$MOUNTBASE/userdata"
+		fi
 		LOGINFO "[$ACTION] mounting /dev/$MDEV to $MOUNTPOINT"
 		# remove old mountpoint symlinks we might have for this device
 		rm -f $MOUNTPOINT
