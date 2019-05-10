@@ -230,7 +230,6 @@ PHONY += find-%
 PHONY += toolcheck
 PHONY += bashcheck
 PHONY += preqs
-PHONY += download
 PHONY += ni-sources
 PHONY += archives-list
 PHONY += archives-info
