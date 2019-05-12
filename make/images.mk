@@ -118,12 +118,12 @@ flash-image-armbox: IMAGE_DATE=$(shell cat $(ROOTFS)/.version | grep "^version="
 flash-image-armbox:
 	mkdir -p $(IMAGE_BUILD_TMP)/$(BOXMODEL)
 	cp $(KERNEL_ZIMAGE_DTB) $(IMAGE_BUILD_TMP)/$(BOXMODEL)/kernel.bin
-	cd $(ROOTFS); \
-	tar -cvf $(IMAGE_BUILD_TMP)/$(BOXMODEL)/rootfs.tar -C $(ROOTFS) .  > /dev/null 2>&1; \
-	bzip2 $(IMAGE_BUILD_TMP)/$(BOXMODEL)/rootfs.tar
+	$(CD) $(ROOTFS); \
+		tar -cvf $(IMAGE_BUILD_TMP)/$(BOXMODEL)/rootfs.tar -C $(ROOTFS) . >/dev/null 2>&1; \
+		bzip2 $(IMAGE_BUILD_TMP)/$(BOXMODEL)/rootfs.tar
 	# Create minimal image
-	cd $(IMAGE_BUILD_TMP)/$(BOXMODEL); \
-	tar -czf $(IMAGE_DIR)/$(IMAGE_NAME).tgz kernel.bin rootfs.tar.bz2
+	$(CD) $(IMAGE_BUILD_TMP)/$(BOXMODEL); \
+		tar -czf $(IMAGE_DIR)/$(IMAGE_NAME).tgz kernel.bin rootfs.tar.bz2
 	echo $(IMAGE_URL)/$(IMAGE_NAME).tgz $(IMAGE_TYPE)$(IMAGE_VERSION)$(IMAGE_DATE) `md5sum $(IMAGE_DIR)/$(IMAGE_NAME).tgz | cut -c1-32` $(IMAGE_DESC) $(IMAGE_VERSION_STRING) >> $(IMAGE_DIR)/$(IMAGE_MD5FILE)
 	rm -rf $(IMAGE_BUILD_TMP)/$(BOXMODEL)
 
@@ -192,11 +192,11 @@ flash-image-armbox-multi:
 	mkdir -p $(IMAGE_DIR)/$(BOXMODEL)
 	cp $(KERNEL_ZIMAGE_DTB) $(IMAGE_DIR)/$(BOXMODEL)/kernel.bin
 	cp $(EMMC_IMAGE) $(IMAGE_DIR)/$(BOXMODEL)
-	cd $(ROOTFS) && \
-		tar -cvf $(IMAGE_DIR)/$(BOXMODEL)/rootfs.tar -C $(ROOTFS) .  > /dev/null 2>&1; \
-	bzip2 $(IMAGE_DIR)/$(BOXMODEL)/rootfs.tar
+	$(CD) $(ROOTFS); \
+		tar -cvf $(IMAGE_DIR)/$(BOXMODEL)/rootfs.tar -C $(ROOTFS) . >/dev/null 2>&1; \
+		bzip2 $(IMAGE_DIR)/$(BOXMODEL)/rootfs.tar
 	echo $(IMAGE_PREFIX) > $(IMAGE_DIR)/$(BOXMODEL)/imageversion
-	cd $(IMAGE_DIR) && \
+	$(CD) $(IMAGE_DIR); \
 		zip -r $(IMAGE_PREFIX)-$(IMAGE_SUFFIX)_multi_usb.zip $(BOXMODEL)/*
 	# cleanup
 	rm -rf $(IMAGE_DIR)/$(BOXMODEL)
