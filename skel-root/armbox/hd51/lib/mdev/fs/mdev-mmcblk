@@ -4,6 +4,11 @@
 
 MOUNTBASE=/mnt
 MOUNTPOINT="$MOUNTBASE/$MDEV"
+if [ "$MDEV" = "mmcblk0p3" ]; then
+	MOUNTPOINT="$MOUNTBASE/linuxrootfs1"
+elif [ "$MDEV" = "mmcblk0p7" ]; then
+	MOUNTPOINT="$MOUNTBASE/userdata"
+fi
 ROOTDEV=$(readlink /dev/root)
 
 # do not add or remove root device again...
@@ -27,11 +32,6 @@ case "$ACTION" in
 		if grep -q "/dev/$MDEV" /proc/mounts; then
 			LOGINFO "/dev/$MDEV already mounted - not mounting again"
 			exit 0
-		fi
-		if [ "$MDEV" = "mmcblk0p3" ]; then
-			MOUNTPOINT="$MOUNTBASE/linuxrootfs1"
-		elif [ "$MDEV" = "mmcblk0p7" ]; then
-			MOUNTPOINT="$MOUNTBASE/userdata"
 		fi
 		LOGINFO "[$ACTION] mounting /dev/$MDEV to $MOUNTPOINT"
 		# remove old mountpoint symlinks we might have for this device
