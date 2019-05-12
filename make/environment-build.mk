@@ -281,7 +281,8 @@ PATCH = patch -p1 -i $(PATCHES)
 # wget tarballs into archive directory
 WGET = wget -t3 -T60 -c -P $(ARCHIVE)
 
-CHDIR = set -e; cd $(BUILD_TMP)
+CD    = set -e; cd
+CHDIR = $(CD) $(BUILD_TMP)
 MKDIR = mkdir -p $(BUILD_TMP)
 TOUCH = @touch $@
 STRIP = $(TARGET)-strip
