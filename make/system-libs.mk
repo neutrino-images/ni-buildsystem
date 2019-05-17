@@ -78,13 +78,19 @@ $(D)/libupnp: $(ARCHIVE)/libupnp-$(LIBUPNP_VER).tar.bz2 | $(TARGET_DIR)
 	
 # -----------------------------------------------------------------------------
 
+$(ARCHIVE)/libbvdsi-.git:
+$(ARCHIVE)/libdvbsi-.git:
+	get-git-source.sh git://github.com/OpenDMM/libdvbsi-.git $@
+
+PHONY += $(ARCHIVE)/libdvbsi-.git
+
 LIBDVBSI_PATCH  = libdvbsi++-content_identifier_descriptor.patch
 LIBDVBSI_PATCH += libdvbsi++-fix-descriptorLenghth.patch
 
-$(D)/libdvbsi: | $(TARGET_DIR)
-	$(REMOVE)/libdvbsi++
-	git clone git://github.com/OpenDMM/libdvbsi-.git $(BUILD_TMP)/libdvbsi++
-	$(CHDIR)/libdvbsi++; \
+$(D)/libdvbsi: $(ARCHIVE)/libdvbsi-.git | $(TARGET_DIR)
+	$(REMOVE)/libdvbsi-.git
+	$(CPDIR)/libdvbsi-.git
+	$(CHDIR)/libdvbsi-.git; \
 		$(call apply_patches, $(LIBDVBSI_PATCH)); \
 		$(CONFIGURE) \
 			--prefix= \
@@ -94,7 +100,7 @@ $(D)/libdvbsi: | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		make install DESTDIR=$(TARGET_DIR); \
-	$(REMOVE)/libdvbsi++
+	$(REMOVE)/libdvbsi-.git
 	$(REWRITE_LIBTOOL)/libdvbsi++.la
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libdvbsi++.pc
 	$(TOUCH)
