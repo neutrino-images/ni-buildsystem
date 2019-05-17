@@ -34,8 +34,8 @@ $(ARCHIVE)/flac-$(LIBFLAC_VER).tar.xz:
 $(D)/libFLAC: $(ARCHIVE)/flac-$(LIBFLAC_VER).tar.xz | $(TARGET_DIR)
 	$(REMOVE)/flac-$(LIBFLAC_VER)
 	$(UNTAR)/flac-$(LIBFLAC_VER).tar.xz
-	cp -f $(HELPERS_DIR)/new_autoconfig/* $(BUILD_TMP)/flac-$(LIBFLAC_VER)
 	$(CHDIR)/flac-$(LIBFLAC_VER); \
+		autoreconf -fi; \
 		$(CONFIGURE) \
 			--prefix= \
 			--datarootdir=/.remove \
