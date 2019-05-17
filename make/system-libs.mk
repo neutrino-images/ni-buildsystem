@@ -78,7 +78,6 @@ $(D)/libupnp: $(ARCHIVE)/libupnp-$(LIBUPNP_VER).tar.bz2 | $(TARGET_DIR)
 	
 # -----------------------------------------------------------------------------
 
-$(ARCHIVE)/libbvdsi-.git:
 $(ARCHIVE)/libdvbsi-.git:
 	get-git-source.sh git://github.com/OpenDMM/libdvbsi-.git $@
 
