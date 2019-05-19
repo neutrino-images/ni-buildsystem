@@ -41,11 +41,18 @@ crosstools-renew:
 
 # -----------------------------------------------------------------------------
 
-crosstool-arm-hd1: CROSS_DIR-check $(SOURCE_DIR)/$(NI_LINUX-KERNEL)
+$(ARCHIVE)/crosstool-ng.git:
+	get-git-source.sh https://github.com/crosstool-ng/crosstool-ng.git $@
+
+PHONY += $(ARCHIVE)/crosstool-ng.git
+
+# -----------------------------------------------------------------------------
+
+crosstool-arm-hd1: CROSS_DIR-check $(ARCHIVE)/crosstool-ng.git $(SOURCE_DIR)/$(NI_LINUX-KERNEL)
 	make $(BUILD_TMP)
-	$(REMOVE)/crosstool-ng
-	git clone https://github.com/crosstool-ng/crosstool-ng $(BUILD_TMP)/crosstool-ng && \
-	$(CHDIR)/crosstool-ng && \
+	$(REMOVE)/crosstool-ng.git
+	$(CPDIR)/crosstool-ng.git
+	$(CHDIR)/crosstool-ng.git; \
 		git checkout 1dbb06f2 && \
 		unset CONFIG_SITE LIBRARY_PATH CPATH C_INCLUDE_PATH PKG_CONFIG_PATH CPLUS_INCLUDE_PATH INCLUDE && \
 		$(MKDIR)/crosstool-ng/targets/src/ && \
@@ -68,14 +75,14 @@ crosstool-arm-hd1: CROSS_DIR-check $(SOURCE_DIR)/$(NI_LINUX-KERNEL)
 	test -e $(CROSS_DIR)/$(TARGET)/lib && mv $(CROSS_DIR)/$(TARGET)/lib $(CROSS_DIR)/$(TARGET)/lib.x
 	test -e $(CROSS_DIR)/$(TARGET)/lib || ln -sf sys-root/lib $(CROSS_DIR)/$(TARGET)/
 	rm -f $(CROSS_DIR)/$(TARGET)/sys-root/lib/libstdc++.so.6.0.20-gdb.py
-	$(REMOVE)/crosstool-ng
+	$(REMOVE)/crosstool-ng.git
 
 UCLIBC_VER=1.0.24
-crosstool-arm-hd2: CROSS_DIR-check $(ARCHIVE)/gcc-linaro-$(GCC_VER).tar.xz $(SOURCE_DIR)/$(NI_LINUX-KERNEL)
+crosstool-arm-hd2: CROSS_DIR-check $(ARCHIVE)/crosstool-ng.git $(ARCHIVE)/gcc-linaro-$(GCC_VER).tar.xz $(SOURCE_DIR)/$(NI_LINUX-KERNEL)
 	make $(BUILD_TMP)
-	$(REMOVE)/crosstool-ng
-	git clone https://github.com/crosstool-ng/crosstool-ng $(BUILD_TMP)/crosstool-ng && \
-	$(CHDIR)/crosstool-ng && \
+	$(REMOVE)/crosstool-ng.git
+	$(CPDIR)/crosstool-ng.git
+	$(CHDIR)/crosstool-ng.git; \
 		git checkout 1dbb06f2 && \
 		cp -a $(PATCHES)/crosstool-ng/gcc/* $(BUILD_TMP)/crosstool-ng/patches/gcc/linaro-6.3-2017.02 && \
 		unset CONFIG_SITE LIBRARY_PATH CPATH C_INCLUDE_PATH PKG_CONFIG_PATH CPLUS_INCLUDE_PATH INCLUDE && \
@@ -100,13 +107,13 @@ crosstool-arm-hd2: CROSS_DIR-check $(ARCHIVE)/gcc-linaro-$(GCC_VER).tar.xz $(SOU
 	test -e $(CROSS_DIR)/$(TARGET)/lib && mv $(CROSS_DIR)/$(TARGET)/lib $(CROSS_DIR)/$(TARGET)/lib.x
 	test -e $(CROSS_DIR)/$(TARGET)/lib || ln -sf sys-root/lib $(CROSS_DIR)/$(TARGET)/
 	rm -f $(CROSS_DIR)/$(TARGET)/sys-root/lib/libstdc++.so.6.0.22-gdb.py
-	$(REMOVE)/crosstool-ng
+	$(REMOVE)/crosstool-ng.git
 
-crosstool-arm-hd51: CROSS_DIR-check
+crosstool-arm-hd51: CROSS_DIR-check $(ARCHIVE)/crosstool-ng.git $(SOURCE_DIR)/$(NI_LINUX-KERNEL)
 	make $(BUILD_TMP)
-	$(REMOVE)/crosstool-ng
-	git clone https://github.com/crosstool-ng/crosstool-ng $(BUILD_TMP)/crosstool-ng && \
-	$(CHDIR)/crosstool-ng && \
+	$(REMOVE)/crosstool-ng.git
+	$(CPDIR)/crosstool-ng.git
+	$(CHDIR)/crosstool-ng.git; \
 		git checkout 1dbb06f2 && \
 		cp -a $(PATCHES)/crosstool-ng/gcc/* $(BUILD_TMP)/crosstool-ng/patches/gcc/linaro-6.3-2017.02 && \
 		unset CONFIG_SITE LIBRARY_PATH CPATH C_INCLUDE_PATH PKG_CONFIG_PATH CPLUS_INCLUDE_PATH INCLUDE && \
@@ -129,7 +136,7 @@ crosstool-arm-hd51: CROSS_DIR-check
 	chmod -R +w $(CROSS_DIR)
 	test -e $(CROSS_DIR)/$(TARGET)/lib || ln -sf sys-root/lib $(CROSS_DIR)/$(TARGET)/
 	rm -f $(CROSS_DIR)/$(TARGET)/sys-root/lib/libstdc++.so.6.0.20-gdb.py
-	$(REMOVE)/crosstool-ng
+	$(REMOVE)/crosstool-ng.git
 
 # -----------------------------------------------------------------------------
 
