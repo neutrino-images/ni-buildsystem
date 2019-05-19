@@ -12,9 +12,14 @@ static-libs: $(STATIC_LIBS)
 
 # -----------------------------------------------------------------------------
 
+CORTEX-STRINGS_VER = 48fd30c346ff2ab14ca574b770b5c1bcbefadba8
+
+$(ARCHIVE)/cortex-strings-$(CORTEX-STRINGS_VER).tar.bz2:
+	get-git-archive.sh http://git.linaro.org/git-ro/toolchain/cortex-strings.git $(CORTEX-STRINGS_VER) $(notdir $@) $(ARCHIVE)
+
 CORTEX-STRINGS_CONF =
 ifneq ($(BOXSERIES), hd51)
-	CORTEX-STRINGS_CONF = --without-neon
+  CORTEX-STRINGS_CONF = --without-neon
 endif
 
 cortex-strings: $(STATIC_LIB_DIR)/libcortex-strings.la

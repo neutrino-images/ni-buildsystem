@@ -140,6 +140,11 @@ $(D)/neutrino-mediathek: $(ARCHIVE)/mediathek.git $(LIBPLUGINS) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
+LINKS_VER = 2.17
+
+$(ARCHIVE)/links-$(LINKS_VER).tar.bz2:
+	$(WGET) http://links.twibright.com/download/links-$(LINKS_VER).tar.bz2
+
 LINKS_PATCH  = links-$(LINKS_VER).patch
 LINKS_PATCH += links-$(LINKS_VER)-ac-prog-cxx.patch
 LINKS_PATCH += links-$(LINKS_VER)-input-$(BOXTYPE).patch

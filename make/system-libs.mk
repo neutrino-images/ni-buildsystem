@@ -483,6 +483,11 @@ $(D)/libdpf: $(D)/libusb_compat $(ARCHIVE)/$(LIBDPF_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
+LZO_VER = 2.10
+
+$(ARCHIVE)/lzo-$(LZO_VER).tar.gz:
+	$(WGET) https://fossies.org/linux/misc/lzo-$(LZO_VER).tar.gz
+
 $(D)/lzo: $(ARCHIVE)/lzo-$(LZO_VER).tar.gz | $(TARGET_DIR)
 	$(REMOVE)/lzo-$(LZO_VER)
 	$(UNTAR)/lzo-$(LZO_VER).tar.gz
@@ -499,6 +504,14 @@ $(D)/lzo: $(ARCHIVE)/lzo-$(LZO_VER).tar.gz | $(TARGET_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
+
+LIBSIGCPP_MAJOR = 2
+LIBSIGCPP_MINOR = 4
+LIBSIGCPP_MICRO = 1
+LIBSIGCPP_VER = $(LIBSIGCPP_MAJOR).$(LIBSIGCPP_MINOR).$(LIBSIGCPP_MICRO)
+
+$(ARCHIVE)/libsigc++-$(LIBSIGCPP_VER).tar.xz:
+	$(WGET) http://ftp.gnome.org/pub/GNOME/sources/libsigc++/$(LIBSIGCPP_MAJOR).$(LIBSIGCPP_MINOR)/libsigc++-$(LIBSIGCPP_VER).tar.xz
 
 $(D)/libsigc++: $(ARCHIVE)/libsigc++-$(LIBSIGCPP_VER).tar.xz | $(TARGET_DIR)
 	$(REMOVE)/libsigc++-$(LIBSIGCPP_VER)
@@ -712,6 +725,11 @@ $(D)/libass: $(D)/freetype $(D)/libfribidi $(ARCHIVE)/libass-$(LIBASS_VER).tar.x
 	
 # -----------------------------------------------------------------------------
 
+LIBGPG-ERROR_VER = 1.32
+
+$(ARCHIVE)/libgpg-error-$(LIBGPG-ERROR_VER).tar.bz2:
+	$(WGET) ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-$(LIBGPG-ERROR_VER).tar.bz2
+
 $(D)/libgpg-error: $(ARCHIVE)/libgpg-error-$(LIBGPG-ERROR_VER).tar.bz2 | $(TARGET_DIR)
 	$(REMOVE)/libgpg-error-$(LIBGPG-ERROR_VER)
 	$(UNTAR)/libgpg-error-$(LIBGPG-ERROR_VER).tar.bz2
@@ -739,6 +757,11 @@ $(D)/libgpg-error: $(ARCHIVE)/libgpg-error-$(LIBGPG-ERROR_VER).tar.bz2 | $(TARGE
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
+
+LIBGCRYPT_VER = 1.8.3
+
+$(ARCHIVE)/libgcrypt-$(LIBGCRYPT_VER).tar.gz:
+	$(WGET) ftp://ftp.gnupg.org/gcrypt/libgcrypt/libgcrypt-$(LIBGCRYPT_VER).tar.gz
 
 $(D)/libgcrypt: $(ARCHIVE)/libgcrypt-$(LIBGCRYPT_VER).tar.gz $(D)/libgpg-error | $(TARGET_DIR)
 	$(REMOVE)/libgcrypt-$(LIBGCRYPT_VER)
@@ -815,6 +838,11 @@ $(D)/libbdplus: $(ARCHIVE)/libbdplus-$(LIBBDPLUS_VER).tar.bz2 $(D)/libaacs | $(T
 
 # -----------------------------------------------------------------------------
 
+LIBXML2_VER = 2.9.8
+
+$(ARCHIVE)/libxml2-$(LIBXML2_VER).tar.gz:
+	$(WGET) ftp://xmlsoft.org/libxml2/libxml2-$(LIBXML2_VER).tar.gz
+
 $(D)/libxml2: $(ARCHIVE)/libxml2-$(LIBXML2_VER).tar.gz | $(TARGET_DIR)
 	$(REMOVE)/libxml2-$(LIBXML2_VER)
 	$(UNTAR)/libxml2-$(LIBXML2_VER).tar.gz
@@ -847,6 +875,11 @@ $(D)/libxml2: $(ARCHIVE)/libxml2-$(LIBXML2_VER).tar.gz | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
+PUGIXML_VER = 1.9
+
+$(ARCHIVE)/pugixml-$(PUGIXML_VER).tar.gz:
+	$(WGET) http://github.com/zeux/pugixml/releases/download/v$(PUGIXML_VER)/pugixml-$(PUGIXML_VER).tar.gz
+
 PUGIXML_PATCH = pugixml-config.patch
 
 $(D)/pugixml: $(ARCHIVE)/pugixml-$(PUGIXML_VER).tar.gz | $(TARGET_DIR)
@@ -877,6 +910,11 @@ $(D)/librtmp: $(D)/zlib $(D)/openssl $(SOURCE_DIR)/$(NI_RTMPDUMP) | $(TARGET_DIR
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
+
+LIBTIRPC_VER = 1.0.2
+
+$(ARCHIVE)/libtirpc-$(LIBTIRPC_VER).tar.bz2:
+	$(WGET) http://sourceforge.net/projects/libtirpc/files/libtirpc/$(LIBTIRPC_VER)/libtirpc-$(LIBTIRPC_VER).tar.bz2
 
 LIBTIRP_PATCH  = libtirpc-0001-Disable-parts-of-TIRPC-requiring-NIS-support.patch
 LIBTIRP_PATCH += libtirpc-0002-uClibc-without-RPC-support-and-musl-does-not-install-rpcent.h.patch
@@ -928,10 +966,15 @@ $(D)/confuse: $(ARCHIVE)/confuse-$(CONFUSE_VER).tar.xz | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-$(D)/libite: $(ARCHIVE)/libite-$(ITE_VER).tar.xz | $(TARGET_DIR)
-	$(REMOVE)/libite-$(ITE_VER)
-	$(UNTAR)/libite-$(ITE_VER).tar.xz
-	$(CHDIR)/libite-$(ITE_VER); \
+LIBITE_VER = 2.0.2
+
+$(ARCHIVE)/libite-$(LIBITE_VER).tar.xz:
+	$(WGET) https://github.com/troglobit/libite/releases/download/v$(LIBITE_VER)/libite-$(LIBITE_VER).tar.xz
+
+$(D)/libite: $(ARCHIVE)/libite-$(LIBITE_VER).tar.xz | $(TARGET_DIR)
+	$(REMOVE)/libite-$(LIBITE_VER)
+	$(UNTAR)/libite-$(LIBITE_VER).tar.xz
+	$(CHDIR)/libite-$(LIBITE_VER); \
 		$(CONFIGURE) \
 			--prefix= \
 			--docdir=/.remove \
@@ -943,7 +986,7 @@ $(D)/libite: $(ARCHIVE)/libite-$(ITE_VER).tar.xz | $(TARGET_DIR)
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF)/libite.pc
-	$(REMOVE)/libite-$(ITE_VER)
+	$(REMOVE)/libite-$(LIBITE_VER)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -1015,6 +1058,11 @@ $(D)/libogg: $(ARCHIVE)/libogg-$(LIBOGG_VER).tar.xz | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
+FRIBIDI_VER = 1.0.4
+
+$(ARCHIVE)/fribidi-$(FRIBIDI_VER).tar.bz2:
+	$(WGET) https://download.videolan.org/contrib/fribidi/fribidi-$(FRIBIDI_VER).tar.bz2
+
 $(D)/libfribidi: $(ARCHIVE)/fribidi-$(FRIBIDI_VER).tar.bz2 | $(TARGET_DIR)
 	$(REMOVE)/fribidi-$(FRIBIDI_VER)
 	$(UNTAR)/fribidi-$(FRIBIDI_VER).tar.bz2
@@ -1035,6 +1083,11 @@ $(D)/libfribidi: $(ARCHIVE)/fribidi-$(FRIBIDI_VER).tar.bz2 | $(TARGET_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
+
+LIBFFI_VER = 3.2.1
+
+$(ARCHIVE)/libffi-$(LIBFFI_VER).tar.gz:
+	$(WGET) ftp://sourceware.org/pub/libffi/libffi-$(LIBFFI_VER).tar.gz
 
 LIBFFI_PATCH  = libffi-install_headers.patch
 
@@ -1064,23 +1117,31 @@ $(D)/libffi: $(ARCHIVE)/libffi-$(LIBFFI_VER).tar.gz
 
 # glibc provides a stub gettext implementation, so we only build it for hd2
 
-LIBGLIB2_DEPS =
+GLIB2_MAJOR = 2
+GLIB2_MINOR = 56
+GLIB2_MICRO = 3
+GLIB2_VER = $(GLIB2_MAJOR).$(GLIB2_MINOR).$(GLIB2_MICRO)
+
+$(ARCHIVE)/glib-$(GLIB2_VER).tar.xz:
+	$(WGET) http://ftp.gnome.org/pub/gnome/sources/glib/$(GLIB2_MAJOR).$(GLIB2_MINOR)/glib-$(GLIB2_VER).tar.xz
+
+GLIB2_PATCH  = glib2-disable-tests.patch
+
+GLIB2_DEPS =
 ifeq ($(BOXSERIES), hd2)
-	LIBGLIB2_DEPS = $(D)/gettext
+  GLIB2_DEPS = $(D)/gettext
 endif
 
-LIBGLIB2_CONF =
+GLIB2_CONF =
 ifeq ($(BOXSERIES), hd1)
-	LIBGLIB2_CONF = --enable-static --disable-shared
+  GLIB2_CONF = --enable-static --disable-shared
 endif
 
-LIBGLIB2_PATCH  = libglib2-disable-tests.patch
-
-$(D)/libglib2: $(ARCHIVE)/glib-$(GLIB_VER).tar.xz $(D)/zlib $(LIBGLIB2_DEPS) $(D)/libffi | $(TARGET_DIR)
-	$(REMOVE)/glib-$(GLIB_VER)
-	$(UNTAR)/glib-$(GLIB_VER).tar.xz
-	$(CHDIR)/glib-$(GLIB_VER); \
-		$(call apply_patches, $(LIBGLIB2_PATCH)); \
+$(D)/glib2: $(ARCHIVE)/glib-$(GLIB2_VER).tar.xz $(D)/zlib $(GLIB2_DEPS) $(D)/libffi | $(TARGET_DIR)
+	$(REMOVE)/glib-$(GLIB2_VER)
+	$(UNTAR)/glib-$(GLIB2_VER).tar.xz
+	$(CHDIR)/glib-$(GLIB2_VER); \
+		$(call apply_patches, $(GLIB2_PATCH)); \
 		echo "ac_cv_type_long_long=yes"		 > arm-linux.cache; \
 		echo "glib_cv_stack_grows=no"		>> arm-linux.cache; \
 		echo "glib_cv_uscore=no"		>> arm-linux.cache; \
@@ -1102,7 +1163,7 @@ $(D)/libglib2: $(ARCHIVE)/glib-$(GLIB_VER).tar.xz $(D)/zlib $(LIBGLIB2_DEPS) $(D
 			--disable-compile-warnings \
 			--with-threads="posix" \
 			--with-pcre=internal \
-			$(LIBGLIB2_CONF) \
+			$(GLIB2_CONF) \
 			; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	rm -rf $(TARGET_DIR)/bin/gapplication
@@ -1126,10 +1187,16 @@ $(D)/libglib2: $(ARCHIVE)/glib-$(GLIB_VER).tar.xz $(D)/zlib $(LIBGLIB2_DEPS) $(D
 	$(REWRITE_LIBTOOL)/libgmodule-2.0.la
 	$(REWRITE_LIBTOOL)/libgobject-2.0.la
 	$(REWRITE_LIBTOOL)/libgthread-2.0.la
-	$(REMOVE)/glib-$(GLIB_VER)
+	$(REMOVE)/glib-$(GLIB2_VER)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
+
+ALSA-LIB_VER = 1.1.8
+ALSA-LIB_SOURCE = alsa-lib-$(ALSA-LIB_VER).tar.bz2
+
+$(ARCHIVE)/$(ALSA-LIB_SOURCE):
+	$(WGET) ftp://ftp.alsa-project.org/pub/lib/$(ALSA-LIB_SOURCE)
 
 ALSA-LIB_PATCH  = alsa-lib.patch
 ALSA-LIB_PATCH += alsa-lib-link_fix.patch

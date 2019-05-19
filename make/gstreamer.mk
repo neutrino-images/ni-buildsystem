@@ -35,7 +35,7 @@ $(ARCHIVE)/$(GSTREAMER_SOURCE):
 
 GSTREAMER_PATCH  = gstreamer-$(GSTREAMER_VER)-revert-use-new-gst-adapter-get-buffer.patch
 
-$(D)/gstreamer: $(D)/libglib2 $(D)/libxml2 $(D)/glib-networking $(ARCHIVE)/$(GSTREAMER_SOURCE)
+$(D)/gstreamer: $(D)/glib2 $(D)/libxml2 $(D)/glib-networking $(ARCHIVE)/$(GSTREAMER_SOURCE)
 	$(REMOVE)/gstreamer-$(GSTREAMER_VER)
 	$(UNTAR)/$(GSTREAMER_SOURCE)
 	$(CHDIR)/gstreamer-$(GSTREAMER_VER); \
@@ -90,7 +90,7 @@ GST_PLUGINS_BASE_PATCH += gst-plugins-base-$(GST_PLUGINS_BASE_VER)-0004-subparse
 GST_PLUGINS_BASE_PATCH += gst-plugins-base-$(GST_PLUGINS_BASE_VER)-make-gio_unix_2_0-dependency-configurable.patch
 GST_PLUGINS_BASE_PATCH += gst-plugins-base-$(GST_PLUGINS_BASE_VER)-0003-riff-media-added-fourcc-to-all-ffmpeg-mpeg4-video-caps.patch
 
-$(D)/gst-plugins-base: $(ARCHIVE)/$(GST_PLUGINS_BASE_SOURCE) $(D)/gstreamer $(D)/zlib $(D)/libglib2 $(D)/orc $(D)/alsa-lib $(D)/libogg $(D)/libvorbisidec | $(TARGET_DIR)
+$(D)/gst-plugins-base: $(ARCHIVE)/$(GST_PLUGINS_BASE_SOURCE) $(D)/gstreamer $(D)/zlib $(D)/glib2 $(D)/orc $(D)/alsa-lib $(D)/libogg $(D)/libvorbisidec | $(TARGET_DIR)
 	$(REMOVE)/gst-plugins-base-$(GST_PLUGINS_BASE_VER)
 	$(UNTAR)/$(GST_PLUGINS_BASE_SOURCE)
 	$(CHDIR)/gst-plugins-base-$(GST_PLUGINS_BASE_VER); \
@@ -556,7 +556,7 @@ GLIB-NETWORKING_SOURCE = glib-networking-$(GLIB-NETWORKING_VER).tar.xz
 $(ARCHIVE)/$(GLIB-NETWORKING_SOURCE):
 	$(WGET) https://ftp.acc.umu.se/pub/GNOME/sources/glib-networking/$(GLIB-NETWORKING_VER_MAJOR)/$(GLIB-NETWORKING_SOURCE)
 
-$(D)/glib-networking: $(D)/gnutls $(D)/libglib2 $(ARCHIVE)/$(GLIB-NETWORKING_SOURCE)
+$(D)/glib-networking: $(D)/gnutls $(D)/glib2 $(ARCHIVE)/$(GLIB-NETWORKING_SOURCE)
 	$(REMOVE)/glib-networking-$(GLIB-NETWORKING_VER)
 	$(UNTAR)/$(GLIB-NETWORKING_SOURCE)
 	$(CHDIR)/glib-networking-$(GLIB-NETWORKING_VER); \
@@ -581,7 +581,7 @@ LIBSOUP_SOURCE = libsoup-$(LIBSOUP_VER).tar.xz
 $(ARCHIVE)/$(LIBSOUP_SOURCE):
 	$(WGET) https://download.gnome.org/sources/libsoup/$(LIBSOUP_VER_MAJOR)/$(LIBSOUP_SOURCE)
 
-$(D)/libsoup: $(D)/sqlite $(D)/libxml2 $(D)/libglib2 $(ARCHIVE)/$(LIBSOUP_SOURCE)
+$(D)/libsoup: $(D)/sqlite $(D)/libxml2 $(D)/glib2 $(ARCHIVE)/$(LIBSOUP_SOURCE)
 	$(REMOVE)/libsoup-$(LIBSOUP_VER)
 	$(UNTAR)/$(LIBSOUP_SOURCE)
 	$(CHDIR)/libsoup-$(LIBSOUP_VER); \

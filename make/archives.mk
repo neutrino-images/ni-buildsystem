@@ -3,37 +3,9 @@
 #
 # -----------------------------------------------------------------------------
 
-LIBGCRYPT_VER=1.8.3
-$(ARCHIVE)/libgcrypt-$(LIBGCRYPT_VER).tar.gz:
-	$(WGET) ftp://ftp.gnupg.org/gcrypt/libgcrypt/libgcrypt-$(LIBGCRYPT_VER).tar.gz
-
-LIBGPG-ERROR_VER=1.32
-$(ARCHIVE)/libgpg-error-$(LIBGPG-ERROR_VER).tar.bz2:
-	$(WGET) ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-$(LIBGPG-ERROR_VER).tar.bz2
-
 TZDATA_VER=2018e
 $(ARCHIVE)/tzdata$(TZDATA_VER).tar.gz:
 	$(WGET) ftp://ftp.iana.org/tz/releases/tzdata$(TZDATA_VER).tar.gz
-
-PUGIXML_VER=1.9
-$(ARCHIVE)/pugixml-$(PUGIXML_VER).tar.gz:
-	$(WGET) http://github.com/zeux/pugixml/releases/download/v$(PUGIXML_VER)/pugixml-$(PUGIXML_VER).tar.gz
-
-LIBXML2_VER=2.9.8
-$(ARCHIVE)/libxml2-$(LIBXML2_VER).tar.gz:
-	$(WGET) ftp://xmlsoft.org/libxml2/libxml2-$(LIBXML2_VER).tar.gz
-
-NFS-UTILS_VER=2.2.1
-$(ARCHIVE)/nfs-utils-$(NFS-UTILS_VER).tar.bz2:
-	$(WGET) http://sourceforge.net/projects/nfs/files/nfs-utils/$(NFS-UTILS_VER)/nfs-utils-$(NFS-UTILS_VER).tar.bz2
-
-RPCBIND_VER=1.2.5
-$(ARCHIVE)/rpcbind-$(RPCBIND_VER).tar.bz2:
-	$(WGET) http://sourceforge.net/projects/rpcbind/files/rpcbind/$(RPCBIND_VER)/rpcbind-$(RPCBIND_VER).tar.bz2
-
-LIBTIRPC_VER=1.0.2
-$(ARCHIVE)/libtirpc-$(LIBTIRPC_VER).tar.bz2:
-	$(WGET) http://sourceforge.net/projects/libtirpc/files/libtirpc/$(LIBTIRPC_VER)/libtirpc-$(LIBTIRPC_VER).tar.bz2
 
 MTD-UTILS_VER=2.0.2
 $(ARCHIVE)/mtd-utils-$(MTD-UTILS_VER).tar.bz2:
@@ -190,14 +162,6 @@ PROCPS-NG_VER=3.3.15
 $(ARCHIVE)/procps-ng-$(PROCPS-NG_VER).tar.xz:
 	$(WGET) http://sourceforge.net/projects/procps-ng/files/Production/procps-ng-$(PROCPS-NG_VER).tar.xz
 
-BUSYBOX_MAJOR=1
-BUSYBOX_MINOR=30
-BUSYBOX_MICRO=1
-BUSYBOX_VER=$(BUSYBOX_MAJOR).$(BUSYBOX_MINOR).$(BUSYBOX_MICRO)
-BUSYBOX_SOURCE=busybox-$(BUSYBOX_VER).tar.bz2
-$(ARCHIVE)/$(BUSYBOX_SOURCE):
-	$(WGET) http://busybox.net/downloads/$(BUSYBOX_SOURCE)
-
 SAMBA33_VER=3.3.16
 $(ARCHIVE)/samba-$(SAMBA33_VER).tar.gz:
 	$(WGET) https://download.samba.org/pub/samba/samba-$(SAMBA33_VER).tar.gz
@@ -214,23 +178,6 @@ endif
 $(ARCHIVE)/e2fsprogs-$(E2FSPROGS_VER).tar.gz:
 	$(WGET) http://downloads.sourceforge.net/project/e2fsprogs/e2fsprogs/v$(E2FSPROGS_VER)/e2fsprogs-$(E2FSPROGS_VER).tar.gz
 
-SMARTMON_VER=6.6
-$(ARCHIVE)/smartmontools-$(SMARTMON_VER).tar.gz:
-	$(WGET) http://downloads.sourceforge.net/project/smartmontools/smartmontools/$(SMARTMON_VER)/smartmontools-$(SMARTMON_VER).tar.gz
-
-NANO_VER_MAJOR=3
-NANO_VER=$(NANO_VER_MAJOR).1
-$(ARCHIVE)/nano-$(NANO_VER).tar.gz:
-	$(WGET) http://www.nano-editor.org/dist/v$(NANO_VER_MAJOR)/nano-$(NANO_VER).tar.gz
-
-MINICOM_VER=2.7.1
-$(ARCHIVE)/minicom-$(MINICOM_VER).tar.gz:
-	$(WGET) http://fossies.org/linux/misc/minicom-$(MINICOM_VER).tar.gz
-
-LZO_VER=2.10
-$(ARCHIVE)/lzo-$(LZO_VER).tar.gz:
-	$(WGET) https://fossies.org/linux/misc/lzo-$(LZO_VER).tar.gz
-
 GNULIB_VER=20140202
 $(ARCHIVE)/gnulib-$(GNULIB_VER)-stable.tar.gz:
 	$(WGET) http://erislabs.net/ianb/projects/gnulib/gnulib-$(GNULIB_VER)-stable.tar.gz
@@ -238,13 +185,6 @@ $(ARCHIVE)/gnulib-$(GNULIB_VER)-stable.tar.gz:
 SLINGSHOT_VER=6
 $(ARCHIVE)/v$(SLINGSHOT_VER).tar.gz:
 	$(WGET) https://github.com/gvvaughan/slingshot/archive/v$(SLINGSHOT_VER).tar.gz
-
-LIBSIGCPP_MAJOR=2
-LIBSIGCPP_MINOR=4
-LIBSIGCPP_MICRO=1
-LIBSIGCPP_VER=$(LIBSIGCPP_MAJOR).$(LIBSIGCPP_MINOR).$(LIBSIGCPP_MICRO)
-$(ARCHIVE)/libsigc++-$(LIBSIGCPP_VER).tar.xz:
-	$(WGET) http://ftp.gnome.org/pub/GNOME/sources/libsigc++/$(LIBSIGCPP_MAJOR).$(LIBSIGCPP_MINOR)/libsigc++-$(LIBSIGCPP_VER).tar.xz
 
 LUA_ABIVER=5.2
 LUA_VER=$(LUA_ABIVER).4
@@ -283,91 +223,10 @@ LIBAACS_VER=0.9.0
 $(ARCHIVE)/libaacs-$(LIBAACS_VER).tar.bz2:
 	$(WGET) ftp://ftp.videolan.org/pub/videolan/libaacs/$(LIBAACS_VER)/libaacs-$(LIBAACS_VER).tar.bz2
 
-BASH_MAJOR=5
-BASH_MINOR=0
-BASH_MICRO=0
-BASH_VER=$(BASH_MAJOR).$(BASH_MINOR)
-ifneq ($(BASH_MICRO), 0)
-  BASH_VER=$(BASH_VER).$(BASH_MICRO)
-endif
-$(ARCHIVE)/bash-$(BASH_VER).tar.gz:
-	$(WGET) http://ftp.gnu.org/gnu/bash/bash-$(BASH_VER).tar.gz
-
-CORTEX-STRINGS_VER=48fd30c346ff2ab14ca574b770b5c1bcbefadba8
-$(ARCHIVE)/cortex-strings-$(CORTEX-STRINGS_VER).tar.bz2:
-	get-git-archive.sh http://git.linaro.org/git-ro/toolchain/cortex-strings.git $(CORTEX-STRINGS_VER) $(notdir $@) $(ARCHIVE)
-
-DOSFSTOOLS_VER=4.1
-$(ARCHIVE)/dosfstools-$(DOSFSTOOLS_VER).tar.xz:
-	$(WGET) https://github.com/dosfstools/dosfstools/releases/download/v$(DOSFSTOOLS_VER)/dosfstools-$(DOSFSTOOLS_VER).tar.xz
-
-LESS_VER=530
-$(ARCHIVE)/less-$(LESS_VER).tar.gz:
-	$(WGET) http://www.greenwoodsoftware.com/less/less-$(LESS_VER).tar.gz
-
 CONFUSE_VER=3.2.2
 $(ARCHIVE)/confuse-$(CONFUSE_VER).tar.xz:
 	$(WGET) https://github.com/martinh/libconfuse/releases/download/v$(CONFUSE_VER)/confuse-$(CONFUSE_VER).tar.xz
 
-ITE_VER=2.0.2
-$(ARCHIVE)/libite-$(ITE_VER).tar.xz:
-	$(WGET) https://github.com/troglobit/libite/releases/download/v$(ITE_VER)/libite-$(ITE_VER).tar.xz
-
 FUSE_EXFAT_VER=1.2.8
 $(ARCHIVE)/fuse-exfat-$(FUSE_EXFAT_VER).tar.gz:
 	$(WGET) https://github.com/relan/exfat/releases/download/v$(FUSE_EXFAT_VER)/fuse-exfat-$(FUSE_EXFAT_VER).tar.gz
-
-EXFAT_UTILS_VER=1.2.8
-$(ARCHIVE)/exfat-utils-$(EXFAT_UTILS_VER).tar.gz:
-	$(WGET) https://github.com/relan/exfat/releases/download/v$(EXFAT_UTILS_VER)/exfat-utils-$(EXFAT_UTILS_VER).tar.gz
-
-FRIBIDI_VER = 1.0.4
-$(ARCHIVE)/fribidi-$(FRIBIDI_VER).tar.bz2:
-	$(WGET) https://download.videolan.org/contrib/fribidi/fribidi-$(FRIBIDI_VER).tar.bz2
-
-MC_VER=4.8.22
-$(ARCHIVE)/mc-$(MC_VER).tar.xz:
-	$(WGET) http://ftp.midnight-commander.org/mc-$(MC_VER).tar.xz
-
-LIBFFI_VER=3.2.1
-$(ARCHIVE)/libffi-$(LIBFFI_VER).tar.gz:
-	$(WGET) ftp://sourceware.org/pub/libffi/libffi-$(LIBFFI_VER).tar.gz
-
-GLIB_MAJOR=2
-GLIB_MINOR=56
-GLIB_MICRO=3
-GLIB_VER=$(GLIB_MAJOR).$(GLIB_MINOR).$(GLIB_MICRO)
-$(ARCHIVE)/glib-$(GLIB_VER).tar.xz:
-	$(WGET) http://ftp.gnome.org/pub/gnome/sources/glib/$(GLIB_MAJOR).$(GLIB_MINOR)/glib-$(GLIB_VER).tar.xz
-
-GETTEXT_VERSION=0.19.8.1
-$(ARCHIVE)/gettext-$(GETTEXT_VERSION).tar.xz:
-	$(WGET) ftp://ftp.gnu.org/gnu/gettext/gettext-$(GETTEXT_VERSION).tar.xz
-
-WGET_VER=1.19.2
-$(ARCHIVE)/wget-$(WGET_VER).tar.gz:
-	$(WGET) http://ftp.gnu.org/gnu/wget/wget-$(WGET_VER).tar.gz
-
-ALSA-LIB_VER = 1.1.8
-ALSA-LIB_SOURCE = alsa-lib-$(ALSA-LIB_VER).tar.bz2
-$(ARCHIVE)/$(ALSA-LIB_SOURCE):
-	$(WGET) ftp://ftp.alsa-project.org/pub/lib/$(ALSA-LIB_SOURCE)
-
-ETHTOOL_VER = 4.19
-ETHTOOL_SOURCE = ethtool-$(ETHTOOL_VER).tar.xz
-$(ARCHIVE)/$(ETHTOOL_SOURCE):
-	$(WGET) https://www.kernel.org/pub/software/network/ethtool/$(ETHTOOL_SOURCE)
-
-GPTFDISK_VER = 1.0.4
-GPTFDISK_SOURCE = gptfdisk-$(GPTFDISK_VER).tar.gz
-$(ARCHIVE)/$(GPTFDISK_SOURCE):
-	$(WGET) http://sourceforge.net/projects/gptfdisk/files/gptfdisk/$(GPTFDISK_VER)/$(GPTFDISK_SOURCE)
-
-POPT_VER = 1.16
-POPT_SOURCE = popt-$(POPT_VER).tar.gz
-$(ARCHIVE)/$(POPT_SOURCE):
-	$(WGET) http://rpm5.org/files/popt/$(POPT_SOURCE)
-
-LINKS_VER = 2.17
-$(ARCHIVE)/links-$(LINKS_VER).tar.bz2:
-	$(WGET) http://links.twibright.com/download/links-$(LINKS_VER).tar.bz2

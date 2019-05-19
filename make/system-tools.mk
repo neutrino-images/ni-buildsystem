@@ -3,6 +3,20 @@
 #
 # -----------------------------------------------------------------------------
 
+BUSYBOX_MAJOR = 1
+BUSYBOX_MINOR = 30
+BUSYBOX_MICRO = 1
+BUSYBOX_VER = $(BUSYBOX_MAJOR).$(BUSYBOX_MINOR).$(BUSYBOX_MICRO)
+BUSYBOX_SOURCE = busybox-$(BUSYBOX_VER).tar.bz2
+
+$(ARCHIVE)/$(BUSYBOX_SOURCE):
+	$(WGET) http://busybox.net/downloads/$(BUSYBOX_SOURCE)
+
+BUSYBOX_PATCH  = busybox-fix-config-header.diff
+BUSYBOX_PATCH += busybox-insmod-hack.patch
+BUSYBOX_PATCH += busybox-mount-use-var-etc-fstab.patch
+BUSYBOX_PATCH += busybox-fix-partition-size.patch
+
 # Link busybox against libtirpc so that we can leverage its RPC support for NFS
 # mounting with BusyBox
 BUSYBOX_CFLAGS = $(TARGET_CFLAGS)
@@ -25,11 +39,6 @@ BUSYBOX_MAKE_OPTS = \
 	CFLAGS_EXTRA="$(TARGET_CFLAGS)" \
 	EXTRA_LDFLAGS="$(TARGET_LDFLAGS)" \
 	CONFIG_PREFIX="$(TARGET_DIR)"
-
-BUSYBOX_PATCH  = busybox-fix-config-header.diff
-BUSYBOX_PATCH += busybox-insmod-hack.patch
-BUSYBOX_PATCH += busybox-mount-use-var-etc-fstab.patch
-BUSYBOX_PATCH += busybox-fix-partition-size.patch
 
 $(D)/busybox: $(D)/libtirpc $(ARCHIVE)/$(BUSYBOX_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/busybox-$(BUSYBOX_VER)
@@ -270,6 +279,11 @@ $(D)/coreutils: $(ARCHIVE)/coreutils-$(COREUTILS_VER).tar.xz | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
+LESS_VER = 530
+
+$(ARCHIVE)/less-$(LESS_VER).tar.gz:
+	$(WGET) http://www.greenwoodsoftware.com/less/less-$(LESS_VER).tar.gz
+
 $(D)/less: $(D)/libncurses $(ARCHIVE)/less-$(LESS_VER).tar.gz | $(TARGET_DIR)
 	$(REMOVE)/less-$(LESS_VER)
 	$(UNTAR)/less-$(LESS_VER).tar.gz
@@ -366,10 +380,15 @@ $(D)/ushare: $(ARCHIVE)/ushare-$(USHARE_VER).tar.bz2 $(D)/libupnp | $(TARGET_DIR
 
 # -----------------------------------------------------------------------------
 
-$(D)/smartmontools: $(ARCHIVE)/smartmontools-$(SMARTMON_VER).tar.gz | $(TARGET_DIR)
-	$(REMOVE)/smartmontools-$(SMARTMON_VER)
-	$(UNTAR)/smartmontools-$(SMARTMON_VER).tar.gz
-	$(CHDIR)/smartmontools-$(SMARTMON_VER); \
+SMARTMONTOOLS_VER = 6.6
+
+$(ARCHIVE)/smartmontools-$(SMARTMONTOOLS_VER).tar.gz:
+	$(WGET) http://downloads.sourceforge.net/project/smartmontools/smartmontools/$(SMARTMONTOOLS_VER)/smartmontools-$(SMARTMONTOOLS_VER).tar.gz
+
+$(D)/smartmontools: $(ARCHIVE)/smartmontools-$(SMARTMONTOOLS_VER).tar.gz | $(TARGET_DIR)
+	$(REMOVE)/smartmontools-$(SMARTMONTOOLS_VER)
+	$(UNTAR)/smartmontools-$(SMARTMONTOOLS_VER).tar.gz
+	$(CHDIR)/smartmontools-$(SMARTMONTOOLS_VER); \
 		$(BUILDENV) \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
@@ -377,7 +396,7 @@ $(D)/smartmontools: $(ARCHIVE)/smartmontools-$(SMARTMON_VER).tar.gz | $(TARGET_D
 			; \
 		$(MAKE); \
 		install -D -m 0755 smartctl $(TARGET_DIR)/sbin/smartctl
-	$(REMOVE)/smartmontools-$(SMARTMON_VER)
+	$(REMOVE)/smartmontools-$(SMARTMONTOOLS_VER)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -451,6 +470,12 @@ $(D)/procps-ng: $(D)/libncurses $(ARCHIVE)/procps-ng-$(PROCPS-NG_VER).tar.xz | $
 
 # -----------------------------------------------------------------------------
 
+NANO_VER_MAJOR = 4
+NANO_VER = $(NANO_VER_MAJOR).2
+
+$(ARCHIVE)/nano-$(NANO_VER).tar.gz:
+	$(WGET) http://www.nano-editor.org/dist/v$(NANO_VER_MAJOR)/nano-$(NANO_VER).tar.gz
+
 $(D)/nano: $(D)/libncurses $(ARCHIVE)/nano-$(NANO_VER).tar.gz | $(TARGET_DIR)
 	$(REMOVE)/nano-$(NANO_VER)
 	$(UNTAR)/nano-$(NANO_VER).tar.gz
@@ -466,6 +491,11 @@ $(D)/nano: $(D)/libncurses $(ARCHIVE)/nano-$(NANO_VER).tar.gz | $(TARGET_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
+
+MINICOM_VER = 2.7.1
+
+$(ARCHIVE)/minicom-$(MINICOM_VER).tar.gz:
+	$(WGET) http://fossies.org/linux/misc/minicom-$(MINICOM_VER).tar.gz
 
 MINICOM_PATCH  = minicom-fix-h-v-return-value-is-not-0.patch
 
@@ -485,6 +515,18 @@ $(D)/minicom: $(D)/libncurses $(ARCHIVE)/minicom-$(MINICOM_VER).tar.gz | $(TARGE
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
+
+BASH_MAJOR = 5
+BASH_MINOR = 0
+BASH_MICRO = 0
+ifeq ($(BASH_MICRO), 0)
+  BASH_VER = $(BASH_MAJOR).$(BASH_MINOR)
+else
+  BASH_VER = $(BASH_MAJOR).$(BASH_MINOR).$(BASH_MICRO)
+endif
+
+$(ARCHIVE)/bash-$(BASH_VER).tar.gz:
+	$(WGET) http://ftp.gnu.org/gnu/bash/bash-$(BASH_VER).tar.gz
 
 $(D)/bash: $(ARCHIVE)/bash-$(BASH_VER).tar.gz | $(TARGET_DIR)
 	$(REMOVE)/bash-$(BASH_VER)
@@ -926,6 +968,11 @@ $(D)/xupnpd: $(ARCHIVE)/xupnpd.git $(D)/lua $(D)/openssl | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
+DOSFSTOOLS_VER = 4.1
+
+$(ARCHIVE)/dosfstools-$(DOSFSTOOLS_VER).tar.xz:
+	$(WGET) https://github.com/dosfstools/dosfstools/releases/download/v$(DOSFSTOOLS_VER)/dosfstools-$(DOSFSTOOLS_VER).tar.xz
+
 DOSFSTOOLS_CFLAGS = $(TARGET_CFLAGS) -D_GNU_SOURCE -fomit-frame-pointer -D_FILE_OFFSET_BITS=64
 
 $(D)/dosfstools: $(DOSFSTOOLS_DEPS) $(ARCHIVE)/dosfstools-$(DOSFSTOOLS_VER).tar.xz | $(TARGET_DIR)
@@ -948,16 +995,21 @@ $(D)/dosfstools: $(DOSFSTOOLS_DEPS) $(ARCHIVE)/dosfstools-$(DOSFSTOOLS_VER).tar.
 
 # -----------------------------------------------------------------------------
 
-NFS-UTILS_IPV6=--enable-ipv6
-ifeq ($(BOXSERIES), hd1)
-	NFS-UTILS_IPV6=--disable-ipv6
-endif
+NFS-UTILS_VER = 2.2.1
+
+$(ARCHIVE)/nfs-utils-$(NFS-UTILS_VER).tar.bz2:
+	$(WGET) http://sourceforge.net/projects/nfs/files/nfs-utils/$(NFS-UTILS_VER)/nfs-utils-$(NFS-UTILS_VER).tar.bz2
 
 NFS-UTILS_PATCH  = nfs-utils_01-Patch-taken-from-Gentoo.patch
 NFS-UTILS_PATCH += nfs-utils_02-Switch-legacy-index-in-favour-of-strchr.patch
 NFS-UTILS_PATCH += nfs-utils_03-Let-the-configure-script-find-getrpcbynumber-in-libt.patch
 NFS-UTILS_PATCH += nfs-utils_04-mountd-Add-check-for-struct-file_handle.patch
 NFS-UTILS_PATCH += nfs-utils_05-sm-notify-use-sbin-instead-of-usr-sbin.patch
+
+NFS-UTILS_IPV6 = --enable-ipv6
+ifeq ($(BOXSERIES), hd1)
+  NFS-UTILS_IPV6 = --disable-ipv6
+endif
 
 $(D)/nfs-utils: $(D)/rpcbind $(ARCHIVE)/nfs-utils-$(NFS-UTILS_VER).tar.bz2 | $(TARGET_DIR)
 	$(REMOVE)/nfs-utils-$(NFS-UTILS_VER)
@@ -1000,6 +1052,11 @@ $(D)/nfs-utils: $(D)/rpcbind $(ARCHIVE)/nfs-utils-$(NFS-UTILS_VER).tar.bz2 | $(T
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
+
+RPCBIND_VER = 1.2.5
+
+$(ARCHIVE)/rpcbind-$(RPCBIND_VER).tar.bz2:
+	$(WGET) http://sourceforge.net/projects/rpcbind/files/rpcbind/$(RPCBIND_VER)/rpcbind-$(RPCBIND_VER).tar.bz2
 
 RPCBIND_PATCH  = rpcbind-0001-Remove-yellow-pages-support.patch
 
@@ -1045,10 +1102,15 @@ $(D)/fuse-exfat: $(ARCHIVE)/fuse-exfat-$(FUSE_EXFAT_VER).tar.gz $(D)/libfuse | $
 
 # -----------------------------------------------------------------------------
 
-$(D)/exfat-utils: $(ARCHIVE)/exfat-utils-$(EXFAT_UTILS_VER).tar.gz $(D)/fuse-exfat | $(TARGET_DIR)
-	$(REMOVE)/exfat-utils-$(EXFAT_UTILS_VER)
-	$(UNTAR)/exfat-utils-$(EXFAT_UTILS_VER).tar.gz
-	$(CHDIR)/exfat-utils-$(EXFAT_UTILS_VER); \
+EXFAT-UTILS_VER = 1.2.8
+
+$(ARCHIVE)/exfat-utils-$(EXFAT-UTILS_VER).tar.gz:
+	$(WGET) https://github.com/relan/exfat/releases/download/v$(EXFAT-UTILS_VER)/exfat-utils-$(EXFAT-UTILS_VER).tar.gz
+
+$(D)/exfat-utils: $(ARCHIVE)/exfat-utils-$(EXFAT-UTILS_VER).tar.gz $(D)/fuse-exfat | $(TARGET_DIR)
+	$(REMOVE)/exfat-utils-$(EXFAT-UTILS_VER)
+	$(UNTAR)/exfat-utils-$(EXFAT-UTILS_VER).tar.gz
+	$(CHDIR)/exfat-utils-$(EXFAT-UTILS_VER); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--prefix= \
@@ -1057,12 +1119,12 @@ $(D)/exfat-utils: $(ARCHIVE)/exfat-utils-$(EXFAT_UTILS_VER).tar.gz $(D)/fuse-exf
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/exfat-utils-$(EXFAT_UTILS_VER)
+	$(REMOVE)/exfat-utils-$(EXFAT-UTILS_VER)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
-$(D)/streamripper: $(D)/libvorbisidec $(D)/libmad $(D)/libglib2 | $(TARGET_DIR)
+$(D)/streamripper: $(D)/libvorbisidec $(D)/libmad $(D)/glib2 | $(TARGET_DIR)
 	$(REMOVE)/$(NI_STREAMRIPPER)
 	tar -C $(SOURCE_DIR) -cp $(NI_STREAMRIPPER) --exclude-vcs | tar -C $(BUILD_TMP) -x
 	$(CHDIR)/$(NI_STREAMRIPPER); \
@@ -1081,6 +1143,11 @@ $(D)/streamripper: $(D)/libvorbisidec $(D)/libmad $(D)/libglib2 | $(TARGET_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
+
+GETTEXT_VERSION = 0.19.8.1
+
+$(ARCHIVE)/gettext-$(GETTEXT_VERSION).tar.xz:
+	$(WGET) ftp://ftp.gnu.org/gnu/gettext/gettext-$(GETTEXT_VERSION).tar.xz
 
 $(D)/gettext: $(ARCHIVE)/gettext-$(GETTEXT_VERSION).tar.xz | $(TARGET_DIR)
 	$(REMOVE)/gettext-$(GETTEXT_VERSION)
@@ -1111,7 +1178,12 @@ $(D)/gettext: $(ARCHIVE)/gettext-$(GETTEXT_VERSION).tar.xz | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-$(D)/mc: $(ARCHIVE)/mc-$(MC_VER).tar.xz $(D)/libglib2 $(D)/libncurses | $(TARGET_DIR)
+MC_VER = 4.8.22
+
+$(ARCHIVE)/mc-$(MC_VER).tar.xz:
+	$(WGET) http://ftp.midnight-commander.org/mc-$(MC_VER).tar.xz
+
+$(D)/mc: $(ARCHIVE)/mc-$(MC_VER).tar.xz $(D)/glib2 $(D)/libncurses | $(TARGET_DIR)
 	$(REMOVE)/mc-$(MC_VER)
 	$(UNTAR)/mc-$(MC_VER).tar.xz
 	$(CHDIR)/mc-$(MC_VER); \
@@ -1141,6 +1213,11 @@ $(D)/mc: $(ARCHIVE)/mc-$(MC_VER).tar.xz $(D)/libglib2 $(D)/libncurses | $(TARGET
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
+
+WGET_VER = 1.19.2
+
+$(ARCHIVE)/wget-$(WGET_VER).tar.gz:
+	$(WGET) http://ftp.gnu.org/gnu/wget/wget-$(WGET_VER).tar.gz
 
 WGET_PATCH  = wget-remove-hardcoded-engine-support-for-openss.patch
 WGET_PATCH += wget-set-check_cert-false-by-default.patch
@@ -1255,6 +1332,12 @@ $(D)/dvbsnoop: $(ARCHIVE)/dvbsnoop.git | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
+ETHTOOL_VER = 4.19
+ETHTOOL_SOURCE = ethtool-$(ETHTOOL_VER).tar.xz
+
+$(ARCHIVE)/$(ETHTOOL_SOURCE):
+	$(WGET) https://www.kernel.org/pub/software/network/ethtool/$(ETHTOOL_SOURCE)
+
 $(D)/ethtool: $(ARCHIVE)/$(ETHTOOL_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/ethtool-$(ETHTOOL_VER)
 	$(UNTAR)/$(ETHTOOL_SOURCE)
@@ -1272,6 +1355,12 @@ $(D)/ethtool: $(ARCHIVE)/$(ETHTOOL_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
+GPTFDISK_VER = 1.0.4
+GPTFDISK_SOURCE = gptfdisk-$(GPTFDISK_VER).tar.gz
+
+$(ARCHIVE)/$(GPTFDISK_SOURCE):
+	$(WGET) http://sourceforge.net/projects/gptfdisk/files/gptfdisk/$(GPTFDISK_VER)/$(GPTFDISK_SOURCE)
+
 $(D)/gptfdisk: $(D)/popt $(D)/e2fsprogs $(ARCHIVE)/$(GPTFDISK_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/gptfdisk-$(GPTFDISK_VER)
 	$(UNTAR)/$(GPTFDISK_SOURCE)
@@ -1285,6 +1374,12 @@ $(D)/gptfdisk: $(D)/popt $(D)/e2fsprogs $(ARCHIVE)/$(GPTFDISK_SOURCE) | $(TARGET
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
+
+POPT_VER = 1.16
+POPT_SOURCE = popt-$(POPT_VER).tar.gz
+
+$(ARCHIVE)/$(POPT_SOURCE):
+	$(WGET) http://rpm5.org/files/popt/$(POPT_SOURCE)
 
 $(D)/popt: $(ARCHIVE)/$(POPT_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/popt-$(POPT_VER)

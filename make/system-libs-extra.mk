@@ -169,7 +169,7 @@ $(ARCHIVE)/$(CAIRO_SOURCE):
 
 CAIRO_PATCH  = cairo-$(CAIRO_VER)-get_bitmap_surface.diff
 
-$(D)/cairo: $(D)/fontconfig $(D)/libglib2 $(D)/libpng $(D)/pixman $(D)/zlib $(ARCHIVE)/$(CAIRO_SOURCE) | $(TARGET_DIR)
+$(D)/cairo: $(D)/fontconfig $(D)/glib2 $(D)/libpng $(D)/pixman $(D)/zlib $(ARCHIVE)/$(CAIRO_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/cairo-$(CAIRO_VER)
 	$(UNTAR)/$(CAIRO_SOURCE)
 	$(CHDIR)/cairo-$(CAIRO_VER); \
@@ -220,7 +220,7 @@ $(ARCHIVE)/$(HARFBUZZ_SOURCE):
 
 HARFBUZZ_PATCH  = harfbuzz-$(HARFBUZZ_VER)-disable-docs.patch
 
-$(D)/harfbuzz: $(D)/fontconfig $(D)/libglib2 $(D)/cairo $(D)/freetype $(ARCHIVE)/$(HARFBUZZ_SOURCE) | $(TARGET_DIR)
+$(D)/harfbuzz: $(D)/fontconfig $(D)/glib2 $(D)/cairo $(D)/freetype $(ARCHIVE)/$(HARFBUZZ_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/harfbuzz-$(HARFBUZZ_VER)
 	$(UNTAR)/$(HARFBUZZ_SOURCE)
 	$(CHDIR)/harfbuzz-$(HARFBUZZ_VER); \
