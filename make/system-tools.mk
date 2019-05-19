@@ -1234,10 +1234,15 @@ $(D)/aio-grab: $(ARCHIVE)/aio-grab.git $(D)/zlib $(D)/libpng $(D)/libjpeg | $(TA
 
 # -----------------------------------------------------------------------------
 
-$(D)/dvbsnoop: | $(TARGET_DIR)
-	$(REMOVE)/dvbsnoop
-	git clone https://github.com/Duckbox-Developers/dvbsnoop.git $(BUILD_TMP)/dvbsnoop; \
-	$(CHDIR)/dvbsnoop; \
+$(ARCHIVE)/dvbsnoop.git:
+	get-git-source.sh https://github.com/Duckbox-Developers/dvbsnoop.git $@
+
+PHONY += $(ARCHIVE)/dvbsnoop.git
+
+$(D)/dvbsnoop: $(ARCHIVE)/dvbsnoop.git | $(TARGET_DIR)
+	$(REMOVE)/dvbsnoop.git
+	$(CPDIR)/dvbsnoop.git
+	$(CHDIR)/dvbsnoop.git; \
 		$(CONFIGURE) \
 			--enable-silent-rules \
 			--prefix= \
@@ -1245,7 +1250,7 @@ $(D)/dvbsnoop: | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/dvbsnoop
+	$(REMOVE)/dvbsnoop.git
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
