@@ -72,16 +72,12 @@ $(D)/libupnp: $(ARCHIVE)/libupnp-$(LIBUPNP_VER).tar.bz2 | $(TARGET_DIR)
 	
 # -----------------------------------------------------------------------------
 
-$(ARCHIVE)/libdvbsi-.git:
-	get-git-source.sh git://github.com/OpenDMM/libdvbsi-.git $@
-
-PHONY += $(ARCHIVE)/libdvbsi-.git
-
 LIBDVBSI_PATCH  = libdvbsi++-content_identifier_descriptor.patch
 LIBDVBSI_PATCH += libdvbsi++-fix-descriptorLenghth.patch
 
-$(D)/libdvbsi: $(ARCHIVE)/libdvbsi-.git | $(TARGET_DIR)
+$(D)/libdvbsi: | $(TARGET_DIR)
 	$(REMOVE)/libdvbsi-.git
+	get-git-source.sh git://github.com/OpenDMM/libdvbsi-.git $(ARCHIVE)/libdvbsi-.git
 	$(CPDIR)/libdvbsi-.git
 	$(CHDIR)/libdvbsi-.git; \
 		$(call apply_patches, $(LIBDVBSI_PATCH)); \

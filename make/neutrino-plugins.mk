@@ -124,13 +124,9 @@ $(D)/doscam-webif-skin:
 
 # -----------------------------------------------------------------------------
 
-$(ARCHIVE)/mediathek.git:
-	get-git-source.sh https://github.com/neutrino-mediathek/mediathek.git $@
-
-PHONY += $(ARCHIVE)/mediathek.git
-
-$(D)/neutrino-mediathek: $(ARCHIVE)/mediathek.git $(LIBPLUGINS) | $(TARGET_DIR)
+$(D)/neutrino-mediathek: $(LIBPLUGINS) | $(TARGET_DIR)
 	$(REMOVE)/mediathek.git
+	get-git-source.sh https://github.com/neutrino-mediathek/mediathek.git $(ARCHIVE)/mediathek.git
 	$(CPDIR)/mediathek.git
 	$(CHDIR)/mediathek.git; \
 		cp -a plugins/* $(LIBPLUGINS)/; \

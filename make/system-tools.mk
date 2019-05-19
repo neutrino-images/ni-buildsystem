@@ -865,13 +865,9 @@ $(D)/fbshot: $(D)/libpng $(ARCHIVE)/fbshot-$(FBSHOT_VER).tar.gz | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-$(ARCHIVE)/lcd4linux.git:
-	get-git-source.sh https://github.com/TangoCash/lcd4linux.git $@
-
-PHONY += $(ARCHIVE)/lcd4linux.git
-
-$(D)/lcd4linux: $(ARCHIVE)/lcd4linux.git $(D)/libncurses $(D)/libgd2 $(D)/libdpf | $(TARGET_DIR)
+$(D)/lcd4linux: $(D)/libncurses $(D)/libgd2 $(D)/libdpf | $(TARGET_DIR)
 	$(REMOVE)/lcd4linux.git
+	get-git-source.sh https://github.com/TangoCash/lcd4linux.git $(ARCHIVE)/lcd4linux.git
 	$(CPDIR)/lcd4linux.git
 	$(CHDIR)/lcd4linux.git; \
 		./bootstrap; \
@@ -897,13 +893,9 @@ $(D)/lcd4linux: $(ARCHIVE)/lcd4linux.git $(D)/libncurses $(D)/libgd2 $(D)/libdpf
 
 # -----------------------------------------------------------------------------
 
-$(ARCHIVE)/samsunglcd4linux.git:
-	get-git-source.sh https://github.com/horsti58/samsunglcd4linux.git $@
-
-PHONY += $(ARCHIVE)/samsunglcd4linux.git
-
-$(D)/samsunglcd4linux: $(ARCHIVE)/samsunglcd4linux.git | $(TARGET_DIR)
+$(D)/samsunglcd4linux: | $(TARGET_DIR)
 	$(REMOVE)/samsunglcd4linux.git
+	get-git-source.sh https://github.com/horsti58/samsunglcd4linux.git $(ARCHIVE)/samsunglcd4linux.git
 	$(CPDIR)/samsunglcd4linux.git
 	$(CHDIR)/samsunglcd4linux.git/ni; \
 		install -m 0600 etc/lcd4linux.conf $(TARGET_DIR)/etc; \
@@ -930,11 +922,6 @@ $(D)/wpa_supplicant: $(D)/openssl $(ARCHIVE)/wpa_supplicant-$(WPA_SUPP_VER).tar.
 
 # -----------------------------------------------------------------------------
 
-$(ARCHIVE)/xupnpd.git:
-	get-git-source.sh https://github.com/clark15b/xupnpd.git $@
-
-PHONY += $(ARCHIVE)/xupnpd.git
-
 XUPNPD_PATCH  = xupnpd-coolstream-dynamic-lua.patch
 XUPNPD_PATCH += xupnpd-fix-memleak-on-coolstream-boxes-thanks-ng777.patch
 XUPNPD_PATCH += xupnpd-fix-webif-backlinks.diff
@@ -943,6 +930,7 @@ XUPNPD_PATCH += xupnpd-add-configuration-files.diff
 
 $(D)/xupnpd: $(ARCHIVE)/xupnpd.git $(D)/lua $(D)/openssl | $(TARGET_DIR)
 	$(REMOVE)/xupnpd.git
+	get-git-source.sh https://github.com/clark15b/xupnpd.git $(ARCHIVE)/xupnpd.git
 	$(CPDIR)/xupnpd.git
 	$(CHDIR)/xupnpd.git; \
 		$(call apply_patches, $(XUPNPD_PATCH))
@@ -1287,13 +1275,9 @@ $(D)/ofgwrite: $(SOURCE_DIR)/$(NI_OFGWRITE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-$(ARCHIVE)/aio-grab.git:
-	get-git-source.sh git://github.com/oe-alliance/aio-grab.git $@
-
-PHONY += $(ARCHIVE)/aio-grab.git
-
-$(D)/aio-grab: $(ARCHIVE)/aio-grab.git $(D)/zlib $(D)/libpng $(D)/libjpeg | $(TARGET_DIR)
+$(D)/aio-grab: $(D)/zlib $(D)/libpng $(D)/libjpeg | $(TARGET_DIR)
 	$(REMOVE)/aio-grab.git
+	get-git-source.sh git://github.com/oe-alliance/aio-grab.git $(ARCHIVE)/aio-grab.git
 	$(CPDIR)/aio-grab.git
 	$(CHDIR)/aio-grab.git; \
 		aclocal --force -I m4; \
@@ -1312,13 +1296,9 @@ $(D)/aio-grab: $(ARCHIVE)/aio-grab.git $(D)/zlib $(D)/libpng $(D)/libjpeg | $(TA
 
 # -----------------------------------------------------------------------------
 
-$(ARCHIVE)/dvbsnoop.git:
-	get-git-source.sh https://github.com/Duckbox-Developers/dvbsnoop.git $@
-
-PHONY += $(ARCHIVE)/dvbsnoop.git
-
-$(D)/dvbsnoop: $(ARCHIVE)/dvbsnoop.git | $(TARGET_DIR)
+$(D)/dvbsnoop: | $(TARGET_DIR)
 	$(REMOVE)/dvbsnoop.git
+	get-git-source.sh https://github.com/Duckbox-Developers/dvbsnoop.git $(ARCHIVE)/dvbsnoop.git
 	$(CPDIR)/dvbsnoop.git
 	$(CHDIR)/dvbsnoop.git; \
 		$(CONFIGURE) \

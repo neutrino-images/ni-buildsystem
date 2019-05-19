@@ -41,16 +41,10 @@ crosstools-renew:
 
 # -----------------------------------------------------------------------------
 
-$(ARCHIVE)/crosstool-ng.git:
-	get-git-source.sh https://github.com/crosstool-ng/crosstool-ng.git $@
-
-PHONY += $(ARCHIVE)/crosstool-ng.git
-
-# -----------------------------------------------------------------------------
-
-crosstool-arm-hd1: CROSS_DIR-check $(ARCHIVE)/crosstool-ng.git $(SOURCE_DIR)/$(NI_LINUX-KERNEL)
+crosstool-arm-hd1: CROSS_DIR-check $(SOURCE_DIR)/$(NI_LINUX-KERNEL)
 	make $(BUILD_TMP)
 	$(REMOVE)/crosstool-ng.git
+	get-git-source.sh https://github.com/crosstool-ng/crosstool-ng.git $(ARCHIVE)/crosstool-ng.git
 	$(CPDIR)/crosstool-ng.git
 	$(CHDIR)/crosstool-ng.git; \
 		git checkout 1dbb06f2 && \
@@ -78,9 +72,10 @@ crosstool-arm-hd1: CROSS_DIR-check $(ARCHIVE)/crosstool-ng.git $(SOURCE_DIR)/$(N
 	$(REMOVE)/crosstool-ng.git
 
 UCLIBC_VER=1.0.24
-crosstool-arm-hd2: CROSS_DIR-check $(ARCHIVE)/crosstool-ng.git $(ARCHIVE)/gcc-linaro-$(GCC_VER).tar.xz $(SOURCE_DIR)/$(NI_LINUX-KERNEL)
+crosstool-arm-hd2: CROSS_DIR-check $(ARCHIVE)/gcc-linaro-$(GCC_VER).tar.xz $(SOURCE_DIR)/$(NI_LINUX-KERNEL)
 	make $(BUILD_TMP)
 	$(REMOVE)/crosstool-ng.git
+	get-git-source.sh https://github.com/crosstool-ng/crosstool-ng.git $(ARCHIVE)/crosstool-ng.git
 	$(CPDIR)/crosstool-ng.git
 	$(CHDIR)/crosstool-ng.git; \
 		git checkout 1dbb06f2 && \
@@ -109,9 +104,10 @@ crosstool-arm-hd2: CROSS_DIR-check $(ARCHIVE)/crosstool-ng.git $(ARCHIVE)/gcc-li
 	rm -f $(CROSS_DIR)/$(TARGET)/sys-root/lib/libstdc++.so.6.0.22-gdb.py
 	$(REMOVE)/crosstool-ng.git
 
-crosstool-arm-hd51: CROSS_DIR-check $(ARCHIVE)/crosstool-ng.git $(SOURCE_DIR)/$(NI_LINUX-KERNEL)
+crosstool-arm-hd51: CROSS_DIR-check $(SOURCE_DIR)/$(NI_LINUX-KERNEL)
 	make $(BUILD_TMP)
 	$(REMOVE)/crosstool-ng.git
+	get-git-source.sh https://github.com/crosstool-ng/crosstool-ng.git $(ARCHIVE)/crosstool-ng.git
 	$(CPDIR)/crosstool-ng.git
 	$(CHDIR)/crosstool-ng.git; \
 		git checkout 1dbb06f2 && \

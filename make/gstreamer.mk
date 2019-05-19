@@ -265,13 +265,9 @@ $(D)/gst-plugins-ugly: $(ARCHIVE)/$(GST_PLUGINS_UGLY_SOURCE) $(D)/gst-plugins-ba
 
 GST_PLUGIN_SUBSINK_VER = 1.0
 
-$(ARCHIVE)/gstreamer$(GST_PLUGIN_SUBSINK_VER)-plugin-subsink.git:
-	get-git-source.sh git://github.com/christophecvr/gstreamer$(GST_PLUGIN_SUBSINK_VER)-plugin-subsink.git $@
-
-PHONY += $(ARCHIVE)/gstreamer$(GST_PLUGIN_SUBSINK_VER)-plugin-subsink.git
-
-$(D)/gst-plugin-subsink: $(ARCHIVE)/gstreamer$(GST_PLUGIN_SUBSINK_VER)-plugin-subsink.git $(D)/gst-plugins-base | $(TARGET_DIR)
+$(D)/gst-plugin-subsink: $(D)/gst-plugins-base | $(TARGET_DIR)
 	$(REMOVE)/gstreamer$(GST_PLUGIN_SUBSINK_VER)-plugin-subsink.git
+	get-git-source.sh git://github.com/christophecvr/gstreamer$(GST_PLUGIN_SUBSINK_VER)-plugin-subsink.git $(ARCHIVE)/gstreamer$(GST_PLUGIN_SUBSINK_VER)-plugin-subsink.git
 	$(CPDIR)/gstreamer$(GST_PLUGIN_SUBSINK_VER)-plugin-subsink.git
 	$(CHDIR)/gstreamer$(GST_PLUGIN_SUBSINK_VER)-plugin-subsink.git; \
 		aclocal --force -I m4; \
@@ -295,13 +291,9 @@ $(D)/gst-plugin-subsink: $(ARCHIVE)/gstreamer$(GST_PLUGIN_SUBSINK_VER)-plugin-su
 
 GST_PLUGINS_DVBMEDIASINK_VER = 1.0
 
-$(ARCHIVE)/gstreamer$(GST_PLUGINS_DVBMEDIASINK_VER)-plugin-dvbmediasink.git:
-	get-git-source.sh https://github.com/OpenPLi/gst-plugin-dvbmediasink.git $@
-
-PHONY += $(ARCHIVE)/gstreamer$(GST_PLUGIN_SUBSINK_VER)-plugin-subsink.git
-
-$(D)/gst-plugin-dvbmediasink: $(ARCHIVE)/gstreamer$(GST_PLUGINS_DVBMEDIASINK_VER)-plugin-dvbmediasink.git $(D)/gst-plugins-base $(D)/libdca | $(TARGET_DIR)
+$(D)/gst-plugin-dvbmediasink: $(D)/gst-plugins-base $(D)/libdca | $(TARGET_DIR)
 	$(REMOVE)/gstreamer$(GST_PLUGINS_DVBMEDIASINK_VER)-plugin-dvbmediasink.git
+	get-git-source.sh https://github.com/OpenPLi/gst-plugin-dvbmediasink.git $(ARCHIVE)/gstreamer$(GST_PLUGINS_DVBMEDIASINK_VER)-plugin-dvbmediasink.git
 	$(CPDIR)/gstreamer$(GST_PLUGINS_DVBMEDIASINK_VER)-plugin-dvbmediasink.git
 	$(CHDIR)/gstreamer$(GST_PLUGINS_DVBMEDIASINK_VER)-plugin-dvbmediasink.git; \
 		git checkout gst-1.0; \
@@ -396,13 +388,9 @@ $(D)/gst_libav: $(ARCHIVE)/$(GST_LIBAV_SOURCE) $(D)/gstreamer $(D)/gst-plugins-b
 
 # -----------------------------------------------------------------------------
 
-$(ARCHIVE)/gmrender-resurrect.git:
-	get-git-source.sh https://github.com/hzeller/gmrender-resurrect.git $@
-
-PHONY += $(ARCHIVE)/gmrender-resurrect.git
-
-$(D)/gmrender-resurrect: $(ARCHIVE)/gmrender-resurrect.git $(D)/gst-plugins-base $(D)/libupnp | $(TARGET_DIR)
+$(D)/gmrender-resurrect: $(D)/gst-plugins-base $(D)/libupnp | $(TARGET_DIR)
 	$(REMOVE)/gmrender-resurrect.git
+	get-git-source.sh https://github.com/hzeller/gmrender-resurrect.git $(ARCHIVE)/gmrender-resurrect.git
 	$(CPDIR)/gmrender-resurrect.git
 	$(CHDIR)/gmrender-resurrect.git; \
 		$(CONFIGURE) \
