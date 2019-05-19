@@ -151,8 +151,8 @@ archives-list:
 	@rm -f $(BUILD_TMP)/$@
 	@make -qp | grep --only-matching '^\$(ARCHIVE).*:' | sed "s|:||g" > $(BUILD_TMP)/$@
 
-DOCLEANUP=no
-GETMISSING=no
+DOCLEANUP ?= no
+GETMISSING ?= no
 archives-info: archives-list
 	@echo "[ ** ] Unused targets in make/archives.mk"
 	@grep --only-matching '^\$$(ARCHIVE).*:' make/archives.mk | sed "s|:||g" | \
