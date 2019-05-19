@@ -887,18 +887,23 @@ $(D)/wpa_supplicant: $(D)/openssl $(ARCHIVE)/wpa_supplicant-$(WPA_SUPP_VER).tar.
 
 # -----------------------------------------------------------------------------
 
+$(ARCHIVE)/xupnpd.git:
+	get-git-source.sh https://github.com/clark15b/xupnpd.git $@
+
+PHONY += $(ARCHIVE)/xupnpd.git
+
 XUPNPD_PATCH  = xupnpd-coolstream-dynamic-lua.patch
 XUPNPD_PATCH += xupnpd-fix-memleak-on-coolstream-boxes-thanks-ng777.patch
 XUPNPD_PATCH += xupnpd-fix-webif-backlinks.diff
 XUPNPD_PATCH += xupnpd-change-XUPNPDROOTDIR.diff
 XUPNPD_PATCH += xupnpd-add-configuration-files.diff
 
-$(D)/xupnpd: $(D)/lua $(D)/openssl | $(TARGET_DIR)
-	$(REMOVE)/xupnpd
-	git clone https://github.com/clark15b/xupnpd.git $(BUILD_TMP)/xupnpd
-	$(CHDIR)/xupnpd; \
+$(D)/xupnpd: $(ARCHIVE)/xupnpd.git $(D)/lua $(D)/openssl | $(TARGET_DIR)
+	$(REMOVE)/xupnpd.git
+	$(CPDIR)/xupnpd.git
+	$(CHDIR)/xupnpd.git; \
 		$(call apply_patches, $(XUPNPD_PATCH))
-	$(CHDIR)/xupnpd/src; \
+	$(CHDIR)/xupnpd.git/src; \
 		$(BUILDENV) \
 		$(MAKE) embedded TARGET=$(TARGET) CC=$(TARGET)-gcc STRIP=$(TARGET)-strip LUAFLAGS="$(TARGET_LDFLAGS) -I$(TARGET_INCLUDE_DIR)"; \
 	install -D -m 0755 xupnpd $(BIN)/; \
@@ -916,7 +921,7 @@ $(D)/xupnpd: $(D)/lua $(D)/openssl | $(TARGET_DIR)
 		ln -sf xupnpd $(TARGET_DIR)/etc/init.d/S99xupnpd
 		ln -sf xupnpd $(TARGET_DIR)/etc/init.d/K01xupnpd
 	cp -a $(IMAGEFILES)/xupnpd/* $(TARGET_DIR)/
-	$(REMOVE)/xupnpd
+	$(REMOVE)/xupnpd.git
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
