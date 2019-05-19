@@ -5,6 +5,7 @@
 
 host-preqs: \
 	host_pkg-config \
+	host_pkg-config-softlink \
 	host_mkfs.jffs2 \
 	host_sumtool \
 	host_mkimage \
@@ -36,12 +37,13 @@ $(HOST_DIR)/bin/pkg-config: $(ARCHIVE)/pkg-config-$(HOST_PKG-CONFIG_VER).tar.gz 
 		./configure \
 			--with-pc_path=$(PKG_CONFIG_PATH) \
 			; \
-		$(MAKE); \
-		cp -a pkg-config $(HOST_DIR)/bin; \
-	ln -sf pkg-config $(HOST_DIR)/bin/arm-cx2450x-linux-gnueabi-pkg-config
-	ln -sf pkg-config $(HOST_DIR)/bin/arm-cortex-linux-uclibcgnueabi-pkg-config
-	ln -sf pkg-config $(HOST_DIR)/bin/arm-cortex-linux-gnueabihf-pkg-config
+		$(MAKE)
+	install -D -m 0755 $(BUILD_TMP)/pkg-config-$(HOST_PKG-CONFIG_VER)/pkg-config $(HOST_DIR)/bin
 	$(REMOVE)/pkg-config-$(HOST_PKG-CONFIG_VER)
+
+host_pkg-config-softlink: $(HOST_DIR)/bin/$(TARGET)-pkg-config
+$(HOST_DIR)/bin/$(TARGET)-pkg-config: | $(HOST_DIR)/bin
+	ln -sf pkg-config $(HOST_DIR)/bin/$(TARGET)-pkg-config
 
 # -----------------------------------------------------------------------------
 
