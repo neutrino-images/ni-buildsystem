@@ -822,10 +822,15 @@ $(D)/fbshot: $(D)/libpng $(ARCHIVE)/fbshot-$(FBSHOT_VER).tar.gz | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-$(D)/lcd4linux: $(D)/libncurses $(D)/libgd2 $(D)/libdpf | $(TARGET_DIR)
-	$(REMOVE)/lcd4linux
-	git clone https://github.com/TangoCash/lcd4linux.git $(BUILD_TMP)/lcd4linux
-	$(CHDIR)/lcd4linux; \
+$(ARCHIVE)/lcd4linux.git:
+	get-git-source.sh https://github.com/TangoCash/lcd4linux.git $@
+
+PHONY += $(ARCHIVE)/lcd4linux.git
+
+$(D)/lcd4linux: $(ARCHIVE)/lcd4linux.git $(D)/libncurses $(D)/libgd2 $(D)/libdpf | $(TARGET_DIR)
+	$(REMOVE)/lcd4linux.git
+	$(CPDIR)/lcd4linux.git
+	$(CHDIR)/lcd4linux.git; \
 		./bootstrap; \
 		$(CONFIGURE) \
 			--libdir=$(TARGET_LIB_DIR) \
@@ -844,7 +849,7 @@ $(D)/lcd4linux: $(D)/libncurses $(D)/libgd2 $(D)/libdpf | $(TARGET_DIR)
 		$(MAKE) install
 	cp -a $(IMAGEFILES)/lcd4linux/* $(TARGET_DIR)/
 	#make samsunglcd4linux
-	$(REMOVE)/lcd4linux
+	$(REMOVE)/lcd4linux.git
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
