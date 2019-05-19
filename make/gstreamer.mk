@@ -72,9 +72,6 @@ $(D)/gstreamer: $(D)/libglib2 $(D)/libxml2 $(D)/glib-networking $(ARCHIVE)/$(GST
 	$(REWRITE_LIBTOOL)/libgstbase-1.0.la
 	$(REWRITE_LIBTOOL)/libgstcontroller-1.0.la
 	$(REWRITE_LIBTOOL)/libgstnet-1.0.la
-	$(REWRITE_LIBTOOLDEP)/libgstbase-1.0.la
-	$(REWRITE_LIBTOOLDEP)/libgstcontroller-1.0.la
-	$(REWRITE_LIBTOOLDEP)/libgstnet-1.0.la
 	$(REMOVE)/gstreamer-$(GSTREAMER_VER)
 	$(TOUCH)
 
@@ -136,17 +133,6 @@ $(D)/gst-plugins-base: $(ARCHIVE)/$(GST_PLUGINS_BASE_SOURCE) $(D)/gstreamer $(D)
 	$(REWRITE_LIBTOOL)/libgstsdp-1.0.la
 	$(REWRITE_LIBTOOL)/libgsttag-1.0.la
 	$(REWRITE_LIBTOOL)/libgstvideo-1.0.la
-	$(REWRITE_LIBTOOLDEP)/libgstallocators-1.0.la
-	$(REWRITE_LIBTOOLDEP)/libgstapp-1.0.la
-	$(REWRITE_LIBTOOLDEP)/libgstaudio-1.0.la
-	$(REWRITE_LIBTOOLDEP)/libgstfft-1.0.la
-	$(REWRITE_LIBTOOLDEP)/libgstpbutils-1.0.la
-	$(REWRITE_LIBTOOLDEP)/libgstriff-1.0.la
-	$(REWRITE_LIBTOOLDEP)/libgstrtp-1.0.la
-	$(REWRITE_LIBTOOLDEP)/libgstrtsp-1.0.la
-	$(REWRITE_LIBTOOLDEP)/libgstsdp-1.0.la
-	$(REWRITE_LIBTOOLDEP)/libgsttag-1.0.la
-	$(REWRITE_LIBTOOLDEP)/libgstvideo-1.0.la
 	$(REMOVE)/gst-plugins-base-$(GST_PLUGINS_BASE_VER)
 	$(TOUCH)
 
@@ -242,9 +228,6 @@ $(D)/gst-plugins-bad: $(ARCHIVE)/$(GST_PLUGINS_BAD_SOURCE) $(D)/gst-plugins-base
 	$(REWRITE_LIBTOOL)/libgstplayer-1.0.la
 	$(REWRITE_LIBTOOL)/libgsturidownloader-1.0.la
 	$(REWRITE_LIBTOOL)/libgstwebrtc-1.0.la
-	$(REWRITE_LIBTOOLDEP)/libgstbadaudio-1.0.la
-	$(REWRITE_LIBTOOLDEP)/libgstadaptivedemux-1.0.la
-	$(REWRITE_LIBTOOLDEP)/libgstbadvideo-1.0.la
 	$(REMOVE)/gst-plugins-bad-$(GST_PLUGINS_BAD_VER)
 	$(TOUCH)
 
@@ -451,7 +434,6 @@ $(D)/orc: $(ARCHIVE)/$(ORC_SOURCE)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/orc-0.4.pc
 	$(REWRITE_LIBTOOL)/liborc-0.4.la
 	$(REWRITE_LIBTOOL)/liborc-test-0.4.la
-	$(REWRITE_LIBTOOLDEP)/liborc-test-0.4.la
 	rm -f $(addprefix $(TARGET_DIR)/bin/,orc-bugreport orcc)
 	$(REMOVE)/orc-$(ORC_VER)
 	$(TOUCH)
@@ -560,7 +542,6 @@ $(D)/gnutls: $(D)/nettle $(D)/ca-bundle $(ARCHIVE)/$(GNUTLS_SOURCE)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gnutls.pc
 	$(REWRITE_LIBTOOL)/libgnutls.la
 	$(REWRITE_LIBTOOL)/libgnutlsxx.la
-	$(REWRITE_LIBTOOLDEP)/libgnutlsxx.la
 	rm -f $(addprefix $(TARGET_DIR)/bin/,psktool gnutls-cli-debug certtool srptool ocsptool gnutls-serv gnutls-cli)
 	$(REMOVE)/gnutls-$(GNUTLS_VER)
 	$(TOUCH)

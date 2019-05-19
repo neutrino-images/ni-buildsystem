@@ -1132,11 +1132,6 @@ $(D)/libglib2: $(ARCHIVE)/glib-$(GLIB_VER).tar.xz $(D)/zlib $(LIBGLIB2_DEPS) $(D
 	$(REWRITE_LIBTOOL)/libgmodule-2.0.la
 	$(REWRITE_LIBTOOL)/libgobject-2.0.la
 	$(REWRITE_LIBTOOL)/libgthread-2.0.la
-	$(REWRITE_LIBTOOLDEP)/libgio-2.0.la
-	$(REWRITE_LIBTOOLDEP)/libglib-2.0.la
-	$(REWRITE_LIBTOOLDEP)/libgmodule-2.0.la
-	$(REWRITE_LIBTOOLDEP)/libgobject-2.0.la
-	$(REWRITE_LIBTOOLDEP)/libgthread-2.0.la
 	$(REMOVE)/glib-$(GLIB_VER)
 	$(TOUCH)
 
