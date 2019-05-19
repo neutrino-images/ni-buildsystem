@@ -854,13 +854,18 @@ $(D)/lcd4linux: $(ARCHIVE)/lcd4linux.git $(D)/libncurses $(D)/libgd2 $(D)/libdpf
 
 # -----------------------------------------------------------------------------
 
-$(D)/samsunglcd4linux:
-	$(REMOVE)/samsunglcd4linux
-	git clone https://github.com/horsti58/SamsungLCD4Linux $(BUILD_TMP)/samsunglcd4linux
-	$(CHDIR)/samsunglcd4linux/ni; \
+$(ARCHIVE)/samsunglcd4linux.git:
+	get-git-source.sh https://github.com/horsti58/samsunglcd4linux.git $@
+
+PHONY += $(ARCHIVE)/samsunglcd4linux.git
+
+$(D)/samsunglcd4linux: $(ARCHIVE)/samsunglcd4linux.git | $(TARGET_DIR)
+	$(REMOVE)/samsunglcd4linux.git
+	$(CPDIR)/samsunglcd4linux.git
+	$(CHDIR)/samsunglcd4linux.git/ni; \
 		install -m 0600 etc/lcd4linux.conf $(TARGET_DIR)/etc; \
 		cp -a share/* $(TARGET_DIR)/share
-	$(REMOVE)/samsunglcd4linux
+	$(REMOVE)/samsunglcd4linux.git
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
