@@ -1209,10 +1209,15 @@ $(D)/ofgwrite: $(SOURCE_DIR)/$(NI_OFGWRITE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-$(D)/aio-grab: $(D)/zlib $(D)/libpng $(D)/libjpeg | $(TARGET_DIR)
-	$(REMOVE)/aio-grab
-	git clone git://github.com/oe-alliance/aio-grab.git $(BUILD_TMP)/aio-grab; \
-	$(CHDIR)/aio-grab; \
+$(ARCHIVE)/aio-grab.git:
+	get-git-source.sh git://github.com/oe-alliance/aio-grab.git $@
+
+PHONY += $(ARCHIVE)/aio-grab.git
+
+$(D)/aio-grab: $(ARCHIVE)/aio-grab.git $(D)/zlib $(D)/libpng $(D)/libjpeg | $(TARGET_DIR)
+	$(REMOVE)/aio-grab.git
+	$(CPDIR)/aio-grab.git
+	$(CHDIR)/aio-grab.git; \
 		aclocal --force -I m4; \
 		libtoolize --copy --ltdl --force; \
 		autoconf --force; \
@@ -1224,7 +1229,7 @@ $(D)/aio-grab: $(D)/zlib $(D)/libpng $(D)/libjpeg | $(TARGET_DIR)
 			; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/aio-grab
+	$(REMOVE)/aio-grab.git
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
