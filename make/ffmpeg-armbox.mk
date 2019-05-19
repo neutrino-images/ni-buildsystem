@@ -360,12 +360,12 @@ endif
 			; \
 		$(MAKE); \
 		make install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libavcodec.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libavdevice.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libavfilter.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libavformat.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libavutil.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libswresample.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libswscale.pc
+	$(REWRITE_PKGCONF)/libavcodec.pc
+	$(REWRITE_PKGCONF)/libavdevice.pc
+	$(REWRITE_PKGCONF)/libavfilter.pc
+	$(REWRITE_PKGCONF)/libavformat.pc
+	$(REWRITE_PKGCONF)/libavutil.pc
+	$(REWRITE_PKGCONF)/libswresample.pc
+	$(REWRITE_PKGCONF)/libswscale.pc
 	$(REMOVE)/ffmpeg-$(FFMPEG_VER)
 	$(TOUCH)

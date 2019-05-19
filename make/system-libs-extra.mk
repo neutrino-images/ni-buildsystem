@@ -48,7 +48,7 @@ $(D)/libFLAC: $(ARCHIVE)/flac-$(LIBFLAC_VER).tar.xz | $(TARGET_DIR)
 			; \
 		$(MAKE) all; \
 		make install DESTDIR=$(TARGET_DIR); \
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/flac.pc
+	$(REWRITE_PKGCONF)/flac.pc
 	$(REWRITE_LIBTOOL)/libFLAC.la
 	rm -rf $(TARGET_DIR)/bin/flac
 	rm -rf $(TARGET_DIR)/bin/metaflac
@@ -75,7 +75,7 @@ $(D)/libroxml: $(ARCHIVE)/libroxml-$(LIBROXML_VER).tar.gz | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libroxml.pc
+	$(REWRITE_PKGCONF)/libroxml.pc
 	$(REMOVE)/libroxml-$(LIBROXML_VER)
 	$(TOUCH)
 
@@ -124,7 +124,7 @@ $(D)/fontconfig: $(D)/freetype $(D)/expat $(ARCHIVE)/$(FONTCONFIG_SOURCE) | $(TA
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL)/libfontconfig.la
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/fontconfig.pc
+	$(REWRITE_PKGCONF)/fontconfig.pc
 	$(REMOVE)/fontconfig-$(FONTCONFIG_VER)
 	$(TOUCH)
 
@@ -155,7 +155,7 @@ $(D)/pixman: $(D)/zlib $(D)/libpng $(ARCHIVE)/$(PIXMAN_SOURCE) | $(TARGET_DIR)
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL)/libpixman-1.la
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/pixman-1.pc
+	$(REWRITE_PKGCONF)/pixman-1.pc
 	$(REMOVE)/pixman-$(PIXMAN_VER)
 	$(TOUCH)
 
@@ -197,16 +197,16 @@ $(D)/cairo: $(D)/fontconfig $(D)/libglib2 $(D)/libpng $(D)/pixman $(D)/zlib $(AR
 	$(REWRITE_LIBTOOL)/libcairo-script-interpreter.la
 	$(REWRITE_LIBTOOL)/libcairo-gobject.la
 	$(REWRITE_LIBTOOL)/cairo/libcairo-trace.la
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/cairo.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/cairo-fc.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/cairo-ft.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/cairo-gobject.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/cairo-pdf.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/cairo-png.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/cairo-ps.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/cairo-script.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/cairo-svg.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/cairo-tee.pc
+	$(REWRITE_PKGCONF)/cairo.pc
+	$(REWRITE_PKGCONF)/cairo-fc.pc
+	$(REWRITE_PKGCONF)/cairo-ft.pc
+	$(REWRITE_PKGCONF)/cairo-gobject.pc
+	$(REWRITE_PKGCONF)/cairo-pdf.pc
+	$(REWRITE_PKGCONF)/cairo-png.pc
+	$(REWRITE_PKGCONF)/cairo-ps.pc
+	$(REWRITE_PKGCONF)/cairo-script.pc
+	$(REWRITE_PKGCONF)/cairo-svg.pc
+	$(REWRITE_PKGCONF)/cairo-tee.pc
 	$(REMOVE)/cairo-$(CAIRO_VER)
 	$(TOUCH)
 
@@ -239,7 +239,7 @@ $(D)/harfbuzz: $(D)/fontconfig $(D)/libglib2 $(D)/cairo $(D)/freetype $(ARCHIVE)
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL)/libharfbuzz.la
 	$(REWRITE_LIBTOOL)/libharfbuzz-subset.la
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/harfbuzz.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/harfbuzz-subset.pc
+	$(REWRITE_PKGCONF)/harfbuzz.pc
+	$(REWRITE_PKGCONF)/harfbuzz-subset.pc
 	$(REMOVE)/harfbuzz-$(HARFBUZZ_VER)
 	$(TOUCH)

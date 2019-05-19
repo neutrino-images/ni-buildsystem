@@ -64,10 +64,10 @@ $(D)/gstreamer: $(D)/libglib2 $(D)/libxml2 $(D)/glib-networking $(ARCHIVE)/$(GST
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-1.0.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-base-1.0.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-controller-1.0.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-net-1.0.pc
+	$(REWRITE_PKGCONF)/gstreamer-1.0.pc
+	$(REWRITE_PKGCONF)/gstreamer-base-1.0.pc
+	$(REWRITE_PKGCONF)/gstreamer-controller-1.0.pc
+	$(REWRITE_PKGCONF)/gstreamer-net-1.0.pc
 	$(REWRITE_LIBTOOL)/libgstreamer-1.0.la
 	$(REWRITE_LIBTOOL)/libgstbase-1.0.la
 	$(REWRITE_LIBTOOL)/libgstcontroller-1.0.la
@@ -110,18 +110,18 @@ $(D)/gst-plugins-base: $(ARCHIVE)/$(GST_PLUGINS_BASE_SOURCE) $(D)/gstreamer $(D)
 	for i in `cd $(TARGET_LIB_DIR)/gstreamer-1.0; echo *.la`; do \
 		$(REWRITE_LIBTOOL)/gstreamer-1.0/$$i; \
 	done
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-allocators-1.0.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-app-1.0.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-audio-1.0.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-fft-1.0.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-pbutils-1.0.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-riff-1.0.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-rtp-1.0.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-rtsp-1.0.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-sdp-1.0.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-tag-1.0.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-video-1.0.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-plugins-base-1.0.pc
+	$(REWRITE_PKGCONF)/gstreamer-allocators-1.0.pc
+	$(REWRITE_PKGCONF)/gstreamer-app-1.0.pc
+	$(REWRITE_PKGCONF)/gstreamer-audio-1.0.pc
+	$(REWRITE_PKGCONF)/gstreamer-fft-1.0.pc
+	$(REWRITE_PKGCONF)/gstreamer-pbutils-1.0.pc
+	$(REWRITE_PKGCONF)/gstreamer-riff-1.0.pc
+	$(REWRITE_PKGCONF)/gstreamer-rtp-1.0.pc
+	$(REWRITE_PKGCONF)/gstreamer-rtsp-1.0.pc
+	$(REWRITE_PKGCONF)/gstreamer-sdp-1.0.pc
+	$(REWRITE_PKGCONF)/gstreamer-tag-1.0.pc
+	$(REWRITE_PKGCONF)/gstreamer-video-1.0.pc
+	$(REWRITE_PKGCONF)/gstreamer-plugins-base-1.0.pc
 	$(REWRITE_LIBTOOL)/libgstallocators-1.0.la
 	$(REWRITE_LIBTOOL)/libgstapp-1.0.la
 	$(REWRITE_LIBTOOL)/libgstaudio-1.0.la
@@ -208,14 +208,14 @@ $(D)/gst-plugins-bad: $(ARCHIVE)/$(GST_PLUGINS_BAD_SOURCE) $(D)/gst-plugins-base
 	for i in `cd $(TARGET_LIB_DIR)/gstreamer-1.0; echo *.la`; do \
 		$(REWRITE_LIBTOOL)/gstreamer-1.0/$$i; \
 	done
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-bad-audio-1.0.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-bad-video-1.0.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-codecparsers-1.0.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-insertbin-1.0.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-mpegts-1.0.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-player-1.0.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-plugins-bad-1.0.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-webrtc-1.0.pc
+	$(REWRITE_PKGCONF)/gstreamer-bad-audio-1.0.pc
+	$(REWRITE_PKGCONF)/gstreamer-bad-video-1.0.pc
+	$(REWRITE_PKGCONF)/gstreamer-codecparsers-1.0.pc
+	$(REWRITE_PKGCONF)/gstreamer-insertbin-1.0.pc
+	$(REWRITE_PKGCONF)/gstreamer-mpegts-1.0.pc
+	$(REWRITE_PKGCONF)/gstreamer-player-1.0.pc
+	$(REWRITE_PKGCONF)/gstreamer-plugins-bad-1.0.pc
+	$(REWRITE_PKGCONF)/gstreamer-webrtc-1.0.pc
 	$(REWRITE_LIBTOOL)/libgstbasecamerabinsrc-1.0.la
 	$(REWRITE_LIBTOOL)/libgstcodecparsers-1.0.la
 	$(REWRITE_LIBTOOL)/libgstphotography-1.0.la
@@ -431,7 +431,7 @@ $(D)/orc: $(ARCHIVE)/$(ORC_SOURCE)
 			; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/orc-0.4.pc
+	$(REWRITE_PKGCONF)/orc-0.4.pc
 	$(REWRITE_LIBTOOL)/liborc-0.4.la
 	$(REWRITE_LIBTOOL)/liborc-test-0.4.la
 	rm -f $(addprefix $(TARGET_DIR)/bin/,orc-bugreport orcc)
@@ -456,8 +456,8 @@ $(D)/libdca: $(ARCHIVE)/$(LIBDCA_SOURCE)
 			; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libdca.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libdts.pc
+	$(REWRITE_PKGCONF)/libdca.pc
+	$(REWRITE_PKGCONF)/libdts.pc
 	$(REWRITE_LIBTOOL)/libdca.la
 	rm -f $(addprefix $(TARGET_DIR)/bin/,extract_dca extract_dts)
 	$(REMOVE)/libdca-$(LIBDCA_VER)
@@ -481,8 +481,8 @@ $(D)/nettle: $(D)/gmp $(ARCHIVE)/$(NETTLE_SOURCE)
 			; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/hogweed.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/nettle.pc
+	$(REWRITE_PKGCONF)/hogweed.pc
+	$(REWRITE_PKGCONF)/nettle.pc
 	rm -f $(addprefix $(TARGET_DIR)/bin/,sexp-conv nettle-hash nettle-pbkdf2 nettle-lfib-stream pkcs1-conv)
 	$(REMOVE)/nettle-$(NETTLE_VER)
 	$(TOUCH)
@@ -539,7 +539,7 @@ $(D)/gnutls: $(D)/nettle $(D)/ca-bundle $(ARCHIVE)/$(GNUTLS_SOURCE)
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gnutls.pc
+	$(REWRITE_PKGCONF)/gnutls.pc
 	$(REWRITE_LIBTOOL)/libgnutls.la
 	$(REWRITE_LIBTOOL)/libgnutlsxx.la
 	rm -f $(addprefix $(TARGET_DIR)/bin/,psktool gnutls-cli-debug certtool srptool ocsptool gnutls-serv gnutls-cli)
@@ -596,7 +596,7 @@ $(D)/libsoup: $(D)/sqlite $(D)/libxml2 $(D)/libglib2 $(ARCHIVE)/$(LIBSOUP_SOURCE
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR) itlocaledir=$$(TARGET_DIR)/.remove
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libsoup-2.4.pc
+	$(REWRITE_PKGCONF)/libsoup-2.4.pc
 	$(REWRITE_LIBTOOL)/libsoup-2.4.la
 	$(REMOVE)/libsoup-$(LIBSOUP_VER)
 	$(TOUCH)
@@ -619,7 +619,7 @@ $(D)/sqlite: $(ARCHIVE)/$(SQLITE_SOURCE)
 			; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/sqlite3.pc
+	$(REWRITE_PKGCONF)/sqlite3.pc
 	$(REWRITE_LIBTOOL)/libsqlite3.la
 	rm -f $(addprefix $(TARGET_DIR)/bin/,sqlite3)
 	$(REMOVE)/sqlite-autoconf-$(SQLITE_VER)

@@ -25,7 +25,7 @@ $(D)/zlib: $(ARCHIVE)/zlib-$(ZLIB_VER).tar.gz | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		$(MAKE) install prefix=$(TARGET_DIR)
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/zlib.pc
+	$(REWRITE_PKGCONF)/zlib.pc
 	$(REMOVE)/zlib-$(ZLIB_VER)
 	$(TOUCH)
 
@@ -50,7 +50,7 @@ $(D)/libfuse: $(ARCHIVE)/fuse-$(FUSE_VER).tar.gz | $(TARGET_DIR)
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL)/libfuse.la
 	$(REWRITE_LIBTOOL)/libulockmgr.la
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/fuse.pc
+	$(REWRITE_PKGCONF)/fuse.pc
 	rm -rf $(TARGET_DIR)/etc/udev
 	rm -rf $(TARGET_DIR)/etc/init.d/fuse
 	$(REMOVE)/fuse-$(FUSE_VER)
@@ -73,7 +73,7 @@ $(D)/libupnp: $(ARCHIVE)/libupnp-$(LIBUPNP_VER).tar.bz2 | $(TARGET_DIR)
 	$(REWRITE_LIBTOOL)/libixml.la
 	$(REWRITE_LIBTOOL)/libthreadutil.la
 	$(REWRITE_LIBTOOL)/libupnp.la
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libupnp.pc
+	$(REWRITE_PKGCONF)/libupnp.pc
 	$(TOUCH)
 	
 # -----------------------------------------------------------------------------
@@ -101,7 +101,7 @@ $(D)/libdvbsi: $(ARCHIVE)/libdvbsi-.git | $(TARGET_DIR)
 		make install DESTDIR=$(TARGET_DIR); \
 	$(REMOVE)/libdvbsi-.git
 	$(REWRITE_LIBTOOL)/libdvbsi++.la
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libdvbsi++.pc
+	$(REWRITE_PKGCONF)/libdvbsi++.pc
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -168,7 +168,7 @@ $(D)/libcurl: $(D)/zlib $(D)/openssl $(D)/librtmp $(D)/ca-bundle $(ARCHIVE)/curl
 		make install DESTDIR=$(TARGET_DIR)
 	rm -rf $(TARGET_DIR)/bin/curl-config $(TARGET_DIR)/share/zsh
 	$(REWRITE_LIBTOOL)/libcurl.la
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libcurl.pc
+	$(REWRITE_PKGCONF)/libcurl.pc
 	$(REMOVE)/curl-$(LIBCURL_VER)
 	$(TOUCH)
 
@@ -294,8 +294,8 @@ $(D)/libjpeg-turbo2: $(ARCHIVE)/$(LIBJPEG-TURBO2_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libturbojpeg.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libjpeg.pc
+	$(REWRITE_PKGCONF)/libturbojpeg.pc
+	$(REWRITE_PKGCONF)/libjpeg.pc
 	rm -f $(addprefix $(TARGET_DIR)/bin/,cjpeg djpeg jpegtran rdjpgcom tjbench wrjpgcom)
 	$(REMOVE)/libjpeg-turbo-$(LIBJPEG-TURBO2_VER)
 	$(TOUCH)
@@ -335,9 +335,9 @@ $(D)/openssl: $(ARCHIVE)/openssl-$(OPENSSL_VER).tar.gz | $(TARGET_DIR)
 		sed -i "s# build_tests##" Makefile; \
 		make $(OPENSSLFLAGS) all; \
 		make install_sw INSTALL_PREFIX=$(TARGET_DIR)
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/openssl.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libcrypto.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libssl.pc
+	$(REWRITE_PKGCONF)/openssl.pc
+	$(REWRITE_PKGCONF)/libcrypto.pc
+	$(REWRITE_PKGCONF)/libssl.pc
 	rm -rf $(TARGET_DIR)/bin/c_rehash $(TARGET_LIB_DIR)/engines
 ifneq ($(BOXSERIES), hd51)
 	rm -rf $(TARGET_DIR)/bin/openssl
@@ -382,8 +382,8 @@ $(D)/libncurses: $(ARCHIVE)/ncurses-$(LIBNCURSES_VER).tar.gz | $(TARGET_DIR)
 	rm -rf $(TARGET_LIB_DIR)/libform* $(TARGET_LIB_DIR)/libmenu* $(TARGET_LIB_DIR)/libpanel*
 	rm -rf $(PKG_CONFIG_PATH)/form.pc $(PKG_CONFIG_PATH)/menu.pc $(PKG_CONFIG_PATH)/panel.pc
 	mv $(TARGET_DIR)/bin/ncurses6-config $(HOST_DIR)/bin
-	$(REWRITE_PKGCONF) $(HOST_DIR)/bin/ncurses6-config
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/ncurses.pc
+	$(REWRITE_CONFIG) $(HOST_DIR)/bin/ncurses6-config
+	$(REWRITE_PKGCONF)/ncurses.pc
 	ln -sf ./ncurses/curses.h $(TARGET_INCLUDE_DIR)/curses.h
 	ln -sf ./ncurses/curses.h $(TARGET_INCLUDE_DIR)/ncurses.h
 	ln -sf ./ncurses/term.h $(TARGET_INCLUDE_DIR)/term.h
@@ -404,7 +404,7 @@ $(D)/openthreads: $(SOURCE_DIR)/$(NI_OPENTHREADS) | $(TARGET_DIR)
 		make install DESTDIR=$(TARGET_DIR)
 	rm -f $(TARGET_LIB_DIR)/cmake
 	$(REMOVE)/$(NI_OPENTHREADS)
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/openthreads.pc
+	$(REWRITE_PKGCONF)/openthreads.pc
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -421,7 +421,7 @@ $(D)/libusb: $(ARCHIVE)/libusb-$(LIBUSB_VER).tar.bz2 | $(TARGET_DIR)
 		make install DESTDIR=$(TARGET_DIR); \
 	$(REMOVE)/libusb-$(LIBUSB_VER)
 	$(REWRITE_LIBTOOL)/libusb-$(LIBUSB_MAJ).la
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libusb-$(LIBUSB_MAJ).pc
+	$(REWRITE_PKGCONF)/libusb-$(LIBUSB_MAJ).pc
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -437,9 +437,9 @@ $(D)/libusb_compat: $(ARCHIVE)/libusb-compat-$(LIBUSB_COMPAT_VER).tar.bz2 $(D)/l
 		make install DESTDIR=$(TARGET_DIR); \
 	$(REMOVE)/libusb-compat-$(LIBUSB_COMPAT_VER)
 	mv $(TARGET_DIR)/bin/libusb-config $(HOST_DIR)/bin
-	$(REWRITE_PKGCONF) $(HOST_DIR)/bin/libusb-config
+	$(REWRITE_CONFIG) $(HOST_DIR)/bin/libusb-config
 	$(REWRITE_LIBTOOL)/libusb.la
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libusb.pc
+	$(REWRITE_PKGCONF)/libusb.pc
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -460,7 +460,7 @@ $(D)/libgd2: $(D)/zlib $(D)/libpng $(D)/libjpeg $(D)/freetype $(ARCHIVE)/libgd-$
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REMOVE)/libgd-$(LIBGD_VER)
 	$(REWRITE_LIBTOOL)/libgd.la
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gdlib.pc
+	$(REWRITE_PKGCONF)/gdlib.pc
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -520,7 +520,7 @@ $(D)/libsigc++: $(ARCHIVE)/libsigc++-$(LIBSIGCPP_VER).tar.xz | $(TARGET_DIR)
 	ln -sf ./sigc++-2.0/sigc++ $(TARGET_INCLUDE_DIR)/sigc++
 	cp $(BUILD_TMP)/libsigc++-$(LIBSIGCPP_VER)/sigc++config.h $(TARGET_INCLUDE_DIR)
 	$(REWRITE_LIBTOOL)/libsigc-2.0.la
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/sigc++-2.0.pc
+	$(REWRITE_PKGCONF)/sigc++-2.0.pc
 	$(REMOVE)/libsigc++-$(LIBSIGCPP_VER)
 	$(TOUCH)
 
@@ -540,7 +540,7 @@ $(D)/expat: $(ARCHIVE)/expat-$(EXPAT_VER).tar.bz2 | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		make install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/expat.pc
+	$(REWRITE_PKGCONF)/expat.pc
 	$(REWRITE_LIBTOOL)/libexpat.la
 	$(REMOVE)/expat-$(EXPAT_VER)
 	$(TOUCH)
@@ -650,7 +650,7 @@ $(D)/lua: $(D)/libncurses $(ARCHIVE)/lua-$(LUA_VER).tar.gz | $(TARGET_DIR)
 	install -D -m 0755 $(BUILD_TMP)/lua-$(LUA_VER)/src/liblua.so.$(LUA_VER) $(TARGET_LIB_DIR)/liblua.so.$(LUA_VER)
 	cd $(TARGET_LIB_DIR); ln -sf liblua.so.$(LUA_VER) $(TARGET_LIB_DIR)/liblua.so
 	install -D -m 0644 $(BUILD_TMP)/lua-$(LUA_VER)/etc/lua.pc $(PKG_CONFIG_PATH)/lua.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/lua.pc
+	$(REWRITE_PKGCONF)/lua.pc
 	rm -rf $(TARGET_DIR)/bin/luac
 	$(REMOVE)/lua-$(LUA_VER)
 	make lua-libs
@@ -690,7 +690,7 @@ $(D)/libbluray: $(LIBBLURAY_DEPS) $(ARCHIVE)/libbluray-$(LIBBLURAY_VER).tar.bz2 
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL)/libbluray.la
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libbluray.pc
+	$(REWRITE_PKGCONF)/libbluray.pc
 	$(REMOVE)/libbluray-$(LIBBLURAY_VER)
 	$(TOUCH)
 
@@ -713,7 +713,7 @@ $(D)/libass: $(D)/freetype $(D)/libfribidi $(ARCHIVE)/libass-$(LIBASS_VER).tar.x
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REMOVE)/libass-$(LIBASS_VER)
 	$(REWRITE_LIBTOOL)/libass.la
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libass.pc
+	$(REWRITE_PKGCONF)/libass.pc
 	$(TOUCH)
 	
 # -----------------------------------------------------------------------------
@@ -737,7 +737,7 @@ $(D)/libgpg-error: $(ARCHIVE)/libgpg-error-$(LIBGPG-ERROR_VER).tar.bz2 | $(TARGE
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	mv $(TARGET_DIR)/bin/gpg-error-config $(HOST_DIR)/bin
-	$(REWRITE_PKGCONF) $(HOST_DIR)/bin/gpg-error-config
+	$(REWRITE_CONFIG) $(HOST_DIR)/bin/gpg-error-config
 	$(REWRITE_LIBTOOL)/libgpg-error.la
 	rm -rf $(TARGET_DIR)/bin/gpg-error
 	rm -rf $(TARGET_DIR)/share/common-lisp
@@ -763,7 +763,7 @@ $(D)/libgcrypt: $(ARCHIVE)/libgcrypt-$(LIBGCRYPT_VER).tar.gz $(D)/libgpg-error |
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	mv $(TARGET_DIR)/bin/libgcrypt-config $(HOST_DIR)/bin
-	$(REWRITE_PKGCONF) $(HOST_DIR)/bin/libgcrypt-config
+	$(REWRITE_CONFIG) $(HOST_DIR)/bin/libgcrypt-config
 	$(REWRITE_LIBTOOL)/libgcrypt.la
 	rm -rf $(TARGET_DIR)/bin/dumpsexp
 	rm -rf $(TARGET_DIR)/bin/hmac256
@@ -787,7 +787,7 @@ $(D)/libaacs: $(ARCHIVE)/libaacs-$(LIBAACS_VER).tar.bz2 $(D)/libgcrypt | $(TARGE
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libaacs.pc
+	$(REWRITE_PKGCONF)/libaacs.pc
 	$(REWRITE_LIBTOOL)/libaacs.la
 	$(REMOVE)/libaacs-$(LIBAACS_VER)
 	cd $(TARGET_DIR); \
@@ -811,7 +811,7 @@ $(D)/libbdplus: $(ARCHIVE)/libbdplus-$(LIBBDPLUS_VER).tar.bz2 $(D)/libaacs | $(T
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libbdplus.pc
+	$(REWRITE_PKGCONF)/libbdplus.pc
 	$(REWRITE_LIBTOOL)/libbdplus.la
 	$(REMOVE)/libbdplus-$(LIBBDPLUS_VER)
 	cd $(TARGET_DIR); \
@@ -844,8 +844,8 @@ $(D)/libxml2: $(ARCHIVE)/libxml2-$(LIBXML2_VER).tar.gz | $(TARGET_DIR)
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	mv $(TARGET_DIR)/bin/xml2-config $(HOST_DIR)/bin
 	$(REWRITE_LIBTOOL)/libxml2.la
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libxml-2.0.pc
-	$(REWRITE_PKGCONF) $(HOST_DIR)/bin/xml2-config
+	$(REWRITE_PKGCONF)/libxml-2.0.pc
+	$(REWRITE_CONFIG) $(HOST_DIR)/bin/xml2-config
 	rm -rf $(TARGET_LIB_DIR)/xml2Conf.sh
 	rm -rf $(TARGET_LIB_DIR)/cmake
 	$(REMOVE)/libxml2-$(LIBXML2_VER)
@@ -878,7 +878,7 @@ $(D)/librtmp: $(D)/zlib $(D)/openssl $(SOURCE_DIR)/$(NI_RTMPDUMP) | $(TARGET_DIR
 	rm -rf $(TARGET_DIR)/sbin/rtmpgw
 	rm -rf $(TARGET_DIR)/sbin/rtmpsrv
 	rm -rf $(TARGET_DIR)/sbin/rtmpsuck
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/librtmp.pc
+	$(REWRITE_PKGCONF)/librtmp.pc
 	$(REMOVE)/$(NI_RTMPDUMP)
 	$(TOUCH)
 
@@ -908,7 +908,7 @@ $(D)/libtirpc: $(ARCHIVE)/libtirpc-$(LIBTIRPC_VER).tar.bz2 | $(TARGET_DIR)
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL)/libtirpc.la
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libtirpc.pc
+	$(REWRITE_PKGCONF)/libtirpc.pc
 	$(REMOVE)/libtirpc-$(LIBTIRPC_VER)
 	$(TOUCH)
 
@@ -928,7 +928,7 @@ $(D)/confuse: $(ARCHIVE)/confuse-$(CONFUSE_VER).tar.xz | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libconfuse.pc
+	$(REWRITE_PKGCONF)/libconfuse.pc
 	$(REMOVE)/confuse-$(CONFUSE_VER)
 	$(TOUCH)
 
@@ -948,7 +948,7 @@ $(D)/libite: $(ARCHIVE)/libite-$(ITE_VER).tar.xz | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libite.pc
+	$(REWRITE_PKGCONF)/libite.pc
 	$(REMOVE)/libite-$(ITE_VER)
 	$(TOUCH)
 
@@ -997,7 +997,7 @@ $(D)/libvorbisidec: $(ARCHIVE)/libvorbisidec_$(LIBVORBISIDEC_VER).orig.tar.gz $(
 		make all; \
 		make install DESTDIR=$(TARGET_DIR); \
 	$(REMOVE)/libvorbisidec-$(LIBVORBISIDEC_VER)
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/vorbisidec.pc
+	$(REWRITE_PKGCONF)/vorbisidec.pc
 	$(REWRITE_LIBTOOL)/libvorbisidec.la
 	$(TOUCH)
 
@@ -1014,7 +1014,7 @@ $(D)/libogg: $(ARCHIVE)/libogg-$(LIBOGG_VER).tar.xz | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		make install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/ogg.pc
+	$(REWRITE_PKGCONF)/ogg.pc
 	$(REWRITE_LIBTOOL)/libogg.la
 	$(REMOVE)/libogg-$(LIBOGG_VER)
 	$(TOUCH)
@@ -1035,7 +1035,7 @@ $(D)/libfribidi: $(ARCHIVE)/fribidi-$(FRIBIDI_VER).tar.bz2 | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/fribidi.pc
+	$(REWRITE_PKGCONF)/fribidi.pc
 	$(REWRITE_LIBTOOL)/libfribidi.la
 	$(REMOVE)/fribidi-$(FRIBIDI_VER)
 	$(TOUCH)
@@ -1061,7 +1061,7 @@ $(D)/libffi: $(ARCHIVE)/libffi-$(LIBFFI_VER).tar.gz
 			; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libffi.pc
+	$(REWRITE_PKGCONF)/libffi.pc
 	$(REWRITE_LIBTOOL)/libffi.la
 	$(REMOVE)/libffi-$(LIBFFI_VER)
 	$(TOUCH)
@@ -1119,14 +1119,14 @@ $(D)/libglib2: $(ARCHIVE)/glib-$(GLIB_VER).tar.xz $(D)/zlib $(LIBGLIB2_DEPS) $(D
 	rm -rf $(TARGET_DIR)/bin/gresource
 	rm -rf $(TARGET_DIR)/bin/gsettings
 	rm -rf $(TARGET_DIR)/bin/gtester*
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gio-2.0.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gio-unix-2.0.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/glib-2.0.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gmodule-2.0.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gmodule-export-2.0.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gmodule-no-export-2.0.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gobject-2.0.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gthread-2.0.pc
+	$(REWRITE_PKGCONF)/gio-2.0.pc
+	$(REWRITE_PKGCONF)/gio-unix-2.0.pc
+	$(REWRITE_PKGCONF)/glib-2.0.pc
+	$(REWRITE_PKGCONF)/gmodule-2.0.pc
+	$(REWRITE_PKGCONF)/gmodule-export-2.0.pc
+	$(REWRITE_PKGCONF)/gmodule-no-export-2.0.pc
+	$(REWRITE_PKGCONF)/gobject-2.0.pc
+	$(REWRITE_PKGCONF)/gthread-2.0.pc
 	$(REWRITE_LIBTOOL)/libgio-2.0.la
 	$(REWRITE_LIBTOOL)/libglib-2.0.la
 	$(REWRITE_LIBTOOL)/libgmodule-2.0.la
@@ -1164,7 +1164,7 @@ $(D)/alsa-lib: $(ARCHIVE)/$(ALSA-LIB_SOURCE)
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/alsa.pc
+	$(REWRITE_PKGCONF)/alsa.pc
 	$(REWRITE_LIBTOOL)/libasound.la
 	$(REMOVE)/alsa-lib-$(ALSA-LIB_VER)
 	$(TOUCH)

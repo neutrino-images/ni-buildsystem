@@ -215,7 +215,7 @@ $(D)/parted: $(D)/e2fsprogs $(ARCHIVE)/parted-$(PARTED_VER).tar.xz | $(TARGET_DI
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL)/libparted.la
 	$(REWRITE_LIBTOOL)/libparted-fs-resize.la
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libparted.pc
+	$(REWRITE_PKGCONF)/libparted.pc
 	$(REMOVE)/parted-$(PARTED_VER)
 	$(TOUCH)
 
@@ -537,7 +537,7 @@ $(D)/e2fsprogs: $(ARCHIVE)/e2fsprogs-$(E2FSPROGS_VER).tar.gz | $(TARGET_DIR)
 		$(MAKE) install DESTDIR=$(TARGET_DIR); \
 		cd lib/uuid/; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/uuid.pc
+	$(REWRITE_PKGCONF)/uuid.pc
 	$(REMOVE)/e2fsprogs-$(E2FSPROGS_VER)
 	cd $(TARGET_DIR) && rm sbin/dumpe2fs sbin/logsave sbin/e2undo \
 		sbin/filefrag sbin/e2freefrag bin/chattr bin/lsattr bin/uuidgen

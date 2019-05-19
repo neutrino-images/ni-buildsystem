@@ -102,10 +102,10 @@ $(D)/iptables: $(ARCHIVE)/iptables-$(IPTABLES_VER).tar.bz2 | $(TARGET_DIR)
 	$(REWRITE_LIBTOOL)/libip6tc.la
 	$(REWRITE_LIBTOOL)/libiptc.la
 	$(REWRITE_LIBTOOL)/libxtables.la
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libip4tc.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libip6tc.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libiptc.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/xtables.pc
+	$(REWRITE_PKGCONF)/libip4tc.pc
+	$(REWRITE_PKGCONF)/libip6tc.pc
+	$(REWRITE_PKGCONF)/libiptc.pc
+	$(REWRITE_PKGCONF)/xtables.pc
 	$(REMOVE)/iptables-$(IPTABLES_VER)
 	$(TOUCH)
 

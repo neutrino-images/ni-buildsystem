@@ -30,7 +30,7 @@ $(D)/valgrind-hd2: $(ARCHIVE)/valgrind-$(VALGRIND_VER).tar.bz2 | $(TARGET_DIR)
 			; \
 		$(MAKE) all; \
 		make install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/valgrind.pc
+	$(REWRITE_PKGCONF)/valgrind.pc
 	rm $(TARGET_DIR)/bin/callgrind_annotate
 	rm $(TARGET_DIR)/bin/callgrind_control
 	rm $(TARGET_DIR)/bin/cg_annotate
@@ -59,7 +59,7 @@ $(D)/valgrind-hd1:
 			; \
 		$(MAKE) all; \
 		make install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/valgrind.pc
+	$(REWRITE_PKGCONF)/valgrind.pc
 	$(REMOVE)/valgrind
 	$(TOUCH)
 
