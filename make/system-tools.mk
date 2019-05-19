@@ -16,6 +16,7 @@ BUSYBOX_PATCH  = busybox-fix-config-header.diff
 BUSYBOX_PATCH += busybox-insmod-hack.patch
 BUSYBOX_PATCH += busybox-mount-use-var-etc-fstab.patch
 BUSYBOX_PATCH += busybox-fix-partition-size.patch
+BUSYBOX_PATCH += busybox-mount_single_uuid.patch
 
 # Link busybox against libtirpc so that we can leverage its RPC support for NFS
 # mounting with BusyBox
