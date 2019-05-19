@@ -11,14 +11,8 @@ $(D)/zlib: $(ARCHIVE)/zlib-$(ZLIB_VER).tar.gz | $(TARGET_DIR)
 	$(UNTAR)/zlib-$(ZLIB_VER).tar.gz
 	$(CHDIR)/zlib-$(ZLIB_VER); \
 		$(call apply_patches, $(ZLIB_PATCH)); \
-		rm -rf config.cache; \
 		$(BUILDENV) \
-		CC=$(TARGET)-gcc \
-		LD=$(TARGET)-ld \
-		AR="$(TARGET)-ar" \
-		RANLIB=$(TARGET)-ranlib \
-		LDFLAGS="$(TARGET_LDFLAGS)" \
-		mandir=$(BUILD_TMP)/zlib-$(ZLIB_VER)/.remove \
+		mandir=$(BUILD_TMP)/.remove \
 		./configure \
 			--prefix= \
 			--shared \
