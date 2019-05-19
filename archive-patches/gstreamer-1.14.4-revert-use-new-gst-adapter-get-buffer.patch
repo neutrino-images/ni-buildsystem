@@ -1,8 +1,6 @@
-diff --git a/libs/gst/base/gstbaseparse.c b/libs/gst/base/gstbaseparse.c
-index eee3c92..d49aad6 100644
 --- a/libs/gst/base/gstbaseparse.c
 +++ b/libs/gst/base/gstbaseparse.c
-@@ -2813,6 +2813,7 @@ gst_base_parse_chain (GstPad * pad, GstObject * parent, GstBuffer * buffer)
+@@ -3021,6 +3021,7 @@
    GstBuffer *tmpbuf = NULL;
    guint fsize = 1;
    gint skip = -1;
@@ -10,20 +8,20 @@ index eee3c92..d49aad6 100644
    guint min_size, av;
    GstClockTime pts, dts;
  
-@@ -3012,7 +3011,11 @@ gst_base_parse_chain (GstPad * pad, GstObject * parent, GstBuffer * buffer)
-       parse->priv->next_dts = pts;
+@@ -3227,7 +3228,11 @@
+     }
  
      /* always pass all available data */
+-    tmpbuf = gst_adapter_get_buffer (parse->priv->adapter, av);
 +    data = gst_adapter_map (parse->priv->adapter, av);
 +    /* arrange for actual data to be copied if subclass tries to,
 +     * since what is passed is tied to the adapter */
 +    tmpbuf = gst_buffer_new_wrapped_full (GST_MEMORY_FLAG_READONLY |
 +        GST_MEMORY_FLAG_NO_SHARE, (gpointer) data, av, 0, av, NULL, NULL);
--    tmpbuf = gst_adapter_get_buffer (parse->priv->adapter, av);
  
      /* already inform subclass what timestamps we have planned,
       * at least if provided by time-based upstream */
-@@ -3029,6 +3024,9 @@ gst_base_parse_chain (GstPad * pad, GstObject * parent, GstBuffer * buffer)
+@@ -3242,6 +3247,9 @@
      ret = gst_base_parse_handle_buffer (parse, tmpbuf, &skip, &flush);
      tmpbuf = NULL;
  

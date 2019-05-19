@@ -191,7 +191,7 @@ LH_DEPS += openthreads
 USE_GSTREAMER = no
 ifeq ($(BOXSERIES), hd51)
   ifeq ($(USE_GSTREAMER), yes)
-    LH_DEPS += gst_plugins_dvbmediasink
+    LH_DEPS += gstreamer-all
   endif
 endif
 
