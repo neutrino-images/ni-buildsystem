@@ -6,7 +6,6 @@
 FLAGDIR="/var/etc"
 F_MGCAM=".mgcamd"
 F_NEWCS=".newcs"
-F_OSEMU=".osemu"
 F_DOSCAM=".doscam"
 F_OSCAM=".oscam"
 F_CCCAM=".cccam"
@@ -62,30 +61,6 @@ NEWCS_Action()
 			NEWCS_Action "stop"
 			sleep 1
 			NEWCS_Action "start"
-		;;
-	esac
-}
-
-OSEMU_Action()
-{
-	case $1 in
-		"start" )
-			SHOWINFO "start osemu"
-			if [ -x /var/bin/osemu.sh ]; then
-				/var/bin/osemu.sh &
-			else
-				/var/bin/osemu -a user:password -p 11000 -b
-			fi
-		;;
-		"stop" )
-			SHOWINFO "stop osemu"
-			killall osemu
-			sleep 1
-		;;
-		* )
-			OSEMU_Action "stop"
-			sleep 1
-			OSEMU_Action "start"
 		;;
 	esac
 }
@@ -258,9 +233,6 @@ CAMD_Action()
 		"gbox")
 			GBOX_Action $ACTION
 		;;
-		"osemu")
-			OSEMU_Action $ACTION
-		;;
 		"doscam")
 			DOSCAM_Action $ACTION
 		;;
@@ -286,10 +258,6 @@ CAMD_Action()
 
 			if [ -e $FLAGDIR/$F_GBOX ]; then
 				GBOX_Action $ACTION
-			fi
-
-			if [ -e $FLAGDIR/$F_OSEMU ]; then
-				OSEMU_Action $ACTION
 			fi
 
 			if [ -e $FLAGDIR/$F_DOSCAM ]; then
