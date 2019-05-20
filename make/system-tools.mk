@@ -928,7 +928,7 @@ XUPNPD_PATCH += xupnpd-fix-webif-backlinks.diff
 XUPNPD_PATCH += xupnpd-change-XUPNPDROOTDIR.diff
 XUPNPD_PATCH += xupnpd-add-configuration-files.diff
 
-$(D)/xupnpd: $(ARCHIVE)/xupnpd.git $(D)/lua $(D)/openssl | $(TARGET_DIR)
+$(D)/xupnpd: $(D)/lua $(D)/openssl | $(TARGET_DIR)
 	$(REMOVE)/xupnpd.git
 	get-git-source.sh https://github.com/clark15b/xupnpd.git $(ARCHIVE)/xupnpd.git
 	$(CPDIR)/xupnpd.git
