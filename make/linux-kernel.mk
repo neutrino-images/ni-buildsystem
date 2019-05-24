@@ -37,6 +37,11 @@ KERNEL_MAKEVARS := \
 	LOCALVERSION= \
 	O=$(BUILD_TMP)/$(KERNEL_OBJ)
 
+# Compatibility variables
+KERNEL_MAKEVARS += \
+	KVER=$(KERNEL_VERSION_FULL) \
+	KSRC=$(BUILD_TMP)/$(KERNEL_SRC)
+
 KERNEL_MAKEOPTS = $(EMPTY)
 ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd1 hd2))
   KERNEL_MAKEOPTS = zImage modules
@@ -135,12 +140,14 @@ kernel-modules-coolstream-hd2: kernel-coolstream
 	cp -a $(KERNEL_MODULES_DIR)/modules.builtin $(TARGET_MODULES_DIR)
 	cp -a $(KERNEL_MODULES_DIR)/modules.order $(TARGET_MODULES_DIR)
 	make depmod
+	make rtl8192eu
 
 kernel-modules-armbox: kernel-armbox
 	cp -a $(KERNEL_MODULES_DIR)/kernel $(TARGET_MODULES_DIR)
 	cp -a $(KERNEL_MODULES_DIR)/modules.builtin $(TARGET_MODULES_DIR)
 	cp -a $(KERNEL_MODULES_DIR)/modules.order $(TARGET_MODULES_DIR)
 	make depmod
+	make rtl8192eu
 
 # -----------------------------------------------------------------------------
 

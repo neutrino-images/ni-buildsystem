@@ -97,6 +97,7 @@ include make/gstreamer.mk
 include make/image-update.mk
 include make/images.mk
 include make/linux-kernel.mk
+include make/linux-drivers.mk
 include make/neutrino.mk
 include make/neutrino-plugins.mk
 include make/prerequisites.mk
