@@ -3,13 +3,18 @@
 #
 # -----------------------------------------------------------------------------
 
-target-finish: .version image-version issue.net update.urls
+target-finish: image-version update.urls
+ifeq ($(BOXTYPE), armbox)
+	make e2-multiboot
+endif
 
 # -----------------------------------------------------------------------------
 
-.version: $(TARGET_DIR)/.version
-$(TARGET_DIR)/.version: | $(TARGET_DIR)
-	echo "imagename=NI \o/ Neutrino-Image"					 > $@
+image-version: $(TARGET_DIR)/etc/image-version
+$(TARGET_DIR)/etc/image-version: | $(TARGET_DIR)
+	echo "distro=NI"							 > $@
+	echo "imagename=NI \o/ Neutrino-Image"					>> $@
+	echo "imageversion=$(IMAGE_VERSION_STRING)"				>> $@
 	echo "version=$(IMAGE_TYPE)$(IMAGE_VERSION)$(IMAGE_DATE)" 		>> $@
 	echo "describe=$$(git describe --always --long --tags | sed 's/-/./2')"	>> $@
 	echo "builddate=$$(date)"						>> $@
@@ -18,25 +23,25 @@ $(TARGET_DIR)/.version: | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-image-version: $(TARGET_DIR)/etc/image-version
-$(TARGET_DIR)/etc/image-version: | $(TARGET_DIR)
-	echo "distro=NI"				 > $@
-	echo "imageversion=$(IMAGE_VERSION_STRING)"	>> $@
-
-# -----------------------------------------------------------------------------
-
-issue.net: $(TARGET_DIR)/etc/issue
-$(TARGET_DIR)/etc/issue: | $(TARGET_DIR)
-	echo "NI \\\o/ Neutrino-Image $(IMAGE_VERSION_STRING)"	>> $@.net
-	echo ""							>> $@.net
-	cp $@.net $@
-
-# -----------------------------------------------------------------------------
-
 update.urls: $(TARGET_DIR)/var/etc/update.urls
 $(TARGET_DIR)/var/etc/update.urls: | $(TARGET_DIR)
 	echo "$(NI-SERVER)/update.php"				 > $@
 	echo "$(CHANNELLISTS_URL)/$(CHANNELLISTS_MD5FILE)"	>> $@
+
+# -----------------------------------------------------------------------------
+
+e2-multiboot:
+	mkdir -p $(TARGET_DIR)/usr/bin
+	echo -e "#!/bin/sh\necho Nope!" > $(TARGET_DIR)/usr/bin/enigma2
+	chmod 0755 $(TARGET_DIR)/usr/bin/enigma2
+	#
+	echo -e "NI $(IMAGE_VERSION_STRING)\n" >> $(TARGET_DIR)/etc/issue
+	#
+	mkdir -p $(TARGET_DIR)/share
+	touch $(TARGET_DIR)/share/bootlogo.mvi
+	#
+	mkdir -p $(TARGET_DIR)/var/lib/opkg
+	touch $(TARGET_DIR)/var/lib/opkg/status
 
 # -----------------------------------------------------------------------------
 
@@ -107,6 +112,7 @@ endif
 # create softlinks in root filesystem
 rootfs-softlinks: $(ROOTFS)
 	pushd $(ROOTFS) && \
+		ln -sf /etc/image-version .version && \
 		ln -sf /var/root root
 ifeq ($(BOXSERIES), hd51)
 	pushd $(ROOTFS) && \
@@ -142,10 +148,6 @@ endif
 	mkdir -p $(ROOTFS)/var/tuxbox/config
 	pushd $(ROOTFS)/var/tuxbox/config && \
 		ln -sf /var/keys/SoftCam.Key SoftCam.Key
-ifeq ($(BOXTYPE), armbox)
-	pushd $(ROOTFS)/usr/bin && \
-		ln -sf /bin/neutrino enigma2
-endif
 
 # -----------------------------------------------------------------------------
 
@@ -192,3 +194,5 @@ PHONY += $(ROOTFS)
 PHONY += rootfs-cleanup
 PHONY += rootfs-strip
 PHONY += rootfs-softlinks
+
+PHONY += e2-multiboot
