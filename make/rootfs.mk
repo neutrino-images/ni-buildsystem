@@ -3,15 +3,15 @@
 #
 # -----------------------------------------------------------------------------
 
-target-finish: image-version update.urls
+target-finish: .version update.urls
 ifeq ($(BOXTYPE), armbox)
 	make e2-multiboot
 endif
 
 # -----------------------------------------------------------------------------
 
-image-version: $(TARGET_DIR)/etc/image-version
-$(TARGET_DIR)/etc/image-version: | $(TARGET_DIR)
+.version: $(TARGET_DIR)/.version
+$(TARGET_DIR)/.version: | $(TARGET_DIR)
 	echo "distro=NI"							 > $@
 	echo "imagename=NI \o/ Neutrino-Image"					>> $@
 	echo "imageversion=$(IMAGE_VERSION_STRING)"				>> $@
@@ -42,6 +42,8 @@ e2-multiboot:
 	#
 	mkdir -p $(TARGET_DIR)/var/lib/opkg
 	touch $(TARGET_DIR)/var/lib/opkg/status
+	#
+	cp -a $(TARGET_DIR)/.version $(TARGET_DIR)/etc/image-version
 
 # -----------------------------------------------------------------------------
 
@@ -112,7 +114,6 @@ endif
 # create softlinks in root filesystem
 rootfs-softlinks: $(ROOTFS)
 	pushd $(ROOTFS) && \
-		ln -sf /etc/image-version .version && \
 		ln -sf /var/root root
 ifeq ($(BOXSERIES), hd51)
 	pushd $(ROOTFS) && \
