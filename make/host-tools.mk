@@ -18,16 +18,18 @@ host-preqs: \
 
 # -----------------------------------------------------------------------------
 
-HOST_PKG-CONFIG_VER = 0.29.2
-
-$(ARCHIVE)/pkg-config-$(HOST_PKG-CONFIG_VER).tar.gz:
-	$(WGET) https://pkg-config.freedesktop.org/releases/pkg-config-$(HOST_PKG-CONFIG_VER).tar.gz
-	
 pkg-config-preqs:
 	@PATH=$(subst $(HOST_DIR)/bin:,,$(PATH)); \
 	if ! pkg-config --exists glib-2.0; then \
 		echo "pkg-config and glib2-devel packages are needed for building cross-pkg-config."; false; \
 	fi
+
+# -----------------------------------------------------------------------------
+
+HOST_PKG-CONFIG_VER = 0.29.2
+
+$(ARCHIVE)/pkg-config-$(HOST_PKG-CONFIG_VER).tar.gz:
+	$(WGET) https://pkg-config.freedesktop.org/releases/pkg-config-$(HOST_PKG-CONFIG_VER).tar.gz
 
 host_pkg-config: $(HOST_DIR)/bin/pkg-config
 $(HOST_DIR)/bin/pkg-config: $(ARCHIVE)/pkg-config-$(HOST_PKG-CONFIG_VER).tar.gz | $(HOST_DIR)/bin pkg-config-preqs
@@ -44,6 +46,31 @@ $(HOST_DIR)/bin/pkg-config: $(ARCHIVE)/pkg-config-$(HOST_PKG-CONFIG_VER).tar.gz 
 host_pkg-config-softlink: $(HOST_DIR)/bin/$(TARGET)-pkg-config
 $(HOST_DIR)/bin/$(TARGET)-pkg-config: | $(HOST_DIR)/bin
 	ln -sf pkg-config $(HOST_DIR)/bin/$(TARGET)-pkg-config
+
+# -----------------------------------------------------------------------------
+
+HOST_PKGCONF_VER = 1.6.0
+HOST_PKGCONF_SOURCE = pkgconf-$(HOST_PKGCONF_VER).tar.gz
+
+$(ARCHIVE)/$(HOST_PKGCONF_SOURCE):
+	$(WGET) https://github.com/pkgconf/pkgconf/archive/$(HOST_PKGCONF_SOURCE)
+
+host_pkgconf: $(HOST_DIR)/bin/pkgconf
+$(HOST_DIR)/bin/pkgconf: $(ARCHIVE)/$(HOST_PKGCONF_SOURCE) | $(HOST_DIR)/bin pkg-config-preqs
+	$(REMOVE)/pkgconf-pkgconf-$(HOST_PKGCONF_VER)
+	$(UNTAR)/$(HOST_PKGCONF_SOURCE)
+	$(CHDIR)/pkgconf-pkgconf-$(HOST_PKGCONF_VER); \
+		./autogen.sh -n; \
+		./configure \
+			--prefix=$(HOST_DIR) \
+			--with-sysroot=$(TARGET_DIR) \
+			--with-system-libdir=$(TARGET_LIB_DIR) \
+			--with-system-includedir=$(TARGET_INCLUDE_DIR) \
+			; \
+		$(MAKE); \
+		$(MAKE) install
+	install -m 0755 $(PATCHES)/pkgconf-pkg-config $(HOST_DIR)/bin/pkg-config
+	$(REMOVE)/pkgconf-pkgconf-$(HOST_PKGCONF_VER)
 
 # -----------------------------------------------------------------------------
 
