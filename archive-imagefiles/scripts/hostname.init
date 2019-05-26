@@ -5,8 +5,9 @@
 case $1 in
 	start)
 		if [ ! -f /etc/hostname ]; then
+			box_model=$(grep "^box_model=" /.version | cut -d'=' -f2)
 			hwaddr=$(ifconfig eth0 | awk '/HWaddr/ { split($5,v,":"); print v[4] v[5] v[6] }')
-			echo "NI-AX-${hwaddr}" > /etc/hostname
+			echo "${box_model}.NI-${hwaddr}" > /etc/hostname
 		fi
 
 		hostname -F /etc/hostname

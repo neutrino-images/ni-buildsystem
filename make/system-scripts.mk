@@ -5,11 +5,15 @@
 
 init-scripts: \
 	init-helpers \
+	init-hostname \
 	init-camd
 
 init-helpers: $(ETCINITD)
 	install -m 0644 $(IMAGEFILES)/scripts/init.globals $(ETCINITD)/globals
 	install -m 0644 $(IMAGEFILES)/scripts/init.functions $(ETCINITD)/functions
+
+init-hostname: $(ETCINITD)
+	install -m 0755 $(IMAGEFILES)/scripts/hostname.init $(ETCINITD)/hostname
 
 init-camd: $(ETCINITD)
 	install -m 0755 $(IMAGEFILES)/scripts/camd.init $(ETCINITD)/camd
