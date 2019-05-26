@@ -14,8 +14,8 @@ endif
 $(TARGET_DIR)/.version: | $(TARGET_DIR)
 	echo "distro=NI"							 > $@
 	echo "imagename=NI \o/ Neutrino-Image"					>> $@
-	echo "imageversion=$(IMAGE_VERSION_STRING)"				>> $@
-	echo "version=$(IMAGE_TYPE)$(IMAGE_VERSION)$(IMAGE_DATE)" 		>> $@
+	echo "imageversion=$(IMAGE_VERSION)"					>> $@
+	echo "version=$(IMAGE_TYPE)$(IMAGE_VER)$(IMAGE_DATE)"	 		>> $@
 	echo "describe=$$(git describe --always --long --tags | sed 's/-/./2')"	>> $@
 	echo "builddate=$$(date)"						>> $@
 	echo "creator=$(MAINTAINER)"						>> $@
@@ -35,7 +35,7 @@ e2-multiboot:
 	echo -e "#!/bin/sh\necho Nope!" > $(TARGET_DIR)/usr/bin/enigma2
 	chmod 0755 $(TARGET_DIR)/usr/bin/enigma2
 	#
-	echo -e "NI $(IMAGE_VERSION_STRING)\n" >> $(TARGET_DIR)/etc/issue
+	echo -e "NI $(IMAGE_VERSION) \\\n \\\l\n" > $(TARGET_DIR)/etc/issue
 	#
 	mkdir -p $(TARGET_DIR)/share
 	touch $(TARGET_DIR)/share/bootlogo.mvi

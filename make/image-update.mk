@@ -93,13 +93,13 @@ u-pr-auto-timer:
 	install -m 0644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/pr-auto-timer/pr-auto-timer.rules.template $(UPDATE_INST_DIR)/var/tuxbox/config/
 	install -m 0644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/pr-auto-timer/auto-record-cleaner.conf.template $(UPDATE_INST_DIR)/var/tuxbox/config/
 	install -m 0644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/pr-auto-timer/auto-record-cleaner.rules.template $(UPDATE_INST_DIR)/var/tuxbox/config/
-	VERSION_STRING=`cat $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/pr-auto-timer/pr-auto-timer | grep '^VERSION' | cut -d= -f2`; \
+	PKG_VERSION=`cat $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-sh/plugins/pr-auto-timer/pr-auto-timer | grep '^VERSION' | cut -d= -f2`; \
 	$(MAKE) u-update-bin \
 			UPDATE_MD5FILE=pr-auto-timer.txt \
 			UPDATE_URL=$(NI-SERVER)/plugins/pr-auto-timer \
-			UPDATE_NAME=pr-auto-timer_$${VERSION_STRING//./} \
+			UPDATE_NAME=pr-auto-timer_$${PKG_VERSION//./} \
 			UPDATE_DESC=Auto-Timer \
-			UPDATE_VERSION_STRING=$$VERSION_STRING
+			UPDATE_VERSION=$$PKG_VERSION
 
 # -----------------------------------------------------------------------------
 
@@ -158,7 +158,7 @@ pathauf-192:
 			UPDATE_MD5FILE=$(CHANNELLISTS_MD5FILE) \
 			UPDATE_NAME=$@ \
 			UPDATE_DESC="$$desc - " \
-			UPDATE_VERSION_STRING="$$date" \
+			UPDATE_VERSION="$$date" \
 
 # -----------------------------------------------------------------------------
 
@@ -167,7 +167,7 @@ u-custom:
 			UPDATE_MD5FILE=custom_bin.txt \
 			UPDATE_NAME=custom_bin \
 			UPDATE_DESC="Custom Package" \
-			UPDATE_VERSION_STRING="0.00"
+			UPDATE_VERSION="0.00"
 
 # -----------------------------------------------------------------------------
 
@@ -188,7 +188,7 @@ u-clean-all: u-clean
 u-update-bin:
 	set -e; cd $(BUILD_TMP); \
 		tar -czvf $(UPDATE_DIR)/$(UPDATE_NAME).bin temp_inst
-	echo $(UPDATE_URL)/$(UPDATE_NAME).bin $(UPDATE_TYPE)$(UPDATE_VERSION)$(UPDATE_DATE) `md5sum $(UPDATE_DIR)/$(UPDATE_NAME).bin | cut -c1-32` $(UPDATE_DESC) $(UPDATE_VERSION_STRING) >> $(UPDATE_DIR)/$(UPDATE_MD5FILE)
+	echo $(UPDATE_URL)/$(UPDATE_NAME).bin $(UPDATE_TYPE)$(UPDATE_VER)$(UPDATE_DATE) `md5sum $(UPDATE_DIR)/$(UPDATE_NAME).bin | cut -c1-32` $(UPDATE_DESC) $(UPDATE_VERSION) >> $(UPDATE_DIR)/$(UPDATE_MD5FILE)
 	$(MAKE) u-clean
 
 # -----------------------------------------------------------------------------

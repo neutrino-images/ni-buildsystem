@@ -83,7 +83,7 @@ ifeq ($(IMAGE_SUMMARIZE), yes)
 	rm -f $(IMAGE_DIR)/$(IMAGE_NAME).img
 	mv $(IMAGE_DIR)/$(IMAGE_NAME)-sum.img $(IMAGE_DIR)/$(IMAGE_NAME).img
 endif
-	echo $(IMAGE_URL)/$(IMAGE_NAME).img $(IMAGE_TYPE)$(IMAGE_VERSION)$(IMAGE_DATE) `md5sum $(IMAGE_DIR)/$(IMAGE_NAME).img | cut -c1-32` $(IMAGE_DESC) $(IMAGE_VERSION_STRING) >> $(IMAGE_DIR)/$(IMAGE_MD5FILE)
+	echo $(IMAGE_URL)/$(IMAGE_NAME).img $(IMAGE_TYPE)$(IMAGE_VER)$(IMAGE_DATE) `md5sum $(IMAGE_DIR)/$(IMAGE_NAME).img | cut -c1-32` $(IMAGE_DESC) $(IMAGE_VERSION) >> $(IMAGE_DIR)/$(IMAGE_MD5FILE)
 	make check-image-size IMAGE_TO_CHECK=$(IMAGE_DIR)/$(IMAGE_NAME).img
 
 # -----------------------------------------------------------------------------
@@ -124,7 +124,7 @@ flash-image-armbox:
 	# Create minimal image
 	$(CD) $(IMAGE_BUILD_TMP)/$(BOXMODEL); \
 		tar -czf $(IMAGE_DIR)/$(IMAGE_NAME).tgz kernel.bin rootfs.tar.bz2
-	echo $(IMAGE_URL)/$(IMAGE_NAME).tgz $(IMAGE_TYPE)$(IMAGE_VERSION)$(IMAGE_DATE) `md5sum $(IMAGE_DIR)/$(IMAGE_NAME).tgz | cut -c1-32` $(IMAGE_DESC) $(IMAGE_VERSION_STRING) >> $(IMAGE_DIR)/$(IMAGE_MD5FILE)
+	echo $(IMAGE_URL)/$(IMAGE_NAME).tgz $(IMAGE_TYPE)$(IMAGE_VER)$(IMAGE_DATE) `md5sum $(IMAGE_DIR)/$(IMAGE_NAME).tgz | cut -c1-32` $(IMAGE_DESC) $(IMAGE_VERSION) >> $(IMAGE_DIR)/$(IMAGE_MD5FILE)
 	rm -rf $(IMAGE_BUILD_TMP)/$(BOXMODEL)
 
 # -----------------------------------------------------------------------------
@@ -155,6 +155,7 @@ THIRD_KERNEL_PARTITION_OFFSET = "$(shell expr $(SECOND_KERNEL_PARTITION_OFFSET) 
 FOURTH_KERNEL_PARTITION_OFFSET = "$(shell expr $(THIRD_KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))"
 MULTI_ROOTFS_PARTITION_OFFSET = "$(shell expr $(FOURTH_KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))"
 
+flash-image-armbox-multi: IMAGE_NAME=$(IMAGE_PREFIX)-$(IMAGE_SUFFIX)
 flash-image-armbox-multi:
 	mkdir -p $(IMAGE_BUILD_TMP)
 	# Create a sparse image block
@@ -197,7 +198,7 @@ flash-image-armbox-multi:
 		bzip2 $(IMAGE_DIR)/$(BOXMODEL)/rootfs.tar
 	echo $(IMAGE_PREFIX) > $(IMAGE_DIR)/$(BOXMODEL)/imageversion
 	$(CD) $(IMAGE_DIR); \
-		zip -r $(IMAGE_PREFIX)-$(IMAGE_SUFFIX)_multi_usb.zip $(BOXMODEL)/*
+		zip -r $(IMAGE_NAME)_multi_usb.zip $(BOXMODEL)/*
 	# cleanup
 	rm -rf $(IMAGE_DIR)/$(BOXMODEL)
 	rm -rf $(IMAGE_BUILD_TMP)
