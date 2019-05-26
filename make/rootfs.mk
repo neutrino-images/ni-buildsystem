@@ -18,6 +18,7 @@ $(TARGET_DIR)/.version: | $(TARGET_DIR)
 	echo "version=$(IMAGE_TYPE)$(IMAGE_VER)$(IMAGE_DATE)"	 		>> $@
 	echo "describe=$$(git describe --always --long --tags | sed 's/-/./2')"	>> $@
 	echo "builddate=$$(date)"						>> $@
+	echo "box_model=$(BOXMODEL)"						>> $@
 	echo "creator=$(MAINTAINER)"						>> $@
 	echo "homepage=www.neutrino-images.de"					>> $@
 
