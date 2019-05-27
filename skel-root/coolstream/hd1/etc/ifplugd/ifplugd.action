@@ -3,7 +3,7 @@
 # simplest possible ifplugd script ;-)
 #
 
-. /et/init.d/globals
+. /etc/init.d/globals
 
 case $2 in
 	up)	ifup	$1 | LOGINFO ;;
