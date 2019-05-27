@@ -5,6 +5,7 @@
 
 init-scripts: \
 	init-helpers \
+	init-coredump \
 	init-crond \
 	init-inetd \
 	init-hostname \
@@ -17,6 +18,11 @@ init-helpers: $(ETCINITD)
 init-hostname: $(ETCINITD)
 	install -m 0755 $(IMAGEFILES)/scripts/hostname.init $(ETCINITD)/hostname
 
+init-coredump: $(ETCINITD)
+ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd51))
+	install -m 0755 $(IMAGEFILES)/scripts/coredump.init $(ETCINITD)/coredump
+endif
+
 init-crond: $(ETCINITD)
 	install -m 0755 $(IMAGEFILES)/scripts/crond.init $(ETCINITD)/crond
 
@@ -26,7 +32,7 @@ init-inetd: $(ETCINITD)
 init-camd: $(ETCINITD)
 	install -m 0755 $(IMAGEFILES)/scripts/camd.init $(ETCINITD)/camd
 	install -m 0755 $(IMAGEFILES)/scripts/camd_datefix.init $(ETCINITD)/camd_datefix
-	set -e; cd $(ETCINITD); \
+	$(CD) $(ETCINITD); \
 		ln -sf camd S99camd; \
 		ln -sf camd K01camd
 
