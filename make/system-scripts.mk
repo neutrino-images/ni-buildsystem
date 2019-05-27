@@ -5,6 +5,8 @@
 
 init-scripts: \
 	init-helpers \
+	init-crond \
+	init-inetd \
 	init-hostname \
 	init-camd
 
@@ -17,6 +19,9 @@ init-hostname: $(ETCINITD)
 
 init-crond: $(ETCINITD)
 	install -m 0755 $(IMAGEFILES)/scripts/crond.init $(ETCINITD)/crond
+
+init-inetd: $(ETCINITD)
+	install -m 0755 $(IMAGEFILES)/scripts/inetd.init $(ETCINITD)/inetd
 
 init-camd: $(ETCINITD)
 	install -m 0755 $(IMAGEFILES)/scripts/camd.init $(ETCINITD)/camd
