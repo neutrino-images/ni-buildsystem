@@ -15,6 +15,9 @@ init-helpers: $(ETCINITD)
 init-hostname: $(ETCINITD)
 	install -m 0755 $(IMAGEFILES)/scripts/hostname.init $(ETCINITD)/hostname
 
+init-crond: $(ETCINITD)
+	install -m 0755 $(IMAGEFILES)/scripts/crond.init $(ETCINITD)/crond
+
 init-camd: $(ETCINITD)
 	install -m 0755 $(IMAGEFILES)/scripts/camd.init $(ETCINITD)/camd
 	install -m 0755 $(IMAGEFILES)/scripts/camd_datefix.init $(ETCINITD)/camd_datefix
