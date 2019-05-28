@@ -1268,7 +1268,7 @@ $(D)/ofgwrite: $(SOURCE_DIR)/$(NI_OFGWRITE) | $(TARGET_DIR)
 		$(BUILDENV) \
 		$(MAKE)
 	install -m 0755 $(BUILD_TMP)/$(NI_OFGWRITE)/ofgwrite_bin $(TARGET_DIR)/bin
-	install -m 0755 $(BUILD_TMP)/$(NI_OFGWRITE)/ofgwrite_tgz $(TARGET_DIR)/bin
+	install -m 0755 $(BUILD_TMP)/$(NI_OFGWRITE)/ofgwrite_caller $(TARGET_DIR)/bin
 	install -m 0755 $(BUILD_TMP)/$(NI_OFGWRITE)/ofgwrite $(TARGET_DIR)/bin
 	$(REMOVE)/$(NI_OFGWRITE)
 	$(TOUCH)
