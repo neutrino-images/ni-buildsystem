@@ -21,6 +21,9 @@ $(TARGET_DIR)/.version: | $(TARGET_DIR)
 	echo "box_model=$(BOXMODEL)"						>> $@
 	echo "creator=$(MAINTAINER)"						>> $@
 	echo "homepage=www.neutrino-images.de"					>> $@
+ifeq ($(BOXTYPE), armbox)
+	echo "imagedir=$(BOXMODEL)"						>> $@
+endif
 
 # -----------------------------------------------------------------------------
 
