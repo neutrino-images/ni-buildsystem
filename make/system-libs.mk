@@ -72,13 +72,17 @@ $(D)/libupnp: $(ARCHIVE)/libupnp-$(LIBUPNP_VER).tar.bz2 | $(TARGET_DIR)
 	
 # -----------------------------------------------------------------------------
 
+LIBDVBSI_VER = git
+LIBDVBSI_SOURCE = libdvbsi.$(LIBDVBSI_VER)
+LIBDVBSI_URL = https://github.com/OpenVisionE2/$(LIBDVBSI_SOURCE)
+
 LIBDVBSI_PATCH  = libdvbsi++-content_identifier_descriptor.patch
 
 $(D)/libdvbsi: | $(TARGET_DIR)
-	$(REMOVE)/libdvbsi-.git
-	get-git-source.sh git://github.com/OpenDMM/libdvbsi-.git $(ARCHIVE)/libdvbsi-.git
-	$(CPDIR)/libdvbsi-.git
-	$(CHDIR)/libdvbsi-.git; \
+	$(REMOVE)/$(LIBDVBSI_SOURCE)
+	get-git-source.sh $(LIBDVBSI_URL) $(ARCHIVE)/$(LIBDVBSI_SOURCE)
+	$(CPDIR)/$(LIBDVBSI_SOURCE)
+	$(CHDIR)/$(LIBDVBSI_SOURCE); \
 		$(call apply_patches, $(LIBDVBSI_PATCH)); \
 		$(CONFIGURE) \
 			--prefix= \
@@ -88,7 +92,7 @@ $(D)/libdvbsi: | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		make install DESTDIR=$(TARGET_DIR); \
-	$(REMOVE)/libdvbsi-.git
+	$(REMOVE)/$(LIBDVBSI_SOURCE)
 	$(REWRITE_LIBTOOL)/libdvbsi++.la
 	$(REWRITE_PKGCONF)/libdvbsi++.pc
 	$(TOUCH)
