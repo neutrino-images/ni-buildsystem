@@ -94,7 +94,7 @@ include make/crosstool.mk
 include make/development-tools.mk
 include make/ffmpeg-$(BOXTYPE).mk
 include make/gstreamer.mk
-include make/image-update.mk
+include make/image-updates.mk
 include make/images.mk
 include make/linux-kernel.mk
 include make/linux-drivers.mk
