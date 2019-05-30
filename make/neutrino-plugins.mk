@@ -109,10 +109,10 @@ $(D)/channellogos: $(SOURCE_DIR)/$(NI_LOGO-STUFF) $(SHAREICONS)
 
 # -----------------------------------------------------------------------------
 
-$(D)/logo-addon: $(SOURCE_DIR)/$(NI_LOGO-STUFF) $(LIBPLUGINS)
-	install -m 0755 $(SOURCE_DIR)/$(NI_LOGO-STUFF)/logo-addon/*.sh $(LIBPLUGINS)/
-	install -m 0644 $(SOURCE_DIR)/$(NI_LOGO-STUFF)/logo-addon/*.cfg $(LIBPLUGINS)/
-	install -m 0644 $(SOURCE_DIR)/$(NI_LOGO-STUFF)/logo-addon/*.png $(LIBPLUGINS)/
+$(D)/logo-addon: $(SOURCE_DIR)/$(NI_LOGO-STUFF) $(SHAREPLUGINS)
+	install -m 0755 $(SOURCE_DIR)/$(NI_LOGO-STUFF)/logo-addon/*.sh $(SHAREPLUGINS)/
+	install -m 0644 $(SOURCE_DIR)/$(NI_LOGO-STUFF)/logo-addon/*.cfg $(SHAREPLUGINS)/
+	install -m 0644 $(SOURCE_DIR)/$(NI_LOGO-STUFF)/logo-addon/*.png $(SHAREPLUGINS)/
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -124,12 +124,12 @@ $(D)/doscam-webif-skin:
 
 # -----------------------------------------------------------------------------
 
-$(D)/neutrino-mediathek: $(LIBPLUGINS) | $(TARGET_DIR)
+$(D)/neutrino-mediathek: $(SHAREPLUGINS) | $(TARGET_DIR)
 	$(REMOVE)/mediathek.git
 	get-git-source.sh https://github.com/neutrino-mediathek/mediathek.git $(ARCHIVE)/mediathek.git
 	$(CPDIR)/mediathek.git
 	$(CHDIR)/mediathek.git; \
-		cp -a plugins/* $(LIBPLUGINS)/; \
+		cp -a plugins/* $(SHAREPLUGINS)/; \
 		cp -a share $(TARGET_DIR)
 	$(REMOVE)/mediathek.git
 	$(TOUCH)
@@ -145,7 +145,7 @@ LINKS_PATCH  = links-$(LINKS_VER).patch
 LINKS_PATCH += links-$(LINKS_VER)-ac-prog-cxx.patch
 LINKS_PATCH += links-$(LINKS_VER)-input-$(BOXTYPE).patch
 
-$(D)/links: $(D)/libpng $(D)/libjpeg $(D)/openssl $(ARCHIVE)/links-$(LINKS_VER).tar.bz2 $(LIBPLUGINS) | $(TARGET_DIR)
+$(D)/links: $(D)/libpng $(D)/libjpeg $(D)/openssl $(ARCHIVE)/links-$(LINKS_VER).tar.bz2 $(SHAREPLUGINS) | $(TARGET_DIR)
 	$(REMOVE)/links-$(LINKS_VER)
 	$(UNTAR)/links-$(LINKS_VER).tar.bz2
 	$(CHDIR)/links-$(LINKS_VER)/intl; \
@@ -173,7 +173,7 @@ $(D)/links: $(D)/libpng $(D)/libjpeg $(D)/openssl $(ARCHIVE)/links-$(LINKS_VER).
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	mv -f $(BIN)/links $(LIBPLUGINS)/links.so
+	mv -f $(BIN)/links $(SHAREPLUGINS)/links.so
 	cp -a $(IMAGEFILES)/links/* $(TARGET_DIR)/
 	$(REMOVE)/links-$(LINKS_VER)
 	$(TOUCH)

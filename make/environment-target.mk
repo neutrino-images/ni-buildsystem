@@ -5,7 +5,6 @@
 
 BIN		= $(TARGET_DIR)/bin
 ETCINITD	= $(TARGET_DIR)/etc/init.d
-LIBPLUGINS	= $(TARGET_DIR)/lib/tuxbox/plugins
 SBIN		= $(TARGET_DIR)/sbin
 SHAREFLEX	= $(TARGET_DIR)/share/tuxbox/neutrino/flex
 SHAREICONS	= $(TARGET_DIR)/share/tuxbox/neutrino/icons
@@ -18,7 +17,6 @@ VARINITD	= $(TARGET_DIR)/var/etc/init.d
 VARPLUGINS	= $(TARGET_DIR)/var/tuxbox/plugins
 
 $(ETCINITD) \
-$(LIBPLUGINS) \
 $(SBIN) \
 $(SHAREFLEX) \
 $(SHAREICONS) \
