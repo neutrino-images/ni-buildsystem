@@ -93,6 +93,7 @@ include make/clean.mk
 include make/crosstool.mk
 include make/development-tools.mk
 include make/ffmpeg-$(BOXTYPE).mk
+include make/helpers.mk
 include make/gstreamer.mk
 include make/image-updates.mk
 include make/images.mk
