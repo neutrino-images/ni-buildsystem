@@ -4,43 +4,57 @@
 # -----------------------------------------------------------------------------
 
 init-scripts: \
-	init-helpers \
-	init-coredump \
-	init-crond \
-	init-inetd \
-	init-hostname \
-	init-camd
+	$(TARGET_DIR)/etc/init.d/globals \
+	$(TARGET_DIR)/etc/init.d/functions \
+	$(TARGET_DIR)/etc/init.d/camd \
+	$(TARGET_DIR)/etc/init.d/camd_datefix \
+	$(TARGET_DIR)/etc/init.d/coredump \
+	$(TARGET_DIR)/etc/init.d/crond \
+	$(TARGET_DIR)/etc/init.d/hostname \
+	$(TARGET_DIR)/etc/init.d/inetd
 
-init-helpers: $(ETCINITD)
-	install -m 0644 $(IMAGEFILES)/scripts/init.globals $(ETCINITD)/globals
-	install -m 0644 $(IMAGEFILES)/scripts/init.functions $(ETCINITD)/functions
+$(TARGET_DIR)/etc/init.d/globals:
+	install -D -m 0644 $(IMAGEFILES)/scripts/init.globals $@
 
-init-hostname: $(ETCINITD)
-	install -m 0755 $(IMAGEFILES)/scripts/hostname.init $(ETCINITD)/hostname
+$(TARGET_DIR)/etc/init.d/functions:
+	install -D -m 0644 $(IMAGEFILES)/scripts/init.functions $@
 
-init-coredump: $(ETCINITD)
+$(TARGET_DIR)/etc/init.d/camd:
+	install -D -m 0755 $(IMAGEFILES)/scripts/camd.init $@
+	ln -sf camd $(TARGET_DIR)/etc/init.d/S99camd
+	ln -sf camd $(TARGET_DIR)/etc/init.d/K01camd
+
+$(TARGET_DIR)/etc/init.d/camd_datefix:
+	install -D -m 0755 $(IMAGEFILES)/scripts/camd_datefix.init $@
+
+$(TARGET_DIR)/etc/init.d/coredump:
 ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd51))
-	install -m 0755 $(IMAGEFILES)/scripts/coredump.init $(ETCINITD)/coredump
+	install -D -m 0755 $(IMAGEFILES)/scripts/coredump.init $@
 endif
 
-init-crond: $(ETCINITD)
-	install -m 0755 $(IMAGEFILES)/scripts/crond.init $(ETCINITD)/crond
+$(TARGET_DIR)/etc/init.d/crond:
+	install -D -m 0755 $(IMAGEFILES)/scripts/crond.init $@
 
-init-inetd: $(ETCINITD)
-	install -m 0755 $(IMAGEFILES)/scripts/inetd.init $(ETCINITD)/inetd
+$(TARGET_DIR)/etc/init.d/hostname:
+	install -D -m 0755 $(IMAGEFILES)/scripts/hostname.init $@
 
-init-camd: $(ETCINITD)
-	install -m 0755 $(IMAGEFILES)/scripts/camd.init $(ETCINITD)/camd
-	install -m 0755 $(IMAGEFILES)/scripts/camd_datefix.init $(ETCINITD)/camd_datefix
-	$(CD) $(ETCINITD); \
-		ln -sf camd S99camd; \
-		ln -sf camd K01camd
+$(TARGET_DIR)/etc/init.d/inetd:
+	install -D -m 0755 $(IMAGEFILES)/scripts/inetd.init $@
 
 # -----------------------------------------------------------------------------
 
-scripts: $(SBIN)
-	install -m 0755 $(IMAGEFILES)/scripts/service $(SBIN)
+scripts: \
+	$(TARGET_DIR)/sbin/service \
+	$(TARGET_DIR)/sbin/flash_eraseall \
+	$(TARGET_DIR)/share/udhcpc/default.script
+
+$(TARGET_DIR)/sbin/service:
+	install -D -m 0755 $(IMAGEFILES)/scripts/service $@
+
+$(TARGET_DIR)/sbin/flash_eraseall:
 ifeq ($(BOXTYPE), coolstream)
-	install -m 0755 $(IMAGEFILES)/scripts/flash_eraseall $(SBIN)
+	install -D -m 0755 $(IMAGEFILES)/scripts/flash_eraseall $@
 endif
-	install -D -m 0755 $(IMAGEFILES)/scripts/udhcpc-default.script $(TARGET_DIR)/share/udhcpc/default.script
+
+$(TARGET_DIR)/share/udhcpc/default.script:
+	install -D -m 0755 $(IMAGEFILES)/scripts/udhcpc-default.script $@
