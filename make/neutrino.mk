@@ -137,7 +137,7 @@ $(N_OBJ_DIR)/config.status: $(N_DEPS)
 	$(CD) $(SOURCE_DIR)/$(NI_NEUTRINO); \
 		git checkout $(NI_NEUTRINO_BRANCH)
 	$(SOURCE_DIR)/$(NI_NEUTRINO)/autogen.sh
-	pushd $(N_OBJ_DIR) && \
+	$(CD) $(N_OBJ_DIR); \
 		$(N_BUILDENV) \
 		$(SOURCE_DIR)/$(NI_NEUTRINO)/configure \
 			--host=$(TARGET) \
@@ -210,7 +210,7 @@ endif
 $(LH_OBJ_DIR)/config.status: $(LH_DEPS)
 	test -d $(LH_OBJ_DIR) || mkdir -p $(LH_OBJ_DIR)
 	$(SOURCE_DIR)/$(NI_LIBSTB-HAL)/autogen.sh
-	pushd $(LH_OBJ_DIR) && \
+	$(CD) $(LH_OBJ_DIR); \
 		$(N_BUILDENV) \
 		$(SOURCE_DIR)/$(NI_LIBSTB-HAL)/configure \
 			--host=$(TARGET) \

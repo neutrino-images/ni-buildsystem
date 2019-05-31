@@ -117,41 +117,41 @@ endif
 
 # create softlinks in root filesystem
 rootfs-softlinks: $(ROOTFS)
-	pushd $(ROOTFS) && \
+	$(CD) $(ROOTFS); \
 		ln -sf /var/root root
 ifeq ($(BOXSERIES), hd51)
-	pushd $(ROOTFS) && \
+	$(CD) $(ROOTFS); \
 		ln -sf /var/root home
 endif
-	pushd $(ROOTFS)/usr && \
+	$(CD) $(ROOTFS)/usr; \
 		ln -sf /share share
-	pushd $(ROOTFS)/var && \
+	$(CD) $(ROOTFS)/var; \
 		ln -sf /tmp run && \
 		ln -sf /tmp tmp
-	pushd $(ROOTFS)/etc && \
+	$(CD) $(ROOTFS)/etc; \
 		ln -sf /proc/mounts mtab
-	pushd $(ROOTFS)/etc/init.d && \
-		ln -sf fstab K99fstab && \
-		ln -sf fstab S01fstab && \
-		ln -sf syslogd K98syslogd && \
-		ln -sf crond S55crond && \
-		ln -sf crond K55crond && \
-		ln -sf inetd S53inetd && \
+	$(CD) $(ROOTFS)/etc/init.d; \
+		ln -sf fstab K99fstab; \
+		ln -sf fstab S01fstab; \
+		ln -sf syslogd K98syslogd; \
+		ln -sf crond S55crond; \
+		ln -sf crond K55crond; \
+		ln -sf inetd S53inetd; \
 		ln -sf inetd K80inetd
 ifeq ($(BOXSERIES), hd2)
-	pushd $(ROOTFS)/etc && \
-		ln -sf /var/etc/exports exports && \
-		ln -sf /var/etc/fstab fstab && \
-		ln -sf /var/etc/hostname hostname && \
-		ln -sf /var/etc/localtime localtime && \
-		ln -sf /var/etc/passwd passwd && \
-		ln -sf /var/etc/resolv.conf resolv.conf && \
+	$(CD) $(ROOTFS)/etc; \
+		ln -sf /var/etc/exports exports; \
+		ln -sf /var/etc/fstab fstab; \
+		ln -sf /var/etc/hostname hostname; \
+		ln -sf /var/etc/localtime localtime; \
+		ln -sf /var/etc/passwd passwd; \
+		ln -sf /var/etc/resolv.conf resolv.conf; \
 		ln -sf /var/etc/wpa_supplicant.conf wpa_supplicant.conf
-	pushd $(ROOTFS)/etc/network && \
+	$(CD) $(ROOTFS)/etc/network; \
 		ln -sf /var/etc/network/interfaces interfaces
 endif
 	mkdir -p $(ROOTFS)/var/tuxbox/config
-	pushd $(ROOTFS)/var/tuxbox/config && \
+	$(CD) $(ROOTFS)/var/tuxbox/config; \
 		ln -sf /var/keys/SoftCam.Key SoftCam.Key
 
 # -----------------------------------------------------------------------------
