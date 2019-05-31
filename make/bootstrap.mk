@@ -107,6 +107,9 @@ $(TARGET_LIB_DIR)/firmware: | $(TARGET_DIR)
 $(TARGET_LIB_DIR)/modules: | $(TARGET_DIR)
 	mkdir -p $@
 	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/lib-modules/$(KERNEL_VERSION_FULL) $@
+ifeq ($(BOXMODEL), nevis)
+	ln -sf $(KERNEL_VERSION_FULL) $@/$(KERNEL_VERSION_FULL)-$(BOXMODEL)
+endif
 
 $(STATIC_LIB_DIR): | $(TARGET_DIR)
 	mkdir -p $@
