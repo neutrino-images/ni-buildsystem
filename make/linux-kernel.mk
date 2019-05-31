@@ -10,7 +10,7 @@ KERNEL_SRC		= linux-$(KERNEL_VERSION)
 KERNEL_OBJ		= linux-$(KERNEL_VERSION)-obj
 KERNEL_MODULES		= linux-$(KERNEL_VERSION)-modules
 
-KERNEL_MODULES_DIR	= $(BUILD_TMP)/$(KERNEL_MODULES)/lib/modules/$(KERNEL_VERSION_FULL)
+KERNEL_MODULES_DIR	= $(BUILD_TMP)/$(KERNEL_MODULES)/lib/modules/$(KERNEL_VERSION)
 KERNEL_CONFIG		= $(CONFIGS)/kernel-$(KERNEL_VERSION_MAJOR)-$(BOXFAMILY).config
 
 KERNEL_UIMAGE		= $(BUILD_TMP)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/Image
@@ -39,7 +39,7 @@ KERNEL_MAKEVARS := \
 
 # Compatibility variables
 KERNEL_MAKEVARS += \
-	KVER=$(KERNEL_VERSION_FULL) \
+	KVER=$(KERNEL_VERSION) \
 	KSRC=$(BUILD_TMP)/$(KERNEL_SRC)
 
 KERNEL_MAKEOPTS = $(EMPTY)
@@ -152,7 +152,7 @@ kernel-modules-armbox: kernel-armbox
 # -----------------------------------------------------------------------------
 
 depmod:
-	PATH=$(PATH):/sbin:/usr/sbin depmod -b $(TARGET_DIR) $(KERNEL_VERSION_FULL)
+	PATH=$(PATH):/sbin:/usr/sbin depmod -b $(TARGET_DIR) $(KERNEL_VERSION)
 ifeq ($(BOXSERIES), hd1)
 	mv $(TARGET_MODULES_DIR)/modules.dep $(TARGET_MODULES_DIR)/.modules.dep
 	rm $(TARGET_MODULES_DIR)/modules.*

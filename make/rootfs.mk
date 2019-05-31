@@ -106,7 +106,7 @@ ifneq ($(DEBUG), yes)
 			-path $(ROOTFS)/lib/modules \) -prune -o \
 	-type f -print0 | xargs -0 $(TARGET)-strip || true
   ifeq ($(BOXSERIES), hd2)
-	find $(ROOTFS)/lib/modules/$(KERNEL_VERSION_FULL)/kernel -type f -name '*.ko' | xargs -n 1 $(TARGET)-objcopy --strip-unneeded
+	find $(ROOTFS)/lib/modules/$(KERNEL_VERSION)/kernel -type f -name '*.ko' | xargs -n 1 $(TARGET)-objcopy --strip-unneeded
   endif
 	@echo -e "$(TERM_YELLOW)"
 	@du -sh $(ROOTFS)
