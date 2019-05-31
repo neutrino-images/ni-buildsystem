@@ -3,19 +3,22 @@
 #
 # -----------------------------------------------------------------------------
 
-plugins-all: $(D)/neutrino $(D)/neutrino-plugins \
-	logo-addon \
-	neutrino-mediathek \
-	doscam-webif-skin
+plugins: \
+	$(D)/neutrino-plugins \
+	$(D)/logo-addon \
+	$(D)/neutrino-mediathek \
+	$(D)/doscam-webif-skin
+	make plugins-$(BOXSERIES)
 
-plugins-hd1: # nothing to do
+plugins-hd1:
+	# nothing to do
 
 plugins-hd2 \
 plugins-hd51: \
-	channellogos
-  ifneq ($(BOXMODEL), kronos_v2)
+	$(D)/channellogos
+ifneq ($(BOXMODEL), kronos_v2)
 	make links
-  endif
+endif
 
 # -----------------------------------------------------------------------------
 
@@ -65,7 +68,7 @@ $(NP_OBJ_DIR)/config.status: $(NP_DEPS)
 
 # -----------------------------------------------------------------------------
 
-$(D)/neutrino-plugins: $(NP_OBJ_DIR)/config.status
+$(D)/neutrino-plugins: $(D)/neutrino $(NP_OBJ_DIR)/config.status
 	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
 	$(MAKE) -C $(NP_OBJ_DIR) all     DESTDIR=$(TARGET_DIR)
 	$(MAKE) -C $(NP_OBJ_DIR) install DESTDIR=$(TARGET_DIR)
@@ -180,10 +183,11 @@ $(D)/links: $(D)/libpng $(D)/libjpeg $(D)/openssl $(ARCHIVE)/links-$(LINKS_VER).
 
 # -----------------------------------------------------------------------------
 
-PHONY += plugins-all
+PHONY += plugins
 PHONY += plugins-hd1
 PHONY += plugins-hd2
 PHONY += plugins-hd51
+
 PHONY += neutrino-plugins-uninstall neutrino-plugins-distclean
 PHONY += neutrino-plugins-clean neutrino-plugins-clean-all
 PHONY += neutrino-plugin-%
