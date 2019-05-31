@@ -101,6 +101,8 @@ endif
 $(TARGET_LIB_DIR)/firmware: | $(TARGET_DIR)
 	mkdir -p $@
 	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/lib-firmware/. $@
+	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/lib-firmware-dvb/. $@
+	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/lib-firmware-rt/. $@
 
 $(TARGET_LIB_DIR)/modules: | $(TARGET_DIR)
 	mkdir -p $@
