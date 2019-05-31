@@ -23,7 +23,7 @@ ni-image:
 	@echo "starting 'make $@' build with "$(PARALLEL_JOBS)" threads!"
 	$(MAKE) kernel
 	$(MAKE) neutrino
-	$(MAKE) plugins
+	make plugins
 	make fbshot
 	$(MAKE) lcd4linux
 	$(MAKE) luacurl
