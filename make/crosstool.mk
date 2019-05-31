@@ -21,7 +21,7 @@ $(CROSSTOOL_BACKUP):
 	@false
 
 crosstool-backup:
-	cd $(CROSS_DIR); \
+	$(CD) $(CROSS_DIR); \
 		tar -czvf $(CROSSTOOL_BACKUP) *
 
 crosstool-restore: $(CROSSTOOL_BACKUP)

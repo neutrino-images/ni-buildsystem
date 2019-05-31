@@ -174,7 +174,7 @@ endif
 
 $(D)/ffmpeg: $(FFMPEG_DEPS) | $(TARGET_DIR)
 	$(REMOVE)/$(NI_FFMPEG)
-	cd $(SOURCE_DIR)/$(NI_FFMPEG) && \
+	$(CD) $(SOURCE_DIR)/$(NI_FFMPEG); \
 		git checkout $(NI_FFMPEG_BRANCH)
 	tar -C $(SOURCE_DIR) -cp $(NI_FFMPEG) --exclude-vcs | tar -C $(BUILD_TMP) -x
 	$(CHDIR)/$(NI_FFMPEG); \

@@ -654,7 +654,8 @@ $(D)/lua: $(D)/libncurses $(ARCHIVE)/lua-$(LUA_VER).tar.gz | $(TARGET_DIR)
 		$(MAKE) linux PKG_VERSION=$(LUA_VER) CC=$(TARGET)-gcc LD=$(TARGET)-ld AR="$(TARGET)-ar rcu" RANLIB=$(TARGET)-ranlib LDFLAGS="$(TARGET_LDFLAGS)"; \
 		$(MAKE) install INSTALL_TOP=$(TARGET_DIR)
 	install -D -m 0755 $(BUILD_TMP)/lua-$(LUA_VER)/src/liblua.so.$(LUA_VER) $(TARGET_LIB_DIR)/liblua.so.$(LUA_VER)
-	cd $(TARGET_LIB_DIR); ln -sf liblua.so.$(LUA_VER) $(TARGET_LIB_DIR)/liblua.so
+	$(CD) $(TARGET_LIB_DIR); \
+		ln -sf liblua.so.$(LUA_VER) $(TARGET_LIB_DIR)/liblua.so
 	install -D -m 0644 $(BUILD_TMP)/lua-$(LUA_VER)/etc/lua.pc $(PKG_CONFIG_PATH)/lua.pc
 	$(REWRITE_PKGCONF)/lua.pc
 	rm -rf $(TARGET_DIR)/bin/luac
@@ -806,7 +807,7 @@ $(D)/libaacs: $(ARCHIVE)/libaacs-$(LIBAACS_VER).tar.bz2 $(D)/libgcrypt | $(TARGE
 	$(REWRITE_PKGCONF)/libaacs.pc
 	$(REWRITE_LIBTOOL)/libaacs.la
 	$(REMOVE)/libaacs-$(LIBAACS_VER)
-	cd $(TARGET_DIR); \
+	$(CD) $(TARGET_DIR); \
 		mkdir -p .config/aacs .cache/aacs/vuk
 	cp $(IMAGEFILES)/libaacs/KEYDB.cfg $(TARGET_DIR)/.config/aacs
 	$(TOUCH)
@@ -830,7 +831,7 @@ $(D)/libbdplus: $(ARCHIVE)/libbdplus-$(LIBBDPLUS_VER).tar.bz2 $(D)/libaacs | $(T
 	$(REWRITE_PKGCONF)/libbdplus.pc
 	$(REWRITE_LIBTOOL)/libbdplus.la
 	$(REMOVE)/libbdplus-$(LIBBDPLUS_VER)
-	cd $(TARGET_DIR); \
+	$(CD) $(TARGET_DIR); \
 		mkdir -p .config/bdplus/vm0
 	cp -f $(IMAGEFILES)/libbdplus/* $(TARGET_DIR)/.config/bdplus/vm0
 	$(TOUCH)

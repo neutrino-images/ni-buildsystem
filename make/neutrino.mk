@@ -134,7 +134,7 @@ N_BUILDENV = \
 
 $(N_OBJ_DIR)/config.status: $(N_DEPS)
 	test -d $(N_OBJ_DIR) || mkdir -p $(N_OBJ_DIR)
-	cd $(SOURCE_DIR)/$(NI_NEUTRINO) && \
+	$(CD) $(SOURCE_DIR)/$(NI_NEUTRINO); \
 		git checkout $(NI_NEUTRINO_BRANCH)
 	$(SOURCE_DIR)/$(NI_NEUTRINO)/autogen.sh
 	pushd $(N_OBJ_DIR) && \

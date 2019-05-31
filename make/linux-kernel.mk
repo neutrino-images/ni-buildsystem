@@ -52,7 +52,7 @@ endif
 # -----------------------------------------------------------------------------
 
 $(D)/kernel.do_checkout: $(SOURCE_DIR)/$(NI_LINUX-KERNEL)
-	cd $(SOURCE_DIR)/$(NI_LINUX-KERNEL); \
+	$(CD) $(SOURCE_DIR)/$(NI_LINUX-KERNEL); \
 		git checkout $(KERNEL_BRANCH)
 	$(TOUCH)
 
@@ -61,7 +61,7 @@ $(D)/kernel.do_prepare: kernel.do_checkout
 	$(REMOVE)/$(KERNEL_OBJ)
 	$(REMOVE)/$(KERNEL_MODULES)
 	tar -C $(SOURCE_DIR) -cp $(NI_LINUX-KERNEL) --exclude-vcs | tar -C $(BUILD_TMP) -x
-	cd $(BUILD_TMP); \
+	$(CD) $(BUILD_TMP); \
 		mv $(NI_LINUX-KERNEL) $(KERNEL_SRC)
 	$(MKDIR)/$(KERNEL_OBJ)
 	$(MKDIR)/$(KERNEL_MODULES)

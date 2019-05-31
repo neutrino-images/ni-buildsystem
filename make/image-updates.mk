@@ -117,7 +117,7 @@ pathauf-192:
 	mkdir -pv $(UPDATE_INST_DIR)/var/tuxbox/config/zapit && \
 	cp -f $(IMAGEFILES)/channellists/$@/* $(UPDATE_INST_DIR)/var/tuxbox/config/zapit/
 	# remove non-printable chars and re-format xml-files
-	cd $(UPDATE_INST_DIR)/var/tuxbox/config/zapit/; \
+	$(CD) $(UPDATE_INST_DIR)/var/tuxbox/config/zapit/; \
 	for file in *.xml; do \
 		sed -i 's/[^[:print:]]//g' $$file; \
 		XMLLINT_INDENT="	" \
@@ -186,7 +186,7 @@ u-clean-all: u-clean
 	rm -rf $(UPDATE_DIR)
 
 u-update-bin:
-	set -e; cd $(BUILD_TMP); \
+	$(CD) $(BUILD_TMP); \
 		tar -czvf $(UPDATE_DIR)/$(UPDATE_NAME).bin temp_inst
 	echo $(UPDATE_URL)/$(UPDATE_NAME).bin $(UPDATE_TYPE)$(UPDATE_VER)$(UPDATE_DATE) `md5sum $(UPDATE_DIR)/$(UPDATE_NAME).bin | cut -c1-32` $(UPDATE_DESC) $(UPDATE_VERSION) >> $(UPDATE_DIR)/$(UPDATE_MD5FILE)
 	$(MAKE) u-clean

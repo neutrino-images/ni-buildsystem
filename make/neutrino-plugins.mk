@@ -103,7 +103,7 @@ $(D)/channellogos: $(SOURCE_DIR)/$(NI_LOGO-STUFF) $(SHAREICONS)
 	install -m 0644 $(SOURCE_DIR)/$(NI_LOGO-STUFF)/logos/* $(SHAREICONS)/logo
 	mkdir -p $(SHAREICONS)/logo/events
 	install -m 0644 $(SOURCE_DIR)/$(NI_LOGO-STUFF)/logos-events/* $(SHAREICONS)/logo/events
-	cd $(SOURCE_DIR)/$(NI_LOGO-STUFF)/logo-links && \
+	$(CD) $(SOURCE_DIR)/$(NI_LOGO-STUFF)/logo-links; \
 		./logo-linker.sh logo-links.db $(SHAREICONS)/logo
 	$(TOUCH)
 

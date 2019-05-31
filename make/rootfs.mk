@@ -162,15 +162,15 @@ get-update-info-hd2:
 	$(call draw_line);
 	@echo "Get update info for model $(shell echo $(BOXMODEL) | sed 's/.*/\u&/')"
 	@echo
-	@cd $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR); \
+	@$(CD) $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR); \
 	test -e ./u-boot.bin && ( \
 		strings u-boot.bin | grep -m1 "U-Boot "; \
 	); \
 	test -e ./uldr.bin && ( \
 		strings uldr.bin | grep -m1 "Microloader "; \
 	); \
-	cd $(TARGET_DIR)/var/update; \
-	test -e ./vmlinux.ub.gz	&& ( \
+	$(CD) $(TARGET_DIR)/var/update; \
+	test -e ./vmlinux.ub.gz && ( \
 		dd if=./vmlinux.ub.gz bs=1 skip=$$(LC_ALL=C grep -a -b -o $$'\x1f\x8b\x08\x00\x00\x00\x00\x00' ./vmlinux.ub.gz \
 		| cut -d ':' -f 1) | zcat | grep -a "Linux version"; \
 	);
@@ -180,7 +180,7 @@ get-update-info-hd1:
 	$(call draw_line);
 	@echo "Get update info for model $(shell echo $(BOXMODEL) | sed 's/.*/\u&/')"
 	@echo
-	@cd $(TARGET_DIR)/var/update; \
+	@$(CD) $(TARGET_DIR)/var/update; \
 	test -e ./zImage && ( \
 		dd if=./zImage bs=1 skip=$$(LC_ALL=C grep -a -b -o $$'\x1f\x8b\x08\x00\x00\x00\x00\x00' ./zImage \
 		| cut -d ':' -f 1) | zcat | grep -a "Linux version"; \

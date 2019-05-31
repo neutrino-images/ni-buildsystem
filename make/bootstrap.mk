@@ -132,15 +132,15 @@ cross-libs: | $(TARGET_DIR)
 		false; \
 	fi
 ifeq ($(BOXSERIES), hd2)
-	cd $(TARGET_LIB_DIR) && \
-		ln -sf libuClibc-$(UCLIBC_VER).so libcrypt.so.0 && \
-		ln -sf libuClibc-$(UCLIBC_VER).so libdl.so.0 && \
-		ln -sf libuClibc-$(UCLIBC_VER).so libm.so.0 && \
-		ln -sf libuClibc-$(UCLIBC_VER).so libpthread.so.0 && \
+	$(CD) $(TARGET_LIB_DIR); \
+		ln -sf libuClibc-$(UCLIBC_VER).so libcrypt.so.0; \
+		ln -sf libuClibc-$(UCLIBC_VER).so libdl.so.0; \
+		ln -sf libuClibc-$(UCLIBC_VER).so libm.so.0; \
+		ln -sf libuClibc-$(UCLIBC_VER).so libpthread.so.0; \
 		ln -sf libuClibc-$(UCLIBC_VER).so librt.so.0
 endif
 ifeq ($(BOXSERIES), hd51)
-	cd $(TARGET_LIB_DIR) && \
+	$(CD) $(TARGET_LIB_DIR); \
 		ln -sf ld-2.23.so ld-linux.so.3
 endif
 
