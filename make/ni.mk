@@ -21,7 +21,7 @@ personalized-image:
 image \
 ni-image:
 	@echo "starting 'make $@' build with "$(PARALLEL_JOBS)" threads!"
-	$(MAKE) kernel-modules-$(BOXTYPE)
+	$(MAKE) kernel
 	$(MAKE) neutrino
 	$(MAKE) plugins
 	make fbshot

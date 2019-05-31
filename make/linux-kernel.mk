@@ -87,6 +87,11 @@ endif
 
 # -----------------------------------------------------------------------------
 
+$(D)/kernel: $(D)/kernel-$(BOXTYPE) $(D)/kernel-modules-$(BOXTYPE)
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
 $(D)/kernel-coolstream: $(D)/kernel-coolstream-$(BOXSERIES)
 	$(TOUCH)
 
