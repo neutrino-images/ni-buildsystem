@@ -15,6 +15,9 @@ deps-clean:
 host-clean:
 	-rm -rf $(HOST_DIR)
 
+host-bin-config-clean:
+	-find $(HOST_DIR)/bin -name *-config ! -name pkg-config -delete
+
 staging-clean:
 	-rm -rf $(STAGING_DIR)
 
@@ -31,7 +34,7 @@ ccache-clean:
 	@echo "Clearing $$CCACHE_DIR"
 	@$(CCACHE) -C
 
-rebuild-clean: target-clean deps-clean
+rebuild-clean: target-clean deps-clean host-bin-config-clean
 	-rm -rf $(BUILD_TMP)
 
 all-clean: rebuild-clean staging-clean host-clean static-base-clean
@@ -55,6 +58,7 @@ PHONY += cross-base-clean
 PHONY += cross-clean
 PHONY += deps-clean
 PHONY += host-clean
+PHONY += host-bin-config-clean
 PHONY += staging-clean
 PHONY += static-base-clean
 PHONY += static-clean
