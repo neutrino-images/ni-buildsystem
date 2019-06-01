@@ -181,11 +181,10 @@ $(D)/libcurl: $(D)/zlib $(D)/openssl $(D)/librtmp $(D)/ca-bundle $(ARCHIVE)/curl
 			--enable-optimize \
 			; \
 		$(MAKE) all; \
-		mkdir -p $(HOST_DIR)/bin; \
-		sed -e "s,^prefix=,prefix=$(TARGET_DIR)," < curl-config > $(HOST_DIR)/bin/curl-config; \
-		chmod 755 $(HOST_DIR)/bin/curl-config; \
-		make install DESTDIR=$(TARGET_DIR)
-	rm -rf $(TARGET_DIR)/bin/curl-config $(TARGET_DIR)/share/zsh
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	mv $(TARGET_DIR)/bin/curl-config $(HOST_DIR)/bin/
+	$(REWRITE_CONFIG) $(HOST_DIR)/bin/curl-config
+	rm -f $(TARGET_DIR)/share/zsh
 	$(REWRITE_LIBTOOL)/libcurl.la
 	$(REWRITE_PKGCONF)/libcurl.pc
 	$(REMOVE)/curl-$(LIBCURL_VER)
