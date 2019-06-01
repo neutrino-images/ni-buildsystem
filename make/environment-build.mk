@@ -264,9 +264,12 @@ PKG_CONFIG_LIBDIR = $(TARGET_LIB_DIR)
 PKG_CONFIG_PATH = $(PKG_CONFIG_LIBDIR)/pkgconfig
 
 # helper-"functions":
-REWRITE_RULES          = sed -i -e "s,^libdir=.*,libdir='$(TARGET_LIB_DIR)'," -e "s,\(^dependency_libs='\| \|-L\|^dependency_libs='\)/lib,\ $(TARGET_LIB_DIR),g"
-REWRITE_LIBTOOL        = $(REWRITE_RULES) $(TARGET_LIB_DIR)
-REWRITE_LIBTOOL_STATIC = $(REWRITE_RULES) $(STATIC_LIB_DIR)
+REWRITE_LIBTOOL_RULES  = sed -i \
+				-e "s,^libdir=.*,libdir='$(TARGET_LIB_DIR)'," \
+				-e "s,\(^dependency_libs='\| \|-L\|^dependency_libs='\)/lib,\ $(TARGET_LIB_DIR),g"
+
+REWRITE_LIBTOOL        = $(REWRITE_LIBTOOL_RULES) $(TARGET_LIB_DIR)
+REWRITE_LIBTOOL_STATIC = $(REWRITE_LIBTOOL_RULES) $(STATIC_LIB_DIR)
 
 REWRITE_CONFIG_RULES   = sed -i \
 				-e "s,^prefix=.*,prefix='$(TARGET_DIR)'," \
