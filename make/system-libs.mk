@@ -201,7 +201,7 @@ LIBPNG_PATCH  = libpng-Disable-pngfix-and-png-fix-itxt.patch
 
 LIBPNG_CONF =
 ifneq ($(BOXSERIES), hd51)
-	LIBPNG_CONF = --disable-arm-neon
+  LIBPNG_CONF = --disable-arm-neon
 endif
 
 $(D)/libpng: $(ARCHIVE)/libpng-$(LIBPNG_VER).tar.xz $(D)/zlib | $(TARGET_DIR)
@@ -210,15 +210,18 @@ $(D)/libpng: $(ARCHIVE)/libpng-$(LIBPNG_VER).tar.xz $(D)/zlib | $(TARGET_DIR)
 	$(CHDIR)/libpng-$(LIBPNG_VER); \
 		$(call apply_patches, $(LIBPNG_PATCH)); \
 		$(CONFIGURE) \
-			--prefix=$(TARGET_DIR) \
-			--bindir=$(HOST_DIR)/bin \
-			--mandir=$(BUILD_TMP)/.remove \
+			--prefix= \
+			--mandir=/.remove \
 			--enable-silent-rules \
 			$(LIBPNG_CONF) \
 			--disable-static \
 			; \
-		ECHO=echo $(MAKE) all; \
-		make install
+		$(MAKE) all; \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	mv $(TARGET_DIR)/bin/libpng*-config $(HOST_DIR)/bin/
+	$(REWRITE_CONFIG) $(HOST_DIR)/bin/libpng16-config
+	$(REWRITE_PKGCONF)/libpng16.pc
+	$(REWRITE_LIBTOOL)/libpng16.la
 	$(REMOVE)/libpng-$(LIBPNG_VER)
 	$(TOUCH)
 
