@@ -4,14 +4,15 @@
 # -----------------------------------------------------------------------------
 
 # usbutils-008 needs udev
-USBUTILS_VER=007
+USBUTILS_VER = 007
+
 $(ARCHIVE)/usbutils-$(USBUTILS_VER).tar.xz:
 	$(WGET) https://www.kernel.org/pub/linux/utils/usb/usbutils/usbutils-$(USBUTILS_VER).tar.xz
 
 USBUTILS_PATCH  = usbutils-avoid-dependency-on-bash.patch
 USBUTILS_PATCH += usbutils-fix-null-pointer-crash.patch
 
-$(D)/usbutils: $(D)/libusb_compat $(ARCHIVE)/usbutils-$(USBUTILS_VER).tar.xz | $(TARGET_DIR)
+$(D)/usbutils: $(D)/libusb-compat $(ARCHIVE)/usbutils-$(USBUTILS_VER).tar.xz | $(TARGET_DIR)
 	$(REMOVE)/usbutils-$(USBUTILS_VER)
 	$(UNTAR)/usbutils-$(USBUTILS_VER).tar.xz
 	$(CHDIR)/usbutils-$(USBUTILS_VER); \
@@ -34,7 +35,8 @@ $(D)/usbutils: $(D)/libusb_compat $(ARCHIVE)/usbutils-$(USBUTILS_VER).tar.xz | $
 
 # -----------------------------------------------------------------------------
 
-BINUTILS_VER=2.25
+BINUTILS_VER = 2.25
+
 $(ARCHIVE)/binutils-$(BINUTILS_VER).tar.bz2:
 	$(WGET) https://ftp.gnu.org/gnu/binutils/binutils-$(BINUTILS_VER).tar.bz2
 
@@ -60,7 +62,8 @@ $(D)/binutils: $(ARCHIVE)/binutils-$(BINUTILS_VER).tar.bz2 | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-UTIL-LINUX_VER=2.29
+UTIL-LINUX_VER = 2.29
+
 $(ARCHIVE)/util-linux-$(UTIL-LINUX_VER).tar.xz:
 	$(WGET) https://www.kernel.org/pub/linux/utils/util-linux/v$(UTIL-LINUX_VER)/util-linux-$(UTIL-LINUX_VER).tar.xz
 
@@ -85,6 +88,7 @@ $(D)/util-linux: $(D)/libncurses $(ARCHIVE)/util-linux-$(UTIL-LINUX_VER).tar.xz 
 # -----------------------------------------------------------------------------
 
 IPTABLES_VER = 1.4.21
+
 $(ARCHIVE)/iptables-$(IPTABLES_VER).tar.bz2:
 	$(WGET) http://www.netfilter.org/projects/iptables/files/iptables-$(IPTABLES_VER).tar.bz2
 
@@ -111,7 +115,8 @@ $(D)/iptables: $(ARCHIVE)/iptables-$(IPTABLES_VER).tar.bz2 | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-LIGHTTPD_VER=1.4.31
+LIGHTTPD_VER = 1.4.31
+
 $(ARCHIVE)/lighttpd-$(LIGHTTPD_VER).tar.gz:
 	$(WGET) http://download.lighttpd.net/lighttpd/releases-1.4.x/lighttpd-$(LIGHTTPD_VER).tar.gz
 
@@ -138,7 +143,8 @@ $(D)/lighttpd: $(D)/zlib $(ARCHIVE)/lighttpd-$(LIGHTTPD_VER).tar.gz | $(TARGET_D
 
 # -----------------------------------------------------------------------------
 
-PYTHON_VER=2.7.11
+PYTHON_VER = 2.7.11
+
 $(ARCHIVE)/Python-$(PYTHON_VER).tgz:
 	$(WGET) http://www.python.org/ftp/python/$(PYTHON_VER)/Python-$(PYTHON_VER).tgz
 

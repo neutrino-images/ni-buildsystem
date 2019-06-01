@@ -29,7 +29,7 @@ ni-image:
 	$(MAKE) luacurl
 	$(MAKE) timezone
 	$(MAKE) smartmontools
-	$(MAKE) sg3-utils
+	$(MAKE) sg3_utils
 	$(MAKE) nfs-utils
 	$(MAKE) procps-ng
 	$(MAKE) nano

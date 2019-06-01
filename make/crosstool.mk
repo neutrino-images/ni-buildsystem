@@ -71,7 +71,13 @@ crosstool-arm-hd1: CROSS_DIR-check $(SOURCE_DIR)/$(NI_LINUX-KERNEL)
 	rm -f $(CROSS_DIR)/$(TARGET)/sys-root/lib/libstdc++.so.6.0.20-gdb.py
 	$(REMOVE)/crosstool-ng.git
 
-UCLIBC_VER=1.0.24
+UCLIBC_VER = 1.0.24
+
+GCC_VER = 4.9-2017.01
+
+$(ARCHIVE)/gcc-linaro-$(GCC_VER).tar.xz:
+	$(WGET) https://releases.linaro.org/components/toolchain/gcc-linaro/$(GCC_VER)/gcc-linaro-$(GCC_VER).tar.xz
+
 crosstool-arm-hd2: CROSS_DIR-check $(ARCHIVE)/gcc-linaro-$(GCC_VER).tar.xz $(SOURCE_DIR)/$(NI_LINUX-KERNEL)
 	make $(BUILD_TMP)
 	$(REMOVE)/crosstool-ng.git

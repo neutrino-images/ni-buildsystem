@@ -59,6 +59,11 @@ endif
 
 # -----------------------------------------------------------------------------
 
+OPENVPN_VER = 2.4.6
+
+$(ARCHIVE)/openvpn-$(OPENVPN_VER).tar.xz:
+	$(WGET) http://swupdate.openvpn.org/community/releases/openvpn-$(OPENVPN_VER).tar.xz
+
 $(D)/openvpn: $(D)/lzo $(D)/openssl $(ARCHIVE)/openvpn-$(OPENVPN_VER).tar.xz | $(TARGET_DIR)
 	$(REMOVE)/openvpn-$(OPENVPN_VER)
 	$(UNTAR)/openvpn-$(OPENVPN_VER).tar.xz
@@ -87,6 +92,11 @@ $(D)/openvpn: $(D)/lzo $(D)/openssl $(ARCHIVE)/openvpn-$(OPENVPN_VER).tar.xz | $
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
+
+OPENSSH_VER = 7.9p1
+
+$(ARCHIVE)/openssh-$(OPENSSH_VER).tar.gz:
+	$(WGET) https://ftp.fau.de/pub/OpenBSD/OpenSSH/portable/openssh-$(OPENSSH_VER).tar.gz
 
 $(D)/openssh: $(D)/openssl $(D)/zlib $(ARCHIVE)/openssh-$(OPENSSH_VER).tar.gz | $(TARGET_DIR)
 	$(REMOVE)/openssh-$(OPENSSH_VER)
@@ -119,6 +129,11 @@ $(D)/openssh: $(D)/openssl $(D)/zlib $(ARCHIVE)/openssh-$(OPENSSH_VER).tar.gz | 
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
+
+TZDATA_VER = 2018e
+
+$(ARCHIVE)/tzdata$(TZDATA_VER).tar.gz:
+	$(WGET) ftp://ftp.iana.org/tz/releases/tzdata$(TZDATA_VER).tar.gz
 
 ifeq ($(BOXSERIES), hd2)
   LOCALTIME = var/etc/localtime
@@ -154,6 +169,11 @@ $(D)/timezone: $(ARCHIVE)/tzdata$(TZDATA_VER).tar.gz | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
+MTD-UTILS_VER = 2.0.2
+
+$(ARCHIVE)/mtd-utils-$(MTD-UTILS_VER).tar.bz2:
+	$(WGET) ftp://ftp.infradead.org/pub/mtd-utils/mtd-utils-$(MTD-UTILS_VER).tar.bz2
+
 $(D)/mtd-utils: $(D)/zlib $(D)/lzo $(D)/e2fsprogs $(ARCHIVE)/mtd-utils-$(MTD-UTILS_VER).tar.bz2 | $(TARGET_DIR)
 	$(REMOVE)/mtd-utils-$(MTD-UTILS_VER)
 	$(UNTAR)/mtd-utils-$(MTD-UTILS_VER).tar.bz2
@@ -180,6 +200,11 @@ endif
 
 # -----------------------------------------------------------------------------
 
+IPERF_VER = 3.1.3
+
+$(ARCHIVE)/iperf-$(IPERF_VER)-source.tar.gz:
+	$(WGET) https://iperf.fr/download/source/iperf-$(IPERF_VER)-source.tar.gz
+
 IPERF_PATCH  = iperf-disable-profiling.patch
 
 $(D)/iperf: $(ARCHIVE)/iperf-$(IPERF_VER)-source.tar.gz | $(TARGET_DIR)
@@ -198,6 +223,11 @@ $(D)/iperf: $(ARCHIVE)/iperf-$(IPERF_VER)-source.tar.gz | $(TARGET_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
+
+PARTED_VER = 3.2
+
+$(ARCHIVE)/parted-$(PARTED_VER).tar.xz:
+	$(WGET) http://ftp.gnu.org/gnu/parted/parted-$(PARTED_VER).tar.xz
 
 PARTED_PATCH  = parted-3.2-devmapper-1.patch
 PARTED_PATCH += parted-3.2-sysmacros.patch
@@ -231,6 +261,11 @@ $(D)/parted: $(D)/e2fsprogs $(ARCHIVE)/parted-$(PARTED_VER).tar.xz | $(TARGET_DI
 
 # -----------------------------------------------------------------------------
 
+HDPARM_VER = 9.54
+
+$(ARCHIVE)/hdparm-$(HDPARM_VER).tar.gz:
+	$(WGET) http://sourceforge.net/projects/hdparm/files/hdparm/hdparm-$(HDPARM_VER).tar.gz
+
 $(D)/hdparm: $(ARCHIVE)/hdparm-$(HDPARM_VER).tar.gz | $(TARGET_DIR)
 	$(REMOVE)/hdparm-$(HDPARM_VER)
 	$(UNTAR)/hdparm-$(HDPARM_VER).tar.gz
@@ -243,6 +278,11 @@ $(D)/hdparm: $(ARCHIVE)/hdparm-$(HDPARM_VER).tar.gz | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
+HD-IDLE_VER = 1.05
+
+$(ARCHIVE)/hd-idle-$(HD-IDLE_VER).tgz:
+	$(WGET) http://downloads.sourceforge.net/project/hd-idle/hd-idle-$(HD-IDLE_VER).tgz
+
 $(D)/hd-idle: $(ARCHIVE)/hd-idle-$(HD-IDLE_VER).tgz | $(TARGET_DIR)
 	$(REMOVE)/hd-idle
 	$(UNTAR)/hd-idle-$(HD-IDLE_VER).tgz
@@ -253,6 +293,11 @@ $(D)/hd-idle: $(ARCHIVE)/hd-idle-$(HD-IDLE_VER).tgz | $(TARGET_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
+
+COREUTILS_VER = 8.30
+
+$(ARCHIVE)/coreutils-$(COREUTILS_VER).tar.xz:
+	$(WGET) http://ftp.gnu.org/gnu/coreutils/coreutils-$(COREUTILS_VER).tar.xz
 
 COREUTILS_PATCH  = coreutils-fix-coolstream-build.patch
 
@@ -301,6 +346,11 @@ $(D)/less: $(D)/libncurses $(ARCHIVE)/less-$(LESS_VER).tar.gz | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
+NTP_VER = 4.2.8
+
+$(ARCHIVE)/ntp-$(NTP_VER).tar.gz:
+	$(WGET) http://www.eecis.udel.edu/~ntp/ntp_spool/ntp4/ntp-4.2/ntp-$(NTP_VER).tar.gz
+
 $(D)/ntp: $(ARCHIVE)/ntp-$(NTP_VER).tar.gz $(D)/openssl | $(TARGET_DIR)
 	$(REMOVE)/ntp-$(NTP_VER)
 	$(UNTAR)/ntp-$(NTP_VER).tar.gz
@@ -320,6 +370,11 @@ $(D)/ntp: $(ARCHIVE)/ntp-$(NTP_VER).tar.gz $(D)/openssl | $(TARGET_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
+
+DJMOUNT_VER = 0.71
+
+$(ARCHIVE)/djmount-$(DJMOUNT_VER).tar.gz:
+	$(WGET) http://sourceforge.net/projects/djmount/files/djmount/$(DJMOUNT_VER)/djmount-$(DJMOUNT_VER).tar.gz
 
 DJMOUNT_PATCH  = djmount-fix-hang-with-asset-upnp.patch
 DJMOUNT_PATCH += djmount-fix-incorrect-range-when-retrieving-content-via-HTTP.patch
@@ -349,6 +404,11 @@ $(D)/djmount: $(ARCHIVE)/djmount-$(DJMOUNT_VER).tar.gz $(D)/libfuse | $(TARGET_D
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
+
+USHARE_VER = 1.1a
+
+$(ARCHIVE)/ushare-$(USHARE_VER).tar.bz2:
+	$(WGET) http://ushare.geexbox.org/releases/ushare-$(USHARE_VER).tar.bz2
 
 USHARE_PATCH  = ushare.diff
 USHARE_PATCH += ushare-fix-building-with-gcc-5.x.patch
@@ -402,6 +462,11 @@ $(D)/smartmontools: $(ARCHIVE)/smartmontools-$(SMARTMONTOOLS_VER).tar.gz | $(TAR
 
 # -----------------------------------------------------------------------------
 
+INADYN_VER = 2.4
+
+$(ARCHIVE)/inadyn-$(INADYN_VER).tar.xz:
+	$(WGET) https://github.com/troglobit/inadyn/releases/download/v$(INADYN_VER)/inadyn-$(INADYN_VER).tar.xz
+
 $(D)/inadyn: $(D)/openssl $(D)/confuse $(D)/libite $(ARCHIVE)/inadyn-$(INADYN_VER).tar.xz | $(TARGET_DIR)
 	$(REMOVE)/inadyn-$(INADYN_VER)
 	$(UNTAR)/inadyn-$(INADYN_VER).tar.xz
@@ -427,6 +492,11 @@ $(D)/inadyn: $(D)/openssl $(D)/confuse $(D)/libite $(ARCHIVE)/inadyn-$(INADYN_VE
 
 # -----------------------------------------------------------------------------
 
+VSFTPD_VER = 3.0.3
+
+$(ARCHIVE)/vsftpd-$(VSFTPD_VER).tar.gz:
+	$(WGET) https://security.appspot.com/downloads/vsftpd-$(VSFTPD_VER).tar.gz
+
 VSFTP_PATCH  = vsftpd-fix-CVE-2015-1419.patch
 VSFTP_PATCH += vsftpd-disable-capabilities.patch
 
@@ -450,6 +520,11 @@ $(D)/vsftpd: $(D)/openssl $(ARCHIVE)/vsftpd-$(VSFTPD_VER).tar.gz | $(TARGET_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
+
+PROCPS-NG_VER = 3.3.15
+
+$(ARCHIVE)/procps-ng-$(PROCPS-NG_VER).tar.xz:
+	$(WGET) http://sourceforge.net/projects/procps-ng/files/Production/procps-ng-$(PROCPS-NG_VER).tar.xz
 
 $(D)/procps-ng: $(D)/libncurses $(ARCHIVE)/procps-ng-$(PROCPS-NG_VER).tar.xz | $(TARGET_DIR)
 	$(REMOVE)/procps-ng-$(PROCPS-NG_VER)
@@ -542,6 +617,15 @@ $(D)/bash: $(ARCHIVE)/bash-$(BASH_VER).tar.gz | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
+E2FSPROGS_VER = 1.44.5
+ifeq ($(BOXTYPE), coolstream)
+  # formatting ext4 failes with newer versions
+  E2FSPROGS_VER = 1.43.8
+endif
+
+$(ARCHIVE)/e2fsprogs-$(E2FSPROGS_VER).tar.gz:
+	$(WGET) http://downloads.sourceforge.net/project/e2fsprogs/e2fsprogs/v$(E2FSPROGS_VER)/e2fsprogs-$(E2FSPROGS_VER).tar.gz
+
 $(D)/e2fsprogs: $(ARCHIVE)/e2fsprogs-$(E2FSPROGS_VER).tar.gz | $(TARGET_DIR)
 	$(REMOVE)/e2fsprogs-$(E2FSPROGS_VER)
 	$(UNTAR)/e2fsprogs-$(E2FSPROGS_VER).tar.gz
@@ -588,10 +672,15 @@ $(D)/e2fsprogs: $(ARCHIVE)/e2fsprogs-$(E2FSPROGS_VER).tar.gz | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-$(D)/ntfs-3g: $(ARCHIVE)/ntfs-3g_ntfsprogs-$(NTFS3G_VER).tgz | $(TARGET_DIR)
-	$(REMOVE)/ntfs-3g_ntfsprogs-$(NTFS3G_VER)
-	$(UNTAR)/ntfs-3g_ntfsprogs-$(NTFS3G_VER).tgz
-	$(CHDIR)/ntfs-3g_ntfsprogs-$(NTFS3G_VER); \
+NTFS-3G_VER = 2017.3.23
+
+$(ARCHIVE)/ntfs-3g_ntfsprogs-$(NTFS-3G_VER).tgz:
+	$(WGET) https://tuxera.com/opensource/ntfs-3g_ntfsprogs-$(NTFS-3G_VER).tgz
+
+$(D)/ntfs-3g: $(ARCHIVE)/ntfs-3g_ntfsprogs-$(NTFS-3G_VER).tgz | $(TARGET_DIR)
+	$(REMOVE)/ntfs-3g_ntfsprogs-$(NTFS-3G_VER)
+	$(UNTAR)/ntfs-3g_ntfsprogs-$(NTFS-3G_VER).tgz
+	$(CHDIR)/ntfs-3g_ntfsprogs-$(NTFS-3G_VER); \
 		$(CONFIGURE) \
 			--prefix= \
 			--mandir=/.remove \
@@ -601,12 +690,20 @@ $(D)/ntfs-3g: $(ARCHIVE)/ntfs-3g_ntfsprogs-$(NTFS3G_VER).tgz | $(TARGET_DIR)
 			--disable-library \
 			; \
 		$(MAKE); \
-	install -D -m 0755 $(BUILD_TMP)/ntfs-3g_ntfsprogs-$(NTFS3G_VER)/src/ntfs-3g $(TARGET_DIR)/sbin/ntfs-3g
+	install -D -m 0755 $(BUILD_TMP)/ntfs-3g_ntfsprogs-$(NTFS-3G_VER)/src/ntfs-3g $(TARGET_DIR)/sbin/ntfs-3g
 	ln -sf ntfs-3g $(TARGET_DIR)/sbin/mount.ntfs
-	$(REMOVE)/ntfs-3g_ntfsprogs-$(NTFS3G_VER)
+	$(REMOVE)/ntfs-3g_ntfsprogs-$(NTFS-3G_VER)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
+
+AUTOFS5_MAJOR = 5
+AUTOFS5_MINOR = 1
+AUTOFS5_MICRO = 4
+AUTOFS5_VER = $(AUTOFS5_MAJOR).$(AUTOFS5_MINOR).$(AUTOFS5_MICRO)
+
+$(ARCHIVE)/autofs-$(AUTOFS5_VER).tar.gz:
+	$(WGET) https://www.kernel.org/pub/linux/daemons/autofs/v$(AUTOFS5_MAJOR)/autofs-$(AUTOFS5_VER).tar.gz
 
 # cd $(PATCHES)\autofs-5.1.4
 # wget -N https://mirrors.edge.kernel.org/pub/linux/daemons/autofs/v5/patches-5.1.5/patch_order-5.1.4
@@ -653,6 +750,11 @@ $(D)/autofs5: $(D)/libtirpc $(ARCHIVE)/autofs-$(AUTOFS5_VER).tar.gz | $(TARGET_D
 samba: samba-$(BOXSERIES)
 
 # -----------------------------------------------------------------------------
+
+SAMBA33_VER = 3.3.16
+
+$(ARCHIVE)/samba-$(SAMBA33_VER).tar.gz:
+	$(WGET) https://download.samba.org/pub/samba/samba-$(SAMBA33_VER).tar.gz
 
 SAMBA33_PATCH  = samba33-build-only-what-we-need.patch
 SAMBA33_PATCH += samba33-configure.in-make-getgrouplist_ok-test-cross-compile.patch
@@ -717,6 +819,11 @@ $(D)/samba-hd1: $(D)/zlib $(ARCHIVE)/samba-$(SAMBA33_VER).tar.gz | $(TARGET_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
+
+SAMBA36_VER = 3.6.25
+
+$(ARCHIVE)/samba-$(SAMBA36_VER).tar.gz:
+	$(WGET) https://download.samba.org/pub/samba/stable/samba-$(SAMBA36_VER).tar.gz
 
 SAMBA36_PATCH1  = samba36-build-only-what-we-need.patch
 SAMBA36_PATCH1 += samba36-remove_printer_support.patch
@@ -791,6 +898,11 @@ $(D)/samba-hd2: $(D)/zlib $(ARCHIVE)/samba-$(SAMBA36_VER).tar.gz | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
+DROPBEAR_VER = 2018.76
+
+$(ARCHIVE)/dropbear-$(DROPBEAR_VER).tar.bz2:
+	$(WGET) http://matt.ucc.asn.au/dropbear/releases/dropbear-$(DROPBEAR_VER).tar.bz2
+
 $(D)/dropbear: $(D)/zlib $(ARCHIVE)/dropbear-$(DROPBEAR_VER).tar.bz2 | $(TARGET_DIR)
 	$(REMOVE)/dropbear-$(DROPBEAR_VER)
 	$(UNTAR)/dropbear-$(DROPBEAR_VER).tar.bz2
@@ -828,10 +940,15 @@ $(D)/dropbear: $(D)/zlib $(ARCHIVE)/dropbear-$(DROPBEAR_VER).tar.bz2 | $(TARGET_
 
 # -----------------------------------------------------------------------------
 
-$(D)/sg3-utils: $(ARCHIVE)/sg3_utils-$(SG3-UTILS_VER).tar.xz | $(TARGET_DIR)
-	$(REMOVE)/sg3_utils-$(SG3-UTILS_VER)
-	$(UNTAR)/sg3_utils-$(SG3-UTILS_VER).tar.xz
-	$(CHDIR)/sg3_utils-$(SG3-UTILS_VER); \
+SG3_UTILS_VER = 1.42
+
+$(ARCHIVE)/sg3_utils-$(SG3_UTILS_VER).tar.xz:
+	$(WGET) http://sg.danny.cz/sg/p/sg3_utils-$(SG3_UTILS_VER).tar.xz
+
+$(D)/sg3_utils: $(ARCHIVE)/sg3_utils-$(SG3_UTILS_VER).tar.xz | $(TARGET_DIR)
+	$(REMOVE)/sg3_utils-$(SG3_UTILS_VER)
+	$(UNTAR)/sg3_utils-$(SG3_UTILS_VER).tar.xz
+	$(CHDIR)/sg3_utils-$(SG3_UTILS_VER); \
 		$(CONFIGURE) \
 			--prefix= \
 			--mandir=/.remove \
@@ -843,10 +960,15 @@ $(D)/sg3-utils: $(ARCHIVE)/sg3_utils-$(SG3-UTILS_VER).tar.xz | $(TARGET_DIR)
 		cp -a lib/.libs/libsgutils2.so $(TARGET_LIB_DIR)
 	install -D -m 0755 $(IMAGEFILES)/scripts/sdX.init $(TARGET_DIR)/etc/init.d/sdX
 	ln -sf sdX $(TARGET_DIR)/etc/init.d/K97sdX
-	$(REMOVE)/sg3_utils-$(SG3-UTILS_VER)
+	$(REMOVE)/sg3_utils-$(SG3_UTILS_VER)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
+
+FBSHOT_VER = 0.3
+
+$(ARCHIVE)/fbshot-$(FBSHOT_VER).tar.gz:
+	$(WGET) http://distro.ibiblio.org/amigolinux/download/Utils/fbshot/fbshot-$(FBSHOT_VER).tar.gz
 
 FBSHOT_PATCH  = fbshot-32bit_cs_fb.diff
 FBSHOT_PATCH += fbshot_cs_hd2.diff
@@ -905,19 +1027,24 @@ $(D)/samsunglcd4linux: | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-$(D)/wpa_supplicant: $(D)/openssl $(ARCHIVE)/wpa_supplicant-$(WPA_SUPP_VER).tar.gz | $(TARGET_DIR)
-	$(REMOVE)/wpa_supplicant-$(WPA_SUPP_VER)
-	$(UNTAR)/wpa_supplicant-$(WPA_SUPP_VER).tar.gz
-	$(CHDIR)/wpa_supplicant-$(WPA_SUPP_VER)/wpa_supplicant; \
+WPA_SUPPLICANT_VER = 0.7.3
+
+$(ARCHIVE)/wpa_supplicant-$(WPA_SUPPLICANT_VER).tar.gz:
+	$(WGET) https://ftp.osuosl.org/pub/blfs/conglomeration/wpa_supplicant/wpa_supplicant-$(WPA_SUPPLICANT_VER).tar.gz
+
+$(D)/wpa_supplicant: $(D)/openssl $(ARCHIVE)/wpa_supplicant-$(WPA_SUPPLICANT_VER).tar.gz | $(TARGET_DIR)
+	$(REMOVE)/wpa_supplicant-$(WPA_SUPPLICANT_VER)
+	$(UNTAR)/wpa_supplicant-$(WPA_SUPPLICANT_VER).tar.gz
+	$(CHDIR)/wpa_supplicant-$(WPA_SUPPLICANT_VER)/wpa_supplicant; \
 		cp $(CONFIGS)/wpa_supplicant.config .config; \
 		CC=$(TARGET)-gcc CFLAGS="$(TARGET_CFLAGS)" CXXFLAGS="$(TARGET_CXXFLAGS)" LDFLAGS="$(TARGET_LDFLAGS)" \
 		$(MAKE)
-	install -D -m 0755 $(BUILD_TMP)/wpa_supplicant-$(WPA_SUPP_VER)/wpa_supplicant/wpa_cli $(TARGET_DIR)/sbin/wpa_cli
-	install -D -m 0755 $(BUILD_TMP)/wpa_supplicant-$(WPA_SUPP_VER)/wpa_supplicant/wpa_passphrase $(TARGET_DIR)/sbin/wpa_passphrase
-	install -D -m 0755 $(BUILD_TMP)/wpa_supplicant-$(WPA_SUPP_VER)/wpa_supplicant/wpa_supplicant $(TARGET_DIR)/sbin/wpa_supplicant
+	install -D -m 0755 $(BUILD_TMP)/wpa_supplicant-$(WPA_SUPPLICANT_VER)/wpa_supplicant/wpa_cli $(TARGET_DIR)/sbin/wpa_cli
+	install -D -m 0755 $(BUILD_TMP)/wpa_supplicant-$(WPA_SUPPLICANT_VER)/wpa_supplicant/wpa_passphrase $(TARGET_DIR)/sbin/wpa_passphrase
+	install -D -m 0755 $(BUILD_TMP)/wpa_supplicant-$(WPA_SUPPLICANT_VER)/wpa_supplicant/wpa_supplicant $(TARGET_DIR)/sbin/wpa_supplicant
 	install -D -m 0755 $(IMAGEFILES)/scripts/pre-wlan0.sh $(TARGET_DIR)/etc/network/pre-wlan0.sh
 	install -D -m 0755 $(IMAGEFILES)/scripts/post-wlan0.sh $(TARGET_DIR)/etc/network/post-wlan0.sh
-	$(REMOVE)/wpa_supplicant-$(WPA_SUPP_VER)
+	$(REMOVE)/wpa_supplicant-$(WPA_SUPPLICANT_VER)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -1074,10 +1201,15 @@ endif
 
 # -----------------------------------------------------------------------------
 
-$(D)/fuse-exfat: $(ARCHIVE)/fuse-exfat-$(FUSE_EXFAT_VER).tar.gz $(D)/libfuse | $(TARGET_DIR)
-	$(REMOVE)/fuse-exfat-$(FUSE_EXFAT_VER)
-	$(UNTAR)/fuse-exfat-$(FUSE_EXFAT_VER).tar.gz
-	$(CHDIR)/fuse-exfat-$(FUSE_EXFAT_VER); \
+FUSE-EXFAT_VER = 1.2.8
+
+$(ARCHIVE)/fuse-exfat-$(FUSE-EXFAT_VER).tar.gz:
+	$(WGET) https://github.com/relan/exfat/releases/download/v$(FUSE-EXFAT_VER)/fuse-exfat-$(FUSE-EXFAT_VER).tar.gz
+
+$(D)/fuse-exfat: $(ARCHIVE)/fuse-exfat-$(FUSE-EXFAT_VER).tar.gz $(D)/libfuse | $(TARGET_DIR)
+	$(REMOVE)/fuse-exfat-$(FUSE-EXFAT_VER)
+	$(UNTAR)/fuse-exfat-$(FUSE-EXFAT_VER).tar.gz
+	$(CHDIR)/fuse-exfat-$(FUSE-EXFAT_VER); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--prefix= \
@@ -1086,7 +1218,7 @@ $(D)/fuse-exfat: $(ARCHIVE)/fuse-exfat-$(FUSE_EXFAT_VER).tar.gz $(D)/libfuse | $
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/fuse-exfat-$(FUSE_EXFAT_VER)
+	$(REMOVE)/fuse-exfat-$(FUSE-EXFAT_VER)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -1234,6 +1366,11 @@ $(D)/wget: $(D)/openssl $(ARCHIVE)/wget-$(WGET_VER).tar.gz | $(TARGET_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
+
+LIBICONV_VER = 1.13.1
+
+$(ARCHIVE)/libiconv-$(LIBICONV_VER).tar.gz:
+	$(WGET) http://ftp.gnu.org/gnu/libiconv/libiconv-$(LIBICONV_VER).tar.gz
 
 LIBICONV_PATCH  = iconv-disable_transliterations.patch
 LIBICONV_PATCH += iconv-strip_charsets.patch

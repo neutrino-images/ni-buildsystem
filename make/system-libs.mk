@@ -3,6 +3,11 @@
 #
 # -----------------------------------------------------------------------------
 
+ZLIB_VER = 1.2.11
+
+$(ARCHIVE)/zlib-$(ZLIB_VER).tar.gz:
+	$(WGET) http://zlib.net/zlib-$(ZLIB_VER).tar.gz
+
 ZLIB_PATCH  = zlib-ldflags-tests.patch
 ZLIB_PATCH += zlib-remove.ldconfig.call.patch
 
@@ -24,6 +29,11 @@ $(D)/zlib: $(ARCHIVE)/zlib-$(ZLIB_VER).tar.gz | $(TARGET_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
+
+FUSE_VER = 2.9.8
+
+$(ARCHIVE)/fuse-$(FUSE_VER).tar.gz:
+	$(WGET) https://github.com/libfuse/libfuse/releases/download/fuse-$(FUSE_VER)/fuse-$(FUSE_VER).tar.gz
 
 $(D)/libfuse: $(ARCHIVE)/fuse-$(FUSE_VER).tar.gz | $(TARGET_DIR)
 	$(REMOVE)/fuse-$(FUSE_VER)
@@ -51,6 +61,11 @@ $(D)/libfuse: $(ARCHIVE)/fuse-$(FUSE_VER).tar.gz | $(TARGET_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
+
+LIBUPNP_VER = 1.6.22
+
+$(ARCHIVE)/libupnp-$(LIBUPNP_VER).tar.bz2:
+	$(WGET) http://sourceforge.net/projects/pupnp/files/pupnp/libUPnP%20$(LIBUPNP_VER)/libupnp-$(LIBUPNP_VER).tar.bz2
 
 $(D)/libupnp: $(ARCHIVE)/libupnp-$(LIBUPNP_VER).tar.bz2 | $(TARGET_DIR)
 	$(REMOVE)/libupnp-$(LIBUPNP_VER)
@@ -99,6 +114,11 @@ $(D)/libdvbsi: | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
+GIFLIB_VER = 5.1.4
+
+$(ARCHIVE)/giflib-$(GIFLIB_VER).tar.bz2:
+	$(WGET) http://sourceforge.net/projects/giflib/files/giflib-$(GIFLIB_VER).tar.bz2
+
 $(D)/giflib: $(ARCHIVE)/giflib-$(GIFLIB_VER).tar.bz2 | $(TARGET_DIR)
 	$(REMOVE)/giflib-$(GIFLIB_VER)
 	$(UNTAR)/giflib-$(GIFLIB_VER).tar.bz2
@@ -118,9 +138,14 @@ $(D)/giflib: $(ARCHIVE)/giflib-$(GIFLIB_VER).tar.bz2 | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-CURL_IPV6="--enable-ipv6"
+LIBCURL_VER = 7.61.1
+
+$(ARCHIVE)/curl-$(LIBCURL_VER).tar.bz2:
+	$(WGET) http://curl.haxx.se/download/curl-$(LIBCURL_VER).tar.bz2
+
+LIBCURL_IPV6="--enable-ipv6"
 ifeq ($(BOXSERIES), hd1)
-	CURL_IPV6="--disable-ipv6"
+  LIBCURL_IPV6="--disable-ipv6"
 endif
 
 $(D)/libcurl: $(D)/zlib $(D)/openssl $(D)/librtmp $(D)/ca-bundle $(ARCHIVE)/curl-$(LIBCURL_VER).tar.bz2 | $(TARGET_DIR)
@@ -151,7 +176,7 @@ $(D)/libcurl: $(D)/zlib $(D)/openssl $(D)/librtmp $(D)/ca-bundle $(ARCHIVE)/curl
 			--with-random=/dev/urandom \
 			--with-ssl=$(TARGET_DIR) \
 			--with-librtmp=$(TARGET_LIB_DIR) \
-			$(CURL_IPV6) \
+			$(LIBCURL_IPV6) \
 			--enable-optimize \
 			; \
 		$(MAKE) all; \
@@ -166,6 +191,11 @@ $(D)/libcurl: $(D)/zlib $(D)/openssl $(D)/librtmp $(D)/ca-bundle $(ARCHIVE)/curl
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
+
+LIBPNG_VER = 1.6.36
+
+$(ARCHIVE)/libpng-$(LIBPNG_VER).tar.xz:
+	$(WGET) http://sourceforge.net/projects/libpng/files/libpng16/$(LIBPNG_VER)/libpng-$(LIBPNG_VER).tar.xz
 
 LIBPNG_PATCH  = libpng-Disable-pngfix-and-png-fix-itxt.patch
 
@@ -193,6 +223,11 @@ $(D)/libpng: $(ARCHIVE)/libpng-$(LIBPNG_VER).tar.xz $(D)/zlib | $(TARGET_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
+
+FREETYPE_VER = 2.9.1
+
+$(ARCHIVE)/freetype-$(FREETYPE_VER).tar.bz2:
+	$(WGET) https://sourceforge.net/projects/freetype/files/freetype2/$(FREETYPE_VER)/freetype-$(FREETYPE_VER).tar.bz2
 
 FREETYPE_PATCH  = freetype2_subpixel.patch
 
@@ -295,9 +330,14 @@ $(D)/libjpeg-turbo2: $(ARCHIVE)/$(LIBJPEG-TURBO2_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
+OPENSSL_VER = 1.0.2q
+
+$(ARCHIVE)/openssl-$(OPENSSL_VER).tar.gz:
+	$(WGET) http://www.openssl.org/source/openssl-$(OPENSSL_VER).tar.gz
+
 OPENSSL_PATCH  = openssl-add-ni-specific-target.patch
 
-OPENSSLFLAGS = CC=$(TARGET)-gcc \
+OPENSSL_FLAGS = CC=$(TARGET)-gcc \
 		LD=$(TARGET)-ld \
 		AR="$(TARGET)-ar r" \
 		RANLIB=$(TARGET)-ranlib \
@@ -324,9 +364,9 @@ $(D)/openssl: $(ARCHIVE)/openssl-$(OPENSSL_VER).tar.gz | $(TARGET_DIR)
 			--prefix=/ \
 			--openssldir=/.remove \
 			; \
-		make $(OPENSSLFLAGS) depend; \
+		make $(OPENSSL_FLAGS) depend; \
 		sed -i "s# build_tests##" Makefile; \
-		make $(OPENSSLFLAGS) all; \
+		make $(OPENSSL_FLAGS) all; \
 		make install_sw INSTALL_PREFIX=$(TARGET_DIR)
 	$(REWRITE_PKGCONF)/openssl.pc
 	$(REWRITE_PKGCONF)/libcrypto.pc
@@ -344,6 +384,11 @@ endif
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
+
+LIBNCURSES_VER = 6.1
+
+$(ARCHIVE)/ncurses-$(LIBNCURSES_VER).tar.gz:
+	$(WGET) http://ftp.gnu.org/pub/gnu/ncurses/ncurses-$(LIBNCURSES_VER).tar.gz
 
 LIBNCURSES_PATCH  = ncurses-gcc-5.x-MKlib_gen.patch
 
@@ -402,6 +447,12 @@ $(D)/openthreads: $(SOURCE_DIR)/$(NI_OPENTHREADS) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
+LIBUSB_MAJOR = 1.0
+LIBUSB_VER = $(LIBUSB_MAJOR).21
+
+$(ARCHIVE)/libusb-$(LIBUSB_VER).tar.bz2:
+	$(WGET) http://sourceforge.net/projects/libusb/files/libusb-$(LIBUSB_MAJOR)/libusb-$(LIBUSB_VER)/libusb-$(LIBUSB_VER).tar.bz2
+
 $(D)/libusb: $(ARCHIVE)/libusb-$(LIBUSB_VER).tar.bz2 | $(TARGET_DIR)
 	$(REMOVE)/libusb-$(LIBUSB_VER)
 	$(UNTAR)/libusb-$(LIBUSB_VER).tar.bz2
@@ -413,22 +464,28 @@ $(D)/libusb: $(ARCHIVE)/libusb-$(LIBUSB_VER).tar.bz2 | $(TARGET_DIR)
 		$(MAKE); \
 		make install DESTDIR=$(TARGET_DIR); \
 	$(REMOVE)/libusb-$(LIBUSB_VER)
-	$(REWRITE_LIBTOOL)/libusb-$(LIBUSB_MAJ).la
-	$(REWRITE_PKGCONF)/libusb-$(LIBUSB_MAJ).pc
+	$(REWRITE_LIBTOOL)/libusb-$(LIBUSB_MAJOR).la
+	$(REWRITE_PKGCONF)/libusb-$(LIBUSB_MAJOR).pc
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
-$(D)/libusb_compat: $(ARCHIVE)/libusb-compat-$(LIBUSB_COMPAT_VER).tar.bz2 $(D)/libusb | $(TARGET_DIR)
-	$(REMOVE)/libusb-compat-$(LIBUSB_COMPAT_VER)
-	$(UNTAR)/libusb-compat-$(LIBUSB_COMPAT_VER).tar.bz2
-	$(CHDIR)/libusb-compat-$(LIBUSB_COMPAT_VER); \
+LIBUSB-COMPAT_MAJOR = 0.1
+LIBUSB-COMPAT_VER = $(LIBUSB-COMPAT_MAJOR).5
+
+$(ARCHIVE)/libusb-compat-$(LIBUSB-COMPAT_VER).tar.bz2:
+	$(WGET) http://downloads.sourceforge.net/project/libusb/libusb-compat-$(LIBUSB-COMPAT_MAJOR)/libusb-compat-$(LIBUSB-COMPAT_VER)/libusb-compat-$(LIBUSB-COMPAT_VER).tar.bz2
+
+$(D)/libusb-compat: $(ARCHIVE)/libusb-compat-$(LIBUSB-COMPAT_VER).tar.bz2 $(D)/libusb | $(TARGET_DIR)
+	$(REMOVE)/libusb-compat-$(LIBUSB-COMPAT_VER)
+	$(UNTAR)/libusb-compat-$(LIBUSB-COMPAT_VER).tar.bz2
+	$(CHDIR)/libusb-compat-$(LIBUSB-COMPAT_VER); \
 		$(CONFIGURE) \
 			--prefix= \
 			; \
 		$(MAKE); \
 		make install DESTDIR=$(TARGET_DIR); \
-	$(REMOVE)/libusb-compat-$(LIBUSB_COMPAT_VER)
+	$(REMOVE)/libusb-compat-$(LIBUSB-COMPAT_VER)
 	mv $(TARGET_DIR)/bin/libusb-config $(HOST_DIR)/bin
 	$(REWRITE_CONFIG) $(HOST_DIR)/bin/libusb-config
 	$(REWRITE_LIBTOOL)/libusb.la
@@ -436,6 +493,11 @@ $(D)/libusb_compat: $(ARCHIVE)/libusb-compat-$(LIBUSB_COMPAT_VER).tar.bz2 $(D)/l
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
+
+LIBGD_VER = 2.2.5
+
+$(ARCHIVE)/libgd-$(LIBGD_VER).tar.xz:
+	$(WGET) https://github.com/libgd/libgd/releases/download/gd-$(LIBGD_VER)/libgd-$(LIBGD_VER).tar.xz
 
 $(D)/libgd2: $(D)/zlib $(D)/libpng $(D)/libjpeg $(D)/freetype $(ARCHIVE)/libgd-$(LIBGD_VER).tar.xz | $(TARGET_DIR)
 	$(REMOVE)/libgd-$(LIBGD_VER)
@@ -466,7 +528,7 @@ $(ARCHIVE)/$(LIBDPF_SOURCE):
 
 LIBDPF_PATCH  = libdpf-crossbuild.patch
 
-$(D)/libdpf: $(D)/libusb_compat $(ARCHIVE)/$(LIBDPF_SOURCE) | $(TARGET_DIR)
+$(D)/libdpf: $(D)/libusb-compat $(ARCHIVE)/$(LIBDPF_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/dpf-ax-git-$(LIBDPF_VER)
 	$(UNTAR)/$(LIBDPF_SOURCE)
 	$(CHDIR)/dpf-ax-git-$(LIBDPF_VER)/dpflib; \
@@ -532,6 +594,11 @@ $(D)/libsigc++: $(ARCHIVE)/libsigc++-$(LIBSIGCPP_VER).tar.xz | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
+EXPAT_VER = 2.2.6
+
+$(ARCHIVE)/expat-$(EXPAT_VER).tar.bz2:
+	$(WGET) http://sourceforge.net/projects/expat/files/expat/$(EXPAT_VER)/expat-$(EXPAT_VER).tar.bz2
+
 $(D)/expat: $(ARCHIVE)/expat-$(EXPAT_VER).tar.bz2 | $(TARGET_DIR)
 	$(REMOVE)/expat-$(EXPAT_VER)
 	$(UNTAR)/expat-$(EXPAT_VER).tar.bz2
@@ -553,6 +620,11 @@ $(D)/expat: $(ARCHIVE)/expat-$(EXPAT_VER).tar.bz2 | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
+LUAEXPAT_VER = 1.3.0
+
+$(ARCHIVE)/luaexpat-$(LUAEXPAT_VER).tar.gz:
+	$(WGET) http://matthewwild.co.uk/projects/luaexpat/luaexpat-$(LUAEXPAT_VER).tar.gz
+
 LUAEXPAT_PATCH  = luaexpat-makefile.patch
 
 $(D)/luaexpat: $(D)/expat $(D)/lua $(ARCHIVE)/luaexpat-$(LUAEXPAT_VER).tar.gz | $(TARGET_DIR)
@@ -566,6 +638,11 @@ $(D)/luaexpat: $(D)/expat $(D)/lua $(ARCHIVE)/luaexpat-$(LUAEXPAT_VER).tar.gz | 
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
+
+LUACURL_VER = v3
+
+$(ARCHIVE)/Lua-cURL$(LUACURL_VER).tar.xz:
+	$(WGET) http://neutrino-images.de/neutrino-images/archives/Lua-cURL$(LUACURL_VER).tar.xz
 
 LUACURL_PATCH  = lua-curl-Makefile.diff
 
@@ -591,8 +668,73 @@ $(D)/luacurl: $(D)/libcurl $(D)/lua $(ARCHIVE)/Lua-cURL$(LUACURL_VER).tar.xz | $
 
 # -----------------------------------------------------------------------------
 
+LUA_ABIVER = 5.2
+LUA_VER = $(LUA_ABIVER).4
+
+$(ARCHIVE)/lua-$(LUA_VER).tar.gz:
+	$(WGET) http://www.lua.org/ftp/lua-$(LUA_VER).tar.gz
+
+LUA_PATCH  = lua-01-fix-coolstream-build.patch
+LUA_PATCH += lua-02-shared-libs-for-lua.patch
+LUA_PATCH += lua-03-lua-pc.patch
+LUA_PATCH += lua-04-crashfix.diff
+
+$(D)/lua: $(D)/libncurses $(ARCHIVE)/lua-$(LUA_VER).tar.gz | $(TARGET_DIR)
+	$(REMOVE)/lua-$(LUA_VER)
+	$(UNTAR)/lua-$(LUA_VER).tar.gz
+	$(CHDIR)/lua-$(LUA_VER); \
+		$(call apply_patches, $(LUA_PATCH)); \
+		sed -i 's/^V=.*/V= $(LUA_ABIVER)/' etc/lua.pc; \
+		sed -i 's/^R=.*/R= $(LUA_VER)/' etc/lua.pc; \
+		$(MAKE) linux PKG_VERSION=$(LUA_VER) CC=$(TARGET)-gcc LD=$(TARGET)-ld AR="$(TARGET)-ar rcu" RANLIB=$(TARGET)-ranlib LDFLAGS="$(TARGET_LDFLAGS)"; \
+		$(MAKE) install INSTALL_TOP=$(TARGET_DIR)
+	install -D -m 0755 $(BUILD_TMP)/lua-$(LUA_VER)/src/liblua.so.$(LUA_VER) $(TARGET_LIB_DIR)/liblua.so.$(LUA_VER)
+	ln -sf liblua.so.$(LUA_VER) $(TARGET_LIB_DIR)/liblua.so
+	install -D -m 0644 $(BUILD_TMP)/lua-$(LUA_VER)/etc/lua.pc $(PKG_CONFIG_PATH)/lua.pc
+	$(REWRITE_PKGCONF)/lua.pc
+	rm -rf $(TARGET_DIR)/bin/luac
+	$(REMOVE)/lua-$(LUA_VER)
+	make lua-libs
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
+lua-libs: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) | $(TARGET_DIR)
+	cp -a $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/share/lua/$(LUA_ABIVER)/* $(TARGET_DIR)/share/lua/$(LUA_ABIVER)/
+
+# -----------------------------------------------------------------------------
+
+HOST_LUA_PATCH  = lua-01-fix-coolstream-build.patch
+
+# helper for luaposix build
+$(HOST_DIR)/bin/lua-$(LUA_VER): $(ARCHIVE)/lua-$(LUA_VER).tar.gz | $(TARGET_DIR)
+	$(REMOVE)/lua-$(LUA_VER)
+	$(UNTAR)/lua-$(LUA_VER).tar.gz
+	$(CHDIR)/lua-$(LUA_VER); \
+		$(call apply_patches, $(HOST_LUA_PATCH)); \
+		$(MAKE) linux
+	install -m 0755 -D $(BUILD_TMP)/lua-$(LUA_VER)/src/lua $@
+	$(REMOVE)/lua-$(LUA_VER)
+
+# -----------------------------------------------------------------------------
+
+LUAPOSIX_VER = 31
+
+$(ARCHIVE)/v$(LUAPOSIX_VER).tar.gz:
+	$(WGET) https://github.com/luaposix/luaposix/archive/v$(LUAPOSIX_VER).tar.gz
+
 LUAPOSIX_PATCH  = luaposix-fix-build.patch
 LUAPOSIX_PATCH += luaposix-fix-docdir-build.patch
+
+SLINGSHOT_VER = 6
+
+$(ARCHIVE)/v$(SLINGSHOT_VER).tar.gz:
+	$(WGET) https://github.com/gvvaughan/slingshot/archive/v$(SLINGSHOT_VER).tar.gz
+
+GNULIB_VER = 20140202
+
+$(ARCHIVE)/gnulib-$(GNULIB_VER)-stable.tar.gz:
+	$(WGET) http://erislabs.net/ianb/projects/gnulib/gnulib-$(GNULIB_VER)-stable.tar.gz
 
 $(D)/luaposix: $(HOST_DIR)/bin/lua-$(LUA_VER) $(D)/lua $(D)/luaexpat $(ARCHIVE)/v$(LUAPOSIX_VER).tar.gz $(ARCHIVE)/v$(SLINGSHOT_VER).tar.gz $(ARCHIVE)/gnulib-$(GNULIB_VER)-stable.tar.gz | $(TARGET_DIR)
 	$(REMOVE)/luaposix-$(LUAPOSIX_VER)
@@ -620,49 +762,10 @@ $(D)/luaposix: $(HOST_DIR)/bin/lua-$(LUA_VER) $(D)/lua $(D)/luaexpat $(ARCHIVE)/
 
 # -----------------------------------------------------------------------------
 
-HOST_LUA_PATCH  = lua-01-fix-coolstream-build.patch
+LIBBLURAY_VER = 0.9.2
 
-# helper for luaposix build
-$(HOST_DIR)/bin/lua-$(LUA_VER): $(ARCHIVE)/lua-$(LUA_VER).tar.gz | $(TARGET_DIR)
-	$(REMOVE)/lua-$(LUA_VER)
-	$(UNTAR)/lua-$(LUA_VER).tar.gz
-	$(CHDIR)/lua-$(LUA_VER); \
-		$(call apply_patches, $(HOST_LUA_PATCH)); \
-		$(MAKE) linux
-	install -m 0755 -D $(BUILD_TMP)/lua-$(LUA_VER)/src/lua $@
-	$(REMOVE)/lua-$(LUA_VER)
-
-# -----------------------------------------------------------------------------
-
-lua-libs: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) | $(TARGET_DIR)
-	cp -a $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/share/lua/5.2/* $(TARGET_DIR)/share/lua/$(LUA_ABIVER)/
-
-# -----------------------------------------------------------------------------
-
-LUA_PATCH  = lua-01-fix-coolstream-build.patch
-LUA_PATCH += lua-02-shared-libs-for-lua.patch
-LUA_PATCH += lua-03-lua-pc.patch
-LUA_PATCH += lua-04-crashfix.diff
-
-$(D)/lua: $(D)/libncurses $(ARCHIVE)/lua-$(LUA_VER).tar.gz | $(TARGET_DIR)
-	$(REMOVE)/lua-$(LUA_VER)
-	$(UNTAR)/lua-$(LUA_VER).tar.gz
-	$(CHDIR)/lua-$(LUA_VER); \
-		$(call apply_patches, $(LUA_PATCH)); \
-		sed -i 's/^V=.*/V= $(LUA_ABIVER)/' etc/lua.pc; \
-		sed -i 's/^R=.*/R= $(LUA_VER)/' etc/lua.pc; \
-		$(MAKE) linux PKG_VERSION=$(LUA_VER) CC=$(TARGET)-gcc LD=$(TARGET)-ld AR="$(TARGET)-ar rcu" RANLIB=$(TARGET)-ranlib LDFLAGS="$(TARGET_LDFLAGS)"; \
-		$(MAKE) install INSTALL_TOP=$(TARGET_DIR)
-	install -D -m 0755 $(BUILD_TMP)/lua-$(LUA_VER)/src/liblua.so.$(LUA_VER) $(TARGET_LIB_DIR)/liblua.so.$(LUA_VER)
-	ln -sf liblua.so.$(LUA_VER) $(TARGET_LIB_DIR)/liblua.so
-	install -D -m 0644 $(BUILD_TMP)/lua-$(LUA_VER)/etc/lua.pc $(PKG_CONFIG_PATH)/lua.pc
-	$(REWRITE_PKGCONF)/lua.pc
-	rm -rf $(TARGET_DIR)/bin/luac
-	$(REMOVE)/lua-$(LUA_VER)
-	make lua-libs
-	$(TOUCH)
-
-# -----------------------------------------------------------------------------
+$(ARCHIVE)/libbluray-$(LIBBLURAY_VER).tar.bz2:
+	$(WGET) ftp://ftp.videolan.org/pub/videolan/libbluray/$(LIBBLURAY_VER)/libbluray-$(LIBBLURAY_VER).tar.bz2
 
 LIBBLURAY_PATCH  = libbluray.diff
 
@@ -701,6 +804,11 @@ $(D)/libbluray: $(LIBBLURAY_DEPS) $(ARCHIVE)/libbluray-$(LIBBLURAY_VER).tar.bz2 
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
+
+LIBASS_VER = 0.14.0
+
+$(ARCHIVE)/libass-$(LIBASS_VER).tar.xz:
+	$(WGET) https://github.com/libass/libass/releases/download/$(LIBASS_VER)/libass-$(LIBASS_VER).tar.xz
 
 $(D)/libass: $(D)/freetype $(D)/libfribidi $(ARCHIVE)/libass-$(LIBASS_VER).tar.xz | $(TARGET_DIR)
 	$(REMOVE)/libass-$(LIBASS_VER)
@@ -789,6 +897,11 @@ $(D)/libgcrypt: $(ARCHIVE)/libgcrypt-$(LIBGCRYPT_VER).tar.gz $(D)/libgpg-error |
 
 # -----------------------------------------------------------------------------
 
+LIBAACS_VER = 0.9.0
+
+$(ARCHIVE)/libaacs-$(LIBAACS_VER).tar.bz2:
+	$(WGET) ftp://ftp.videolan.org/pub/videolan/libaacs/$(LIBAACS_VER)/libaacs-$(LIBAACS_VER).tar.bz2
+
 $(D)/libaacs: $(ARCHIVE)/libaacs-$(LIBAACS_VER).tar.bz2 $(D)/libgcrypt | $(TARGET_DIR)
 	$(REMOVE)/libaacs-$(LIBAACS_VER)
 	$(UNTAR)/libaacs-$(LIBAACS_VER).tar.bz2
@@ -812,6 +925,11 @@ $(D)/libaacs: $(ARCHIVE)/libaacs-$(LIBAACS_VER).tar.bz2 $(D)/libgcrypt | $(TARGE
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
+
+LIBBDPLUS_VER = 0.1.2
+
+$(ARCHIVE)/libbdplus-$(LIBBDPLUS_VER).tar.bz2:
+	$(WGET) ftp://ftp.videolan.org/pub/videolan/libbdplus/$(LIBBDPLUS_VER)/libbdplus-$(LIBBDPLUS_VER).tar.bz2
 
 $(D)/libbdplus: $(ARCHIVE)/libbdplus-$(LIBBDPLUS_VER).tar.bz2 $(D)/libaacs | $(TARGET_DIR)
 	$(REMOVE)/libbdplus-$(LIBBDPLUS_VER)
@@ -945,6 +1063,11 @@ $(D)/libtirpc: $(ARCHIVE)/libtirpc-$(LIBTIRPC_VER).tar.bz2 | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
+CONFUSE_VER = 3.2.2
+
+$(ARCHIVE)/confuse-$(CONFUSE_VER).tar.xz:
+	$(WGET) https://github.com/martinh/libconfuse/releases/download/v$(CONFUSE_VER)/confuse-$(CONFUSE_VER).tar.xz
+
 $(D)/confuse: $(ARCHIVE)/confuse-$(CONFUSE_VER).tar.xz | $(TARGET_DIR)
 	$(REMOVE)/confuse-$(CONFUSE_VER)
 	$(UNTAR)/confuse-$(CONFUSE_VER).tar.xz
@@ -990,6 +1113,11 @@ $(D)/libite: $(ARCHIVE)/libite-$(LIBITE_VER).tar.xz | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
+LIBMAD_VER = 0.15.1b
+
+$(ARCHIVE)/libmad-$(LIBMAD_VER).tar.gz:
+	$(WGET) http://downloads.sourceforge.net/project/mad/libmad/$(LIBMAD_VER)/libmad-$(LIBMAD_VER).tar.gz
+
 LIBMAD_PATCH  = libmad-pc-fix.diff
 LIBMAD_PATCH += libmad-frame_length.diff
 LIBMAD_PATCH += libmad-mips-h-constraint-removal.patch
@@ -1020,6 +1148,11 @@ $(D)/libmad: $(ARCHIVE)/libmad-$(LIBMAD_VER).tar.gz | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
+LIBVORBISIDEC_VER = 1.2.1+git20180316
+
+$(ARCHIVE)/libvorbisidec_$(LIBVORBISIDEC_VER).orig.tar.gz:
+	$(WGET) http://ftp.de.debian.org/debian/pool/main/libv/libvorbisidec/libvorbisidec_$(LIBVORBISIDEC_VER).orig.tar.gz
+
 $(D)/libvorbisidec: $(ARCHIVE)/libvorbisidec_$(LIBVORBISIDEC_VER).orig.tar.gz $(D)/libogg | $(TARGET_DIR)
 	$(REMOVE)/libvorbisidec-$(LIBVORBISIDEC_VER)
 	$(UNTAR)/libvorbisidec_$(LIBVORBISIDEC_VER).orig.tar.gz
@@ -1038,6 +1171,11 @@ $(D)/libvorbisidec: $(ARCHIVE)/libvorbisidec_$(LIBVORBISIDEC_VER).orig.tar.gz $(
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
+
+LIBOGG_VER = 1.3.3
+
+$(ARCHIVE)/libogg-$(LIBOGG_VER).tar.xz:
+	$(WGET) http://downloads.xiph.org/releases/ogg/libogg-$(LIBOGG_VER).tar.xz
 
 $(D)/libogg: $(ARCHIVE)/libogg-$(LIBOGG_VER).tar.xz | $(TARGET_DIR)
 	$(REMOVE)/libogg-$(LIBOGG_VER)

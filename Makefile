@@ -87,7 +87,6 @@ help:
 
 -include internal/internal.mk
 
-include make/archives.mk
 include make/bootstrap.mk
 include make/clean.mk
 include make/crosstool.mk
