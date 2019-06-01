@@ -232,7 +232,9 @@ FREETYPE_VER = 2.9.1
 $(ARCHIVE)/freetype-$(FREETYPE_VER).tar.bz2:
 	$(WGET) https://sourceforge.net/projects/freetype/files/freetype2/$(FREETYPE_VER)/freetype-$(FREETYPE_VER).tar.bz2
 
-FREETYPE_PATCH  = freetype2_subpixel.patch
+FREETYPE_PATCH  = freetype2-subpixel.patch
+FREETYPE_PATCH += freetype2-config.patch
+FREETYPE_PATCH += freetype2-pkgconf.patch
 
 $(D)/freetype: $(D)/zlib $(D)/libpng $(ARCHIVE)/freetype-$(FREETYPE_VER).tar.bz2 | $(TARGET_DIR)
 	$(REMOVE)/freetype-$(FREETYPE_VER)
@@ -246,8 +248,8 @@ $(D)/freetype: $(D)/zlib $(D)/libpng $(ARCHIVE)/freetype-$(FREETYPE_VER).tar.bz2
 		autoconf
 	$(CHDIR)/freetype-$(FREETYPE_VER); \
 		$(CONFIGURE) \
-			--prefix=$(TARGET_DIR) \
-			--mandir=$(BUILD_TMP)/.remove \
+			--prefix= \
+			--mandir=/.remove \
 			--enable-shared \
 			--disable-static \
 			--enable-freetype-config \
@@ -257,9 +259,12 @@ $(D)/freetype: $(D)/zlib $(D)/libpng $(ARCHIVE)/freetype-$(FREETYPE_VER).tar.bz2
 			--without-bzip2 \
 			; \
 		$(MAKE) all; \
-		make install; \
-		ln -sf ./freetype2/freetype $(TARGET_INCLUDE_DIR)/freetype; \
-	mv $(TARGET_DIR)/bin/freetype-config $(HOST_DIR)/bin/freetype-config
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	ln -sf freetype2 $(TARGET_INCLUDE_DIR)/freetype
+	mv $(TARGET_DIR)/bin/freetype-config $(HOST_DIR)/bin
+	$(REWRITE_CONFIG) $(HOST_DIR)/bin/freetype-config
+	$(REWRITE_PKGCONF)/freetype2.pc
+	$(REWRITE_LIBTOOL)/libfreetype.la
 	$(REMOVE)/freetype-$(FREETYPE_VER) $(TARGET_DIR)/share/aclocal
 	$(TOUCH)
 

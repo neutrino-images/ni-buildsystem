@@ -1,0 +1,14 @@
+--- a/builds/unix/freetype2.in
++++ b/builds/unix/freetype2.in
+@@ -1,7 +1,7 @@
+ prefix=%prefix%
+-exec_prefix=%exec_prefix%
+-libdir=%libdir%
+-includedir=%includedir%
++exec_prefix=${prefix}
++libdir=${exec_prefix}/lib
++includedir=${prefix}/include
+ 
+ Name: FreeType 2
+ URL: https://freetype.org
+
