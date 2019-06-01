@@ -17,7 +17,7 @@ $(D)/zlib: $(ARCHIVE)/zlib-$(ZLIB_VER).tar.gz | $(TARGET_DIR)
 	$(CHDIR)/zlib-$(ZLIB_VER); \
 		$(call apply_patches, $(ZLIB_PATCH)); \
 		$(BUILDENV) \
-		mandir=$(BUILD_TMP)/.remove \
+		mandir=/.remove \
 		./configure \
 			--prefix= \
 			--shared \
