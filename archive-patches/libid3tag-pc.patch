@@ -1,0 +1,65 @@
+diff --git a/configure.ac b/configure.ac
+index a0a0237..dd23b06 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -26,9 +26,9 @@
+ 
+ AC_CONFIG_SRCDIR([id3tag.h])
+ 
+-AM_INIT_AUTOMAKE
+-
+-AM_CONFIG_HEADER([config.h])
++AM_INIT_AUTOMAKE([foreign])
++
++AC_CONFIG_HEADERS([config.h])
+ 
+ dnl System type.
+ 
+@@ -201,5 +201,5 @@ dnl LTLIBOBJS=`echo "$LIBOBJS" | sed -e 's/\.o/.lo/g'`
+ dnl AC_SUBST(LTLIBOBJS)
+ 
+ AC_CONFIG_FILES([Makefile msvc++/Makefile  \
+-	libid3tag.list])
++	libid3tag.list id3tag.pc])
+ AC_OUTPUT
+diff --git a/id3tag.pc.in b/id3tag.pc.in
+new file mode 100644
+index 0000000..0704d8c
+--- /dev/null
++++ b/id3tag.pc.in
+@@ -0,0 +1,11 @@
++prefix=
++exec_prefix=${prefix}
++libdir=${exec_prefix}/lib
++includedir=${prefix}/include
++
++Name: id3tag
++Description: ID3 tag reading library
++Requires:
++Version: 0.15.1b
++Libs: -L${libdir} -lid3tag -lz
++Cflags: -I${includedir}
+diff --git a/Makefile.am b/Makefile.am
+index 3ee9aa6..dd08c2c 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -24,6 +24,9 @@
+ SUBDIRS =		
+ DIST_SUBDIRS =		msvc++
+ 
++pkgconfigdir =		$(libdir)/pkgconfig
++pkgconfig_DATA =	id3tag.pc
++
+ lib_LTLIBRARIES =	libid3tag.la
+ include_HEADERS =	id3tag.h
+ 
+@@ -70,7 +73,8 @@ version_age =		3
+ version_info =		$(version_current):$(version_revision):$(version_age)
+ 
+ EXTRA_DIST =		genre.dat.sed  \
+-			CHANGES COPYRIGHT CREDITS README TODO VERSION
++			CHANGES COPYRIGHT CREDITS README TODO VERSION \
++			id3tag.pc.in
+ 
+ if DEBUG
+ debug = debug.c debug.h

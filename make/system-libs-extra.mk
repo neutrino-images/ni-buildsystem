@@ -8,18 +8,21 @@ LIBID3TAG_VER = 0.15.1b
 $(ARCHIVE)/libid3tag-$(LIBID3TAG_VER).tar.gz:
 	$(WGET) http://downloads.sourceforge.net/project/mad/libid3tag/$(LIBID3TAG_VER)/libid3tag-$(LIBID3TAG_VER).tar.gz
 
+LIBID3TAG_PATCH  = libid3tag-pc.patch
+
 $(D)/libid3tag: $(D)/zlib $(ARCHIVE)/libid3tag-$(LIBID3TAG_VER).tar.gz | $(TARGET_DIR)
 	$(REMOVE)/libid3tag-$(LIBID3TAG_VER)
 	$(UNTAR)/libid3tag-$(LIBID3TAG_VER).tar.gz
 	$(CHDIR)/libid3tag-$(LIBID3TAG_VER); \
-		$(PATCH)/libid3tag.diff; \
+		$(call apply_patches, $(LIBID3TAG_PATCH)); \
+		autoreconf -fi; \
 		$(CONFIGURE) \
 			--prefix= \
 			--enable-shared=yes \
 			; \
 		$(MAKE) all; \
-		make install DESTDIR=$(TARGET_DIR); \
-		sed "s!^prefix=.*!prefix=$(TARGET_DIR)!;" id3tag.pc > $(PKG_CONFIG_PATH)/libid3tag.pc
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(REWRITE_PKGCONF)/id3tag.pc
 	$(REWRITE_LIBTOOL)/libid3tag.la
 	$(REMOVE)/libid3tag-$(LIBID3TAG_VER)
 	$(TOUCH)
