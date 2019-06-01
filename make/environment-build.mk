@@ -268,8 +268,14 @@ REWRITE_RULES          = sed -i -e "s,^libdir=.*,libdir='$(TARGET_LIB_DIR)'," -e
 REWRITE_LIBTOOL        = $(REWRITE_RULES) $(TARGET_LIB_DIR)
 REWRITE_LIBTOOL_STATIC = $(REWRITE_RULES) $(STATIC_LIB_DIR)
 
-REWRITE_CONFIG         = sed -i "s,^prefix=.*,prefix='$(TARGET_DIR)',"
-REWRITE_PKGCONF        = sed -i "s,^prefix=.*,prefix='$(TARGET_DIR)'," $(PKG_CONFIG_PATH)
+REWRITE_CONFIG_RULES   = sed -i \
+				-e "s,^prefix=.*,prefix='$(TARGET_DIR)'," \
+				-e "s,^exec_prefix=.*,exec_prefix='$(TARGET_DIR)'," \
+				-e "s,^libdir=.*,libdir='$(TARGET_LIB_DIR)'," \
+				-e "s,^includedir=.*,includedir='$(TARGET_INCLUDE_DIR)',"
+
+REWRITE_CONFIG         = $(REWRITE_CONFIG_RULES)
+REWRITE_PKGCONF        = $(REWRITE_CONFIG_RULES) $(PKG_CONFIG_PATH)
 
 # unpack tarballs, clean up
 UNTAR = tar -C $(BUILD_TMP) -xf $(ARCHIVE)
