@@ -535,13 +535,23 @@ $(D)/procps-ng: $(D)/libncurses $(ARCHIVE)/procps-ng-$(PROCPS-NG_VER).tar.xz | $
 		$(CONFIGURE) \
 			--target=$(TARGET) \
 			--prefix= \
+			--bindir=/bin.procps \
+			--sbindir=/sbin.procps \
+			--mandir=/.remove \
+			--docdir=/.remove \
+			--datarootdir=/.remove \
 			; \
 		$(MAKE); \
-		rm -f $(TARGET_DIR)/bin/ps $(TARGET_DIR)/bin/top; \
-		install -D -m 0755 ps/.libs/pscommand $(TARGET_DIR)/bin/ps; \
-		install -D -m 0755 top/.libs/top $(TARGET_DIR)/bin/top; \
-		cp -a proc/.libs/libprocps.so* $(TARGET_LIB_DIR)
-	$(REMOVE)/procps-ng-$(PROCPS-NG_VER)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	for bin in ps top; do \
+		rm -f $(TARGET_DIR)/bin/$$bin; \
+		install -m 0755 $(TARGET_DIR)/bin.procps/$$bin $(TARGET_DIR)/bin/$$bin; \
+	done
+	$(REWRITE_PKGCONF)/libprocps.pc
+	$(REWRITE_LIBTOOL)/libprocps.la
+	$(REMOVE)/procps-ng-$(PROCPS-NG_VER) \
+		$(TARGET_DIR)/bin.procps \
+		$(TARGET_DIR)/sbin.procps
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
