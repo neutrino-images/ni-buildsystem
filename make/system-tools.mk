@@ -777,7 +777,7 @@ $(D)/samba-hd1: $(D)/zlib $(ARCHIVE)/samba-$(SAMBA33_VER).tar.gz | $(TARGET_DIR)
 			--with-privatedir=/etc/samba \
 			--with-modulesdir=/.remove \
 			--with-sys-quotas=no \
-			--with-piddir=/tmp \
+			--with-piddir=/var/run \
 			--enable-static \
 			--disable-shared \
 			--without-cifsmount \
@@ -856,7 +856,7 @@ $(D)/samba-hd2: $(D)/zlib $(ARCHIVE)/samba-$(SAMBA36_VER).tar.gz | $(TARGET_DIR)
 			--with-configdir=/etc/samba \
 			--with-privatedir=/etc/samba \
 			--with-modulesdir=/.remove \
-			--with-piddir=/tmp \
+			--with-piddir=/var/run \
 			--with-sys-quotas=no \
 			--enable-static \
 			--disable-shared \
