@@ -1126,7 +1126,7 @@ LIBMAD_VER = 0.15.1b
 $(ARCHIVE)/libmad-$(LIBMAD_VER).tar.gz:
 	$(WGET) http://downloads.sourceforge.net/project/mad/libmad/$(LIBMAD_VER)/libmad-$(LIBMAD_VER).tar.gz
 
-LIBMAD_PATCH  = libmad-pc-fix.diff
+LIBMAD_PATCH  = libmad-pc.patch
 LIBMAD_PATCH += libmad-frame_length.diff
 LIBMAD_PATCH += libmad-mips-h-constraint-removal.patch
 LIBMAD_PATCH += libmad-remove-deprecated-cflags.patch
@@ -1138,7 +1138,6 @@ $(D)/libmad: $(ARCHIVE)/libmad-$(LIBMAD_VER).tar.gz | $(TARGET_DIR)
 	$(UNTAR)/libmad-$(LIBMAD_VER).tar.gz
 	$(CHDIR)/libmad-$(LIBMAD_VER); \
 		$(call apply_patches, $(LIBMAD_PATCH)); \
-		touch NEWS AUTHORS ChangeLog; \
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--prefix= \
@@ -1148,8 +1147,8 @@ $(D)/libmad: $(ARCHIVE)/libmad-$(LIBMAD_VER).tar.gz | $(TARGET_DIR)
 			--enable-sso \
 			; \
 		$(MAKE) all; \
-		make install DESTDIR=$(TARGET_DIR); \
-		sed "s!^prefix=.*!prefix=$(TARGET_DIR)!;" mad.pc > $(PKG_CONFIG_PATH)/libmad.pc
+		make install DESTDIR=$(TARGET_DIR)
+	$(REWRITE_PKGCONF)/mad.pc
 	$(REWRITE_LIBTOOL)/libmad.la
 	$(REMOVE)/libmad-$(LIBMAD_VER)
 	$(TOUCH)
