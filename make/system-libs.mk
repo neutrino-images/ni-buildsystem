@@ -21,9 +21,10 @@ $(D)/zlib: $(ARCHIVE)/zlib-$(ZLIB_VER).tar.gz | $(TARGET_DIR)
 		./configure \
 			--prefix= \
 			--shared \
+			--uname=Linux \
 			; \
 		$(MAKE); \
-		$(MAKE) install prefix=$(TARGET_DIR)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF)/zlib.pc
 	$(REMOVE)/zlib-$(ZLIB_VER)
 	$(TOUCH)
