@@ -38,6 +38,40 @@ endef
 
 # -----------------------------------------------------------------------------
 
+#
+# $(1) = title
+# $(2) = color
+#	0 - Black
+#	1 - Red
+#	2 - Green
+#	3 - Yellow
+#	4 - Blue
+#	5 - Magenta
+#	6 - Cyan
+#	7 - White
+# $(3) = left|center|right
+#
+define draw_line
+	@ \
+	printf '%.0s-' {1..$(shell tput cols)}; \
+	if test "$(1)"; then \
+		cols=$(shell tput cols); \
+		length=$(shell echo $(1) | awk '{print length}'); \
+		case "$(3)" in \
+			*right)  let indent="length + 1" ;; \
+			*center) let indent="cols - (cols - length) / 2" ;; \
+			*left|*) let indent="cols" ;; \
+		esac; \
+		tput cub $$indent; \
+		test "$(2)" && printf $$(tput setaf $(2)); \
+		printf '$(1)'; \
+		test "$(2)" && printf $$(tput sgr0); \
+	fi; \
+	echo
+endef
+
+# -----------------------------------------------------------------------------
+
 archives-list:
 	@rm -f $(BUILD_TMP)/$@
 	@make -qp | grep --only-matching '^\$(ARCHIVE).*:' | sed "s|:||g" > $(BUILD_TMP)/$@

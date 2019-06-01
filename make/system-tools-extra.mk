@@ -62,27 +62,42 @@ $(D)/binutils: $(ARCHIVE)/binutils-$(BINUTILS_VER).tar.bz2 | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-UTIL-LINUX_VER = 2.29
+UTIL-LINUX_MAJOR = 2
+UTIL-LINUX_MINOR = 33
+UTIL-LINUX_MICRO = 2
+UTIL-LINUX_VER = $(UTIL-LINUX_MAJOR).$(UTIL-LINUX_MINOR).$(UTIL-LINUX_MICRO)
 
 $(ARCHIVE)/util-linux-$(UTIL-LINUX_VER).tar.xz:
-	$(WGET) https://www.kernel.org/pub/linux/utils/util-linux/v$(UTIL-LINUX_VER)/util-linux-$(UTIL-LINUX_VER).tar.xz
+	$(WGET) https://www.kernel.org/pub/linux/utils/util-linux/v$(UTIL-LINUX_MAJOR).$(UTIL-LINUX_MINOR)/util-linux-$(UTIL-LINUX_VER).tar.xz
 
-$(D)/util-linux: $(D)/libncurses $(ARCHIVE)/util-linux-$(UTIL-LINUX_VER).tar.xz | $(TARGET_DIR)
+$(D)/util-linux: $(D)/libncurses $(D)/zlib $(ARCHIVE)/util-linux-$(UTIL-LINUX_VER).tar.xz | $(TARGET_DIR)
 	$(REMOVE)/util-linux-$(UTIL-LINUX_VER)
 	$(UNTAR)/util-linux-$(UTIL-LINUX_VER).tar.xz
 	$(CHDIR)/util-linux-$(UTIL-LINUX_VER); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
-			--prefix= \
-			--build=$(BUILD) \
-			--host=$(TARGET) \
+			--prefix=/usr \
+			--mandir=/.remove/man \
+			--localedir=/.remove/locale \
 			--enable-static \
 			--disable-shared \
-			--mandir=/.remove \
+			--disable-gtk-doc \
+			\
+			--disable-all-programs \
+			\
+			--disable-makeinstall-chown \
+			--disable-makeinstall-setuid \
+			--disable-makeinstall-chown \
+			\
+			--without-ncursesw \
+			--without-python \
+			--without-slang \
+			--without-systemdsystemunitdir \
+			--without-tinfo \
 			; \
-		$(MAKE) sfdisk; \
-		install -m 0755 sfdisk $(TARGET_DIR)/sbin/sfdisk
-	$(REMOVE)/util-linux-$(UTIL-LINUX_VER)
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(BUILD_TMP)/util-linux-install
+	#$(REMOVE)/util-linux-$(UTIL-LINUX_VER)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
