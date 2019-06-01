@@ -1,8 +1,8 @@
 --- a/include/freetype/config/ftoption.h
 +++ b/include/freetype/config/ftoption.h
 @@ -122,7 +122,7 @@
-   /* This is done to allow FreeType clients to run unmodified, forcing     */
-   /* them to display normal gray-level anti-aliased glyphs.                */
+   /* rendering technology that produces excellent output without LCD       */
+   /* filtering.                                                            */
    /*                                                                       */
 -/* #define FT_CONFIG_OPTION_SUBPIXEL_RENDERING */
 +#define FT_CONFIG_OPTION_SUBPIXEL_RENDERING
