@@ -420,7 +420,7 @@ $(D)/ushare: $(ARCHIVE)/ushare-$(USHARE_VER).tar.bz2 $(D)/libupnp | $(TARGET_DIR
 		$(call apply_patches, $(USHARE_PATCH)); \
 		$(BUILDENV) \
 		./configure \
-			--prefix=$(TARGET_DIR) \
+			--prefix= \
 			--disable-dlna \
 			--disable-nls \
 			--cross-compile \
@@ -430,7 +430,7 @@ $(D)/ushare: $(ARCHIVE)/ushare-$(USHARE_VER).tar.bz2 $(D)/libupnp | $(TARGET_DIR
 		sed -i config.h  -e 's@LOCALEDIR.*@LOCALEDIR "/share"@'; \
 		ln -sf ../config.h src/; \
 		$(MAKE); \
-		$(MAKE) install
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	install -D -m 0644 $(IMAGEFILES)/scripts/ushare.conf $(TARGET_DIR)/etc/ushare.conf
 	sed -i 's|%(BOXTYPE)|$(BOXTYPE)|; s|%(BOXMODEL)|$(BOXMODEL)|' $(TARGET_DIR)/etc/ushare.conf
 	install -D -m 0755 $(IMAGEFILES)/scripts/ushare.init $(TARGET_DIR)/etc/init.d/ushare
