@@ -1,0 +1,87 @@
+autofs-5.1.5 - add ignore mount option
+
+From: Ian Kent <raven@themaw.net>
+
+Add mount option "ignore", if the kernel supports it, as an
+indicator to applications to ignore the mount entry.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ daemon/direct.c     |   10 ++++++++++
+ daemon/indirect.c   |   10 ++++++++++
+ include/automount.h |    3 +++
+ lib/master.c        |    4 ++--
+ 4 files changed, 25 insertions(+), 2 deletions(-)
+
+diff --git a/daemon/direct.c b/daemon/direct.c
+index 4f468563..42992220 100644
+--- a/daemon/direct.c
++++ b/daemon/direct.c
+@@ -431,6 +431,16 @@ int do_mount_autofs_direct(struct autofs_point *ap,
+ 				mp->options = tmp;
+ 			}
+ 		}
++
++		if ((ap->flags & MOUNT_FLAG_IGNORE) &&
++		    ((get_kver_major() == 5 && get_kver_minor() > 4) ||
++		     (get_kver_major() > 5))) {
++			char *tmp = realloc(mp->options, strlen(mp->options) + 7);
++			if (tmp) {
++				strcat(tmp, ",ignore");
++				mp->options = tmp;
++			}
++		}
+ 	}
+ 
+ 	/* In case the directory doesn't exist, try to mkdir it */
+diff --git a/daemon/indirect.c b/daemon/indirect.c
+index 9ccbc038..8719960e 100644
+--- a/daemon/indirect.c
++++ b/daemon/indirect.c
+@@ -142,6 +142,16 @@ static int do_mount_autofs_indirect(struct autofs_point *ap, const char *root)
+ 		}
+ 	}
+ 
++	if ((ap->flags & MOUNT_FLAG_IGNORE) &&
++	    ((get_kver_major() == 5 && get_kver_minor() > 4) ||
++	     (get_kver_major() > 5))) {
++		char *tmp = realloc(options, strlen(options) + 7);
++		if (tmp) {
++			strcat(tmp, ",ignore");
++			options = tmp;
++		}
++	}
++
+ 	/* In case the directory doesn't exist, try to mkdir it */
+ 	if (mkdir_path(root, mp_mode) < 0) {
+ 		if (errno != EEXIST && errno != EROFS) {
+diff --git a/include/automount.h b/include/automount.h
+index 1bb32015..d02410f3 100644
+--- a/include/automount.h
++++ b/include/automount.h
+@@ -557,6 +557,9 @@ struct kernel_mod_version {
+ /* Use strict expire semantics if requested and kernel supports it */
+ #define MOUNT_FLAG_STRICTEXPIRE		0x0400
+ 
++/* Indicator for applications to ignore the mount entry */
++#define MOUNT_FLAG_IGNORE		0x0800
++
+ struct autofs_point {
+ 	pthread_t thid;
+ 	char *path;			/* Mount point name */
+diff --git a/lib/master.c b/lib/master.c
+index 5f3a3d99..e0bd34ab 100644
+--- a/lib/master.c
++++ b/lib/master.c
+@@ -101,9 +101,9 @@ int master_add_autofs_point(struct master_mapent *entry, unsigned logopt,
+ 		ap->negative_timeout = global_negative_timeout;
+ 	ap->exp_timeout = defaults_get_timeout();
+ 	ap->exp_runfreq = 0;
+-	ap->flags = 0;
++	ap->flags = MOUNT_FLAG_IGNORE;
+ 	if (ghost)
+-		ap->flags = MOUNT_FLAG_GHOST;
++		ap->flags |= MOUNT_FLAG_GHOST;
+ 
+ 	if (nobind)
+ 		ap->flags |= MOUNT_FLAG_NOBIND;

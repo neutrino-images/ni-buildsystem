@@ -1,0 +1,234 @@
+autofs-5.1.5 - log mount call arguments if mount_verbose is set
+
+From: Lars R. Damerow <lars@pixar.com>
+
+Override the debug log only setting if mount_verbose is set so that
+mount parameter information is logged on mount.
+
+Signed-off-by: Lars R. Damerow <lars@pixar.com>
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG               |    1 +
+ modules/mount_afs.c     |    6 +++++-
+ modules/mount_bind.c    |   10 +++++++---
+ modules/mount_ext2.c    |   16 ++++++++++------
+ modules/mount_generic.c |   14 +++++++++-----
+ modules/mount_nfs.c     |   29 +++++++++++++++++------------
+ 6 files changed, 49 insertions(+), 27 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index ee7deda4..5650e73b 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -5,6 +5,7 @@ xx/xx/2019 autofs-5.1.6
+ - use malloc(3) in spawn.c.
+ - add mount_verbose configuration option.
+ - optionally log mount requestor process info.
++- log mount call arguments if mount_verbose is set.
+ 
+ 30/10/2018 autofs-5.1.5
+ - fix flag file permission.
+diff --git a/modules/mount_afs.c b/modules/mount_afs.c
+index 2a776bd2..ef4e04da 100644
+--- a/modules/mount_afs.c
++++ b/modules/mount_afs.c
+@@ -37,10 +37,14 @@ int mount_mount(struct autofs_point *ap, const char *root, const char *name, int
+ 	char dest[PATH_MAX + 1];
+ 	size_t r_len = strlen(root);
+ 	size_t d_len = r_len + name_len + 2;
++	void (*mountlog)(unsigned int, const char*, ...) = &log_debug;
+ 
+ 	if (ap->flags & MOUNT_FLAG_REMOUNT)
+ 		return 0;
+ 
++	if (defaults_get_mount_verbose())
++		mountlog = &log_info;
++
+ 	if (d_len > PATH_MAX)
+ 		return 1;
+ 
+@@ -53,7 +57,7 @@ int mount_mount(struct autofs_point *ap, const char *root, const char *name, int
+ 	if (dest[strlen(dest)-1] == '/')
+ 	    dest[strlen(dest)-1] = '\0';
+ 
+-	debug(ap->logopt, MODPREFIX "mounting AFS %s -> %s", dest, what);
++	mountlog(ap->logopt, MODPREFIX "mounting AFS %s -> %s", dest, what);
+ 
+ 	return symlink(what, dest);	/* Try it.  If it fails, return the error. */
+ }
+diff --git a/modules/mount_bind.c b/modules/mount_bind.c
+index b64cdccc..9cba0d7a 100644
+--- a/modules/mount_bind.c
++++ b/modules/mount_bind.c
+@@ -81,10 +81,14 @@ int mount_mount(struct autofs_point *ap, const char *root, const char *name, int
+ 	int err;
+ 	int i, len;
+ 	int symlnk = (*name != '/' && (ap->flags & MOUNT_FLAG_SYMLINK));
++	void (*mountlog)(unsigned int, const char*, ...) = &log_debug;
+ 
+ 	if (ap->flags & MOUNT_FLAG_REMOUNT)
+ 		return 0;
+ 
++	if (defaults_get_mount_verbose())
++		mountlog = &log_info;
++
+ 	/* Extract "symlink" pseudo-option which forces local filesystems
+ 	 * to be symlinked instead of bound.
+ 	 */
+@@ -164,9 +168,9 @@ int mount_mount(struct autofs_point *ap, const char *root, const char *name, int
+ 		if (!status)
+ 			existed = 0;
+ 
+-		debug(ap->logopt, MODPREFIX
+-		      "calling mount --bind -o %s %s %s",
+-		      options, what, fullpath);
++		mountlog(ap->logopt, MODPREFIX
++			 "calling mount --bind -o %s %s %s",
++			  options, what, fullpath);
+ 
+ 		err = spawn_bind_mount(ap->logopt, "-o",
+ 				       options, what, fullpath, NULL);
+diff --git a/modules/mount_ext2.c b/modules/mount_ext2.c
+index 3bbea95a..eb28b06c 100644
+--- a/modules/mount_ext2.c
++++ b/modules/mount_ext2.c
+@@ -47,10 +47,14 @@ int mount_mount(struct autofs_point *ap, const char *root, const char *name, int
+ 	int err, ro = 0;
+ 	const char *fsck_prog;
+ 	int len, status, existed = 1;
++	void (*mountlog)(unsigned int, const char*, ...) = &log_debug;
+ 
+ 	if (ap->flags & MOUNT_FLAG_REMOUNT)
+ 		return 0;
+ 
++	if (defaults_get_mount_verbose())
++		mountlog = &log_info;
++
+ 	/* Root offset of multi-mount */
+ 	len = strlen(root);
+ 	if (root[len - 1] == '/') {
+@@ -121,15 +125,15 @@ int mount_mount(struct autofs_point *ap, const char *root, const char *name, int
+ 	}
+ 
+ 	if (options) {
+-		debug(ap->logopt, MODPREFIX
+-		      "calling mount -t %s -o %s %s %s",
+-		      fstype, options, what, fullpath);
++		mountlog(ap->logopt, MODPREFIX
++			 "calling mount -t %s -o %s %s %s",
++			 fstype, options, what, fullpath);
+ 		err = spawn_mount(ap->logopt, "-t", fstype,
+ 			          "-o", options, what, fullpath, NULL);
+ 	} else {
+-		debug(ap->logopt,
+-		      MODPREFIX "calling mount -t %s %s %s",
+-		      fstype, what, fullpath);
++		mountlog(ap->logopt,
++			 MODPREFIX "calling mount -t %s %s %s",
++			 fstype, what, fullpath);
+ 		err = spawn_mount(ap->logopt, "-t", fstype, what, fullpath, NULL);
+ 	}
+ 
+diff --git a/modules/mount_generic.c b/modules/mount_generic.c
+index b1a3adbf..cf531145 100644
+--- a/modules/mount_generic.c
++++ b/modules/mount_generic.c
+@@ -46,10 +46,14 @@ int mount_mount(struct autofs_point *ap, const char *root, const char *name, int
+ 	char buf[MAX_ERR_BUF];
+ 	int err;
+ 	int len, status, existed = 1;
++	void (*mountlog)(unsigned int, const char*, ...) = &log_debug;
+ 
+ 	if (ap->flags & MOUNT_FLAG_REMOUNT)
+ 		return 0;
+ 
++	if (defaults_get_mount_verbose())
++		mountlog = &log_info;
++
+ 	/* Root offset of multi-mount */
+ 	len = strlen(root);
+ 	if (root[len - 1] == '/') {
+@@ -80,15 +84,15 @@ int mount_mount(struct autofs_point *ap, const char *root, const char *name, int
+ 		existed = 0;
+ 
+ 	if (options && options[0]) {
+-		debug(ap->logopt,
+-		      MODPREFIX "calling mount -t %s -o %s %s %s",
+-		      fstype, options, what, fullpath);
++		mountlog(ap->logopt,
++			 MODPREFIX "calling mount -t %s -o %s %s %s",
++			 fstype, options, what, fullpath);
+ 
+ 		err = spawn_mount(ap->logopt, "-t", fstype,
+ 				  "-o", options, what, fullpath, NULL);
+ 	} else {
+-		debug(ap->logopt, MODPREFIX "calling mount -t %s %s %s",
+-		      fstype, what, fullpath);
++		mountlog(ap->logopt, MODPREFIX "calling mount -t %s %s %s",
++			 fstype, what, fullpath);
+ 		err = spawn_mount(ap->logopt, "-t", fstype, what, fullpath, NULL);
+ 	}
+ 
+diff --git a/modules/mount_nfs.c b/modules/mount_nfs.c
+index 295c4a5d..4e3e703f 100644
+--- a/modules/mount_nfs.c
++++ b/modules/mount_nfs.c
+@@ -77,13 +77,17 @@ int mount_mount(struct autofs_point *ap, const char *root, const char *name, int
+ 	int port = -1;
+ 	int ro = 0;            /* Set if mount bind should be read-only */
+ 	int rdma = 0;
++	void (*mountlog)(unsigned int, const char*, ...) = &log_debug;
+ 
+ 	if (ap->flags & MOUNT_FLAG_REMOUNT)
+ 		return 0;
+ 
+-	debug(ap->logopt,
+-	      MODPREFIX "root=%s name=%s what=%s, fstype=%s, options=%s",
+-	      root, name, what, fstype, options);
++	if (defaults_get_mount_verbose())
++		mountlog = &log_info;
++
++	mountlog(ap->logopt,
++		 MODPREFIX "root=%s name=%s what=%s, fstype=%s, options=%s",
++		 root, name, what, fstype, options);
+ 
+ 	mount_default_proto = defaults_get_mount_nfs_default_proto();
+ 	vers = NFS_VERS_DEFAULT | NFS_PROTO_DEFAULT;
+@@ -203,9 +207,9 @@ int mount_mount(struct autofs_point *ap, const char *root, const char *name, int
+ 		if ((vers & NFS_PROTO_MASK) == 0)
+ 			vers |= NFS_PROTO_MASK;
+ 
+-		debug(ap->logopt, MODPREFIX
+-		      "nfs options=\"%s\", nobind=%d, nosymlink=%d, ro=%d",
+-		      nfsoptions, nobind, nosymlink, ro);
++		mountlog(ap->logopt, MODPREFIX
++			 "nfs options=\"%s\", nobind=%d, nosymlink=%d, ro=%d",
++			 nfsoptions, nobind, nosymlink, ro);
+ 	}
+ 
+ 	if (!parse_location(ap->logopt, &hosts, what, flags)) {
+@@ -379,17 +383,18 @@ dont_probe:
+ 		}
+ 
+ 		if (nfsoptions && *nfsoptions) {
+-			debug(ap->logopt,
+-			      MODPREFIX "calling mount -t %s " SLOPPY 
+-			      "-o %s %s %s", fstype, nfsoptions, loc, fullpath);
++			mountlog(ap->logopt,
++				 MODPREFIX "calling mount -t %s " SLOPPY
++				 "-o %s %s %s", fstype, nfsoptions, loc,
++				 fullpath);
+ 
+ 			err = spawn_mount(ap->logopt,
+ 					  "-t", fstype, SLOPPYOPT "-o",
+ 					  nfsoptions, loc, fullpath, NULL);
+ 		} else {
+-			debug(ap->logopt,
+-			      MODPREFIX "calling mount -t %s %s %s",
+-			      fstype, loc, fullpath);
++			mountlog(ap->logopt,
++				 MODPREFIX "calling mount -t %s %s %s",
++				 fstype, loc, fullpath);
+ 			err = spawn_mount(ap->logopt,
+ 					  "-t", fstype, loc, fullpath, NULL);
+ 		}

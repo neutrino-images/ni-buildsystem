@@ -1,0 +1,47 @@
+autofs-5.1.5 - Fix NFS mount from IPv6 addresses
+
+From: Goldwyn Rodrigues <rgoldwyn@suse.de>
+
+When an NFS server is specified by an IPv6 address and no mount
+options, the mount fails because check_address_proto()
+receives vers with TCP_REQUESTED set but the host.addr_len is
+INET6_ADDRSTRLEN. Removing the check for INET_ADDRSTRLEN
+fixes this issue.
+
+However, this will allow mount from "proto=tcp" for an IPv6
+addressed server.
+
+Fixes: 9053214 ("autofs-5.1.3 - fix ipv6 proto option handling")
+Signed-off-by: Goldwyn Rodrigues <rgoldwyn@suse.com>
+Acked-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG            |    1 +
+ modules/replicated.c |    3 ---
+ 2 files changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index 5650e73b..c8a3dec2 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -6,6 +6,7 @@ xx/xx/2019 autofs-5.1.6
+ - add mount_verbose configuration option.
+ - optionally log mount requestor process info.
+ - log mount call arguments if mount_verbose is set.
++- Fix NFS mount from IPv6 addresses.
+ 
+ 30/10/2018 autofs-5.1.5
+ - fix flag file permission.
+diff --git a/modules/replicated.c b/modules/replicated.c
+index 740270ec..e99e32a9 100644
+--- a/modules/replicated.c
++++ b/modules/replicated.c
+@@ -497,9 +497,6 @@ static int check_address_proto(unsigned logopt,
+ 	if (ipv6_requested) {
+ 		if (host->addr_len == INET_ADDRSTRLEN)
+ 			ret = 0;
+-	} else {
+-		if (host->addr_len == INET6_ADDRSTRLEN)
+-			ret = 0;
+ 	}
+ 
+ 	if (!ret)

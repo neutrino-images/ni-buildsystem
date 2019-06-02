@@ -1,0 +1,52 @@
+autofs-5.1.5 - fix hesiod string check in master_parse()
+
+From: Ian Kent <raven@themaw.net>
+
+When map source is specified in a master map entry, checking if
+map type is hesiod in master_parse() will generate a SEGV if a
+parser type is not also present becuase tmp will be NULL in this
+case.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG          |    1 +
+ lib/master_parse.y |    8 ++++----
+ 2 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index f671dc52..76da2ee4 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -1,5 +1,6 @@
+ xx/xx/2019 autofs-5.1.6
+ - support strictexpire mount option.
++- fix hesiod string check in master_parse().
+ 
+ 30/10/2018 autofs-5.1.5
+ - fix flag file permission.
+diff --git a/lib/master_parse.y b/lib/master_parse.y
+index 8fe8b128..f817f739 100644
+--- a/lib/master_parse.y
++++ b/lib/master_parse.y
+@@ -173,8 +173,8 @@ line:
+ 		if ((tmp = strchr($2, ',')))
+ 			*tmp++ = '\0';
+ #ifndef WITH_HESIOD
+-		/* Map type or or map type parser is hesiod */
+-		if (!strcmp($2, "hesiod") || !strcmp(tmp, "hesiod")) {
++		/* Map type or map type parser is hesiod */
++		if (!strcmp($2, "hesiod") || (tmp && !strcmp(tmp, "hesiod"))) {
+ 			master_error("hesiod support not built in");
+ 			local_free_vars();
+ 			YYABORT;
+@@ -362,8 +362,8 @@ map:	PATH
+ 		if ((tmp = strchr($1, ',')))
+ 			*tmp++ = '\0';
+ #ifndef WITH_HESIOD
+-		/* Map type or or map type parser is hesiod */
+-		if (!strcmp($1, "hesiod") || !strcmp(tmp, "hesiod")) {
++		/* Map type or map type parser is hesiod */
++		if (!strcmp($1, "hesiod") || (tmp && !strcmp(tmp, "hesiod"))) {
+ 			master_error("hesiod support not built in");
+ 			local_free_vars();
+ 			YYABORT;

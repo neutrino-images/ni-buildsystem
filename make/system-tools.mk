@@ -709,17 +709,17 @@ $(D)/ntfs-3g: $(ARCHIVE)/ntfs-3g_ntfsprogs-$(NTFS-3G_VER).tgz | $(TARGET_DIR)
 
 AUTOFS5_MAJOR = 5
 AUTOFS5_MINOR = 1
-AUTOFS5_MICRO = 4
+AUTOFS5_MICRO = 5
 AUTOFS5_VER = $(AUTOFS5_MAJOR).$(AUTOFS5_MINOR).$(AUTOFS5_MICRO)
 
 $(ARCHIVE)/autofs-$(AUTOFS5_VER).tar.gz:
 	$(WGET) https://www.kernel.org/pub/linux/daemons/autofs/v$(AUTOFS5_MAJOR)/autofs-$(AUTOFS5_VER).tar.gz
 
-# cd $(PATCHES)\autofs-5.1.4
-# wget -N https://mirrors.edge.kernel.org/pub/linux/daemons/autofs/v5/patches-5.1.5/patch_order-5.1.4
-# for p in $(cat patch_order-5.1.4); do test -f $p || wget https://mirrors.edge.kernel.org/pub/linux/daemons/autofs/v5/patches-5.1.5/$p; done
+# cd $(PATCHES)\autofs-5.1.5
+# wget -N https://mirrors.edge.kernel.org/pub/linux/daemons/autofs/v5/patches-5.1.6/patch_order_5.1.5
+# for p in $(cat patch_order_5.1.5); do test -f $p || wget https://mirrors.edge.kernel.org/pub/linux/daemons/autofs/v5/patches-5.1.6/$p; done
 
-AUTOFS_PATCH = $(addprefix autofs-$(AUTOFS5_VER)/, $(shell cat $(PATCHES)/autofs-$(AUTOFS5_VER)/patch_order-$(AUTOFS5_VER)))
+AUTOFS_PATCH = $(addprefix autofs-$(AUTOFS5_VER)/, $(shell cat $(PATCHES)/autofs-$(AUTOFS5_VER)/patch_order_$(AUTOFS5_VER)))
 
 $(D)/autofs5: $(D)/libtirpc $(ARCHIVE)/autofs-$(AUTOFS5_VER).tar.gz | $(TARGET_DIR)
 	$(REMOVE)/autofs-$(AUTOFS5_VER)
