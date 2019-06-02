@@ -76,7 +76,8 @@ $(D)/util-linux: $(D)/libncurses $(D)/zlib $(ARCHIVE)/util-linux-$(UTIL-LINUX_VE
 	$(CHDIR)/util-linux-$(UTIL-LINUX_VER); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
-			--prefix=/usr \
+			--prefix= \
+			--datarootdir=/.remove/share \
 			--mandir=/.remove/man \
 			--localedir=/.remove/locale \
 			--enable-static \
@@ -84,6 +85,11 @@ $(D)/util-linux: $(D)/libncurses $(D)/zlib $(ARCHIVE)/util-linux-$(UTIL-LINUX_VE
 			--disable-gtk-doc \
 			\
 			--disable-all-programs \
+				--enable-fdisks \
+				--enable-libfdisk \
+				--enable-libsmartcols \
+				--enable-libuuid \
+			--disable-bash-completion \
 			\
 			--disable-makeinstall-chown \
 			--disable-makeinstall-setuid \
@@ -96,7 +102,13 @@ $(D)/util-linux: $(D)/libncurses $(D)/zlib $(ARCHIVE)/util-linux-$(UTIL-LINUX_VE
 			--without-tinfo \
 			; \
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(BUILD_TMP)/util-linux-install
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(REWRITE_PKGCONF)/fdisk.pc
+	$(REWRITE_PKGCONF)/smartcols.pc
+	$(REWRITE_PKGCONF)/uuid.pc
+	$(REWRITE_LIBTOOL)/libfdisk.la
+	$(REWRITE_LIBTOOL)/libsmartcols.la
+	$(REWRITE_LIBTOOL)/libuuid.la
 	#$(REMOVE)/util-linux-$(UTIL-LINUX_VER)
 	$(TOUCH)
 
