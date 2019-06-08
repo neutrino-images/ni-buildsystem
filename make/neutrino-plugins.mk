@@ -147,6 +147,7 @@ $(ARCHIVE)/links-$(LINKS_VER).tar.bz2:
 LINKS_PATCH  = links-$(LINKS_VER).patch
 LINKS_PATCH += links-$(LINKS_VER)-ac-prog-cxx.patch
 LINKS_PATCH += links-$(LINKS_VER)-input-$(BOXTYPE).patch
+LINKS_PATCH += links-$(LINKS_VER)-accept_https_play.patch
 
 $(D)/links: $(D)/libpng $(D)/libjpeg $(D)/openssl $(ARCHIVE)/links-$(LINKS_VER).tar.bz2 $(SHAREPLUGINS) | $(TARGET_DIR)
 	$(REMOVE)/links-$(LINKS_VER)

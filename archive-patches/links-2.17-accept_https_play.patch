@@ -1,0 +1,10 @@
+--- a/session.c
++++ b/session.c
+@@ -2495,6 +2495,7 @@
+	unsigned char *proto = get_protocol_name(rq->url);
+	int ret = 0;
+	if (!proto) return 0;
++	if (a->accept_http && !casestrcmp(proto, cast_uchar "https")) ret = 1;
+	if (a->accept_http && !casestrcmp(proto, cast_uchar "http")) ret = 1;
+	if (a->accept_ftp && !casestrcmp(proto, cast_uchar "ftp")) ret = 1;
+	mem_free(proto);
