@@ -44,13 +44,9 @@ BUSYBOX_MAKE_OPTS = \
 $(D)/busybox: $(D)/libtirpc $(ARCHIVE)/$(BUSYBOX_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/busybox-$(BUSYBOX_VER)
 	$(UNTAR)/$(BUSYBOX_SOURCE)
-ifeq ($(BOXTYPE), coolstream)
-	cp $(CONFIGS)/busybox-$(BOXTYPE)-$(BOXSERIES).config $(BUILD_TMP)/busybox-$(BUSYBOX_VER)/.config
-else
-	cp $(CONFIGS)/busybox-$(BOXTYPE).config $(BUILD_TMP)/busybox-$(BUSYBOX_VER)/.config
-endif
 	$(CHDIR)/busybox-$(BUSYBOX_VER); \
 		$(call apply_patches, $(BUSYBOX_PATCH)); \
+		cp $(CONFIGS)/busybox-$(BOXTYPE)-$(BOXSERIES).config .config; \
 		sed -i -e 's|^CONFIG_PREFIX=.*|CONFIG_PREFIX="$(TARGET_DIR)"|' .config; \
 		$(BUSYBOX_MAKE_ENV) $(MAKE) busybox $(BUSYBOX_MAKE_OPTS); \
 		$(BUSYBOX_MAKE_ENV) $(MAKE) install $(BUSYBOX_MAKE_OPTS)
