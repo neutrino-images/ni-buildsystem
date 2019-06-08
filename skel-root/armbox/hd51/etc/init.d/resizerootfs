@@ -27,4 +27,18 @@ if [ ! -f "/.resize-userdata" ] && [ -e "/dev/block/by-name/userdata" ] && [ -x 
     touch "/.resize-userdata"
   fi
 fi
+
+if [ ! -f "/.resize-storage" ] && [ -e "/dev/block/by-name/storage" ] && [ -x "/sbin/blkid" ]; then
+  if blkid /dev/block/by-name/storage | grep "ext4"; then
+    echo "Resizing storage partition, Do not unplug power!..."
+    resize2fs /dev/block/by-name/storage
+    touch "/.resize-storage"
+  else
+    echo "storage partition is not format!..."
+    echo "Setup storage partitions, Do not unplug power!..."
+    mkfs.ext4 -F /dev/block/by-name/storage
+    touch "/.resize-storage"
+  fi
+fi
+
 : exit 0
