@@ -678,10 +678,10 @@ $(D)/e2fsprogs: $(ARCHIVE)/e2fsprogs-$(E2FSPROGS_VER).tar.gz | $(TARGET_DIR)
 		$(MAKE) install DESTDIR=$(TARGET_DIR); \
 		cd lib/uuid/; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	-rm $(addprefix $(TARGET_DIR)/bin/, chattr compile_et lsattr mk_cmds uuidgen)
+	-rm $(addprefix $(TARGET_DIR)/sbin/, dumpe2fs e2freefrag e2mmpstatus e2undo e4crypt filefrag logsave)
 	$(REWRITE_PKGCONF)/uuid.pc
 	$(REMOVE)/e2fsprogs-$(E2FSPROGS_VER)
-	$(CD) $(TARGET_DIR); \
-		rm sbin/dumpe2fs sbin/logsave sbin/e2undo sbin/filefrag sbin/e2freefrag bin/chattr bin/lsattr bin/uuidgen
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
