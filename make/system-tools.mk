@@ -726,6 +726,7 @@ $(D)/autofs5: $(D)/libtirpc $(ARCHIVE)/autofs-$(AUTOFS5_VER).tar.gz | $(TARGET_D
 	$(UNTAR)/autofs-$(AUTOFS5_VER).tar.gz
 	$(CHDIR)/autofs-$(AUTOFS5_VER); \
 		$(call apply_patches, $(AUTOFS_PATCH)); \
+		sed -i "s|nfs/nfs.h|linux/nfs.h|" include/rpc_subs.h; \
 		export ac_cv_linux_procfs=yes; \
 		export ac_cv_path_KRB5_CONFIG=no; \
 		export ac_cv_path_MODPROBE=/sbin/modprobe; \
@@ -734,6 +735,7 @@ $(D)/autofs5: $(D)/libtirpc $(ARCHIVE)/autofs-$(AUTOFS5_VER).tar.gz | $(TARGET_D
 		$(CONFIGURE) \
 			--prefix= \
 			--datarootdir=/.remove \
+			--enable-ignore-busy \
 			--disable-mount-locking \
 			--without-openldap \
 			--without-sasl \
@@ -746,7 +748,6 @@ $(D)/autofs5: $(D)/libtirpc $(ARCHIVE)/autofs-$(AUTOFS5_VER).tar.gz | $(TARGET_D
 			--with-fifodir=/var/run \
 			--with-flagdir=/var/run \
 			; \
-		sed -i "s|nfs/nfs.h|linux/nfs.h|" include/rpc_subs.h; \
 		$(MAKE) SUBDIRS="lib daemon modules" DONTSTRIP=1; \
 		$(MAKE) SUBDIRS="lib daemon modules" install DESTDIR=$(TARGET_DIR)
 	cp -a $(IMAGEFILES)/autofs/* $(TARGET_DIR)/
