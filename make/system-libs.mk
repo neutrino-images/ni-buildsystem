@@ -647,31 +647,24 @@ $(D)/luaexpat: $(D)/expat $(D)/lua $(ARCHIVE)/luaexpat-$(LUAEXPAT_VER).tar.gz | 
 
 # -----------------------------------------------------------------------------
 
-LUACURL_VER = v3
+LUACURL_VER = git
+LUACURL_SOURCE = lua-curlv3.$(LUACURL_VER)
+LUACURL_URL = https://github.com/lua-curl/$(LUACURL_SOURCE)
 
-$(ARCHIVE)/Lua-cURL$(LUACURL_VER).tar.xz:
-	$(WGET) http://neutrino-images.de/neutrino-images/archives/Lua-cURL$(LUACURL_VER).tar.xz
-
-LUACURL_PATCH  = lua-curl-Makefile.diff
-
-$(D)/luacurl: $(D)/libcurl $(D)/lua $(ARCHIVE)/Lua-cURL$(LUACURL_VER).tar.xz | $(TARGET_DIR)
-	$(REMOVE)/Lua-cURL$(LUACURL_VER)
-	$(UNTAR)/Lua-cURL$(LUACURL_VER).tar.xz
-	$(CHDIR)/Lua-cURL$(LUACURL_VER); \
-		$(call apply_patches, $(LUACURL_PATCH)); \
+$(D)/luacurl: $(D)/libcurl $(D)/lua | $(TARGET_DIR)
+	$(REMOVE)/$(LUACURL_SOURCE)
+	get-git-source.sh $(LUACURL_URL) $(ARCHIVE)/$(LUACURL_SOURCE)
+	$(CPDIR)/$(LUACURL_SOURCE)
+	$(CHDIR)/$(LUACURL_SOURCE); \
 		$(BUILDENV) \
-		CC=$(TARGET)-gcc \
-		LUA_CMOD=/lib/lua/$(LUA_ABIVER) \
-		LUA_LMOD=/share/lua/$(LUA_ABIVER) \
-		LIBDIR=$(TARGET_LIB_DIR) \
-		LUA_INC=$(TARGET_INCLUDE_DIR) \
-		CURL_LIBS="$(TARGET_LDFLAGS) -lcurl" \
-		$(MAKE); \
-		LUA_CMOD=/lib/lua/$(LUA_ABIVER) \
-		LUA_LMOD=/share/lua/$(LUA_ABIVER) \
-		DESTDIR=$(TARGET_DIR) \
-		$(MAKE) install
-	$(REMOVE)/Lua-cURL$(LUACURL_VER)
+		$(MAKE) CC=$(TARGET)-gcc \
+			LDFLAGS="$(TARGET_LDFLAGS)" \
+			LIBDIR=$(TARGET_LIB_DIR) \
+			LUA_INC=$(TARGET_INCLUDE_DIR); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR) \
+			LUA_CMOD=/lib/lua/$(LUA_ABIVER) \
+			LUA_LMOD=/share/lua/$(LUA_ABIVER)
+	$(REMOVE)/$(LUACURL_SOURCE)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
