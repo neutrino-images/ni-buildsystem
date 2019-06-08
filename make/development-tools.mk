@@ -80,7 +80,7 @@ $(D)/strace: $(ARCHIVE)/strace-$(STRACE_VER).tar.xz | $(TARGET_DIR)
 			--enable-silent-rules \
 			; \
 		$(MAKE) all; \
-		make install prefix=$(TARGET_DIR)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	rm $(TARGET_DIR)/bin/strace-graph
 	rm $(TARGET_DIR)/bin/strace-log-merge
 	$(REMOVE)/strace-$(STRACE_VER)
@@ -108,7 +108,7 @@ $(D)/gdb: $(D)/zlib $(D)/libncurses $(ARCHIVE)/gdb-$(GDB_VER).tar.xz | $(TARGET_
 			--enable-static \
 			; \
 		$(MAKE) all-gdb; \
-		make install-gdb prefix=$(TARGET_DIR)
+		$(MAKE) install-gdb DESTDIR=$(TARGET_DIR)
 	rm -rf $(TARGET_DIR)/share/gdb/system-gdbinit
 	find $(TARGET_DIR)/share/gdb/syscalls -type f -not -name 'arm-linux.xml' -not -name 'gdb-syscalls.dtd' -print0 | xargs -0 rm --
 	$(REMOVE)/gdb-$(GDB_VER)

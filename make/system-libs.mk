@@ -154,7 +154,7 @@ $(D)/libcurl: $(D)/zlib $(D)/openssl $(D)/librtmp $(D)/ca-bundle $(ARCHIVE)/curl
 	$(UNTAR)/curl-$(LIBCURL_VER).tar.bz2
 	$(CHDIR)/curl-$(LIBCURL_VER); \
 		$(CONFIGURE) \
-			--prefix=  \
+			--prefix= \
 			--mandir=/.remove \
 			--datarootdir=/.remove \
 			--disable-manual \
