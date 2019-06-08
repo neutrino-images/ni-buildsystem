@@ -192,7 +192,7 @@ $(D)/libcurl: $(D)/zlib $(D)/openssl $(D)/librtmp $(D)/ca-bundle $(ARCHIVE)/curl
 
 # -----------------------------------------------------------------------------
 
-LIBPNG_VER = 1.6.36
+LIBPNG_VER = 1.6.37
 
 $(ARCHIVE)/libpng-$(LIBPNG_VER).tar.xz:
 	$(WGET) http://sourceforge.net/projects/libpng/files/libpng16/$(LIBPNG_VER)/libpng-$(LIBPNG_VER).tar.xz
