@@ -619,11 +619,18 @@ $(D)/bash: $(ARCHIVE)/bash-$(BASH_VER).tar.gz | $(TARGET_DIR)
 	$(UNTAR)/bash-$(BASH_VER).tar.gz
 	$(CHDIR)/bash-$(BASH_VER); \
 		$(call apply_patches, $(PATCHES)/bash-$(BASH_MAJOR).$(BASH_MINOR), 0); \
-		$(CONFIGURE); \
+		$(CONFIGURE) \
+			--prefix= \
+			--datarootdir=/.remove \
+			; \
 		$(MAKE); \
-		install -m 0755 bash $(TARGET_DIR)/bin
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(REWRITE_PKGCONF)/bash.pc
+	rm -f $(TARGET_DIR)/lib/bash/loadables.h
+	rm -f $(TARGET_DIR)/lib/bash/Makefile.inc
 	$(REMOVE)/bash-$(BASH_VER)
 	$(TOUCH)
+
 
 # -----------------------------------------------------------------------------
 
