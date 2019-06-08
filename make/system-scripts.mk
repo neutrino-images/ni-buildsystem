@@ -12,7 +12,8 @@ init-scripts: \
 	$(TARGET_DIR)/etc/init.d/crond \
 	$(TARGET_DIR)/etc/init.d/hostname \
 	$(TARGET_DIR)/etc/init.d/inetd \
-	$(TARGET_DIR)/etc/init.d/swap
+	$(TARGET_DIR)/etc/init.d/swap \
+	$(TARGET_DIR)/etc/init.d/syslogd
 
 $(TARGET_DIR)/etc/init.d/globals:
 	install -D -m 0644 $(IMAGEFILES)/scripts/init.globals $@
@@ -51,6 +52,10 @@ ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51))
 	install -D -m 0755 $(IMAGEFILES)/scripts/swap.init $@
 	ln -sf swap $(TARGET_DIR)/etc/init.d/K99swap
 endif
+
+$(TARGET_DIR)/etc/init.d/syslogd:
+	install -D -m 0755 $(IMAGEFILES)/scripts/syslogd.init $@
+	ln -sf syslogd $(TARGET_DIR)/etc/init.d/K98syslogd
 
 # -----------------------------------------------------------------------------
 
