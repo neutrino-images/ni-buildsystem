@@ -1336,7 +1336,7 @@ $(D)/glib2: $(ARCHIVE)/glib-$(GLIB2_VER).tar.xz $(D)/zlib $(GLIB2_DEPS) $(D)/lib
 
 # -----------------------------------------------------------------------------
 
-ALSA-LIB_VER = 1.1.8
+ALSA-LIB_VER = 1.1.9
 ALSA-LIB_SOURCE = alsa-lib-$(ALSA-LIB_VER).tar.bz2
 
 $(ARCHIVE)/$(ALSA-LIB_SOURCE):
