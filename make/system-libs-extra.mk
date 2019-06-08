@@ -98,7 +98,8 @@ $(D)/bzip2: $(ARCHIVE)/$(BZIP2_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/bzip2-$(BZIP2_VER); \
 		$(call apply_patches, $(BZIP2_Patch)); \
 		mv Makefile-libbz2_so Makefile; \
-		$(MAKE) all CC=$(TARGET)-gcc AR=$(TARGET)-ar RANLIB=$(TARGET)-ranlib; \
+		$(BUILDENV) \
+		$(MAKE) all; \
 		$(MAKE) install PREFIX=$(TARGET_DIR)
 	rm -f $(TARGET_DIR)/bin/bzip2
 	$(REMOVE)/bzip2-$(BZIP2_VER)
