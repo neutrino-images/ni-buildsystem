@@ -271,7 +271,7 @@ $(D)/hdparm: $(ARCHIVE)/hdparm-$(HDPARM_VER).tar.gz | $(TARGET_DIR)
 	$(UNTAR)/hdparm-$(HDPARM_VER).tar.gz
 	$(CHDIR)/hdparm-$(HDPARM_VER); \
 		$(BUILDENV) \
-		$(MAKE) CC=$(TARGET)-gcc STRIP=$(TARGET)-strip; \
+		$(MAKE); \
 		install -D -m 0755 hdparm $(TARGET_DIR)/sbin/hdparm
 	$(REMOVE)/hdparm-$(HDPARM_VER)
 	$(TOUCH)
@@ -287,8 +287,9 @@ $(D)/hd-idle: $(ARCHIVE)/hd-idle-$(HD-IDLE_VER).tgz | $(TARGET_DIR)
 	$(REMOVE)/hd-idle
 	$(UNTAR)/hd-idle-$(HD-IDLE_VER).tgz
 	$(CHDIR)/hd-idle; \
-		$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) -o hd-idle hd-idle.c; \
-		install -m 0755 hd-idle $(BIN)/
+		$(BUILDENV) \
+		$(MAKE); \
+		install -D -m 0755 hd-idle $(TARGET_DIR)/sbin/hd-idle
 	$(REMOVE)/hd-idle
 	$(TOUCH)
 
