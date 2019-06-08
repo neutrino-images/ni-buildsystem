@@ -1,0 +1,12 @@
+#!/bin/sh
+
+. /etc/init.d/globals
+
+case $1 in
+	stop)
+		swapoff -a
+	;;
+	*)
+		echo "[${BASENAME}] Usage: $0 {stop}"
+	;;
+esac

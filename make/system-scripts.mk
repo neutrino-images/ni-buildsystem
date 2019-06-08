@@ -11,7 +11,8 @@ init-scripts: \
 	$(TARGET_DIR)/etc/init.d/coredump \
 	$(TARGET_DIR)/etc/init.d/crond \
 	$(TARGET_DIR)/etc/init.d/hostname \
-	$(TARGET_DIR)/etc/init.d/inetd
+	$(TARGET_DIR)/etc/init.d/inetd \
+	$(TARGET_DIR)/etc/init.d/swap
 
 $(TARGET_DIR)/etc/init.d/globals:
 	install -D -m 0644 $(IMAGEFILES)/scripts/init.globals $@
@@ -40,6 +41,12 @@ $(TARGET_DIR)/etc/init.d/hostname:
 
 $(TARGET_DIR)/etc/init.d/inetd:
 	install -D -m 0755 $(IMAGEFILES)/scripts/inetd.init $@
+
+$(TARGET_DIR)/etc/init.d/swap:
+ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51))
+	install -D -m 0755 $(IMAGEFILES)/scripts/swap.init $@
+	ln -sf swap $(TARGET_DIR)/etc/init.d/K99swap
+endif
 
 # -----------------------------------------------------------------------------
 
