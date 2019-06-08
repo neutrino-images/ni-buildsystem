@@ -139,7 +139,7 @@ $(D)/giflib: $(ARCHIVE)/giflib-$(GIFLIB_VER).tar.bz2 | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-LIBCURL_VER = 7.61.1
+LIBCURL_VER = 7.65.0
 
 $(ARCHIVE)/curl-$(LIBCURL_VER).tar.bz2:
 	$(WGET) http://curl.haxx.se/download/curl-$(LIBCURL_VER).tar.bz2
