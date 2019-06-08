@@ -338,7 +338,7 @@ $(D)/libjpeg-turbo2: $(ARCHIVE)/$(LIBJPEG-TURBO2_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-OPENSSL_VER = 1.0.2q
+OPENSSL_VER = 1.0.2s
 
 $(ARCHIVE)/openssl-$(OPENSSL_VER).tar.gz:
 	$(WGET) http://www.openssl.org/source/openssl-$(OPENSSL_VER).tar.gz
