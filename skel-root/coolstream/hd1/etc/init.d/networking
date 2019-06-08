@@ -5,7 +5,7 @@
 case "$1" in
 	start)
 		SHOWINFO "Configuring network ..."
-		ifup -a
+		ifup -a -f
 		if type ifplugd >/dev/null 2>&1; then
 			SHOWINFO "Starting ifplugd ..."
 			ifplugd -F -p -q

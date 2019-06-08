@@ -5,7 +5,7 @@
 case "$1" in
 	start)
 		SHOWINFO "Configuring network ... "
-		ifup -a
+		ifup -a -f
 	;;
 	stop)
 		SHOWINFO "Deconfiguring network ... "
