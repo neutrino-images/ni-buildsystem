@@ -35,12 +35,16 @@ endif
 
 $(TARGET_DIR)/etc/init.d/crond:
 	install -D -m 0755 $(IMAGEFILES)/scripts/crond.init $@
+	ln -sf crond $(TARGET_DIR)/etc/init.d/S55crond
+	ln -sf crond $(TARGET_DIR)/etc/init.d/K55crond
 
 $(TARGET_DIR)/etc/init.d/hostname:
 	install -D -m 0755 $(IMAGEFILES)/scripts/hostname.init $@
 
 $(TARGET_DIR)/etc/init.d/inetd:
 	install -D -m 0755 $(IMAGEFILES)/scripts/inetd.init $@
+	ln -sf inetd $(TARGET_DIR)/etc/init.d/S53inetd
+	ln -sf inetd $(TARGET_DIR)/etc/init.d/K80inetd
 
 $(TARGET_DIR)/etc/init.d/swap:
 ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51))

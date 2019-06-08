@@ -134,11 +134,7 @@ endif
 		ln -sf fstab K99fstab; \
 		ln -sf fstab S01fstab; \
 		ln -sf syslogd K98syslogd; \
-		ln -sf networking K99networking; \
-		ln -sf crond S55crond; \
-		ln -sf crond K55crond; \
-		ln -sf inetd S53inetd; \
-		ln -sf inetd K80inetd
+		ln -sf networking K99networking
 ifeq ($(BOXSERIES), hd2)
 	$(CD) $(ROOTFS)/etc; \
 		ln -sf /var/etc/exports exports; \
