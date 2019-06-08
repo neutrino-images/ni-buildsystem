@@ -283,7 +283,7 @@ REWRITE_PKGCONF        = $(REWRITE_CONFIG_RULES) $(PKG_CONFIG_PATH)
 # unpack tarballs, clean up
 UNTAR = tar -C $(BUILD_TMP) -xf $(ARCHIVE)
 UNZIP = unzip -d $(BUILD_TMP) -o $(ARCHIVE)
-REMOVE = rm -rf $(BUILD_TMP)/.remove $(TARGET_DIR)/.remove $(BUILD_TMP)
+REMOVE = rm -rf $(TARGET_DIR)/.remove $(BUILD_TMP)
 PATCH = patch -p1 -i $(PATCHES)
 
 # wget tarballs into archive directory

@@ -76,7 +76,7 @@ $(D)/strace: $(ARCHIVE)/strace-$(STRACE_VER).tar.xz | $(TARGET_DIR)
 	$(CHDIR)/strace-$(STRACE_VER); \
 		$(CONFIGURE) \
 			--prefix= \
-			--mandir=$(BUILD_TMP)/.remove \
+			--mandir=/.remove \
 			--enable-silent-rules \
 			; \
 		$(MAKE) all; \
@@ -99,8 +99,8 @@ $(D)/gdb: $(D)/zlib $(D)/libncurses $(ARCHIVE)/gdb-$(GDB_VER).tar.xz | $(TARGET_
 	$(CHDIR)/gdb-$(GDB_VER); \
 		$(CONFIGURE) \
 			--prefix= \
-			--mandir=$(BUILD_TMP)/.remove \
-			--infodir=$(BUILD_TMP)/.remove \
+			--mandir=/.remove \
+			--infodir=/.remove \
 			--disable-binutils \
 			--disable-werror \
 			--with-curses \
