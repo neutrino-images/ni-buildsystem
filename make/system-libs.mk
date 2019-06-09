@@ -200,7 +200,7 @@ $(ARCHIVE)/libpng-$(LIBPNG_VER).tar.xz:
 LIBPNG_PATCH  = libpng-Disable-pngfix-and-png-fix-itxt.patch
 
 LIBPNG_CONF =
-ifneq ($(BOXSERIES), hd51)
+ifneq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 bre2ze4k))
   LIBPNG_CONF = --disable-arm-neon
 endif
 
@@ -380,7 +380,7 @@ $(D)/openssl: $(ARCHIVE)/openssl-$(OPENSSL_VER).tar.gz | $(TARGET_DIR)
 	$(REWRITE_PKGCONF)/libcrypto.pc
 	$(REWRITE_PKGCONF)/libssl.pc
 	rm -rf $(TARGET_DIR)/bin/c_rehash $(TARGET_LIB_DIR)/engines
-ifneq ($(BOXSERIES), hd51)
+ifneq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 bre2ze4k))
 	rm -rf $(TARGET_DIR)/bin/openssl
 endif
 	$(REMOVE)/openssl-$(OPENSSL_VER)

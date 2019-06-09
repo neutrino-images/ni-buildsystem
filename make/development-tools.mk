@@ -14,6 +14,7 @@ $(ARCHIVE)/valgrind-$(VALGRIND_VER).tar.bz2:
 
 VALGRIND_PATCH  = valgrind-fix-$(BOXSERIES)-build.patch
 
+$(D)/valgrind-bre2ze4k \
 $(D)/valgrind-hd51 \
 $(D)/valgrind-hd2: $(ARCHIVE)/valgrind-$(VALGRIND_VER).tar.bz2 | $(TARGET_DIR)
 	$(REMOVE)/valgrind-$(VALGRIND_VER)

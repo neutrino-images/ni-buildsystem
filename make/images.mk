@@ -67,6 +67,10 @@ ifeq ($(BOXMODEL), hd51)
 	make flash-image-armbox BOXNAME="AX/Mut@nt HD51"
 	make flash-image-armbox-multi
 endif
+ifeq ($(BOXMODEL), bre2ze4k)
+	make flash-image-armbox BOXNAME="WWIO BRE2ZE4K"
+	make flash-image-armbox-multi
+endif
 
 # -----------------------------------------------------------------------------
 
@@ -129,7 +133,7 @@ flash-image-armbox:
 
 # -----------------------------------------------------------------------------
 
-# general
+# hd51 / bre2ze4k
 HD51_IMAGE_NAME = disk
 HD51_BOOT_IMAGE = boot.img
 HD51_IMAGE_LINK = $(HD51_IMAGE_NAME).ext4

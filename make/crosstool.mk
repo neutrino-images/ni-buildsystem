@@ -6,7 +6,7 @@
 crosstool: crosstool-$(BOXARCH)-$(BOXSERIES)
 
 crosstools:
-	for boxseries in hd1 hd2 hd51; do \
+	for boxseries in hd1 hd2 hd51 bre2ze4k; do \
 		make BOXSERIES=$${boxseries} crosstool-$(BOXARCH)-$${boxseries} || exit; \
 	done;
 
@@ -32,7 +32,7 @@ crosstool-restore: $(CROSSTOOL_BACKUP)
 # -----------------------------------------------------------------------------
 
 crosstools-renew:
-	for boxseries in hd1 hd2 hd51; do \
+	for boxseries in hd1 hd2 hd51 bre2ze4k; do \
 		make BOXSERIES=$${boxseries} ccache-clean static-clean cross-clean || exit; \
 	done;
 	make host-clean
@@ -58,6 +58,7 @@ crosstool-arm-hd1: CROSS_DIR-check $(SOURCE_DIR)/$(NI_LINUX-KERNEL)
 		cp -a $(CONFIGS)/ct-ng-$(BOXTYPE)-$(BOXSERIES).config .config && \
 		sed -i "s@^CT_PARALLEL_JOBS=.*@CT_PARALLEL_JOBS=$(PARALLEL_JOBS)@" .config && \
 		export NI_BASE_DIR=$(BASE_DIR) && \
+		export NI_CROSS_DIR=$(CROSS_DIR) && \
 		export NI_CUSTOM_KERNEL=$(BUILD_TMP)/crosstool-ng/targets/src/linux-$(KERNEL_VERSION).tar && \
 		export NI_CUSTOM_KERNEL_VERSION=$(KERNEL_VERSION) && \
 		export LD_LIBRARY_PATH= && \
@@ -96,6 +97,7 @@ crosstool-arm-hd2: CROSS_DIR-check $(ARCHIVE)/gcc-linaro-$(GCC_VER).tar.xz $(SOU
 		cp -a $(CONFIGS)/ct-ng-$(BOXTYPE)-$(BOXSERIES).config .config && \
 		sed -i "s@^CT_PARALLEL_JOBS=.*@CT_PARALLEL_JOBS=$(PARALLEL_JOBS)@" .config && \
 		export NI_BASE_DIR=$(BASE_DIR) && \
+		export NI_CROSS_DIR=$(CROSS_DIR) && \
 		export NI_CUSTOM_KERNEL=$(BUILD_TMP)/crosstool-ng/targets/src/linux-$(KERNEL_VERSION).tar && \
 		export NI_CUSTOM_KERNEL_VERSION=$(KERNEL_VERSION) && \
 		export NI_UCLIBC_CONFIG=$(CONFIGS)/ct-ng-uClibc-$(UCLIBC_VER).config && \
@@ -128,6 +130,7 @@ crosstool-arm-hd51: CROSS_DIR-check $(SOURCE_DIR)/$(NI_LINUX-KERNEL)
 		cp -a $(CONFIGS)/ct-ng-$(BOXTYPE)-$(BOXSERIES).config .config && \
 		sed -i "s@^CT_PARALLEL_JOBS=.*@CT_PARALLEL_JOBS=$(PARALLEL_JOBS)@" .config && \
 		export NI_BASE_DIR=$(BASE_DIR) && \
+		export NI_CROSS_DIR=$(CROSS_DIR) && \
 		export NI_CUSTOM_KERNEL=$(BUILD_TMP)/crosstool-ng/targets/src/linux-$(KERNEL_VERSION).tar && \
 		export NI_CUSTOM_KERNEL_VERSION=$(KERNEL_VERSION) && \
 		export LD_LIBRARY_PATH= && \
@@ -139,6 +142,12 @@ crosstool-arm-hd51: CROSS_DIR-check $(SOURCE_DIR)/$(NI_LINUX-KERNEL)
 	test -e $(CROSS_DIR)/$(TARGET)/lib || ln -sf sys-root/lib $(CROSS_DIR)/$(TARGET)/
 	rm -f $(CROSS_DIR)/$(TARGET)/sys-root/lib/libstdc++.so.6.0.20-gdb.py
 	$(REMOVE)/crosstool-ng.git
+
+crosstool-arm-bre2ze4k: CROSS_DIR-check
+ifeq ($(wildcard $(CROSS_BASE)/$(BOXARCH)/hd51),)
+	make crosstool-arm-hd51
+endif
+	ln -sf hd51 $(CROSS_DIR)
 
 # -----------------------------------------------------------------------------
 

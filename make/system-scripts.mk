@@ -30,7 +30,7 @@ $(TARGET_DIR)/etc/init.d/camd_datefix:
 	install -D -m 0755 $(IMAGEFILES)/scripts/camd_datefix.init $@
 
 $(TARGET_DIR)/etc/init.d/coredump:
-ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd51))
+ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd51 bre2ze4k))
 	install -D -m 0755 $(IMAGEFILES)/scripts/coredump.init $@
 endif
 
@@ -48,7 +48,7 @@ $(TARGET_DIR)/etc/init.d/inetd:
 	ln -sf inetd $(TARGET_DIR)/etc/init.d/K80inetd
 
 $(TARGET_DIR)/etc/init.d/swap:
-ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51))
+ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 bre2ze4k))
 	install -D -m 0755 $(IMAGEFILES)/scripts/swap.init $@
 	ln -sf swap $(TARGET_DIR)/etc/init.d/K99swap
 endif

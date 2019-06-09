@@ -14,6 +14,7 @@ plugins-hd1:
 	# nothing to do
 
 plugins-hd2 \
+plugins-bre2ze4k \
 plugins-hd51: \
 	$(D)/channellogos
 ifneq ($(BOXMODEL), kronos_v2)
@@ -37,7 +38,7 @@ NP_CONFIGURE_ADDITIONS = \
 		--disable-mountpointmanagement \
 		--disable-stbup
 
-ifneq ($(BOXMODEL), hd51)
+ifneq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 bre2ze4k))
   NP_CONFIGURE_ADDITIONS += \
 		--disable-showiframe \
 		--disable-stb_startup \
@@ -188,6 +189,7 @@ PHONY += plugins
 PHONY += plugins-hd1
 PHONY += plugins-hd2
 PHONY += plugins-hd51
+PHONY += plugins-bre2ze4k
 
 PHONY += neutrino-plugins-uninstall neutrino-plugins-distclean
 PHONY += neutrino-plugins-clean neutrino-plugins-clean-all

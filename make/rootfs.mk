@@ -119,7 +119,7 @@ endif
 rootfs-softlinks: $(ROOTFS)
 	$(CD) $(ROOTFS); \
 		ln -sf /var/root root
-ifeq ($(BOXSERIES), hd51)
+ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 bre2ze4k))
 	$(CD) $(ROOTFS); \
 		ln -sf /var/root home
 endif

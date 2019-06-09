@@ -28,12 +28,12 @@ SHELL := /bin/bash
 # - AX Technologies / Mutant --------------------------------------------------
 
 # BOXTYPE                     armbox
-#                               |
-# BOXSERIES                    hd51
-#                               |
+#                             /    \
+# BOXSERIES                hd51    bre2ze4k
+#                            |      |
 # BOXFAMILY                  bcm7251s
-#                               |
-# BOXMODEL                     hd51
+#                            |      |
+# BOXMODEL                 hd51    bre2ze4k
 
 # -----------------------------------------------------------------------------
 
@@ -51,30 +51,12 @@ ifneq ($(BOXSERIES),)
     BOXTYPE = armbox
     BOXFAMILY = bcm7251s
     BOXMODEL = hd51
+  else ifeq ($(BOXSERIES), bre2ze4k)
+    BOXTYPE = armbox
+    BOXFAMILY = bcm7251s
+    BOXMODEL = bre2ze4k
   else
     $(error $(BOXTYPE) BOXSERIES $(BOXSERIES) not supported)
-  endif
-
-# assign by given BOXFAMILY
-else ifneq ($(BOXFAMILY),)
-  ifeq ($(BOXFAMILY), nevis)
-    BOXTYPE = coolstream
-    BOXSERIES = hd1
-    BOXMODEL = nevis
-  else ifeq ($(BOXFAMILY), apollo)
-    BOXTYPE = coolstream
-    BOXSERIES = hd2
-    BOXMODEL = apollo
-  else ifeq ($(BOXFAMILY), kronos)
-    BOXTYPE = coolstream
-    BOXSERIES = hd2
-    BOXMODEL = kronos
-  else ifeq ($(BOXFAMILY), bcm7251s)
-    BOXTYPE = armbox
-    BOXSERIES = hd51
-    BOXMODEL = hd51
-  else
-    $(error $(BOXTYPE) BOXFAMILY $(BOXFAMILY) not supported)
   endif
 
 # assign by given BOXMODEL
@@ -94,6 +76,10 @@ else ifneq ($(BOXMODEL),)
   else ifeq ($(BOXMODEL), hd51)
     BOXTYPE = armbox
     BOXSERIES = hd51
+    BOXFAMILY = bcm7251s
+  else ifeq ($(BOXMODEL), bre2ze4k)
+    BOXTYPE = armbox
+    BOXSERIES = bre2ze4k
     BOXFAMILY = bcm7251s
   else
     $(error $(BOXTYPE) BOXMODEL $(BOXMODEL) not supported)
@@ -216,11 +202,11 @@ else ifeq ($(BOXSERIES), hd2)
   endif
   CXX11_ABI              = -D_GLIBCXX_USE_CXX11_ABI=0
 
-else ifeq ($(BOXSERIES), hd51)
+else ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 bre2ze4k))
   KERNEL_VERSION_MAJOR   = 4.10
   KERNEL_VERSION         = 4.10.12
 
-  DRIVERS_DIR            = hd51
+  DRIVERS_DIR            = $(BOXSERIES)
   CORTEX-STRINGS         = -lcortex-strings
   TARGET                 = arm-cortex-linux-gnueabihf
   TARGET_O_CFLAGS        = -O2

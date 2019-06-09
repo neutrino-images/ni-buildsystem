@@ -37,7 +37,7 @@ skeleton: | $(TARGET_DIR)
 
 target-dir:
 	mkdir -p $(TARGET_DIR)
-ifeq ($(BOXSERIES), hd51)
+ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 bre2ze4k))
 	mkdir -p $(TARGET_DIR)/boot
 endif
 	mkdir -p $(TARGET_DIR)/dev
@@ -144,7 +144,7 @@ ifeq ($(BOXSERIES), hd2)
 		ln -sf libuClibc-$(UCLIBC_VER).so libpthread.so.0; \
 		ln -sf libuClibc-$(UCLIBC_VER).so librt.so.0
 endif
-ifeq ($(BOXSERIES), hd51)
+ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 bre2ze4k))
 	$(CD) $(TARGET_LIB_DIR); \
 		ln -sf ld-2.23.so ld-linux.so.3
 endif

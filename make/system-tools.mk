@@ -852,6 +852,7 @@ SAMBA36_PATCH0  = samba36-CVE-2016-2112-v3-6.patch
 SAMBA36_PATCH0 += samba36-CVE-2016-2115-v3-6.patch
 SAMBA36_PATCH0 += samba36-CVE-2017-7494-v3-6.patch
 
+$(D)/samba-bre2ze4k \
 $(D)/samba-hd51 \
 $(D)/samba-hd2: $(D)/zlib $(ARCHIVE)/samba-$(SAMBA36_VER).tar.gz | $(TARGET_DIR)
 	$(REMOVE)/samba-$(SAMBA36_VER)

@@ -24,7 +24,7 @@ ifeq ($(BOXSERIES)-$(BOXFAMILY), hd2-apollo)
   KERNEL_DTB = $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/kernel-dtb/hd849x.dtb
 else ifeq ($(BOXSERIES)-$(BOXFAMILY), hd2-kronos)
   KERNEL_DTB = $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/kernel-dtb/en75x1.dtb
-else ifeq ($(BOXSERIES), hd51)
+else ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 bre2ze4k))
   KERNEL_DTB = $(BUILD_TMP)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/dts/bcm7445-bcm97445svmb.dtb
 endif
 
@@ -45,7 +45,7 @@ KERNEL_MAKEVARS += \
 KERNEL_MAKEOPTS = $(EMPTY)
 ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd1 hd2))
   KERNEL_MAKEOPTS = zImage modules
-else ifeq ($(BOXSERIES), hd51)
+else ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 bre2ze4k))
   KERNEL_MAKEOPTS = zImage modules $(notdir $(KERNEL_DTB))
 endif
 

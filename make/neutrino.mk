@@ -48,7 +48,7 @@ ifeq ($(BOXSERIES), hd2)
   N_CFLAGS += -DFB_HW_ACCELERATION
 endif
 
-ifeq ($(BOXSERIES), hd51)
+ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 bre2ze4k))
   ifeq ($(USE_GSTREAMER), yes)
     N_CFLAGS += $(shell $(PKG_CONFIG) --cflags --libs gstreamer-1.0)
     N_CFLAGS += $(shell $(PKG_CONFIG) --cflags --libs gstreamer-audio-1.0)
@@ -189,7 +189,7 @@ LH_DEPS += ffmpeg
 LH_DEPS += openthreads
 
 USE_GSTREAMER = no
-ifeq ($(BOXSERIES), hd51)
+ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 bre2ze4k))
   ifeq ($(USE_GSTREAMER), yes)
     LH_DEPS += gstreamer-all
   endif
@@ -198,7 +198,7 @@ endif
 # -----------------------------------------------------------------------------
 
 LH_CONFIGURE_GSTREAMER =
-ifeq ($(BOXSERIES), hd51)
+ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 bre2ze4k))
   ifeq ($(USE_GSTREAMER), yes)
     LH_CONFIGURE_GSTREAMER += \
 			--enable-gstreamer_10

@@ -3,7 +3,7 @@
 #
 # -----------------------------------------------------------------------------
 
-BOXSERIES_UPDATE = hd2 hd51
+BOXSERIES_UPDATE = hd2 hd51 bre2ze4k
 ifneq ($(DEBUG), yes)
 	BOXSERIES_UPDATE += hd1
 endif
