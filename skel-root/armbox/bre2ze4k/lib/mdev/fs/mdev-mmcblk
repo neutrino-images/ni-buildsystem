@@ -1,0 +1,153 @@
+#!/bin/sh
+
+. /etc/init.d/globals
+
+MOUNTBASE=/mnt
+MOUNTPOINT="$MOUNTBASE/$MDEV"
+ROOTDEV=$(readlink /dev/root)
+BLOCKS="/sys/block/mmcblk0/mmcblk0p*/uevent"
+KERNELDEV=""
+K_PARTNAME=""
+ROOTFSDEV=""
+R_PARTNAME=""
+ROOTSUBDIR=""
+SUBDIRBOOT=0
+# to use partition names in non-subdirboot layout, set it to 1
+USE_PARTNAMES=0
+
+# check partition names
+DEVNAME=""
+PARTNAME=""
+for i in $BLOCKS; do
+	if [ "$i" != "$BLOCKS" ]; then
+		DEVNAME=$(cat $i | grep DEVNAME | cut -d '=' -f 2)
+		if [ "$DEVNAME" == "$MDEV" ]; then
+			PARTNAME=$(cat $i | grep PARTNAME | cut -d '=' -f 2)
+			if [ -n "$(echo $PARTNAME | grep 'kernel')" ]; then
+				KERNELDEV=$DEVNAME
+				K_PARTNAME=$PARTNAME
+				break
+			elif [ -n "$(echo $PARTNAME | grep 'rootfs')" ]; then
+				ROOTFSDEV=$DEVNAME
+				R_PARTNAME=$PARTNAME
+				if [ -n "$(echo $PARTNAME | grep 'linuxrootfs')" ]; then
+					R_PARTNAME="linuxrootfs1"
+					SUBDIRBOOT=1
+				fi
+				break
+			elif [ -n "$(echo $PARTNAME | grep 'userdata')" ]; then
+				ROOTFSDEV=$DEVNAME
+				R_PARTNAME=$PARTNAME
+				SUBDIRBOOT=1
+				break
+			fi
+		fi
+	fi
+done
+
+if [ "$SUBDIRBOOT" == "1" -o "$USE_PARTNAMES" == "1" ]; then
+	MOUNTPOINT="$MOUNTBASE/$R_PARTNAME"
+elif [ "$PARTNAME" == "storage" ]; then
+	MOUNTPOINT="$MOUNTBASE/$PARTNAME"
+fi
+
+# do not add or remove root device again...
+[ "$ROOTDEV" = "$MDEV" -a "$R_PARTNAME" != "userdata" ] && exit 0
+
+if [ -e /tmp/.nomdevmount ]; then
+	LOGINFO "no action on $MDEV -- /tmp/.nomdevmount exists"
+	exit 0
+fi
+
+case "$ACTION" in
+	add)
+		# do not mount kernel partitions
+		if [ "$KERNELDEV" == "$MDEV" ]; then
+			LOGINFO "[$ACTION] /dev/$MDEV is a kernel partition [$K_PARTNAME] - not mounting."
+			exit 0
+		fi
+
+		if [ "$PARTNAME" == "swap" ]; then
+			mkswap /dev/$MDEV
+			swapon /dev/$MDEV
+			exit 0
+		fi
+
+		if [ "$SUBDIRBOOT" == "1" ]; then
+			if grep -q $MOUNTPOINT /proc/mounts; then
+				LOGINFO "/dev/$MDEV already mounted [$R_PARTNAME] - not mounting again"
+				exit 0
+			fi
+			mkdir -p /tmp/$MDEV
+			mount -t auto /dev/$MDEV /tmp/$MDEV 2>&1 >/dev/null
+			RET=$?
+			[ $RET != 0 ] && LOGWARN "mount /dev/$MDEV to /tmp/$MDEV failed with $RET" && rmdir /tmp/$MDEV
+			if [ "$R_PARTNAME" == "linuxrootfs1" ]; then
+				LOGINFO "mounting /dev/$MDEV [$R_PARTNAME] to $MOUNTPOINT"
+				mkdir -p $MOUNTPOINT
+				mount --bind /tmp/$MDEV/linuxrootfs1 $MOUNTPOINT
+			elif [ "$R_PARTNAME" == "userdata" ]; then
+				# parse cmdline for rootsubdir
+				for param in $(cat /proc/cmdline); do
+					if [ -n "$(echo $param | grep rootsubdir)" ]; then
+						ROOTSUBDIR=$(echo $param | cut -d '=' -f 2)
+						break
+					fi
+				done
+
+				for i in /tmp/$MDEV/*; do
+					if [ -n "$(echo $i | grep linuxrootfs)" ]; then
+						if [ "$ROOTSUBDIR" == "$(basename $i)" ]; then
+							LOGINFO "/dev/$MDEV rootsubdir [$ROOTSUBDIR] is already mounted as root"
+							continue
+						fi
+						MOUNTPOINT="$MOUNTBASE/$(basename $i)"
+						if grep -q $MOUNTPOINT /proc/mounts; then
+							LOGINFO "/dev/$MDEV already mounted [$(basename $i)] - not mounting again"
+						else
+							LOGINFO "mounting /dev/$MDEV [$(basename $i)] to $MOUNTPOINT"
+							mkdir -p $MOUNTPOINT
+							mount --bind /tmp/$MDEV/$(basename $i) $MOUNTPOINT
+						fi
+					fi
+				done
+			fi
+			umount -lf /tmp/$MDEV
+			RET=$?
+			if [ $RET = 0 ]; then
+				rmdir /tmp/$MDEV
+			else
+				LOGWARN "umount /tmp/$MDEV failed with $RET"
+			fi
+		else
+			if grep -q "/dev/$MDEV" /proc/mounts; then
+				LOGINFO "/dev/$MDEV already mounted - not mounting again"
+				exit 0
+			fi
+			LOGINFO "[$ACTION] mounting /dev/$MDEV to $MOUNTPOINT"
+			# remove old mountpoint symlinks we might have for this device
+			rm -f $MOUNTPOINT
+			mkdir -p $MOUNTPOINT
+			mount -t auto /dev/$MDEV $MOUNTPOINT 2>&1 >/dev/null
+			RET=$?
+			if [ $RET != 0 ]; then
+				LOGWARN "mount /dev/$MDEV $MOUNTPOINT failed with $RET"
+				LOGWARN "      $OUT1"
+				rmdir $MOUNTPOINT
+			fi
+		fi
+		;;
+	# I think never comes a 'remove' from mdev, because never the mmcblock will be removed
+	# It can be used for manually ( or per script ) umounting
+	remove)
+		LOGINFO "[$ACTION] unmounting $MOUNTBASE/$MDEV"
+		grep -q "$MOUNTBASE/$MDEV " /proc/mounts || exit 0 # not mounted...
+		umount -lf $MOUNTBASE/$MDEV
+		RET=$?
+		if [ $RET = 0 ]; then
+			rmdir $MOUNTBASE/$MDEV
+		else
+			LOGWARN "umount $MOUNTBASE/$MDEV failed with $RET"
+		fi
+		;;
+esac

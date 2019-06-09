@@ -1,0 +1,17 @@
+# /etc/profile: system-wide profile file for the shell
+
+PATH=/sbin:/bin:/usr/bin:/var/bin
+TERM=linux
+
+PS1='[\h] \w \$ '
+
+alias l='ls -al'
+alias ll='ls -l'
+alias dir='ls -lA'
+alias ..='cd ..'
+alias mc='mc -a'
+alias sc='setconsole'
+alias sr='setconsole -r'
+
+# Add your own modifications to /etc/profile.local!
+test -e /etc/profile.local && . /etc/profile.local

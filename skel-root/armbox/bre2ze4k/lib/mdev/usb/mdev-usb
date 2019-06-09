@@ -1,0 +1,135 @@
+#!/bin/sh
+
+. /etc/init.d/globals
+
+# setup environment for coldplug events
+[ -z "$ACTION" ] && . /lib/mdev/usb/coldplug-setenv
+
+# get proper product and manufacturer description (only works for ACTION=add)
+[ -z "$DEVPATH" ] && LOGERROR 'uevent environment variable DEVPATH is unset' && exit 1
+if [ -d /sys${DEVPATH} ]; then
+	cd /sys${DEVPATH}/..
+	for f in product manufacturer id[PV]*; do
+		[ -r $f ] && eval "$f='$(cat $f)'"
+	done
+	cd $MDEV
+fi
+
+# get $idVendor and $idProduct from $MODALIAS if necessary
+idVendor=${idVendor:-${MODALIAS:5:4}}
+idProduct=${idProduct:-${MODALIAS:10:4}}
+# set $idVendor and $idProduct lower case and w/o leading zeros
+idVendor=$(echo ${idVendor} | sed 's/^[0]*//' | tr [:upper:] [:lower:])
+idProduct=$(echo ${idProduct} | sed 's/^[0]*//' | tr [:upper:] [:lower:])
+
+channel=${MDEV%:1.0}
+LOGINFO "${ACTION} $channel ${manufacturer:-$idVendor} ${product:-$idProduct}"
+
+# for debug
+#LOGINFO "ACTION=${ACTION}"
+#LOGINFO "MDEV=${MDEV}"
+#LOGINFO "DEVPATH=${DEVPATH}"
+#LOGINFO "INTERFACE=${INTERFACE}"
+#LOGINFO "MODALIAS=${MODALIAS}"
+#LOGINFO "PRODUCT=${product} idProduct=${idProduct}"
+#LOGINFO "MANUFACTURER=${manufacturer} idVendor=${idVendor}"
+
+# ignore controllers and hubs
+cat /sys/bus/usb/devices/*/bDeviceClass | grep -q -v '02\|09'
+RET=$?
+case "$ACTION" in
+	add)
+		if [ $RET = 0 ]; then
+			echo 1 > /proc/stb/lcd/symbol_usb
+		fi
+	;;
+	remove)
+		if [ $RET = 1 ]; then
+			echo 0 > /proc/stb/lcd/symbol_usb
+		fi
+	;;
+esac
+
+# http://en.wikipedia.org/wiki/Universal_Serial_Bus#Device_classes
+# http://www.usb.org/developers/defined_class
+[ 0 -eq "${TYPE%%/*}" ] && TYPE=$INTERFACE
+LOGINFO "type ${TYPE}"
+case $TYPE in
+	1/*/*)
+		LOGINFO "$channel USB Audio Interface"
+		;;
+	2/*/*)
+		LOGINFO "$channel Communications and CDC Control"
+		;;
+	3/*/*)
+		LOGINFO "$channel HID (Human Interface Device)"
+		# precheck vendor id for unsupported DPF in bootloader mode
+		if [ "$idVendor" == "1908" ]; then
+			service extdisplay ${ACTION} ${MDEV} ${idVendor} ${idProduct}
+		fi
+		;;
+	5/*/*)
+		LOGINFO "$channel Physical Interface"
+		;;
+	6/*/*)
+		LOGINFO "$channel Image Interface"
+		;;
+	7/*/*)
+		LOGINFO "$channel Printer Interface"
+		;;
+	8/*/*)
+		LOGINFO "$channel Mass Storage Interface"
+		# precheck vendor id for supported SPFs
+		if [ "$idVendor" == "4e8" ]; then
+			service extdisplay ${ACTION} ${MDEV} ${idVendor} ${idProduct}
+		fi
+		;;
+	9/*/*)
+		LOGINFO "$channel HUB Device"
+		;;
+	10/*/*)
+		LOGINFO "$channel CDC Data Interface"
+		;;
+	11/*/*)
+		LOGINFO "$channel Smart Card Interface"
+		;;
+	13/*/*)
+		LOGINFO "$channel Content Security Interface"
+		;;
+	14/*/*)
+		LOGINFO "$channel Video Interface"
+		;;
+	15/*/*)
+		LOGINFO "$channel Personal Healthcare Interface"
+		;;
+	16/*/*)
+		LOGINFO "$channel usb Audio/Video Devices Interface"
+		;;
+	17/*/*)
+		LOGINFO "$channel Billboard Device Class"
+		;;
+	220/*/*)
+		LOGINFO "$channel Diagnostic Device"
+		;;
+	224/*/*)
+		LOGINFO "$channel Wireless Controller Interface"
+		;;
+	239/*/*)
+		LOGINFO "$channel Miscellaneous"
+		;;
+	254/*/*)
+		LOGINFO "$channel Application Specific"
+		;;
+	255/*/*)
+		LOGINFO "$channel Vendor Specific"
+		# pre-check vendor id for supported DPFs and SPFs
+		if [ "$idVendor" = "1908" -o "$idVendor" == "4e8" ]; then
+			service extdisplay ${ACTION} ${MDEV} ${idVendor} ${idProduct}
+		fi
+		;;
+	*)
+		LOGINFO "FALLBACK: $channel device $MODALIAS"
+		;;
+esac
+
+/lib/mdev/common/mdev-modprobe $MODALIAS
