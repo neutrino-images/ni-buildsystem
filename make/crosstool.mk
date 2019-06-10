@@ -33,9 +33,11 @@ crosstool-restore: $(CROSSTOOL_BACKUP)
 
 crosstools-renew:
 	for boxseries in hd1 hd2 hd51 bre2ze4k; do \
-		make BOXSERIES=$${boxseries} ccache-clean static-clean cross-clean || exit; \
+		make BOXSERIES=$${boxseries} ccache-clean || exit; \
 	done;
 	make host-clean
+	make static-base-clean
+	make cross-base-clean
 	make crosstools
 	make clean
 
