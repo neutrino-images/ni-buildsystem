@@ -54,17 +54,17 @@ $(CROSS_BASE)/arm/hd1: | $(SOURCE_DIR)/$(NI_LINUX-KERNEL)
 	$(CHDIR)/crosstool-ng.git; \
 		git checkout 1dbb06f2 && \
 		unset CONFIG_SITE LIBRARY_PATH CPATH C_INCLUDE_PATH PKG_CONFIG_PATH CPLUS_INCLUDE_PATH INCLUDE && \
-		$(MKDIR)/crosstool-ng/targets/src/ && \
-			pushd $(SOURCE_DIR)/$(NI_LINUX-KERNEL) && \
-				git checkout $(KERNEL_BRANCH) && \
-			popd && \
+		mkdir -p targets/src/ && \
+		pushd $(SOURCE_DIR)/$(NI_LINUX-KERNEL) && \
+			git checkout $(KERNEL_BRANCH) && \
+		popd && \
 		tar cf linux-$(KERNEL_VERSION).tar --exclude-vcs -C $(SOURCE_DIR)/$(NI_LINUX-KERNEL) . && \
-		mv linux-$(KERNEL_VERSION).tar $(BUILD_TMP)/crosstool-ng/targets/src/ && \
+		mv linux-$(KERNEL_VERSION).tar targets/src/ && \
 		cp -a $(CONFIGS)/ct-ng-$(BOXTYPE)-$(BOXSERIES).config .config && \
 		sed -i "s@^CT_PARALLEL_JOBS=.*@CT_PARALLEL_JOBS=$(PARALLEL_JOBS)@" .config && \
 		export NI_BASE_DIR=$(BASE_DIR) && \
 		export NI_CROSS_DIR=$(CROSS_DIR) && \
-		export NI_CUSTOM_KERNEL=$(BUILD_TMP)/crosstool-ng/targets/src/linux-$(KERNEL_VERSION).tar && \
+		export NI_CUSTOM_KERNEL=$(BUILD_TMP)/crosstool-ng.git/targets/src/linux-$(KERNEL_VERSION).tar && \
 		export NI_CUSTOM_KERNEL_VERSION=$(KERNEL_VERSION) && \
 		export LD_LIBRARY_PATH= && \
 		test -f ./configure || ./bootstrap && \
@@ -96,19 +96,19 @@ $(CROSS_BASE)/arm/hd2: $(ARCHIVE)/gcc-linaro-$(GCC_VER).tar.xz | $(SOURCE_DIR)/$
 	$(CPDIR)/crosstool-ng.git
 	$(CHDIR)/crosstool-ng.git; \
 		git checkout 1dbb06f2 && \
-		cp -a $(PATCHES)/crosstool-ng/gcc/* $(BUILD_TMP)/crosstool-ng/patches/gcc/linaro-6.3-2017.02 && \
+		cp -a $(PATCHES)/crosstool-ng/gcc/* patches/gcc/linaro-6.3-2017.02 && \
 		unset CONFIG_SITE LIBRARY_PATH CPATH C_INCLUDE_PATH PKG_CONFIG_PATH CPLUS_INCLUDE_PATH INCLUDE && \
-		$(MKDIR)/crosstool-ng/targets/src/ && \
-			pushd $(SOURCE_DIR)/$(NI_LINUX-KERNEL) && \
-				git checkout $(KERNEL_BRANCH) && \
-			popd && \
+		mkdir -p targets/src/ && \
+		pushd $(SOURCE_DIR)/$(NI_LINUX-KERNEL) && \
+			git checkout $(KERNEL_BRANCH) && \
+		popd && \
 		tar cf linux-$(KERNEL_VERSION).tar --exclude-vcs -C $(SOURCE_DIR)/$(NI_LINUX-KERNEL) . && \
-		mv linux-$(KERNEL_VERSION).tar $(BUILD_TMP)/crosstool-ng/targets/src/ && \
+		mv linux-$(KERNEL_VERSION).tar targets/src/ && \
 		cp -a $(CONFIGS)/ct-ng-$(BOXTYPE)-$(BOXSERIES).config .config && \
 		sed -i "s@^CT_PARALLEL_JOBS=.*@CT_PARALLEL_JOBS=$(PARALLEL_JOBS)@" .config && \
 		export NI_BASE_DIR=$(BASE_DIR) && \
 		export NI_CROSS_DIR=$(CROSS_DIR) && \
-		export NI_CUSTOM_KERNEL=$(BUILD_TMP)/crosstool-ng/targets/src/linux-$(KERNEL_VERSION).tar && \
+		export NI_CUSTOM_KERNEL=$(BUILD_TMP)/crosstool-ng.git/targets/src/linux-$(KERNEL_VERSION).tar && \
 		export NI_CUSTOM_KERNEL_VERSION=$(KERNEL_VERSION) && \
 		export NI_UCLIBC_CONFIG=$(CONFIGS)/ct-ng-uClibc-$(UCLIBC_VER).config && \
 		export LD_LIBRARY_PATH= && \
@@ -134,19 +134,19 @@ $(CROSS_BASE)/arm/hd51: | $(SOURCE_DIR)/$(NI_LINUX-KERNEL)
 	$(CPDIR)/crosstool-ng.git
 	$(CHDIR)/crosstool-ng.git; \
 		git checkout 1dbb06f2 && \
-		cp -a $(PATCHES)/crosstool-ng/gcc/* $(BUILD_TMP)/crosstool-ng/patches/gcc/linaro-6.3-2017.02 && \
+		cp -a $(PATCHES)/crosstool-ng/gcc/* patches/gcc/linaro-6.3-2017.02 && \
 		unset CONFIG_SITE LIBRARY_PATH CPATH C_INCLUDE_PATH PKG_CONFIG_PATH CPLUS_INCLUDE_PATH INCLUDE && \
-		$(MKDIR)/crosstool-ng/targets/src/ && \
-			pushd $(SOURCE_DIR)/$(NI_LINUX-KERNEL) && \
-				git checkout $(KERNEL_BRANCH) && \
-			popd && \
+		mkdir -p targets/src/ && \
+		pushd $(SOURCE_DIR)/$(NI_LINUX-KERNEL) && \
+			git checkout $(KERNEL_BRANCH) && \
+		popd && \
 		tar cf linux-$(KERNEL_VERSION).tar --exclude-vcs -C $(SOURCE_DIR)/$(NI_LINUX-KERNEL) . && \
-		mv linux-$(KERNEL_VERSION).tar $(BUILD_TMP)/crosstool-ng/targets/src/ && \
+		mv linux-$(KERNEL_VERSION).tar targets/src/ && \
 		cp -a $(CONFIGS)/ct-ng-$(BOXTYPE)-$(BOXSERIES).config .config && \
 		sed -i "s@^CT_PARALLEL_JOBS=.*@CT_PARALLEL_JOBS=$(PARALLEL_JOBS)@" .config && \
 		export NI_BASE_DIR=$(BASE_DIR) && \
 		export NI_CROSS_DIR=$(CROSS_DIR) && \
-		export NI_CUSTOM_KERNEL=$(BUILD_TMP)/crosstool-ng/targets/src/linux-$(KERNEL_VERSION).tar && \
+		export NI_CUSTOM_KERNEL=$(BUILD_TMP)/crosstool-ng.git/targets/src/linux-$(KERNEL_VERSION).tar && \
 		export NI_CUSTOM_KERNEL_VERSION=$(KERNEL_VERSION) && \
 		export LD_LIBRARY_PATH= && \
 		test -f ./configure || ./bootstrap && \
