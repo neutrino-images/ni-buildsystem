@@ -11,17 +11,34 @@ $boxmodel = "";
 
 $image_type = "";
 $image_type = trim($_GET["image_type"]);
+$image_type = strtolower($image_type);
+
 $revision = "";
 $revision = trim($_GET["revision"]);
+
+$boxname = "";
+$boxname = trim($_GET["boxname"]);
+$boxname = strtolower($boxname);
+
 $chip_type = "";
 $chip_type = trim($_GET["chip_type"]);
 
-if ($revision == 1) //FIXME
+if ($revision == 1) // libstb-hal
 {
-	# AX/Mutant
-	$boxtype_sc = "arm";
-	$boxseries = "hd51";
-	$boxmodel = "hd51";
+	if ($boxname == "hd51")
+	{
+		# AX/Mutant
+		$boxtype_sc = "arm";
+		$boxseries = "hd51";
+		$boxmodel = "hd51";
+	}
+	elseif ($boxname == "bre2ze4k")
+	{
+		# WWIO
+		$boxtype_sc = "arm";
+		$boxseries = "bre2ze4k";
+		$boxmodel = "bre2ze4k";
+	}
 }
 elseif ($revision == 6 || $revision == 7 || $revision == 8 || $revision == 10)
 {
@@ -65,11 +82,10 @@ elseif ($revision == 13 || $revision == 14)
 if (empty($image_type))
 	$image_type = "nightly";
 
-$image_type = strtolower($image_type);
 $directory = $image_type;
 
 $result = "";
-if (empty($boxtype_sc) ||empty($boxseries) || empty($boxmodel))
+if (empty($boxtype_sc) || empty($boxseries) || empty($boxmodel))
 {
 	# fallback: send all files we have
 	foreach (glob($directory . "/*.txt") as $file)
