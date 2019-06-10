@@ -3,11 +3,11 @@
 #
 # -----------------------------------------------------------------------------
 
-crosstool: crosstool-$(BOXARCH)-$(BOXSERIES)
+crosstool: $(CROSS_BASE)/$(BOXARCH)/$(BOXSERIES)
 
 crosstools:
 	for boxseries in hd1 hd2 hd51 bre2ze4k; do \
-		make BOXSERIES=$${boxseries} crosstool-$(BOXARCH)-$${boxseries} || exit; \
+		make BOXSERIES=$${boxseries} $(CROSS_BASE)/$(BOXARCH)/$${boxseries} || exit; \
 	done;
 
 # -----------------------------------------------------------------------------
@@ -41,7 +41,10 @@ crosstools-renew:
 
 # -----------------------------------------------------------------------------
 
-crosstool-arm-hd1: CROSS_DIR-check $(SOURCE_DIR)/$(NI_LINUX-KERNEL)
+# wrapper for manually call
+crosstool-arm-hd1: $(CROSS_BASE)/arm/hd1
+
+$(CROSS_BASE)/arm/hd1: | $(SOURCE_DIR)/$(NI_LINUX-KERNEL)
 	make $(BUILD_TMP)
 	$(REMOVE)/crosstool-ng.git
 	get-git-source.sh https://github.com/crosstool-ng/crosstool-ng.git $(ARCHIVE)/crosstool-ng.git
@@ -72,6 +75,8 @@ crosstool-arm-hd1: CROSS_DIR-check $(SOURCE_DIR)/$(NI_LINUX-KERNEL)
 	rm -f $(CROSS_DIR)/$(TARGET)/sys-root/lib/libstdc++.so.6.0.20-gdb.py
 	$(REMOVE)/crosstool-ng.git
 
+# -----------------------------------------------------------------------------
+
 UCLIBC_VER = 1.0.24
 
 GCC_VER = 4.9-2017.01
@@ -79,7 +84,10 @@ GCC_VER = 4.9-2017.01
 $(ARCHIVE)/gcc-linaro-$(GCC_VER).tar.xz:
 	$(WGET) https://releases.linaro.org/components/toolchain/gcc-linaro/$(GCC_VER)/gcc-linaro-$(GCC_VER).tar.xz
 
-crosstool-arm-hd2: CROSS_DIR-check $(ARCHIVE)/gcc-linaro-$(GCC_VER).tar.xz $(SOURCE_DIR)/$(NI_LINUX-KERNEL)
+# wrapper for manually call
+crosstool-arm-hd2: $(CROSS_BASE)/arm/hd2
+
+$(CROSS_BASE)/arm/hd2: $(ARCHIVE)/gcc-linaro-$(GCC_VER).tar.xz | $(SOURCE_DIR)/$(NI_LINUX-KERNEL)
 	make $(BUILD_TMP)
 	$(REMOVE)/crosstool-ng.git
 	get-git-source.sh https://github.com/crosstool-ng/crosstool-ng.git $(ARCHIVE)/crosstool-ng.git
@@ -112,7 +120,12 @@ crosstool-arm-hd2: CROSS_DIR-check $(ARCHIVE)/gcc-linaro-$(GCC_VER).tar.xz $(SOU
 	rm -f $(CROSS_DIR)/$(TARGET)/sys-root/lib/libstdc++.so.6.0.22-gdb.py
 	$(REMOVE)/crosstool-ng.git
 
-crosstool-arm-hd51: CROSS_DIR-check $(SOURCE_DIR)/$(NI_LINUX-KERNEL)
+# -----------------------------------------------------------------------------
+
+# wrapper for manually call
+crosstool-arm-hd51: $(CROSS_BASE)/arm/hd51
+
+$(CROSS_BASE)/arm/hd51: | $(SOURCE_DIR)/$(NI_LINUX-KERNEL)
 	make $(BUILD_TMP)
 	$(REMOVE)/crosstool-ng.git
 	get-git-source.sh https://github.com/crosstool-ng/crosstool-ng.git $(ARCHIVE)/crosstool-ng.git
@@ -143,28 +156,17 @@ crosstool-arm-hd51: CROSS_DIR-check $(SOURCE_DIR)/$(NI_LINUX-KERNEL)
 	rm -f $(CROSS_DIR)/$(TARGET)/sys-root/lib/libstdc++.so.6.0.20-gdb.py
 	$(REMOVE)/crosstool-ng.git
 
-crosstool-arm-bre2ze4k: CROSS_DIR-check
-ifeq ($(wildcard $(CROSS_BASE)/$(BOXARCH)/hd51),)
-	make crosstool-arm-hd51
-endif
-	ln -sf hd51 $(CROSS_DIR)
-
 # -----------------------------------------------------------------------------
 
-CROSS_DIR-check:
-ifneq ($(wildcard $(CROSS_DIR)),)
-	$(call draw_line);
-	@echo "Crosstool directory already present."
-	@echo
-	@echo "You need to run 'make cross-clean' first if you really want to build a new crosstool."
-	$(call draw_line);
-	@false
-endif
+# wrapper for manually call
+crosstool-arm-bre2ze4k: $(CROSS_BASE)/arm/bre2ze4k
+
+$(CROSS_BASE)/arm/bre2ze4k:
+	make $(CROSS_BASE)/arm/hd51
+	ln -sf hd51 $(CROSS_BASE)/arm/bre2ze4k
 
 # -----------------------------------------------------------------------------
 
 PHONY += crosstool
 PHONY += crosstools
 PHONY += crosstools-renew
-PHONY += $(CROSS_DIR)
-PHONY += CROSS_DIR-check
