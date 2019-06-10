@@ -57,8 +57,7 @@ printenv:
 	fi
 	@if ! test -e $(BASE_DIR)/config.local; then \
 		echo; \
-		echo "If you want to change the configuration, then run"; \
-		echo -e "$(TERM_YELLOW)cp config.example config.local$(TERM_NORMAL)"; \
+		echo "If you want to change the configuration, then run 'make local-files'"; \
 		echo "and edit config.local to fit your needs. See the comments in there."; \
 		echo; \
 	fi
