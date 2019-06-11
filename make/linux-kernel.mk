@@ -51,12 +51,13 @@ endif
 
 # -----------------------------------------------------------------------------
 
-$(D)/kernel.do_checkout: $(SOURCE_DIR)/$(NI_LINUX-KERNEL)
+kernel.do_checkout: $(SOURCE_DIR)/$(NI_LINUX-KERNEL)
 	$(CD) $(SOURCE_DIR)/$(NI_LINUX-KERNEL); \
 		git checkout $(KERNEL_BRANCH)
-	$(TOUCH)
 
-$(D)/kernel.do_prepare: kernel.do_checkout
+$(D)/kernel.do_prepare:
+	make kernel.do_checkout
+	#
 	$(REMOVE)/$(KERNEL_SRC)
 	$(REMOVE)/$(KERNEL_OBJ)
 	$(REMOVE)/$(KERNEL_MODULES)
@@ -209,3 +210,7 @@ kernel-install-coolstream-all:
 	make get-update-info-hd2 BOXFAMILY=kronos
 	#
 	make clean > /dev/null 2>&1
+
+# -----------------------------------------------------------------------------
+
+PHONY += kernel.do_checkout
