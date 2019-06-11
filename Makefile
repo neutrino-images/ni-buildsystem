@@ -13,11 +13,49 @@ else
 # first target is default ...
 default: all
 
-# workaround unset variables at first start
-local-files: $(eval BOXMODEL = nevis)
-	@test -e config.local || cp config.example config.local
-	@test -e Makefile.local || cp Makefile.example Makefile.local
+local-files: config.local Makefile.local
 	@mkdir -p local/{root,scripts}
+
+# workaround unset variables at first start
+config.local: $(eval BOXMODEL=hd51)
+	@clear
+	@echo ""
+	@echo "    ###   ###  ###"
+	@echo "     ###   ##  ##"
+	@echo "     ####  ##  ##"
+	@echo "     ## ## ##  ##"
+	@echo "     ##  ####  ##"
+	@echo "     ##   ###  ##"
+	@echo "     ##    ##  ##      http://www.neutrino-images.de"
+	@echo "            #"
+	@echo ""
+	$(call draw_line);
+	@echo ""
+	@echo "   1)  Coolstream Nevis (HD1, BSE, Neo, Neo², Zee)"
+	@echo "   2)  Coolstream Apollo (Tank)"
+	@echo "   3)  Coolstream Shiner (Trinity)"
+	@echo "   4)  Coolstream Kronos (Zee², Trinity V2)"
+	@echo "   5)  Coolstream Kronos V2 (Link, Trinity Duo)"
+	@echo "  11)  WWIO BRE2ZE4K"
+	@echo "  21)  AX/Mutant HD51"
+	@echo ""
+	@read -p "Select your boxmodel? [default: 21] " boxmodel; \
+	boxmodel=$${boxmodel:-21}; \
+	case "$$boxmodel" in \
+		 1)	boxmodel=nevis;; \
+		 2)	boxmodel=apollo;; \
+		 3)	boxmodel=shiner;; \
+		 4)	boxmodel=kronos;; \
+		 5)	boxmodel=kronos_v2;; \
+		11)	boxmodel=bre2ze4k;; \
+		21|*)	boxmodel=hd51;; \
+	esac; \
+	cp config.example $@; \
+	sed -i -e "s|^#BOXMODEL = $$boxmodel|BOXMODEL = $$boxmodel|" $@
+	@echo ""
+
+Makefile.local:
+	@cp Makefile.example $@
 
 -include config.local
 include make/environment-build.mk
@@ -31,9 +69,9 @@ printenv:
 	@echo "CROSS_DIR:   $(CROSS_DIR)"
 	@echo "TARGET:      $(TARGET)"
 	@echo "BASE_DIR:    $(BASE_DIR)"
+	@echo "SOURCE_DIR:  $(SOURCE_DIR)"
 	@echo "BUILD:       $(BUILD)"
 	@echo "PATH:        `type -p fmt>/dev/null&&echo $(PATH)|sed 's/:/ /g' |fmt -65|sed 's/ /:/g; 2,$$s/^/             /;'||echo $(PATH)`"
-	@echo "N_HD_SOURCE: $(N_HD_SOURCE)"
 	@echo "BOXARCH:     $(BOXARCH)"
 	@echo "BOXTYPE:     $(BOXTYPE)"
 	@echo "BOXSERIES:   $(BOXSERIES)"
