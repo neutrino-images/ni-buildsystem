@@ -715,13 +715,7 @@ $(D)/lua: $(D)/libncurses $(ARCHIVE)/lua-$(LUA_VER).tar.gz | $(TARGET_DIR)
 	$(REWRITE_PKGCONF)/lua.pc
 	rm -rf $(TARGET_DIR)/bin/luac
 	$(REMOVE)/lua-$(LUA_VER)
-	make lua-libs
 	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
-lua-libs: $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) | $(TARGET_DIR)
-	cp -a $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/share/lua/$(LUA_ABIVER)/* $(TARGET_DIR)/share/lua/$(LUA_ABIVER)/
 
 # -----------------------------------------------------------------------------
 
