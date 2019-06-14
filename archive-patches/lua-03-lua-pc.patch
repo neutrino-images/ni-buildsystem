@@ -12,16 +12,16 @@ Index: b/etc/lua.pc
 +# vars from install Makefile
 +
 +# grep '^V=' ../Makefile
-+V= 5.2
++V=5.2
 +# grep '^R=' ../Makefile
-+R= 5.2.1
++R=5.2.4
 +
 +# grep '^INSTALL_.*=' ../Makefile | sed 's/INSTALL_TOP/prefix/'
 +prefix= /
 +INSTALL_BIN= ${prefix}/bin
 +INSTALL_INC= ${prefix}/include
 +INSTALL_LIB= ${prefix}/lib
-+INSTALL_MAN= ${prefix}/man/man1
++INSTALL_MAN= ${prefix}/.remove
 +INSTALL_LMOD= ${prefix}/share/lua/${V}
 +INSTALL_CMOD= ${prefix}/lib/lua/${V}
 +

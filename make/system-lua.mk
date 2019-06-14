@@ -21,7 +21,13 @@ $(D)/lua: $(D)/libncurses $(ARCHIVE)/lua-$(LUA_VER).tar.gz | $(TARGET_DIR)
 		$(call apply_patches, $(LUA_PATCH)); \
 		sed -i 's/^V=.*/V= $(LUA_ABIVER)/' etc/lua.pc; \
 		sed -i 's/^R=.*/R= $(LUA_VER)/' etc/lua.pc; \
-		$(MAKE) linux PKG_VERSION=$(LUA_VER) CC=$(TARGET)-gcc LD=$(TARGET)-ld AR="$(TARGET)-ar rcu" RANLIB=$(TARGET)-ranlib LDFLAGS="$(TARGET_LDFLAGS)"; \
+		$(MAKE) linux \
+			PKG_VERSION=$(LUA_VER) \
+			CC="$(TARGET)-gcc" \
+			LD="$(TARGET)-ld" \
+			AR="$(TARGET)-ar rcu" \
+			RANLIB=$(TARGET)-ranlib \
+			LDFLAGS="$(TARGET_LDFLAGS)"; \
 		$(MAKE) install INSTALL_TOP=$(TARGET_DIR)
 	install -D -m 0755 $(BUILD_TMP)/lua-$(LUA_VER)/src/liblua.so.$(LUA_VER) $(TARGET_LIB_DIR)/liblua.so.$(LUA_VER)
 	ln -sf liblua.so.$(LUA_VER) $(TARGET_LIB_DIR)/liblua.so
@@ -45,7 +51,9 @@ $(D)/luaexpat: $(D)/expat $(D)/lua $(ARCHIVE)/luaexpat-$(LUAEXPAT_VER).tar.gz | 
 	$(UNTAR)/luaexpat-$(LUAEXPAT_VER).tar.gz
 	$(CHDIR)/luaexpat-$(LUAEXPAT_VER); \
 		$(call apply_patches, $(LUAEXPAT_PATCH)); \
-		$(MAKE) CC=$(TARGET)-gcc LDFLAGS="$(TARGET_LDFLAGS)" PREFIX=$(TARGET_DIR); \
+		$(BUILDENV) \
+		$(MAKE) \
+			PREFIX=$(TARGET_DIR); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REMOVE)/luaexpat-$(LUAEXPAT_VER)
 	$(TOUCH)
@@ -56,7 +64,7 @@ LUA-FEEDPARSER_VER = 0.71
 LUA-FEEDPARSER_SOURCE = lua-feedparser-$(LUA-FEEDPARSER_VER).tar.gz
 
 $(ARCHIVE)/$(LUA-FEEDPARSER_SOURCE):
-	$(WGET) https://github.com/slact/lua-feedparser/archive/$(LUA-FEEDPARSER_VER).tar.gz -O $(ARCHIVE)/$(LUA-FEEDPARSER_SOURCE)
+	$(WGET) https://github.com/slact/lua-feedparser/archive/$(LUA-FEEDPARSER_VER).tar.gz -O $@
 
 LUA-FEEDPARSER_PATCH  = lua-feedparser.patch
 
@@ -96,8 +104,7 @@ $(D)/luacurl: $(D)/libcurl $(D)/lua | $(TARGET_DIR)
 	$(CPDIR)/$(LUACURL_SOURCE)
 	$(CHDIR)/$(LUACURL_SOURCE); \
 		$(BUILDENV) \
-		$(MAKE) CC=$(TARGET)-gcc \
-			LDFLAGS="$(TARGET_LDFLAGS)" \
+		$(MAKE) \
 			LIBDIR=$(TARGET_LIB_DIR) \
 			LUA_INC=$(TARGET_INCLUDE_DIR); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR) \
@@ -119,9 +126,8 @@ $(D)/luaposix: $(HOST_DIR)/bin/lua-$(LUA_VER) $(D)/lua $(D)/luaexpat $(ARCHIVE)/
 	$(REMOVE)/luaposix-$(LUAPOSIX_VER)
 	$(UNTAR)/$(LUAPOSIX_SOURCE)
 	$(CHDIR)/luaposix-$(LUAPOSIX_VER); \
+		$(BUILDENV) \
 		$(HOST_DIR)/bin/lua-$(LUA_VER) build-aux/luke \
-			CC="$(TARGET)-gcc" \
-			CFLAGS="$(TARGET_CFLAGS)" \
 			LUA_INCDIR=$(TARGET_INCLUDE_DIR); \
 		$(HOST_DIR)/bin/lua-$(LUA_VER) build-aux/luke install \
 			INST_LIBDIR="$(TARGET_LIB_DIR)/lua/$(LUA_ABIVER)" \
