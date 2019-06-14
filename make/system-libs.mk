@@ -667,6 +667,20 @@ $(D)/lua-feedparser: $(D)/luaexpat $(ARCHIVE)/$(LUA-FEEDPARSER_SOURCE) | $(TARGE
 
 # -----------------------------------------------------------------------------
 
+LUAJSON_SOURCE = JSON.lua
+LUAJSON_URL = http://regex.info/code/$(LUAJSON_SOURCE)
+
+$(ARCHIVE)/$(LUAJSON_SOURCE):
+	$(WGET) $(LUAJSON_URL)
+
+$(D)/luajson: $(ARCHIVE)/$(LUAJSON_SOURCE) | $(TARGET_DIR)
+	$(CD) $(ARCHIVE); \
+		curl --remote-name --time-cond $(LUAJSON_SOURCE) $(LUAJSON_URL) || true
+	install -D -m 0644 $(ARCHIVE)/$(LUAJSON_SOURCE) $(TARGET_DIR)/share/lua/$(LUA_ABIVER)
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
 LUACURL_VER = git
 LUACURL_SOURCE = lua-curlv3.$(LUACURL_VER)
 LUACURL_URL = https://github.com/lua-curl/$(LUACURL_SOURCE)
