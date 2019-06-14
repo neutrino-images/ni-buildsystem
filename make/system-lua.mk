@@ -9,7 +9,7 @@ LUA_VER = $(LUA_ABIVER).4
 $(ARCHIVE)/lua-$(LUA_VER).tar.gz:
 	$(WGET) http://www.lua.org/ftp/lua-$(LUA_VER).tar.gz
 
-LUA_PATCH  = lua-01-fix-coolstream-build.patch
+LUA_PATCH  = lua-01-fix-build.patch
 LUA_PATCH += lua-02-shared-libs-for-lua.patch
 LUA_PATCH += lua-03-lua-pc.patch
 LUA_PATCH += lua-04-crashfix.diff
@@ -33,7 +33,7 @@ $(D)/lua: $(D)/libncurses $(ARCHIVE)/lua-$(LUA_VER).tar.gz | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-HOST_LUA_PATCH  = lua-01-fix-coolstream-build.patch
+HOST_LUA_PATCH  = lua-01-fix-build.patch
 
 # helper for luaposix build
 $(HOST_DIR)/bin/lua-$(LUA_VER): $(ARCHIVE)/lua-$(LUA_VER).tar.gz | $(TARGET_DIR)

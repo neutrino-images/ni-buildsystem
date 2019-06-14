@@ -2,7 +2,7 @@ From 57e1907d6813565e29990864807bdceb393653d3 Mon Sep 17 00:00:00 2001
 Message-Id: <57e1907d6813565e29990864807bdceb393653d3.1390660080.git.striper@gmx.de>
 From: striper <striper@gmx.de>
 Date: Sat, 25 Jan 2014 15:27:54 +0100
-Subject: [PATCH] - fix coolstream build
+Subject: [PATCH] - fix build
 
 ---
  Makefile      | 2 +-
