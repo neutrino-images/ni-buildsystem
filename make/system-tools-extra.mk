@@ -284,3 +284,25 @@ $(D)/rsync: $(ARCHIVE)/$(RSYNC_SOURCE) | $(TARGET_DIR)
 		$(MAKE) install-all DESTDIR=$(TARGET_DIR)
 	$(REMOVE)/rsync-$(RSYNC_VER)
 	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
+READLINE_VER = 8.0
+READLINE_SOURCE = readline-$(READLINE_VER).tar.gz
+
+$(ARCHIVE)/$(READLINE_SOURCE):
+	$(WGET) https://ftp.gnu.org/gnu/readline/$(READLINE_SOURCE)
+
+$(D)/readline: $(ARCHIVE)/$(READLINE_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/readline-$(READLINE_VER)
+	$(UNTAR)/$(READLINE_SOURCE)
+	$(CHDIR)/readline-$(READLINE_VER); \
+		$(CONFIGURE) \
+			--prefix= \
+			--datarootdir=/.remove \
+			; \
+		$(MAKE) all; \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(REWRITE_PKGCONF)/readline.pc
+	$(REMOVE)/readline-$(READLINE_VER)
+	$(TOUCH)
