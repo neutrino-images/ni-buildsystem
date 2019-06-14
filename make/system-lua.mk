@@ -3,6 +3,10 @@
 #
 # -----------------------------------------------------------------------------
 
+HOST_LUA = $(HOST_DIR)/bin/lua-$(LUA_VER)
+
+# -----------------------------------------------------------------------------
+
 LUA_ABIVER = 5.2
 LUA_VER = $(LUA_ABIVER).4
 
@@ -122,14 +126,14 @@ LUAPOSIX_URL = https://github.com/luaposix/luaposix/archive
 $(ARCHIVE)/$(LUAPOSIX_SOURCE):
 	$(WGET) $(LUAPOSIX_URL)/v$(LUAPOSIX_VER).tar.gz -O $@
 
-$(D)/luaposix: $(HOST_DIR)/bin/lua-$(LUA_VER) $(D)/lua $(D)/luaexpat $(ARCHIVE)/$(LUAPOSIX_SOURCE) | $(TARGET_DIR)
+$(D)/luaposix: $(HOST_LUA) $(D)/lua $(D)/luaexpat $(ARCHIVE)/$(LUAPOSIX_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/luaposix-$(LUAPOSIX_VER)
 	$(UNTAR)/$(LUAPOSIX_SOURCE)
 	$(CHDIR)/luaposix-$(LUAPOSIX_VER); \
 		$(BUILDENV) \
-		$(HOST_DIR)/bin/lua-$(LUA_VER) build-aux/luke \
+		$(HOST_LUA) build-aux/luke \
 			LUA_INCDIR=$(TARGET_INCLUDE_DIR); \
-		$(HOST_DIR)/bin/lua-$(LUA_VER) build-aux/luke install \
+		$(HOST_LUA) build-aux/luke install \
 			INST_LIBDIR="$(TARGET_LIB_DIR)/lua/$(LUA_ABIVER)" \
 			INST_LUADIR="$(TARGET_SHARE_DIR)/lua/$(LUA_ABIVER)"
 	$(REMOVE)/luaposix-$(LUAPOSIX_VER)
