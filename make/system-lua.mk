@@ -33,20 +33,6 @@ $(D)/lua: $(D)/libncurses $(ARCHIVE)/lua-$(LUA_VER).tar.gz | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-HOST_LUA_PATCH  = lua-01-fix-build.patch
-
-# helper for luaposix build
-$(HOST_DIR)/bin/lua-$(LUA_VER): $(ARCHIVE)/lua-$(LUA_VER).tar.gz | $(TARGET_DIR)
-	$(REMOVE)/lua-$(LUA_VER)
-	$(UNTAR)/lua-$(LUA_VER).tar.gz
-	$(CHDIR)/lua-$(LUA_VER); \
-		$(call apply_patches, $(HOST_LUA_PATCH)); \
-		$(MAKE) linux
-	install -m 0755 -D $(BUILD_TMP)/lua-$(LUA_VER)/src/lua $@
-	$(REMOVE)/lua-$(LUA_VER)
-
-# -----------------------------------------------------------------------------
-
 LUAEXPAT_VER = 1.3.0
 
 $(ARCHIVE)/luaexpat-$(LUAEXPAT_VER).tar.gz:

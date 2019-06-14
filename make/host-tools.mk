@@ -9,6 +9,7 @@ host-preqs: \
 	host_mkfs.jffs2 \
 	host_sumtool \
 	host_mkimage \
+	host_lua \
 	host_zic \
 	host_parted \
 	host_mkfs.fat \
@@ -235,6 +236,25 @@ $(HOST_DIR)/bin/resize2fs: $(ARCHIVE)/e2fsprogs-$(HOST_E2FSPROGS_VER).tar.gz | $
 	ln -sf e2fsck $(HOST_DIR)/bin/fsck.ext4
 	ln -sf e2fsck $(HOST_DIR)/bin/fsck.ext4dev
 	$(REMOVE)/e2fsprogs-$(HOST_E2FSPROGS_VER)
+
+# -----------------------------------------------------------------------------
+
+HOST_LUA_VER = $(LUA_VER)
+
+#$(ARCHIVE)/lua-$(HOST_LUA_VER).tar.gz:
+#	$(WGET) http://www.lua.org/ftp/lua-$(HOST_LUA_VER).tar.gz
+
+HOST_LUA_PATCH  = lua-01-fix-build.patch
+
+host_lua: $(HOST_DIR)/bin/lua-$(HOST_LUA_VER)
+$(HOST_DIR)/bin/lua-$(HOST_LUA_VER): $(ARCHIVE)/lua-$(HOST_LUA_VER).tar.gz | $(TARGET_DIR)
+	$(REMOVE)/lua-$(HOST_LUA_VER)
+	$(UNTAR)/lua-$(HOST_LUA_VER).tar.gz
+	$(CHDIR)/lua-$(HOST_LUA_VER); \
+		$(call apply_patches, $(HOST_LUA_PATCH)); \
+		$(MAKE) linux
+	install -m 0755 -D $(BUILD_TMP)/lua-$(HOST_LUA_VER)/src/lua $@
+	$(REMOVE)/lua-$(HOST_LUA_VER)
 
 # -----------------------------------------------------------------------------
 
