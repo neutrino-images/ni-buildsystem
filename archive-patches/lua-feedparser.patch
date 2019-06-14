@@ -1,0 +1,38 @@
+commit 782e2925d376d4d78382faa4ef477c72de3d8848
+Author: Jacek Jendrzej <overx300@gmail.com>
+Date:   Fri Jun 14 08:45:41 2019 +0200
+
+    - fix missing pictures; fix empty titles
+
+diff --git a/feedparser.lua b/feedparser.lua
+index 2d66b8c..b3887ce 100644
+--- a/feedparser.lua
++++ b/feedparser.lua
+@@ -73,7 +73,17 @@ local function parse_entries(entries_el, format_str, base)
+ 			--content
+ 			elseif	(format_str=='atom' and tag=='content') or 
+ 					(format_str=='rss' and (tag=='body' or tag=='xhtml:body' or tag == 'fullitem' or tag=='content:encoded')) then 
+-				entry.content=el:getText()			
++				entry.content=el:getText()
++				if el.lom and el.lom[2] and el.lom[2][2] and el.lom[2][2][2].attr and el.lom[2][2][2].attr.src then
++					local img = el.lom[2][2][2].attr.src
++					if img:match ('(http.-%.jpg)') or img:match ('(http.-%.jpeg)') then
++						tinsert(entry.enclosures, {
++							url=img,
++							length=0,
++							type="image/jpeg"
++						})
++					end
++				end
+ 				--TODO: content_detail
+ 			
+ 			--published
+@@ -317,7 +327,7 @@ local function parse_rss(root, base_uri)
+ 		--image
+ 		elseif tag=='image' or tag=='rdf:image' then
+ 			feed.image={
+-				title=el:getChild('title'):getText(),
++				title=(el:getChild('title') or blanky):getText(),
+ 				link=(el:getChild('link') or blanky):getText(),
+ 				width=(el:getChild('width') or blanky):getText(),
+ 				height=(el:getChild('height') or blanky):getText()

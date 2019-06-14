@@ -662,7 +662,7 @@ $(D)/lua-feedparser: $(D)/luaexpat $(ARCHIVE)/$(LUA-FEEDPARSER_SOURCE) | $(TARGE
 		sed -i 's|^PREFIX =|PREFIX ?=|' Makefile; \
 		$(call apply_patches, $(LUA-FEEDPARSER_PATCH)); \
 		$(MAKE) install PREFIX=$(TARGET_DIR)
-#	$(REMOVE)/lua-feedparser-$(LUA-FEEDPARSER_VER)
+	$(REMOVE)/lua-feedparser-$(LUA-FEEDPARSER_VER)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
