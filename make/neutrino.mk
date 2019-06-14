@@ -9,34 +9,34 @@ N_OBJ_DIR = $(BUILD_TMP)/$(NI_NEUTRINO)
 # -----------------------------------------------------------------------------
 
 N_DEPS  =
-N_DEPS += ffmpeg
-N_DEPS += freetype
-N_DEPS += giflib
-N_DEPS += libcurl
-N_DEPS += libdvbsi
-N_DEPS += libfribidi
-N_DEPS += libjpeg
-N_DEPS += libsigc++
-N_DEPS += lua
-N_DEPS += ntp
-N_DEPS += openssl
-N_DEPS += openthreads
-N_DEPS += pugixml
-N_DEPS += zlib
+N_DEPS += $(D)/ffmpeg
+N_DEPS += $(D)/freetype
+N_DEPS += $(D)/giflib
+N_DEPS += $(D)/libcurl
+N_DEPS += $(D)/libdvbsi
+N_DEPS += $(D)/libfribidi
+N_DEPS += $(D)/libjpeg
+N_DEPS += $(D)/libsigc++
+N_DEPS += $(D)/lua
+N_DEPS += $(D)/ntp
+N_DEPS += $(D)/openssl
+N_DEPS += $(D)/openthreads
+N_DEPS += $(D)/pugixml
+N_DEPS += $(D)/zlib
 
 ifeq ($(BOXTYPE)-$(HAS_LIBCS), coolstream-yes)
-  N_DEPS += libcoolstream
+  N_DEPS += $(D)/libcoolstream
 endif
 
 ifeq ($(USE_LIBSTB-HAL), yes)
-  N_DEPS += libstb-hal
+  N_DEPS += $(D)/libstb-hal
 endif
 
 # uncomment next lines to build neutrino without --enable-ffmpegdec
-#N_DEPS += libFLAC
-#N_DEPS += libid3tag
-#N_DEPS += libmad
-#N_DEPS += libvorbisidec
+#N_DEPS += $(D)/libFLAC
+#N_DEPS += $(D)/libid3tag
+#N_DEPS += $(D)/libmad
+#N_DEPS += $(D)/libvorbisidec
 
 # -----------------------------------------------------------------------------
 
@@ -185,13 +185,13 @@ LH_OBJ_DIR = $(BUILD_TMP)/$(NI_LIBSTB-HAL)
 # -----------------------------------------------------------------------------
 
 LH_DEPS  =
-LH_DEPS += ffmpeg
-LH_DEPS += openthreads
+LH_DEPS += $(D)/ffmpeg
+LH_DEPS += $(D)/openthreads
 
 USE_GSTREAMER = no
 ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 bre2ze4k))
   ifeq ($(USE_GSTREAMER), yes)
-    LH_DEPS += gstreamer-all
+    LH_DEPS += $(D)/gstreamer-all
   endif
 endif
 

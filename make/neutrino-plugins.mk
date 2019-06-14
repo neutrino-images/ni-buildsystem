@@ -25,17 +25,17 @@ endif
 
 NP_OBJ_DIR = $(BUILD_TMP)/$(NI_NEUTRINO-PLUGINS)
 
-NP_DEPS  = ffmpeg
-NP_DEPS += libcurl
-NP_DEPS += libpng
-NP_DEPS += libjpeg
-NP_DEPS += giflib
-NP_DEPS += freetype
-NP_DEPS += luaexpat
-NP_DEPS += luajson
-NP_DEPS += luacurl
-NP_DEPS += luaposix
-NP_DEPS += lua-feedparser
+NP_DEPS  = $(D)/ffmpeg
+NP_DEPS += $(D)/libcurl
+NP_DEPS += $(D)/libpng
+NP_DEPS += $(D)/libjpeg
+NP_DEPS += $(D)/giflib
+NP_DEPS += $(D)/freetype
+NP_DEPS += $(D)/luaexpat
+NP_DEPS += $(D)/luajson
+NP_DEPS += $(D)/luacurl
+NP_DEPS += $(D)/luaposix
+NP_DEPS += $(D)/lua-feedparser
 
 NP_CONFIGURE_ADDITIONS = \
 		--disable-logoupdater \
