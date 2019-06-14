@@ -31,6 +31,7 @@ NP_DEPS += libpng
 NP_DEPS += libjpeg
 NP_DEPS += giflib
 NP_DEPS += freetype
+NP_DEPS += lua-feedparser
 
 NP_CONFIGURE_ADDITIONS = \
 		--disable-logoupdater \

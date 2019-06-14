@@ -647,6 +647,26 @@ $(D)/luaexpat: $(D)/expat $(D)/lua $(ARCHIVE)/luaexpat-$(LUAEXPAT_VER).tar.gz | 
 
 # -----------------------------------------------------------------------------
 
+LUA-FEEDPARSER_VER = 0.71
+LUA-FEEDPARSER_SOURCE = lua-feedparser-$(LUA-FEEDPARSER_VER).tar.gz
+
+$(ARCHIVE)/$(LUA-FEEDPARSER_SOURCE):
+	$(WGET) https://github.com/slact/lua-feedparser/archive/$(LUA-FEEDPARSER_VER).tar.gz -O $(ARCHIVE)/$(LUA-FEEDPARSER_SOURCE)
+
+LUA-FEEDPARSER_PATCH  = lua-feedparser.patch
+
+$(D)/lua-feedparser: $(D)/luaexpat $(ARCHIVE)/$(LUA-FEEDPARSER_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/lua-feedparser-$(LUA-FEEDPARSER_VER)
+	$(UNTAR)/$(LUA-FEEDPARSER_SOURCE)
+	$(CHDIR)/lua-feedparser-$(LUA-FEEDPARSER_VER); \
+		sed -i 's|^PREFIX =|PREFIX ?=|' Makefile; \
+		$(call apply_patches, $(LUA-FEEDPARSER_PATCH)); \
+		$(MAKE) install PREFIX=$(TARGET_DIR)
+#	$(REMOVE)/lua-feedparser-$(LUA-FEEDPARSER_VER)
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
 LUACURL_VER = git
 LUACURL_SOURCE = lua-curlv3.$(LUACURL_VER)
 LUACURL_URL = https://github.com/lua-curl/$(LUACURL_SOURCE)
