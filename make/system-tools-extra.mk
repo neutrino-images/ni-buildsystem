@@ -28,8 +28,8 @@ $(D)/usbutils: $(D)/libusb-compat $(ARCHIVE)/usbutils-$(USBUTILS_VER).tar.xz | $
 	rm -rf $(TARGET_DIR)/bin/lsusb.py
 	rm -rf $(TARGET_DIR)/bin/usbhid-dump
 	rm -rf $(TARGET_DIR)/sbin/update-usbids.sh
-	rm -rf $(TARGET_DIR)/share/pkgconfig
-	rm -rf $(TARGET_DIR)/share/usb.ids.gz
+	rm -rf $(TARGET_SHARE_DIR)/pkgconfig
+	rm -rf $(TARGET_SHARE_DIR)/usb.ids.gz
 	$(REMOVE)/usbutils-$(USBUTILS_VER)
 	$(TOUCH)
 

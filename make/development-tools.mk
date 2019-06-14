@@ -110,8 +110,8 @@ $(D)/gdb: $(D)/zlib $(D)/libncurses $(ARCHIVE)/gdb-$(GDB_VER).tar.xz | $(TARGET_
 			; \
 		$(MAKE) all-gdb; \
 		$(MAKE) install-gdb DESTDIR=$(TARGET_DIR)
-	rm -rf $(TARGET_DIR)/share/gdb/system-gdbinit
-	find $(TARGET_DIR)/share/gdb/syscalls -type f -not -name 'arm-linux.xml' -not -name 'gdb-syscalls.dtd' -print0 | xargs -0 rm --
+	rm -rf $(TARGET_SHARE_DIR)/gdb/system-gdbinit
+	find $(TARGET_SHARE_DIR)/gdb/syscalls -type f -not -name 'arm-linux.xml' -not -name 'gdb-syscalls.dtd' -print0 | xargs -0 rm --
 	$(REMOVE)/gdb-$(GDB_VER)
 	$(TOUCH)
 

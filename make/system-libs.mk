@@ -184,7 +184,7 @@ $(D)/libcurl: $(D)/zlib $(D)/openssl $(D)/librtmp $(D)/ca-bundle $(ARCHIVE)/curl
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	mv $(TARGET_DIR)/bin/curl-config $(HOST_DIR)/bin/
 	$(REWRITE_CONFIG) $(HOST_DIR)/bin/curl-config
-	rm -f $(TARGET_DIR)/share/zsh
+	rm -f $(TARGET_SHARE_DIR)/zsh
 	$(REWRITE_LIBTOOL)/libcurl.la
 	$(REWRITE_PKGCONF)/libcurl.pc
 	$(REMOVE)/curl-$(LIBCURL_VER)
@@ -265,7 +265,7 @@ $(D)/freetype: $(D)/zlib $(D)/libpng $(ARCHIVE)/freetype-$(FREETYPE_VER).tar.bz2
 	$(REWRITE_CONFIG) $(HOST_DIR)/bin/freetype-config
 	$(REWRITE_PKGCONF)/freetype2.pc
 	$(REWRITE_LIBTOOL)/libfreetype.la
-	$(REMOVE)/freetype-$(FREETYPE_VER) $(TARGET_DIR)/share/aclocal
+	$(REMOVE)/freetype-$(FREETYPE_VER) $(TARGET_SHARE_DIR)/aclocal
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -725,7 +725,7 @@ $(D)/libgpg-error: $(ARCHIVE)/libgpg-error-$(LIBGPG-ERROR_VER).tar.bz2 | $(TARGE
 	$(REWRITE_CONFIG) $(HOST_DIR)/bin/gpg-error-config
 	$(REWRITE_LIBTOOL)/libgpg-error.la
 	rm -rf $(TARGET_DIR)/bin/gpg-error
-	rm -rf $(TARGET_DIR)/share/common-lisp
+	rm -rf $(TARGET_SHARE_DIR)/common-lisp
 	$(REMOVE)/libgpg-error-$(LIBGPG-ERROR_VER)
 	$(TOUCH)
 

@@ -41,8 +41,8 @@ e2-multiboot:
 	#
 	echo -e "NI $(IMAGE_VERSION) \\\n \\\l\n" > $(TARGET_DIR)/etc/issue
 	#
-	mkdir -p $(TARGET_DIR)/share
-	touch $(TARGET_DIR)/share/bootlogo.mvi
+	mkdir -p $(TARGET_SHARE_DIR)
+	touch $(TARGET_SHARE_DIR)/bootlogo.mvi
 	#
 	mkdir -p $(TARGET_DIR)/var/lib/opkg
 	touch $(TARGET_DIR)/var/lib/opkg/status

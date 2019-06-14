@@ -62,7 +62,7 @@ $(TARGET_DIR)/etc/init.d/syslogd:
 scripts: \
 	$(TARGET_DIR)/sbin/service \
 	$(TARGET_DIR)/sbin/flash_eraseall \
-	$(TARGET_DIR)/share/udhcpc/default.script
+	$(TARGET_SHARE_DIR)/udhcpc/default.script
 
 $(TARGET_DIR)/sbin/service:
 	install -D -m 0755 $(IMAGEFILES)/scripts/service $@
@@ -72,5 +72,5 @@ ifeq ($(BOXTYPE), coolstream)
 	install -D -m 0755 $(IMAGEFILES)/scripts/flash_eraseall $@
 endif
 
-$(TARGET_DIR)/share/udhcpc/default.script:
+$(TARGET_SHARE_DIR)/udhcpc/default.script:
 	install -D -m 0755 $(IMAGEFILES)/scripts/udhcpc-default.script $@

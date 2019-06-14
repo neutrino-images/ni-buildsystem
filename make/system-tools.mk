@@ -156,10 +156,10 @@ $(D)/timezone: $(ARCHIVE)/tzdata$(TZDATA_VER).tar.gz | $(TARGET_DIR)
 			done; \
 			test -e zoneinfo/$$x || echo "WARNING: timezone $$x not found."; \
 		done; \
-		install -d -m 0755 $(TARGET_DIR)/share/ $(TARGET_DIR)/etc; \
-		mv zoneinfo/ $(TARGET_DIR)/share/
+		install -d -m 0755 $(TARGET_SHARE_DIR)/ $(TARGET_DIR)/etc; \
+		mv zoneinfo/ $(TARGET_SHARE_DIR)/
 	install -m 0644 $(IMAGEFILES)/timezone/timezone.xml $(TARGET_DIR)/etc/
-	cp $(TARGET_DIR)/share/zoneinfo/CET $(TARGET_DIR)/$(LOCALTIME)
+	cp $(TARGET_SHARE_DIR)/zoneinfo/CET $(TARGET_DIR)/$(LOCALTIME)
 	$(REMOVE)/timezone
 	$(TOUCH)
 
@@ -423,8 +423,8 @@ $(D)/ushare: $(ARCHIVE)/ushare-$(USHARE_VER).tar.bz2 $(D)/libupnp | $(TARGET_DIR
 			--cross-compile \
 			--cross-prefix=$(TARGET)- \
 			; \
-		sed -i config.h  -e 's@SYSCONFDIR.*@SYSCONFDIR "/etc"@'; \
-		sed -i config.h  -e 's@LOCALEDIR.*@LOCALEDIR "/share"@'; \
+		sed -i config.h -e 's@SYSCONFDIR.*@SYSCONFDIR "/etc"@'; \
+		sed -i config.h -e 's@LOCALEDIR.*@LOCALEDIR "/share"@'; \
 		ln -sf ../config.h src/; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
@@ -506,7 +506,7 @@ $(D)/vsftpd: $(D)/openssl $(ARCHIVE)/vsftpd-$(VSFTPD_VER).tar.gz | $(TARGET_DIR)
 		sed -i -e 's/.*VSF_BUILD_SSL/#define VSF_BUILD_SSL/' builddefs.h; \
 		make clean; \
 		TARGET_DIR=$(TARGET_DIR) make CC=$(TARGET)-gcc LIBS="-lcrypt -lcrypto -lssl" CFLAGS="$(TARGET_CFLAGS)" LDFLAGS="$(TARGET_LDFLAGS)"
-	install -d $(TARGET_DIR)/share/empty
+	install -d $(TARGET_SHARE_DIR)/empty
 	install -D -m 0755 $(BUILD_TMP)/vsftpd-$(VSFTPD_VER)/vsftpd $(TARGET_DIR)/sbin/vsftpd
 	install -D -m 0644 $(IMAGEFILES)/scripts/vsftpd.conf $(TARGET_DIR)/etc/vsftpd.conf
 	install -D -m 0644 $(IMAGEFILES)/scripts/vsftpd.chroot_list $(TARGET_DIR)/etc/vsftpd.chroot_list
@@ -623,8 +623,8 @@ $(D)/bash: $(ARCHIVE)/bash-$(BASH_VER).tar.gz | $(TARGET_DIR)
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF)/bash.pc
-	rm -f $(TARGET_DIR)/lib/bash/loadables.h
-	rm -f $(TARGET_DIR)/lib/bash/Makefile.inc
+	rm -f $(TARGET_LIB_DIR)/bash/loadables.h
+	rm -f $(TARGET_LIB_DIR)/bash/Makefile.inc
 	$(REMOVE)/bash-$(BASH_VER)
 	$(TOUCH)
 
@@ -1037,7 +1037,7 @@ $(D)/samsunglcd4linux: | $(TARGET_DIR)
 	$(CPDIR)/samsunglcd4linux.git
 	$(CHDIR)/samsunglcd4linux.git/ni; \
 		install -m 0600 etc/lcd4linux.conf $(TARGET_DIR)/etc; \
-		cp -a share/* $(TARGET_DIR)/share
+		cp -a share/* $(TARGET_SHARE_DIR)
 	$(REMOVE)/samsunglcd4linux.git
 	$(TOUCH)
 
@@ -1081,15 +1081,15 @@ $(D)/xupnpd: $(D)/lua $(D)/openssl | $(TARGET_DIR)
 		$(BUILDENV) \
 		$(MAKE) embedded TARGET=$(TARGET) CC=$(TARGET)-gcc STRIP=$(TARGET)-strip LUAFLAGS="$(TARGET_LDFLAGS) -I$(TARGET_INCLUDE_DIR)"; \
 	install -D -m 0755 xupnpd $(BIN)/; \
-	mkdir -p $(TARGET_DIR)/share/xupnpd/config; \
+	mkdir -p $(TARGET_SHARE_DIR)/xupnpd/config; \
 	for object in *.lua plugins/ profiles/ ui/ www/; do \
-		cp -a $$object $(TARGET_DIR)/share/xupnpd/; \
+		cp -a $$object $(TARGET_SHARE_DIR)/xupnpd/; \
 	done;
-	rm $(TARGET_DIR)/share/xupnpd/plugins/staff/xupnpd_18plus.lua
-	install -D -m 0644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/xupnpd/xupnpd_18plus.lua $(TARGET_DIR)/share/xupnpd/plugins/
-	install -D -m 0644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/xupnpd/xupnpd_youtube.lua $(TARGET_DIR)/share/xupnpd/plugins/
-	install -D -m 0644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/xupnpd/xupnpd_coolstream.lua $(TARGET_DIR)/share/xupnpd/plugins/
-	install -D -m 0644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/xupnpd/xupnpd_cczwei.lua $(TARGET_DIR)/share/xupnpd/plugins/
+	rm $(TARGET_SHARE_DIR)/xupnpd/plugins/staff/xupnpd_18plus.lua
+	install -D -m 0644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/xupnpd/xupnpd_18plus.lua $(TARGET_SHARE_DIR)/xupnpd/plugins/
+	install -D -m 0644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/xupnpd/xupnpd_youtube.lua $(TARGET_SHARE_DIR)/xupnpd/plugins/
+	install -D -m 0644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/xupnpd/xupnpd_coolstream.lua $(TARGET_SHARE_DIR)/xupnpd/plugins/
+	install -D -m 0644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/xupnpd/xupnpd_cczwei.lua $(TARGET_SHARE_DIR)/xupnpd/plugins/
 	mkdir -p $(TARGET_DIR)/etc/init.d/
 		install -D -m 0755 $(IMAGEFILES)/scripts/xupnpd.init $(TARGET_DIR)/etc/init.d/xupnpd
 		ln -sf xupnpd $(TARGET_DIR)/etc/init.d/S99xupnpd
@@ -1344,8 +1344,8 @@ $(D)/mc: $(ARCHIVE)/mc-$(MC_VER).tar.xz $(D)/glib2 $(D)/libncurses | $(TARGET_DI
 			; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	rm -rf $(TARGET_DIR)/share/mc/examples
-	find $(TARGET_DIR)/share/mc/skins -type f ! -name default.ini | xargs --no-run-if-empty rm
+	rm -rf $(TARGET_SHARE_DIR)/mc/examples
+	find $(TARGET_SHARE_DIR)/mc/skins -type f ! -name default.ini | xargs --no-run-if-empty rm
 	$(REMOVE)/mc-$(MC_VER)
 	$(TOUCH)
 
