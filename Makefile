@@ -142,6 +142,7 @@ include make/rootfs.mk
 include make/static-libs.mk
 include make/system-libs-extra.mk
 include make/system-libs.mk
+include make/system-lua.mk
 include make/system-scripts.mk
 include make/system-tools-extra.mk
 include make/system-tools.mk
