@@ -94,6 +94,7 @@ $(D)/luajson: $(ARCHIVE)/$(LUAJSON_SOURCE) | $(TARGET_DIR)
 	$(CD) $(ARCHIVE); \
 		curl --remote-name --time-cond $(LUAJSON_SOURCE) $(LUAJSON_URL) || true
 	install -D -m 0644 $(ARCHIVE)/$(LUAJSON_SOURCE) $(TARGET_SHARE_DIR)/lua/$(LUA_ABIVER)
+	ln -sf $(LUAJSON_SOURCE) $(TARGET_SHARE_DIR)/lua/$(LUA_ABIVER)/json.lua
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
