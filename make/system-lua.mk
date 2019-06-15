@@ -120,22 +120,44 @@ $(D)/luacurl: $(D)/libcurl $(D)/lua | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-LUAPOSIX_VER = 34.0.4
-LUAPOSIX_SOURCE = luaposix-$(LUAPOSIX_VER).tar.gz
-LUAPOSIX_URL = https://github.com/luaposix/luaposix/archive
+LUAPOSIX_VER = 31
 
-$(ARCHIVE)/$(LUAPOSIX_SOURCE):
-	$(WGET) $(LUAPOSIX_URL)/v$(LUAPOSIX_VER).tar.gz -O $@
+$(ARCHIVE)/v$(LUAPOSIX_VER).tar.gz:
+	$(WGET) https://github.com/luaposix/luaposix/archive/v$(LUAPOSIX_VER).tar.gz
 
-$(D)/luaposix: $(HOST_LUA) $(D)/lua $(D)/luaexpat $(ARCHIVE)/$(LUAPOSIX_SOURCE) | $(TARGET_DIR)
+LUAPOSIX_PATCH  = luaposix-fix-build.patch
+LUAPOSIX_PATCH += luaposix-fix-docdir-build.patch
+
+SLINGSHOT_VER = 6
+
+$(ARCHIVE)/v$(SLINGSHOT_VER).tar.gz:
+	$(WGET) https://github.com/gvvaughan/slingshot/archive/v$(SLINGSHOT_VER).tar.gz
+
+GNULIB_VER = 20140202
+
+$(ARCHIVE)/gnulib-$(GNULIB_VER)-stable.tar.gz:
+	$(WGET) http://erislabs.net/ianb/projects/gnulib/gnulib-$(GNULIB_VER)-stable.tar.gz
+
+$(D)/luaposix: $(HOST_LUA) $(D)/lua $(D)/luaexpat $(ARCHIVE)/v$(LUAPOSIX_VER).tar.gz $(ARCHIVE)/v$(SLINGSHOT_VER).tar.gz $(ARCHIVE)/gnulib-$(GNULIB_VER)-stable.tar.gz | $(TARGET_DIR)
 	$(REMOVE)/luaposix-$(LUAPOSIX_VER)
-	$(UNTAR)/$(LUAPOSIX_SOURCE)
+	$(UNTAR)/v$(LUAPOSIX_VER).tar.gz
+	tar -C $(BUILD_TMP)/luaposix-$(LUAPOSIX_VER)/slingshot --strip=1 -xf $(ARCHIVE)/v$(SLINGSHOT_VER).tar.gz
+	tar -C $(BUILD_TMP)/luaposix-$(LUAPOSIX_VER)/gnulib --strip=1 -xf $(ARCHIVE)/gnulib-$(GNULIB_VER)-stable.tar.gz
 	$(CHDIR)/luaposix-$(LUAPOSIX_VER); \
-		$(BUILDENV) \
-		$(HOST_LUA) build-aux/luke \
-			LUA_INCDIR=$(TARGET_INCLUDE_DIR); \
-		$(HOST_LUA) build-aux/luke install \
-			INST_LIBDIR="$(TARGET_LIB_DIR)/lua/$(LUA_ABIVER)" \
-			INST_LUADIR="$(TARGET_SHARE_DIR)/lua/$(LUA_ABIVER)"
+		$(call apply_patches, $(LUAPOSIX_PATCH)); \
+		export LUA=$(HOST_LUA); \
+		./bootstrap; \
+		autoreconf -fi; \
+		$(CONFIGURE) \
+			--prefix= \
+			--exec-prefix= \
+			--libdir=$(TARGET_LIB_DIR)/lua/$(LUA_ABIVER) \
+			--datarootdir=$(TARGET_SHARE_DIR)/lua/$(LUA_ABIVER) \
+			--mandir=$(TARGET_DIR)/.remove \
+			--docdir=$(TARGET_DIR)/.remove \
+			--enable-silent-rules \
+			; \
+		$(MAKE); \
+		$(MAKE) all check install
 	$(REMOVE)/luaposix-$(LUAPOSIX_VER)
 	$(TOUCH)
