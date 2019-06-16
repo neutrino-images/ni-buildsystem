@@ -153,6 +153,9 @@ $(D)/luaposix: $(HOST_LUA) $(D)/lua $(D)/luaexpat $(ARCHIVE)/$(SLINGSHOT_SOURCE)
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--prefix= \
+			--exec-prefix= \
+			--libdir=$(TARGET_LIB_DIR)/lua/$(LUA_ABIVER) \
+			--datarootdir=$(TARGET_SHARE_DIR)/lua/$(LUA_ABIVER) \
 			--mandir=$(TARGET_DIR)/.remove \
 			--docdir=$(TARGET_DIR)/.remove \
 			--enable-silent-rules \
