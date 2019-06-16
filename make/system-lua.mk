@@ -3,7 +3,7 @@
 #
 # -----------------------------------------------------------------------------
 
-HOST_LUA = $(HOST_DIR)/bin/lua-$(LUA_VER)
+HOST_LUA = $(HOST_DIR)/bin/lua
 
 # -----------------------------------------------------------------------------
 
@@ -121,38 +121,38 @@ $(D)/luacurl: $(D)/libcurl $(D)/lua | $(TARGET_DIR)
 # -----------------------------------------------------------------------------
 
 LUAPOSIX_VER = 31
+LUAPOSIX_SOURCE = luaposix-$(LUAPOSIX_VER).tar.gz
 
-$(ARCHIVE)/v$(LUAPOSIX_VER).tar.gz:
-	$(WGET) https://github.com/luaposix/luaposix/archive/v$(LUAPOSIX_VER).tar.gz
+$(ARCHIVE)/$(LUAPOSIX_SOURCE):
+	$(WGET) https://github.com/luaposix/luaposix/archive/v$(LUAPOSIX_VER).tar.gz -O $@
 
 LUAPOSIX_PATCH  = luaposix-fix-build.patch
 LUAPOSIX_PATCH += luaposix-fix-docdir-build.patch
 
-SLINGSHOT_VER = 6
-
-$(ARCHIVE)/v$(SLINGSHOT_VER).tar.gz:
-	$(WGET) https://github.com/gvvaughan/slingshot/archive/v$(SLINGSHOT_VER).tar.gz
-
 GNULIB_VER = 20140202
+GNULIB_SOURCE = gnulib-$(GNULIB_VER)-stable.tar.gz
 
-$(ARCHIVE)/gnulib-$(GNULIB_VER)-stable.tar.gz:
-	$(WGET) http://erislabs.net/ianb/projects/gnulib/gnulib-$(GNULIB_VER)-stable.tar.gz
+$(ARCHIVE)/$(GNULIB_SOURCE):
+	$(WGET) http://erislabs.net/ianb/projects/gnulib/$(GNULIB_SOURCE)
 
-$(D)/luaposix: $(HOST_LUA) $(D)/lua $(D)/luaexpat $(ARCHIVE)/v$(LUAPOSIX_VER).tar.gz $(ARCHIVE)/v$(SLINGSHOT_VER).tar.gz $(ARCHIVE)/gnulib-$(GNULIB_VER)-stable.tar.gz | $(TARGET_DIR)
+SLINGSHOT_VER = 6
+SLINGSHOT_SOURCE = slingshot-$(SLINGSHOT_VER).tar.gz
+
+$(ARCHIVE)/$(SLINGSHOT_SOURCE):
+	$(WGET) https://github.com/gvvaughan/slingshot/archive/v$(SLINGSHOT_VER).tar.gz -O $@
+
+$(D)/luaposix: $(HOST_LUA) $(D)/lua $(D)/luaexpat $(ARCHIVE)/$(SLINGSHOT_SOURCE) $(ARCHIVE)/$(GNULIB_SOURCE) $(ARCHIVE)/$(LUAPOSIX_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/luaposix-$(LUAPOSIX_VER)
-	$(UNTAR)/v$(LUAPOSIX_VER).tar.gz
-	tar -C $(BUILD_TMP)/luaposix-$(LUAPOSIX_VER)/slingshot --strip=1 -xf $(ARCHIVE)/v$(SLINGSHOT_VER).tar.gz
-	tar -C $(BUILD_TMP)/luaposix-$(LUAPOSIX_VER)/gnulib --strip=1 -xf $(ARCHIVE)/gnulib-$(GNULIB_VER)-stable.tar.gz
+	$(UNTAR)/$(LUAPOSIX_SOURCE)
 	$(CHDIR)/luaposix-$(LUAPOSIX_VER); \
+		tar -C gnulib --strip=1 -xf $(ARCHIVE)/$(GNULIB_SOURCE); \
+		tar -C slingshot --strip=1 -xf $(ARCHIVE)/$(SLINGSHOT_SOURCE); \
 		$(call apply_patches, $(LUAPOSIX_PATCH)); \
 		export LUA=$(HOST_LUA); \
 		./bootstrap; \
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--prefix= \
-			--exec-prefix= \
-			--libdir=$(TARGET_LIB_DIR)/lua/$(LUA_ABIVER) \
-			--datarootdir=$(TARGET_SHARE_DIR)/lua/$(LUA_ABIVER) \
 			--mandir=$(TARGET_DIR)/.remove \
 			--docdir=$(TARGET_DIR)/.remove \
 			--enable-silent-rules \
