@@ -10,6 +10,7 @@ host-preqs: \
 	host_sumtool \
 	host_mkimage \
 	host_lua \
+	host_luarocks \
 	host_zic \
 	host_parted \
 	host_mkfs.fat \
@@ -249,7 +250,7 @@ HOST_LUA_PATCH  = lua-01-fix-LUA_ROOT.patch
 HOST_LUA_PATCH += lua-01-remove-readline.patch
 
 host_lua: $(HOST_LUA)
-$(HOST_LUA): $(ARCHIVE)/lua-$(HOST_LUA_VER).tar.gz | $(TARGET_DIR)
+$(HOST_LUA): $(ARCHIVE)/lua-$(HOST_LUA_VER).tar.gz | $(HOST_DIR)
 	$(REMOVE)/lua-$(HOST_LUA_VER)
 	$(UNTAR)/lua-$(HOST_LUA_VER).tar.gz
 	$(CHDIR)/lua-$(HOST_LUA_VER); \
@@ -257,6 +258,45 @@ $(HOST_LUA): $(ARCHIVE)/lua-$(HOST_LUA_VER).tar.gz | $(TARGET_DIR)
 		$(MAKE) linux; \
 		$(MAKE) install INSTALL_TOP=$(HOST_DIR)
 	$(REMOVE)/lua-$(HOST_LUA_VER)
+
+# -----------------------------------------------------------------------------
+
+HOST_LUAROCKS = $(HOST_DIR)/bin/luarocks
+HOST_LUAROCKS_VER = 3.1.3
+HOST_LUAROCKS_SOURCE = luarocks-$(HOST_LUAROCKS_VER).tar.gz
+
+$(ARCHIVE)/$(HOST_LUAROCKS_SOURCE):
+	$(WGET) https://luarocks.github.io/luarocks/releases/$(HOST_LUAROCKS_SOURCE)
+
+HOST_LUAROCKS_PATCH  = luarocks-0001-allow-libluajit-detection.patch
+
+HOST_LUAROCKS_CONFIG_FILE = $(HOST_DIR)/etc/luarocks/config-$(LUA_ABIVER).lua
+
+HOST_LUAROCKS_BUILDENV = \
+	LUA_PATH="$(HOST_DIR)/share/lua/$(LUA_ABIVER)/?.lua" \
+	TARGET_CC="$(TARGET)-gcc" \
+	TARGET_LD="$(TARGET)-ld" \
+	TARGET_CFLAGS="$(TARGET_CFLAGS)" \
+	TARGET_LDFLAGS="$(TARGET_LDFLAGS)" \
+	TARGET_DIR="$(TARGET_DIR)" \
+	TARGET_INCLUDE_DIR="$(TARGET_INCLUDE_DIR)" \
+	TARGET_LIB_DIR="$(TARGET_LIB_DIR)"
+
+host_luarocks: $(HOST_LUAROCKS)
+$(HOST_LUAROCKS): $(HOST_LUA) $(ARCHIVE)/$(HOST_LUAROCKS_SOURCE) | $(HOST_DIR)
+	$(REMOVE)/luarocks-$(HOST_LUAROCKS_VER)
+	$(UNTAR)/$(HOST_LUAROCKS_SOURCE)
+	$(CHDIR)/luarocks-$(HOST_LUAROCKS_VER); \
+		$(call apply_patches, $(HOST_LUAROCKS_PATCH)); \
+		./configure $(SILENT_OPT) \
+			--prefix=$(HOST_DIR) \
+			--with-lua=$(HOST_DIR) \
+			--rocks-tree=$(TARGET_DIR) \
+		; \
+		$(MAKE) install
+	install -m 0644 $(CONFIGS)/luarocks-config.lua $(HOST_LUAROCKS_CONFIG_FILE)
+	$(REMOVE)/luarocks-$(HOST_LUAROCKS_VER)
+	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
