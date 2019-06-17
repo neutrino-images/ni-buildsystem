@@ -239,21 +239,23 @@ $(HOST_DIR)/bin/resize2fs: $(ARCHIVE)/e2fsprogs-$(HOST_E2FSPROGS_VER).tar.gz | $
 
 # -----------------------------------------------------------------------------
 
+HOST_LUA = $(HOST_DIR)/bin/lua
 HOST_LUA_VER = $(LUA_VER)
 
 #$(ARCHIVE)/lua-$(HOST_LUA_VER).tar.gz:
 #	$(WGET) http://www.lua.org/ftp/lua-$(HOST_LUA_VER).tar.gz
 
-HOST_LUA_PATCH  = lua-01-fix-build.patch
+HOST_LUA_PATCH  = lua-01-fix-LUA_ROOT.patch
+HOST_LUA_PATCH += lua-01-remove-readline.patch
 
-host_lua: $(HOST_DIR)/bin/lua
-$(HOST_DIR)/bin/lua: $(ARCHIVE)/lua-$(HOST_LUA_VER).tar.gz | $(TARGET_DIR)
+host_lua: $(HOST_LUA)
+$(HOST_LUA): $(ARCHIVE)/lua-$(HOST_LUA_VER).tar.gz | $(TARGET_DIR)
 	$(REMOVE)/lua-$(HOST_LUA_VER)
 	$(UNTAR)/lua-$(HOST_LUA_VER).tar.gz
 	$(CHDIR)/lua-$(HOST_LUA_VER); \
 		$(call apply_patches, $(HOST_LUA_PATCH)); \
-		$(MAKE) linux
-	install -m 0755 -D $(BUILD_TMP)/lua-$(HOST_LUA_VER)/src/lua $@
+		$(MAKE) linux; \
+		$(MAKE) install INSTALL_TOP=$(HOST_DIR)
 	$(REMOVE)/lua-$(HOST_LUA_VER)
 
 # -----------------------------------------------------------------------------

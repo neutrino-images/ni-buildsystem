@@ -1,0 +1,13 @@
+diff --git a/Makefile b/Makefile
+index d2c7db4..2dea130 100644
+--- a/Makefile
++++ b/Makefile
+@@ -14,7 +14,7 @@ INSTALL_TOP= /usr/local
+ INSTALL_BIN= $(INSTALL_TOP)/bin
+ INSTALL_INC= $(INSTALL_TOP)/include
+ INSTALL_LIB= $(INSTALL_TOP)/lib
+-INSTALL_MAN= $(INSTALL_TOP)/man/man1
++INSTALL_MAN= $(INSTALL_TOP)/.remove
+ INSTALL_LMOD= $(INSTALL_TOP)/share/lua/$V
+ INSTALL_CMOD= $(INSTALL_TOP)/lib/lua/$V
+ 

@@ -3,17 +3,15 @@
 #
 # -----------------------------------------------------------------------------
 
-HOST_LUA = $(HOST_DIR)/bin/lua
-
-# -----------------------------------------------------------------------------
-
 LUA_ABIVER = 5.2
 LUA_VER = $(LUA_ABIVER).4
 
 $(ARCHIVE)/lua-$(LUA_VER).tar.gz:
 	$(WGET) http://www.lua.org/ftp/lua-$(LUA_VER).tar.gz
 
-LUA_PATCH  = lua-01-fix-build.patch
+LUA_PATCH  = lua-01-fix-LUA_ROOT.patch
+LUA_PATCH += lua-01-remove-readline.patch
+LUA_PATCH += lua-01-remove-man.patch
 LUA_PATCH += lua-02-shared-libs-for-lua.patch
 LUA_PATCH += lua-03-lua-pc.patch
 LUA_PATCH += lua-04-crashfix.diff
