@@ -3,19 +3,19 @@
 #
 # -----------------------------------------------------------------------------
 
-host-preqs: \
+host-preqs: $(HOST_DIR)/bin \
 	host_pkg-config \
 	host_pkg-config-softlink \
 	host_mkfs.jffs2 \
 	host_sumtool \
 	host_mkimage \
-	host_lua \
-	host_luarocks \
 	host_zic \
 	host_parted \
 	host_mkfs.fat \
 	host_mtools \
 	host_resize2fs \
+	host_lua \
+	host_luarocks \
 	ccache
 
 # -----------------------------------------------------------------------------
@@ -290,11 +290,14 @@ $(HOST_LUAROCKS): $(HOST_LUA) $(ARCHIVE)/$(HOST_LUAROCKS_SOURCE) | $(HOST_DIR)
 		$(call apply_patches, $(HOST_LUAROCKS_PATCH)); \
 		./configure $(SILENT_OPT) \
 			--prefix=$(HOST_DIR) \
+			--sysconfdir=$(HOST_DIR)/etc \
 			--with-lua=$(HOST_DIR) \
 			--rocks-tree=$(TARGET_DIR) \
 		; \
+		rm -f $(HOST_LUAROCKS_CONFIG_FILE); \
+		$(MAKE); \
 		$(MAKE) install
-	install -m 0644 $(CONFIGS)/luarocks-config.lua $(HOST_LUAROCKS_CONFIG_FILE)
+	cat $(CONFIGS)/luarocks-config.lua >> $(HOST_LUAROCKS_CONFIG_FILE)
 	$(REMOVE)/luarocks-$(HOST_LUAROCKS_VER)
 	$(TOUCH)
 
