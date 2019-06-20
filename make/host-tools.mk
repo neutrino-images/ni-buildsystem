@@ -4,19 +4,19 @@
 # -----------------------------------------------------------------------------
 
 host-preqs: $(HOST_DIR)/bin \
-	host_pkg-config \
-	host_pkg-config-softlink \
-	host_mkfs.jffs2 \
-	host_sumtool \
-	host_mkimage \
-	host_zic \
-	host_parted \
-	host_mkfs.fat \
-	host_mtools \
-	host_resize2fs \
-	host_lua \
-	host_luarocks \
-	ccache
+	host-pkg-config \
+	host-pkg-config-softlink \
+	host-mkfs.jffs2 \
+	host-sumtool \
+	host-mkimage \
+	host-zic \
+	host-parted \
+	host-mkfs.fat \
+	host-mtools \
+	host-resize2fs \
+	host-lua \
+	host-luarocks \
+	host-ccache
 
 # -----------------------------------------------------------------------------
 
@@ -33,7 +33,7 @@ HOST_PKG-CONFIG_VER = 0.29.2
 $(ARCHIVE)/pkg-config-$(HOST_PKG-CONFIG_VER).tar.gz:
 	$(WGET) https://pkg-config.freedesktop.org/releases/pkg-config-$(HOST_PKG-CONFIG_VER).tar.gz
 
-host_pkg-config: $(HOST_DIR)/bin/pkg-config
+host-pkg-config: $(HOST_DIR)/bin/pkg-config
 $(HOST_DIR)/bin/pkg-config: $(ARCHIVE)/pkg-config-$(HOST_PKG-CONFIG_VER).tar.gz | $(HOST_DIR)/bin pkg-config-preqs
 	$(REMOVE)/pkg-config-$(HOST_PKG-CONFIG_VER)
 	$(UNTAR)/pkg-config-$(HOST_PKG-CONFIG_VER).tar.gz
@@ -45,7 +45,7 @@ $(HOST_DIR)/bin/pkg-config: $(ARCHIVE)/pkg-config-$(HOST_PKG-CONFIG_VER).tar.gz 
 	install -D -m 0755 $(BUILD_TMP)/pkg-config-$(HOST_PKG-CONFIG_VER)/pkg-config $(HOST_DIR)/bin
 	$(REMOVE)/pkg-config-$(HOST_PKG-CONFIG_VER)
 
-host_pkg-config-softlink: $(HOST_DIR)/bin/$(TARGET)-pkg-config
+host-pkg-config-softlink: $(HOST_DIR)/bin/$(TARGET)-pkg-config
 $(HOST_DIR)/bin/$(TARGET)-pkg-config: | $(HOST_DIR)/bin
 	ln -sf pkg-config $(HOST_DIR)/bin/$(TARGET)-pkg-config
 
@@ -57,7 +57,7 @@ HOST_PKGCONF_SOURCE = pkgconf-$(HOST_PKGCONF_VER).tar.gz
 $(ARCHIVE)/$(HOST_PKGCONF_SOURCE):
 	$(WGET) https://github.com/pkgconf/pkgconf/archive/$(HOST_PKGCONF_SOURCE)
 
-host_pkgconf: $(HOST_DIR)/bin/pkgconf
+host-pkgconf: $(HOST_DIR)/bin/pkgconf
 $(HOST_DIR)/bin/pkgconf: $(ARCHIVE)/$(HOST_PKGCONF_SOURCE) | $(HOST_DIR)/bin pkg-config-preqs
 	$(REMOVE)/pkgconf-pkgconf-$(HOST_PKGCONF_VER)
 	$(UNTAR)/$(HOST_PKGCONF_SOURCE)
@@ -81,8 +81,8 @@ HOST_MTD-UTILS_VER = $(MTD-UTILS_VER)
 #$(ARCHIVE)/mtd-utils-$(HOST_MTD-UTILS_VER).tar.bz2:
 #	$(WGET) ftp://ftp.infradead.org/pub/mtd-utils/mtd-utils-$(HOST_MTD-UTILS_VER).tar.bz2
 
-host_mkfs.jffs2: $(HOST_DIR)/bin/mkfs.jffs2
-host_sumtool: $(HOST_DIR)/bin/sumtool
+host-mkfs.jffs2: $(HOST_DIR)/bin/mkfs.jffs2
+host-sumtool: $(HOST_DIR)/bin/sumtool
 $(HOST_DIR)/bin/mkfs.jffs2 \
 $(HOST_DIR)/bin/sumtool: $(ARCHIVE)/mtd-utils-$(HOST_MTD-UTILS_VER).tar.bz2 | $(HOST_DIR)/bin
 	$(REMOVE)/mtd-utils-$(HOST_MTD-UTILS_VER)
@@ -110,7 +110,7 @@ HOST_U-BOOT_VER = 2018.09
 $(ARCHIVE)/u-boot-$(HOST_U-BOOT_VER).tar.bz2:
 	$(WGET) ftp://ftp.denx.de/pub/u-boot/u-boot-$(HOST_U-BOOT_VER).tar.bz2
 
-host_mkimage: $(HOST_DIR)/bin/mkimage
+host-mkimage: $(HOST_DIR)/bin/mkimage
 $(HOST_DIR)/bin/mkimage: $(ARCHIVE)/u-boot-$(HOST_U-BOOT_VER).tar.bz2 | $(HOST_DIR)/bin
 	$(REMOVE)/u-boot-$(HOST_U-BOOT_VER)
 	$(UNTAR)/u-boot-$(HOST_U-BOOT_VER).tar.bz2
@@ -133,7 +133,7 @@ HOST_TZCODE_VER = 2018e
 $(ARCHIVE)/tzcode$(HOST_TZCODE_VER).tar.gz:
 	$(WGET) ftp://ftp.iana.org/tz/releases/tzcode$(HOST_TZCODE_VER).tar.gz
 
-host_zic: $(HOST_DIR)/bin/zic
+host-zic: $(HOST_DIR)/bin/zic
 $(HOST_DIR)/bin/zic: $(ARCHIVE)/tzdata$(HOST_TZDATA_VER).tar.gz $(ARCHIVE)/tzcode$(HOST_TZCODE_VER).tar.gz | $(HOST_DIR)/bin
 	$(REMOVE)/tzcode
 	$(MKDIR)/tzcode
@@ -154,7 +154,7 @@ HOST_PARTED_VER = $(PARTED_VER)
 HOST_PARTED_PATCH  = parted-3.2-devmapper-1.patch
 HOST_PARTED_PATCH += parted-3.2-sysmacros.patch
 
-host_parted: $(HOST_DIR)/bin/parted
+host-parted: $(HOST_DIR)/bin/parted
 $(HOST_DIR)/bin/parted: $(ARCHIVE)/parted-$(HOST_PARTED_VER).tar.xz | $(HOST_DIR)/bin
 	$(REMOVE)/parted-$(HOST_PARTED_VER)
 	$(UNTAR)/parted-$(HOST_PARTED_VER).tar.xz
@@ -178,7 +178,7 @@ HOST_DOSFSTOOLS_VER = $(DOSFSTOOLS_VER)
 #$(ARCHIVE)/dosfstools-$(HOST_DOSFSTOOLS_VER).tar.xz:
 #	$(WGET) https://github.com/dosfstools/dosfstools/releases/download/v$(HOST_DOSFSTOOLS_VER)/dosfstools-$(HOST_DOSFSTOOLS_VER).tar.xz
 
-host_mkfs.fat: $(HOST_DIR)/bin/mkfs.fat
+host-mkfs.fat: $(HOST_DIR)/bin/mkfs.fat
 $(HOST_DIR)/bin/mkfs.fat: $(ARCHIVE)/dosfstools-$(HOST_DOSFSTOOLS_VER).tar.xz | $(HOST_DIR)/bin
 	$(REMOVE)/dosfstools-$(HOST_DOSFSTOOLS_VER)
 	$(UNTAR)/dosfstools-$(HOST_DOSFSTOOLS_VER).tar.xz
@@ -200,7 +200,7 @@ HOST_MTOOLS_VER = 4.0.19
 $(ARCHIVE)/mtools-$(HOST_MTOOLS_VER).tar.gz:
 	$(WGET) ftp://ftp.gnu.org/gnu/mtools/mtools-$(HOST_MTOOLS_VER).tar.gz
 
-host_mtools: $(HOST_DIR)/bin/mtools
+host-mtools: $(HOST_DIR)/bin/mtools
 $(HOST_DIR)/bin/mtools: $(ARCHIVE)/mtools-$(HOST_MTOOLS_VER).tar.gz | $(HOST_DIR)/bin
 	$(REMOVE)/mtools-$(HOST_MTOOLS_VER)
 	$(UNTAR)/mtools-$(HOST_MTOOLS_VER).tar.gz
@@ -218,7 +218,7 @@ HOST_E2FSPROGS_VER = $(E2FSPROGS_VER)
 #$(ARCHIVE)/e2fsprogs-$(HOST_E2FSPROGS_VER).tar.gz:
 #	$(WGET) http://downloads.sourceforge.net/project/e2fsprogs/e2fsprogs/v$(HOST_E2FSPROGS_VER)/e2fsprogs-$(HOST_E2FSPROGS_VER).tar.gz
 
-host_resize2fs: $(HOST_DIR)/bin/resize2fs
+host-resize2fs: $(HOST_DIR)/bin/resize2fs
 $(HOST_DIR)/bin/resize2fs: $(ARCHIVE)/e2fsprogs-$(HOST_E2FSPROGS_VER).tar.gz | $(HOST_DIR)/bin
 	$(REMOVE)/e2fsprogs-$(HOST_E2FSPROGS_VER)
 	$(UNTAR)/e2fsprogs-$(HOST_E2FSPROGS_VER).tar.gz
@@ -249,7 +249,7 @@ HOST_LUA_VER = $(LUA_VER)
 HOST_LUA_PATCH  = lua-01-fix-LUA_ROOT.patch
 HOST_LUA_PATCH += lua-01-remove-readline.patch
 
-host_lua: $(HOST_LUA)
+host-lua: $(HOST_LUA)
 $(HOST_LUA): $(ARCHIVE)/lua-$(HOST_LUA_VER).tar.gz | $(HOST_DIR)
 	$(REMOVE)/lua-$(HOST_LUA_VER)
 	$(UNTAR)/lua-$(HOST_LUA_VER).tar.gz
@@ -282,7 +282,7 @@ HOST_LUAROCKS_BUILDENV = \
 	TARGET_INCLUDE_DIR="$(TARGET_INCLUDE_DIR)" \
 	TARGET_LIB_DIR="$(TARGET_LIB_DIR)"
 
-host_luarocks: $(HOST_LUAROCKS)
+host-luarocks: $(HOST_LUAROCKS)
 $(HOST_LUAROCKS): $(HOST_LUA) $(ARCHIVE)/$(HOST_LUAROCKS_SOURCE) | $(HOST_DIR)
 	$(REMOVE)/luarocks-$(HOST_LUAROCKS_VER)
 	$(UNTAR)/$(HOST_LUAROCKS_SOURCE)
@@ -303,8 +303,8 @@ $(HOST_LUAROCKS): $(HOST_LUA) $(ARCHIVE)/$(HOST_LUAROCKS_SOURCE) | $(HOST_DIR)
 
 # -----------------------------------------------------------------------------
 
-# helper target to create ccache links (make sure to have ccache installed in /usr/bin ;)
-ccache: find-ccache $(CCACHE) $(HOST_DIR)/bin
+# helper target to create ccache links
+host-ccache: find-ccache $(CCACHE) $(HOST_DIR)/bin
 	@ln -sf $(CCACHE) $(HOST_DIR)/bin/cc
 	@ln -sf $(CCACHE) $(HOST_DIR)/bin/gcc
 	@ln -sf $(CCACHE) $(HOST_DIR)/bin/g++
@@ -314,5 +314,5 @@ ccache: find-ccache $(CCACHE) $(HOST_DIR)/bin
 # -----------------------------------------------------------------------------
 
 PHONY += host-preqs
-PHONY += ccache
 PHONY += pkg-config-preqs
+PHONY += host-ccache
