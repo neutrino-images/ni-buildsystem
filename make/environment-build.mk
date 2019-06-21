@@ -174,6 +174,7 @@ ifeq ($(BOXSERIES), hd1)
   CORTEX-STRINGS         =
   TARGET                 = arm-cx2450x-linux-gnueabi
   TARGET_OPTIMIZATION    = -Os
+  TARGET_DEBUGGING       = -g
   TARGET_ABI             = -march=armv6 -mfloat-abi=soft -mlittle-endian
   TARGET_EXTRA_CFLAGS    = -fdata-sections -ffunction-sections
   TARGET_EXTRA_LDFLAGS   = -Wl,--gc-sections
@@ -192,6 +193,7 @@ else ifeq ($(BOXSERIES), hd2)
   CORTEX-STRINGS         = -lcortex-strings
   TARGET                 = arm-cortex-linux-uclibcgnueabi
   TARGET_OPTIMIZATION    = -O2
+  TARGET_DEBUGGING       = -g
   TARGET_ABI             = -march=armv7-a -mtune=cortex-a9 -mfpu=vfpv3-d16 -mfloat-abi=hard -mlittle-endian
   TARGET_EXTRA_CFLAGS    =
   TARGET_EXTRA_LDFLAGS   =
@@ -210,6 +212,7 @@ else ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 bre2ze4k))
   CORTEX-STRINGS         = -lcortex-strings
   TARGET                 = arm-cortex-linux-gnueabihf
   TARGET_OPTIMIZATION    = -O2
+  TARGET_DEBUGGING       = -g
   TARGET_ABI             = -march=armv7ve -mtune=cortex-a15 -mfpu=neon-vfpv4 -mfloat-abi=hard
   TARGET_EXTRA_CFLAGS    =
   TARGET_EXTRA_LDFLAGS   =
@@ -224,7 +227,7 @@ TARGET_MODULES_DIR = $(TARGET_LIB_DIR)/modules/$(KERNEL_VERSION)
 TARGET_INCLUDE_DIR = $(TARGET_DIR)/include
 TARGET_SHARE_DIR = $(TARGET_DIR)/share
 
-TARGET_CFLAGS   = -pipe $(TARGET_OPTIMIZATION) $(TARGET_ABI) $(TARGET_EXTRA_CFLAGS) $(CXX11_ABI) -g -I$(TARGET_INCLUDE_DIR)
+TARGET_CFLAGS   = -pipe $(TARGET_OPTIMIZATION) $(TARGET_DEBUGGING) $(TARGET_ABI) $(TARGET_EXTRA_CFLAGS) $(CXX11_ABI) -I$(TARGET_INCLUDE_DIR)
 TARGET_CPPFLAGS = $(TARGET_CFLAGS)
 TARGET_CXXFLAGS = $(TARGET_CFLAGS)
 TARGET_LDFLAGS  = $(CORTEX-STRINGS) -Wl,-O1 -Wl,-rpath,$(TARGET_LIB_DIR) -Wl,-rpath-link,$(TARGET_LIB_DIR) -L$(TARGET_LIB_DIR) $(TARGET_EXTRA_LDFLAGS)

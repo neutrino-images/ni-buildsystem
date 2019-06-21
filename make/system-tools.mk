@@ -107,7 +107,7 @@ $(D)/openssh: $(D)/openssl $(D)/zlib $(ARCHIVE)/openssh-$(OPENSSH_VER).tar.gz | 
 			--infodir=/.remove \
 			--with-pid-dir=/tmp \
 			--with-privsep-path=/var/empty \
-			--with-cppflags="-pipe $(TARGET_OPTIMIZATION) $(TARGET_ABI) -g -I$(TARGET_INCLUDE_DIR)" \
+			--with-cppflags="-pipe $(TARGET_OPTIMIZATION) $(TARGET_DEBUGGING) $(TARGET_ABI) -I$(TARGET_INCLUDE_DIR)" \
 			--with-ldflags="-L$(TARGET_LIB_DIR)" \
 			--libexecdir=/bin \
 			--disable-strip \

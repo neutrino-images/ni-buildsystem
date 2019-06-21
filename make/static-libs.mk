@@ -28,9 +28,9 @@ $(STATIC_LIB_DIR)/libcortex-strings.la: $(ARCHIVE)/cortex-strings-$(CORTEX-STRIN
 	$(UNTAR)/cortex-strings-$(CORTEX-STRINGS_VER).tar.bz2
 	$(CHDIR)/cortex-strings-$(CORTEX-STRINGS_VER); \
 		./autogen.sh; \
-		CFLAGS="-pipe -O2 $(CXX11_ABI) -g -I$(TARGET_INCLUDE_DIR)" \
-		CPPFLAGS="-pipe -O2 $(CXX11_ABI) -g -I$(TARGET_INCLUDE_DIR)" \
-		CXXFLAGS="-pipe -O2 $(CXX11_ABI) -g -I$(TARGET_INCLUDE_DIR)" \
+		CFLAGS="-pipe -O2 $(TARGET_DEBUGGING) $(CXX11_ABI) -I$(TARGET_INCLUDE_DIR)" \
+		CPPFLAGS="-pipe -O2 $(TARGET_DEBUGGING) $(CXX11_ABI) -I$(TARGET_INCLUDE_DIR)" \
+		CXXFLAGS="-pipe -O2 $(TARGET_DEBUGGING) $(CXX11_ABI) -I$(TARGET_INCLUDE_DIR)" \
 		LDFLAGS="-Wl,-O1 -L$(TARGET_LIB_DIR)" \
 		PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
 		./configure $(CONFIGURE_OPTS) \
