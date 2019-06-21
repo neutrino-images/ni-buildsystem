@@ -226,7 +226,7 @@ $(D)/python: $(ARCHIVE)/Python-$(PYTHON_VER).tgz | $(TARGET_DIR)
 # -----------------------------------------------------------------------------
 
 # workaround unrecognized command line options
-$(D)/astra-sm: TARGET_MARCH_CFLAGS=""
+$(D)/astra-sm: TARGET_ABI=""
 $(D)/astra-sm: $(D)/openssl | $(TARGET_DIR)
 	$(REMOVE)/astra-sm.git
 	get-git-source.sh https://gitlab.com/crazycat69/astra-sm.git $(ARCHIVE)/astra-sm.git
