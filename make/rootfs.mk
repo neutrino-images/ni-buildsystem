@@ -3,7 +3,7 @@
 #
 # -----------------------------------------------------------------------------
 
-target-finish: .version update.urls
+target-finish: .version update.urls symbolic-links
 ifeq ($(BOXTYPE), armbox)
 	make e2-multiboot
 endif
@@ -34,7 +34,7 @@ $(TARGET_DIR)/var/etc/update.urls: | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-e2-multiboot:
+e2-multiboot: | $(TARGET_DIR)
 	mkdir -p $(TARGET_DIR)/usr/bin
 	echo -e "#!/bin/sh\necho Nope!" > $(TARGET_DIR)/usr/bin/enigma2
 	chmod 0755 $(TARGET_DIR)/usr/bin/enigma2
@@ -51,6 +51,43 @@ e2-multiboot:
 
 # -----------------------------------------------------------------------------
 
+# create symbolic links in TARGET_DIR
+symbolic-links: | $(TARGET_DIR)
+	$(CD) $(TARGET_DIR); \
+		ln -sf /var/root root
+ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 bre2ze4k))
+	$(CD) $(TARGET_DIR); \
+		ln -sf /var/root home
+endif
+	$(CD) $(TARGET_DIR)/usr; \
+		ln -sf /share share
+	$(CD) $(TARGET_DIR)/var; \
+		ln -sf /tmp run && \
+		ln -sf /tmp tmp
+	$(CD) $(TARGET_DIR)/etc; \
+		ln -sf /proc/mounts mtab
+	$(CD) $(TARGET_DIR)/etc/init.d; \
+		ln -sf fstab K99fstab; \
+		ln -sf fstab S01fstab; \
+		ln -sf networking K99networking
+ifeq ($(BOXSERIES), hd2)
+	$(CD) $(TARGET_DIR)/etc; \
+		ln -sf /var/etc/exports exports; \
+		ln -sf /var/etc/fstab fstab; \
+		ln -sf /var/etc/hostname hostname; \
+		ln -sf /var/etc/localtime localtime; \
+		ln -sf /var/etc/passwd passwd; \
+		ln -sf /var/etc/resolv.conf resolv.conf; \
+		ln -sf /var/etc/wpa_supplicant.conf wpa_supplicant.conf
+	$(CD) $(TARGET_DIR)/etc/network; \
+		ln -sf /var/etc/network/interfaces interfaces
+endif
+	install -d $(TARGET_DIR)/var/tuxbox/config
+	$(CD) $(TARGET_DIR)/var/tuxbox/config; \
+		ln -sf /var/keys/SoftCam.Key SoftCam.Key
+
+# -----------------------------------------------------------------------------
+
 personalize: | $(TARGET_DIR)
 	$(call local-script,$(notdir $@),start)
 	@LOCAL_ROOT=$(LOCAL_DIR)/root; \
@@ -61,7 +98,7 @@ personalize: | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-rootfs: target-finish $(ROOTFS) rootfs-cleanup rootfs-strip rootfs-softlinks
+rootfs: target-finish $(ROOTFS) rootfs-cleanup rootfs-strip
 
 # -----------------------------------------------------------------------------
 
@@ -115,43 +152,6 @@ endif
 
 # -----------------------------------------------------------------------------
 
-# create softlinks in root filesystem
-rootfs-softlinks: $(ROOTFS)
-	$(CD) $(ROOTFS); \
-		ln -sf /var/root root
-ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 bre2ze4k))
-	$(CD) $(ROOTFS); \
-		ln -sf /var/root home
-endif
-	$(CD) $(ROOTFS)/usr; \
-		ln -sf /share share
-	$(CD) $(ROOTFS)/var; \
-		ln -sf /tmp run && \
-		ln -sf /tmp tmp
-	$(CD) $(ROOTFS)/etc; \
-		ln -sf /proc/mounts mtab
-	$(CD) $(ROOTFS)/etc/init.d; \
-		ln -sf fstab K99fstab; \
-		ln -sf fstab S01fstab; \
-		ln -sf networking K99networking
-ifeq ($(BOXSERIES), hd2)
-	$(CD) $(ROOTFS)/etc; \
-		ln -sf /var/etc/exports exports; \
-		ln -sf /var/etc/fstab fstab; \
-		ln -sf /var/etc/hostname hostname; \
-		ln -sf /var/etc/localtime localtime; \
-		ln -sf /var/etc/passwd passwd; \
-		ln -sf /var/etc/resolv.conf resolv.conf; \
-		ln -sf /var/etc/wpa_supplicant.conf wpa_supplicant.conf
-	$(CD) $(ROOTFS)/etc/network; \
-		ln -sf /var/etc/network/interfaces interfaces
-endif
-	mkdir -p $(ROOTFS)/var/tuxbox/config
-	$(CD) $(ROOTFS)/var/tuxbox/config; \
-		ln -sf /var/keys/SoftCam.Key SoftCam.Key
-
-# -----------------------------------------------------------------------------
-
 get-update-info: get-update-info-$(BOXSERIES)
 
 get-update-info-hd2:
@@ -188,12 +188,12 @@ get-update-info-hd1:
 PHONY += target-finish
 PHONY += .version $(TARGET_DIR)/.version
 PHONY += update.urls $(TARGET_DIR)/var/etc/update.urls
+PHONY += symbolic-links
 PHONY += personalize
 
 PHONY += rootfs
 PHONY += $(ROOTFS)
 PHONY += rootfs-cleanup
 PHONY += rootfs-strip
-PHONY += rootfs-softlinks
 
 PHONY += e2-multiboot

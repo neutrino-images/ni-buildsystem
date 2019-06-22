@@ -5,7 +5,7 @@
 
 host-preqs: $(HOST_DIR)/bin \
 	host-pkg-config \
-	host-pkg-config-softlink \
+	host-pkg-config-link \
 	host-mkfs.jffs2 \
 	host-sumtool \
 	host-mkimage \
@@ -45,7 +45,7 @@ $(HOST_DIR)/bin/pkg-config: $(ARCHIVE)/pkg-config-$(HOST_PKG-CONFIG_VER).tar.gz 
 	install -D -m 0755 $(BUILD_TMP)/pkg-config-$(HOST_PKG-CONFIG_VER)/pkg-config $(HOST_DIR)/bin
 	$(REMOVE)/pkg-config-$(HOST_PKG-CONFIG_VER)
 
-host-pkg-config-softlink: $(HOST_DIR)/bin/$(TARGET)-pkg-config
+host-pkg-config-link: $(HOST_DIR)/bin/$(TARGET)-pkg-config
 $(HOST_DIR)/bin/$(TARGET)-pkg-config: | $(HOST_DIR)/bin
 	ln -sf pkg-config $(HOST_DIR)/bin/$(TARGET)-pkg-config
 
