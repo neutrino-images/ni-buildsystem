@@ -26,7 +26,7 @@ create_symlinks() {
 	OLDPWD=$PWD
 	cd $MOUNTBASE
 	if which blkid > /dev/null; then
-		BLKID=$(blkid /dev/$MDEV)
+		BLKID=$(blkid -c /dev/null /dev/$MDEV)
 		eval ${BLKID#*:}
 	fi
 	if [ -n "$LABEL" ]; then
