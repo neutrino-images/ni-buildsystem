@@ -821,7 +821,7 @@ $(D)/libbdplus: $(ARCHIVE)/libbdplus-$(LIBBDPLUS_VER).tar.bz2 $(D)/libaacs | $(T
 
 # -----------------------------------------------------------------------------
 
-LIBXML2_VER = 2.9.8
+LIBXML2_VER = 2.9.9
 
 $(ARCHIVE)/libxml2-$(LIBXML2_VER).tar.gz:
 	$(WGET) ftp://xmlsoft.org/libxml2/libxml2-$(LIBXML2_VER).tar.gz
