@@ -591,11 +591,11 @@ $(D)/libsoup: $(D)/sqlite $(D)/libxml2 $(D)/glib2 $(ARCHIVE)/$(LIBSOUP_SOURCE)
 
 # -----------------------------------------------------------------------------
 
-SQLITE_VER = 3210000
+SQLITE_VER = 3280000
 SQLITE_SOURCE = sqlite-autoconf-$(SQLITE_VER).tar.gz
 
 $(ARCHIVE)/$(SQLITE_SOURCE):
-	$(WGET) http://www.sqlite.org/2017/$(SQLITE_SOURCE)
+	$(WGET) http://www.sqlite.org/2019/$(SQLITE_SOURCE)
 
 $(D)/sqlite: $(ARCHIVE)/$(SQLITE_SOURCE)
 	$(REMOVE)/sqlite-autoconf-$(SQLITE_VER)
