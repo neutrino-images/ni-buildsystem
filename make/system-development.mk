@@ -1,5 +1,5 @@
 #
-# makefile to build development-tools
+# makefile to build development tools
 #
 # -----------------------------------------------------------------------------
 
