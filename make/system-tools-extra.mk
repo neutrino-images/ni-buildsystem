@@ -240,7 +240,7 @@ $(D)/astra-sm: $(D)/openssl | $(TARGET_DIR)
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--prefix= \
-			--without-lua-compiler \
+			--without-lua \
 			; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REMOVE)/astra-sm.git
