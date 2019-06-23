@@ -130,7 +130,6 @@ include make/crosstool.mk
 include make/development-tools.mk
 include make/ffmpeg-$(BOXTYPE).mk
 include make/helpers.mk
-include make/gstreamer.mk
 include make/image-updates.mk
 include make/images.mk
 include make/linux-kernel.mk
@@ -140,6 +139,7 @@ include make/neutrino-plugins.mk
 include make/prerequisites.mk
 include make/rootfs.mk
 include make/static-libs.mk
+include make/system-gstreamer-unused.mk
 include make/system-libs-extra.mk
 include make/system-libs.mk
 include make/system-lua.mk
