@@ -152,7 +152,7 @@ HELPERS_DIR   = $(BASE_DIR)/helpers
 CROSS_BASE    = $(BASE_DIR)/cross
 CROSS_DIR    ?= $(CROSS_BASE)/$(BOXARCH)/$(BOXSERIES)
 CONFIGS       = $(BASE_DIR)/configs
-PATCHES       = $(BASE_DIR)/archive-patches
+PATCHES       = $(BASE_DIR)/patches
 IMAGEFILES    = $(BASE_DIR)/archive-imagefiles
 SKEL_ROOT     = $(BASE_DIR)/skel-root/$(BOXTYPE)/$(BOXSERIES)
 
