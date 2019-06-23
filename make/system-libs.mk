@@ -227,7 +227,7 @@ $(D)/libpng: $(ARCHIVE)/libpng-$(LIBPNG_VER).tar.xz $(D)/zlib | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-FREETYPE_VER = 2.9.1
+FREETYPE_VER = 2.10.0
 
 $(ARCHIVE)/freetype-$(FREETYPE_VER).tar.bz2:
 	$(WGET) https://sourceforge.net/projects/freetype/files/freetype2/$(FREETYPE_VER)/freetype-$(FREETYPE_VER).tar.bz2
