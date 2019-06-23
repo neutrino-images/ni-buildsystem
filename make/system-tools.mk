@@ -1495,10 +1495,13 @@ GPTFDISK_SOURCE = gptfdisk-$(GPTFDISK_VER).tar.gz
 $(ARCHIVE)/$(GPTFDISK_SOURCE):
 	$(WGET) http://sourceforge.net/projects/gptfdisk/files/gptfdisk/$(GPTFDISK_VER)/$(GPTFDISK_SOURCE)
 
+GPTFDISK_PATCH  = gptfdisk-ldlibs.patch
+
 $(D)/gptfdisk: $(D)/popt $(D)/e2fsprogs $(ARCHIVE)/$(GPTFDISK_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/gptfdisk-$(GPTFDISK_VER)
 	$(UNTAR)/$(GPTFDISK_SOURCE)
 	$(CHDIR)/gptfdisk-$(GPTFDISK_VER); \
+		$(call apply_patches, $(GPTFDISK_PATCH)); \
 		sed -i 's|^CC=.*|CC=$(TARGET)-gcc|' Makefile; \
 		sed -i 's|^CXX=.*|CXX=$(TARGET)-g++|' Makefile; \
 		$(BUILDENV) \
