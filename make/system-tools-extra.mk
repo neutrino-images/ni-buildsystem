@@ -62,13 +62,17 @@ $(D)/binutils: $(ARCHIVE)/binutils-$(BINUTILS_VER).tar.bz2 | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-UTIL-LINUX_MAJOR = 2
-UTIL-LINUX_MINOR = 33
-UTIL-LINUX_MICRO = 2
-UTIL-LINUX_VER = $(UTIL-LINUX_MAJOR).$(UTIL-LINUX_MINOR).$(UTIL-LINUX_MICRO)
+UTIL-LINUX_VER_MAJOR = 2
+UTIL-LINUX_VER_MINOR = 34
+UTIL-LINUX_VER_MICRO = 0
+ifeq ($(UTIL-LINUX_VER_MICRO), 0)
+  UTIL-LINUX_VER = $(UTIL-LINUX_VER_MAJOR).$(UTIL-LINUX_VER_MINOR)
+else
+  UTIL-LINUX_VER = $(UTIL-LINUX_VER_MAJOR).$(UTIL-LINUX_VER_MINOR).$(UTIL-LINUX_VER_MICRO)
+endif
 
 $(ARCHIVE)/util-linux-$(UTIL-LINUX_VER).tar.xz:
-	$(WGET) https://www.kernel.org/pub/linux/utils/util-linux/v$(UTIL-LINUX_MAJOR).$(UTIL-LINUX_MINOR)/util-linux-$(UTIL-LINUX_VER).tar.xz
+	$(WGET) https://www.kernel.org/pub/linux/utils/util-linux/v$(UTIL-LINUX_VER_MAJOR).$(UTIL-LINUX_VER_MINOR)/util-linux-$(UTIL-LINUX_VER).tar.xz
 
 $(D)/util-linux: $(D)/libncurses $(D)/zlib $(ARCHIVE)/util-linux-$(UTIL-LINUX_VER).tar.xz | $(TARGET_DIR)
 	$(REMOVE)/util-linux-$(UTIL-LINUX_VER)
@@ -82,6 +86,7 @@ $(D)/util-linux: $(D)/libncurses $(D)/zlib $(ARCHIVE)/util-linux-$(UTIL-LINUX_VE
 			--localedir=/.remove/locale \
 			--enable-static \
 			--disable-shared \
+			--disable-hardlink \
 			--disable-gtk-doc \
 			\
 			--disable-all-programs \
