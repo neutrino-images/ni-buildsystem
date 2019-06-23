@@ -127,7 +127,6 @@ help:
 include make/bootstrap.mk
 include make/clean.mk
 include make/crosstool.mk
-include make/development-tools.mk
 include make/helpers.mk
 include make/image-updates.mk
 include make/images.mk
@@ -138,6 +137,7 @@ include make/neutrino-plugins.mk
 include make/prerequisites.mk
 include make/rootfs.mk
 include make/static-libs.mk
+include make/system-development.mk
 include make/system-ffmpeg-$(BOXTYPE).mk
 include make/system-gstreamer-unused.mk
 include make/system-libs-extra.mk
