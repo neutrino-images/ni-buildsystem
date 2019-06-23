@@ -1,6 +1,6 @@
 --- a/configure.in
 +++ b/configure.in
-@@ -16,9 +16,11 @@ image_formats="GIF PNG XBM"
+@@ -21,9 +21,11 @@ image_formats="GIF PNG XBM"
  AM_CONFIG_HEADER(config.h)
  
  dnl Checks for programs.

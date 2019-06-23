@@ -145,15 +145,15 @@ $(D)/neutrino-mediathek: $(SHAREPLUGINS) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-LINKS_VER = 2.17
+LINKS_VER = 2.19
 
 $(ARCHIVE)/links-$(LINKS_VER).tar.bz2:
 	$(WGET) http://links.twibright.com/download/links-$(LINKS_VER).tar.bz2
 
-LINKS_PATCH  = links-$(LINKS_VER).patch
-LINKS_PATCH += links-$(LINKS_VER)-ac-prog-cxx.patch
-LINKS_PATCH += links-$(LINKS_VER)-input-$(BOXTYPE).patch
-LINKS_PATCH += links-$(LINKS_VER)-accept_https_play.patch
+LINKS_PATCH  = links.patch
+LINKS_PATCH += links-ac-prog-cxx.patch
+LINKS_PATCH += links-input-$(BOXTYPE).patch
+LINKS_PATCH += links-accept_https_play.patch
 
 $(D)/links: $(D)/libpng $(D)/libjpeg $(D)/openssl $(ARCHIVE)/links-$(LINKS_VER).tar.bz2 $(SHAREPLUGINS) | $(TARGET_DIR)
 	$(REMOVE)/links-$(LINKS_VER)
