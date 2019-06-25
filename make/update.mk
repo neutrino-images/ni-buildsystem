@@ -14,8 +14,7 @@ update-neutrino:
 	export GIT_MERGE_AUTOEDIT=no; \
 	$(CD) $(SOURCE_DIR)/$(NI_NEUTRINO); \
 		git checkout $(NI_NEUTRINO_BRANCH); \
-		git pull origin $(NI_NEUTRINO_BRANCH); \
-		git fetch
+		git pull origin $(NI_NEUTRINO_BRANCH)
 
 update-remotes:
 ifeq ($(NI_ADMIN), true)
@@ -25,8 +24,7 @@ ifeq ($(NI_ADMIN), true)
 		git fetch --all
 	$(CD) $(SOURCE_DIR)/$(NI_LIBSTB-HAL); \
 		git checkout master; \
-		git fetch --all; \
-		git pull $(TANGO_REMOTE_REPO) master
+		git fetch --all
 	$(CD) $(SOURCE_DIR)/$(NI_OFGWRITE); \
 		git checkout master; \
 		git fetch --all; \

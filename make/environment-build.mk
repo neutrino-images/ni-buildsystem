@@ -372,11 +372,3 @@ NI_FFMPEG		= ni-ffmpeg
 NI_FFMPEG_BRANCH	?= ni/ffmpeg/2.8
 #NI_FFMPEG_BRANCH	?= ni/ffmpeg/master
 #NI_FFMPEG_BRANCH	?= ffmpeg/master
-
-TUXBOX_GIT		= $(GITHUB)/tuxbox-neutrino
-TUXBOX_NEUTRINO		= gui-neutrino
-TUXBOX_NEUTRINO_BRANCH	?= master
-TUXBOX_LIBSTB-HAL	= library-stb-hal
-TUXBOX_REMOTE_REPO	= tuxbox
-
-TANGO_REMOTE_REPO	= tango

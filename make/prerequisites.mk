@@ -70,22 +70,30 @@ download:
 $(SOURCE_DIR):
 	mkdir -p $@
 
+$(BUILD-GENERIC-PC):
+	git clone $(NI_GIT)/$(NI_BUILD-GENERIC-PC).git $(BUILD-GENERIC-PC)
+
 $(SOURCE_DIR)/$(NI_NEUTRINO):
 	$(CD) $(SOURCE_DIR); \
 		git clone $(NI_GIT)/$(notdir $@).git
 	$(CD) $@; \
-		git remote add $(TUXBOX_REMOTE_REPO) $(TUXBOX_GIT)/$(TUXBOX_NEUTRINO).git; \
-		git fetch $(TUXBOX_REMOTE_REPO)
-
-$(BUILD-GENERIC-PC):
-	git clone $(NI_GIT)/$(NI_BUILD-GENERIC-PC).git $(BUILD-GENERIC-PC)
+		git remote add tuxbox $(GITHUB)/tuxbox-neutrino/gui-neutrino.git; \
+		git remote add seife  $(GITHUB)/neutrino-mp/neutrino-mp.git; \
+		git remote add ddt    $(GITHUB)/duckbox-developers/neutrino-mp-ddt.git; \
+		git remote add tango  $(GITHUB)/tangocash/neutrino-mp-tangos.git; \
+		git remote add max_10 $(BITBUCKET)/max_10/neutrino-mp-max.git; \
+		git fetch --all
 
 $(SOURCE_DIR)/$(NI_LIBSTB-HAL):
 	$(CD) $(SOURCE_DIR); \
 		git clone $(NI_GIT)/$(notdir $@).git
 	$(CD) $@; \
-		git remote add $(TANGO_REMOTE_REPO) https://github.com/TangoCash/libstb-hal-tangos.git; \
-		git fetch $(TANGO_REMOTE_REPO)
+		git remote add tuxbox $(GITHUB)/tuxbox-neutrino/library-stb-hal.git; \
+		git remote add seife  $(GITHUB)/neutrino-mp/libstb-hal.git; \
+		git remote add ddt    $(GITHUB)/duckbox-developers/libstb-hal-ddt.git; \
+		git remote add tango  $(GITHUB)/tangocash/libstb-hal-tangos.git; \
+		git remote add max_10 $(BITBUCKET)/max_10/libstb-hal-max.git; \
+		git fetch --all
 
 $(SOURCE_DIR)/$(NI_LIBCOOLSTREAM):
 ifeq ($(HAS_LIBCS), yes)
@@ -118,7 +126,7 @@ $(SOURCE_DIR)/$(NI_OFGWRITE):
 	$(CD) $(SOURCE_DIR); \
 		git clone $(NI_GIT)/$(notdir $@).git
 	$(CD) $@ && \
-		git remote add upstream https://github.com/oe-alliance/ofgwrite.git; \
+		git remote add upstream $(GITHUB)/oe-alliance/ofgwrite.git; \
 		git fetch --all
 
 $(SOURCE_DIR)/$(NI_DRIVERS-BIN) \
