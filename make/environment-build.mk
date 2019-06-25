@@ -349,8 +349,8 @@ BITBUCKET		= https://bitbucket.org
 BITBUCKET_SSH		= git@bitbucket.org
 
 NI_GIT			= $(BITBUCKET_SSH):neutrino-images
-NI_NEUTRINO		= ni-neutrino-hd
-NI_NEUTRINO_BRANCH	?= ni/mp/tuxbox
+NI_NEUTRINO		= ni-neutrino
+NI_NEUTRINO_BRANCH	?= master
 NI_NEUTRINO-PLUGINS	= ni-neutrino-plugins
 
 BUILD-GENERIC-PC	= build-generic-pc
