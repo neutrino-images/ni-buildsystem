@@ -7,9 +7,9 @@ FLAGDIR="/var/etc"
 F_MGCAM=".mgcamd"
 F_DOSCAM=".doscam"
 F_OSCAM=".oscam"
-F_CCCAM=".cccam"
 F_OSMOD=".osmod"
 F_NCAM=".ncam"
+F_CCCAM=".cccam"
 F_GBOX=".gbox"
 
 MGCAM_Action()
@@ -209,8 +209,8 @@ GBOX_Action()
 CAMD_Action()
 {
 	case $1 in
-		"gbox")
-			GBOX_Action $ACTION
+		"mgcamd")
+			MGCAM_Action $ACTION
 		;;
 		"doscam")
 			DOSCAM_Action $ACTION
@@ -218,21 +218,21 @@ CAMD_Action()
 		"oscam")
 			OSCAM_Action $ACTION
 		;;
-		"ncam")
-			NCAM_Action $ACTION
-		;;
 		"osmod")
 			OSMOD_Action $ACTION
+		;;
+		"ncam")
+			NCAM_Action $ACTION
 		;;
 		"cccam")
 			CCCAM_Action $ACTION
 		;;
-		"mgcamd")
-			MGCAM_Action $ACTION
+		"gbox")
+			GBOX_Action $ACTION
 		;;
 		*)
-			if [ -e $FLAGDIR/$F_GBOX ]; then
-				GBOX_Action $ACTION
+			if [ -e $FLAGDIR/$F_MGCAM ]; then
+				MGCAM_Action $ACTION
 			fi
 
 			if [ -e $FLAGDIR/$F_DOSCAM ]; then
@@ -255,8 +255,8 @@ CAMD_Action()
 				CCCAM_Action $ACTION
 			fi
 
-			if [ -e $FLAGDIR/$F_MGCAM ]; then
-				MGCAM_Action $ACTION
+			if [ -e $FLAGDIR/$F_GBOX ]; then
+				GBOX_Action $ACTION
 			fi
 		;;
 	esac
