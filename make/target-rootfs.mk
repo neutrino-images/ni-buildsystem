@@ -34,23 +34,6 @@ $(TARGET_DIR)/var/etc/update.urls: | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-e2-multiboot: | $(TARGET_DIR)
-	mkdir -p $(TARGET_DIR)/usr/bin
-	echo -e "#!/bin/sh\necho Nope!" > $(TARGET_DIR)/usr/bin/enigma2
-	chmod 0755 $(TARGET_DIR)/usr/bin/enigma2
-	#
-	echo -e "NI $(IMAGE_VERSION) \\\n \\\l\n" > $(TARGET_DIR)/etc/issue
-	#
-	mkdir -p $(TARGET_SHARE_DIR)
-	touch $(TARGET_SHARE_DIR)/bootlogo.mvi
-	#
-	mkdir -p $(TARGET_DIR)/var/lib/opkg
-	touch $(TARGET_DIR)/var/lib/opkg/status
-	#
-	cp -a $(TARGET_DIR)/.version $(TARGET_DIR)/etc/image-version
-
-# -----------------------------------------------------------------------------
-
 # create symbolic links in TARGET_DIR
 symbolic-links: | $(TARGET_DIR)
 	$(CD) $(TARGET_DIR); \
@@ -85,6 +68,23 @@ endif
 	install -d $(TARGET_DIR)/var/tuxbox/config
 	$(CD) $(TARGET_DIR)/var/tuxbox/config; \
 		ln -sf /var/keys/SoftCam.Key SoftCam.Key
+
+# -----------------------------------------------------------------------------
+
+e2-multiboot: | $(TARGET_DIR)
+	mkdir -p $(TARGET_DIR)/usr/bin
+	echo -e "#!/bin/sh\necho Nope!" > $(TARGET_DIR)/usr/bin/enigma2
+	chmod 0755 $(TARGET_DIR)/usr/bin/enigma2
+	#
+	echo -e "NI $(IMAGE_VERSION) \\\n \\\l\n" > $(TARGET_DIR)/etc/issue
+	#
+	mkdir -p $(TARGET_SHARE_DIR)
+	touch $(TARGET_SHARE_DIR)/bootlogo.mvi
+	#
+	mkdir -p $(TARGET_DIR)/var/lib/opkg
+	touch $(TARGET_DIR)/var/lib/opkg/status
+	#
+	cp -a $(TARGET_DIR)/.version $(TARGET_DIR)/etc/image-version
 
 # -----------------------------------------------------------------------------
 
@@ -189,11 +189,10 @@ PHONY += target-finish
 PHONY += .version $(TARGET_DIR)/.version
 PHONY += update.urls $(TARGET_DIR)/var/etc/update.urls
 PHONY += symbolic-links
+PHONY += e2-multiboot
 PHONY += personalize
 
 PHONY += rootfs
 PHONY += $(ROOTFS)
 PHONY += rootfs-cleanup
 PHONY += rootfs-strip
-
-PHONY += e2-multiboot
