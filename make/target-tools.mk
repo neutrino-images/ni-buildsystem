@@ -1315,12 +1315,12 @@ $(D)/gettext: $(ARCHIVE)/gettext-$(GETTEXT_VERSION).tar.xz | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-MC_VER = 4.8.22
+MC_VER = 4.8.23
 
 $(ARCHIVE)/mc-$(MC_VER).tar.xz:
 	$(WGET) http://ftp.midnight-commander.org/mc-$(MC_VER).tar.xz
 
-$(D)/mc: $(ARCHIVE)/mc-$(MC_VER).tar.xz $(D)/glib2 $(D)/libncurses | $(TARGET_DIR)
+$(D)/mc: $(D)/glib2 $(D)/libncurses $(ARCHIVE)/mc-$(MC_VER).tar.xz | $(TARGET_DIR)
 	$(REMOVE)/mc-$(MC_VER)
 	$(UNTAR)/mc-$(MC_VER).tar.xz
 	$(CHDIR)/mc-$(MC_VER); \
