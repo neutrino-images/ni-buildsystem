@@ -175,61 +175,6 @@ $(D)/lighttpd: $(D)/zlib $(ARCHIVE)/lighttpd-$(LIGHTTPD_VER).tar.gz | $(TARGET_D
 
 # -----------------------------------------------------------------------------
 
-PYTHON_VER = 2.7.11
-
-$(ARCHIVE)/Python-$(PYTHON_VER).tgz:
-	$(WGET) http://www.python.org/ftp/python/$(PYTHON_VER)/Python-$(PYTHON_VER).tgz
-
-$(D)/python: $(ARCHIVE)/Python-$(PYTHON_VER).tgz | $(TARGET_DIR)
-	$(REMOVE)/Python-$(PYTHON_VER)
-	$(UNTAR)/Python-$(PYTHON_VER).tgz
-	$(CHDIR)/Python-$(PYTHON_VER); \
-		echo "ac_cv_file__dev_ptmx=no" > config.site; \
-		echo "ac_cv_file__dev_ptc=no" >> config.site; \
-		export CONFIG_SITE=config.site; \
-		./configure; \
-		make python Parser/pgen; \
-		mv python hostpython; \
-		mv Parser/pgen Parser/hostpgen; \
-		make distclean; \
-		$(PATCH)/Python-xcompile.patch; \
-		CC=$(TARGET)-gcc \
-		CXX=$(TARGET)-g++ \
-		AR=$(TARGET)-ar \
-		RANLIB=$(TARGET)-ranlib \
-		./configure \
-			--build=$(BUILD) \
-			--host=$(TARGET) \
-			--prefix= \
-			--enable-shared \
-			--disable-ipv6 \
-			; \
-		make \
-			HOSTPYTHON=./hostpython \
-			HOSTPGEN=./Parser/hostpgen \
-			BLDSHARED="$(TARGET)-gcc -shared" \
-			CROSS_COMPILE=$(TARGET)- \
-			CROSS_COMPILE_TARGET=yes \
-			HOSTARCH=$(TARGET) \
-			BUILDARCH=$(BUILD) \
-			; \
-		make install \
-			HOSTPYTHON=./hostpython \
-			HOSTPGEN=./Parser/hostpgen \
-			BLDSHARED="$(TARGET)-gcc -shared" \
-			CROSS_COMPILE=$(TARGET)- \
-			CROSS_COMPILE_TARGET=yes \
-			prefix=$(BUILD_TMP)/Python-$(PYTHON_VER)/_install \
-			; \
-		cp -a $(BUILD_TMP)/Python-$(PYTHON_VER)/_install/lib/python* $(TARGET_LIB_DIR)/
-		cp -a $(BUILD_TMP)/Python-$(PYTHON_VER)/_install/lib/libpython* $(TARGET_LIB_DIR)/
-		chmod +w $(TARGET_LIB_DIR)/libpython*
-		install -m 0755 $(BUILD_TMP)/Python-$(PYTHON_VER)/_install/bin/python $(TARGET_DIR)/bin/
-	$(REMOVE)/Python-$(PYTHON_VER)
-	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
 # workaround unrecognized command line options
 $(D)/astra-sm: TARGET_ABI=""
 $(D)/astra-sm: $(D)/openssl | $(TARGET_DIR)
