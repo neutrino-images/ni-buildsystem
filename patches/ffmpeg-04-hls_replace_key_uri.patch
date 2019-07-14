@@ -36,7 +36,7 @@
          }
          ff_data_to_hex(iv, seg->iv, sizeof(seg->iv), 0);
          ff_data_to_hex(key, pls->key, sizeof(pls->key), 0);
-@@ -2315,6 +2327,8 @@
+@@ -2313,6 +2325,8 @@
          OFFSET(http_persistent), AV_OPT_TYPE_BOOL, {.i64 = 1}, 0, 1, FLAGS },
      {"http_multiple", "Use multiple HTTP connections for fetching segments",
          OFFSET(http_multiple), AV_OPT_TYPE_BOOL, {.i64 = -1}, -1, 1, FLAGS},

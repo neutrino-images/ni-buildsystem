@@ -3,24 +3,30 @@
 #
 # -----------------------------------------------------------------------------
 
-FFMPEG_VER = 4.1.1
-FFMPEG_SOURCE = ffmpeg-$(FFMPEG_VER).tar.xz
+FFMPEG_VER    = 4.1.3
+FFMPEG        = ffmpeg-$(FFMPEG_VER)
+FFMPEG_SOURCE = $(FFMPEG).tar.xz
+FFMPEG_URL    = http://www.ffmpeg.org/releases
 
 $(ARCHIVE)/$(FFMPEG_SOURCE):
-	$(DOWNLOAD) http://www.ffmpeg.org/releases/$(FFMPEG_SOURCE)
+	$(DOWNLOAD) $(FFMPEG_URL)/$(FFMPEG_SOURCE)
 
 # -----------------------------------------------------------------------------
 
 FFMPEG_UNPATCHED := no
 
-FFMPEG_PATCH  = ffmpeg-$(FFMPEG_VER)-fix_hls.patch
-FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-increase_buffer_size.patch
-FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-optimize_aac.patch
-FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-fix_edit_list_parsing.patch
-# ffmpeg exteplayer3 patches
-FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-fix_mpegts.patch
-FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-allow_to_choose_rtmp_impl_at_runtime.patch
-FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-hls_replace_key_uri.patch
+FFMPEG_PATCH  = ffmpeg-02-fix_mpegts.patch
+FFMPEG_PATCH += ffmpeg-03-allow_to_choose_rtmp_impl_at_runtime.patch
+FFMPEG_PATCH += ffmpeg-04-hls_replace_key_uri.patch
+FFMPEG_PATCH += ffmpeg-06-optimize_aac.patch
+FFMPEG_PATCH += ffmpeg-07-increase_buffer_size.patch
+FFMPEG_PATCH += ffmpeg-08-recheck_discard_flags.patch
+FFMPEG_PATCH += ffmpeg-09-fix_edit_list_parsing.patch
+FFMPEG_PATCH += ffmpeg-10-remove_avpriv_request_sample.patch
+FFMPEG_PATCH += ffmpeg-A02-corrupt-h264-frames.patch
+FFMPEG_PATCH += ffmpeg-A10-mpeg-quarter-sample.patch
+FFMPEG_PATCH += ffmpeg-A11-FFmpeg-devel-amfenc-Add-support-for-pict_type-field.patch
+FFMPEG_PATCH += ffmpeg-mips64_cpu_detection.patch
 
 # -----------------------------------------------------------------------------
 
@@ -347,13 +353,13 @@ FFMPEG_CONFIGURE_PLATFORM = \
 # -----------------------------------------------------------------------------
 
 $(D)/ffmpeg: $(FFMPEG_DEPS) $(ARCHIVE)/$(FFMPEG_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/ffmpeg-$(FFMPEG_VER)
+	$(REMOVE)/$(FFMPEG)
 	$(UNTAR)/$(FFMPEG_SOURCE)
 ifneq ($(FFMPEG_UNPATCHED), yes)
-	$(CHDIR)/ffmpeg-$(FFMPEG_VER); \
+	$(CHDIR)/$(FFMPEG); \
 		$(call apply_patches, $(FFMPEG_PATCH))
 endif
-	$(CHDIR)/ffmpeg-$(FFMPEG_VER); \
+	$(CHDIR)/$(FFMPEG); \
 		./configure \
 			$(FFMPEG_CONFIGURE_GENERIC) \
 			$(FFMPEG_CONFIGURE_PLATFORM) \
@@ -367,5 +373,5 @@ endif
 	$(REWRITE_PKGCONF)/libavutil.pc
 	$(REWRITE_PKGCONF)/libswresample.pc
 	$(REWRITE_PKGCONF)/libswscale.pc
-	$(REMOVE)/ffmpeg-$(FFMPEG_VER)
+	$(REMOVE)/$(FFMPEG)
 	$(TOUCH)

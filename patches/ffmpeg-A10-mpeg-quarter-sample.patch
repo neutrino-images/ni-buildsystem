@@ -1,0 +1,11 @@
+--- a/libavcodec/mpegvideo.c
++++ b/libavcodec/mpegvideo.c
+@@ -538,6 +538,8 @@
+     s->avctx->width         = s1->avctx->width;
+     s->avctx->height        = s1->avctx->height;
+ 
++    s->quarter_sample       = s1->quarter_sample;
++
+     s->coded_picture_number = s1->coded_picture_number;
+     s->picture_number       = s1->picture_number;
+ 
