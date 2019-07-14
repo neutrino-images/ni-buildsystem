@@ -11,10 +11,6 @@ FFMPEG_URL    = http://www.ffmpeg.org/releases
 $(ARCHIVE)/$(FFMPEG_SOURCE):
 	$(DOWNLOAD) $(FFMPEG_URL)/$(FFMPEG_SOURCE)
 
-# -----------------------------------------------------------------------------
-
-FFMPEG_UNPATCHED := no
-
 FFMPEG_PATCH  = ffmpeg-02-fix_mpegts.patch
 FFMPEG_PATCH += ffmpeg-03-allow_to_choose_rtmp_impl_at_runtime.patch
 FFMPEG_PATCH += ffmpeg-04-hls_replace_key_uri.patch
@@ -27,6 +23,8 @@ FFMPEG_PATCH += ffmpeg-A02-corrupt-h264-frames.patch
 FFMPEG_PATCH += ffmpeg-A10-mpeg-quarter-sample.patch
 FFMPEG_PATCH += ffmpeg-A11-FFmpeg-devel-amfenc-Add-support-for-pict_type-field.patch
 FFMPEG_PATCH += ffmpeg-mips64_cpu_detection.patch
+
+FFMPEG_UNPATCHED := no
 
 # -----------------------------------------------------------------------------
 
