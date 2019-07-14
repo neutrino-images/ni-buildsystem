@@ -7,7 +7,7 @@ FFMPEG_DEPS = $(D)/openssl $(D)/librtmp $(D)/libbluray $(D)/libass
 
 # -----------------------------------------------------------------------------
 
-ifeq ($(NI_FFMPEG_BRANCH), ni/ffmpeg/2.8)
+ifeq ($(NI-FFMPEG_BRANCH), ni/ffmpeg/2.8)
   FFMPEG_DEPS += $(D)/libroxml
   FFMPEG_CONFIGURE_BRANCH =
 else
@@ -173,11 +173,11 @@ endif
 # -----------------------------------------------------------------------------
 
 $(D)/ffmpeg: $(FFMPEG_DEPS) | $(TARGET_DIR)
-	$(REMOVE)/$(NI_FFMPEG)
-	$(CD) $(SOURCE_DIR)/$(NI_FFMPEG); \
-		git checkout $(NI_FFMPEG_BRANCH)
-	tar -C $(SOURCE_DIR) -cp $(NI_FFMPEG) --exclude-vcs | tar -C $(BUILD_TMP) -x
-	$(CHDIR)/$(NI_FFMPEG); \
+	$(REMOVE)/$(NI-FFMPEG)
+	$(CD) $(SOURCE_DIR)/$(NI-FFMPEG); \
+		git checkout $(NI-FFMPEG_BRANCH)
+	tar -C $(SOURCE_DIR) -cp $(NI-FFMPEG) --exclude-vcs | tar -C $(BUILD_TMP) -x
+	$(CHDIR)/$(NI-FFMPEG); \
 		./configure \
 			$(FFMPEG_CONFIGURE_GENERIC) \
 			$(FFMPEG_CONFIGURE_PLATFORM) \
@@ -191,5 +191,5 @@ $(D)/ffmpeg: $(FFMPEG_DEPS) | $(TARGET_DIR)
 	$(REWRITE_PKGCONF)/libavformat.pc
 	$(REWRITE_PKGCONF)/libavutil.pc
 	$(REWRITE_PKGCONF)/libswresample.pc
-	$(REMOVE)/$(NI_FFMPEG)
+	$(REMOVE)/$(NI-FFMPEG)
 	$(TOUCH)

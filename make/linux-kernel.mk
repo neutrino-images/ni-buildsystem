@@ -21,9 +21,9 @@ KERNEL_ZIMAGE_DTB	= $(BUILD_TMP)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/zImage_dtb
 
 KERNEL_DTB = $(EMPTY)
 ifeq ($(BOXSERIES)-$(BOXFAMILY), hd2-apollo)
-  KERNEL_DTB = $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/kernel-dtb/hd849x.dtb
+  KERNEL_DTB = $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/kernel-dtb/hd849x.dtb
 else ifeq ($(BOXSERIES)-$(BOXFAMILY), hd2-kronos)
-  KERNEL_DTB = $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/kernel-dtb/en75x1.dtb
+  KERNEL_DTB = $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/kernel-dtb/en75x1.dtb
 else ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 bre2ze4k))
   KERNEL_DTB = $(BUILD_TMP)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/dts/bcm7445-bcm97445svmb.dtb
 endif
@@ -51,8 +51,8 @@ endif
 
 # -----------------------------------------------------------------------------
 
-kernel.do_checkout: $(SOURCE_DIR)/$(NI_LINUX-KERNEL)
-	$(CD) $(SOURCE_DIR)/$(NI_LINUX-KERNEL); \
+kernel.do_checkout: $(SOURCE_DIR)/$(NI-LINUX-KERNEL)
+	$(CD) $(SOURCE_DIR)/$(NI-LINUX-KERNEL); \
 		git checkout $(KERNEL_BRANCH)
 
 $(D)/kernel.do_prepare:
@@ -61,9 +61,9 @@ $(D)/kernel.do_prepare:
 	$(REMOVE)/$(KERNEL_SRC)
 	$(REMOVE)/$(KERNEL_OBJ)
 	$(REMOVE)/$(KERNEL_MODULES)
-	tar -C $(SOURCE_DIR) -cp $(NI_LINUX-KERNEL) --exclude-vcs | tar -C $(BUILD_TMP) -x
+	tar -C $(SOURCE_DIR) -cp $(NI-LINUX-KERNEL) --exclude-vcs | tar -C $(BUILD_TMP) -x
 	$(CD) $(BUILD_TMP); \
-		mv $(NI_LINUX-KERNEL) $(KERNEL_SRC)
+		mv $(NI-LINUX-KERNEL) $(KERNEL_SRC)
 	$(MKDIR)/$(KERNEL_OBJ)
 	$(MKDIR)/$(KERNEL_MODULES)
 	install -m 644 $(KERNEL_CONFIG) $(BUILD_TMP)/$(KERNEL_OBJ)/.config

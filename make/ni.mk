@@ -99,9 +99,9 @@ endef
 
 changelogs:
 	$(call make-changelog) > $(STAGING_DIR)/changelog-buildsystem
-	$(CD) $(SOURCE_DIR)/$(NI_NEUTRINO); \
+	$(CD) $(SOURCE_DIR)/$(NI-NEUTRINO); \
 		$(call make-changelog) > $(STAGING_DIR)/changelog-neutrino
-	$(CD) $(SOURCE_DIR)/$(NI_LIBSTB-HAL); \
+	$(CD) $(SOURCE_DIR)/$(NI-LIBSTB-HAL); \
 		$(call make-changelog) > $(STAGING_DIR)/changelog-libstb-hal
 
 # -----------------------------------------------------------------------------

@@ -71,11 +71,11 @@ $(SOURCE_DIR):
 	mkdir -p $@
 
 $(BUILD-GENERIC-PC):
-	git clone $(NI_GIT)/$(NI_BUILD-GENERIC-PC).git $(BUILD-GENERIC-PC)
+	git clone $(NI-GIT)/$(NI-BUILD-GENERIC-PC).git $(BUILD-GENERIC-PC)
 
-$(SOURCE_DIR)/$(NI_NEUTRINO):
+$(SOURCE_DIR)/$(NI-NEUTRINO):
 	$(CD) $(SOURCE_DIR); \
-		git clone $(NI_GIT)/$(notdir $@).git
+		git clone $(NI-GIT)/$(notdir $@).git
 	$(CD) $@; \
 		git remote add tuxbox $(GITHUB)/tuxbox-neutrino/gui-neutrino.git; \
 		git remote add seife  $(GITHUB)/neutrino-mp/neutrino-mp.git; \
@@ -84,9 +84,9 @@ $(SOURCE_DIR)/$(NI_NEUTRINO):
 		git remote add max_10 $(BITBUCKET)/max_10/neutrino-mp-max.git; \
 		git fetch --all
 
-$(SOURCE_DIR)/$(NI_LIBSTB-HAL):
+$(SOURCE_DIR)/$(NI-LIBSTB-HAL):
 	$(CD) $(SOURCE_DIR); \
-		git clone $(NI_GIT)/$(notdir $@).git
+		git clone $(NI-GIT)/$(notdir $@).git
 	$(CD) $@; \
 		git remote add tuxbox $(GITHUB)/tuxbox-neutrino/library-stb-hal.git; \
 		git remote add seife  $(GITHUB)/neutrino-mp/libstb-hal.git; \
@@ -95,63 +95,63 @@ $(SOURCE_DIR)/$(NI_LIBSTB-HAL):
 		git remote add max_10 $(BITBUCKET)/max_10/libstb-hal-max.git; \
 		git fetch --all
 
-$(SOURCE_DIR)/$(NI_LIBCOOLSTREAM):
+$(SOURCE_DIR)/$(NI-LIBCOOLSTREAM):
 ifeq ($(HAS_LIBCS), yes)
 	$(CD) $(SOURCE_DIR); \
-		git clone $(NI_GIT)/$(notdir $@).git
+		git clone $(NI-GIT)/$(notdir $@).git
 	$(CD) $@; \
-		git checkout $(NI_LIBCOOLSTREAM_BRANCH)
+		git checkout $(NI-LIBCOOLSTREAM_BRANCH)
 endif
 
 # upstream for rebase
-$(SOURCE_DIR)/$(NI_FFMPEG):
+$(SOURCE_DIR)/$(NI-FFMPEG):
 	$(CD) $(SOURCE_DIR); \
-		git clone $(NI_GIT)/$(notdir $@).git
+		git clone $(NI-GIT)/$(notdir $@).git
 	$(CD) $@; \
 		git remote add upstream https://git.ffmpeg.org/ffmpeg.git; \
 		git fetch --all
 
 # upstream for rebase
 # torvalds for cherry-picking
-$(SOURCE_DIR)/$(NI_LINUX-KERNEL):
+$(SOURCE_DIR)/$(NI-LINUX-KERNEL):
 	$(CD) $(SOURCE_DIR); \
-		git clone $(NI_GIT)/$(notdir $@).git
+		git clone $(NI-GIT)/$(notdir $@).git
 	$(CD) $@; \
 		git remote add upstream https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git; \
 		git remote add torvalds https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git; \
 		git fetch --all
 
 # upstream for rebase
-$(SOURCE_DIR)/$(NI_OFGWRITE):
+$(SOURCE_DIR)/$(NI-OFGWRITE):
 	$(CD) $(SOURCE_DIR); \
-		git clone $(NI_GIT)/$(notdir $@).git
+		git clone $(NI-GIT)/$(notdir $@).git
 	$(CD) $@ && \
 		git remote add upstream $(GITHUB)/oe-alliance/ofgwrite.git; \
 		git fetch --all
 
-$(SOURCE_DIR)/$(NI_DRIVERS-BIN) \
-$(SOURCE_DIR)/$(NI_LOGO-STUFF) \
-$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) \
-$(SOURCE_DIR)/$(NI_OPENTHREADS) \
-$(SOURCE_DIR)/$(NI_RTMPDUMP) \
-$(SOURCE_DIR)/$(NI_STREAMRIPPER):
+$(SOURCE_DIR)/$(NI-DRIVERS-BIN) \
+$(SOURCE_DIR)/$(NI-LOGO-STUFF) \
+$(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS) \
+$(SOURCE_DIR)/$(NI-OPENTHREADS) \
+$(SOURCE_DIR)/$(NI-RTMPDUMP) \
+$(SOURCE_DIR)/$(NI-STREAMRIPPER):
 	$(CD) $(SOURCE_DIR); \
-		git clone $(NI_GIT)/$(notdir $@).git
+		git clone $(NI-GIT)/$(notdir $@).git
 
 ni-sources: $(SOURCE_DIR) \
 	$(BUILD-GENERIC-PC) \
-	$(SOURCE_DIR)/$(NI_DRIVERS-BIN) \
-	$(SOURCE_DIR)/$(NI_FFMPEG) \
-	$(SOURCE_DIR)/$(NI_LIBCOOLSTREAM) \
-	$(SOURCE_DIR)/$(NI_LIBSTB-HAL) \
-	$(SOURCE_DIR)/$(NI_LINUX-KERNEL) \
-	$(SOURCE_DIR)/$(NI_LOGO-STUFF) \
-	$(SOURCE_DIR)/$(NI_NEUTRINO) \
-	$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS) \
-	$(SOURCE_DIR)/$(NI_OFGWRITE) \
-	$(SOURCE_DIR)/$(NI_OPENTHREADS) \
-	$(SOURCE_DIR)/$(NI_RTMPDUMP) \
-	$(SOURCE_DIR)/$(NI_STREAMRIPPER)
+	$(SOURCE_DIR)/$(NI-DRIVERS-BIN) \
+	$(SOURCE_DIR)/$(NI-FFMPEG) \
+	$(SOURCE_DIR)/$(NI-LIBCOOLSTREAM) \
+	$(SOURCE_DIR)/$(NI-LIBSTB-HAL) \
+	$(SOURCE_DIR)/$(NI-LINUX-KERNEL) \
+	$(SOURCE_DIR)/$(NI-LOGO-STUFF) \
+	$(SOURCE_DIR)/$(NI-NEUTRINO) \
+	$(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS) \
+	$(SOURCE_DIR)/$(NI-OFGWRITE) \
+	$(SOURCE_DIR)/$(NI-OPENTHREADS) \
+	$(SOURCE_DIR)/$(NI-RTMPDUMP) \
+	$(SOURCE_DIR)/$(NI-STREAMRIPPER)
 
 # -----------------------------------------------------------------------------
 

@@ -438,10 +438,10 @@ $(D)/libncurses: $(ARCHIVE)/ncurses-$(LIBNCURSES_VER).tar.gz | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-$(D)/openthreads: $(SOURCE_DIR)/$(NI_OPENTHREADS) | $(TARGET_DIR)
-	$(REMOVE)/$(NI_OPENTHREADS)
-	tar -C $(SOURCE_DIR) -cp $(NI_OPENTHREADS) --exclude-vcs | tar -C $(BUILD_TMP) -x
-	$(CHDIR)/$(NI_OPENTHREADS)/; \
+$(D)/openthreads: $(SOURCE_DIR)/$(NI-OPENTHREADS) | $(TARGET_DIR)
+	$(REMOVE)/$(NI-OPENTHREADS)
+	tar -C $(SOURCE_DIR) -cp $(NI-OPENTHREADS) --exclude-vcs | tar -C $(BUILD_TMP) -x
+	$(CHDIR)/$(NI-OPENTHREADS)/; \
 		$(CMAKE) \
 			-DCMAKE_SUPPRESS_DEVELOPER_WARNINGS="1" \
 			-D_OPENTHREADS_ATOMIC_USE_GCC_BUILTINS_EXITCODE="0" \
@@ -449,7 +449,7 @@ $(D)/openthreads: $(SOURCE_DIR)/$(NI_OPENTHREADS) | $(TARGET_DIR)
 		$(MAKE); \
 		make install DESTDIR=$(TARGET_DIR)
 	rm -f $(TARGET_LIB_DIR)/cmake
-	$(REMOVE)/$(NI_OPENTHREADS)
+	$(REMOVE)/$(NI-OPENTHREADS)
 	$(REWRITE_PKGCONF)/openthreads.pc
 	$(TOUCH)
 
@@ -886,17 +886,17 @@ $(D)/pugixml: $(ARCHIVE)/pugixml-$(PUGIXML_VER).tar.gz | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-$(D)/librtmp: $(D)/zlib $(D)/openssl $(SOURCE_DIR)/$(NI_RTMPDUMP) | $(TARGET_DIR)
-	$(REMOVE)/$(NI_RTMPDUMP)
-	tar -C $(SOURCE_DIR) -cp $(NI_RTMPDUMP) --exclude-vcs | tar -C $(BUILD_TMP) -x
-	$(CHDIR)/$(NI_RTMPDUMP); \
+$(D)/librtmp: $(D)/zlib $(D)/openssl $(SOURCE_DIR)/$(NI-RTMPDUMP) | $(TARGET_DIR)
+	$(REMOVE)/$(NI-RTMPDUMP)
+	tar -C $(SOURCE_DIR) -cp $(NI-RTMPDUMP) --exclude-vcs | tar -C $(BUILD_TMP) -x
+	$(CHDIR)/$(NI-RTMPDUMP); \
 		make CROSS_COMPILE=$(TARGET)- XCFLAGS="-I$(TARGET_INCLUDE_DIR) -L$(TARGET_LIB_DIR)" LDFLAGS="-L$(TARGET_LIB_DIR)" prefix=$(TARGET_DIR);\
 		make install DESTDIR=$(TARGET_DIR) prefix="" mandir=/.remove
 	rm -rf $(TARGET_DIR)/sbin/rtmpgw
 	rm -rf $(TARGET_DIR)/sbin/rtmpsrv
 	rm -rf $(TARGET_DIR)/sbin/rtmpsuck
 	$(REWRITE_PKGCONF)/librtmp.pc
-	$(REMOVE)/$(NI_RTMPDUMP)
+	$(REMOVE)/$(NI-RTMPDUMP)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------

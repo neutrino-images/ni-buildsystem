@@ -4,7 +4,7 @@
 # -----------------------------------------------------------------------------
 
 N_INST_DIR ?= $(TARGET_DIR)
-N_OBJ_DIR = $(BUILD_TMP)/$(NI_NEUTRINO)
+N_OBJ_DIR = $(BUILD_TMP)/$(NI-NEUTRINO)
 
 # -----------------------------------------------------------------------------
 
@@ -88,7 +88,7 @@ endif
 N_CONFIGURE_LIBSTB-HAL =
 ifeq ($(USE_LIBSTB-HAL), yes)
   N_CONFIGURE_LIBSTB-HAL += \
-		--with-stb-hal-includes=$(SOURCE_DIR)/$(NI_LIBSTB-HAL)/include \
+		--with-stb-hal-includes=$(SOURCE_DIR)/$(NI-LIBSTB-HAL)/include \
 		--with-stb-hal-build=$(LH_OBJ_DIR)
 endif
 
@@ -134,12 +134,12 @@ N_BUILDENV = \
 
 $(N_OBJ_DIR)/config.status: $(N_DEPS)
 	test -d $(N_OBJ_DIR) || mkdir -p $(N_OBJ_DIR)
-	$(CD) $(SOURCE_DIR)/$(NI_NEUTRINO); \
-		git checkout $(NI_NEUTRINO_BRANCH)
-	$(SOURCE_DIR)/$(NI_NEUTRINO)/autogen.sh
+	$(CD) $(SOURCE_DIR)/$(NI-NEUTRINO); \
+		git checkout $(NI-NEUTRINO_BRANCH)
+	$(SOURCE_DIR)/$(NI-NEUTRINO)/autogen.sh
 	$(CD) $(N_OBJ_DIR); \
 		$(N_BUILDENV) \
-		$(SOURCE_DIR)/$(NI_NEUTRINO)/configure \
+		$(SOURCE_DIR)/$(NI-NEUTRINO)/configure \
 			--host=$(TARGET) \
 			--build=$(BUILD) \
 			--prefix= \
@@ -180,7 +180,7 @@ $(D)/neutrino: $(N_OBJ_DIR)/config.status
 
 # -----------------------------------------------------------------------------
 
-LH_OBJ_DIR = $(BUILD_TMP)/$(NI_LIBSTB-HAL)
+LH_OBJ_DIR = $(BUILD_TMP)/$(NI-LIBSTB-HAL)
 
 # -----------------------------------------------------------------------------
 
@@ -209,10 +209,10 @@ endif
 
 $(LH_OBJ_DIR)/config.status: $(LH_DEPS)
 	test -d $(LH_OBJ_DIR) || mkdir -p $(LH_OBJ_DIR)
-	$(SOURCE_DIR)/$(NI_LIBSTB-HAL)/autogen.sh
+	$(SOURCE_DIR)/$(NI-LIBSTB-HAL)/autogen.sh
 	$(CD) $(LH_OBJ_DIR); \
 		$(N_BUILDENV) \
-		$(SOURCE_DIR)/$(NI_LIBSTB-HAL)/configure \
+		$(SOURCE_DIR)/$(NI-LIBSTB-HAL)/configure \
 			--host=$(TARGET) \
 			--build=$(BUILD) \
 			--prefix= \

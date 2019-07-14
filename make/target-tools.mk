@@ -1103,10 +1103,10 @@ $(D)/xupnpd: $(D)/lua $(D)/openssl | $(TARGET_DIR)
 		cp -a $$object $(TARGET_SHARE_DIR)/xupnpd/; \
 	done;
 	rm $(TARGET_SHARE_DIR)/xupnpd/plugins/staff/xupnpd_18plus.lua
-	install -D -m 0644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/xupnpd/xupnpd_18plus.lua $(TARGET_SHARE_DIR)/xupnpd/plugins/
-	install -D -m 0644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/xupnpd/xupnpd_youtube.lua $(TARGET_SHARE_DIR)/xupnpd/plugins/
-	install -D -m 0644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/xupnpd/xupnpd_coolstream.lua $(TARGET_SHARE_DIR)/xupnpd/plugins/
-	install -D -m 0644 $(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/scripts-lua/xupnpd/xupnpd_cczwei.lua $(TARGET_SHARE_DIR)/xupnpd/plugins/
+	install -D -m 0644 $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-lua/xupnpd/xupnpd_18plus.lua $(TARGET_SHARE_DIR)/xupnpd/plugins/
+	install -D -m 0644 $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-lua/xupnpd/xupnpd_youtube.lua $(TARGET_SHARE_DIR)/xupnpd/plugins/
+	install -D -m 0644 $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-lua/xupnpd/xupnpd_coolstream.lua $(TARGET_SHARE_DIR)/xupnpd/plugins/
+	install -D -m 0644 $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-lua/xupnpd/xupnpd_cczwei.lua $(TARGET_SHARE_DIR)/xupnpd/plugins/
 	mkdir -p $(TARGET_DIR)/etc/init.d/
 		install -D -m 0755 $(IMAGEFILES)/scripts/xupnpd.init $(TARGET_DIR)/etc/init.d/xupnpd
 		ln -sf xupnpd $(TARGET_DIR)/etc/init.d/S99xupnpd
@@ -1279,9 +1279,9 @@ $(D)/exfat-utils: $(ARCHIVE)/exfat-utils-$(EXFAT-UTILS_VER).tar.gz $(D)/fuse-exf
 # -----------------------------------------------------------------------------
 
 $(D)/streamripper: $(D)/libvorbisidec $(D)/libmad $(D)/glib2 | $(TARGET_DIR)
-	$(REMOVE)/$(NI_STREAMRIPPER)
-	tar -C $(SOURCE_DIR) -cp $(NI_STREAMRIPPER) --exclude-vcs | tar -C $(BUILD_TMP) -x
-	$(CHDIR)/$(NI_STREAMRIPPER); \
+	$(REMOVE)/$(NI-STREAMRIPPER)
+	tar -C $(SOURCE_DIR) -cp $(NI-STREAMRIPPER) --exclude-vcs | tar -C $(BUILD_TMP) -x
+	$(CHDIR)/$(NI-STREAMRIPPER); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--prefix= \
@@ -1293,7 +1293,7 @@ $(D)/streamripper: $(D)/libvorbisidec $(D)/libmad $(D)/glib2 | $(TARGET_DIR)
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	install -m 0755 $(IMAGEFILES)/scripts/streamripper.sh $(TARGET_DIR)/bin/
-	$(REMOVE)/$(NI_STREAMRIPPER)
+	$(REMOVE)/$(NI-STREAMRIPPER)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -1431,16 +1431,16 @@ $(D)/iconv: $(ARCHIVE)/libiconv-$(LIBICONV_VER).tar.gz | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-$(D)/ofgwrite: $(SOURCE_DIR)/$(NI_OFGWRITE) | $(TARGET_DIR)
-	$(REMOVE)/$(NI_OFGWRITE)
-	tar -C $(SOURCE_DIR) -cp $(NI_OFGWRITE) --exclude-vcs | tar -C $(BUILD_TMP) -x
-	$(CHDIR)/$(NI_OFGWRITE); \
+$(D)/ofgwrite: $(SOURCE_DIR)/$(NI-OFGWRITE) | $(TARGET_DIR)
+	$(REMOVE)/$(NI-OFGWRITE)
+	tar -C $(SOURCE_DIR) -cp $(NI-OFGWRITE) --exclude-vcs | tar -C $(BUILD_TMP) -x
+	$(CHDIR)/$(NI-OFGWRITE); \
 		$(BUILDENV) \
 		$(MAKE)
-	install -m 0755 $(BUILD_TMP)/$(NI_OFGWRITE)/ofgwrite_bin $(TARGET_DIR)/bin
-	install -m 0755 $(BUILD_TMP)/$(NI_OFGWRITE)/ofgwrite_caller $(TARGET_DIR)/bin
-	install -m 0755 $(BUILD_TMP)/$(NI_OFGWRITE)/ofgwrite $(TARGET_DIR)/bin
-	$(REMOVE)/$(NI_OFGWRITE)
+	install -m 0755 $(BUILD_TMP)/$(NI-OFGWRITE)/ofgwrite_bin $(TARGET_DIR)/bin
+	install -m 0755 $(BUILD_TMP)/$(NI-OFGWRITE)/ofgwrite_caller $(TARGET_DIR)/bin
+	install -m 0755 $(BUILD_TMP)/$(NI-OFGWRITE)/ofgwrite $(TARGET_DIR)/bin
+	$(REMOVE)/$(NI-OFGWRITE)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------

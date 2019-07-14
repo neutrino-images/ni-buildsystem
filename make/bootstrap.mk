@@ -84,14 +84,14 @@ $(TARGET_BIN_DIR): | $(TARGET_DIR)
 $(TARGET_INCLUDE_DIR): | $(TARGET_DIR)
 	mkdir -p $@
 ifeq ($(BOXTYPE), armbox)
-	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/include/. $@
+	cp -a $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/include/. $@
 endif
 
 $(TARGET_LIB_DIR): | $(TARGET_DIR)
 	mkdir -p $@
-	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/lib/. $@
+	cp -a $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/lib/. $@
 ifeq ($(BOXTYPE), coolstream)
-	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/libcoolstream/$(shell echo -n $(NI_FFMPEG_BRANCH) | sed 's,/,-,g')/. $@
+	cp -a $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/libcoolstream/$(shell echo -n $(NI-FFMPEG_BRANCH) | sed 's,/,-,g')/. $@
   ifeq ($(BOXSERIES), hd1)
 	ln -sf libnxp.so $@/libconexant.so
   endif
@@ -99,13 +99,13 @@ endif
 
 $(TARGET_LIB_DIR)/firmware: | $(TARGET_DIR)
 	mkdir -p $@
-	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/lib-firmware/. $@
-	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/lib-firmware-dvb/. $@
-	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/lib-firmware-rt/. $@
+	cp -a $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/lib-firmware/. $@
+	cp -a $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/lib-firmware-dvb/. $@
+	cp -a $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/lib-firmware-rt/. $@
 
 $(TARGET_LIB_DIR)/modules: | $(TARGET_DIR)
 	mkdir -p $@
-	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/lib-modules/$(KERNEL_VERSION) $@
+	cp -a $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/lib-modules/$(KERNEL_VERSION) $@
 ifeq ($(BOXMODEL), nevis)
 	ln -sf $(KERNEL_VERSION) $@/$(KERNEL_VERSION)-$(BOXMODEL)
 endif
@@ -119,11 +119,11 @@ $(STATIC_LIB_DIR): | $(TARGET_DIR)
 $(TARGET_DIR)/var/update: | $(TARGET_DIR)
 	mkdir -p $@
 ifeq ($(BOXTYPE), coolstream)
-	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/uldr.bin $@
+	cp -a $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/uldr.bin $@
   ifeq ($(BOXMODEL), kronos_v2)
-	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/u-boot.bin.kronos_v2 $@/u-boot.bin
+	cp -a $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/u-boot.bin.kronos_v2 $@/u-boot.bin
   else
-	cp -a $(SOURCE_DIR)/$(NI_DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/u-boot.bin $@
+	cp -a $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/u-boot.bin $@
   endif
 endif
 

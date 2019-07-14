@@ -49,7 +49,7 @@ kernel-tarball: $(BUILD_TMP)/linux-$(KERNEL_VERSION).tar
 # create kernel-tarball
 $(BUILD_TMP)/linux-$(KERNEL_VERSION).tar: | $(BUILD_TMP)
 	make kernel.do_checkout
-	tar cf $@ --exclude-vcs -C $(SOURCE_DIR)/$(NI_LINUX-KERNEL) .
+	tar cf $@ --exclude-vcs -C $(SOURCE_DIR)/$(NI-LINUX-KERNEL) .
 
 # -----------------------------------------------------------------------------
 

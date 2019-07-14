@@ -23,7 +23,7 @@ endif
 
 # -----------------------------------------------------------------------------
 
-NP_OBJ_DIR = $(BUILD_TMP)/$(NI_NEUTRINO-PLUGINS)
+NP_OBJ_DIR = $(BUILD_TMP)/$(NI-NEUTRINO-PLUGINS)
 
 NP_DEPS  = $(D)/ffmpeg
 NP_DEPS += $(D)/libcurl
@@ -52,17 +52,17 @@ endif
 
 $(NP_OBJ_DIR)/config.status: $(NP_DEPS)
 	test -d $(NP_OBJ_DIR) || mkdir -p $(NP_OBJ_DIR)
-	$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/autogen.sh
+	$(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/autogen.sh
 	$(CD) $(NP_OBJ_DIR); \
 		$(BUILDENV) \
-		$(SOURCE_DIR)/$(NI_NEUTRINO-PLUGINS)/configure \
+		$(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/configure \
 			--host=$(TARGET) \
 			--build=$(BUILD) \
 			--prefix= \
 			--enable-maintainer-mode \
 			--enable-silent-rules \
 			\
-			--with-neutrino-source=$(SOURCE_DIR)/$(NI_NEUTRINO) \
+			--with-neutrino-source=$(SOURCE_DIR)/$(NI-NEUTRINO) \
 			--with-neutrino-build=$(N_OBJ_DIR) \
 			\
 			$(NP_CONFIGURE_ADDITIONS) \
@@ -106,22 +106,22 @@ neutrino-plugin-%: $(NP_OBJ_DIR)/config.status
 
 # -----------------------------------------------------------------------------
 
-$(D)/channellogos: $(SOURCE_DIR)/$(NI_LOGO-STUFF) $(SHAREICONS)
+$(D)/channellogos: $(SOURCE_DIR)/$(NI-LOGO-STUFF) $(SHAREICONS)
 	rm -rf $(SHAREICONS)/logo
 	mkdir -p $(SHAREICONS)/logo
-	install -m 0644 $(SOURCE_DIR)/$(NI_LOGO-STUFF)/logos/* $(SHAREICONS)/logo
+	install -m 0644 $(SOURCE_DIR)/$(NI-LOGO-STUFF)/logos/* $(SHAREICONS)/logo
 	mkdir -p $(SHAREICONS)/logo/events
-	install -m 0644 $(SOURCE_DIR)/$(NI_LOGO-STUFF)/logos-events/* $(SHAREICONS)/logo/events
-	$(CD) $(SOURCE_DIR)/$(NI_LOGO-STUFF)/logo-links; \
+	install -m 0644 $(SOURCE_DIR)/$(NI-LOGO-STUFF)/logos-events/* $(SHAREICONS)/logo/events
+	$(CD) $(SOURCE_DIR)/$(NI-LOGO-STUFF)/logo-links; \
 		./logo-linker.sh logo-links.db $(SHAREICONS)/logo
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
-$(D)/logo-addon: $(SOURCE_DIR)/$(NI_LOGO-STUFF) $(SHAREPLUGINS)
-	install -m 0755 $(SOURCE_DIR)/$(NI_LOGO-STUFF)/logo-addon/*.sh $(SHAREPLUGINS)/
-	install -m 0644 $(SOURCE_DIR)/$(NI_LOGO-STUFF)/logo-addon/*.cfg $(SHAREPLUGINS)/
-	install -m 0644 $(SOURCE_DIR)/$(NI_LOGO-STUFF)/logo-addon/*.png $(SHAREPLUGINS)/
+$(D)/logo-addon: $(SOURCE_DIR)/$(NI-LOGO-STUFF) $(SHAREPLUGINS)
+	install -m 0755 $(SOURCE_DIR)/$(NI-LOGO-STUFF)/logo-addon/*.sh $(SHAREPLUGINS)/
+	install -m 0644 $(SOURCE_DIR)/$(NI-LOGO-STUFF)/logo-addon/*.cfg $(SHAREPLUGINS)/
+	install -m 0644 $(SOURCE_DIR)/$(NI-LOGO-STUFF)/logo-addon/*.png $(SHAREPLUGINS)/
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------

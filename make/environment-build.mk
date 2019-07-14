@@ -348,27 +348,27 @@ GITHUB			= https://github.com
 BITBUCKET		= https://bitbucket.org
 BITBUCKET_SSH		= git@bitbucket.org
 
-NI_GIT			= $(BITBUCKET_SSH):neutrino-images
-NI_NEUTRINO		= ni-neutrino
-NI_NEUTRINO_BRANCH	?= master
-NI_NEUTRINO-PLUGINS	= ni-neutrino-plugins
+NI-GIT			= $(BITBUCKET_SSH):neutrino-images
+NI-NEUTRINO		= ni-neutrino
+NI-NEUTRINO_BRANCH	?= master
+NI-NEUTRINO-PLUGINS	= ni-neutrino-plugins
 
 BUILD-GENERIC-PC	= build-generic-pc
-NI_BUILD-GENERIC-PC	= ni-build-generic-pc
-NI_DRIVERS-BIN		= ni-drivers-bin
-NI_LIBSTB-HAL		= ni-libstb-hal
-NI_LINUX-KERNEL		= ni-linux-kernel
-NI_LOGO-STUFF		= ni-logo-stuff
-NI_OFGWRITE		= ni-ofgwrite
-NI_OPENTHREADS		= ni-openthreads
-NI_RTMPDUMP		= ni-rtmpdump
-NI_STREAMRIPPER		= ni-streamripper
+NI-BUILD-GENERIC-PC	= ni-build-generic-pc
+NI-DRIVERS-BIN		= ni-drivers-bin
+NI-LIBSTB-HAL		= ni-libstb-hal
+NI-LINUX-KERNEL		= ni-linux-kernel
+NI-LOGO-STUFF		= ni-logo-stuff
+NI-OFGWRITE		= ni-ofgwrite
+NI-OPENTHREADS		= ni-openthreads
+NI-RTMPDUMP		= ni-rtmpdump
+NI-STREAMRIPPER		= ni-streamripper
 
-# Note: NI_FFMPEG-variables are only used for Coolstream-builds
+# Note: NI-FFMPEG-variables are only used for Coolstream-builds
 #
 # ffmpeg/master is currently not mature enough for daily use
 # if you want to help testing you can enable it here
-NI_FFMPEG		= ni-ffmpeg
-NI_FFMPEG_BRANCH	?= ni/ffmpeg/2.8
-#NI_FFMPEG_BRANCH	?= ni/ffmpeg/master
-#NI_FFMPEG_BRANCH	?= ffmpeg/master
+NI-FFMPEG		= ni-ffmpeg
+NI-FFMPEG_BRANCH	?= ni/ffmpeg/2.8
+#NI-FFMPEG_BRANCH	?= ni/ffmpeg/master
+#NI-FFMPEG_BRANCH	?= ffmpeg/master
