@@ -525,15 +525,23 @@ $(D)/vsftpd: $(D)/openssl $(ARCHIVE)/vsftpd-$(VSFTPD_VER).tar.gz | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-PROCPS-NG_VER = 3.3.15
+PROCPS-NG_VER    = 3.3.15
+PROCPS-NG        = procps-ng-$(PROCPS-NG_VER)
+PROCPS-NG_SOURCE = procps-ng-$(PROCPS-NG_VER).tar.xz
+PROCPS-NG_URL    = http://sourceforge.net/projects/procps-ng/files/Production
 
-$(ARCHIVE)/procps-ng-$(PROCPS-NG_VER).tar.xz:
-	$(DOWNLOAD) http://sourceforge.net/projects/procps-ng/files/Production/procps-ng-$(PROCPS-NG_VER).tar.xz
+$(ARCHIVE)/$(PROCPS-NG_SOURCE):
+	$(DOWNLOAD) $(PROCPS-NG_URL)/$(PROCPS-NG_SOURCE)
 
-$(D)/procps-ng: $(D)/libncurses $(ARCHIVE)/procps-ng-$(PROCPS-NG_VER).tar.xz | $(TARGET_DIR)
-	$(REMOVE)/procps-ng-$(PROCPS-NG_VER)
-	$(UNTAR)/procps-ng-$(PROCPS-NG_VER).tar.xz
-	$(CHDIR)/procps-ng-$(PROCPS-NG_VER); \
+PROCPS-NG_PATCH  = procps_0001-Fix-out-of-tree-builds.patch
+PROCPS-NG_PATCH += procps-ng-no-tests-docs.patch
+
+PROCPS-NG_BIN = ps top
+
+$(D)/procps-ng: $(D)/libncurses $(ARCHIVE)/$(PROCPS-NG_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(PROCPS-NG)
+	$(UNTAR)/$(PROCPS-NG_SOURCE)
+	$(CHDIR)/$(PROCPS-NG); \
 		export ac_cv_func_malloc_0_nonnull=yes; \
 		export ac_cv_func_realloc_0_nonnull=yes; \
 		$(CONFIGURE) \
@@ -547,13 +555,13 @@ $(D)/procps-ng: $(D)/libncurses $(ARCHIVE)/procps-ng-$(PROCPS-NG_VER).tar.xz | $
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	for bin in ps top; do \
+	for bin in $(PROCPS-NG_BIN); do \
 		rm -f $(TARGET_DIR)/bin/$$bin; \
 		install -m 0755 $(TARGET_DIR)/bin.procps/$$bin $(TARGET_DIR)/bin/$$bin; \
 	done
 	$(REWRITE_PKGCONF)/libprocps.pc
 	$(REWRITE_LIBTOOL)/libprocps.la
-	$(REMOVE)/procps-ng-$(PROCPS-NG_VER) \
+	$(REMOVE)/$(PROCPS-NG) \
 		$(TARGET_DIR)/bin.procps \
 		$(TARGET_DIR)/sbin.procps
 	$(TOUCH)
