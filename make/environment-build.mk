@@ -171,7 +171,7 @@ ifeq ($(BOXSERIES), hd1)
   KERNEL_VERSION         = 2.6.34.13
 
   DRIVERS_DIR            = nevis
-  -LCORTEX-STRINGS       =
+  CORTEX-STRINGS_LDFLAG  =
   TARGET                 = arm-cx2450x-linux-gnueabi
   TARGET_OPTIMIZATION    = -Os
   TARGET_DEBUGGING       = -g
@@ -190,7 +190,7 @@ else ifeq ($(BOXSERIES), hd2)
   ifeq ($(BOXFAMILY), kronos)
     DRIVERS_DIR          = kronos
   endif
-  -LCORTEX-STRINGS       = -lcortex-strings
+  CORTEX-STRINGS_LDFLAG  = -lcortex-strings
   TARGET                 = arm-cortex-linux-uclibcgnueabi
   TARGET_OPTIMIZATION    = -O2
   TARGET_DEBUGGING       = -g
@@ -209,7 +209,7 @@ else ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 bre2ze4k))
   KERNEL_VERSION         = 4.10.12
 
   DRIVERS_DIR            = $(BOXSERIES)
-  -LCORTEX-STRINGS       = -lcortex-strings
+  CORTEX-STRINGS_LDFLAG  = -lcortex-strings
   TARGET                 = arm-cortex-linux-gnueabihf
   TARGET_OPTIMIZATION    = -O2
   TARGET_DEBUGGING       = -g
@@ -230,7 +230,7 @@ TARGET_SHARE_DIR = $(TARGET_DIR)/share
 TARGET_CFLAGS   = -pipe $(TARGET_OPTIMIZATION) $(TARGET_DEBUGGING) $(TARGET_ABI) $(TARGET_EXTRA_CFLAGS) $(CXX11_ABI) -I$(TARGET_INCLUDE_DIR)
 TARGET_CPPFLAGS = $(TARGET_CFLAGS)
 TARGET_CXXFLAGS = $(TARGET_CFLAGS)
-TARGET_LDFLAGS  = $(-LCORTEX-STRINGS) -Wl,-O1 -Wl,-rpath,$(TARGET_LIB_DIR) -Wl,-rpath-link,$(TARGET_LIB_DIR) -L$(TARGET_LIB_DIR) $(TARGET_EXTRA_LDFLAGS)
+TARGET_LDFLAGS  = $(CORTEX-STRINGS_LDFLAG) -Wl,-O1 -Wl,-rpath,$(TARGET_LIB_DIR) -Wl,-rpath-link,$(TARGET_LIB_DIR) -L$(TARGET_LIB_DIR) $(TARGET_EXTRA_LDFLAGS)
 
 VPATH = $(D)
 

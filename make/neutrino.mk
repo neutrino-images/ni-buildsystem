@@ -65,7 +65,7 @@ endif
 
 # -----------------------------------------------------------------------------
 
-N_LDFLAGS = -lcrypto -ldl -lz $(-LCORTEX-STRINGS) -L$(TARGET_LIB_DIR)
+N_LDFLAGS = -lcrypto -ldl -lz $(CORTEX-STRINGS_LDFLAG) -L$(TARGET_LIB_DIR)
 ifeq ($(DEBUG), yes)
   N_LDFLAGS += -Wl,-rpath-link,$(TARGET_LIB_DIR)
 else
