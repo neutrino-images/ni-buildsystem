@@ -5,7 +5,7 @@
 
 FFMPEG_VER    = 4.1.3
 FFMPEG        = ffmpeg-$(FFMPEG_VER)
-FFMPEG_SOURCE = $(FFMPEG).tar.xz
+FFMPEG_SOURCE = ffmpeg-$(FFMPEG_VER).tar.xz
 FFMPEG_URL    = http://www.ffmpeg.org/releases
 
 $(ARCHIVE)/$(FFMPEG_SOURCE):

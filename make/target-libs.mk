@@ -602,15 +602,22 @@ $(D)/libsigc++: $(ARCHIVE)/libsigc++-$(LIBSIGCPP_VER).tar.xz | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-EXPAT_VER = 2.2.6
+EXPAT_VER    = 2.2.7
+EXPAT        = expat-$(EXPAT_VER)
+EXPAT_SOURCE = expat-$(EXPAT_VER).tar.bz2
+EXPAT_URL    = https://sourceforge.net/projects/expat/files/expat/$(EXPAT_VER)
 
-$(ARCHIVE)/expat-$(EXPAT_VER).tar.bz2:
-	$(DOWNLOAD) http://sourceforge.net/projects/expat/files/expat/$(EXPAT_VER)/expat-$(EXPAT_VER).tar.bz2
+$(ARCHIVE)/$(EXPAT_SOURCE):
+	$(DOWNLOAD) $(EXPAT_URL)/$(EXPAT_SOURCE)
 
-$(D)/expat: $(ARCHIVE)/expat-$(EXPAT_VER).tar.bz2 | $(TARGET_DIR)
-	$(REMOVE)/expat-$(EXPAT_VER)
-	$(UNTAR)/expat-$(EXPAT_VER).tar.bz2
-	$(CHDIR)/expat-$(EXPAT_VER); \
+EXPAT_PATCH  = expat-libtool-tag.patch
+
+$(D)/expat: $(ARCHIVE)/$(EXPAT_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(EXPAT)
+	$(UNTAR)/$(EXPAT_SOURCE)
+	$(CHDIR)/$(EXPAT); \
+		$(call apply_patches, $(EXPAT_PATCH)); \
+		autoreconf -fi; \
 		$(CONFIGURE) \
 			--prefix= \
 			--docdir=/.remove \
@@ -623,7 +630,7 @@ $(D)/expat: $(ARCHIVE)/expat-$(EXPAT_VER).tar.bz2 | $(TARGET_DIR)
 		make install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF)/expat.pc
 	$(REWRITE_LIBTOOL)/libexpat.la
-	$(REMOVE)/expat-$(EXPAT_VER)
+	$(REMOVE)/$(EXPAT)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
