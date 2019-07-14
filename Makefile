@@ -135,17 +135,17 @@ include make/linux-drivers.mk
 include make/neutrino.mk
 include make/neutrino-plugins.mk
 include make/prerequisites.mk
-include make/static-libs.mk
 include make/target-development.mk
 include make/target-ffmpeg-$(BOXTYPE).mk
 include make/target-gstreamer-unused.mk
-include make/target-libs-unused.mk
 include make/target-libs.mk
+include make/target-libs-static.mk
+include make/target-libs-unused.mk
 include make/target-lua.mk
 include make/target-rootfs.mk
 include make/target-scripts.mk
-include make/target-tools-unused.mk
 include make/target-tools.mk
+include make/target-tools-unused.mk
 include make/host-tools.mk
 include make/update.mk
 
