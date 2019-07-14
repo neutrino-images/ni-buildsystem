@@ -16,7 +16,7 @@ diff --git a/src/security.c b/src/security.c
 index 0c9453f..abc81bb 100644
 --- a/src/security.c
 +++ b/src/security.c
-@@ -24,9 +24,6 @@
+@@ -26,9 +26,6 @@
  #include <rpcsvc/mount.h>
  #include <rpcsvc/rquota.h>
  #include <rpcsvc/nfs_prot.h>
@@ -26,7 +26,7 @@ index 0c9453f..abc81bb 100644
  #else
  # define MOUNTPROC_MNT	1
  # define MOUNTPROC_UMNT	3
-@@ -325,24 +322,9 @@ check_callit(SVCXPRT *xprt, struct r_rmtcall_args *args, int versnum /*__unused*
+@@ -327,24 +324,9 @@ check_callit(SVCXPRT *xprt, struct r_rmtcall_args *args, int versnum /*__unused*
  		    args->rmt_proc != MOUNTPROC_UMNT)
  			break;
  		goto deny;

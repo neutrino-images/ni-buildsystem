@@ -1325,3 +1325,28 @@ $(D)/alsa-lib: $(ARCHIVE)/$(ALSA-LIB_SOURCE)
 	$(REWRITE_LIBTOOL)/libasound.la
 	$(REMOVE)/$(ALSA-LIB)
 	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
+POPT_VER    = 1.16
+POPT        = popt-$(POPT_VER)
+POPT_SOURCE = popt-$(POPT_VER).tar.gz
+POPT_URL    = ftp://anduin.linuxfromscratch.org/BLFS/popt
+
+$(ARCHIVE)/$(POPT_SOURCE):
+	$(DOWNLOAD) $(POPT_URL)/$(POPT_SOURCE)
+
+$(D)/popt: $(ARCHIVE)/$(POPT_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(POPT)
+	$(UNTAR)/$(POPT_SOURCE)
+	$(CHDIR)/$(POPT); \
+		$(CONFIGURE) \
+			--prefix= \
+			--datarootdir=/.remove/share \
+			; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(REWRITE_PKGCONF)/popt.pc
+	$(REWRITE_LIBTOOL)/libpopt.la
+	$(REMOVE)/$(POPT)
+	$(TOUCH)

@@ -91,10 +91,10 @@ $(D)/lua-feedparser: $(D)/luaexpat $(ARCHIVE)/$(LUA-FEEDPARSER_SOURCE) | $(TARGE
 # -----------------------------------------------------------------------------
 
 LUAJSON_SOURCE = JSON.lua
-LUAJSON_URL    = http://regex.info/code/$(LUAJSON_SOURCE)
+LUAJSON_URL    = http://regex.info/code
 
 $(ARCHIVE)/$(LUAJSON_SOURCE):
-	$(DOWNLOAD) $(LUAJSON_URL)
+	$(DOWNLOAD) $(LUAJSON_URL)/$(LUAJSON_SOURCE)
 
 $(D)/luajson: $(ARCHIVE)/$(LUAJSON_SOURCE) | $(TARGET_DIR)
 	$(CD) $(ARCHIVE); \

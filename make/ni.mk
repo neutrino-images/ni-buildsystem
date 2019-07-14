@@ -27,7 +27,7 @@ ni-image:
 	make fbshot
 	$(MAKE) lcd4linux
 	$(MAKE) luacurl
-	$(MAKE) timezone
+	$(MAKE) tzdata
 	$(MAKE) smartmontools
 	$(MAKE) sg3_utils
 	$(MAKE) nfs-utils
@@ -76,7 +76,7 @@ ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd51 bre2ze4k))
 	$(MAKE) gdb
   endif
 endif
-	make autofs5
+	make autofs
 	make scripts
 	make init-scripts
 ifeq ($(PERSONALIZE), yes)
