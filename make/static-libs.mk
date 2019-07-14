@@ -12,10 +12,13 @@ static-libs: $(STATIC_LIBS)
 
 # -----------------------------------------------------------------------------
 
-CORTEX-STRINGS_VER = 48fd30c346ff2ab14ca574b770b5c1bcbefadba8
+CORTEX-STRINGS_VER    = 48fd30c
+CORTEX-STRINGS        = cortex-strings-$(CORTEX-STRINGS_VER)
+CORTEX-STRINGS_SOURCE = cortex-strings-$(CORTEX-STRINGS_VER).tar.bz2
+CORTEX-STRINGS_URL    = http://git.linaro.org/git-ro/toolchain/cortex-strings.git
 
-$(ARCHIVE)/cortex-strings-$(CORTEX-STRINGS_VER).tar.bz2:
-	get-git-archive.sh http://git.linaro.org/git-ro/toolchain/cortex-strings.git $(CORTEX-STRINGS_VER) $(notdir $@) $(ARCHIVE)
+$(ARCHIVE)/$(CORTEX-STRINGS_SOURCE):
+	get-git-archive.sh $(CORTEX-STRINGS_URL) $(CORTEX-STRINGS_VER) $(notdir $@) $(ARCHIVE)
 
 CORTEX-STRINGS_CONF =
 ifneq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 bre2ze4k))
@@ -23,10 +26,10 @@ ifneq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 bre2ze4k))
 endif
 
 cortex-strings: $(STATIC_LIB_DIR)/libcortex-strings.la
-$(STATIC_LIB_DIR)/libcortex-strings.la: $(ARCHIVE)/cortex-strings-$(CORTEX-STRINGS_VER).tar.bz2 | $(TARGET_DIR)
-	$(REMOVE)/cortex-strings-$(CORTEX-STRINGS_VER)
-	$(UNTAR)/cortex-strings-$(CORTEX-STRINGS_VER).tar.bz2
-	$(CHDIR)/cortex-strings-$(CORTEX-STRINGS_VER); \
+$(STATIC_LIB_DIR)/libcortex-strings.la: $(ARCHIVE)/$(CORTEX-STRINGS_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(CORTEX-STRINGS)
+	$(UNTAR)/$(CORTEX-STRINGS_SOURCE)
+	$(CHDIR)/$(CORTEX-STRINGS); \
 		./autogen.sh; \
 		CFLAGS="-pipe -O2 $(TARGET_DEBUGGING) $(CXX11_ABI) -I$(TARGET_INCLUDE_DIR)" \
 		CPPFLAGS="-pipe -O2 $(TARGET_DEBUGGING) $(CXX11_ABI) -I$(TARGET_INCLUDE_DIR)" \
@@ -42,7 +45,7 @@ $(STATIC_LIB_DIR)/libcortex-strings.la: $(ARCHIVE)/cortex-strings-$(CORTEX-STRIN
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(STATIC_DIR)
 	$(REWRITE_LIBTOOL_STATIC)/libcortex-strings.la
-	$(REMOVE)/cortex-strings-$(CORTEX-STRINGS_VER)
+	$(REMOVE)/$(CORTEX-STRINGS)
 
 # -----------------------------------------------------------------------------
 
