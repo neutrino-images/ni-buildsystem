@@ -44,7 +44,7 @@ $(D)/gstreamer: $(D)/glib2 $(D)/libxml2 $(D)/glib-networking $(ARCHIVE)/$(GSTREA
 		$(CONFIGURE) \
 			--prefix= \
 			--libexecdir=/lib \
-			--datarootdir=/.remove \
+			--datarootdir=$(remove-datarootdir) \
 			--enable-silent-rules \
 			$(GST_PLUGIN_CONFIG_DEBUG) \
 			--disable-tests \
@@ -98,7 +98,7 @@ $(D)/gst-plugins-base: $(ARCHIVE)/$(GST_PLUGINS_BASE_SOURCE) $(D)/gstreamer $(D)
 		./autogen.sh --noconfigure; \
 		$(CONFIGURE) \
 			--prefix= \
-			--datarootdir=/.remove \
+			--datarootdir=$(remove-datarootdir) \
 			--enable-silent-rules \
 			--disable-valgrind \
 			$(GST_PLUGIN_CONFIG_DEBUG) \
@@ -154,7 +154,7 @@ $(D)/gst-plugins-good: $(ARCHIVE)/$(GST_PLUGINS_GOOD_SOURCE) $(D)/gst-plugins-ba
 		./autogen.sh --noconfigure; \
 		$(CONFIGURE) \
 			--prefix= \
-			--datarootdir=/.remove \
+			--datarootdir=$(remove-datarootdir) \
 			--enable-silent-rules \
 			--disable-valgrind \
 			$(GST_PLUGIN_CONFIG_DEBUG) \
@@ -196,7 +196,7 @@ $(D)/gst-plugins-bad: $(ARCHIVE)/$(GST_PLUGINS_BAD_SOURCE) $(D)/gst-plugins-base
 			--build=$(BUILD) \
 			--host=$(TARGET) \
 			--prefix= \
-			--datarootdir=/.remove \
+			--datarootdir=$(remove-datarootdir) \
 			--enable-silent-rules \
 			--disable-valgrind \
 			$(GST_PLUGIN_CONFIG_DEBUG) \
@@ -246,7 +246,7 @@ $(D)/gst-plugins-ugly: $(ARCHIVE)/$(GST_PLUGINS_UGLY_SOURCE) $(D)/gst-plugins-ba
 		./autogen.sh --noconfigure; \
 		$(CONFIGURE) \
 			--prefix= \
-			--datarootdir=/.remove \
+			--datarootdir=$(remove-datarootdir) \
 			--enable-silent-rules \
 			--disable-valgrind \
 			$(GST_PLUGIN_CONFIG_DEBUG) \
@@ -414,7 +414,7 @@ $(D)/orc: $(ARCHIVE)/$(ORC_SOURCE)
 	$(UNTAR)/$(ORC_SOURCE)
 	$(CHDIR)/orc-$(ORC_VER); \
 		$(CONFIGURE) \
-			--datarootdir=/.remove \
+			--datarootdir=$(remove-datarootdir) \
 			--prefix= \
 			; \
 		$(MAKE) all; \
@@ -440,7 +440,7 @@ $(D)/libdca: $(ARCHIVE)/$(LIBDCA_SOURCE)
 	$(CHDIR)/libdca-$(LIBDCA_VER); \
 		$(CONFIGURE) \
 			--prefix= \
-			--mandir=/.remove \
+			--mandir=$(remove-mandir) \
 			; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
@@ -489,7 +489,7 @@ $(D)/gmp: $(ARCHIVE)/$(GMP_SOURCE)
 	$(CHDIR)/gmp-$(GMP_VER); \
 		$(CONFIGURE) \
 			--prefix= \
-			--infodir=/.remove \
+			--infodir=$(remove-infodir) \
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
@@ -513,9 +513,7 @@ $(D)/gnutls: $(D)/nettle $(D)/ca-bundle $(ARCHIVE)/$(GNUTLS_SOURCE)
 	$(CHDIR)/gnutls-$(GNUTLS_VER); \
 		$(CONFIGURE) \
 			--prefix= \
-			--mandir=/.remove \
-			--infodir=/.remove \
-			--datarootdir=/.remove \
+			--datarootdir=$(remove-datarootdir) \
 			--with-included-libtasn1 \
 			--enable-local-libopts \
 			--with-libpthread-prefix=$(TARGET_DIR) \
@@ -550,9 +548,7 @@ $(D)/glib-networking: $(D)/gnutls $(D)/glib2 $(ARCHIVE)/$(GLIB-NETWORKING_SOURCE
 	$(CHDIR)/glib-networking-$(GLIB-NETWORKING_VER); \
 		$(CONFIGURE) \
 			--prefix= \
-			--datadir=/.remove \
-			--datarootdir=/.remove \
-			--localedir=/.remove \
+			--datarootdir=$(remove-datarootdir) \
 			; \
 		$(MAKE); \
 		$(MAKE) install prefix=$(TARGET_DIR)
@@ -575,7 +571,7 @@ $(D)/libsoup: $(D)/sqlite $(D)/libxml2 $(D)/glib2 $(ARCHIVE)/$(LIBSOUP_SOURCE)
 	$(CHDIR)/libsoup-$(LIBSOUP_VER); \
 		$(CONFIGURE) \
 			--prefix= \
-			--datarootdir=/.remove \
+			--datarootdir=$(remove-datarootdir) \
 			--disable-more-warnings \
 			--without-gnome \
 			--disable-gtk-doc \
@@ -583,7 +579,7 @@ $(D)/libsoup: $(D)/sqlite $(D)/libxml2 $(D)/glib2 $(ARCHIVE)/$(LIBSOUP_SOURCE)
 			--disable-gtk-doc-pdf \
 			; \
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR) itlocaledir=$$(TARGET_DIR)/.remove
+		$(MAKE) install DESTDIR=$(TARGET_DIR) itlocaledir=$(remove-localedir)
 	$(REWRITE_PKGCONF)/libsoup-2.4.pc
 	$(REWRITE_LIBTOOL)/libsoup-2.4.la
 	$(REMOVE)/libsoup-$(LIBSOUP_VER)
@@ -603,7 +599,7 @@ $(D)/sqlite: $(ARCHIVE)/$(SQLITE_SOURCE)
 	$(CHDIR)/sqlite-autoconf-$(SQLITE_VER); \
 		$(CONFIGURE) \
 			--prefix= \
-			--mandir=/.remove \
+			--mandir=$(remove-mandir) \
 			; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)

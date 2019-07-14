@@ -273,7 +273,7 @@ REWRITE_PKGCONF        = $(REWRITE_CONFIG_RULES) $(PKG_CONFIG_PATH)
 # unpack tarballs, clean up
 UNTAR = tar -C $(BUILD_TMP) -xf $(ARCHIVE)
 UNZIP = unzip -d $(BUILD_TMP) -o $(ARCHIVE)
-REMOVE = rm -rf $(TARGET_DIR)/.remove $(BUILD_TMP)
+REMOVE = rm -rf $(BUILD_TMP)
 PATCH = patch -p1 -i $(PATCHES)
 
 # download tarballs into archive directory
@@ -325,8 +325,8 @@ CMAKE_OPTS = \
 	-DCMAKE_SYSTEM_NAME="Linux" \
 	-DCMAKE_SYSTEM_PROCESSOR="$(BOXARCH)" \
 	-DCMAKE_INSTALL_PREFIX="" \
-	-DCMAKE_INSTALL_DOCDIR="/.remove" \
-	-DCMAKE_INSTALL_MANDIR="/.remove" \
+	-DCMAKE_INSTALL_DOCDIR="$(remove-docdir)" \
+	-DCMAKE_INSTALL_MANDIR="$(remove-mandir)" \
 	-DCMAKE_PREFIX_PATH="$(TARGET_DIR)" \
 	-DCMAKE_INCLUDE_PATH="$(TARGET_INCLUDE_DIR)" \
 	-DCMAKE_C_COMPILER="$(TARGET)-gcc" \

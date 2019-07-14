@@ -20,7 +20,7 @@ $(D)/zlib: $(ARCHIVE)/$(ZLIB_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(ZLIB_TMP); \
 		$(call apply_patches, $(ZLIB_PATCH)); \
 		$(BUILDENV) \
-		mandir=/.remove \
+		mandir=$(remove-mandir) \
 		./configure \
 			--prefix= \
 			--shared \
@@ -48,7 +48,7 @@ $(D)/libfuse: $(ARCHIVE)/$(FUSE_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(FUSE_TMP); \
 		$(CONFIGURE) \
 			--prefix= \
-			--datarootdir=/.remove \
+			--datarootdir=$(remove-datarootdir) \
 			--disable-static \
 			--disable-example \
 			--disable-mtab \
@@ -142,7 +142,7 @@ $(D)/giflib: $(ARCHIVE)/$(GIFLIB_SOURCE) | $(TARGET_DIR)
 			--prefix= \
 			--disable-static \
 			--enable-shared \
-			--bindir=/.remove \
+			--bindir=$(remove-bindir) \
 			; \
 		$(MAKE) all; \
 		make install DESTDIR=$(TARGET_DIR)
@@ -171,8 +171,7 @@ $(D)/libcurl: $(D)/zlib $(D)/openssl $(D)/librtmp $(D)/ca-bundle $(ARCHIVE)/curl
 	$(CHDIR)/$(LIBCURL_TMP); \
 		$(CONFIGURE) \
 			--prefix= \
-			--mandir=/.remove \
-			--datarootdir=/.remove \
+			--datarootdir=$(remove-datarootdir) \
 			--disable-manual \
 			--disable-file \
 			--disable-rtsp \
@@ -230,7 +229,7 @@ $(D)/libpng: $(D)/zlib $(ARCHIVE)/$(LIBPNG_SOURCE) | $(TARGET_DIR)
 		$(call apply_patches, $(LIBPNG_PATCH)); \
 		$(CONFIGURE) \
 			--prefix= \
-			--mandir=/.remove \
+			--mandir=$(remove-mandir) \
 			--enable-silent-rules \
 			$(LIBPNG_CONF) \
 			--disable-static \
@@ -271,7 +270,7 @@ $(D)/freetype: $(D)/zlib $(D)/libpng $(ARCHIVE)/$(FREETYPE_SOURCE) | $(TARGET_DI
 	$(CHDIR)/$(FREETYPE_TMP); \
 		$(CONFIGURE) \
 			--prefix= \
-			--mandir=/.remove \
+			--mandir=$(remove-mandir) \
 			--enable-shared \
 			--disable-static \
 			--enable-freetype-config \
@@ -320,10 +319,8 @@ $(D)/libjpeg-turbo: $(ARCHIVE)/$(LIBJPEG-TURBO_SOURCE) | $(TARGET_DIR)
 		$(CONFIGURE) \
 			--prefix= \
 			--enable-shared \
-			--mandir=/.remove \
-			--bindir=/.remove \
-			--datadir=/.remove \
-			--datarootdir=/.remove \
+			--bindir=$(remove-bindir) \
+			--datarootdir=$(remove-datarootdir) \
 			--disable-static \
 			; \
 		$(MAKE); \
@@ -353,8 +350,6 @@ $(D)/libjpeg-turbo2: $(ARCHIVE)/$(LIBJPEG-TURBO2_SOURCE) | $(TARGET_DIR)
 		$(CMAKE) \
 			-DWITH_SIMD=False \
 			-DWITH_JPEG8=80 \
-			-DCMAKE_INSTALL_DOCDIR=/.remove \
-			-DCMAKE_INSTALL_MANDIR=/.remove \
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
@@ -401,7 +396,7 @@ $(D)/openssl: $(ARCHIVE)/$(OPENSSL_SOURCE) | $(TARGET_DIR)
 			$(TARGET_LDFLAGS) \
 			-DOPENSSL_SMALL_FOOTPRINT \
 			--prefix=/ \
-			--openssldir=/.remove \
+			--openssldir=$(remove-dir)/ssl \
 			; \
 		make $(OPENSSL_FLAGS) depend; \
 		sed -i "s# build_tests##" Makefile; \
@@ -555,7 +550,7 @@ $(D)/libgd2: $(D)/zlib $(D)/libpng $(D)/libjpeg $(D)/freetype $(ARCHIVE)/$(LIBGD
 		./bootstrap.sh; \
 		$(CONFIGURE) \
 			--prefix= \
-			--bindir=/.remove \
+			--bindir=$(remove-bindir) \
 			--without-fontconfig \
 			--without-xpm \
 			--without-x \
@@ -606,8 +601,8 @@ $(D)/lzo: $(ARCHIVE)/$(LZO_SOURCE) | $(TARGET_DIR)
 	$(UNTAR)/$(LZO_SOURCE)
 	$(CHDIR)/$(LZO_TMP); \
 		$(CONFIGURE) \
-			--mandir=/.remove \
-			--docdir=/.remove \
+			--mandir=$(remove-mandir) \
+			--docdir=$(remove-docdir) \
 			--prefix= \
 			; \
 		$(MAKE); \
@@ -664,8 +659,8 @@ $(D)/expat: $(ARCHIVE)/$(EXPAT_SOURCE) | $(TARGET_DIR)
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--prefix= \
-			--docdir=/.remove \
-			--mandir=/.remove \
+			--docdir=$(remove-docdir) \
+			--mandir=$(remove-mandir) \
 			--enable-shared \
 			--disable-static \
 			--without-xmlwf \
@@ -775,9 +770,7 @@ $(D)/libgpg-error: $(ARCHIVE)/$(LIBGPG-ERROR_SOURCE) | $(TARGET_DIR)
 		popd; \
 		$(CONFIGURE) \
 			--prefix= \
-			--mandir=/.remove \
-			--infodir=/.remove \
-			--datarootdir=/.remove \
+			--datarootdir=$(remove-datarootdir) \
 			--enable-maintainer-mode \
 			--enable-shared \
 			--disable-static \
@@ -808,9 +801,7 @@ $(D)/libgcrypt: $(D)/libgpg-error $(ARCHIVE)/$(LIBGCRYPT_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(LIBGCRYPT_TMP); \
 		$(CONFIGURE) \
 			--prefix= \
-			--mandir=/.remove \
-			--infodir=/.remove \
-			--datarootdir=/.remove \
+			--datarootdir=$(remove-datarootdir) \
 			--enable-maintainer-mode \
 			--enable-silent-rules \
 			--enable-shared \
@@ -909,7 +900,7 @@ $(D)/libxml2: $(ARCHIVE)/$(LIBXML2_SOURCE) | $(TARGET_DIR)
 			--prefix= \
 			--enable-shared \
 			--disable-static \
-			--datarootdir=/.remove \
+			--datarootdir=$(remove-datarootdir) \
 			--without-python \
 			--without-debug \
 			--without-c14n \
@@ -962,7 +953,7 @@ $(D)/librtmp: $(D)/zlib $(D)/openssl $(SOURCE_DIR)/$(NI-RTMPDUMP) | $(TARGET_DIR
 	tar -C $(SOURCE_DIR) -cp $(NI-RTMPDUMP) --exclude-vcs | tar -C $(BUILD_TMP) -x
 	$(CHDIR)/$(NI-RTMPDUMP); \
 		make CROSS_COMPILE=$(TARGET)- XCFLAGS="-I$(TARGET_INCLUDE_DIR) -L$(TARGET_LIB_DIR)" LDFLAGS="-L$(TARGET_LIB_DIR)" prefix=$(TARGET_DIR);\
-		make install DESTDIR=$(TARGET_DIR) prefix="" mandir=/.remove
+		make install DESTDIR=$(TARGET_DIR) prefix="" mandir=$(remove-mandir)
 	rm -rf $(TARGET_DIR)/sbin/rtmpgw
 	rm -rf $(TARGET_DIR)/sbin/rtmpsrv
 	rm -rf $(TARGET_DIR)/sbin/rtmpsuck
@@ -998,7 +989,7 @@ $(D)/libtirpc: $(ARCHIVE)/$(LIBTIRPC_SOURCE) | $(TARGET_DIR)
 			--prefix= \
 			--disable-gssapi \
 			--enable-silent-rules \
-			--mandir=/.remove \
+			--mandir=$(remove-mandir) \
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
@@ -1023,8 +1014,8 @@ $(D)/confuse: $(ARCHIVE)/$(CONFUSE_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(CONFUSE_TMP); \
 		$(CONFIGURE) \
 			--prefix= \
-			--docdir=/.remove \
-			--mandir=/.remove \
+			--docdir=$(remove-docdir) \
+			--mandir=$(remove-mandir) \
 			--enable-silent-rules \
 			--enable-static \
 			--disable-shared \
@@ -1051,8 +1042,8 @@ $(D)/libite: $(ARCHIVE)/$(LIBITE_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(LIBITE_TMP); \
 		$(CONFIGURE) \
 			--prefix= \
-			--docdir=/.remove \
-			--mandir=/.remove \
+			--docdir=$(remove-docdir) \
+			--mandir=$(remove-docdir) \
 			--enable-silent-rules \
 			--enable-static \
 			--disable-shared \
@@ -1142,7 +1133,7 @@ $(D)/libogg: $(ARCHIVE)/$(LIBOGG_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(LIBOGG_TMP); \
 		$(CONFIGURE) \
 			--prefix= \
-			--datarootdir=/.remove \
+			--datarootdir=$(remove-datarootdir) \
 			--enable-shared \
 			; \
 		$(MAKE); \
@@ -1168,7 +1159,7 @@ $(D)/fribidi: $(ARCHIVE)/$(FRIBIDI_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(FRIBIDI_TMP); \
 		$(CONFIGURE) \
 			--prefix= \
-			--mandir=/.remove \
+			--mandir=$(remove-mandir) \
 			--disable-debug \
 			--disable-deprecated \
 			--enable-charsets \
@@ -1205,7 +1196,7 @@ $(D)/libffi: $(ARCHIVE)/$(LIBFFI_SOURCE) | $(TARGET_DIR)
 		$(call apply_patches, $(LIBFFI_PATCH)); \
 		$(CONFIGURE) \
 			--prefix= \
-			--datarootdir=/.remove \
+			--datarootdir=$(remove-datarootdir) \
 			$(LIBFFI_CONF) \
 			; \
 		$(MAKE) all; \
@@ -1253,7 +1244,7 @@ $(D)/glib2: $(D)/zlib $(D)/libffi $(GLIB2_DEPS) $(ARCHIVE)/$(GLIB2_SOURCE) | $(T
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--prefix= \
-			--datarootdir=/.remove \
+			--datarootdir=$(remove-datarootdir) \
 			--cache-file=arm-linux.cache \
 			--disable-debug \
 			--disable-selinux \
@@ -1304,7 +1295,7 @@ $(D)/alsa-lib: $(ARCHIVE)/$(ALSA-LIB_SOURCE)
 		$(call apply_patches, $(ALSA-LIB_PATCH)); \
 		$(CONFIGURE) \
 			--prefix= \
-			--datarootdir=/.remove \
+			--datarootdir=$(remove-datarootdir) \
 			--with-alsa-devdir=/dev/snd/ \
 			--with-plugindir=/lib/alsa \
 			--without-debug \
@@ -1342,7 +1333,7 @@ $(D)/popt: $(ARCHIVE)/$(POPT_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(POPT_TMP); \
 		$(CONFIGURE) \
 			--prefix= \
-			--datarootdir=/.remove/share \
+			--datarootdir=$(remove-datarootdir) \
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)

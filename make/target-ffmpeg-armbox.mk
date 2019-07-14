@@ -35,9 +35,7 @@ FFMPEG_DEPS = $(D)/openssl $(D)/freetype $(D)/librtmp $(D)/libbluray $(D)/libass
 FFMPEG_CONFIGURE_GENERIC = \
 			--prefix=/ \
 			--cross-prefix=$(TARGET)- \
-			--mandir=/.remove \
-			--datadir=/.remove \
-			--docdir=/.remove \
+			--datadir=$(remove-datadir) \
 			\
 			--disable-doc \
 			--disable-htmlpages \

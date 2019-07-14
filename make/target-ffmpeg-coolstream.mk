@@ -22,9 +22,7 @@ endif
 FFMPEG_CONFIGURE_GENERIC = \
 			--prefix=/ \
 			--cross-prefix=$(TARGET)- \
-			--mandir=/.remove \
-			--datadir=/.remove \
-			--docdir=/.remove \
+			--datadir=$(remove-datadir) \
 			\
 			--disable-doc \
 			--disable-htmlpages \

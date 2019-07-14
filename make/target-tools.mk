@@ -72,9 +72,9 @@ $(D)/openvpn: $(D)/lzo $(D)/openssl $(ARCHIVE)/$(OPENVPN_SOURCE) | $(TARGET_DIR)
 			ROUTE="/sbin/route" \
 			IPROUTE="/sbin/ip" \
 			--prefix= \
-			--mandir=/.remove \
-			--docdir=/.remove \
-			--infodir=/.remove \
+			--mandir=$(remove-mandir) \
+			--docdir=$(remove-docdir) \
+			--infodir=$(remove-infodir) \
 			--enable-shared \
 			--disable-static \
 			--enable-small \
@@ -107,9 +107,9 @@ $(D)/openssh: $(D)/openssl $(D)/zlib $(ARCHIVE)/$(OPENSSH_SOURCE) | $(TARGET_DIR
 		./configure \
 			$(CONFIGURE_OPTS) \
 			--prefix= \
-			--mandir=/.remove \
-			--docdir=/.remove \
-			--infodir=/.remove \
+			--mandir=$(remove-mandir) \
+			--docdir=$(remove-docdir) \
+			--infodir=$(remove-infodir) \
 			--with-pid-dir=/tmp \
 			--with-privsep-path=/var/empty \
 			--with-cppflags="-pipe $(TARGET_OPTIMIZATION) $(TARGET_DEBUGGING) $(TARGET_ABI) -I$(TARGET_INCLUDE_DIR)" \
@@ -188,7 +188,7 @@ $(D)/mtd-utils: $(D)/zlib $(D)/lzo $(D)/e2fsprogs $(ARCHIVE)/$(MTD-UTILS_SOURCE)
 		$(CONFIGURE) \
 			--prefix= \
 			--target=$(TARGET) \
-			--mandir=/.remove \
+			--mandir=$(remove-mandir) \
 			--enable-silent-rules \
 			--disable-tests \
 			--without-xattr \
@@ -225,7 +225,7 @@ $(D)/iperf: $(ARCHIVE)/$(IPERF_SOURCE) | $(TARGET_DIR)
 		$(CONFIGURE) \
 			--target=$(TARGET) \
 			--prefix= \
-			--mandir=/.remove \
+			--mandir=$(remove-mandir) \
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
@@ -253,8 +253,8 @@ $(D)/parted: $(D)/e2fsprogs $(ARCHIVE)/$(PARTED_SOURCE) | $(TARGET_DIR)
 		$(CONFIGURE) \
 			--prefix= \
 			--target=$(TARGET) \
-			--mandir=/.remove \
-			--infodir=/.remove \
+			--mandir=$(remove-mandir) \
+			--infodir=$(remove-infodir) \
 			--enable-silent-rules \
 			--enable-shared \
 			--disable-static \
@@ -336,8 +336,8 @@ $(D)/coreutils: $(ARCHIVE)/$(COREUTILS_SOURCE) | $(TARGET_DIR)
 			--target=$(TARGET) \
 			--prefix= \
 			--bindir=/bin.coreutils \
-			--libexecdir=/.remove/libexec \
-			--datarootdir=/.remove/share \
+			--libexecdir=$(remove-libexecdir) \
+			--datarootdir=$(remove-datarootdir) \
 			--enable-silent-rules \
 			--disable-xattr \
 			--disable-libcap \
@@ -372,7 +372,7 @@ $(D)/less: $(D)/ncurses $(ARCHIVE)/$(LESS_SOURCE) | $(TARGET_DIR)
 		$(CONFIGURE) \
 			--prefix= \
 			--target=$(TARGET) \
-			--mandir=/.remove \
+			--mandir=$(remove-mandir) \
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
@@ -529,8 +529,8 @@ $(D)/inadyn: $(D)/openssl $(D)/confuse $(D)/libite $(ARCHIVE)/$(INADYN_SOURCE) |
 			--prefix= \
 			--libdir=$(TARGET_LIB_DIR) \
 			--includedir=$(TARGET_INCLUDE_DIR) \
-			--mandir=/.remove \
-			--docdir=/.remove \
+			--mandir=$(remove-mandir) \
+			--docdir=$(remove-docdir) \
 			--enable-openssl \
 			; \
 		$(MAKE); \
@@ -605,7 +605,7 @@ $(D)/procps-ng: $(D)/ncurses $(ARCHIVE)/$(PROCPS-NG_SOURCE) | $(TARGET_DIR)
 			--prefix= \
 			--bindir=/bin.procps \
 			--sbindir=/sbin.procps \
-			--datarootdir=/.remove \
+			--datarootdir=$(remove-datarootdir) \
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
@@ -638,7 +638,7 @@ $(D)/nano: $(D)/ncurses $(ARCHIVE)/$(NANO_SOURCE) | $(TARGET_DIR)
 		$(CONFIGURE) \
 			--target=$(TARGET) \
 			--prefix= \
-			--datarootdir=/.remove/share \
+			--datarootdir=$(remove-datarootdir) \
 			--disable-nls \
 			--enable-tiny \
 			; \
@@ -693,7 +693,7 @@ $(D)/bash: $(ARCHIVE)/$(BASH_SOURCE) | $(TARGET_DIR)
 		$(call apply_patches, $(BASH_PATCH), 0); \
 		$(CONFIGURE) \
 			--prefix= \
-			--datarootdir=/.remove \
+			--datarootdir=$(remove-datarootdir) \
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
@@ -726,9 +726,7 @@ $(D)/e2fsprogs: $(ARCHIVE)/$(E2FSPROGS_SOURCE) | $(TARGET_DIR)
 		$(CONFIGURE) \
 			--target=$(TARGET) \
 			--prefix=/ \
-			--datarootdir=/.remove \
-			--infodir=/.remove \
-			--mandir=/.remove \
+			--datarootdir=$(remove-datarootdir) \
 			--disable-nls \
 			--disable-profile \
 			--disable-e2initrd-helper \
@@ -778,8 +776,8 @@ $(D)/ntfs-3g: $(ARCHIVE)/$(NTFS-3G_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(NTFS-3G_TMP); \
 		$(CONFIGURE) \
 			--prefix= \
-			--mandir=/.remove \
-			--docdir=/.remove \
+			--mandir=$(remove-mandir) \
+			--docdir=$(remove-docdir) \
 			--disable-ntfsprogs \
 			--disable-ldconfig \
 			--disable-library \
@@ -820,7 +818,7 @@ $(D)/autofs: $(D)/libtirpc $(ARCHIVE)/$(AUTOFS_SOURCE) | $(TARGET_DIR)
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--prefix= \
-			--datarootdir=/.remove \
+			--datarootdir=$(remove-datarootdir) \
 			--enable-ignore-busy \
 			--disable-mount-locking \
 			--without-openldap \
@@ -870,12 +868,12 @@ $(D)/samba-hd1: $(D)/zlib $(ARCHIVE)/$(SAMBA33_SOURCE) | $(TARGET_DIR)
 		$(CONFIGURE) \
 			--prefix=/ \
 			--datadir=/var/samba \
-			--datarootdir=/.remove \
+			--datarootdir=$(remove-datarootdir) \
 			--localstatedir=/var/samba \
 			--sysconfdir=/etc/samba \
 			--with-configdir=/etc/samba \
 			--with-privatedir=/etc/samba \
-			--with-modulesdir=/.remove \
+			--with-modulesdir=$(remove-libdir)/samba \
 			--with-sys-quotas=no \
 			--with-piddir=/var/run \
 			--enable-static \
@@ -954,12 +952,12 @@ $(D)/samba-hd2: $(D)/zlib $(ARCHIVE)/$(SAMBA36_SOURCE) | $(TARGET_DIR)
 		$(CONFIGURE) \
 			--prefix=/ \
 			--datadir=/var/samba \
-			--datarootdir=/.remove \
+			--datarootdir=$(remove-datarootdir) \
 			--localstatedir=/var/samba \
 			--sysconfdir=/etc/samba \
 			--with-configdir=/etc/samba \
 			--with-privatedir=/etc/samba \
-			--with-modulesdir=/.remove \
+			--with-modulesdir=$(remove-libdir)/samba \
 			--with-piddir=/var/run \
 			--with-sys-quotas=no \
 			--enable-static \
@@ -1016,7 +1014,7 @@ $(D)/dropbear: $(D)/zlib $(ARCHIVE)/$(DROPBEAR_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(DROPBEAR_TMP); \
 		$(CONFIGURE) \
 			--prefix= \
-			--mandir=/.remove \
+			--mandir=$(remove-mandir) \
 			--disable-pututxline \
 			--disable-wtmp \
 			--disable-wtmpx \
@@ -1064,7 +1062,7 @@ $(D)/sg3_utils: $(ARCHIVE)/$(SG3_UTILS_SOURCE) | $(TARGET_DIR)
 		$(CONFIGURE) \
 			--prefix= \
 			--bindir=/bin.sg3_utils \
-			--mandir=/.remove \
+			--mandir=$(remove-mandir) \
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
@@ -1122,9 +1120,9 @@ $(D)/lcd4linux: $(D)/ncurses $(D)/libgd2 $(D)/libdpf | $(TARGET_DIR)
 			--includedir=$(TARGET_INCLUDE_DIR) \
 			--bindir=$(TARGET_DIR)/bin \
 			--prefix= \
-			--mandir=/.remove \
-			--docdir=/.remove \
-			--infodir=/.remove \
+			--mandir=$(remove-mandir) \
+			--docdir=$(remove-docdir) \
+			--infodir=$(remove-infodir) \
 			--with-ncurses=$(TARGET_LIB_DIR) \
 			--with-drivers='DPF, SamsungSPF, PNG' \
 			--with-plugins='all,!dbus,!mpris_dbus,!asterisk,!isdn,!pop3,!ppp,!seti,!huawei,!imon,!kvv,!sample,!w1retap,!wireless,!xmms,!gps,!mpd,!mysql,!qnaplog,!iconv' \
@@ -1233,8 +1231,8 @@ $(D)/dosfstools: $(ARCHIVE)/$(DOSFSTOOLS_SOURCE) | $(TARGET_DIR)
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--prefix= \
-			--mandir=/.remove \
-			--docdir=/.remove \
+			--mandir=$(remove-mandir) \
+			--docdir=$(remove-docdir) \
 			--without-udev \
 			--enable-compat-symlinks \
 			CFLAGS="$(DOSFSTOOLS_CFLAGS)" \
@@ -1276,8 +1274,8 @@ $(D)/nfs-utils: $(D)/rpcbind $(ARCHIVE)/$(NFS-UTILS_SOURCE) | $(TARGET_DIR)
 			--prefix= \
 			--target=$(TARGET) \
 			--enable-maintainer-mode \
-			--docdir=/.remove \
-			--mandir=/.remove \
+			--docdir=$(remove-docdir) \
+			--mandir=$(remove-mandir) \
 			--disable-nfsv4 \
 			--disable-nfsv41 \
 			--disable-gss \
@@ -1330,7 +1328,7 @@ $(D)/rpcbind: $(D)/libtirpc $(ARCHIVE)/$(RPCBIND_SOURCE) | $(TARGET_DIR)
 			--enable-silent-rules \
 			--with-rpcuser=root \
 			--with-systemdsystemunitdir=no \
-			--mandir=/.remove \
+			--mandir=$(remove-mandir) \
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
@@ -1358,8 +1356,8 @@ $(D)/fuse-exfat: $(D)/libfuse $(ARCHIVE)/$(FUSE-EXFAT_SOURCE) | $(TARGET_DIR)
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--prefix= \
-			--docdir=/.remove \
-			--mandir=/.remove \
+			--docdir=$(remove-docdir) \
+			--mandir=$(remove-mandir) \
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
@@ -1383,8 +1381,8 @@ $(D)/exfat-utils: $(D)/fuse-exfat $(ARCHIVE)/$(EXFAT-UTILS_SOURCE) | $(TARGET_DI
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--prefix= \
-			--docdir=/.remove \
-			--mandir=/.remove \
+			--docdir=$(remove-docdir) \
+			--mandir=$(remove-mandir) \
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
@@ -1401,7 +1399,7 @@ $(D)/streamripper: $(D)/libvorbisidec $(D)/libmad $(D)/glib2 | $(TARGET_DIR)
 		$(CONFIGURE) \
 			--prefix= \
 			--includedir=$(TARGET_INCLUDE_DIR) \
-			--datarootdir=/.remove \
+			--datarootdir=$(remove-datarootdir) \
 			--with-included-argv=yes \
 			--with-included-libmad=no \
 			; \
@@ -1428,8 +1426,8 @@ $(D)/gettext: $(ARCHIVE)/$(GETTEXT_SOURCE) | $(TARGET_DIR)
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--prefix= \
-			--bindir=/.remove/bin \
-			--datarootdir=/.remove/share \
+			--bindir=$(remove-bindir) \
+			--datarootdir=$(remove-datarootdir) \
 			--disable-libasprintf \
 			--disable-acl \
 			--disable-openmp \
@@ -1462,7 +1460,7 @@ $(D)/mc: $(D)/glib2 $(D)/ncurses $(ARCHIVE)/$(MC_SOURCE) | $(TARGET_DIR)
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--prefix= \
-			--mandir=/.remove \
+			--mandir=$(remove-mandir) \
 			--enable-maintainer-mode \
 			--enable-silent-rules \
 			\
@@ -1506,10 +1504,8 @@ $(D)/wget: $(D)/openssl $(ARCHIVE)/$(WGET_SOURCE) | $(TARGET_DIR)
 		$(CONFIGURE) \
 			--target=$(TARGET) \
 			--prefix= \
-			--datarootdir=/.remove \
-			--docdir=/.remove \
-			--sysconfdir=/.remove \
-			--mandir=/.remove \
+			--datarootdir=$(remove-datarootdir) \
+			--sysconfdir=$(remove-sysconfdir) \
 			--with-gnu-ld \
 			--with-ssl=openssl \
 			--disable-debug \
@@ -1541,9 +1537,9 @@ $(D)/iconv: $(ARCHIVE)/$(LIBICONV_SOURCE) | $(TARGET_DIR)
 		$(CONFIGURE) \
 			--target=$(TARGET) \
 			--prefix= \
-			--datarootdir=/.remove/share \
-			--includedir=/.remove/include \
-			--libdir=/.remove/lib \
+			--datarootdir=$(remove-datarootdir) \
+			--includedir=$(remove-includedir) \
+			--libdir=$(remove-libdir) \
 			--enable-static \
 			--disable-shared \
 			--enable-relocatable \
@@ -1608,7 +1604,7 @@ $(D)/dvbsnoop: | $(TARGET_DIR)
 		$(CONFIGURE) \
 			--enable-silent-rules \
 			--prefix= \
-			--mandir=/.remove \
+			--mandir=$(remove-mandir) \
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
@@ -1631,7 +1627,7 @@ $(D)/ethtool: $(ARCHIVE)/$(ETHTOOL_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(ETHTOOL_TMP); \
 		$(CONFIGURE) \
 			--prefix= \
-			--mandir=/.remove \
+			--mandir=$(remove-mandir) \
 			--libdir=$(TARGET_LIB_DIR) \
 			--disable-pretty-dump \
 			; \

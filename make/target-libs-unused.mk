@@ -47,7 +47,7 @@ $(D)/libFLAC: $(ARCHIVE)/$(FLAC_SOURCE) | $(TARGET_DIR)
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--prefix= \
-			--datarootdir=/.remove \
+			--datarootdir=$(remove-datarootdir) \
 			--enable-shared \
 			--disable-static \
 			--disable-cpplibs \

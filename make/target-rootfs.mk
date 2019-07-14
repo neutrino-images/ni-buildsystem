@@ -112,12 +112,12 @@ $(ROOTFS): | $(TARGET_DIR)
 
 # cleanup root filesystem from useless stuff
 rootfs-cleanup: $(ROOTFS)
-	rm -rf $(ROOTFS)/{include,mymodules}
-	rm -rf $(ROOTFS)/share/{aclocal,gdb,locale,man,doc,info,common-lisp}
+	rm -rf $(ROOTFS)$(remove-dir)
+	rm -rf $(ROOTFS)/include
 	rm -rf $(ROOTFS)/lib/pkgconfig
-	rm -f  $(ROOTFS)/lib/libvorbisenc*
 	rm -rf $(ROOTFS)/lib/sigc++*
 	rm -rf $(ROOTFS)/lib/glib-2.0
+	rm -f  $(ROOTFS)/lib/libvorbisenc*
 	find $(ROOTFS) \( -name .gitignore -o -name .gitkeep \) -type f -print0 | xargs --no-run-if-empty -0 rm -f
 	find $(ROOTFS) \( -name Makefile.am \) -type f -print0 | xargs --no-run-if-empty -0 rm -f
 	find $(ROOTFS)/lib \( -name '*.a' -o -name '*.la' \) -print0 | xargs --no-run-if-empty -0 rm -f

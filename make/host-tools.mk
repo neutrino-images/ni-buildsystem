@@ -269,8 +269,6 @@ $(HOST_DIR)/bin/resize2fs: $(ARCHIVE)/$(HOST_E2FSPROGS_SOURCE) | $(HOST_DIR)/bin
 
 # -----------------------------------------------------------------------------
 
-HOST_LUA = $(HOST_DIR)/bin/lua
-
 HOST_LUA_VER    = $(LUA_VER)
 HOST_LUA_TMP    = lua-$(HOST_LUA_VER)
 HOST_LUA_SOURCE = lua-$(HOST_LUA_VER).tar.gz
@@ -281,6 +279,8 @@ HOST_LUA_URL    = http://www.lua.org/ftp
 
 HOST_LUA_PATCH  = lua-01-fix-LUA_ROOT.patch
 HOST_LUA_PATCH += lua-01-remove-readline.patch
+
+HOST_LUA = $(HOST_DIR)/bin/lua
 
 host-lua: $(HOST_LUA)
 $(HOST_LUA): $(ARCHIVE)/$(HOST_LUA_SOURCE) | $(HOST_DIR)
@@ -293,8 +293,6 @@ $(HOST_LUA): $(ARCHIVE)/$(HOST_LUA_SOURCE) | $(HOST_DIR)
 	$(REMOVE)/$(HOST_LUA_TMP)
 
 # -----------------------------------------------------------------------------
-
-HOST_LUAROCKS = $(HOST_DIR)/bin/luarocks
 
 HOST_LUAROCKS_VER    = 3.1.3
 HOST_LUAROCKS_TMP    = luarocks-$(HOST_LUAROCKS_VER)
@@ -317,6 +315,8 @@ HOST_LUAROCKS_BUILDENV = \
 	TARGET_DIR="$(TARGET_DIR)" \
 	TARGET_INCLUDE_DIR="$(TARGET_INCLUDE_DIR)" \
 	TARGET_LIB_DIR="$(TARGET_LIB_DIR)"
+
+HOST_LUAROCKS = $(HOST_DIR)/bin/luarocks
 
 host-luarocks: $(HOST_LUAROCKS)
 $(HOST_LUAROCKS): $(HOST_LUA) $(ARCHIVE)/$(HOST_LUAROCKS_SOURCE) | $(HOST_DIR)

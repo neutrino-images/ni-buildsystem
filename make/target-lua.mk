@@ -167,8 +167,8 @@ $(D)/luaposix: $(HOST_LUA) $(D)/lua $(D)/luaexpat $(ARCHIVE)/$(SLINGSHOT_SOURCE)
 			--exec-prefix= \
 			--libdir=$(TARGET_LIB_DIR)/lua/$(LUA_ABIVER) \
 			--datarootdir=$(TARGET_SHARE_DIR)/lua/$(LUA_ABIVER) \
-			--mandir=$(TARGET_DIR)/.remove \
-			--docdir=$(TARGET_DIR)/.remove \
+			--mandir=$(TARGET_DIR)$(remove-mandir) \
+			--docdir=$(TARGET_DIR)$(remove-docdir) \
 			--enable-silent-rules \
 			; \
 		$(MAKE); \

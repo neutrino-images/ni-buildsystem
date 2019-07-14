@@ -29,8 +29,8 @@ $(D)/valgrind-hd2: $(ARCHIVE)/$(VALGRIND_SOURCE) | $(TARGET_DIR)
 		$(CONFIGURE) \
 			--prefix= \
 			--enable-only32bit \
-			--mandir=/.remove \
-			--datadir=/.remove \
+			--mandir=$(remove-mandir) \
+			--datadir=$(remove-datadir) \
 			; \
 		$(MAKE) all; \
 		make install DESTDIR=$(TARGET_DIR)
@@ -55,8 +55,8 @@ $(D)/valgrind-hd1:
 		$(CONFIGURE) \
 			--prefix= \
 			--enable-only32bit \
-			--mandir=/.remove \
-			--datadir=/.remove \
+			--mandir=$(remove-mandir) \
+			--datadir=$(remove-datadir) \
 			; \
 		$(MAKE) all; \
 		make install DESTDIR=$(TARGET_DIR)
@@ -80,7 +80,7 @@ $(D)/strace: $(ARCHIVE)/$(STRACE_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(STRACE_TMP); \
 		$(CONFIGURE) \
 			--prefix= \
-			--mandir=/.remove \
+			--mandir=$(remove-mandir) \
 			--enable-silent-rules \
 			; \
 		$(MAKE) all; \
@@ -105,8 +105,8 @@ $(D)/gdb: $(D)/zlib $(D)/ncurses $(ARCHIVE)/$(GDB_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(GDB_TMP); \
 		$(CONFIGURE) \
 			--prefix= \
-			--mandir=/.remove \
-			--infodir=/.remove \
+			--mandir=$(remove-mandir) \
+			--infodir=$(remove-infodir) \
 			--disable-binutils \
 			--disable-werror \
 			--with-curses \

@@ -176,7 +176,7 @@ $(D)/links: $(D)/libpng $(D)/libjpeg $(D)/openssl $(ARCHIVE)/$(LINKS_SOURCE) $(S
 		autoreconf -vfi; \
 		$(CONFIGURE) \
 			--prefix= \
-			--mandir=/.remove \
+			--mandir=$(remove-mandir) \
 			--enable-graphics \
 			--with-fb \
 			--with-libjpeg \

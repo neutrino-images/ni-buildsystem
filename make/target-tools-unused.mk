@@ -23,8 +23,8 @@ $(D)/usbutils: $(D)/libusb-compat $(ARCHIVE)/$(USBUTILS_SOURCE) | $(TARGET_DIR)
 		$(CONFIGURE) \
 			--target=$(TARGET) \
 			--prefix= \
-			--mandir=/.remove \
-			--infodir=/.remove \
+			--mandir=$(remove-mandir) \
+			--infodir=$(remove-infodir) \
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
@@ -84,7 +84,7 @@ $(D)/util-linux: $(D)/ncurses $(D)/zlib $(ARCHIVE)/$(UTIL_LINUX_SOURCE) | $(TARG
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--prefix= \
-			--datarootdir=/.remove/share \
+			--datarootdir=$(remove-datarootdir) \
 			--enable-static \
 			--disable-shared \
 			--disable-hardlink \
@@ -179,7 +179,7 @@ $(D)/rsync: $(ARCHIVE)/$(RSYNC_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(RSYNC_TMP); \
 		$(CONFIGURE) \
 			--prefix= \
-			--mandir=/.remove \
+			--mandir=$(remove-mandir) \
 			--sysconfdir=/etc \
 			--disable-debug \
 			--disable-locale \
@@ -205,7 +205,7 @@ $(D)/readline: $(ARCHIVE)/$(READLINE_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(READLINE_TMP); \
 		$(CONFIGURE) \
 			--prefix= \
-			--datarootdir=/.remove/share \
+			--datarootdir=$(remove-datarootdir) \
 			; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
