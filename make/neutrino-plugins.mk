@@ -108,9 +108,9 @@ neutrino-plugin-%: $(NP_OBJ_DIR)/config.status
 
 $(D)/channellogos: $(SOURCE_DIR)/$(NI-LOGO-STUFF) $(SHAREICONS)
 	rm -rf $(SHAREICONS)/logo
-	mkdir -p $(SHAREICONS)/logo
+	install -d $(SHAREICONS)/logo
 	install -m 0644 $(SOURCE_DIR)/$(NI-LOGO-STUFF)/logos/* $(SHAREICONS)/logo
-	mkdir -p $(SHAREICONS)/logo/events
+	install -d $(SHAREICONS)/logo/events
 	install -m 0644 $(SOURCE_DIR)/$(NI-LOGO-STUFF)/logos-events/* $(SHAREICONS)/logo/events
 	$(CD) $(SOURCE_DIR)/$(NI-LOGO-STUFF)/logo-links; \
 		./logo-linker.sh logo-links.db $(SHAREICONS)/logo
@@ -133,37 +133,45 @@ $(D)/doscam-webif-skin:
 
 # -----------------------------------------------------------------------------
 
+NEUTRINO-MEDIATHEK_VER    = git
+NEUTRINO-MEDIATHEK_TMP    = mediathek.$(NEUTRINO-MEDIATHEK_VER)
+NEUTRINO-MEDIATHEK_SOURCE = mediathek.$(NEUTRINO-MEDIATHEK_VER)
+NEUTRINO-MEDIATHEK_URL    = https://github.com/neutrino-mediathek
+
 $(D)/neutrino-mediathek: $(SHAREPLUGINS) | $(TARGET_DIR)
-	$(REMOVE)/mediathek.git
-	get-git-source.sh https://github.com/neutrino-mediathek/mediathek.git $(ARCHIVE)/mediathek.git
-	$(CPDIR)/mediathek.git
-	$(CHDIR)/mediathek.git; \
+	$(REMOVE)/$(NEUTRINO-MEDIATHEK_TMP)
+	get-git-source.sh $(NEUTRINO-MEDIATHEK_URL)/$(NEUTRINO-MEDIATHEK_SOURCE) $(ARCHIVE)/$(NEUTRINO-MEDIATHEK_SOURCE)
+	$(CPDIR)/$(NEUTRINO-MEDIATHEK_SOURCE)
+	$(CHDIR)/$(NEUTRINO-MEDIATHEK_TMP); \
 		cp -a plugins/* $(SHAREPLUGINS)/; \
 		cp -a share $(TARGET_DIR)
-	$(REMOVE)/mediathek.git
+	$(REMOVE)/$(NEUTRINO-MEDIATHEK_TMP)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
-LINKS_VER = 2.19
+LINKS_VER    = 2.19
+LINKS_TMP    = links-$(LINKS_VER)
+LINKS_SOURCE = links-$(LINKS_VER).tar.bz2
+LINKS_URL    = http://links.twibright.com/download
 
-$(ARCHIVE)/links-$(LINKS_VER).tar.bz2:
-	$(DOWNLOAD) http://links.twibright.com/download/links-$(LINKS_VER).tar.bz2
+$(ARCHIVE)/$(LINKS_SOURCE):
+	$(DOWNLOAD) $(LINKS_URL)/$(LINKS_SOURCE)
 
 LINKS_PATCH  = links.patch
 LINKS_PATCH += links-ac-prog-cxx.patch
 LINKS_PATCH += links-input-$(BOXTYPE).patch
 LINKS_PATCH += links-accept_https_play.patch
 
-$(D)/links: $(D)/libpng $(D)/libjpeg $(D)/openssl $(ARCHIVE)/links-$(LINKS_VER).tar.bz2 $(SHAREPLUGINS) | $(TARGET_DIR)
-	$(REMOVE)/links-$(LINKS_VER)
-	$(UNTAR)/links-$(LINKS_VER).tar.bz2
-	$(CHDIR)/links-$(LINKS_VER)/intl; \
+$(D)/links: $(D)/libpng $(D)/libjpeg $(D)/openssl $(ARCHIVE)/$(LINKS_SOURCE) $(SHAREPLUGINS) | $(TARGET_DIR)
+	$(REMOVE)/$(LINKS_TMP)
+	$(UNTAR)/$(LINKS_SOURCE)
+	$(CHDIR)/$(LINKS_TMP)/intl; \
 		sed -i -e 's|^T_SAVE_HTML_OPTIONS,.*|T_SAVE_HTML_OPTIONS, "HTML-Optionen speichern",|' german.lng; \
 		echo "english" > index.txt; \
 		echo "german" >> index.txt; \
 		./gen-intl
-	$(CHDIR)/links-$(LINKS_VER); \
+	$(CHDIR)/$(LINKS_TMP); \
 		$(call apply_patches, $(LINKS_PATCH)); \
 		autoreconf -vfi; \
 		$(CONFIGURE) \
@@ -183,9 +191,9 @@ $(D)/links: $(D)/libpng $(D)/libjpeg $(D)/openssl $(ARCHIVE)/links-$(LINKS_VER).
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	mv -f $(BIN)/links $(SHAREPLUGINS)/links.so
+	mv -f $(TARGET_BIN_DIR)/links $(SHAREPLUGINS)/links.so
 	cp -a $(IMAGEFILES)/links/* $(TARGET_DIR)/
-	$(REMOVE)/links-$(LINKS_VER)
+	$(REMOVE)/$(LINKS_TMP)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------

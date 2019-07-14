@@ -123,7 +123,7 @@ $(D)/util-linux: $(D)/ncurses $(D)/zlib $(ARCHIVE)/$(UTIL_LINUX_SOURCE) | $(TARG
 ASTRA-SM_VER    = git
 ASTRA-SM_TMP    = astra-sm.$(ASTRA-SM_VER)
 ASTRA-SM_SOURCE = astra-sm.$(ASTRA-SM_VER)
-ASTRA-SM_URL    = https://gitlab.com/crazycat69/astra-sm.git
+ASTRA-SM_URL    = https://gitlab.com/crazycat69
 
 # workaround unrecognized command line options
 $(D)/astra-sm: TARGET_ABI=""

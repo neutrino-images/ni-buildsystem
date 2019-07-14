@@ -1182,7 +1182,7 @@ $(D)/wpa_supplicant: $(D)/openssl $(ARCHIVE)/$(WPA_SUPPLICANT_SOURCE) | $(TARGET
 XUPNPD_VER    = git
 XUPNPD_TMP    = xupnpd.$(XUPNPD_VER)
 XUPNPD_SOURCE = xupnpd.$(XUPNPD_VER)
-XUPNPD_URL    = https://github.com/clark15b/xupnpd.git
+XUPNPD_URL    = https://github.com/clark15b
 
 XUPNPD_PATCH  = xupnpd-dynamic-lua.patch
 XUPNPD_PATCH += xupnpd-fix-memleak.patch
