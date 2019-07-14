@@ -84,25 +84,27 @@ $(D)/libroxml: $(ARCHIVE)/libroxml-$(LIBROXML_VER).tar.gz | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-BZIP2_VER = 1.0.6
+BZIP2_VER    = 1.0.7
+BZIP2        = bzip2-$(BZIP2_VER)
 BZIP2_SOURCE = bzip2-$(BZIP2_VER).tar.gz
+BZIP2_URL    = https://sourceware.org/pub/bzip2
 
 $(ARCHIVE)/$(BZIP2_SOURCE):
-	$(DOWNLOAD) http://sources.buildroot.net/$(BZIP2_SOURCE)
+	$(DOWNLOAD) $(BZIP2_URL)/$(BZIP2_SOURCE)
 
-BZIP2_Patch = bzip2-$(BZIP2_VER).patch
+BZIP2_PATCH  = bzip2.patch
 
 $(D)/bzip2: $(ARCHIVE)/$(BZIP2_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/bzip2-$(BZIP2_VER)
+	$(REMOVE)/$(BZIP2)
 	$(UNTAR)/$(BZIP2_SOURCE)
-	$(CHDIR)/bzip2-$(BZIP2_VER); \
-		$(call apply_patches, $(BZIP2_Patch)); \
+	$(CHDIR)/$(BZIP2); \
+		$(call apply_patches, $(BZIP2_PATCH)); \
 		mv Makefile-libbz2_so Makefile; \
 		$(BUILDENV) \
 		$(MAKE) all; \
 		$(MAKE) install PREFIX=$(TARGET_DIR)
 	rm -f $(TARGET_DIR)/bin/bzip2
-	$(REMOVE)/bzip2-$(BZIP2_VER)
+	$(REMOVE)/$(BZIP2)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
