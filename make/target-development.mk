@@ -8,7 +8,7 @@ valgrind: valgrind-$(BOXSERIES)
 # -----------------------------------------------------------------------------
 
 VALGRIND_VER    = 3.13.0
-VALGRIND        = valgrind-$(VALGRIND_VER)
+VALGRIND_TMP    = valgrind-$(VALGRIND_VER)
 VALGRIND_SOURCE = valgrind-$(VALGRIND_VER).tar.bz2
 VALGRIND_URL    = ftp://sourceware.org/pub/valgrind
 
@@ -20,9 +20,9 @@ VALGRIND_PATCH  = valgrind-fix-$(BOXSERIES)-build.patch
 $(D)/valgrind-bre2ze4k \
 $(D)/valgrind-hd51 \
 $(D)/valgrind-hd2: $(ARCHIVE)/$(VALGRIND_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(VALGRIND)
+	$(REMOVE)/$(VALGRIND_TMP)
 	$(UNTAR)/$(VALGRIND_SOURCE)
-	$(CHDIR)/$(VALGRIND); \
+	$(CHDIR)/$(VALGRIND_TMP); \
 		$(call apply_patches, $(VALGRIND_PATCH)); \
 		export AR=$(TARGET)-ar; \
 		autoreconf -fi; \
@@ -37,7 +37,7 @@ $(D)/valgrind-hd2: $(ARCHIVE)/$(VALGRIND_SOURCE) | $(TARGET_DIR)
 	$(REWRITE_PKGCONF)/valgrind.pc
 	rm -f $(addprefix $(TARGET_LIB_DIR)/valgrind/,*.a *.xml)
 	rm -f $(addprefix $(TARGET_BIN_DIR)/,cg_* callgrind_* ms_print)
-	$(REMOVE)/$(VALGRIND)
+	$(REMOVE)/$(VALGRIND_TMP)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -67,7 +67,7 @@ $(D)/valgrind-hd1:
 # -----------------------------------------------------------------------------
 
 STRACE_VER    = 5.1
-STRACE        = strace-$(STRACE_VER)
+STRACE_TMP    = strace-$(STRACE_VER)
 STRACE_SOURCE = strace-$(STRACE_VER).tar.xz
 STRACE_URL    = https://strace.io/files/$(STRACE_VER)
 
@@ -75,9 +75,9 @@ $(ARCHIVE)/$(STRACE_SOURCE):
 	$(DOWNLOAD) $(STRACE_URL)/$(STRACE_SOURCE)
 
 $(D)/strace: $(ARCHIVE)/$(STRACE_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(STRACE)
+	$(REMOVE)/$(STRACE_TMP)
 	$(UNTAR)/$(STRACE_SOURCE)
-	$(CHDIR)/$(STRACE); \
+	$(CHDIR)/$(STRACE_TMP); \
 		$(CONFIGURE) \
 			--prefix= \
 			--mandir=/.remove \
@@ -86,13 +86,13 @@ $(D)/strace: $(ARCHIVE)/$(STRACE_SOURCE) | $(TARGET_DIR)
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	rm -f $(addprefix $(TARGET_BIN_DIR)/,strace-graph strace-log-merge)
-	$(REMOVE)/$(STRACE)
+	$(REMOVE)/$(STRACE_TMP)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 GDB_VER    = 8.1.1
-GDB        = gdb-$(GDB_VER)
+GDB_TMP    = gdb-$(GDB_VER)
 GDB_SOURCE = gdb-$(GDB_VER).tar.xz
 GDB_URL    = https://sourceware.org/pub/gdb/releases
 
@@ -100,9 +100,9 @@ $(ARCHIVE)/$(GDB_SOURCE):
 	$(DOWNLOAD) $(GDB_URL)/$(GDB_SOURCE)
 
 $(D)/gdb: $(D)/zlib $(D)/ncurses $(ARCHIVE)/$(GDB_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(GDB)
+	$(REMOVE)/$(GDB_TMP)
 	$(UNTAR)/$(GDB_SOURCE)
-	$(CHDIR)/$(GDB); \
+	$(CHDIR)/$(GDB_TMP); \
 		$(CONFIGURE) \
 			--prefix= \
 			--mandir=/.remove \
@@ -117,7 +117,7 @@ $(D)/gdb: $(D)/zlib $(D)/ncurses $(ARCHIVE)/$(GDB_SOURCE) | $(TARGET_DIR)
 		$(MAKE) install-gdb DESTDIR=$(TARGET_DIR)
 	rm -rf $(addprefix $(TARGET_SHARE_DIR)/,system-gdbinit)
 	find $(TARGET_SHARE_DIR)/gdb/syscalls -type f -not -name 'arm-linux.xml' -not -name 'gdb-syscalls.dtd' -print0 | xargs -0 rm --
-	$(REMOVE)/$(GDB)
+	$(REMOVE)/$(GDB_TMP)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------

@@ -5,7 +5,7 @@
 
 # usbutils-008 needs udev
 USBUTILS_VER    = 007
-USBUTILS        = usbutils-$(USBUTILS_VER)
+USBUTILS_TMP    = usbutils-$(USBUTILS_VER)
 USBUTILS_SOURCE = usbutils-$(USBUTILS_VER).tar.xz
 USBUTILS_URL    = https://www.kernel.org/pub/linux/utils/usb/usbutils
 
@@ -16,9 +16,9 @@ USBUTILS_PATCH  = usbutils-avoid-dependency-on-bash.patch
 USBUTILS_PATCH += usbutils-fix-null-pointer-crash.patch
 
 $(D)/usbutils: $(D)/libusb-compat $(ARCHIVE)/$(USBUTILS_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(USBUTILS)
+	$(REMOVE)/$(USBUTILS_TMP)
 	$(UNTAR)/$(USBUTILS_SOURCE)
-	$(CHDIR)/$(USBUTILS); \
+	$(CHDIR)/$(USBUTILS_TMP); \
 		$(call apply_patches, $(USBUTILS_PATCH)); \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
@@ -33,13 +33,13 @@ $(D)/usbutils: $(D)/libusb-compat $(ARCHIVE)/$(USBUTILS_SOURCE) | $(TARGET_DIR)
 	rm -rf $(TARGET_DIR)/sbin/update-usbids.sh
 	rm -rf $(TARGET_SHARE_DIR)/pkgconfig
 	rm -rf $(TARGET_SHARE_DIR)/usb.ids.gz
-	$(REMOVE)/$(USBUTILS)
+	$(REMOVE)/$(USBUTILS_TMP)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 BINUTILS_VER    = 2.25
-BINUTILS        = binutils-$(BINUTILS_VER)
+BINUTILS_TMP    = binutils-$(BINUTILS_VER)
 BINUTILS_SOURCE = binutils-$(BINUTILS_VER).tar.bz2
 BINUTILS_URL    = https://ftp.gnu.org/gnu/binutils
 
@@ -47,9 +47,9 @@ $(ARCHIVE)/$(BINUTILS_SOURCE):
 	$(DOWNLOAD) $(BINUTILS_URL)/$(BINUTILS_SOURCE)
 
 $(D)/binutils: $(ARCHIVE)/$(BINUTILS_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(BINUTILS)
+	$(REMOVE)/$(BINUTILS_TMP)
 	$(UNTAR)/$(BINUTILS_SOURCE)
-	$(CHDIR)/$(BINUTILS); \
+	$(CHDIR)/$(BINUTILS_TMP); \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
 			--prefix= \
@@ -63,14 +63,14 @@ $(D)/binutils: $(ARCHIVE)/$(BINUTILS_SOURCE) | $(TARGET_DIR)
 		$(MAKE); \
 		install -m 0755 binutils/objdump $(TARGET_BIN_DIR)/
 		install -m 0755 binutils/objcopy $(TARGET_BIN_DIR)/
-	$(REMOVE)/$(BINUTILS)
+	$(REMOVE)/$(BINUTILS_TMP)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 UTIL_LINUX_ABIVER = 2.34
 UTIL_LINUX_VER    = 2.34
-UTIL_LINUX        = util-linux-$(UTIL_LINUX_VER)
+UTIL_LINUX_TMP    = util-linux-$(UTIL_LINUX_VER)
 UTIL_LINUX_SOURCE = util-linux-$(UTIL_LINUX_VER).tar.xz
 UTIL_LINUX_URL    = https://www.kernel.org/pub/linux/utils/util-linux/v$(UTIL_LINUX_ABIVER)
 
@@ -78,9 +78,9 @@ $(ARCHIVE)/$(UTIL_LINUX_SOURCE):
 	$(DOWNLOAD) $(UTIL_LINUX_URL)/$(UTIL_LINUX_SOURCE)
 
 $(D)/util-linux: $(D)/ncurses $(D)/zlib $(ARCHIVE)/$(UTIL_LINUX_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(UTIL-LINUX)
+	$(REMOVE)/$(UTIL-LINUX_TMP)
 	$(UNTAR)/$(UTIL-LINUX_SOURCE)
-	$(CHDIR)/$(UTIL-LINUX); \
+	$(CHDIR)/$(UTIL-LINUX_TMP); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--prefix= \
@@ -115,36 +115,36 @@ $(D)/util-linux: $(D)/ncurses $(D)/zlib $(ARCHIVE)/$(UTIL_LINUX_SOURCE) | $(TARG
 	$(REWRITE_LIBTOOL)/libfdisk.la
 	$(REWRITE_LIBTOOL)/libsmartcols.la
 	$(REWRITE_LIBTOOL)/libuuid.la
-	$(REMOVE)/$(UTIL-LINUX)
+	$(REMOVE)/$(UTIL-LINUX_TMP)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 ASTRA-SM_VER    = git
-ASTRA-SM        = astra-sm.$(ASTRA-SM_VER)
+ASTRA-SM_TMP    = astra-sm.$(ASTRA-SM_VER)
 ASTRA-SM_SOURCE = astra-sm.$(ASTRA-SM_VER)
 ASTRA-SM_URL    = https://gitlab.com/crazycat69/astra-sm.git
 
 # workaround unrecognized command line options
 $(D)/astra-sm: TARGET_ABI=""
 $(D)/astra-sm: $(D)/openssl | $(TARGET_DIR)
-	$(REMOVE)/$(ASTRA-SM)
+	$(REMOVE)/$(ASTRA-SM_TMP)
 	get-git-source.sh $(ASTRA-SM_URL)/$(ASTRA-SM_SOURCE) $(ARCHIVE)/$(ASTRA-SM_SOURCE)
 	$(CPDIR)/$(ASTRA-SM_SOURCE)
-	$(CHDIR)/$(ASTRA-SM); \
+	$(CHDIR)/$(ASTRA-SM_TMP); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--prefix= \
 			--without-lua \
 			; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/$(ASTRA-SM)
+	$(REMOVE)/$(ASTRA-SM_TMP)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 IOZONE_VER    = 482
-IOZONE        = iozone3_$(IOZONE_VER)
+IOZONE_TMP    = iozone3_$(IOZONE_VER)
 IOZONE_SOURCE = iozone3_$(IOZONE_VER).tar
 IOZONE_URL    = http://www.iozone.org/src/current
 
@@ -152,21 +152,21 @@ $(ARCHIVE)/$(IOZONE_SOURCE):
 	$(DOWNLOAD) $(IOZONE_URL)/$(IOZONE_SOURCE)
 
 $(D)/iozone3: $(ARCHIVE)/$(IOZONE_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(IOZONE)
+	$(REMOVE)/$(IOZONE_TMP)
 	$(UNTAR)/$(IOZONE_SOURCE)
-	$(CHDIR)/$(IOZONE)/src/current; \
+	$(CHDIR)/$(IOZONE_TMP)/src/current; \
 		sed -i -e "s/= gcc/= $(TARGET)-gcc/" makefile; \
 		sed -i -e "s/= cc/= $(TARGET)-cc/" makefile; \
 		$(BUILDENV) \
 		$(MAKE) linux-arm; \
 		install -m 0755 iozone $(TARGET_BIN_DIR)/
-	$(REMOVE)/$(IOZONE)
+	$(REMOVE)/$(IOZONE_TMP)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 RSYNC_VER    = 3.1.3
-RSYNC        = rsync-$(RSYNC_VER)
+RSYNC_TMP    = rsync-$(RSYNC_VER)
 RSYNC_SOURCE = rsync-$(RSYNC_VER).tar.gz
 RSYNC_URL    = https://ftp.samba.org/pub/rsync
 
@@ -174,9 +174,9 @@ $(ARCHIVE)/$(RSYNC_SOURCE):
 	$(DOWNLOAD) $(RSYNC_URL)/$(RSYNC_SOURCE)
 
 $(D)/rsync: $(ARCHIVE)/$(RSYNC_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(RSYNC)
+	$(REMOVE)/$(RSYNC_TMP)
 	$(UNTAR)/$(RSYNC_SOURCE)
-	$(CHDIR)/$(RSYNC); \
+	$(CHDIR)/$(RSYNC_TMP); \
 		$(CONFIGURE) \
 			--prefix= \
 			--mandir=/.remove \
@@ -186,13 +186,13 @@ $(D)/rsync: $(ARCHIVE)/$(RSYNC_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE) all; \
 		$(MAKE) install-all DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/$(RSYNC)
+	$(REMOVE)/$(RSYNC_TMP)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 READLINE_VER    = 8.0
-READLINE        = readline-$(READLINE_VER)
+READLINE_TMP    = readline-$(READLINE_VER)
 READLINE_SOURCE = readline-$(READLINE_VER).tar.gz
 READLINE_URL    = https://ftp.gnu.org/gnu/readline
 
@@ -200,9 +200,9 @@ $(ARCHIVE)/$(READLINE_SOURCE):
 	$(DOWNLOAD) $(READLINE_URL)/$(READLINE_SOURCE)
 
 $(D)/readline: $(ARCHIVE)/$(READLINE_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(READLINE)
+	$(REMOVE)/$(READLINE_TMP)
 	$(UNTAR)/$(READLINE_SOURCE)
-	$(CHDIR)/$(READLINE); \
+	$(CHDIR)/$(READLINE_TMP); \
 		$(CONFIGURE) \
 			--prefix= \
 			--datarootdir=/.remove/share \
@@ -210,5 +210,5 @@ $(D)/readline: $(ARCHIVE)/$(READLINE_SOURCE) | $(TARGET_DIR)
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF)/readline.pc
-	$(REMOVE)/$(READLINE)
+	$(REMOVE)/$(READLINE_TMP)
 	$(TOUCH)

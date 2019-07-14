@@ -3,9 +3,9 @@
 #
 # -----------------------------------------------------------------------------
 
+LUA_ABIVER = 5.2
 LUA_VER    = 5.2.4
-LUA_ABIVER = $(basename $(LUA_VER))
-LUA        = lua-$(LUA_VER)
+LUA_TMP    = lua-$(LUA_VER)
 LUA_SOURCE = lua-$(LUA_VER).tar.gz
 LUA_URL    = https://www.lua.org
 
@@ -20,9 +20,9 @@ LUA_PATCH += lua-03-lua-pc.patch
 LUA_PATCH += lua-04-crashfix.diff
 
 $(D)/lua: $(D)/ncurses $(ARCHIVE)/$(LUA_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(LUA)
+	$(REMOVE)/$(LUA_TMP)
 	$(UNTAR)/$(LUA_SOURCE)
-	$(CHDIR)/$(LUA); \
+	$(CHDIR)/$(LUA_TMP); \
 		$(call apply_patches, $(LUA_PATCH)); \
 		sed -i 's/^V=.*/V= $(LUA_ABIVER)/' etc/lua.pc; \
 		sed -i 's/^R=.*/R= $(LUA_VER)/' etc/lua.pc; \
@@ -34,18 +34,18 @@ $(D)/lua: $(D)/ncurses $(ARCHIVE)/$(LUA_SOURCE) | $(TARGET_DIR)
 			RANLIB=$(TARGET)-ranlib \
 			LDFLAGS="$(TARGET_LDFLAGS)"; \
 		$(MAKE) install INSTALL_TOP=$(TARGET_DIR)
-	install -D -m 0755 $(BUILD_TMP)/lua-$(LUA_VER)/src/liblua.so.$(LUA_VER) $(TARGET_LIB_DIR)/liblua.so.$(LUA_VER)
+	install -D -m 0755 $(BUILD_TMP)/$(LUA_TMP)/src/liblua.so.$(LUA_VER) $(TARGET_LIB_DIR)/liblua.so.$(LUA_VER)
 	ln -sf liblua.so.$(LUA_VER) $(TARGET_LIB_DIR)/liblua.so
-	install -D -m 0644 $(BUILD_TMP)/lua-$(LUA_VER)/etc/lua.pc $(PKG_CONFIG_PATH)/lua.pc
+	install -D -m 0644 $(BUILD_TMP)/$(LUA_TMP)/etc/lua.pc $(PKG_CONFIG_PATH)/lua.pc
 	$(REWRITE_PKGCONF)/lua.pc
 	rm -rf $(TARGET_DIR)/bin/luac
-	$(REMOVE)/$(LUA)
+	$(REMOVE)/$(LUA_TMP)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 LUAEXPAT_VER    = 1.3.0
-LUAEXPAT        = luaexpat-$(LUAEXPAT_VER)
+LUAEXPAT_TMP    = luaexpat-$(LUAEXPAT_VER)
 LUAEXPAT_SOURCE = luaexpat-$(LUAEXPAT_VER).tar.gz
 LUAEXPAT_URL    = https://matthewwild.co.uk/projects/luaexpat
 
@@ -55,21 +55,21 @@ $(ARCHIVE)/$(LUAEXPAT_SOURCE):
 LUAEXPAT_PATCH  = luaexpat-makefile.patch
 
 $(D)/luaexpat: $(D)/expat $(D)/lua $(ARCHIVE)/$(LUAEXPAT_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(LUAEXPAT)
+	$(REMOVE)/$(LUAEXPAT_TMP)
 	$(UNTAR)/$(LUAEXPAT_SOURCE)
-	$(CHDIR)/$(LUAEXPAT); \
+	$(CHDIR)/$(LUAEXPAT_TMP); \
 		$(call apply_patches, $(LUAEXPAT_PATCH)); \
 		$(BUILDENV) \
 		$(MAKE) \
 			PREFIX=$(TARGET_DIR); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/$(LUAEXPAT)
+	$(REMOVE)/$(LUAEXPAT_TMP)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 LUA-FEEDPARSER_VER    = 0.71
-LUA-FEEDPARSER        = lua-feedparser-$(LUA-FEEDPARSER_VER)
+LUA-FEEDPARSER_TMP    = lua-feedparser-$(LUA-FEEDPARSER_VER)
 LUA-FEEDPARSER_SOURCE = lua-feedparser-$(LUA-FEEDPARSER_VER).tar.gz
 LUA-FEEDPARSER_URL    = https://github.com/slact/lua-feedparser/archive
 
@@ -79,13 +79,13 @@ $(ARCHIVE)/$(LUA-FEEDPARSER_SOURCE):
 LUA-FEEDPARSER_PATCH  = lua-feedparser.patch
 
 $(D)/lua-feedparser: $(D)/luaexpat $(ARCHIVE)/$(LUA-FEEDPARSER_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(LUA-FEEDPARSER)
+	$(REMOVE)/$(LUA-FEEDPARSER_TMP)
 	$(UNTAR)/$(LUA-FEEDPARSER_SOURCE)
-	$(CHDIR)/$(LUA-FEEDPARSER); \
+	$(CHDIR)/$(LUA-FEEDPARSER_TMP); \
 		sed -i 's|^PREFIX =|PREFIX ?=|' Makefile; \
 		$(call apply_patches, $(LUA-FEEDPARSER_PATCH)); \
 		$(MAKE) install PREFIX=$(TARGET_DIR)
-	$(REMOVE)/$(LUA-FEEDPARSER)
+	$(REMOVE)/$(LUA-FEEDPARSER_TMP)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -106,15 +106,15 @@ $(D)/luajson: $(ARCHIVE)/$(LUAJSON_SOURCE) | $(TARGET_DIR)
 # -----------------------------------------------------------------------------
 
 LUACURL_VER    = git
-LUACURL        = lua-curlv3.$(LUACURL_VER)
+LUACURL_TMP    = lua-curlv3.$(LUACURL_VER)
 LUACURL_SOURCE = lua-curlv3.$(LUACURL_VER)
 LUACURL_URL    = https://github.com/lua-curl/$(LUACURL_SOURCE)
 
 $(D)/luacurl: $(D)/libcurl $(D)/lua | $(TARGET_DIR)
-	$(REMOVE)/$(LUACURL)
+	$(REMOVE)/$(LUACURL_TMP)
 	get-git-source.sh $(LUACURL_URL) $(ARCHIVE)/$(LUACURL_SOURCE)
-	$(CPDIR)/$(LUACURL)
-	$(CHDIR)/$(LUACURL); \
+	$(CPDIR)/$(LUACURL_SOURCE)
+	$(CHDIR)/$(LUACURL_TMP); \
 		$(BUILDENV) \
 		$(MAKE) \
 			LIBDIR=$(TARGET_LIB_DIR) \
@@ -122,13 +122,13 @@ $(D)/luacurl: $(D)/libcurl $(D)/lua | $(TARGET_DIR)
 		$(MAKE) install DESTDIR=$(TARGET_DIR) \
 			LUA_CMOD=/lib/lua/$(LUA_ABIVER) \
 			LUA_LMOD=/share/lua/$(LUA_ABIVER)
-	$(REMOVE)/$(LUACURL)
+	$(REMOVE)/$(LUACURL_TMP)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 LUAPOSIX_VER    = 31
-LUAPOSIX        = luaposix-$(LUAPOSIX_VER)
+LUAPOSIX_TMP    = luaposix-$(LUAPOSIX_VER)
 LUAPOSIX_SOURCE = luaposix-$(LUAPOSIX_VER).tar.gz
 LUAPOSIX_URL    = https://github.com/luaposix/luaposix/archive
 
@@ -153,9 +153,9 @@ $(ARCHIVE)/$(SLINGSHOT_SOURCE):
 	$(DOWNLOAD) $(SLINGSHOT_URL)/v$(SLINGSHOT_VER).tar.gz -O $@
 
 $(D)/luaposix: $(HOST_LUA) $(D)/lua $(D)/luaexpat $(ARCHIVE)/$(SLINGSHOT_SOURCE) $(ARCHIVE)/$(GNULIB_SOURCE) $(ARCHIVE)/$(LUAPOSIX_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(LUAPOSIX)
+	$(REMOVE)/$(LUAPOSIX_TMP)
 	$(UNTAR)/$(LUAPOSIX_SOURCE)
-	$(CHDIR)/$(LUAPOSIX); \
+	$(CHDIR)/$(LUAPOSIX_TMP); \
 		tar -C gnulib --strip=1 -xf $(ARCHIVE)/$(GNULIB_SOURCE); \
 		tar -C slingshot --strip=1 -xf $(ARCHIVE)/$(SLINGSHOT_SOURCE); \
 		$(call apply_patches, $(LUAPOSIX_PATCH)); \
@@ -173,5 +173,5 @@ $(D)/luaposix: $(HOST_LUA) $(D)/lua $(D)/luaexpat $(ARCHIVE)/$(SLINGSHOT_SOURCE)
 			; \
 		$(MAKE); \
 		$(MAKE) all check install
-	$(REMOVE)/$(LUAPOSIX)
+	$(REMOVE)/$(LUAPOSIX_TMP)
 	$(TOUCH)

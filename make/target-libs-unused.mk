@@ -4,7 +4,7 @@
 # -----------------------------------------------------------------------------
 
 LIBID3TAG_VER    = 0.15.1b
-LIBID3TAG        = libid3tag-$(LIBID3TAG_VER)
+LIBID3TAG_TMP    = libid3tag-$(LIBID3TAG_VER)
 LIBID3TAG_SOURCE = libid3tag-$(LIBID3TAG_VER).tar.gz
 LIBID3TAG_URL    = https://sourceforge.net/projects/mad/files/libid3tag/$(LIBID3TAG_VER)
 
@@ -14,9 +14,9 @@ $(ARCHIVE)/$(LIBID3TAG_SOURCE):
 LIBID3TAG_PATCH  = libid3tag-pc.patch
 
 $(D)/libid3tag: $(D)/zlib $(ARCHIVE)/$(LIBID3TAG_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(LIBID3TAG)
+	$(REMOVE)/$(LIBID3TAG_TMP)
 	$(UNTAR)/$(LIBID3TAG_SOURCE)
-	$(CHDIR)/$(LIBID3TAG); \
+	$(CHDIR)/$(LIBID3TAG_TMP); \
 		$(call apply_patches, $(LIBID3TAG_PATCH)); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
@@ -27,13 +27,13 @@ $(D)/libid3tag: $(D)/zlib $(ARCHIVE)/$(LIBID3TAG_SOURCE) | $(TARGET_DIR)
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF)/id3tag.pc
 	$(REWRITE_LIBTOOL)/libid3tag.la
-	$(REMOVE)/$(LIBID3TAG)
+	$(REMOVE)/$(LIBID3TAG_TMP)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 FLAC_VER    = 1.3.2
-FLAC        = flac-$(FLAC_VER)
+FLAC_TMP    = flac-$(FLAC_VER)
 FLAC_SOURCE = flac-$(FLAC_VER).tar.xz
 FLAC_URL    = https://ftp.osuosl.org/pub/xiph/releases/flac
 
@@ -41,9 +41,9 @@ $(ARCHIVE)/$(FLAC_SOURCE):
 	$(DOWNLOAD) $(FLAC_URL)/$(FLAC_SOURCE)
 
 $(D)/libFLAC: $(ARCHIVE)/$(FLAC_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(LIBFLAC)
+	$(REMOVE)/$(LIBFLAC_TMP)
 	$(UNTAR)/$(LIBFLAC_SOURCE)
-	$(CHDIR)/$(LIBFLAC); \
+	$(CHDIR)/$(LIBFLAC_TMP); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--prefix= \
@@ -61,13 +61,13 @@ $(D)/libFLAC: $(ARCHIVE)/$(FLAC_SOURCE) | $(TARGET_DIR)
 	$(REWRITE_LIBTOOL)/libFLAC.la
 	rm -rf $(TARGET_DIR)/bin/flac
 	rm -rf $(TARGET_DIR)/bin/metaflac
-	$(REMOVE)/$(LIBFLAC)
+	$(REMOVE)/$(LIBFLAC_TMP)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 LIBROXML_VER    = 2.3.0
-LIBROXML        = libroxml-$(LIBROXML_VER)
+LIBROXML_TMP    = libroxml-$(LIBROXML_VER)
 LIBROXML_SOURCE = libroxml-$(LIBROXML_VER).tar.gz
 LIBROXML_URL    = http://download.libroxml.net/pool/v2.x
 
@@ -75,9 +75,9 @@ $(ARCHIVE)/$(LIBROXML_SOURCE):
 	$(DOWNLOAD) $(LIBROXML_URL)/$(LIBROXML_SOURCE)
 
 $(D)/libroxml: $(ARCHIVE)/$(LIBROXML_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(LIBROXML)
+	$(REMOVE)/$(LIBROXML_TMP)
 	$(UNTAR)/$(LIBROXML_SOURCE)
-	$(CHDIR)/$(LIBROXML); \
+	$(CHDIR)/$(LIBROXML_TMP); \
 		$(CONFIGURE) \
 			--prefix= \
 			--disable-xml-read-write \
@@ -88,13 +88,13 @@ $(D)/libroxml: $(ARCHIVE)/$(LIBROXML_SOURCE) | $(TARGET_DIR)
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF)/libroxml.pc
-	$(REMOVE)/$(LIBROXML)
+	$(REMOVE)/$(LIBROXML_TMP)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 BZIP2_VER    = 1.0.7
-BZIP2        = bzip2-$(BZIP2_VER)
+BZIP2_TMP    = bzip2-$(BZIP2_VER)
 BZIP2_SOURCE = bzip2-$(BZIP2_VER).tar.gz
 BZIP2_URL    = https://sourceware.org/pub/bzip2
 
@@ -104,22 +104,22 @@ $(ARCHIVE)/$(BZIP2_SOURCE):
 BZIP2_PATCH  = bzip2.patch
 
 $(D)/bzip2: $(ARCHIVE)/$(BZIP2_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(BZIP2)
+	$(REMOVE)/$(BZIP2_TMP)
 	$(UNTAR)/$(BZIP2_SOURCE)
-	$(CHDIR)/$(BZIP2); \
+	$(CHDIR)/$(BZIP2_TMP); \
 		$(call apply_patches, $(BZIP2_PATCH)); \
 		mv Makefile-libbz2_so Makefile; \
 		$(BUILDENV) \
 		$(MAKE) all; \
 		$(MAKE) install PREFIX=$(TARGET_DIR)
 	rm -f $(TARGET_DIR)/bin/bzip2
-	$(REMOVE)/$(BZIP2)
+	$(REMOVE)/$(BZIP2_TMP)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 FONTCONFIG_VER    = 2.11.93
-FONTCONFIG        = fontconfig-$(FONTCONFIG_VER)
+FONTCONFIG_TMP    = fontconfig-$(FONTCONFIG_VER)
 FONTCONFIG_SOURCE = fontconfig-$(FONTCONFIG_VER).tar.bz2
 FONTCONFIG_URL    = https://www.freedesktop.org/software/fontconfig/release
 
@@ -127,9 +127,9 @@ $(ARCHIVE)/$(FONTCONFIG_SOURCE):
 	$(DOWNLOAD) $(FONTCONFIG_URL)/$(FONTCONFIG_SOURCE)
 
 $(D)/fontconfig: $(D)/freetype $(D)/expat $(ARCHIVE)/$(FONTCONFIG_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(FONTCONFIG)
+	$(REMOVE)/$(FONTCONFIG_TMP)
 	$(UNTAR)/$(FONTCONFIG_SOURCE)
-	$(CHDIR)/$(FONTCONFIG); \
+	$(CHDIR)/$(FONTCONFIG_TMP); \
 		$(CONFIGURE) \
 			--prefix= \
 			--with-freetype-config=$(HOST_DIR)/bin/freetype-config \
@@ -142,13 +142,13 @@ $(D)/fontconfig: $(D)/freetype $(D)/expat $(ARCHIVE)/$(FONTCONFIG_SOURCE) | $(TA
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL)/libfontconfig.la
 	$(REWRITE_PKGCONF)/fontconfig.pc
-	$(REMOVE)/$(FONTCONFIG)
+	$(REMOVE)/$(FONTCONFIG_TMP)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 PIXMAN_VER    = 0.34.0
-PIXMAN        = pixman-$(PIXMAN_VER)
+PIXMAN_TMP    = pixman-$(PIXMAN_VER)
 PIXMAN_SOURCE = pixman-$(PIXMAN_VER).tar.gz
 PIXMAN_URL    = https://www.cairographics.org/releases
 
@@ -160,9 +160,9 @@ PIXMAN_PATCH += pixman-asm_include.patch
 PIXMAN_PATCH += pixman-0001-test-utils-Check-for-FE_INVALID-definition-before-us.patch
 
 $(D)/pixman: $(D)/zlib $(D)/libpng $(ARCHIVE)/$(PIXMAN_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PIXMAN)
+	$(REMOVE)/$(PIXMAN_TMP)
 	$(UNTAR)/$(PIXMAN_SOURCE)
-	$(CHDIR)/$(PIXMAN); \
+	$(CHDIR)/$(PIXMAN_TMP); \
 		$(call apply_patches, $(PIXMAN_PATCH)); \
 		$(CONFIGURE) \
 			--prefix= \
@@ -175,13 +175,13 @@ $(D)/pixman: $(D)/zlib $(D)/libpng $(ARCHIVE)/$(PIXMAN_SOURCE) | $(TARGET_DIR)
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL)/libpixman-1.la
 	$(REWRITE_PKGCONF)/pixman-1.pc
-	$(REMOVE)/$(PIXMAN)
+	$(REMOVE)/$(PIXMAN_TMP)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 CAIRO_VER    = 1.16.0
-CAIRO        = cairo-$(CAIRO_VER)
+CAIRO_TMP    = cairo-$(CAIRO_VER)
 CAIRO_SOURCE = cairo-$(CAIRO_VER).tar.xz
 CAIRO_URL    = https://www.cairographics.org/releases
 
@@ -191,9 +191,9 @@ $(ARCHIVE)/$(CAIRO_SOURCE):
 CAIRO_PATCH  = cairo-get_bitmap_surface.diff
 
 $(D)/cairo: $(D)/fontconfig $(D)/glib2 $(D)/libpng $(D)/pixman $(D)/zlib $(ARCHIVE)/$(CAIRO_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(CAIRO)
+	$(REMOVE)/$(CAIRO_TMP)
 	$(UNTAR)/$(CAIRO_SOURCE)
-	$(CHDIR)/$(CAIRO); \
+	$(CHDIR)/$(CAIRO_TMP); \
 		$(call apply_patches, $(CAIRO_PATCH)); \
 		$(BUILDENV) \
 		ax_cv_c_float_words_bigendian="no" \
@@ -228,13 +228,13 @@ $(D)/cairo: $(D)/fontconfig $(D)/glib2 $(D)/libpng $(D)/pixman $(D)/zlib $(ARCHI
 	$(REWRITE_PKGCONF)/cairo-script.pc
 	$(REWRITE_PKGCONF)/cairo-svg.pc
 	$(REWRITE_PKGCONF)/cairo-tee.pc
-	$(REMOVE)/$(CAIRO)
+	$(REMOVE)/$(CAIRO_TMP)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 HARFBUZZ_VER    = 1.8.8
-HARFBUZZ        = harfbuzz-$(HARFBUZZ_VER)
+HARFBUZZ_TMP    = harfbuzz-$(HARFBUZZ_VER)
 HARFBUZZ_SOURCE = harfbuzz-$(HARFBUZZ_VER).tar.bz2
 HARFBUZZ_URL    = https://www.freedesktop.org/software/harfbuzz/release
 
@@ -244,9 +244,9 @@ $(ARCHIVE)/$(HARFBUZZ_SOURCE):
 HARFBUZZ_PATCH  = harfbuzz-disable-docs.patch
 
 $(D)/harfbuzz: $(D)/fontconfig $(D)/glib2 $(D)/cairo $(D)/freetype $(ARCHIVE)/$(HARFBUZZ_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(HARFBUZZ)
+	$(REMOVE)/$(HARFBUZZ_TMP)
 	$(UNTAR)/$(HARFBUZZ_SOURCE)
-	$(CHDIR)/$(HARFBUZZ); \
+	$(CHDIR)/$(HARFBUZZ_TMP); \
 		$(call apply_patches, $(HARFBUZZ_PATCH)); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
@@ -264,5 +264,5 @@ $(D)/harfbuzz: $(D)/fontconfig $(D)/glib2 $(D)/cairo $(D)/freetype $(ARCHIVE)/$(
 	$(REWRITE_LIBTOOL)/libharfbuzz-subset.la
 	$(REWRITE_PKGCONF)/harfbuzz.pc
 	$(REWRITE_PKGCONF)/harfbuzz-subset.pc
-	$(REMOVE)/$(HARFBUZZ)
+	$(REMOVE)/$(HARFBUZZ_TMP)
 	$(TOUCH)

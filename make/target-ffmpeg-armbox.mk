@@ -4,7 +4,7 @@
 # -----------------------------------------------------------------------------
 
 FFMPEG_VER    = 4.1.3
-FFMPEG        = ffmpeg-$(FFMPEG_VER)
+FFMPEG_TMP    = ffmpeg-$(FFMPEG_VER)
 FFMPEG_SOURCE = ffmpeg-$(FFMPEG_VER).tar.xz
 FFMPEG_URL    = http://www.ffmpeg.org/releases
 
@@ -351,13 +351,13 @@ FFMPEG_CONFIGURE_PLATFORM = \
 # -----------------------------------------------------------------------------
 
 $(D)/ffmpeg: $(FFMPEG_DEPS) $(ARCHIVE)/$(FFMPEG_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(FFMPEG)
+	$(REMOVE)/$(FFMPEG_TMP)
 	$(UNTAR)/$(FFMPEG_SOURCE)
 ifneq ($(FFMPEG_UNPATCHED), yes)
-	$(CHDIR)/$(FFMPEG); \
+	$(CHDIR)/$(FFMPEG_TMP); \
 		$(call apply_patches, $(FFMPEG_PATCH))
 endif
-	$(CHDIR)/$(FFMPEG); \
+	$(CHDIR)/$(FFMPEG_TMP); \
 		./configure \
 			$(FFMPEG_CONFIGURE_GENERIC) \
 			$(FFMPEG_CONFIGURE_PLATFORM) \
@@ -371,5 +371,5 @@ endif
 	$(REWRITE_PKGCONF)/libavutil.pc
 	$(REWRITE_PKGCONF)/libswresample.pc
 	$(REWRITE_PKGCONF)/libswscale.pc
-	$(REMOVE)/$(FFMPEG)
+	$(REMOVE)/$(FFMPEG_TMP)
 	$(TOUCH)
