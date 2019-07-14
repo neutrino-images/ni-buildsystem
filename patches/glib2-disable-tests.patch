@@ -31,7 +31,7 @@ diff --git a/gio/Makefile.am b/gio/Makefile.am
 index 67db1b7..78309b5 100644
 --- a/gio/Makefile.am
 +++ b/gio/Makefile.am
-@@ -253,7 +253,7 @@ platform_libadd += win32/libgiowin32.la
+@@ -246,7 +246,7 @@ platform_libadd += win32/libgiowin32.la
  platform_deps += win32/libgiowin32.la
  endif
  

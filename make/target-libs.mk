@@ -3,18 +3,21 @@
 #
 # -----------------------------------------------------------------------------
 
-ZLIB_VER = 1.2.11
+ZLIB_VER    = 1.2.11
+ZLIB        = zlib-$(ZLIB_VER)
+ZLIB_SOURCE = zlib-$(ZLIB_VER).tar.xz
+ZLIB_URL    = https://sourceforge.net/projects/libpng/files/zlib/$(ZLIB_VER)
 
-$(ARCHIVE)/zlib-$(ZLIB_VER).tar.gz:
-	$(DOWNLOAD) http://zlib.net/zlib-$(ZLIB_VER).tar.gz
+$(ARCHIVE)/$(ZLIB_SOURCE):
+	$(DOWNLOAD) $(ZLIB_URL)/$(ZLIB_SOURCE)
 
 ZLIB_PATCH  = zlib-ldflags-tests.patch
 ZLIB_PATCH += zlib-remove.ldconfig.call.patch
 
-$(D)/zlib: $(ARCHIVE)/zlib-$(ZLIB_VER).tar.gz | $(TARGET_DIR)
-	$(REMOVE)/zlib-$(ZLIB_VER)
-	$(UNTAR)/zlib-$(ZLIB_VER).tar.gz
-	$(CHDIR)/zlib-$(ZLIB_VER); \
+$(D)/zlib: $(ARCHIVE)/$(ZLIB_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(ZLIB)
+	$(UNTAR)/$(ZLIB_SOURCE)
+	$(CHDIR)/$(ZLIB); \
 		$(call apply_patches, $(ZLIB_PATCH)); \
 		$(BUILDENV) \
 		mandir=/.remove \
@@ -26,20 +29,23 @@ $(D)/zlib: $(ARCHIVE)/zlib-$(ZLIB_VER).tar.gz | $(TARGET_DIR)
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF)/zlib.pc
-	$(REMOVE)/zlib-$(ZLIB_VER)
+	$(REMOVE)/$(ZLIB)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
-FUSE_VER = 2.9.8
+FUSE_VER    = 2.9.8
+FUSE        = fuse-$(FUSE_VER)
+FUSE_SOURCE = fuse-$(FUSE_VER).tar.gz
+FUSE_URL    = https://github.com/libfuse/libfuse/releases/download/fuse-$(FUSE_VER)
 
-$(ARCHIVE)/fuse-$(FUSE_VER).tar.gz:
-	$(DOWNLOAD) https://github.com/libfuse/libfuse/releases/download/fuse-$(FUSE_VER)/fuse-$(FUSE_VER).tar.gz
+$(ARCHIVE)/$(FUSE_SOURCE):
+	$(DOWNLOAD) $(FUSE_URL)/$(FUSE_SOURCE)
 
-$(D)/libfuse: $(ARCHIVE)/fuse-$(FUSE_VER).tar.gz | $(TARGET_DIR)
-	$(REMOVE)/fuse-$(FUSE_VER)
-	$(UNTAR)/fuse-$(FUSE_VER).tar.gz
-	$(CHDIR)/fuse-$(FUSE_VER); \
+$(D)/libfuse: $(ARCHIVE)/$(FUSE_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(FUSE)
+	$(UNTAR)/$(FUSE_SOURCE)
+	$(CHDIR)/$(FUSE); \
 		$(CONFIGURE) \
 			--prefix= \
 			--datarootdir=/.remove \
@@ -58,20 +64,23 @@ $(D)/libfuse: $(ARCHIVE)/fuse-$(FUSE_VER).tar.gz | $(TARGET_DIR)
 	$(REWRITE_PKGCONF)/fuse.pc
 	rm -rf $(TARGET_DIR)/etc/udev
 	rm -rf $(TARGET_DIR)/etc/init.d/fuse
-	$(REMOVE)/fuse-$(FUSE_VER)
+	$(REMOVE)/$(FUSE)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
-LIBUPNP_VER = 1.6.22
+LIBUPNP_VER    = 1.6.22
+LIBUPNP        = libupnp-$(LIBUPNP_VER)
+LIBUPNP_SOURCE = libupnp-$(LIBUPNP_VER).tar.bz2
+LIBUPNP_URL    = http://sourceforge.net/projects/pupnp/files/pupnp/libUPnP%20$(LIBUPNP_VER)
 
-$(ARCHIVE)/libupnp-$(LIBUPNP_VER).tar.bz2:
-	$(DOWNLOAD) http://sourceforge.net/projects/pupnp/files/pupnp/libUPnP%20$(LIBUPNP_VER)/libupnp-$(LIBUPNP_VER).tar.bz2
+$(ARCHIVE)/$(LIBUPNP_SOURCE):
+	$(DOWNLOAD) $(LIBUPNP_URL)/$(LIBUPNP_SOURCE)
 
-$(D)/libupnp: $(ARCHIVE)/libupnp-$(LIBUPNP_VER).tar.bz2 | $(TARGET_DIR)
-	$(REMOVE)/libupnp-$(LIBUPNP_VER)
-	$(UNTAR)/libupnp-$(LIBUPNP_VER).tar.bz2
-	$(CHDIR)/libupnp-$(LIBUPNP_VER); \
+$(D)/libupnp: $(ARCHIVE)/$(LIBUPNP_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(LIBUPNP)
+	$(UNTAR)/$(LIBUPNP_SOURCE)
+	$(CHDIR)/$(LIBUPNP); \
 		$(CONFIGURE) \
 			--prefix= \
 			--enable-shared \
@@ -79,26 +88,27 @@ $(D)/libupnp: $(ARCHIVE)/libupnp-$(LIBUPNP_VER).tar.bz2 | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR); \
-	$(REMOVE)/libupnp-$(LIBUPNP_VER)
 	$(REWRITE_LIBTOOL)/libixml.la
 	$(REWRITE_LIBTOOL)/libthreadutil.la
 	$(REWRITE_LIBTOOL)/libupnp.la
 	$(REWRITE_PKGCONF)/libupnp.pc
+	$(REMOVE)/$(LIBUPNP)
 	$(TOUCH)
 	
 # -----------------------------------------------------------------------------
 
-LIBDVBSI_VER = git
+LIBDVBSI_VER    = git
+LIBDVBSI        = libdvbsi.$(LIBDVBSI_VER)
 LIBDVBSI_SOURCE = libdvbsi.$(LIBDVBSI_VER)
-LIBDVBSI_URL = https://github.com/OpenVisionE2/$(LIBDVBSI_SOURCE)
+LIBDVBSI_URL    = https://github.com/OpenVisionE2
 
 LIBDVBSI_PATCH  = libdvbsi++-content_identifier_descriptor.patch
 
 $(D)/libdvbsi: | $(TARGET_DIR)
-	$(REMOVE)/$(LIBDVBSI_SOURCE)
-	get-git-source.sh $(LIBDVBSI_URL) $(ARCHIVE)/$(LIBDVBSI_SOURCE)
+	$(REMOVE)/$(LIBDVBSI)
+	get-git-source.sh $(LIBDVBSI_URL)/$(LIBDVBSI_SOURCE) $(ARCHIVE)/$(LIBDVBSI_SOURCE)
 	$(CPDIR)/$(LIBDVBSI_SOURCE)
-	$(CHDIR)/$(LIBDVBSI_SOURCE); \
+	$(CHDIR)/$(LIBDVBSI); \
 		$(call apply_patches, $(LIBDVBSI_PATCH)); \
 		$(CONFIGURE) \
 			--prefix= \
@@ -108,22 +118,25 @@ $(D)/libdvbsi: | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		make install DESTDIR=$(TARGET_DIR); \
-	$(REMOVE)/$(LIBDVBSI_SOURCE)
 	$(REWRITE_LIBTOOL)/libdvbsi++.la
 	$(REWRITE_PKGCONF)/libdvbsi++.pc
+	$(REMOVE)/$(LIBDVBSI)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
-GIFLIB_VER = 5.1.4
+GIFLIB_VER    = 5.1.4
+GIFLIB        = giflib-$(GIFLIB_VER)
+GIFLIB_SOURCE = giflib-$(GIFLIB_VER).tar.bz2
+GIFLIB_URL    = https://sourceforge.net/projects/giflib/files
 
-$(ARCHIVE)/giflib-$(GIFLIB_VER).tar.bz2:
-	$(DOWNLOAD) http://sourceforge.net/projects/giflib/files/giflib-$(GIFLIB_VER).tar.bz2
+$(ARCHIVE)/$(GIFLIB_SOURCE):
+	$(DOWNLOAD) $(GIFLIB_URL)/$(GIFLIB_SOURCE)
 
-$(D)/giflib: $(ARCHIVE)/giflib-$(GIFLIB_VER).tar.bz2 | $(TARGET_DIR)
-	$(REMOVE)/giflib-$(GIFLIB_VER)
-	$(UNTAR)/giflib-$(GIFLIB_VER).tar.bz2
-	$(CHDIR)/giflib-$(GIFLIB_VER); \
+$(D)/giflib: $(ARCHIVE)/$(GIFLIB_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(GIFLIB)
+	$(UNTAR)/$(GIFLIB_SOURCE)
+	$(CHDIR)/$(GIFLIB); \
 		export ac_cv_prog_have_xmlto=no; \
 		$(CONFIGURE) \
 			--prefix= \
@@ -134,25 +147,28 @@ $(D)/giflib: $(ARCHIVE)/giflib-$(GIFLIB_VER).tar.bz2 | $(TARGET_DIR)
 		$(MAKE) all; \
 		make install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL)/libgif.la
-	$(REMOVE)/giflib-$(GIFLIB_VER)
+	$(REMOVE)/$(GIFLIB)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
-LIBCURL_VER = 7.65.1
+LIBCURL_VER    = 7.65.1
+LIBCURL        = curl-$(LIBCURL_VER)
+LIBCURL_SOURCE = curl-$(LIBCURL_VER).tar.bz2
+LIBCURL_URL    = https://curl.haxx.se/download
 
-$(ARCHIVE)/curl-$(LIBCURL_VER).tar.bz2:
-	$(DOWNLOAD) http://curl.haxx.se/download/curl-$(LIBCURL_VER).tar.bz2
+$(ARCHIVE)/$(LIBCURL_SOURCE):
+	$(DOWNLOAD) $(LIBCURL_URL)/$(LIBCURL_SOURCE)
 
-LIBCURL_IPV6="--enable-ipv6"
+LIBCURL_IPV6 = --enable-ipv6
 ifeq ($(BOXSERIES), hd1)
-  LIBCURL_IPV6="--disable-ipv6"
+  LIBCURL_IPV6 = --disable-ipv6
 endif
 
 $(D)/libcurl: $(D)/zlib $(D)/openssl $(D)/librtmp $(D)/ca-bundle $(ARCHIVE)/curl-$(LIBCURL_VER).tar.bz2 | $(TARGET_DIR)
-	$(REMOVE)/curl-$(LIBCURL_VER)
-	$(UNTAR)/curl-$(LIBCURL_VER).tar.bz2
-	$(CHDIR)/curl-$(LIBCURL_VER); \
+	$(REMOVE)/$(LIBCURL)
+	$(UNTAR)/$(LIBCURL_SOURCE)
+	$(CHDIR)/$(LIBCURL); \
 		$(CONFIGURE) \
 			--prefix= \
 			--mandir=/.remove \
@@ -182,20 +198,23 @@ $(D)/libcurl: $(D)/zlib $(D)/openssl $(D)/librtmp $(D)/ca-bundle $(ARCHIVE)/curl
 			; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	mv $(TARGET_DIR)/bin/curl-config $(HOST_DIR)/bin/
+	mv $(TARGET_BIN_DIR)/curl-config $(HOST_DIR)/bin/
 	$(REWRITE_CONFIG) $(HOST_DIR)/bin/curl-config
 	rm -f $(TARGET_SHARE_DIR)/zsh
 	$(REWRITE_LIBTOOL)/libcurl.la
 	$(REWRITE_PKGCONF)/libcurl.pc
-	$(REMOVE)/curl-$(LIBCURL_VER)
+	$(REMOVE)/$(LIBCURL)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
-LIBPNG_VER = 1.6.37
+LIBPNG_VER    = 1.6.37
+LIBPNG        = libpng-$(LIBPNG_VER)
+LIBPNG_SOURCE = libpng-$(LIBPNG_VER).tar.xz
+LIBPNG_URL    = https://sourceforge.net/projects/libpng/files/libpng16/$(LIBPNG_VER)
 
-$(ARCHIVE)/libpng-$(LIBPNG_VER).tar.xz:
-	$(DOWNLOAD) http://sourceforge.net/projects/libpng/files/libpng16/$(LIBPNG_VER)/libpng-$(LIBPNG_VER).tar.xz
+$(ARCHIVE)/$(LIBPNG_SOURCE):
+	$(DOWNLOAD) $(LIBPNG_URL)/$(LIBPNG_SOURCE)
 
 LIBPNG_PATCH  = libpng-Disable-pngfix-and-png-fix-itxt.patch
 
@@ -204,10 +223,10 @@ ifneq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 bre2ze4k))
   LIBPNG_CONF = --disable-arm-neon
 endif
 
-$(D)/libpng: $(ARCHIVE)/libpng-$(LIBPNG_VER).tar.xz $(D)/zlib | $(TARGET_DIR)
-	$(REMOVE)/libpng-$(LIBPNG_VER)
-	$(UNTAR)/libpng-$(LIBPNG_VER).tar.xz
-	$(CHDIR)/libpng-$(LIBPNG_VER); \
+$(D)/libpng: $(D)/zlib $(ARCHIVE)/$(LIBPNG_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(LIBPNG)
+	$(UNTAR)/$(LIBPNG_SOURCE)
+	$(CHDIR)/$(LIBPNG); \
 		$(call apply_patches, $(LIBPNG_PATCH)); \
 		$(CONFIGURE) \
 			--prefix= \
@@ -218,35 +237,38 @@ $(D)/libpng: $(ARCHIVE)/libpng-$(LIBPNG_VER).tar.xz $(D)/zlib | $(TARGET_DIR)
 			; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	mv $(TARGET_DIR)/bin/libpng*-config $(HOST_DIR)/bin/
+	mv $(TARGET_BIN_DIR)/libpng*-config $(HOST_DIR)/bin/
 	$(REWRITE_CONFIG) $(HOST_DIR)/bin/libpng16-config
 	$(REWRITE_PKGCONF)/libpng16.pc
 	$(REWRITE_LIBTOOL)/libpng16.la
-	$(REMOVE)/libpng-$(LIBPNG_VER)
+	$(REMOVE)/$(LIBPNG)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
-FREETYPE_VER = 2.10.0
+FREETYPE_VER    = 2.10.0
+FREETYPE        = freetype-$(FREETYPE_VER)
+FREETYPE_SOURCE = freetype-$(FREETYPE_VER).tar.bz2
+FREETYPE_URL    = https://sourceforge.net/projects/freetype/files/freetype2/$(FREETYPE_VER)
 
-$(ARCHIVE)/freetype-$(FREETYPE_VER).tar.bz2:
-	$(DOWNLOAD) https://sourceforge.net/projects/freetype/files/freetype2/$(FREETYPE_VER)/freetype-$(FREETYPE_VER).tar.bz2
+$(ARCHIVE)/$(FREETYPE_SOURCE):
+	$(DOWNLOAD) $(FREETYPE_URL)/$(FREETYPE_SOURCE)
 
 FREETYPE_PATCH  = freetype2-subpixel.patch
 FREETYPE_PATCH += freetype2-config.patch
 FREETYPE_PATCH += freetype2-pkgconf.patch
 
-$(D)/freetype: $(D)/zlib $(D)/libpng $(ARCHIVE)/freetype-$(FREETYPE_VER).tar.bz2 | $(TARGET_DIR)
-	$(REMOVE)/freetype-$(FREETYPE_VER)
-	$(UNTAR)/freetype-$(FREETYPE_VER).tar.bz2
-	$(CHDIR)/freetype-$(FREETYPE_VER); \
+$(D)/freetype: $(D)/zlib $(D)/libpng $(ARCHIVE)/$(FREETYPE_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(FREETYPE)
+	$(UNTAR)/$(FREETYPE_SOURCE)
+	$(CHDIR)/$(FREETYPE); \
 		$(call apply_patches, $(FREETYPE_PATCH)); \
 		sed -i '/^FONT_MODULES += \(type1\|cid\|pfr\|type42\|pcf\|bdf\|winfonts\|cff\)/d' modules.cfg
-	$(CHDIR)/freetype-$(FREETYPE_VER)/builds/unix; \
+	$(CHDIR)/$(FREETYPE)/builds/unix; \
 		libtoolize --force --copy; \
 		aclocal -I .; \
 		autoconf
-	$(CHDIR)/freetype-$(FREETYPE_VER); \
+	$(CHDIR)/$(FREETYPE); \
 		$(CONFIGURE) \
 			--prefix= \
 			--mandir=/.remove \
@@ -261,11 +283,12 @@ $(D)/freetype: $(D)/zlib $(D)/libpng $(ARCHIVE)/freetype-$(FREETYPE_VER).tar.bz2
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	ln -sf freetype2 $(TARGET_INCLUDE_DIR)/freetype
-	mv $(TARGET_DIR)/bin/freetype-config $(HOST_DIR)/bin
+	mv $(TARGET_BIN_DIR)/freetype-config $(HOST_DIR)/bin
 	$(REWRITE_CONFIG) $(HOST_DIR)/bin/freetype-config
 	$(REWRITE_PKGCONF)/freetype2.pc
 	$(REWRITE_LIBTOOL)/libfreetype.la
-	$(REMOVE)/freetype-$(FREETYPE_VER) $(TARGET_SHARE_DIR)/aclocal
+	$(REMOVE)/$(FREETYPE) \
+		$(TARGET_SHARE_DIR)/aclocal
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -281,15 +304,18 @@ $(D)/libjpeg: $(LIBJPEG-TURBO)
 
 # -----------------------------------------------------------------------------
 
-LIBJPEG-TURBO_VER = 1.5.3
+LIBJPEG-TURBO_VER    = 1.5.3
+LIBJPEG-TURBO        = libjpeg-turbo-$(LIBJPEG-TURBO_VER)
+LIBJPEG-TURBO_SOURCE = libjpeg-turbo-$(LIBJPEG-TURBO_VER).tar.gz
+LIBJPEG-TURBO_URL    = https://sourceforge.net/projects/libjpeg-turbo/files/$(LIBJPEG-TURBO_VER)
 
-$(ARCHIVE)/libjpeg-turbo-$(LIBJPEG-TURBO_VER).tar.gz:
-	$(DOWNLOAD) https://sourceforge.net/projects/libjpeg-turbo/files/$(LIBJPEG-TURBO_VER)/libjpeg-turbo-$(LIBJPEG-TURBO_VER).tar.gz
+$(ARCHIVE)/$(LIBJPEG-TURBO_SOURCE):
+	$(DOWNLOAD) $(LIBJPEG-TURBO_URL)/$(LIBJPEG-TURBO_SOURCE)
 
-$(D)/libjpeg-turbo: $(ARCHIVE)/libjpeg-turbo-$(LIBJPEG-TURBO_VER).tar.gz | $(TARGET_DIR)
-	$(REMOVE)/libjpeg-turbo-$(LIBJPEG-TURBO_VER)
-	$(UNTAR)/libjpeg-turbo-$(LIBJPEG-TURBO_VER).tar.gz
-	$(CHDIR)/libjpeg-turbo-$(LIBJPEG-TURBO_VER); \
+$(D)/libjpeg-turbo: $(ARCHIVE)/$(LIBJPEG-TURBO_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(LIBJPEG-TURBO)
+	$(UNTAR)/$(LIBJPEG-TURBO_SOURCE)
+	$(CHDIR)/$(LIBJPEG-TURBO); \
 		export CC=$(TARGET)-gcc; \
 		$(CONFIGURE) \
 			--prefix= \
@@ -300,27 +326,29 @@ $(D)/libjpeg-turbo: $(ARCHIVE)/libjpeg-turbo-$(LIBJPEG-TURBO_VER).tar.gz | $(TAR
 			--datarootdir=/.remove \
 			--disable-static \
 			; \
-		$(MAKE) ; \
+		$(MAKE); \
 		make install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL)/libjpeg.la
 	rm -f $(TARGET_LIB_DIR)/libturbojpeg* $(TARGET_INCLUDE_DIR)/turbojpeg.h
-	$(REMOVE)/libjpeg-turbo-$(LIBJPEG-TURBO_VER)
+	$(REMOVE)/$(LIBJPEG-TURBO)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
-LIBJPEG-TURBO2_VER = 2.0.2
+LIBJPEG-TURBO2_VER    = 2.0.2
+LIBJPEG-TURBO2        = libjpeg-turbo-$(LIBJPEG-TURBO2_VER)
 LIBJPEG-TURBO2_SOURCE = libjpeg-turbo-$(LIBJPEG-TURBO2_VER).tar.gz
+LIBJPEG-TURBO2_URL    = https://sourceforge.net/projects/libjpeg-turbo/files/$(LIBJPEG-TURBO2_VER)
 
 $(ARCHIVE)/$(LIBJPEG-TURBO2_SOURCE):
-	$(DOWNLOAD) https://sourceforge.net/projects/libjpeg-turbo/files/$(LIBJPEG-TURBO2_VER)/$(LIBJPEG-TURBO2_SOURCE)
+	$(DOWNLOAD) $(LIBJPEG-TURBO2_URL)/$(LIBJPEG-TURBO2_SOURCE)
 
-LIBJPEG-TURBO2_PATCH = libjpeg-turbo-tiff-ojpeg.patch
+LIBJPEG-TURBO2_PATCH  = libjpeg-turbo-tiff-ojpeg.patch
 
 $(D)/libjpeg-turbo2: $(ARCHIVE)/$(LIBJPEG-TURBO2_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/libjpeg-turbo-$(LIBJPEG-TURBO2_VER)
+	$(REMOVE)/$(LIBJPEG-TURBO2)
 	$(UNTAR)/$(LIBJPEG-TURBO2_SOURCE)
-	$(CHDIR)/libjpeg-turbo-$(LIBJPEG-TURBO2_VER); \
+	$(CHDIR)/$(LIBJPEG-TURBO2); \
 		$(call apply_patches, $(LIBJPEG-TURBO2_PATCH)); \
 		$(CMAKE) \
 			-DWITH_SIMD=False \
@@ -332,16 +360,19 @@ $(D)/libjpeg-turbo2: $(ARCHIVE)/$(LIBJPEG-TURBO2_SOURCE) | $(TARGET_DIR)
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF)/libturbojpeg.pc
 	$(REWRITE_PKGCONF)/libjpeg.pc
-	rm -f $(addprefix $(TARGET_DIR)/bin/,cjpeg djpeg jpegtran rdjpgcom tjbench wrjpgcom)
-	$(REMOVE)/libjpeg-turbo-$(LIBJPEG-TURBO2_VER)
+	rm -f $(addprefix $(TARGET_BIN_DIR)/,cjpeg djpeg jpegtran rdjpgcom tjbench wrjpgcom)
+	$(REMOVE)/$(LIBJPEG-TURBO2)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
-OPENSSL_VER = 1.0.2s
+OPENSSL_VER    = 1.0.2s
+OPENSSL        = openssl-$(OPENSSL_VER)
+OPENSSL_SOURCE = openssl-$(OPENSSL_VER).tar.gz
+OPENSSL_URL    = https://www.openssl.org/source
 
-$(ARCHIVE)/openssl-$(OPENSSL_VER).tar.gz:
-	$(DOWNLOAD) http://www.openssl.org/source/openssl-$(OPENSSL_VER).tar.gz
+$(ARCHIVE)/$(OPENSSL_SOURCE):
+	$(DOWNLOAD) $(OPENSSL_URL)/$(OPENSSL_SOURCE)
 
 OPENSSL_PATCH  = openssl-add-ni-specific-target.patch
 
@@ -353,10 +384,10 @@ OPENSSL_FLAGS = CC=$(TARGET)-gcc \
 		NI_OPTIMIZATION_FLAGS="$(TARGET_CFLAGS)" \
 		PROCESSOR=ARM
 
-$(D)/openssl: $(ARCHIVE)/openssl-$(OPENSSL_VER).tar.gz | $(TARGET_DIR)
-	$(REMOVE)/openssl-$(OPENSSL_VER)
-	$(UNTAR)/openssl-$(OPENSSL_VER).tar.gz
-	$(CHDIR)/openssl-$(OPENSSL_VER); \
+$(D)/openssl: $(ARCHIVE)/$(OPENSSL_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(OPENSSL)
+	$(UNTAR)/$(OPENSSL_SOURCE)
+	$(CHDIR)/$(OPENSSL); \
 		$(call apply_patches, $(OPENSSL_PATCH)); \
 		./Configure \
 			linux-armv4-ni \
@@ -379,11 +410,11 @@ $(D)/openssl: $(ARCHIVE)/openssl-$(OPENSSL_VER).tar.gz | $(TARGET_DIR)
 	$(REWRITE_PKGCONF)/openssl.pc
 	$(REWRITE_PKGCONF)/libcrypto.pc
 	$(REWRITE_PKGCONF)/libssl.pc
-	rm -rf $(TARGET_DIR)/bin/c_rehash $(TARGET_LIB_DIR)/engines
-ifneq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 bre2ze4k))
-	rm -rf $(TARGET_DIR)/bin/openssl
+	rm -rf $(TARGET_BIN_DIR)/c_rehash $(TARGET_LIB_DIR)/engines
+ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd1 hd2))
+	rm -rf $(TARGET_BIN_DIR)/openssl
 endif
-	$(REMOVE)/openssl-$(OPENSSL_VER)
+	$(REMOVE)/$(OPENSSL)
 	chmod 0755 $(TARGET_LIB_DIR)/libcrypto.so.* $(TARGET_LIB_DIR)/libssl.so.*
 	for version in 0.9.7 0.9.8 1.0.2; do \
 		ln -sf libcrypto.so.1.0.0 $(TARGET_LIB_DIR)/libcrypto.so.$$version; \
@@ -393,18 +424,21 @@ endif
 
 # -----------------------------------------------------------------------------
 
-LIBNCURSES_VER = 6.1
+NCURSES_VER    = 6.1
+NCURSES        = ncurses-$(NCURSES_VER)
+NCURSES_SOURCE = ncurses-$(NCURSES_VER).tar.gz
+NCURSES_URL    = https://ftp.gnu.org/pub/gnu/ncurses
 
-$(ARCHIVE)/ncurses-$(LIBNCURSES_VER).tar.gz:
-	$(DOWNLOAD) http://ftp.gnu.org/pub/gnu/ncurses/ncurses-$(LIBNCURSES_VER).tar.gz
+$(ARCHIVE)/$(NCURSES_SOURCE):
+	$(DOWNLOAD) $(NCURSES_URL)/$(NCURSES_SOURCE)
 
-LIBNCURSES_PATCH  = ncurses-gcc-5.x-MKlib_gen.patch
+NCURSES_PATCH  = ncurses-gcc-5.x-MKlib_gen.patch
 
-$(D)/libncurses: $(ARCHIVE)/ncurses-$(LIBNCURSES_VER).tar.gz | $(TARGET_DIR)
-	$(REMOVE)/ncurses-$(LIBNCURSES_VER)
-	$(UNTAR)/ncurses-$(LIBNCURSES_VER).tar.gz; \
-	$(CHDIR)/ncurses-$(LIBNCURSES_VER); \
-		$(call apply_patches, $(LIBNCURSES_PATCH)); \
+$(D)/ncurses: $(ARCHIVE)/$(NCURSES_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(NCURSES)
+	$(UNTAR)/$(NCURSES_SOURCE)
+	$(CHDIR)/$(NCURSES); \
+		$(call apply_patches, $(NCURSES_PATCH)); \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
 			--prefix= \
@@ -424,16 +458,16 @@ $(D)/libncurses: $(ARCHIVE)/ncurses-$(LIBNCURSES_VER).tar.gz | $(TARGET_DIR)
 			; \
 		$(MAKE) libs; \
 		$(MAKE) install.libs DESTDIR=$(TARGET_DIR)
-	rm -rf $(HOST_DIR)/bin/ncurses*
-	rm -rf $(TARGET_LIB_DIR)/libform* $(TARGET_LIB_DIR)/libmenu* $(TARGET_LIB_DIR)/libpanel*
-	rm -rf $(PKG_CONFIG_PATH)/form.pc $(PKG_CONFIG_PATH)/menu.pc $(PKG_CONFIG_PATH)/panel.pc
-	mv $(TARGET_DIR)/bin/ncurses6-config $(HOST_DIR)/bin
+	rm -f $(addprefix $(TARGET_LIB_DIR)/,libform* libmenu* libpanel*)
+	rm -f $(addprefix $(PKG_CONFIG_PATH)/,form.pc menu.pc panel.pc)
+	rm -f $(HOST_DIR)/bin/ncurses*
+	mv $(TARGET_BIN_DIR)/ncurses6-config $(HOST_DIR)/bin
 	$(REWRITE_CONFIG) $(HOST_DIR)/bin/ncurses6-config
 	$(REWRITE_PKGCONF)/ncurses.pc
 	ln -sf ./ncurses/curses.h $(TARGET_INCLUDE_DIR)/curses.h
 	ln -sf ./ncurses/curses.h $(TARGET_INCLUDE_DIR)/ncurses.h
 	ln -sf ./ncurses/term.h $(TARGET_INCLUDE_DIR)/term.h
-	$(REMOVE)/ncurses-$(LIBNCURSES_VER)
+	$(REMOVE)/$(NCURSES)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -455,62 +489,69 @@ $(D)/openthreads: $(SOURCE_DIR)/$(NI-OPENTHREADS) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-LIBUSB_MAJOR = 1.0
-LIBUSB_VER = $(LIBUSB_MAJOR).21
+LIBUSB_VER    = 1.0.22
+LIBUSB        = libusb-$(LIBUSB_VER)
+LIBUSB_SOURCE = libusb-$(LIBUSB_VER).tar.bz2
+LIBUSB_URL    = https://sourceforge.net/projects/libusb/files/libusb-$(basename $(LIBUSB_VER))/libusb-$(LIBUSB_VER)
 
-$(ARCHIVE)/libusb-$(LIBUSB_VER).tar.bz2:
-	$(DOWNLOAD) http://sourceforge.net/projects/libusb/files/libusb-$(LIBUSB_MAJOR)/libusb-$(LIBUSB_VER)/libusb-$(LIBUSB_VER).tar.bz2
+$(ARCHIVE)/$(LIBUSB_SOURCE):
+	$(DOWNLOAD) $(LIBUSB_URL)/$(LIBUSB_SOURCE)
 
-$(D)/libusb: $(ARCHIVE)/libusb-$(LIBUSB_VER).tar.bz2 | $(TARGET_DIR)
-	$(REMOVE)/libusb-$(LIBUSB_VER)
-	$(UNTAR)/libusb-$(LIBUSB_VER).tar.bz2
-	$(CHDIR)/libusb-$(LIBUSB_VER); \
+$(D)/libusb: $(ARCHIVE)/$(LIBUSB_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(LIBUSB)
+	$(UNTAR)/$(LIBUSB_SOURCE)
+	$(CHDIR)/$(LIBUSB); \
 		$(CONFIGURE) \
 			--prefix= \
 			--disable-udev \
 			; \
 		$(MAKE); \
 		make install DESTDIR=$(TARGET_DIR); \
-	$(REMOVE)/libusb-$(LIBUSB_VER)
-	$(REWRITE_LIBTOOL)/libusb-$(LIBUSB_MAJOR).la
-	$(REWRITE_PKGCONF)/libusb-$(LIBUSB_MAJOR).pc
+	$(REWRITE_LIBTOOL)/libusb-$(basename $(LIBUSB_VER)).la
+	$(REWRITE_PKGCONF)/libusb-$(basename $(LIBUSB_VER)).pc
+	$(REMOVE)/$(LIBUSB)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
-LIBUSB-COMPAT_MAJOR = 0.1
-LIBUSB-COMPAT_VER = $(LIBUSB-COMPAT_MAJOR).5
+LIBUSB-COMPAT_VER    = 0.1.5
+LIBUSB-COMPAT        = libusb-compat-$(LIBUSB-COMPAT_VER)
+LIBUSB-COMPAT_SOURCE = libusb-compat-$(LIBUSB-COMPAT_VER).tar.bz2
+LIBUSB-COMPAT_URL    = https://sourceforge.net/projects/libusb/files/libusb-compat-$(basename $(LIBUSB-COMPAT_VER))/libusb-compat-$(LIBUSB-COMPAT_VER)
 
-$(ARCHIVE)/libusb-compat-$(LIBUSB-COMPAT_VER).tar.bz2:
-	$(DOWNLOAD) http://downloads.sourceforge.net/project/libusb/libusb-compat-$(LIBUSB-COMPAT_MAJOR)/libusb-compat-$(LIBUSB-COMPAT_VER)/libusb-compat-$(LIBUSB-COMPAT_VER).tar.bz2
+$(ARCHIVE)/$(LIBUSB-COMPAT_SOURCE):
+	$(DOWNLOAD) $(LIBUSB-COMPAT_URL)/$(LIBUSB-COMPAT_SOURCE)
 
-$(D)/libusb-compat: $(ARCHIVE)/libusb-compat-$(LIBUSB-COMPAT_VER).tar.bz2 $(D)/libusb | $(TARGET_DIR)
-	$(REMOVE)/libusb-compat-$(LIBUSB-COMPAT_VER)
-	$(UNTAR)/libusb-compat-$(LIBUSB-COMPAT_VER).tar.bz2
-	$(CHDIR)/libusb-compat-$(LIBUSB-COMPAT_VER); \
+$(D)/libusb-compat: $(D)/libusb $(ARCHIVE)/$(LIBUSB-COMPAT_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(LIBUSB-COMPAT)
+	$(UNTAR)/$(LIBUSB-COMPAT_SOURCE)
+	$(CHDIR)/$(LIBUSB-COMPAT); \
 		$(CONFIGURE) \
 			--prefix= \
 			; \
 		$(MAKE); \
 		make install DESTDIR=$(TARGET_DIR); \
-	$(REMOVE)/libusb-compat-$(LIBUSB-COMPAT_VER)
-	mv $(TARGET_DIR)/bin/libusb-config $(HOST_DIR)/bin
+	mv $(TARGET_BIN_DIR)/libusb-config $(HOST_DIR)/bin
 	$(REWRITE_CONFIG) $(HOST_DIR)/bin/libusb-config
 	$(REWRITE_LIBTOOL)/libusb.la
 	$(REWRITE_PKGCONF)/libusb.pc
+	$(REMOVE)/$(LIBUSB-COMPAT)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
-LIBGD_VER = 2.2.5
+LIBGD_VER    = 2.2.5
+LIBGD        = libgd-$(LIBGD_VER)
+LIBGD_SOURCE = libgd-$(LIBGD_VER).tar.xz
+LIBGD_URL    = https://github.com/libgd/libgd/releases/download/gd-$(LIBGD_VER)
 
-$(ARCHIVE)/libgd-$(LIBGD_VER).tar.xz:
-	$(DOWNLOAD) https://github.com/libgd/libgd/releases/download/gd-$(LIBGD_VER)/libgd-$(LIBGD_VER).tar.xz
+$(ARCHIVE)/$(LIBGD_SOURCE):
+	$(DOWNLOAD) $(LIBGD_URL)/$(LIBGD_SOURCE)
 
-$(D)/libgd2: $(D)/zlib $(D)/libpng $(D)/libjpeg $(D)/freetype $(ARCHIVE)/libgd-$(LIBGD_VER).tar.xz | $(TARGET_DIR)
-	$(REMOVE)/libgd-$(LIBGD_VER)
-	$(UNTAR)/libgd-$(LIBGD_VER).tar.xz
-	$(CHDIR)/libgd-$(LIBGD_VER); \
+$(D)/libgd2: $(D)/zlib $(D)/libpng $(D)/libjpeg $(D)/freetype $(ARCHIVE)/$(LIBGD_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(LIBGD)
+	$(UNTAR)/$(LIBGD_SOURCE)
+	$(CHDIR)/$(LIBGD); \
 		./bootstrap.sh; \
 		$(CONFIGURE) \
 			--prefix= \
@@ -521,25 +562,25 @@ $(D)/libgd2: $(D)/zlib $(D)/libpng $(D)/libjpeg $(D)/freetype $(ARCHIVE)/libgd-$
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/libgd-$(LIBGD_VER)
 	$(REWRITE_LIBTOOL)/libgd.la
 	$(REWRITE_PKGCONF)/gdlib.pc
+	$(REMOVE)/$(LIBGD)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
-LIBDPF_VER = 62c8fd0
-LIBDPF_SOURCE = dpf-ax-git-$(LIBDPF_VER).tar.bz2
-
-$(ARCHIVE)/$(LIBDPF_SOURCE):
-	get-git-archive.sh https://bitbucket.org/max_10/dpf-ax $(LIBDPF_VER) $(notdir $@) $(ARCHIVE)
+LIBDPF_VER    = git
+LIBDPF        = dpf-ax.$(LIBDPF_VER)
+LIBDPF_SOURCE = dpf-ax.$(LIBDPF_VER)
+LIBDPF_URL    = https://bitbucket.org/max_10
 
 LIBDPF_PATCH  = libdpf-crossbuild.patch
 
-$(D)/libdpf: $(D)/libusb-compat $(ARCHIVE)/$(LIBDPF_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/dpf-ax-git-$(LIBDPF_VER)
-	$(UNTAR)/$(LIBDPF_SOURCE)
-	$(CHDIR)/dpf-ax-git-$(LIBDPF_VER)/dpflib; \
+$(D)/libdpf: $(D)/libusb-compat | $(TARGET_DIR)
+	$(REMOVE)/$(LIBDPF)
+	get-git-source.sh $(LIBDPF_URL)/$(LIBDPF_SOURCE) $(ARCHIVE)/$(LIBDPF_SOURCE)
+	$(CPDIR)/$(LIBDPF_SOURCE)
+	$(CHDIR)/$(LIBDPF)/dpflib; \
 		$(call apply_patches, $(LIBDPF_PATCH)); \
 		make libdpf.a CC=$(TARGET)-gcc PREFIX=$(TARGET_DIR); \
 		mkdir -p $(TARGET_INCLUDE_DIR)/libdpf; \
@@ -547,20 +588,23 @@ $(D)/libdpf: $(D)/libusb-compat $(ARCHIVE)/$(LIBDPF_SOURCE) | $(TARGET_DIR)
 		cp ../include/spiflash.h $(TARGET_INCLUDE_DIR)/libdpf/; \
 		cp ../include/usbuser.h $(TARGET_INCLUDE_DIR)/libdpf/; \
 		cp libdpf.a $(TARGET_LIB_DIR)/
-	$(REMOVE)/dpf-ax-git-$(LIBDPF_VER)
+	$(REMOVE)/$(LIBDPF)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
-LZO_VER = 2.10
+LZO_VER    = 2.10
+LZO        = lzo-$(LZO_VER)
+LZO_SOURCE = lzo-$(LZO_VER).tar.gz
+LZO_URL    = https://www.oberhumer.com/opensource/lzo/download
 
-$(ARCHIVE)/lzo-$(LZO_VER).tar.gz:
-	$(DOWNLOAD) https://fossies.org/linux/misc/lzo-$(LZO_VER).tar.gz
+$(ARCHIVE)/$(LZO_SOURCE):
+	$(DOWNLOAD) $(LZO_URL)/$(LZO_SOURCE)
 
-$(D)/lzo: $(ARCHIVE)/lzo-$(LZO_VER).tar.gz | $(TARGET_DIR)
-	$(REMOVE)/lzo-$(LZO_VER)
-	$(UNTAR)/lzo-$(LZO_VER).tar.gz
-	$(CHDIR)/lzo-$(LZO_VER); \
+$(D)/lzo: $(ARCHIVE)/$(LZO_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(LZO)
+	$(UNTAR)/$(LZO_SOURCE)
+	$(CHDIR)/$(LZO); \
 		$(CONFIGURE) \
 			--mandir=/.remove \
 			--docdir=/.remove \
@@ -568,36 +612,36 @@ $(D)/lzo: $(ARCHIVE)/lzo-$(LZO_VER).tar.gz | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL)/liblzo2.la
-	$(REMOVE)/lzo-$(LZO_VER)
+	$(REWRITE_LIBTOOL)/liblzo$(basename $(LZO_VER)).la
+	$(REMOVE)/$(LZO)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
-LIBSIGCPP_MAJOR = 2
-LIBSIGCPP_MINOR = 4
-LIBSIGCPP_MICRO = 1
-LIBSIGCPP_VER = $(LIBSIGCPP_MAJOR).$(LIBSIGCPP_MINOR).$(LIBSIGCPP_MICRO)
+LIBSIGC_VER    = 2.10.0
+LIBSIGC        = libsigc++-$(LIBSIGC_VER)
+LIBSIGC_SOURCE = libsigc++-$(LIBSIGC_VER).tar.xz
+LIBSIGC_URL    = https://download.gnome.org/sources/libsigc++/$(basename $(LIBSIGC_VER))
 
-$(ARCHIVE)/libsigc++-$(LIBSIGCPP_VER).tar.xz:
-	$(DOWNLOAD) http://ftp.gnome.org/pub/GNOME/sources/libsigc++/$(LIBSIGCPP_MAJOR).$(LIBSIGCPP_MINOR)/libsigc++-$(LIBSIGCPP_VER).tar.xz
+$(ARCHIVE)/$(LIBSIGC_SOURCE):
+	$(DOWNLOAD) $(LIBSIGC_URL)/$(LIBSIGC_SOURCE)
 
-$(D)/libsigc++: $(ARCHIVE)/libsigc++-$(LIBSIGCPP_VER).tar.xz | $(TARGET_DIR)
-	$(REMOVE)/libsigc++-$(LIBSIGCPP_VER)
-	$(UNTAR)/libsigc++-$(LIBSIGCPP_VER).tar.xz
-	$(CHDIR)/libsigc++-$(LIBSIGCPP_VER); \
+$(D)/libsigc++: $(ARCHIVE)/$(LIBSIGC_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(LIBSIGC)
+	$(UNTAR)/$(LIBSIGC_SOURCE)
+	$(CHDIR)/$(LIBSIGC); \
 		$(CONFIGURE) \
 			--prefix= \
 			--disable-documentation \
 			--enable-silent-rules \
 			; \
 		$(MAKE); \
-		make install DESTDIR=$(TARGET_DIR); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR); \
+		cp sigc++config.h $(TARGET_INCLUDE_DIR)
 	ln -sf ./sigc++-2.0/sigc++ $(TARGET_INCLUDE_DIR)/sigc++
-	cp $(BUILD_TMP)/libsigc++-$(LIBSIGCPP_VER)/sigc++config.h $(TARGET_INCLUDE_DIR)
 	$(REWRITE_LIBTOOL)/libsigc-2.0.la
 	$(REWRITE_PKGCONF)/sigc++-2.0.pc
-	$(REMOVE)/libsigc++-$(LIBSIGCPP_VER)
+	$(REMOVE)/$(LIBSIGC)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -635,22 +679,25 @@ $(D)/expat: $(ARCHIVE)/$(EXPAT_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-LIBBLURAY_VER = 0.9.2
+LIBBLURAY_VER    = 0.9.3
+LIBBLURAY        = libbluray-$(LIBBLURAY_VER)
+LIBBLURAY_SOURCE = libbluray-$(LIBBLURAY_VER).tar.bz2
+LIBBLURAY_URL    = ftp.videolan.org/pub/videolan/libbluray/$(LIBBLURAY_VER)
 
-$(ARCHIVE)/libbluray-$(LIBBLURAY_VER).tar.bz2:
-	$(DOWNLOAD) ftp://ftp.videolan.org/pub/videolan/libbluray/$(LIBBLURAY_VER)/libbluray-$(LIBBLURAY_VER).tar.bz2
+$(ARCHIVE)/$(LIBBLURAY_SOURCE):
+	$(DOWNLOAD) $(LIBBLURAY_URL)/$(LIBBLURAY_SOURCE)
 
-LIBBLURAY_PATCH  = libbluray.diff
+LIBBLURAY_PATCH  = libbluray.patch
 
 LIBBLURAY_DEPS = $(D)/freetype
 ifeq ($(BOXSERIES), hd2)
   LIBBLURAY_DEPS += $(D)/libaacs $(D)/libbdplus
 endif
 
-$(D)/libbluray: $(LIBBLURAY_DEPS) $(ARCHIVE)/libbluray-$(LIBBLURAY_VER).tar.bz2 | $(TARGET_DIR)
-	$(REMOVE)/libbluray-$(LIBBLURAY_VER)
-	$(UNTAR)/libbluray-$(LIBBLURAY_VER).tar.bz2
-	$(CHDIR)/libbluray-$(LIBBLURAY_VER); \
+$(D)/libbluray: $(LIBBLURAY_DEPS) $(ARCHIVE)/$(LIBBLURAY_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(LIBBLURAY)
+	$(UNTAR)/$(LIBBLURAY_SOURCE)
+	$(CHDIR)/$(LIBBLURAY); \
 		$(call apply_patches, $(LIBBLURAY_PATCH)); \
 		./bootstrap; \
 		$(CONFIGURE) \
@@ -673,20 +720,26 @@ $(D)/libbluray: $(LIBBLURAY_DEPS) $(ARCHIVE)/libbluray-$(LIBBLURAY_VER).tar.bz2 
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL)/libbluray.la
 	$(REWRITE_PKGCONF)/libbluray.pc
-	$(REMOVE)/libbluray-$(LIBBLURAY_VER)
+	$(REMOVE)/$(LIBBLURAY)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
-LIBASS_VER = 0.14.0
+LIBASS_VER    = 0.14.0
+LIBASS        = libass-$(LIBASS_VER)
+LIBASS_SOURCE = libass-$(LIBASS_VER).tar.xz
+LIBASS_URL    = https://github.com/libass/libass/releases/download/$(LIBASS_VER)
 
-$(ARCHIVE)/libass-$(LIBASS_VER).tar.xz:
-	$(DOWNLOAD) https://github.com/libass/libass/releases/download/$(LIBASS_VER)/libass-$(LIBASS_VER).tar.xz
+$(ARCHIVE)/$(LIBASS_SOURCE):
+	$(DOWNLOAD) $(LIBASS_URL)/$(LIBASS_SOURCE)
 
-$(D)/libass: $(D)/freetype $(D)/libfribidi $(ARCHIVE)/libass-$(LIBASS_VER).tar.xz | $(TARGET_DIR)
-	$(REMOVE)/libass-$(LIBASS_VER)
-	$(UNTAR)/libass-$(LIBASS_VER).tar.xz
-	$(CHDIR)/libass-$(LIBASS_VER); \
+LIBASS_PATCH  = libass.patch
+
+$(D)/libass: $(D)/freetype $(D)/fribidi $(ARCHIVE)/$(LIBASS_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(LIBASS)
+	$(UNTAR)/$(LIBASS_SOURCE)
+	$(CHDIR)/$(LIBASS); \
+		$(call apply_patches, $(LIBASS_PATCH)); \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
 			--prefix= \
@@ -698,24 +751,27 @@ $(D)/libass: $(D)/freetype $(D)/libfribidi $(ARCHIVE)/libass-$(LIBASS_VER).tar.x
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/libass-$(LIBASS_VER)
 	$(REWRITE_LIBTOOL)/libass.la
 	$(REWRITE_PKGCONF)/libass.pc
+	$(REMOVE)/$(LIBASS)
 	$(TOUCH)
 	
 # -----------------------------------------------------------------------------
 
-LIBGPG-ERROR_VER = 1.32
+LIBGPG-ERROR_VER    = 1.32
+LIBGPG-ERROR        = libgpg-error-$(LIBGPG-ERROR_VER)
+LIBGPG-ERROR_SOURCE = libgpg-error-$(LIBGPG-ERROR_VER).tar.bz2
+LIBGPG-ERROR_URL    = ftp://ftp.gnupg.org/gcrypt/libgpg-error
 
-$(ARCHIVE)/libgpg-error-$(LIBGPG-ERROR_VER).tar.bz2:
-	$(DOWNLOAD) ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-$(LIBGPG-ERROR_VER).tar.bz2
+$(ARCHIVE)/$(LIBGPG-ERROR_SOURCE):
+	$(DOWNLOAD) $(LIBGPG-ERROR_URL)/$(LIBGPG-ERROR_SOURCE)
 
-$(D)/libgpg-error: $(ARCHIVE)/libgpg-error-$(LIBGPG-ERROR_VER).tar.bz2 | $(TARGET_DIR)
-	$(REMOVE)/libgpg-error-$(LIBGPG-ERROR_VER)
-	$(UNTAR)/libgpg-error-$(LIBGPG-ERROR_VER).tar.bz2
-	$(CHDIR)/libgpg-error-$(LIBGPG-ERROR_VER); \
+$(D)/libgpg-error: $(ARCHIVE)/$(LIBGPG-ERROR_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(LIBGPG-ERROR)
+	$(UNTAR)/$(LIBGPG-ERROR_SOURCE)
+	$(CHDIR)/$(LIBGPG-ERROR); \
 		pushd src/syscfg; \
-			ln -s lock-obj-pub.arm-unknown-linux-gnueabi.h lock-obj-pub.linux-uclibcgnueabi.h; \
+			ln -s lock-obj-pub.arm-unknown-linux-gnueabi.h lock-obj-pub.$(TARGET).h; \
 		popd; \
 		$(CONFIGURE) \
 			--prefix= \
@@ -728,25 +784,28 @@ $(D)/libgpg-error: $(ARCHIVE)/libgpg-error-$(LIBGPG-ERROR_VER).tar.bz2 | $(TARGE
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	mv $(TARGET_DIR)/bin/gpg-error-config $(HOST_DIR)/bin
+	mv $(TARGET_BIN_DIR)/gpg-error-config $(HOST_DIR)/bin
 	$(REWRITE_CONFIG) $(HOST_DIR)/bin/gpg-error-config
 	$(REWRITE_LIBTOOL)/libgpg-error.la
-	rm -rf $(TARGET_DIR)/bin/gpg-error
+	rm -rf $(TARGET_BIN_DIR)/gpg-error
 	rm -rf $(TARGET_SHARE_DIR)/common-lisp
-	$(REMOVE)/libgpg-error-$(LIBGPG-ERROR_VER)
+	$(REMOVE)/$(LIBGPG-ERROR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
-LIBGCRYPT_VER = 1.8.3
+LIBGCRYPT_VER    = 1.8.3
+LIBGCRYPT        = libgcrypt-$(LIBGCRYPT_VER)
+LIBGCRYPT_SOURCE = libgcrypt-$(LIBGCRYPT_VER).tar.gz
+LIBGCRYPT_URL    = ftp://ftp.gnupg.org/gcrypt/libgcrypt
 
-$(ARCHIVE)/libgcrypt-$(LIBGCRYPT_VER).tar.gz:
-	$(DOWNLOAD) ftp://ftp.gnupg.org/gcrypt/libgcrypt/libgcrypt-$(LIBGCRYPT_VER).tar.gz
+$(ARCHIVE)/$(LIBGCRYPT_SOURCE):
+	$(DOWNLOAD) $(LIBGCRYPT_URL)/$(LIBGCRYPT_SOURCE)
 
-$(D)/libgcrypt: $(ARCHIVE)/libgcrypt-$(LIBGCRYPT_VER).tar.gz $(D)/libgpg-error | $(TARGET_DIR)
-	$(REMOVE)/libgcrypt-$(LIBGCRYPT_VER)
-	$(UNTAR)/libgcrypt-$(LIBGCRYPT_VER).tar.gz
-	$(CHDIR)/libgcrypt-$(LIBGCRYPT_VER); \
+$(D)/libgcrypt: $(D)/libgpg-error $(ARCHIVE)/$(LIBGCRYPT_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(LIBGCRYPT)
+	$(UNTAR)/$(LIBGCRYPT_SOURCE)
+	$(CHDIR)/$(LIBGCRYPT); \
 		$(CONFIGURE) \
 			--prefix= \
 			--mandir=/.remove \
@@ -759,26 +818,29 @@ $(D)/libgcrypt: $(ARCHIVE)/libgcrypt-$(LIBGCRYPT_VER).tar.gz $(D)/libgpg-error |
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	mv $(TARGET_DIR)/bin/libgcrypt-config $(HOST_DIR)/bin
+	mv $(TARGET_BIN_DIR)/libgcrypt-config $(HOST_DIR)/bin
 	$(REWRITE_CONFIG) $(HOST_DIR)/bin/libgcrypt-config
 	$(REWRITE_LIBTOOL)/libgcrypt.la
-	rm -rf $(TARGET_DIR)/bin/dumpsexp
-	rm -rf $(TARGET_DIR)/bin/hmac256
-	rm -rf $(TARGET_DIR)/bin/mpicalc
-	$(REMOVE)/libgcrypt-$(LIBGCRYPT_VER)
+	rm -rf $(TARGET_BIN_DIR)/dumpsexp
+	rm -rf $(TARGET_BIN_DIR)/hmac256
+	rm -rf $(TARGET_BIN_DIR)/mpicalc
+	$(REMOVE)/$(LIBGCRYPT)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
-LIBAACS_VER = 0.9.0
+LIBAACS_VER    = 0.9.0
+LIBAACS        = libaacs-$(LIBAACS_VER)
+LIBAACS_SOURCE = libaacs-$(LIBAACS_VER).tar.bz2
+LIBAACS_URL    = ftp://ftp.videolan.org/pub/videolan/libaacs/$(LIBAACS_VER)
 
-$(ARCHIVE)/libaacs-$(LIBAACS_VER).tar.bz2:
-	$(DOWNLOAD) ftp://ftp.videolan.org/pub/videolan/libaacs/$(LIBAACS_VER)/libaacs-$(LIBAACS_VER).tar.bz2
+$(ARCHIVE)/$(LIBAACS_SOURCE):
+	$(DOWNLOAD) $(LIBAACS_URL)/$(LIBAACS_SOURCE)
 
-$(D)/libaacs: $(ARCHIVE)/libaacs-$(LIBAACS_VER).tar.bz2 $(D)/libgcrypt | $(TARGET_DIR)
-	$(REMOVE)/libaacs-$(LIBAACS_VER)
-	$(UNTAR)/libaacs-$(LIBAACS_VER).tar.bz2
-	$(CHDIR)/libaacs-$(LIBAACS_VER); \
+$(D)/libaacs: $(D)/libgcrypt $(ARCHIVE)/$(LIBAACS_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(LIBAACS)
+	$(UNTAR)/$(LIBAACS_SOURCE)
+	$(CHDIR)/$(LIBAACS); \
 		./bootstrap; \
 		$(CONFIGURE) \
 			--prefix= \
@@ -791,23 +853,26 @@ $(D)/libaacs: $(ARCHIVE)/libaacs-$(LIBAACS_VER).tar.bz2 $(D)/libgcrypt | $(TARGE
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF)/libaacs.pc
 	$(REWRITE_LIBTOOL)/libaacs.la
-	$(REMOVE)/libaacs-$(LIBAACS_VER)
 	$(CD) $(TARGET_DIR); \
 		mkdir -p .config/aacs .cache/aacs/vuk
 	cp $(IMAGEFILES)/libaacs/KEYDB.cfg $(TARGET_DIR)/.config/aacs
+	$(REMOVE)/$(LIBAACS)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
-LIBBDPLUS_VER = 0.1.2
+LIBBDPLUS_VER    = 0.1.2
+LIBBDPLUS        = libbdplus-$(LIBBDPLUS_VER)
+LIBBDPLUS_SOURCE = libbdplus-$(LIBBDPLUS_VER).tar.bz2
+LIBBDPLUS_URL    = ftp://ftp.videolan.org/pub/videolan/libbdplus/$(LIBBDPLUS_VER)
 
-$(ARCHIVE)/libbdplus-$(LIBBDPLUS_VER).tar.bz2:
-	$(DOWNLOAD) ftp://ftp.videolan.org/pub/videolan/libbdplus/$(LIBBDPLUS_VER)/libbdplus-$(LIBBDPLUS_VER).tar.bz2
+$(ARCHIVE)/$(LIBBDPLUS_SOURCE):
+	$(DOWNLOAD) $(LIBBDPLUS_URL)/$(LIBBDPLUS_SOURCE)
 
-$(D)/libbdplus: $(ARCHIVE)/libbdplus-$(LIBBDPLUS_VER).tar.bz2 $(D)/libaacs | $(TARGET_DIR)
-	$(REMOVE)/libbdplus-$(LIBBDPLUS_VER)
-	$(UNTAR)/libbdplus-$(LIBBDPLUS_VER).tar.bz2
-	$(CHDIR)/libbdplus-$(LIBBDPLUS_VER); \
+$(D)/libbdplus: $(D)/libaacs $(ARCHIVE)/$(LIBBDPLUS_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(LIBBDPLUS)
+	$(UNTAR)/$(LIBBDPLUS_SOURCE)
+	$(CHDIR)/$(LIBBDPLUS); \
 		./bootstrap; \
 		$(CONFIGURE) \
 			--prefix= \
@@ -820,23 +885,26 @@ $(D)/libbdplus: $(ARCHIVE)/libbdplus-$(LIBBDPLUS_VER).tar.bz2 $(D)/libaacs | $(T
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF)/libbdplus.pc
 	$(REWRITE_LIBTOOL)/libbdplus.la
-	$(REMOVE)/libbdplus-$(LIBBDPLUS_VER)
 	$(CD) $(TARGET_DIR); \
 		mkdir -p .config/bdplus/vm0
 	cp -f $(IMAGEFILES)/libbdplus/* $(TARGET_DIR)/.config/bdplus/vm0
+	$(REMOVE)/$(LIBBDPLUS)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
-LIBXML2_VER = 2.9.9
+LIBXML2_VER    = 2.9.9
+LIBXML2        = libxml2-$(LIBXML2_VER)
+LIBXML2_SOURCE = libxml2-$(LIBXML2_VER).tar.gz
+LIBXML2_URL    = http://xmlsoft.org/sources
 
-$(ARCHIVE)/libxml2-$(LIBXML2_VER).tar.gz:
-	$(DOWNLOAD) ftp://xmlsoft.org/libxml2/libxml2-$(LIBXML2_VER).tar.gz
+$(ARCHIVE)/$(LIBXML2_SOURCE):
+	$(DOWNLOAD) $(LIBXML2_URL)/$(LIBXML2_SOURCE)
 
-$(D)/libxml2: $(ARCHIVE)/libxml2-$(LIBXML2_VER).tar.gz | $(TARGET_DIR)
-	$(REMOVE)/libxml2-$(LIBXML2_VER)
-	$(UNTAR)/libxml2-$(LIBXML2_VER).tar.gz
-	$(CHDIR)/libxml2-$(LIBXML2_VER); \
+$(D)/libxml2: $(ARCHIVE)/$(LIBXML2_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(LIBXML2)
+	$(UNTAR)/$(LIBXML2_SOURCE)
+	$(CHDIR)/$(LIBXML2); \
 		$(CONFIGURE) \
 			--prefix= \
 			--enable-shared \
@@ -854,34 +922,37 @@ $(D)/libxml2: $(ARCHIVE)/libxml2-$(LIBXML2_VER).tar.gz | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	mv $(TARGET_DIR)/bin/xml2-config $(HOST_DIR)/bin
+	mv $(TARGET_BIN_DIR)/xml2-config $(HOST_DIR)/bin
 	$(REWRITE_LIBTOOL)/libxml2.la
 	$(REWRITE_PKGCONF)/libxml-2.0.pc
 	$(REWRITE_CONFIG) $(HOST_DIR)/bin/xml2-config
 	rm -rf $(TARGET_LIB_DIR)/xml2Conf.sh
 	rm -rf $(TARGET_LIB_DIR)/cmake
-	$(REMOVE)/libxml2-$(LIBXML2_VER)
+	$(REMOVE)/$(LIBXML2)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
-PUGIXML_VER = 1.9
+PUGIXML_VER    = 1.9
+PUGIXML        = pugixml-$(PUGIXML_VER)
+PUGIXML_SOURCE = pugixml-$(PUGIXML_VER).tar.gz
+PUGIXML_URL    = https://github.com/zeux/pugixml/releases/download/v$(PUGIXML_VER)
 
-$(ARCHIVE)/pugixml-$(PUGIXML_VER).tar.gz:
-	$(DOWNLOAD) http://github.com/zeux/pugixml/releases/download/v$(PUGIXML_VER)/pugixml-$(PUGIXML_VER).tar.gz
+$(ARCHIVE)/$(PUGIXML_SOURCE):
+	$(DOWNLOAD) $(PUGIXML_URL)/$(PUGIXML_SOURCE)
 
-PUGIXML_PATCH = pugixml-config.patch
+PUGIXML_PATCH  = pugixml-config.patch
 
-$(D)/pugixml: $(ARCHIVE)/pugixml-$(PUGIXML_VER).tar.gz | $(TARGET_DIR)
-	$(REMOVE)/pugixml-$(PUGIXML_VER)
-	$(UNTAR)/pugixml-$(PUGIXML_VER).tar.gz
-	$(CHDIR)/pugixml-$(PUGIXML_VER); \
+$(D)/pugixml: $(ARCHIVE)/$(PUGIXML_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(PUGIXML)
+	$(UNTAR)/$(PUGIXML_SOURCE)
+	$(CHDIR)/$(PUGIXML); \
 		$(call apply_patches, $(PUGIXML_PATCH)); \
 		$(CMAKE); \
 		$(MAKE); \
-		make install DESTDIR=$(TARGET_DIR)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	rm -rf $(TARGET_LIB_DIR)/cmake
-	$(REMOVE)/pugixml-$(PUGIXML_VER)
+	$(REMOVE)/$(PUGIXML)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -901,10 +972,13 @@ $(D)/librtmp: $(D)/zlib $(D)/openssl $(SOURCE_DIR)/$(NI-RTMPDUMP) | $(TARGET_DIR
 
 # -----------------------------------------------------------------------------
 
-LIBTIRPC_VER = 1.0.2
+LIBTIRPC_VER    = 1.0.3
+LIBTIRPC        = libtirpc-$(LIBTIRPC_VER)
+LIBTIRPC_SOURCE = libtirpc-$(LIBTIRPC_VER).tar.bz2
+LIBTIRPC_URL    = https://sourceforge.net/projects/libtirpc/files/libtirpc/$(LIBTIRPC_VER)
 
-$(ARCHIVE)/libtirpc-$(LIBTIRPC_VER).tar.bz2:
-	$(DOWNLOAD) http://sourceforge.net/projects/libtirpc/files/libtirpc/$(LIBTIRPC_VER)/libtirpc-$(LIBTIRPC_VER).tar.bz2
+$(ARCHIVE)/$(LIBTIRPC_SOURCE):
+	$(DOWNLOAD) $(LIBTIRPC_URL)/$(LIBTIRPC_SOURCE)
 
 LIBTIRP_PATCH  = libtirpc-0001-Disable-parts-of-TIRPC-requiring-NIS-support.patch
 LIBTIRP_PATCH += libtirpc-0002-uClibc-without-RPC-support-and-musl-does-not-install-rpcent.h.patch
@@ -912,12 +986,11 @@ LIBTIRP_PATCH += libtirpc-0003-Add-rpcgen-program-from-nfs-utils-sources.patch
 LIBTIRP_PATCH += libtirpc-0004-Automatically-generate-XDR-header-files-from-.x-sour.patch
 LIBTIRP_PATCH += libtirpc-0005-Add-more-XDR-files-needed-to-build-rpcbind-on-top-of.patch
 LIBTIRP_PATCH += libtirpc-0006-Disable-DES-authentification-support.patch
-LIBTIRP_PATCH += libtirpc-0007-include-stdint.h-for-uintptr_t.patch
 
-$(D)/libtirpc: $(ARCHIVE)/libtirpc-$(LIBTIRPC_VER).tar.bz2 | $(TARGET_DIR)
-	$(REMOVE)/libtirpc-$(LIBTIRPC_VER)
-	$(UNTAR)/libtirpc-$(LIBTIRPC_VER).tar.bz2
-	$(CHDIR)/libtirpc-$(LIBTIRPC_VER); \
+$(D)/libtirpc: $(ARCHIVE)/$(LIBTIRPC_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(LIBTIRPC)
+	$(UNTAR)/$(LIBTIRPC_SOURCE)
+	$(CHDIR)/$(LIBTIRPC); \
 		$(call apply_patches, $(LIBTIRP_PATCH)); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
@@ -931,20 +1004,23 @@ $(D)/libtirpc: $(ARCHIVE)/libtirpc-$(LIBTIRPC_VER).tar.bz2 | $(TARGET_DIR)
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL)/libtirpc.la
 	$(REWRITE_PKGCONF)/libtirpc.pc
-	$(REMOVE)/libtirpc-$(LIBTIRPC_VER)
+	$(REMOVE)/$(LIBTIRPC)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
-CONFUSE_VER = 3.2.2
+CONFUSE_VER    = 3.2.2
+CONFUSE        = confuse-$(CONFUSE_VER)
+CONFUSE_SOURCE = confuse-$(CONFUSE_VER).tar.xz
+CONFUSE_URL    = https://github.com/martinh/libconfuse/releases/download/v$(CONFUSE_VER)
 
-$(ARCHIVE)/confuse-$(CONFUSE_VER).tar.xz:
-	$(DOWNLOAD) https://github.com/martinh/libconfuse/releases/download/v$(CONFUSE_VER)/confuse-$(CONFUSE_VER).tar.xz
+$(ARCHIVE)/$(CONFUSE_SOURCE):
+	$(DOWNLOAD) $(CONFUSE_URL)/$(CONFUSE_SOURCE)
 
-$(D)/confuse: $(ARCHIVE)/confuse-$(CONFUSE_VER).tar.xz | $(TARGET_DIR)
-	$(REMOVE)/confuse-$(CONFUSE_VER)
-	$(UNTAR)/confuse-$(CONFUSE_VER).tar.xz
-	$(CHDIR)/confuse-$(CONFUSE_VER); \
+$(D)/confuse: $(ARCHIVE)/$(CONFUSE_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(CONFUSE)
+	$(UNTAR)/$(CONFUSE_SOURCE)
+	$(CHDIR)/$(CONFUSE); \
 		$(CONFIGURE) \
 			--prefix= \
 			--docdir=/.remove \
@@ -956,20 +1032,23 @@ $(D)/confuse: $(ARCHIVE)/confuse-$(CONFUSE_VER).tar.xz | $(TARGET_DIR)
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF)/libconfuse.pc
-	$(REMOVE)/confuse-$(CONFUSE_VER)
+	$(REMOVE)/$(CONFUSE)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
-LIBITE_VER = 2.0.2
+LIBITE_VER    = 2.0.2
+LIBITE        = libite-$(LIBITE_VER)
+LIBITE_SOURCE = libite-$(LIBITE_VER).tar.xz
+LIBITE_URL    = https://github.com/troglobit/libite/releases/download/v$(LIBITE_VER)
 
-$(ARCHIVE)/libite-$(LIBITE_VER).tar.xz:
-	$(DOWNLOAD) https://github.com/troglobit/libite/releases/download/v$(LIBITE_VER)/libite-$(LIBITE_VER).tar.xz
+$(ARCHIVE)/$(LIBITE_SOURCE):
+	$(DOWNLOAD) $(LIBITE_URL)/$(LIBITE_SOURCE)
 
-$(D)/libite: $(ARCHIVE)/libite-$(LIBITE_VER).tar.xz | $(TARGET_DIR)
-	$(REMOVE)/libite-$(LIBITE_VER)
-	$(UNTAR)/libite-$(LIBITE_VER).tar.xz
-	$(CHDIR)/libite-$(LIBITE_VER); \
+$(D)/libite: $(ARCHIVE)/$(LIBITE_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(LIBITE)
+	$(UNTAR)/$(LIBITE_SOURCE)
+	$(CHDIR)/$(LIBITE); \
 		$(CONFIGURE) \
 			--prefix= \
 			--docdir=/.remove \
@@ -981,15 +1060,18 @@ $(D)/libite: $(ARCHIVE)/libite-$(LIBITE_VER).tar.xz | $(TARGET_DIR)
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF)/libite.pc
-	$(REMOVE)/libite-$(LIBITE_VER)
+	$(REMOVE)/$(LIBITE)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
-LIBMAD_VER = 0.15.1b
+LIBMAD_VER    = 0.15.1b
+LIBMAD        = libmad-$(LIBMAD_VER)
+LIBMAD_SOURCE = libmad-$(LIBMAD_VER).tar.gz
+LIBMAD_URL    = https://sourceforge.net/projects/mad/files/libmad/$(LIBMAD_VER)
 
-$(ARCHIVE)/libmad-$(LIBMAD_VER).tar.gz:
-	$(DOWNLOAD) http://downloads.sourceforge.net/project/mad/libmad/$(LIBMAD_VER)/libmad-$(LIBMAD_VER).tar.gz
+$(ARCHIVE)/$(LIBMAD_SOURCE):
+	$(DOWNLOAD) $(LIBMAD_URL)/$(LIBMAD_SOURCE)
 
 LIBMAD_PATCH  = libmad-pc.patch
 LIBMAD_PATCH += libmad-frame_length.diff
@@ -998,10 +1080,10 @@ LIBMAD_PATCH += libmad-remove-deprecated-cflags.patch
 LIBMAD_PATCH += libmad-thumb2-fixed-arm.patch
 LIBMAD_PATCH += libmad-thumb2-imdct-arm.patch
 
-$(D)/libmad: $(ARCHIVE)/libmad-$(LIBMAD_VER).tar.gz | $(TARGET_DIR)
-	$(REMOVE)/libmad-$(LIBMAD_VER)
-	$(UNTAR)/libmad-$(LIBMAD_VER).tar.gz
-	$(CHDIR)/libmad-$(LIBMAD_VER); \
+$(D)/libmad: $(ARCHIVE)/$(LIBMAD_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(LIBMAD)
+	$(UNTAR)/$(LIBMAD_SOURCE)
+	$(CHDIR)/$(LIBMAD); \
 		$(call apply_patches, $(LIBMAD_PATCH)); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
@@ -1015,44 +1097,49 @@ $(D)/libmad: $(ARCHIVE)/libmad-$(LIBMAD_VER).tar.gz | $(TARGET_DIR)
 		make install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF)/mad.pc
 	$(REWRITE_LIBTOOL)/libmad.la
-	$(REMOVE)/libmad-$(LIBMAD_VER)
+	$(REMOVE)/$(LIBMAD)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
-LIBVORBISIDEC_VER = 1.2.1+git20180316
+LIBVORBISIDEC_VER    = 1.2.1+git20180316
+LIBVORBISIDEC        = libvorbisidec-$(LIBVORBISIDEC_VER)
+LIBVORBISIDEC_SOURCE = libvorbisidec_$(LIBVORBISIDEC_VER).orig.tar.gz
+LIBVORBISIDEC_URL    = https://ftp.de.debian.org/debian/pool/main/libv/libvorbisidec
 
-$(ARCHIVE)/libvorbisidec_$(LIBVORBISIDEC_VER).orig.tar.gz:
-	$(DOWNLOAD) http://ftp.de.debian.org/debian/pool/main/libv/libvorbisidec/libvorbisidec_$(LIBVORBISIDEC_VER).orig.tar.gz
+$(ARCHIVE)/$(LIBVORBISIDEC_SOURCE):
+	$(DOWNLOAD) $(LIBVORBISIDEC_URL)/$(LIBVORBISIDEC_SOURCE)
 
-$(D)/libvorbisidec: $(ARCHIVE)/libvorbisidec_$(LIBVORBISIDEC_VER).orig.tar.gz $(D)/libogg | $(TARGET_DIR)
-	$(REMOVE)/libvorbisidec-$(LIBVORBISIDEC_VER)
-	$(UNTAR)/libvorbisidec_$(LIBVORBISIDEC_VER).orig.tar.gz
-	$(CHDIR)/libvorbisidec-$(LIBVORBISIDEC_VER); \
+$(D)/libvorbisidec: $(D)/libogg $(ARCHIVE)/$(LIBVORBISIDEC_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(LIBVORBISIDEC)
+	$(UNTAR)/$(LIBVORBISIDEC_SOURCE)
+	$(CHDIR)/$(LIBVORBISIDEC); \
 		sed -i '122 s/^/#/' configure.in; \
 		autoreconf -fi; \
-		$(BUILDENV) \
 		$(CONFIGURE) \
 			--prefix= \
 			; \
 		make all; \
 		make install DESTDIR=$(TARGET_DIR); \
-	$(REMOVE)/libvorbisidec-$(LIBVORBISIDEC_VER)
 	$(REWRITE_PKGCONF)/vorbisidec.pc
 	$(REWRITE_LIBTOOL)/libvorbisidec.la
+	$(REMOVE)/$(LIBVORBISIDEC)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
-LIBOGG_VER = 1.3.3
+LIBOGG_VER    = 1.3.3
+LIBOGG        = libogg-$(LIBOGG_VER)
+LIBOGG_SOURCE = libogg-$(LIBOGG_VER).tar.gz
+LIBOGG_URL    = https://ftp.osuosl.org/pub/xiph/releases/ogg
 
-$(ARCHIVE)/libogg-$(LIBOGG_VER).tar.xz:
-	$(DOWNLOAD) http://downloads.xiph.org/releases/ogg/libogg-$(LIBOGG_VER).tar.xz
+$(ARCHIVE)/$(LIBOGG_SOURCE):
+	$(DOWNLOAD) $(LIBOGG_URL)/$(LIBOGG_SOURCE)
 
-$(D)/libogg: $(ARCHIVE)/libogg-$(LIBOGG_VER).tar.xz | $(TARGET_DIR)
-	$(REMOVE)/libogg-$(LIBOGG_VER)
-	$(UNTAR)/libogg-$(LIBOGG_VER).tar.xz
-	$(CHDIR)/libogg-$(LIBOGG_VER); \
+$(D)/libogg: $(ARCHIVE)/$(LIBOGG_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(LIBOGG)
+	$(UNTAR)/$(LIBOGG_SOURCE)
+	$(CHDIR)/$(LIBOGG); \
 		$(CONFIGURE) \
 			--prefix= \
 			--datarootdir=/.remove \
@@ -1062,20 +1149,23 @@ $(D)/libogg: $(ARCHIVE)/libogg-$(LIBOGG_VER).tar.xz | $(TARGET_DIR)
 		make install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF)/ogg.pc
 	$(REWRITE_LIBTOOL)/libogg.la
-	$(REMOVE)/libogg-$(LIBOGG_VER)
+	$(REMOVE)/$(LIBOGG)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
-FRIBIDI_VER = 1.0.4
+FRIBIDI_VER    = 1.0.3
+FRIBIDI        = fribidi-$(FRIBIDI_VER)
+FRIBIDI_SOURCE = fribidi-$(FRIBIDI_VER).tar.bz2
+FRIBIDI_URL    = https://github.com/fribidi/fribidi/releases/download/v$(FRIBIDI_VER)
 
-$(ARCHIVE)/fribidi-$(FRIBIDI_VER).tar.bz2:
-	$(DOWNLOAD) https://download.videolan.org/contrib/fribidi/fribidi-$(FRIBIDI_VER).tar.bz2
+$(ARCHIVE)/$(FRIBIDI_SOURCE):
+	$(DOWNLOAD) $(FRIBIDI_URL)/$(FRIBIDI_SOURCE)
 
-$(D)/libfribidi: $(ARCHIVE)/fribidi-$(FRIBIDI_VER).tar.bz2 | $(TARGET_DIR)
-	$(REMOVE)/fribidi-$(FRIBIDI_VER)
-	$(UNTAR)/fribidi-$(FRIBIDI_VER).tar.bz2
-	$(CHDIR)/fribidi-$(FRIBIDI_VER); \
+$(D)/fribidi: $(ARCHIVE)/$(FRIBIDI_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(FRIBIDI)
+	$(UNTAR)/$(FRIBIDI_SOURCE)
+	$(CHDIR)/$(FRIBIDI); \
 		$(CONFIGURE) \
 			--prefix= \
 			--mandir=/.remove \
@@ -1088,15 +1178,18 @@ $(D)/libfribidi: $(ARCHIVE)/fribidi-$(FRIBIDI_VER).tar.bz2 | $(TARGET_DIR)
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF)/fribidi.pc
 	$(REWRITE_LIBTOOL)/libfribidi.la
-	$(REMOVE)/fribidi-$(FRIBIDI_VER)
+	$(REMOVE)/$(FRIBIDI)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
-LIBFFI_VER = 3.2.1
+LIBFFI_VER    = 3.2.1
+LIBFFI        = libffi-$(LIBFFI_VER)
+LIBFFI_SOURCE = libffi-$(LIBFFI_VER).tar.gz
+LIBFFI_URL    = ftp://sourceware.org/pub/libffi
 
-$(ARCHIVE)/libffi-$(LIBFFI_VER).tar.gz:
-	$(DOWNLOAD) ftp://sourceware.org/pub/libffi/libffi-$(LIBFFI_VER).tar.gz
+$(ARCHIVE)/$(LIBFFI_SOURCE):
+	$(DOWNLOAD) $(LIBFFI_URL)/$(LIBFFI_SOURCE)
 
 LIBFFI_PATCH  = libffi-install_headers.patch
 
@@ -1105,10 +1198,10 @@ ifeq ($(BOXSERIES), hd1)
 	LIBFFI_CONF = --enable-static --disable-shared
 endif
 
-$(D)/libffi: $(ARCHIVE)/libffi-$(LIBFFI_VER).tar.gz
-	$(REMOVE)/libffi-$(LIBFFI_VER)
-	$(UNTAR)/libffi-$(LIBFFI_VER).tar.gz
-	$(CHDIR)/libffi-$(LIBFFI_VER); \
+$(D)/libffi: $(ARCHIVE)/$(LIBFFI_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(LIBFFI)
+	$(UNTAR)/$(LIBFFI_SOURCE)
+	$(CHDIR)/$(LIBFFI); \
 		$(call apply_patches, $(LIBFFI_PATCH)); \
 		$(CONFIGURE) \
 			--prefix= \
@@ -1119,22 +1212,21 @@ $(D)/libffi: $(ARCHIVE)/libffi-$(LIBFFI_VER).tar.gz
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF)/libffi.pc
 	$(REWRITE_LIBTOOL)/libffi.la
-	$(REMOVE)/libffi-$(LIBFFI_VER)
+	$(REMOVE)/$(LIBFFI)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
-# glibc provides a stub gettext implementation, so we only build it for hd2
+GLIB2_VER    = 2.56.3
+GLIB2        = glib-$(GLIB2_VER)
+GLIB2_SOURCE = glib-$(GLIB2_VER).tar.xz
+GLIB2_URL    = https://ftp.gnome.org/pub/gnome/sources/glib/$(basename $(GLIB2_VER))
 
-GLIB2_MAJOR = 2
-GLIB2_MINOR = 56
-GLIB2_MICRO = 3
-GLIB2_VER = $(GLIB2_MAJOR).$(GLIB2_MINOR).$(GLIB2_MICRO)
-
-$(ARCHIVE)/glib-$(GLIB2_VER).tar.xz:
-	$(DOWNLOAD) http://ftp.gnome.org/pub/gnome/sources/glib/$(GLIB2_MAJOR).$(GLIB2_MINOR)/glib-$(GLIB2_VER).tar.xz
+$(ARCHIVE)/$(GLIB2_SOURCE):
+	$(DOWNLOAD) $(GLIB2_URL)/$(GLIB2_SOURCE)
 
 GLIB2_PATCH  = glib2-disable-tests.patch
+GLIB2_PATCH += glib2-automake.patch
 
 GLIB2_DEPS =
 ifeq ($(BOXSERIES), hd2)
@@ -1146,10 +1238,10 @@ ifeq ($(BOXSERIES), hd1)
   GLIB2_CONF = --enable-static --disable-shared
 endif
 
-$(D)/glib2: $(ARCHIVE)/glib-$(GLIB2_VER).tar.xz $(D)/zlib $(GLIB2_DEPS) $(D)/libffi | $(TARGET_DIR)
-	$(REMOVE)/glib-$(GLIB2_VER)
-	$(UNTAR)/glib-$(GLIB2_VER).tar.xz
-	$(CHDIR)/glib-$(GLIB2_VER); \
+$(D)/glib2: $(D)/zlib $(D)/libffi $(GLIB2_DEPS) $(ARCHIVE)/$(GLIB2_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(GLIB2)
+	$(UNTAR)/$(GLIB2_SOURCE)
+	$(CHDIR)/$(GLIB2); \
 		$(call apply_patches, $(GLIB2_PATCH)); \
 		echo "ac_cv_type_long_long=yes"		 > arm-linux.cache; \
 		echo "glib_cv_stack_grows=no"		>> arm-linux.cache; \
@@ -1175,14 +1267,7 @@ $(D)/glib2: $(ARCHIVE)/glib-$(GLIB2_VER).tar.xz $(D)/zlib $(GLIB2_DEPS) $(D)/lib
 			$(GLIB2_CONF) \
 			; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	rm -rf $(TARGET_DIR)/bin/gapplication
-	rm -rf $(TARGET_DIR)/bin/gdbus*
-	rm -rf $(TARGET_DIR)/bin/gio*
-	rm -rf $(TARGET_DIR)/bin/glib*
-	rm -rf $(TARGET_DIR)/bin/gobject-query
-	rm -rf $(TARGET_DIR)/bin/gresource
-	rm -rf $(TARGET_DIR)/bin/gsettings
-	rm -rf $(TARGET_DIR)/bin/gtester*
+	rm -f $(addprefix $(TARGET_BIN_DIR)/,gapplication gdbus* gio* glib* gobject-query gresource gsettings gtester*)
 	$(REWRITE_PKGCONF)/gio-2.0.pc
 	$(REWRITE_PKGCONF)/gio-unix-2.0.pc
 	$(REWRITE_PKGCONF)/glib-2.0.pc
@@ -1196,24 +1281,26 @@ $(D)/glib2: $(ARCHIVE)/glib-$(GLIB2_VER).tar.xz $(D)/zlib $(GLIB2_DEPS) $(D)/lib
 	$(REWRITE_LIBTOOL)/libgmodule-2.0.la
 	$(REWRITE_LIBTOOL)/libgobject-2.0.la
 	$(REWRITE_LIBTOOL)/libgthread-2.0.la
-	$(REMOVE)/glib-$(GLIB2_VER)
+	$(REMOVE)/$(GLIB2)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
-ALSA-LIB_VER = 1.1.9
+ALSA-LIB_VER    = 1.1.9
+ALSA-LIB        = alsa-lib-$(ALSA-LIB_VER)
 ALSA-LIB_SOURCE = alsa-lib-$(ALSA-LIB_VER).tar.bz2
+ALSA-LIB_URL    = https://www.alsa-project.org/files/pub/lib
 
 $(ARCHIVE)/$(ALSA-LIB_SOURCE):
-	$(DOWNLOAD) ftp://ftp.alsa-project.org/pub/lib/$(ALSA-LIB_SOURCE)
+	$(DOWNLOAD) $(ALSA-LIB_URL)/$(ALSA-LIB_SOURCE)
 
 ALSA-LIB_PATCH  = alsa-lib.patch
 ALSA-LIB_PATCH += alsa-lib-link_fix.patch
 
 $(D)/alsa-lib: $(ARCHIVE)/$(ALSA-LIB_SOURCE)
-	$(REMOVE)/alsa-lib-$(ALSA-LIB_VER)
+	$(REMOVE)/$(ALSA-LIB)
 	$(UNTAR)/$(ALSA-LIB_SOURCE)
-	$(CHDIR)/alsa-lib-$(ALSA-LIB_VER); \
+	$(CHDIR)/$(ALSA-LIB); \
 		$(call apply_patches, $(ALSA-LIB_PATCH)); \
 		$(CONFIGURE) \
 			--prefix= \
@@ -1236,5 +1323,5 @@ $(D)/alsa-lib: $(ARCHIVE)/$(ALSA-LIB_SOURCE)
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF)/alsa.pc
 	$(REWRITE_LIBTOOL)/libasound.la
-	$(REMOVE)/alsa-lib-$(ALSA-LIB_VER)
+	$(REMOVE)/$(ALSA-LIB)
 	$(TOUCH)

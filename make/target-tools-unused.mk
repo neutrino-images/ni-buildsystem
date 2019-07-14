@@ -74,7 +74,7 @@ endif
 $(ARCHIVE)/util-linux-$(UTIL-LINUX_VER).tar.xz:
 	$(DOWNLOAD) https://www.kernel.org/pub/linux/utils/util-linux/v$(UTIL-LINUX_VER_MAJOR).$(UTIL-LINUX_VER_MINOR)/util-linux-$(UTIL-LINUX_VER).tar.xz
 
-$(D)/util-linux: $(D)/libncurses $(D)/zlib $(ARCHIVE)/util-linux-$(UTIL-LINUX_VER).tar.xz | $(TARGET_DIR)
+$(D)/util-linux: $(D)/ncurses $(D)/zlib $(ARCHIVE)/util-linux-$(UTIL-LINUX_VER).tar.xz | $(TARGET_DIR)
 	$(REMOVE)/util-linux-$(UTIL-LINUX_VER)
 	$(UNTAR)/util-linux-$(UTIL-LINUX_VER).tar.xz
 	$(CHDIR)/util-linux-$(UTIL-LINUX_VER); \

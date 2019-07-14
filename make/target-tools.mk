@@ -327,7 +327,7 @@ LESS_VER = 530
 $(ARCHIVE)/less-$(LESS_VER).tar.gz:
 	$(DOWNLOAD) http://www.greenwoodsoftware.com/less/less-$(LESS_VER).tar.gz
 
-$(D)/less: $(D)/libncurses $(ARCHIVE)/less-$(LESS_VER).tar.gz | $(TARGET_DIR)
+$(D)/less: $(D)/ncurses $(ARCHIVE)/less-$(LESS_VER).tar.gz | $(TARGET_DIR)
 	$(REMOVE)/less-$(LESS_VER)
 	$(UNTAR)/less-$(LESS_VER).tar.gz
 	$(CHDIR)/less-$(LESS_VER); \
@@ -409,18 +409,21 @@ $(D)/djmount: $(ARCHIVE)/djmount-$(DJMOUNT_VER).tar.gz $(D)/libfuse | $(TARGET_D
 
 # -----------------------------------------------------------------------------
 
-USHARE_VER = 1.1a
+USHARE_VER    = 1.1a
+USHARE        = ushare-uShare_v$(USHARE_VER)
+USHARE_SOURCE = uShare_v$(USHARE_VER).tar.gz
+USHARE_URL    = https://github.com/GeeXboX/ushare/archive
 
-$(ARCHIVE)/ushare-$(USHARE_VER).tar.bz2:
-	$(DOWNLOAD) http://ushare.geexbox.org/releases/ushare-$(USHARE_VER).tar.bz2
+$(ARCHIVE)/$(USHARE_SOURCE):
+	$(DOWNLOAD) $(USHARE_URL)/$(USHARE_SOURCE)
 
 USHARE_PATCH  = ushare.diff
 USHARE_PATCH += ushare-fix-building-with-gcc-5.x.patch
 
-$(D)/ushare: $(ARCHIVE)/ushare-$(USHARE_VER).tar.bz2 $(D)/libupnp | $(TARGET_DIR)
-	$(REMOVE)/ushare-$(USHARE_VER)
-	$(UNTAR)/ushare-$(USHARE_VER).tar.bz2
-	$(CHDIR)/ushare-$(USHARE_VER); \
+$(D)/ushare: $(D)/libupnp $(ARCHIVE)/$(USHARE_SOURCE)| $(TARGET_DIR)
+	$(REMOVE)/$(USHARE)
+	$(UNTAR)/$(USHARE_SOURCE)
+	$(CHDIR)/$(USHARE); \
 		$(call apply_patches, $(USHARE_PATCH)); \
 		$(BUILDENV) \
 		./configure \
@@ -440,7 +443,7 @@ $(D)/ushare: $(ARCHIVE)/ushare-$(USHARE_VER).tar.bz2 $(D)/libupnp | $(TARGET_DIR
 	install -D -m 0755 $(IMAGEFILES)/scripts/ushare.init $(TARGET_DIR)/etc/init.d/ushare
 	ln -sf ushare $(TARGET_DIR)/etc/init.d/S99ushare
 	ln -sf ushare $(TARGET_DIR)/etc/init.d/K01ushare
-	$(REMOVE)/ushare-$(USHARE_VER)
+	$(REMOVE)/$(USHARE)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -538,7 +541,7 @@ PROCPS-NG_PATCH += procps-ng-no-tests-docs.patch
 
 PROCPS-NG_BIN = ps top
 
-$(D)/procps-ng: $(D)/libncurses $(ARCHIVE)/$(PROCPS-NG_SOURCE) | $(TARGET_DIR)
+$(D)/procps-ng: $(D)/ncurses $(ARCHIVE)/$(PROCPS-NG_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PROCPS-NG)
 	$(UNTAR)/$(PROCPS-NG_SOURCE)
 	$(CHDIR)/$(PROCPS-NG); \
@@ -576,7 +579,7 @@ NANO_VER = $(NANO_VER_MAJOR).2
 $(ARCHIVE)/nano-$(NANO_VER).tar.gz:
 	$(DOWNLOAD) http://www.nano-editor.org/dist/v$(NANO_VER_MAJOR)/nano-$(NANO_VER).tar.gz
 
-$(D)/nano: $(D)/libncurses $(ARCHIVE)/nano-$(NANO_VER).tar.gz | $(TARGET_DIR)
+$(D)/nano: $(D)/ncurses $(ARCHIVE)/nano-$(NANO_VER).tar.gz | $(TARGET_DIR)
 	$(REMOVE)/nano-$(NANO_VER)
 	$(UNTAR)/nano-$(NANO_VER).tar.gz
 	$(CHDIR)/nano-$(NANO_VER); \
@@ -599,7 +602,7 @@ $(ARCHIVE)/minicom-$(MINICOM_VER).tar.gz:
 
 MINICOM_PATCH  = minicom-fix-h-v-return-value-is-not-0.patch
 
-$(D)/minicom: $(D)/libncurses $(ARCHIVE)/minicom-$(MINICOM_VER).tar.gz | $(TARGET_DIR)
+$(D)/minicom: $(D)/ncurses $(ARCHIVE)/minicom-$(MINICOM_VER).tar.gz | $(TARGET_DIR)
 	$(REMOVE)/minicom-$(MINICOM_VER)
 	$(UNTAR)/minicom-$(MINICOM_VER).tar.gz
 	$(CHDIR)/minicom-$(MINICOM_VER); \
@@ -1020,7 +1023,7 @@ $(D)/fbshot: $(D)/libpng $(ARCHIVE)/fbshot-$(FBSHOT_VER).tar.gz | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-$(D)/lcd4linux: $(D)/libncurses $(D)/libgd2 $(D)/libdpf | $(TARGET_DIR)
+$(D)/lcd4linux: $(D)/ncurses $(D)/libgd2 $(D)/libdpf | $(TARGET_DIR)
 	$(REMOVE)/lcd4linux.git
 	get-git-source.sh https://github.com/TangoCash/lcd4linux.git $(ARCHIVE)/lcd4linux.git
 	$(CPDIR)/lcd4linux.git
@@ -1337,7 +1340,7 @@ MC_VER = 4.8.23
 $(ARCHIVE)/mc-$(MC_VER).tar.xz:
 	$(DOWNLOAD) http://ftp.midnight-commander.org/mc-$(MC_VER).tar.xz
 
-$(D)/mc: $(D)/glib2 $(D)/libncurses $(ARCHIVE)/mc-$(MC_VER).tar.xz | $(TARGET_DIR)
+$(D)/mc: $(D)/glib2 $(D)/ncurses $(ARCHIVE)/mc-$(MC_VER).tar.xz | $(TARGET_DIR)
 	$(REMOVE)/mc-$(MC_VER)
 	$(UNTAR)/mc-$(MC_VER).tar.xz
 	$(CHDIR)/mc-$(MC_VER); \

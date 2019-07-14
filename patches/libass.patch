@@ -1,0 +1,51 @@
+--- a/libass/ass.c
++++ b/libass/ass.c
+@@ -627,6 +627,26 @@
+             "No event format found, using fallback");
+ }
+ 
++// we may get duplicate events from a rewinded stream ...
++static int check_duplicate_event_adv(ASS_Track *track)
++{
++	int i, last = track->n_events - 1;
++	for (i = 0; i < last; ++i)
++		if (track->events[i].Start == track->events[last].Start
++			&& track->events[i].Duration == track->events[last].Duration
++			&& track->events[i].Layer == track->events[last].Layer
++			&& track->events[i].Style == track->events[last].Style
++			&& track->events[i].MarginL == track->events[last].MarginL
++			&& track->events[i].MarginR == track->events[last].MarginR
++			&& track->events[i].MarginV == track->events[last].MarginV
++			&& !strcmp(track->events[i].Name, track->events[last].Name)
++			&& !strcmp(track->events[i].Effect, track->events[last].Effect)
++			&& !strcmp(track->events[i].Text, track->events[last].Text)
++		)
++			return 1;
++	return 0;
++}
++
+ static int process_events_line(ASS_Track *track, char *str)
+ {
+     if (!strncmp(str, "Format:", 7)) {
+@@ -653,6 +673,11 @@
+             event_format_fallback(track);
+ 
+         process_event_tail(track, event, str, 0);
++
++	if (check_duplicate_event_adv(track)) {
++		ass_free_event(track, eid);
++		track->n_events--;
++	}
+     } else {
+         ass_msg(track->library, MSGL_V, "Not understood: '%.30s'", str);
+     }
+@@ -939,6 +964,9 @@
+ 
+         event->Start = timecode;
+         event->Duration = duration;
++
++	if (check_duplicate_event_adv(track))
++		break;
+ 
+         free(str);
+         return;

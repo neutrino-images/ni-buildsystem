@@ -16,7 +16,7 @@ LUA_PATCH += lua-02-shared-libs-for-lua.patch
 LUA_PATCH += lua-03-lua-pc.patch
 LUA_PATCH += lua-04-crashfix.diff
 
-$(D)/lua: $(D)/libncurses $(ARCHIVE)/lua-$(LUA_VER).tar.gz | $(TARGET_DIR)
+$(D)/lua: $(D)/ncurses $(ARCHIVE)/lua-$(LUA_VER).tar.gz | $(TARGET_DIR)
 	$(REMOVE)/lua-$(LUA_VER)
 	$(UNTAR)/lua-$(LUA_VER).tar.gz
 	$(CHDIR)/lua-$(LUA_VER); \

@@ -1,0 +1,22 @@
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -484,15 +484,15 @@
+   | sed 's|^\./|$(prefix)/|' | grep -v '$(infodir)/dir$$'
+ distcleancheck_listfiles = find . -type f -print
+ ABS_TAPSET_DIR = @ABS_TAPSET_DIR@
+-ACLOCAL = @ACLOCAL@
++ACLOCAL = true
+ ALLOCA = @ALLOCA@
+ AMTAR = @AMTAR@
+ AM_DEFAULT_VERBOSITY = @AM_DEFAULT_VERBOSITY@
+ AR = @AR@
+ AS = @AS@
+-AUTOCONF = @AUTOCONF@
+-AUTOHEADER = @AUTOHEADER@
+-AUTOMAKE = @AUTOMAKE@
++AUTOCONF = true
++AUTOHEADER = true
++AUTOMAKE = true
+ AWK = @AWK@
+ CARBON_LIBS = @CARBON_LIBS@
+ CATALOGS = @CATALOGS@
