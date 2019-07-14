@@ -31,7 +31,7 @@ pkg-config-preqs:
 HOST_PKG-CONFIG_VER = 0.29.2
 
 $(ARCHIVE)/pkg-config-$(HOST_PKG-CONFIG_VER).tar.gz:
-	$(WGET) https://pkg-config.freedesktop.org/releases/pkg-config-$(HOST_PKG-CONFIG_VER).tar.gz
+	$(DOWNLOAD) https://pkg-config.freedesktop.org/releases/pkg-config-$(HOST_PKG-CONFIG_VER).tar.gz
 
 host-pkg-config: $(HOST_DIR)/bin/pkg-config
 $(HOST_DIR)/bin/pkg-config: $(ARCHIVE)/pkg-config-$(HOST_PKG-CONFIG_VER).tar.gz | $(HOST_DIR)/bin pkg-config-preqs
@@ -55,7 +55,7 @@ HOST_PKGCONF_VER = 1.6.0
 HOST_PKGCONF_SOURCE = pkgconf-$(HOST_PKGCONF_VER).tar.gz
 
 $(ARCHIVE)/$(HOST_PKGCONF_SOURCE):
-	$(WGET) https://github.com/pkgconf/pkgconf/archive/$(HOST_PKGCONF_SOURCE)
+	$(DOWNLOAD) https://github.com/pkgconf/pkgconf/archive/$(HOST_PKGCONF_SOURCE)
 
 host-pkgconf: $(HOST_DIR)/bin/pkgconf
 $(HOST_DIR)/bin/pkgconf: $(ARCHIVE)/$(HOST_PKGCONF_SOURCE) | $(HOST_DIR)/bin pkg-config-preqs
@@ -79,7 +79,7 @@ $(HOST_DIR)/bin/pkgconf: $(ARCHIVE)/$(HOST_PKGCONF_SOURCE) | $(HOST_DIR)/bin pkg
 HOST_MTD-UTILS_VER = $(MTD-UTILS_VER)
 
 #$(ARCHIVE)/mtd-utils-$(HOST_MTD-UTILS_VER).tar.bz2:
-#	$(WGET) ftp://ftp.infradead.org/pub/mtd-utils/mtd-utils-$(HOST_MTD-UTILS_VER).tar.bz2
+#	$(DOWNLOAD) ftp://ftp.infradead.org/pub/mtd-utils/mtd-utils-$(HOST_MTD-UTILS_VER).tar.bz2
 
 host-mkfs.jffs2: $(HOST_DIR)/bin/mkfs.jffs2
 host-sumtool: $(HOST_DIR)/bin/sumtool
@@ -108,7 +108,7 @@ $(HOST_DIR)/bin/sumtool: $(ARCHIVE)/mtd-utils-$(HOST_MTD-UTILS_VER).tar.bz2 | $(
 HOST_U-BOOT_VER = 2018.09
 
 $(ARCHIVE)/u-boot-$(HOST_U-BOOT_VER).tar.bz2:
-	$(WGET) ftp://ftp.denx.de/pub/u-boot/u-boot-$(HOST_U-BOOT_VER).tar.bz2
+	$(DOWNLOAD) ftp://ftp.denx.de/pub/u-boot/u-boot-$(HOST_U-BOOT_VER).tar.bz2
 
 host-mkimage: $(HOST_DIR)/bin/mkimage
 $(HOST_DIR)/bin/mkimage: $(ARCHIVE)/u-boot-$(HOST_U-BOOT_VER).tar.bz2 | $(HOST_DIR)/bin
@@ -126,12 +126,12 @@ $(HOST_DIR)/bin/mkimage: $(ARCHIVE)/u-boot-$(HOST_U-BOOT_VER).tar.bz2 | $(HOST_D
 HOST_TZDATA_VER = $(TZDATA_VER)
 
 #$(ARCHIVE)/tzdata$(HOST_TZDATA_VER).tar.gz:
-#	$(WGET) ftp://ftp.iana.org/tz/releases/tzdata$(HOST_TZDATA_VER).tar.gz
+#	$(DOWNLOAD) ftp://ftp.iana.org/tz/releases/tzdata$(HOST_TZDATA_VER).tar.gz
 
 HOST_TZCODE_VER = 2018e
 
 $(ARCHIVE)/tzcode$(HOST_TZCODE_VER).tar.gz:
-	$(WGET) ftp://ftp.iana.org/tz/releases/tzcode$(HOST_TZCODE_VER).tar.gz
+	$(DOWNLOAD) ftp://ftp.iana.org/tz/releases/tzcode$(HOST_TZCODE_VER).tar.gz
 
 host-zic: $(HOST_DIR)/bin/zic
 $(HOST_DIR)/bin/zic: $(ARCHIVE)/tzdata$(HOST_TZDATA_VER).tar.gz $(ARCHIVE)/tzcode$(HOST_TZCODE_VER).tar.gz | $(HOST_DIR)/bin
@@ -149,7 +149,7 @@ $(HOST_DIR)/bin/zic: $(ARCHIVE)/tzdata$(HOST_TZDATA_VER).tar.gz $(ARCHIVE)/tzcod
 HOST_PARTED_VER = $(PARTED_VER)
 
 #$(ARCHIVE)/parted-$(HOST_PARTED_VER).tar.xz:
-#	$(WGET) http://ftp.gnu.org/gnu/parted/parted-$(HOST_PARTED_VER).tar.xz
+#	$(DOWNLOAD) http://ftp.gnu.org/gnu/parted/parted-$(HOST_PARTED_VER).tar.xz
 
 HOST_PARTED_PATCH  = parted-3.2-devmapper-1.patch
 HOST_PARTED_PATCH += parted-3.2-sysmacros.patch
@@ -176,7 +176,7 @@ $(HOST_DIR)/bin/parted: $(ARCHIVE)/parted-$(HOST_PARTED_VER).tar.xz | $(HOST_DIR
 HOST_DOSFSTOOLS_VER = $(DOSFSTOOLS_VER)
 
 #$(ARCHIVE)/dosfstools-$(HOST_DOSFSTOOLS_VER).tar.xz:
-#	$(WGET) https://github.com/dosfstools/dosfstools/releases/download/v$(HOST_DOSFSTOOLS_VER)/dosfstools-$(HOST_DOSFSTOOLS_VER).tar.xz
+#	$(DOWNLOAD) https://github.com/dosfstools/dosfstools/releases/download/v$(HOST_DOSFSTOOLS_VER)/dosfstools-$(HOST_DOSFSTOOLS_VER).tar.xz
 
 host-mkfs.fat: $(HOST_DIR)/bin/mkfs.fat
 $(HOST_DIR)/bin/mkfs.fat: $(ARCHIVE)/dosfstools-$(HOST_DOSFSTOOLS_VER).tar.xz | $(HOST_DIR)/bin
@@ -198,7 +198,7 @@ $(HOST_DIR)/bin/mkfs.fat: $(ARCHIVE)/dosfstools-$(HOST_DOSFSTOOLS_VER).tar.xz | 
 HOST_MTOOLS_VER = 4.0.19
 
 $(ARCHIVE)/mtools-$(HOST_MTOOLS_VER).tar.gz:
-	$(WGET) ftp://ftp.gnu.org/gnu/mtools/mtools-$(HOST_MTOOLS_VER).tar.gz
+	$(DOWNLOAD) ftp://ftp.gnu.org/gnu/mtools/mtools-$(HOST_MTOOLS_VER).tar.gz
 
 host-mtools: $(HOST_DIR)/bin/mtools
 $(HOST_DIR)/bin/mtools: $(ARCHIVE)/mtools-$(HOST_MTOOLS_VER).tar.gz | $(HOST_DIR)/bin
@@ -216,7 +216,7 @@ $(HOST_DIR)/bin/mtools: $(ARCHIVE)/mtools-$(HOST_MTOOLS_VER).tar.gz | $(HOST_DIR
 HOST_E2FSPROGS_VER = $(E2FSPROGS_VER)
 
 #$(ARCHIVE)/e2fsprogs-$(HOST_E2FSPROGS_VER).tar.gz:
-#	$(WGET) http://downloads.sourceforge.net/project/e2fsprogs/e2fsprogs/v$(HOST_E2FSPROGS_VER)/e2fsprogs-$(HOST_E2FSPROGS_VER).tar.gz
+#	$(DOWNLOAD) http://downloads.sourceforge.net/project/e2fsprogs/e2fsprogs/v$(HOST_E2FSPROGS_VER)/e2fsprogs-$(HOST_E2FSPROGS_VER).tar.gz
 
 host-resize2fs: $(HOST_DIR)/bin/resize2fs
 $(HOST_DIR)/bin/resize2fs: $(ARCHIVE)/e2fsprogs-$(HOST_E2FSPROGS_VER).tar.gz | $(HOST_DIR)/bin
@@ -244,7 +244,7 @@ HOST_LUA = $(HOST_DIR)/bin/lua
 HOST_LUA_VER = $(LUA_VER)
 
 #$(ARCHIVE)/lua-$(HOST_LUA_VER).tar.gz:
-#	$(WGET) http://www.lua.org/ftp/lua-$(HOST_LUA_VER).tar.gz
+#	$(DOWNLOAD) http://www.lua.org/ftp/lua-$(HOST_LUA_VER).tar.gz
 
 HOST_LUA_PATCH  = lua-01-fix-LUA_ROOT.patch
 HOST_LUA_PATCH += lua-01-remove-readline.patch
@@ -266,7 +266,7 @@ HOST_LUAROCKS_VER = 3.1.3
 HOST_LUAROCKS_SOURCE = luarocks-$(HOST_LUAROCKS_VER).tar.gz
 
 $(ARCHIVE)/$(HOST_LUAROCKS_SOURCE):
-	$(WGET) https://luarocks.github.io/luarocks/releases/$(HOST_LUAROCKS_SOURCE)
+	$(DOWNLOAD) https://luarocks.github.io/luarocks/releases/$(HOST_LUAROCKS_SOURCE)
 
 HOST_LUAROCKS_PATCH  = luarocks-0001-allow-libluajit-detection.patch
 

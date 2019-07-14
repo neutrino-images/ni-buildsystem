@@ -7,7 +7,7 @@ FFMPEG_VER = 4.1.1
 FFMPEG_SOURCE = ffmpeg-$(FFMPEG_VER).tar.xz
 
 $(ARCHIVE)/$(FFMPEG_SOURCE):
-	$(WGET) http://www.ffmpeg.org/releases/$(FFMPEG_SOURCE)
+	$(DOWNLOAD) http://www.ffmpeg.org/releases/$(FFMPEG_SOURCE)
 
 # -----------------------------------------------------------------------------
 

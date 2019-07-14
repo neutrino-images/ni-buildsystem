@@ -148,7 +148,7 @@ $(D)/neutrino-mediathek: $(SHAREPLUGINS) | $(TARGET_DIR)
 LINKS_VER = 2.19
 
 $(ARCHIVE)/links-$(LINKS_VER).tar.bz2:
-	$(WGET) http://links.twibright.com/download/links-$(LINKS_VER).tar.bz2
+	$(DOWNLOAD) http://links.twibright.com/download/links-$(LINKS_VER).tar.bz2
 
 LINKS_PATCH  = links.patch
 LINKS_PATCH += links-ac-prog-cxx.patch

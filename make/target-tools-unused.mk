@@ -7,7 +7,7 @@
 USBUTILS_VER = 007
 
 $(ARCHIVE)/usbutils-$(USBUTILS_VER).tar.xz:
-	$(WGET) https://www.kernel.org/pub/linux/utils/usb/usbutils/usbutils-$(USBUTILS_VER).tar.xz
+	$(DOWNLOAD) https://www.kernel.org/pub/linux/utils/usb/usbutils/usbutils-$(USBUTILS_VER).tar.xz
 
 USBUTILS_PATCH  = usbutils-avoid-dependency-on-bash.patch
 USBUTILS_PATCH += usbutils-fix-null-pointer-crash.patch
@@ -38,7 +38,7 @@ $(D)/usbutils: $(D)/libusb-compat $(ARCHIVE)/usbutils-$(USBUTILS_VER).tar.xz | $
 BINUTILS_VER = 2.25
 
 $(ARCHIVE)/binutils-$(BINUTILS_VER).tar.bz2:
-	$(WGET) https://ftp.gnu.org/gnu/binutils/binutils-$(BINUTILS_VER).tar.bz2
+	$(DOWNLOAD) https://ftp.gnu.org/gnu/binutils/binutils-$(BINUTILS_VER).tar.bz2
 
 $(D)/binutils: $(ARCHIVE)/binutils-$(BINUTILS_VER).tar.bz2 | $(TARGET_DIR)
 	$(REMOVE)/binutils-$(BINUTILS_VER)
@@ -72,7 +72,7 @@ else
 endif
 
 $(ARCHIVE)/util-linux-$(UTIL-LINUX_VER).tar.xz:
-	$(WGET) https://www.kernel.org/pub/linux/utils/util-linux/v$(UTIL-LINUX_VER_MAJOR).$(UTIL-LINUX_VER_MINOR)/util-linux-$(UTIL-LINUX_VER).tar.xz
+	$(DOWNLOAD) https://www.kernel.org/pub/linux/utils/util-linux/v$(UTIL-LINUX_VER_MAJOR).$(UTIL-LINUX_VER_MINOR)/util-linux-$(UTIL-LINUX_VER).tar.xz
 
 $(D)/util-linux: $(D)/libncurses $(D)/zlib $(ARCHIVE)/util-linux-$(UTIL-LINUX_VER).tar.xz | $(TARGET_DIR)
 	$(REMOVE)/util-linux-$(UTIL-LINUX_VER)
@@ -122,7 +122,7 @@ $(D)/util-linux: $(D)/libncurses $(D)/zlib $(ARCHIVE)/util-linux-$(UTIL-LINUX_VE
 IPTABLES_VER = 1.4.21
 
 $(ARCHIVE)/iptables-$(IPTABLES_VER).tar.bz2:
-	$(WGET) http://www.netfilter.org/projects/iptables/files/iptables-$(IPTABLES_VER).tar.bz2
+	$(DOWNLOAD) http://www.netfilter.org/projects/iptables/files/iptables-$(IPTABLES_VER).tar.bz2
 
 $(D)/iptables: $(ARCHIVE)/iptables-$(IPTABLES_VER).tar.bz2 | $(TARGET_DIR)
 	$(REMOVE)/iptables-$(IPTABLES_VER)
@@ -150,7 +150,7 @@ $(D)/iptables: $(ARCHIVE)/iptables-$(IPTABLES_VER).tar.bz2 | $(TARGET_DIR)
 LIGHTTPD_VER = 1.4.31
 
 $(ARCHIVE)/lighttpd-$(LIGHTTPD_VER).tar.gz:
-	$(WGET) http://download.lighttpd.net/lighttpd/releases-1.4.x/lighttpd-$(LIGHTTPD_VER).tar.gz
+	$(DOWNLOAD) http://download.lighttpd.net/lighttpd/releases-1.4.x/lighttpd-$(LIGHTTPD_VER).tar.gz
 
 $(D)/lighttpd: $(D)/zlib $(ARCHIVE)/lighttpd-$(LIGHTTPD_VER).tar.gz | $(TARGET_DIR)
 	$(REMOVE)/lighttpd-$(LIGHTTPD_VER)
@@ -197,7 +197,7 @@ IOZONE_VER = 482
 IOZONE_SOURCE = iozone3_$(IOZONE_VER).tar
 
 $(ARCHIVE)/$(IOZONE_SOURCE):
-	$(WGET) http://www.iozone.org/src/current/$(IOZONE_SOURCE)
+	$(DOWNLOAD) http://www.iozone.org/src/current/$(IOZONE_SOURCE)
 
 $(D)/iozone3: $(ARCHIVE)/$(IOZONE_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/iozone3_$(IOZONE_VER)
@@ -217,7 +217,7 @@ RSYNC_VER = 3.1.3
 RSYNC_SOURCE = rsync-$(RSYNC_VER).tar.gz
 
 $(ARCHIVE)/$(RSYNC_SOURCE):
-	$(WGET) https://ftp.samba.org/pub/rsync/$(RSYNC_SOURCE)
+	$(DOWNLOAD) https://ftp.samba.org/pub/rsync/$(RSYNC_SOURCE)
 
 $(D)/rsync: $(ARCHIVE)/$(RSYNC_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/rsync-$(RSYNC_VER)
@@ -241,7 +241,7 @@ READLINE_VER = 8.0
 READLINE_SOURCE = readline-$(READLINE_VER).tar.gz
 
 $(ARCHIVE)/$(READLINE_SOURCE):
-	$(WGET) https://ftp.gnu.org/gnu/readline/$(READLINE_SOURCE)
+	$(DOWNLOAD) https://ftp.gnu.org/gnu/readline/$(READLINE_SOURCE)
 
 $(D)/readline: $(ARCHIVE)/$(READLINE_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/readline-$(READLINE_VER)

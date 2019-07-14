@@ -6,7 +6,7 @@
 LIBID3TAG_VER = 0.15.1b
 
 $(ARCHIVE)/libid3tag-$(LIBID3TAG_VER).tar.gz:
-	$(WGET) http://downloads.sourceforge.net/project/mad/libid3tag/$(LIBID3TAG_VER)/libid3tag-$(LIBID3TAG_VER).tar.gz
+	$(DOWNLOAD) http://downloads.sourceforge.net/project/mad/libid3tag/$(LIBID3TAG_VER)/libid3tag-$(LIBID3TAG_VER).tar.gz
 
 LIBID3TAG_PATCH  = libid3tag-pc.patch
 
@@ -32,7 +32,7 @@ $(D)/libid3tag: $(D)/zlib $(ARCHIVE)/libid3tag-$(LIBID3TAG_VER).tar.gz | $(TARGE
 LIBFLAC_VER = 1.3.2
 
 $(ARCHIVE)/flac-$(LIBFLAC_VER).tar.xz:
-	$(WGET) http://prdownloads.sourceforge.net/sourceforge/flac/flac-$(LIBFLAC_VER).tar.xz
+	$(DOWNLOAD) http://prdownloads.sourceforge.net/sourceforge/flac/flac-$(LIBFLAC_VER).tar.xz
 
 $(D)/libFLAC: $(ARCHIVE)/flac-$(LIBFLAC_VER).tar.xz | $(TARGET_DIR)
 	$(REMOVE)/flac-$(LIBFLAC_VER)
@@ -63,7 +63,7 @@ $(D)/libFLAC: $(ARCHIVE)/flac-$(LIBFLAC_VER).tar.xz | $(TARGET_DIR)
 LIBROXML_VER = 2.3.0
 
 $(ARCHIVE)/libroxml-$(LIBROXML_VER).tar.gz:
-	$(WGET) http://download.libroxml.net/pool/v2.x/libroxml-$(LIBROXML_VER).tar.gz
+	$(DOWNLOAD) http://download.libroxml.net/pool/v2.x/libroxml-$(LIBROXML_VER).tar.gz
 
 $(D)/libroxml: $(ARCHIVE)/libroxml-$(LIBROXML_VER).tar.gz | $(TARGET_DIR)
 	$(REMOVE)/libroxml-$(LIBROXML_VER)
@@ -88,7 +88,7 @@ BZIP2_VER = 1.0.6
 BZIP2_SOURCE = bzip2-$(BZIP2_VER).tar.gz
 
 $(ARCHIVE)/$(BZIP2_SOURCE):
-	$(WGET) http://sources.buildroot.net/$(BZIP2_SOURCE)
+	$(DOWNLOAD) http://sources.buildroot.net/$(BZIP2_SOURCE)
 
 BZIP2_Patch = bzip2-$(BZIP2_VER).patch
 
@@ -111,7 +111,7 @@ FONTCONFIG_VER = 2.11.93
 FONTCONFIG_SOURCE = fontconfig-$(FONTCONFIG_VER).tar.bz2
 
 $(ARCHIVE)/$(FONTCONFIG_SOURCE):
-	$(WGET) https://www.freedesktop.org/software/fontconfig/release/$(FONTCONFIG_SOURCE)
+	$(DOWNLOAD) https://www.freedesktop.org/software/fontconfig/release/$(FONTCONFIG_SOURCE)
 
 $(D)/fontconfig: $(D)/freetype $(D)/expat $(ARCHIVE)/$(FONTCONFIG_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/fontconfig-$(FONTCONFIG_VER)
@@ -138,7 +138,7 @@ PIXMAN_VER = 0.34.0
 PIXMAN_SOURCE = pixman-$(PIXMAN_VER).tar.gz
 
 $(ARCHIVE)/$(PIXMAN_SOURCE):
-	$(WGET) https://www.cairographics.org/releases/$(PIXMAN_SOURCE)
+	$(DOWNLOAD) https://www.cairographics.org/releases/$(PIXMAN_SOURCE)
 
 PIXMAN_PATCH  = pixman-$(PIXMAN_VER)-0001-ARM-qemu-related-workarounds-in-cpu-features-detecti.patch
 PIXMAN_PATCH += pixman-$(PIXMAN_VER)-asm_include.patch
@@ -169,7 +169,7 @@ CAIRO_VER = 1.16.0
 CAIRO_SOURCE = cairo-$(CAIRO_VER).tar.xz
 
 $(ARCHIVE)/$(CAIRO_SOURCE):
-	$(WGET) https://www.cairographics.org/releases/$(CAIRO_SOURCE)
+	$(DOWNLOAD) https://www.cairographics.org/releases/$(CAIRO_SOURCE)
 
 CAIRO_PATCH  = cairo-$(CAIRO_VER)-get_bitmap_surface.diff
 
@@ -220,7 +220,7 @@ HARFBUZZ_VER = 1.8.8
 HARFBUZZ_SOURCE = harfbuzz-$(HARFBUZZ_VER).tar.bz2
 
 $(ARCHIVE)/$(HARFBUZZ_SOURCE):
-	$(WGET) https://www.freedesktop.org/software/harfbuzz/release/$(HARFBUZZ_SOURCE)
+	$(DOWNLOAD) https://www.freedesktop.org/software/harfbuzz/release/$(HARFBUZZ_SOURCE)
 
 HARFBUZZ_PATCH  = harfbuzz-$(HARFBUZZ_VER)-disable-docs.patch
 

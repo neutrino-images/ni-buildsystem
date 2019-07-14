@@ -7,7 +7,7 @@ LUA_ABIVER = 5.2
 LUA_VER = $(LUA_ABIVER).4
 
 $(ARCHIVE)/lua-$(LUA_VER).tar.gz:
-	$(WGET) http://www.lua.org/ftp/lua-$(LUA_VER).tar.gz
+	$(DOWNLOAD) http://www.lua.org/ftp/lua-$(LUA_VER).tar.gz
 
 LUA_PATCH  = lua-01-fix-LUA_ROOT.patch
 LUA_PATCH += lua-01-remove-readline.patch
@@ -44,7 +44,7 @@ $(D)/lua: $(D)/libncurses $(ARCHIVE)/lua-$(LUA_VER).tar.gz | $(TARGET_DIR)
 LUAEXPAT_VER = 1.3.0
 
 $(ARCHIVE)/luaexpat-$(LUAEXPAT_VER).tar.gz:
-	$(WGET) http://matthewwild.co.uk/projects/luaexpat/luaexpat-$(LUAEXPAT_VER).tar.gz
+	$(DOWNLOAD) http://matthewwild.co.uk/projects/luaexpat/luaexpat-$(LUAEXPAT_VER).tar.gz
 
 LUAEXPAT_PATCH  = luaexpat-makefile.patch
 
@@ -66,7 +66,7 @@ LUA-FEEDPARSER_VER = 0.71
 LUA-FEEDPARSER_SOURCE = lua-feedparser-$(LUA-FEEDPARSER_VER).tar.gz
 
 $(ARCHIVE)/$(LUA-FEEDPARSER_SOURCE):
-	$(WGET) https://github.com/slact/lua-feedparser/archive/$(LUA-FEEDPARSER_VER).tar.gz -O $@
+	$(DOWNLOAD) https://github.com/slact/lua-feedparser/archive/$(LUA-FEEDPARSER_VER).tar.gz -O $@
 
 LUA-FEEDPARSER_PATCH  = lua-feedparser.patch
 
@@ -86,7 +86,7 @@ LUAJSON_SOURCE = JSON.lua
 LUAJSON_URL = http://regex.info/code/$(LUAJSON_SOURCE)
 
 $(ARCHIVE)/$(LUAJSON_SOURCE):
-	$(WGET) $(LUAJSON_URL)
+	$(DOWNLOAD) $(LUAJSON_URL)
 
 $(D)/luajson: $(ARCHIVE)/$(LUAJSON_SOURCE) | $(TARGET_DIR)
 	$(CD) $(ARCHIVE); \
@@ -122,7 +122,7 @@ LUAPOSIX_VER = 31
 LUAPOSIX_SOURCE = luaposix-$(LUAPOSIX_VER).tar.gz
 
 $(ARCHIVE)/$(LUAPOSIX_SOURCE):
-	$(WGET) https://github.com/luaposix/luaposix/archive/v$(LUAPOSIX_VER).tar.gz -O $@
+	$(DOWNLOAD) https://github.com/luaposix/luaposix/archive/v$(LUAPOSIX_VER).tar.gz -O $@
 
 LUAPOSIX_PATCH  = luaposix-fix-build.patch
 LUAPOSIX_PATCH += luaposix-fix-docdir-build.patch
@@ -131,13 +131,13 @@ GNULIB_VER = 20140202
 GNULIB_SOURCE = gnulib-$(GNULIB_VER)-stable.tar.gz
 
 $(ARCHIVE)/$(GNULIB_SOURCE):
-	$(WGET) http://erislabs.net/ianb/projects/gnulib/$(GNULIB_SOURCE)
+	$(DOWNLOAD) http://erislabs.net/ianb/projects/gnulib/$(GNULIB_SOURCE)
 
 SLINGSHOT_VER = 6
 SLINGSHOT_SOURCE = slingshot-$(SLINGSHOT_VER).tar.gz
 
 $(ARCHIVE)/$(SLINGSHOT_SOURCE):
-	$(WGET) https://github.com/gvvaughan/slingshot/archive/v$(SLINGSHOT_VER).tar.gz -O $@
+	$(DOWNLOAD) https://github.com/gvvaughan/slingshot/archive/v$(SLINGSHOT_VER).tar.gz -O $@
 
 $(D)/luaposix: $(HOST_LUA) $(D)/lua $(D)/luaexpat $(ARCHIVE)/$(SLINGSHOT_SOURCE) $(ARCHIVE)/$(GNULIB_SOURCE) $(ARCHIVE)/$(LUAPOSIX_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/luaposix-$(LUAPOSIX_VER)

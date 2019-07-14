@@ -64,7 +64,7 @@ crosstool-arm-bre2ze4k: $(CROSS_BASE)/arm/bre2ze4k
 GCC_VER = 4.9-2017.01
 
 $(ARCHIVE)/gcc-linaro-$(GCC_VER).tar.xz:
-	$(WGET) https://releases.linaro.org/components/toolchain/gcc-linaro/$(GCC_VER)/gcc-linaro-$(GCC_VER).tar.xz
+	$(DOWNLOAD) https://releases.linaro.org/components/toolchain/gcc-linaro/$(GCC_VER)/gcc-linaro-$(GCC_VER).tar.xz
 
 UCLIBC_VER = 1.0.24
 

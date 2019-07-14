@@ -31,7 +31,7 @@ GSTREAMER_VER = 1.14.4
 GSTREAMER_SOURCE = gstreamer-$(GSTREAMER_VER).tar.xz
 
 $(ARCHIVE)/$(GSTREAMER_SOURCE):
-	$(WGET) https://gstreamer.freedesktop.org/src/gstreamer/$(GSTREAMER_SOURCE)
+	$(DOWNLOAD) https://gstreamer.freedesktop.org/src/gstreamer/$(GSTREAMER_SOURCE)
 
 GSTREAMER_PATCH  = gstreamer-$(GSTREAMER_VER)-revert-use-new-gst-adapter-get-buffer.patch
 
@@ -81,7 +81,7 @@ GST_PLUGINS_BASE_VER = $(GSTREAMER_VER)
 GST_PLUGINS_BASE_SOURCE = gst-plugins-base-$(GST_PLUGINS_BASE_VER).tar.xz
 
 $(ARCHIVE)/$(GST_PLUGINS_BASE_SOURCE):
-	$(WGET) https://gstreamer.freedesktop.org/src/gst-plugins-base/$(GST_PLUGINS_BASE_SOURCE)
+	$(DOWNLOAD) https://gstreamer.freedesktop.org/src/gst-plugins-base/$(GST_PLUGINS_BASE_SOURCE)
 
 GST_PLUGINS_BASE_PATCH  = gst-plugins-base-$(GST_PLUGINS_BASE_VER)-0003-riff-add-missing-include-directories-when-calling-in.patch
 #GST_PLUGINS_BASE_PATCH += gst-plugins-base-$(GST_PLUGINS_BASE_VER)-0004-rtsp-drop-incorrect-reference-to-gstreamer-sdp-in-Ma.patch
@@ -142,7 +142,7 @@ GST_PLUGINS_GOOD_VER = $(GSTREAMER_VER)
 GST_PLUGINS_GOOD_SOURCE = gst-plugins-good-$(GST_PLUGINS_GOOD_VER).tar.xz
 
 $(ARCHIVE)/$(GST_PLUGINS_GOOD_SOURCE):
-	$(WGET) https://gstreamer.freedesktop.org/src/gst-plugins-good/$(GST_PLUGINS_GOOD_SOURCE)
+	$(DOWNLOAD) https://gstreamer.freedesktop.org/src/gst-plugins-good/$(GST_PLUGINS_GOOD_SOURCE)
 
 GST_PLUGINS_GOOD_PATCH  = gst-plugins-good-$(GST_PLUGINS_GOOD_VER)-0001-gstrtpmp4gpay-set-dafault-value-for-MPEG4-without-co.patch
 
@@ -175,7 +175,7 @@ GST_PLUGINS_BAD_VER = $(GSTREAMER_VER)
 GST_PLUGINS_BAD_SOURCE = gst-plugins-bad-$(GST_PLUGINS_BAD_VER).tar.xz
 
 $(ARCHIVE)/$(GST_PLUGINS_BAD_SOURCE):
-	$(WGET) https://gstreamer.freedesktop.org/src/gst-plugins-bad/$(GST_PLUGINS_BAD_SOURCE)
+	$(DOWNLOAD) https://gstreamer.freedesktop.org/src/gst-plugins-bad/$(GST_PLUGINS_BAD_SOURCE)
 
 GST_PLUGINS_BAD_PATCH  = gst-plugins-bad-$(GST_PLUGINS_BAD_VER)-configure-allow-to-disable-libssh2.patch
 GST_PLUGINS_BAD_PATCH += gst-plugins-bad-$(GST_PLUGINS_BAD_VER)-fix-maybe-uninitialized-warnings-when-compiling-with-Os.patch
@@ -237,7 +237,7 @@ GST_PLUGINS_UGLY_VER = $(GSTREAMER_VER)
 GST_PLUGINS_UGLY_SOURCE = gst-plugins-ugly-$(GST_PLUGINS_UGLY_VER).tar.xz
 
 $(ARCHIVE)/$(GST_PLUGINS_UGLY_SOURCE):
-	$(WGET) https://gstreamer.freedesktop.org/src/gst-plugins-ugly/$(GST_PLUGINS_UGLY_SOURCE)
+	$(DOWNLOAD) https://gstreamer.freedesktop.org/src/gst-plugins-ugly/$(GST_PLUGINS_UGLY_SOURCE)
 
 $(D)/gst-plugins-ugly: $(ARCHIVE)/$(GST_PLUGINS_UGLY_SOURCE) $(D)/gst-plugins-base | $(TARGET_DIR)
 	$(REMOVE)/gst-plugins-ugly-$(GST_PLUGINS_UGLY_VER)
@@ -331,7 +331,7 @@ GST_LIBAV_VER = $(GSTREAMER_VER)
 GST_LIBAV_SOURCE = gst-libav-$(GST_LIBAV_VER).tar.xz
 
 $(ARCHIVE)/$(GST_LIBAV_SOURCE):
-	$(WGET) https://gstreamer.freedesktop.org/src/gst-libav/$(GST_LIBAV_SOURCE)
+	$(DOWNLOAD) https://gstreamer.freedesktop.org/src/gst-libav/$(GST_LIBAV_SOURCE)
 
 GST_LIBAV_PATCH  = gst-libav-$(GST_LIBAV_VER)-0001-Disable-yasm-for-libav-when-disable-yasm.patch
 GST_LIBAV_PATCH += gst-libav-$(GST_LIBAV_VER)-workaround-to-build-gst-libav-for-i586-with-gcc.patch
@@ -407,7 +407,7 @@ ORC_VER = 0.4.28
 ORC_SOURCE = orc-$(ORC_VER).tar.xz
 
 $(ARCHIVE)/$(ORC_SOURCE):
-	$(WGET) https://gstreamer.freedesktop.org/src/orc/$(ORC_SOURCE)
+	$(DOWNLOAD) https://gstreamer.freedesktop.org/src/orc/$(ORC_SOURCE)
 
 $(D)/orc: $(ARCHIVE)/$(ORC_SOURCE)
 	$(REMOVE)/orc-$(ORC_VER)
@@ -432,7 +432,7 @@ LIBDCA_VER = 0.0.5
 LIBDCA_SOURCE = libdca-$(LIBDCA_VER).tar.bz2
 
 $(ARCHIVE)/$(LIBDCA_SOURCE):
-	$(WGET) http://download.videolan.org/pub/videolan/libdca/$(LIBDCA_VER)/$(LIBDCA_SOURCE)
+	$(DOWNLOAD) http://download.videolan.org/pub/videolan/libdca/$(LIBDCA_VER)/$(LIBDCA_SOURCE)
 
 $(D)/libdca: $(ARCHIVE)/$(LIBDCA_SOURCE)
 	$(REMOVE)/libdca-$(LIBDCA_VER)
@@ -457,7 +457,7 @@ NETTLE_VER = 3.4
 NETTLE_SOURCE = nettle-$(NETTLE_VER).tar.gz
 
 $(ARCHIVE)/$(NETTLE_SOURCE):
-	$(WGET) https://ftp.gnu.org/gnu/nettle/$(NETTLE_SOURCE)
+	$(DOWNLOAD) https://ftp.gnu.org/gnu/nettle/$(NETTLE_SOURCE)
 
 $(D)/nettle: $(D)/gmp $(ARCHIVE)/$(NETTLE_SOURCE)
 	$(REMOVE)/nettle-$(NETTLE_VER)
@@ -481,7 +481,7 @@ GMP_VER = 6.1.2
 GMP_SOURCE = gmp-$(GMP_VER).tar.xz
 
 $(ARCHIVE)/$(GMP_SOURCE):
-	$(WGET) ftp://ftp.gmplib.org/pub/gmp-$(GMP_VER)/$(GMP_SOURCE)
+	$(DOWNLOAD) ftp://ftp.gmplib.org/pub/gmp-$(GMP_VER)/$(GMP_SOURCE)
 
 $(D)/gmp: $(ARCHIVE)/$(GMP_SOURCE)
 	$(REMOVE)/gmp-$(GMP_VER)
@@ -505,7 +505,7 @@ GNUTLS_VER = $(GNUTLS_VER_MAJOR).$(GNUTLS_VER_MINOR)
 GNUTLS_SOURCE = gnutls-$(GNUTLS_VER).tar.xz
 
 $(ARCHIVE)/$(GNUTLS_SOURCE):
-	$(WGET) ftp://ftp.gnutls.org/gcrypt/gnutls/v$(GNUTLS_VER_MAJOR)/$(GNUTLS_SOURCE)
+	$(DOWNLOAD) ftp://ftp.gnutls.org/gcrypt/gnutls/v$(GNUTLS_VER_MAJOR)/$(GNUTLS_SOURCE)
 
 $(D)/gnutls: $(D)/nettle $(D)/ca-bundle $(ARCHIVE)/$(GNUTLS_SOURCE)
 	$(REMOVE)/gnutls-$(GNUTLS_VER)
@@ -542,7 +542,7 @@ GLIB-NETWORKING_VER = $(GLIB-NETWORKING_VER_MAJOR).$(GLIB-NETWORKING_VER_MINOR)
 GLIB-NETWORKING_SOURCE = glib-networking-$(GLIB-NETWORKING_VER).tar.xz
 
 $(ARCHIVE)/$(GLIB-NETWORKING_SOURCE):
-	$(WGET) https://ftp.acc.umu.se/pub/GNOME/sources/glib-networking/$(GLIB-NETWORKING_VER_MAJOR)/$(GLIB-NETWORKING_SOURCE)
+	$(DOWNLOAD) https://ftp.acc.umu.se/pub/GNOME/sources/glib-networking/$(GLIB-NETWORKING_VER_MAJOR)/$(GLIB-NETWORKING_SOURCE)
 
 $(D)/glib-networking: $(D)/gnutls $(D)/glib2 $(ARCHIVE)/$(GLIB-NETWORKING_SOURCE)
 	$(REMOVE)/glib-networking-$(GLIB-NETWORKING_VER)
@@ -567,7 +567,7 @@ LIBSOUP_VER = $(LIBSOUP_VER_MAJOR).$(LIBSOUP_VER_MINOR)
 LIBSOUP_SOURCE = libsoup-$(LIBSOUP_VER).tar.xz
 
 $(ARCHIVE)/$(LIBSOUP_SOURCE):
-	$(WGET) https://download.gnome.org/sources/libsoup/$(LIBSOUP_VER_MAJOR)/$(LIBSOUP_SOURCE)
+	$(DOWNLOAD) https://download.gnome.org/sources/libsoup/$(LIBSOUP_VER_MAJOR)/$(LIBSOUP_SOURCE)
 
 $(D)/libsoup: $(D)/sqlite $(D)/libxml2 $(D)/glib2 $(ARCHIVE)/$(LIBSOUP_SOURCE)
 	$(REMOVE)/libsoup-$(LIBSOUP_VER)
@@ -595,7 +595,7 @@ SQLITE_VER = 3280000
 SQLITE_SOURCE = sqlite-autoconf-$(SQLITE_VER).tar.gz
 
 $(ARCHIVE)/$(SQLITE_SOURCE):
-	$(WGET) http://www.sqlite.org/2019/$(SQLITE_SOURCE)
+	$(DOWNLOAD) http://www.sqlite.org/2019/$(SQLITE_SOURCE)
 
 $(D)/sqlite: $(ARCHIVE)/$(SQLITE_SOURCE)
 	$(REMOVE)/sqlite-autoconf-$(SQLITE_VER)

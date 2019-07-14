@@ -276,8 +276,8 @@ UNZIP = unzip -d $(BUILD_TMP) -o $(ARCHIVE)
 REMOVE = rm -rf $(TARGET_DIR)/.remove $(BUILD_TMP)
 PATCH = patch -p1 -i $(PATCHES)
 
-# wget tarballs into archive directory
-WGET = wget -t3 -T60 -c -P $(ARCHIVE)
+# download tarballs into archive directory
+DOWNLOAD = wget -t3 -T60 -c -P $(ARCHIVE)
 
 CD    = set -e; cd
 CHDIR = $(CD) $(BUILD_TMP)
