@@ -343,27 +343,34 @@ $(D)/less: $(D)/libncurses $(ARCHIVE)/less-$(LESS_VER).tar.gz | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-NTP_VER = 4.2.8
+NTP_VER    = 4.2.8
+NTP        = ntp-$(NTP_VER)
+NTP_SOURCE = ntp-$(NTP_VER).tar.gz
+NTP_URL    = https://www.eecis.udel.edu/~ntp/ntp_spool/ntp4/ntp-$(basename $(NTP_VER))
 
-$(ARCHIVE)/ntp-$(NTP_VER).tar.gz:
-	$(DOWNLOAD) http://www.eecis.udel.edu/~ntp/ntp_spool/ntp4/ntp-4.2/ntp-$(NTP_VER).tar.gz
+$(ARCHIVE)/$(NTP_SOURCE):
+	$(DOWNLOAD) $(NTP_URL)/$(NTP_SOURCE)
 
-$(D)/ntp: $(ARCHIVE)/ntp-$(NTP_VER).tar.gz $(D)/openssl | $(TARGET_DIR)
-	$(REMOVE)/ntp-$(NTP_VER)
-	$(UNTAR)/ntp-$(NTP_VER).tar.gz
-	$(CHDIR)/ntp-$(NTP_VER); \
+NTP_PATCH  = ntp.patch
+
+$(D)/ntp: $(D)/openssl $(ARCHIVE)/$(NTP_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(NTP)
+	$(UNTAR)/$(NTP_SOURCE)
+	$(CHDIR)/$(NTP); \
+		$(call apply_patches, $(NTP_PATCH)); \
 		$(CONFIGURE) \
 			--prefix= \
 			--target=$(TARGET) \
+			--disable-debugging \
 			--with-shared \
 			--with-crypto \
 			--with-yielding-select=yes \
 			--without-ntpsnmpd \
 			; \
 		$(MAKE)
-	install -D -m 0755 $(BUILD_TMP)/ntp-$(NTP_VER)/ntpdate/ntpdate $(TARGET_DIR)/sbin/ntpdate
+	install -D -m 0755 $(BUILD_TMP)/$(NTP)/ntpdate/ntpdate $(TARGET_DIR)/sbin/ntpdate
 	install -D -m 0755 $(IMAGEFILES)/scripts/ntpdate.init $(TARGET_DIR)/etc/init.d/ntpdate
-	$(REMOVE)/ntp-$(NTP_VER)
+	$(REMOVE)/$(NTP)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
