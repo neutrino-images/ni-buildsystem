@@ -139,6 +139,10 @@ TZDATA_URL    = ftp://ftp.iana.org/tz/releases
 $(ARCHIVE)/$(TZDATA_SOURCE):
 	$(DOWNLOAD) $(TZDATA_URL)/$(TZDATA_SOURCE)
 
+TZDATA_ZONELIST = \
+	africa antarctica asia australasia europe northamerica \
+	southamerica pacificnew etcetera backward
+
 ifeq ($(BOXSERIES), hd2)
   LOCALTIME = var/etc/localtime
 else
@@ -151,23 +155,20 @@ $(D)/tzdata: $(ARCHIVE)/$(TZDATA_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(TZDATA_TMP); \
 		tar -xf $(ARCHIVE)/$(TZDATA_SOURCE); \
 		unset ${!LC_*}; LANG=POSIX; LC_ALL=POSIX; export LANG LC_ALL; \
-		zic -d zoneinfo.tmp \
-			africa antarctica asia australasia \
-			europe northamerica southamerica pacificnew \
-			etcetera backward; \
+		zic -d zoneinfo.tmp $(TZDATA_ZONELIST); \
 		mkdir zoneinfo; \
-		sed -n '/zone=/{s/.*zone="\(.*\)".*$$/\1/; p}' $(IMAGEFILES)/timezone/timezone.xml | sort -u | \
+		sed -n '/zone=/{s/.*zone="\(.*\)".*$$/\1/; p}' $(IMAGEFILES)/tzdata/timezone.xml | sort -u | \
 		while read x; do \
 			find zoneinfo.tmp -type f -name $$x | sort | \
 			while read y; do \
-				cp -a $$y zoneinfo/$$x; \
+				install -m 0644 $$y zoneinfo/$$x; \
 			done; \
 			test -e zoneinfo/$$x || echo "WARNING: timezone $$x not found."; \
 		done; \
-		install -d -m 0755 $(TARGET_SHARE_DIR)/ $(TARGET_DIR)/etc; \
+		install -d $(TARGET_SHARE_DIR); \
 		mv zoneinfo/ $(TARGET_SHARE_DIR)/
-	install -m 0644 $(IMAGEFILES)/timezone/timezone.xml $(TARGET_DIR)/etc/
-	cp $(TARGET_SHARE_DIR)/zoneinfo/CET $(TARGET_DIR)/$(LOCALTIME)
+	install -m 0644 -D $(IMAGEFILES)/tzdata/timezone.xml $(TARGET_DIR)/etc/timezone.xml
+	install -m 0644 $(TARGET_SHARE_DIR)/zoneinfo/CET $(TARGET_DIR)/$(LOCALTIME)
 	$(REMOVE)/$(TZDATA_TMP)
 	$(TOUCH)
 
