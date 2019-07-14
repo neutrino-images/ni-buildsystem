@@ -61,33 +61,41 @@ crosstool-arm-bre2ze4k: $(CROSS_BASE)/arm/bre2ze4k
 
 # -----------------------------------------------------------------------------
 
-GCC_VER = 4.9-2017.01
+CROSSTOOL-NG_VER     = git
+CROSSTOOL-NG_TMP     = crosstool-ng.$(CROSSTOOL-NG_VER)
+CROSSTOOL-NG_SOURCE  = crosstool-ng.$(CROSSTOOL-NG_VER)
+CROSSTOOL-NG_URL     = https://github.com/crosstool-ng
 
-$(ARCHIVE)/gcc-linaro-$(GCC_VER).tar.xz:
-	$(DOWNLOAD) https://releases.linaro.org/components/toolchain/gcc-linaro/$(GCC_VER)/gcc-linaro-$(GCC_VER).tar.xz
+# crosstool for hd2 depends on gcc-linaro
+GCC-LINARO_VER    = 4.9-2017.01
+GCC-LINARO_SOURCE = gcc-linaro-$(GCC-LINARO_VER).tar.xz
+GCC-LINARO_URL    = https://releases.linaro.org/components/toolchain/gcc-linaro
+
+$(ARCHIVE)/$(GCC-LINARO_SOURCE):
+	$(DOWNLOAD) $(GCC-LINARO_URL)/$(GCC-LINARO_SOURCE)
 
 UCLIBC_VER = 1.0.24
 
 # -----------------------------------------------------------------------------
 
 # crosstool for hd2 depends on gcc-linaro
-$(CROSS_BASE)/arm/hd2: $(ARCHIVE)/gcc-linaro-$(GCC_VER).tar.xz
+$(CROSS_BASE)/arm/hd2: $(ARCHIVE)/$(GCC-LINARO_SOURCE)
 
 $(CROSS_BASE)/arm/hd1 \
 $(CROSS_BASE)/arm/hd2 \
 $(CROSS_BASE)/arm/hd51: | $(BUILD_TMP)
 	make $(BUILD_TMP)/linux-$(KERNEL_VERSION).tar
 	#
-	$(REMOVE)/crosstool-ng.git
-	get-git-source.sh https://github.com/crosstool-ng/crosstool-ng.git $(ARCHIVE)/crosstool-ng.git
-	$(CPDIR)/crosstool-ng.git
-	$(CHDIR)/crosstool-ng.git; \
+	$(REMOVE)/$(CROSSTOOL-NG_TMP)
+	get-git-source.sh $(CROSSTOOL-NG_URL)/$(CROSSTOOL-NG_SOURCE) $(ARCHIVE)/$(CROSSTOOL-NG_SOURCE)
+	$(CPDIR)/$(CROSSTOOL-NG_SOURCE)
+	$(CHDIR)/$(CROSSTOOL-NG_TMP); \
 		git checkout 1dbb06f2
 ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd2 hd51 bre2ze4k))
-	$(CHDIR)/crosstool-ng.git; \
+	$(CHDIR)/$(CROSSTOOL-NG_TMP); \
 		cp -a $(PATCHES)/crosstool-ng/gcc/* patches/gcc/linaro-6.3-2017.02
 endif
-	$(CHDIR)/crosstool-ng.git; \
+	$(CHDIR)/$(CROSSTOOL-NG_TMP); \
 		unset CONFIG_SITE LIBRARY_PATH CPATH C_INCLUDE_PATH PKG_CONFIG_PATH CPLUS_INCLUDE_PATH INCLUDE; \
 		install -m 0644 $(CONFIGS)/ct-ng-$(BOXTYPE)-$(BOXSERIES).config .config; \
 		sed -i "s|^CT_PARALLEL_JOBS=.*|CT_PARALLEL_JOBS=$(PARALLEL_JOBS)|" .config; \
@@ -108,7 +116,7 @@ ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd1 hd2))
 endif
 	test -e $(CROSS_DIR)/$(TARGET)/lib || ln -sf sys-root/lib $(CROSS_DIR)/$(TARGET)/
 	rm -f $(CROSS_DIR)/$(TARGET)/sys-root/lib/libstdc++.so.6.0.*-gdb.py
-	$(REMOVE)/crosstool-ng.git
+	$(REMOVE)/$(CROSSTOOL-NG_TMP)
 
 # -----------------------------------------------------------------------------
 
