@@ -131,7 +131,7 @@ $(D)/openssh: $(D)/openssl $(D)/zlib $(ARCHIVE)/$(OPENSSH_SOURCE) | $(TARGET_DIR
 
 # -----------------------------------------------------------------------------
 
-TZDATA_VER    = 2018e
+TZDATA_VER    = 2019b
 TZDATA_TMP    = tzdata$(TZDATA_VER)
 TZDATA_SOURCE = tzdata$(TZDATA_VER).tar.gz
 TZDATA_URL    = ftp://ftp.iana.org/tz/releases
@@ -149,13 +149,13 @@ else
   LOCALTIME = etc/localtime
 endif
 
-$(D)/tzdata: $(ARCHIVE)/$(TZDATA_SOURCE) | $(TARGET_DIR)
+$(D)/tzdata: $(HOST_ZIC) $(ARCHIVE)/$(TZDATA_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(TZDATA_TMP)
 	$(MKDIR)/$(TZDATA_TMP)
 	$(CHDIR)/$(TZDATA_TMP); \
 		tar -xf $(ARCHIVE)/$(TZDATA_SOURCE); \
 		unset ${!LC_*}; LANG=POSIX; LC_ALL=POSIX; export LANG LC_ALL; \
-		zic -d zoneinfo.tmp $(TZDATA_ZONELIST); \
+		$(HOST_ZIC) -d zoneinfo.tmp $(TZDATA_ZONELIST); \
 		mkdir zoneinfo; \
 		sed -n '/zone=/{s/.*zone="\(.*\)".*$$/\1/; p}' $(IMAGEFILES)/tzdata/timezone.xml | sort -u | \
 		while read x; do \
