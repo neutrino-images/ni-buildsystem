@@ -1,8 +1,8 @@
-From 9901cac770d0d81ccf1ee8e5a02abf54d18e3a04 Mon Sep 17 00:00:00 2001
-Message-Id: <9901cac770d0d81ccf1ee8e5a02abf54d18e3a04.1509108606.git.thomas.harfmann@gmail.com>
+From f0b4fd4d1c96b77cbf6c881b7d2d29882a05ab89 Mon Sep 17 00:00:00 2001
+Message-Id: <f0b4fd4d1c96b77cbf6c881b7d2d29882a05ab89.1509108332.git.thomas.harfmann@gmail.com>
 From: gixxpunk <thomas.harfmann@gmail.com>
-Date: Fri, 27 Oct 2017 14:50:01 +0200
-Subject: [PATCH] - valgrind-fix-hd51-build
+Date: Fri, 27 Oct 2017 14:45:27 +0200
+Subject: [PATCH] - valgrind-fix-build-hd2
 
 ---
  Makefile.all.am | 6 +++---
@@ -10,7 +10,7 @@ Subject: [PATCH] - valgrind-fix-hd51-build
  2 files changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/Makefile.all.am b/Makefile.all.am
-index 1859a51..648a197 100644
+index 1859a51..6ca4374 100644
 --- a/Makefile.all.am
 +++ b/Makefile.all.am
 @@ -199,11 +199,11 @@ AM_CCASFLAGS_PPC64LE_LINUX  = @FLAG_M64@ -g
@@ -18,13 +18,13 @@ index 1859a51..648a197 100644
  AM_FLAG_M3264_ARM_LINUX   = @FLAG_M32@
  AM_CFLAGS_ARM_LINUX       = @FLAG_M32@ \
 -			 	$(AM_CFLAGS_BASE) -marm -mcpu=cortex-a8
-+			 	$(AM_CFLAGS_BASE) -mlittle-endian -march=armv7ve -mtune=cortex-a15 -mfpu=neon-vfpv4 -mhard-float
++			 	$(AM_CFLAGS_BASE) -mlittle-endian -march=armv7-a -mtune=cortex-a9 -mfpu=vfpv3-d16 -mhard-float
  AM_CFLAGS_PSO_ARM_LINUX   = @FLAG_M32@ $(AM_CFLAGS_BASE) \
 -				-marm -mcpu=cortex-a8 $(AM_CFLAGS_PSO_BASE)
-+				-mlittle-endian -march=armv7ve -mtune=cortex-a15 -mfpu=neon-vfpv4 -mhard-float $(AM_CFLAGS_PSO_BASE)
++				-mlittle-endian -march=armv7-a -mtune=cortex-a9 -mfpu=vfpv3-d16 -mhard-float $(AM_CFLAGS_PSO_BASE)
  AM_CCASFLAGS_ARM_LINUX    = @FLAG_M32@ \
 -				-marm -mcpu=cortex-a8 -g
-+				-mlittle-endian -march=armv7ve -mtune=cortex-a15 -mfpu=neon-vfpv4 -mhard-float -g
++				-mlittle-endian -march=armv7-a -mtune=cortex-a9 -mfpu=vfpv3-d16 -mhard-float -g
  
  AM_FLAG_M3264_ARM64_LINUX = @FLAG_M64@
  AM_CFLAGS_ARM64_LINUX     = @FLAG_M64@ $(AM_CFLAGS_BASE)

@@ -3,7 +3,12 @@
 #
 # -----------------------------------------------------------------------------
 
-valgrind: valgrind-$(BOXSERIES)
+VALGRIND_TARGET = valgrind3
+ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd1))
+  VALGRIND_TARGET = valgrind12305
+endif
+
+valgrind: $(VALGRIND_TARGET)
 
 # -----------------------------------------------------------------------------
 
@@ -15,11 +20,9 @@ VALGRIND_URL    = ftp://sourceware.org/pub/valgrind
 $(ARCHIVE)/$(VALGRIND_SOURCE):
 	$(DOWNLOAD) $(VALGRIND_URL)/$(VALGRIND_SOURCE)
 
-VALGRIND_PATCH  = valgrind-fix-$(BOXSERIES)-build.patch
+VALGRIND_PATCH  = valgrind-fix-build-$(BOXSERIES).patch
 
-$(D)/valgrind-bre2ze4k \
-$(D)/valgrind-hd51 \
-$(D)/valgrind-hd2: $(ARCHIVE)/$(VALGRIND_SOURCE) | $(TARGET_DIR)
+$(D)/valgrind3: $(ARCHIVE)/$(VALGRIND_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(VALGRIND_TMP)
 	$(UNTAR)/$(VALGRIND_SOURCE)
 	$(CHDIR)/$(VALGRIND_TMP); \
@@ -42,15 +45,15 @@ $(D)/valgrind-hd2: $(ARCHIVE)/$(VALGRIND_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-VALGRIND-HD1_PATCH  = valgrind12305-nevis-patch.diff
-VALGRIND-HD1_PATCH += valgrind-automake-1.11.2.patch
+VALGRIND12305_PATCH  = valgrind12305-nevis-patch.diff
+VALGRIND12305_PATCH += valgrind12305-automake-1.11.2.patch
 
-$(D)/valgrind-hd1:
+$(D)/valgrind12305:
 	$(REMOVE)/valgrind
 	svn co -r 12305 svn://svn.valgrind.org/valgrind/trunk $(BUILD_TMP)/valgrind; \
 	$(CHDIR)/valgrind; \
 		svn up --force -r {2011-12-13} VEX; \
-		$(call apply_patches, $(VALGRIND-HD1_PATCH)); \
+		$(call apply_patches, $(VALGRIND12305_PATCH)); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--prefix= \
