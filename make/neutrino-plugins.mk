@@ -14,8 +14,8 @@ plugins-hd1:
 	# nothing to do
 
 plugins-hd2 \
-plugins-bre2ze4k \
-plugins-hd51: \
+plugins-hd51 \
+plugins-bre2ze4k: \
 	$(D)/channellogos
 ifneq ($(BOXMODEL), kronos_v2)
 	make links
@@ -43,7 +43,7 @@ NP_CONFIGURE_ADDITIONS = \
 		--disable-mountpointmanagement \
 		--disable-stbup
 
-ifneq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 bre2ze4k))
+ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd1 hd2))
   NP_CONFIGURE_ADDITIONS += \
 		--disable-showiframe \
 		--disable-stb_startup \
