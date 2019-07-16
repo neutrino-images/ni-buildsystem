@@ -843,7 +843,12 @@ $(D)/autofs: $(D)/libtirpc $(ARCHIVE)/$(AUTOFS_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-samba: samba-$(BOXSERIES)
+SAMBA_TARGET = samba36
+ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd1))
+  SAMBA_TARGET = samba33
+endif
+
+samba: $(SAMBA_TARGET)
 
 # -----------------------------------------------------------------------------
 
@@ -858,7 +863,7 @@ $(ARCHIVE)/$(SAMBA33_SOURCE):
 SAMBA33_PATCH  = samba33-build-only-what-we-need.patch
 SAMBA33_PATCH += samba33-configure.in-make-getgrouplist_ok-test-cross-compile.patch
 
-$(D)/samba-hd1: $(D)/zlib $(ARCHIVE)/$(SAMBA33_SOURCE) | $(TARGET_DIR)
+$(D)/samba33: $(D)/zlib $(ARCHIVE)/$(SAMBA33_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(SAMBA33_TMP)
 	$(UNTAR)/$(SAMBA33_SOURCE)
 	$(CHDIR)/$(SAMBA33_TMP); \
@@ -939,9 +944,7 @@ SAMBA36_PATCH0  = samba36-CVE-2016-2112-v3-6.patch
 SAMBA36_PATCH0 += samba36-CVE-2016-2115-v3-6.patch
 SAMBA36_PATCH0 += samba36-CVE-2017-7494-v3-6.patch
 
-$(D)/samba-bre2ze4k \
-$(D)/samba-hd51 \
-$(D)/samba-hd2: $(D)/zlib $(ARCHIVE)/$(SAMBA36_SOURCE) | $(TARGET_DIR)
+$(D)/samba36: $(D)/zlib $(ARCHIVE)/$(SAMBA36_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(SAMBA36_TMP)
 	$(UNTAR)/$(SAMBA36_SOURCE)
 	$(CHDIR)/$(SAMBA36_TMP); \
