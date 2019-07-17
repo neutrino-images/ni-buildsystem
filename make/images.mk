@@ -137,7 +137,6 @@ flash-image-armbox:
 HD51_IMAGE_NAME = disk
 HD51_BOOT_IMAGE = boot.img
 HD51_IMAGE_LINK = $(HD51_IMAGE_NAME).ext4
-HD51_IMAGE_ROOTFS_SIZE = 294912
 
 # emmc image
 EMMC_IMAGE_SIZE = 3817472
@@ -174,7 +173,7 @@ flash-image-armbox-multi: IMAGE_NAME=$(IMAGE_PREFIX)-$(IMAGE_SUFFIX)
 flash-image-armbox-multi:
 	mkdir -p $(IMAGE_BUILD_TMP)
 	# Create a sparse image block
-	dd if=/dev/zero of=$(IMAGE_BUILD_TMP)/$(HD51_IMAGE_LINK) seek=$(shell expr $(HD51_IMAGE_ROOTFS_SIZE) \* $(BLOCK_SECTOR)) count=0 bs=$(BLOCK_SIZE)
+	dd if=/dev/zero of=$(IMAGE_BUILD_TMP)/$(HD51_IMAGE_LINK) seek=$(shell expr $(ROOTFS_PARTITION_SIZE) \* $(BLOCK_SECTOR)) count=0 bs=$(BLOCK_SIZE)
 	mkfs.ext4 -v -F $(IMAGE_BUILD_TMP)/$(HD51_IMAGE_LINK) -d $(ROOTFS)/..
 	# Error codes 0-3 indicate successfull operation of fsck (no errors or errors corrected)
 	fsck.ext4 -pvfD $(IMAGE_BUILD_TMP)/$(HD51_IMAGE_LINK) || [ $? -le 3 ]
