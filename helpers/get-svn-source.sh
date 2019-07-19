@@ -12,6 +12,9 @@
 SVN_URL="$1"
 DEST="$2"
 
+# exit on error
+set -e
+
 if [ -d $DEST ]; then
 	cd $DEST
 		svn update || true
