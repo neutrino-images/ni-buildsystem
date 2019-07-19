@@ -963,7 +963,7 @@ $(D)/librtmp: $(D)/zlib $(D)/openssl $(SOURCE_DIR)/$(NI-RTMPDUMP) | $(TARGET_DIR
 
 # -----------------------------------------------------------------------------
 
-LIBTIRPC_VER    = 1.0.3
+LIBTIRPC_VER    = 1.1.4
 LIBTIRPC_TMP    = libtirpc-$(LIBTIRPC_VER)
 LIBTIRPC_SOURCE = libtirpc-$(LIBTIRPC_VER).tar.bz2
 LIBTIRPC_URL    = https://sourceforge.net/projects/libtirpc/files/libtirpc/$(LIBTIRPC_VER)
@@ -971,18 +971,18 @@ LIBTIRPC_URL    = https://sourceforge.net/projects/libtirpc/files/libtirpc/$(LIB
 $(ARCHIVE)/$(LIBTIRPC_SOURCE):
 	$(DOWNLOAD) $(LIBTIRPC_URL)/$(LIBTIRPC_SOURCE)
 
-LIBTIRP_PATCH  = libtirpc-0001-Disable-parts-of-TIRPC-requiring-NIS-support.patch
-LIBTIRP_PATCH += libtirpc-0002-uClibc-without-RPC-support-and-musl-does-not-install-rpcent.h.patch
-LIBTIRP_PATCH += libtirpc-0003-Add-rpcgen-program-from-nfs-utils-sources.patch
-LIBTIRP_PATCH += libtirpc-0004-Automatically-generate-XDR-header-files-from-.x-sour.patch
-LIBTIRP_PATCH += libtirpc-0005-Add-more-XDR-files-needed-to-build-rpcbind-on-top-of.patch
-LIBTIRP_PATCH += libtirpc-0006-Disable-DES-authentification-support.patch
+LIBTIRP_PATCH  = 0001-Disable-parts-of-TIRPC-requiring-NIS-support.patch
+LIBTIRP_PATCH += 0002-uClibc-without-RPC-support-and-musl-does-not-install-rpcent.h.patch
+LIBTIRP_PATCH += 0003-Automatically-generate-XDR-header-files-from-.x-sour.patch
+LIBTIRP_PATCH += 0004-Add-more-XDR-files-needed-to-build-rpcbind-on-top-of.patch
+LIBTIRP_PATCH += 0005-Disable-DES-authentification-support.patch
+LIBTIRP_PATCH += 0006-rpc-types.h-fix-musl-build.patch
 
 $(D)/libtirpc: $(ARCHIVE)/$(LIBTIRPC_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LIBTIRPC_TMP)
 	$(UNTAR)/$(LIBTIRPC_SOURCE)
 	$(CHDIR)/$(LIBTIRPC_TMP); \
-		$(call apply_patches, $(LIBTIRP_PATCH)); \
+		$(call apply_patches, $(addprefix $(notdir $@)/,$(LIBTIRP_PATCH))); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
