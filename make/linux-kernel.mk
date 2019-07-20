@@ -32,7 +32,7 @@ endif
 
 KERNEL_MAKEVARS := \
 	ARCH=$(BOXARCH) \
-	CROSS_COMPILE=$(TARGET)- \
+	CROSS_COMPILE=$(TARGET_CROSS) \
 	INSTALL_MOD_PATH=$(BUILD_TMP)/$(KERNEL_MODULES) \
 	LOCALVERSION= \
 	O=$(BUILD_TMP)/$(KERNEL_OBJ)
@@ -136,7 +136,7 @@ STRIP-MODULES-COOLSTREAM-HD1 += kernel/fs/fuse/fuse.ko
 $(D)/kernel-modules-coolstream-hd1: $(D)/kernel-coolstream
 	for module in $(STRIP-MODULES-COOLSTREAM-HD1); do \
 		mkdir -p $(TARGET_MODULES_DIR)/$$(dirname "$$module"); \
-		$(TARGET)-objcopy --strip-unneeded $(KERNEL_MODULES_DIR)/$$module $(TARGET_MODULES_DIR)/$$module; \
+		$(TARGET_OBJCOPY) --strip-unneeded $(KERNEL_MODULES_DIR)/$$module $(TARGET_MODULES_DIR)/$$module; \
 	done;
 	rm -f $(TARGET_MODULES_DIR)/usb-storage.ko # already builtin
 	make depmod
