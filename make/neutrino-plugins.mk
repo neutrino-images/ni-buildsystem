@@ -54,7 +54,7 @@ $(NP_OBJ_DIR)/config.status: $(NP_DEPS)
 	test -d $(NP_OBJ_DIR) || mkdir -p $(NP_OBJ_DIR)
 	$(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/autogen.sh
 	$(CD) $(NP_OBJ_DIR); \
-		$(BUILDENV) \
+		$(BUILD_ENV) \
 		$(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/configure \
 			--host=$(TARGET) \
 			--build=$(BUILD) \

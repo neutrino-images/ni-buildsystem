@@ -334,7 +334,7 @@ MAKE_OPTS = \
 	STRIP="$(TARGET_STRIP)" \
 	ARCH=$(BOXARCH)
 
-BUILDENV = \
+BUILD_ENV = \
 	$(MAKE_OPTS) \
 	\
 	CFLAGS="$(TARGET_CFLAGS)" \
@@ -342,7 +342,7 @@ BUILDENV = \
 	CXXFLAGS="$(TARGET_CXXFLAGS)" \
 	LDFLAGS="$(TARGET_LDFLAGS)" \
 
-BUILDENV += \
+BUILD_ENV += \
 	PKG_CONFIG=$(PKG_CONFIG) \
 	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH)
 
@@ -352,7 +352,7 @@ CONFIGURE_OPTS = \
 
 CONFIGURE = \
 	test -f ./configure || ./autogen.sh && \
-	$(BUILDENV) \
+	$(BUILD_ENV) \
 	./configure $(CONFIGURE_OPTS)
 
 # -----------------------------------------------------------------------------
