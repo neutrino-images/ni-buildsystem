@@ -58,7 +58,7 @@ $(D)/luaexpat: $(D)/expat $(D)/lua $(ARCHIVE)/$(LUAEXPAT_SOURCE) | $(TARGET_DIR)
 	$(UNTAR)/$(LUAEXPAT_SOURCE)
 	$(CHDIR)/$(LUAEXPAT_TMP); \
 		$(call apply_patches, $(LUAEXPAT_PATCH)); \
-		$(BUILD_ENV) \
+		$(BUILDENV) \
 		$(MAKE) \
 			PREFIX=$(TARGET_DIR); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
@@ -114,7 +114,7 @@ $(D)/luacurl: $(D)/libcurl $(D)/lua | $(TARGET_DIR)
 	get-git-source.sh $(LUACURL_URL) $(ARCHIVE)/$(LUACURL_SOURCE)
 	$(CPDIR)/$(LUACURL_SOURCE)
 	$(CHDIR)/$(LUACURL_TMP); \
-		$(BUILD_ENV) \
+		$(BUILDENV) \
 		$(MAKE) \
 			LIBDIR=$(TARGET_LIB_DIR) \
 			LUA_INC=$(TARGET_INCLUDE_DIR); \

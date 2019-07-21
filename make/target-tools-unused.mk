@@ -157,7 +157,7 @@ $(D)/iozone3: $(ARCHIVE)/$(IOZONE_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(IOZONE_TMP)/src/current; \
 		sed -i -e "s/= gcc/= $(TARGET_CC)/" makefile; \
 		sed -i -e "s/= cc/= $(TARGET_CC)/" makefile; \
-		$(BUILD_ENV) \
+		$(BUILDENV) \
 		$(MAKE) linux-arm; \
 		install -m 0755 iozone $(TARGET_BIN_DIR)/
 	$(REMOVE)/$(IOZONE_TMP)
