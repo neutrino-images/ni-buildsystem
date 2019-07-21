@@ -96,12 +96,12 @@ $(D)/kernel: $(D)/kernel-$(BOXTYPE) $(D)/kernel-modules-$(BOXTYPE)
 $(D)/kernel-coolstream: $(D)/kernel-coolstream-$(BOXSERIES)
 	$(TOUCH)
 
-$(D)/kernel-coolstream-hd1: $(D)/kernel.do_compile | $(IMAGE_DIR)
+$(D)/kernel-coolstream-hd1: $(D)/kernel.do_compile
 	mkimage -A $(BOXARCH) -O linux -T kernel -C none -a 0x48000 -e 0x48000 -n "$(KERNEL_NAME)" -d $(KERNEL_UIMAGE) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-uImage.img
 	mkimage -A $(BOXARCH) -O linux -T kernel -C none -a 0x48000 -e 0x48000 -n "$(KERNEL_NAME)" -d $(KERNEL_ZIMAGE) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-zImage.img
 	$(TOUCH)
 
-$(D)/kernel-coolstream-hd2: $(D)/kernel.do_compile | $(IMAGE_DIR)
+$(D)/kernel-coolstream-hd2: $(D)/kernel.do_compile
 	mkimage -A $(BOXARCH) -O linux -T kernel -C none -a 0x8000 -e 0x8000 -n "$(KERNEL_NAME)" -d $(KERNEL_ZIMAGE_DTB) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-vmlinux.ub.gz
 ifeq ($(BOXFAMILY), apollo)
   ifeq ($(BOXMODEL), apollo)
@@ -112,7 +112,7 @@ ifeq ($(BOXFAMILY), apollo)
 endif
 	$(TOUCH)
 
-$(D)/kernel-armbox: $(D)/kernel.do_compile | $(IMAGE_DIR)
+$(D)/kernel-armbox: $(D)/kernel.do_compile
 	cp -a $(KERNEL_ZIMAGE_DTB) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL).bin
 	$(TOUCH)
 
