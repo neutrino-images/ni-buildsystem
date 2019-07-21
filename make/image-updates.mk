@@ -42,7 +42,7 @@ u-neutrino: neutrino-clean
 	install -D -m 0644 $(TARGET_SHARE_DIR)/tuxbox/neutrino/locale/deutsch.locale $(UPDATE_INST_DIR)/share/tuxbox/neutrino/locale/deutsch.locale
 	install -D -m 0644 $(TARGET_SHARE_DIR)/tuxbox/neutrino/locale/english.locale $(UPDATE_INST_DIR)/share/tuxbox/neutrino/locale/english.locale
 ifneq ($(DEBUG), yes)
-	find $(UPDATE_INST_DIR)/bin -type f ! -name *.sh -print0 | xargs -0 $(TARGET_STRIP) || true
+	find $(UPDATE_INST_DIR)/bin -type f ! -name *.sh -print0 | xargs -0 $(TARGET)-strip || true
 endif
 	$(MAKE) u-update-bin \
 			UPDATE_MD5FILE=$(UPDATE_MD5FILE-BOXSERIES)
@@ -56,7 +56,7 @@ u-neutrino-full: neutrino-clean
 	$(MAKE) neutrino N_INST_DIR=$(UPDATE_INST_DIR)
 	install -D -m 0755 $(TARGET_DIR)/etc/init.d/start_neutrino $(UPDATE_INST_DIR)/etc/init.d/start_neutrino
 ifneq ($(DEBUG), yes)
-	find $(UPDATE_INST_DIR)/bin -type f ! -name *.sh -print0 | xargs -0 $(TARGET_STRIP) || true
+	find $(UPDATE_INST_DIR)/bin -type f ! -name *.sh -print0 | xargs -0 $(TARGET)-strip || true
 endif
 ifeq ($(BOXSERIES), hd2)
 	# avoid overrides in user's var-partition

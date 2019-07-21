@@ -31,7 +31,11 @@ BUSYBOX_MAKE_ENV = \
 	CFLAGS_busybox="$(BUSYBOX_CFLAGS_busybox)"
 
 BUSYBOX_MAKE_OPTS = \
-	$(MAKE_OPTS) \
+	CC="$(TARGET)-gcc" \
+	LD="$(TARGET)-ld" \
+	AR="$(TARGET)-ar" \
+	RANLIB="$(TARGET)-ranlib" \
+	CROSS_COMPILE="$(TARGET)-" \
 	CFLAGS_EXTRA="$(TARGET_CFLAGS)" \
 	EXTRA_LDFLAGS="$(TARGET_LDFLAGS)" \
 	CONFIG_PREFIX="$(TARGET_DIR)"
@@ -469,7 +473,7 @@ $(D)/ushare: $(D)/libupnp $(ARCHIVE)/$(USHARE_SOURCE)| $(TARGET_DIR)
 			--disable-dlna \
 			--disable-nls \
 			--cross-compile \
-			--cross-prefix=$(TARGET_CROSS) \
+			--cross-prefix=$(TARGET)- \
 			; \
 		sed -i config.h -e 's@SYSCONFDIR.*@SYSCONFDIR "/etc"@'; \
 		sed -i config.h -e 's@LOCALEDIR.*@LOCALEDIR "/share"@'; \
@@ -811,7 +815,7 @@ $(D)/autofs: $(D)/libtirpc $(ARCHIVE)/$(AUTOFS_SOURCE) | $(TARGET_DIR)
 		export ac_cv_linux_procfs=yes; \
 		export ac_cv_path_KRB5_CONFIG=no; \
 		export ac_cv_path_MODPROBE=/sbin/modprobe; \
-		export ac_cv_path_RANLIB=$(TARGET_RANLIB); \
+		export ac_cv_path_RANLIB=$(TARGET)-ranlib; \
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--prefix= \
@@ -1095,7 +1099,7 @@ $(D)/fbshot: $(D)/libpng $(ARCHIVE)/$(FBSHOT_SOURCE) | $(TARGET_DIR)
 	$(UNTAR)/$(FBSHOT_SOURCE)
 	$(CHDIR)/$(FBSHOT_TMP); \
 		$(call apply_patches, $(FBSHOT_PATCH)); \
-		sed -i 's|	gcc |	$(TARGET_CC) $(TARGET_CFLAGS) $(TARGET_LDFLAGS) |' Makefile; \
+		sed -i 's|	gcc |	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) |' Makefile; \
 		sed -i '/strip fbshot/d' Makefile; \
 		$(MAKE) all; \
 		install -D -m 0755 fbshot $(TARGET_DIR)/bin/fbshot
@@ -1196,7 +1200,7 @@ $(D)/xupnpd: $(D)/lua $(D)/openssl | $(TARGET_DIR)
 		$(call apply_patches, $(XUPNPD_PATCH))
 	$(CHDIR)/$(XUPNPD_TMP)/src; \
 		$(BUILDENV) \
-		$(MAKE) embedded TARGET=$(TARGET) CC=$(TARGET_CC) STRIP=$(TARGET_STRIP) LUAFLAGS="$(TARGET_LDFLAGS) -I$(TARGET_INCLUDE_DIR)"; \
+		$(MAKE) embedded TARGET=$(TARGET) CC=$(TARGET)-gcc STRIP=$(TARGET)-strip LUAFLAGS="$(TARGET_LDFLAGS) -I$(TARGET_INCLUDE_DIR)"; \
 		install -D -m 0755 xupnpd $(TARGET_BIN_DIR)/; \
 		install -d $(TARGET_SHARE_DIR)/xupnpd/config; \
 		cp -a plugins profiles ui www *.lua $(TARGET_SHARE_DIR)/xupnpd/
@@ -1653,8 +1657,8 @@ $(D)/gptfdisk: $(D)/popt $(D)/e2fsprogs $(ARCHIVE)/$(GPTFDISK_SOURCE) | $(TARGET
 	$(UNTAR)/$(GPTFDISK_SOURCE)
 	$(CHDIR)/$(GPTFDISK_TMP); \
 		$(call apply_patches, $(GPTFDISK_PATCH)); \
-		sed -i 's|^CC=.*|CC=$(TARGET_CC)|' Makefile; \
-		sed -i 's|^CXX=.*|CXX=$(TARGET_CXX)|' Makefile; \
+		sed -i 's|^CC=.*|CC=$(TARGET)-gcc|' Makefile; \
+		sed -i 's|^CXX=.*|CXX=$(TARGET)-g++|' Makefile; \
 		$(BUILDENV) \
 		$(MAKE) sgdisk; \
 		install -D -m 0755 sgdisk $(TARGET_DIR)/sbin/sgdisk

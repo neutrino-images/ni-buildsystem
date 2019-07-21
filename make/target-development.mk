@@ -27,7 +27,7 @@ $(D)/valgrind3: $(ARCHIVE)/$(VALGRIND_SOURCE) | $(TARGET_DIR)
 	$(UNTAR)/$(VALGRIND_SOURCE)
 	$(CHDIR)/$(VALGRIND_TMP); \
 		$(call apply_patches, $(VALGRIND_PATCH)); \
-		export AR=$(TARGET_AR); \
+		export AR=$(TARGET)-ar; \
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--prefix= \

@@ -133,17 +133,17 @@ ifneq ($(DEBUG), yes)
 	$(call draw_line);
 	@echo "The following warnings from strip are harmless!"
 	$(call draw_line);
-	find $(ROOTFS)/bin -type f -print0 | xargs -0 $(TARGET_STRIP) || true
-	find $(ROOTFS)/sbin -type f -print0 | xargs -0 $(TARGET_STRIP) || true
+	find $(ROOTFS)/bin -type f -print0 | xargs -0 $(TARGET)-strip || true
+	find $(ROOTFS)/sbin -type f -print0 | xargs -0 $(TARGET)-strip || true
 	find $(ROOTFS)/lib \( \
 			-path $(ROOTFS)/lib/libnexus.so -o \
 			-path $(ROOTFS)/lib/libnxpl.so -o \
 			-path $(ROOTFS)/lib/libv3ddriver.so -o \
 			\
 			-path $(ROOTFS)/lib/modules \) -prune -o \
-	-type f -print0 | xargs -0 $(TARGET_STRIP) || true
+	-type f -print0 | xargs -0 $(TARGET)-strip || true
   ifeq ($(BOXSERIES), hd2)
-	find $(ROOTFS)/lib/modules/$(KERNEL_VERSION)/kernel -type f -name '*.ko' | xargs -n 1 $(TARGET_OBJCOPY) --strip-unneeded
+	find $(ROOTFS)/lib/modules/$(KERNEL_VERSION)/kernel -type f -name '*.ko' | xargs -n 1 $(TARGET)-objcopy --strip-unneeded
   endif
 	@echo -e "$(TERM_YELLOW)"
 	@du -sh $(ROOTFS)

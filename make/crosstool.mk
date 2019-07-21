@@ -129,7 +129,7 @@ $(CROSS_BASE)/arm/bre2ze4k:
 
 get-gccversion:
 	@echo ""
-	@$(TARGET_CC) --version
+	@$(TARGET)-gcc --version
 
 # -----------------------------------------------------------------------------
 

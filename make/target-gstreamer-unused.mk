@@ -361,7 +361,7 @@ $(D)/gst_libav: $(ARCHIVE)/$(GST_LIBAV_SOURCE) $(D)/gstreamer $(D)/gst-plugins-b
 			--enable-cross-compile \
 			--target-os=linux \
 			--arch=$(BOXARCH) \
-			--cross-prefix=$(TARGET_CROSS) \
+			--cross-prefix=$(TARGET)- \
 			\
 			--disable-muxers \
 			--disable-encoders \

@@ -232,24 +232,6 @@ TARGET_CPPFLAGS = $(TARGET_CFLAGS)
 TARGET_CXXFLAGS = $(TARGET_CFLAGS)
 TARGET_LDFLAGS  = $(CORTEX-STRINGS_LDFLAG) -Wl,-O1 -Wl,-rpath,$(TARGET_LIB_DIR) -Wl,-rpath-link,$(TARGET_LIB_DIR) -L$(TARGET_LIB_DIR) $(TARGET_EXTRA_LDFLAGS)
 
-TARGET_CROSS    = $(TARGET)-
-
-# Define TARGET_xx variables for all common binutils/gcc
-TARGET_AR       = $(TARGET_CROSS)ar
-TARGET_AS       = $(TARGET_CROSS)as
-TARGET_CC       = $(TARGET_CROSS)gcc
-TARGET_CPP      = $(TARGET_CROSS)cpp
-TARGET_CXX      = $(TARGET_CROSS)g++
-TARGET_LD       = $(TARGET_CROSS)ld
-TARGET_NM       = $(TARGET_CROSS)nm
-TARGET_OBJCOPY  = $(TARGET_CROSS)objcopy
-TARGET_OBJDUMP  = $(TARGET_CROSS)objdump
-TARGET_RANLIB   = $(TARGET_CROSS)ranlib
-TARGET_READELF  = $(TARGET_CROSS)readelf
-TARGET_STRIP    = $(TARGET_CROSS)strip
-
-# -----------------------------------------------------------------------------
-
 VPATH = $(D)
 
 TERM_RED	= \033[40;0;31m
@@ -271,9 +253,7 @@ PKG_CONFIG = $(HOST_DIR)/bin/$(TARGET)-pkg-config
 PKG_CONFIG_LIBDIR = $(TARGET_LIB_DIR)
 PKG_CONFIG_PATH = $(PKG_CONFIG_LIBDIR)/pkgconfig
 
-# -----------------------------------------------------------------------------
-
-# rewrite-"functions"
+# helper-"functions":
 REWRITE_LIBTOOL_RULES  = sed -i \
 				-e "s,^libdir=.*,libdir='$(TARGET_LIB_DIR)'," \
 				-e "s,\(^dependency_libs='\| \|-L\|^dependency_libs='\)/lib,\ $(TARGET_LIB_DIR),g"
@@ -290,59 +270,42 @@ REWRITE_CONFIG_RULES   = sed -i \
 REWRITE_CONFIG         = $(REWRITE_CONFIG_RULES)
 REWRITE_PKGCONF        = $(REWRITE_CONFIG_RULES) $(PKG_CONFIG_PATH)
 
-# -----------------------------------------------------------------------------
-
-# download archives into archives directory
-DOWNLOAD = wget -t3 -T60 -c -P $(ARCHIVE)
-
-# unpack archives into build directory
+# unpack tarballs, clean up
 UNTAR = tar -C $(BUILD_TMP) -xf $(ARCHIVE)
 UNZIP = unzip -d $(BUILD_TMP) -o $(ARCHIVE)
-
-# clean up
 REMOVE = rm -rf $(BUILD_TMP)
-
-# apply patches
 PATCH = patch -p1 -i $(PATCHES)
 
-# build helper variables
+# download tarballs into archive directory
+DOWNLOAD = wget -t3 -T60 -c -P $(ARCHIVE)
+
 CD    = set -e; cd
 CHDIR = $(CD) $(BUILD_TMP)
 MKDIR = mkdir -p $(BUILD_TMP)
 CPDIR = cp -a -t $(BUILD_TMP) $(ARCHIVE)
 TOUCH = @touch $@
+STRIP = $(TARGET)-strip
 
 # empty variable EMPTY for smoother comparisons
 EMPTY =
 
-# -----------------------------------------------------------------------------
-
-MAKE_OPTS = \
-	CROSS_COMPILE="$(TARGET_CROSS)" \
-	CC="$(TARGET_CC)" \
-	GCC="$(TARGET_CC)" \
-	CPP="$(TARGET_CPP)" \
-	CXX="$(TARGET_CXX)" \
-	LD="$(TARGET_LD)" \
-	AR="$(TARGET_AR)" \
-	AS="$(TARGET_AS)" \
-	NM="$(TARGET_NM)" \
-	OBJCOPY="$(TARGET_OBJCOPY)" \
-	OBJDUMP="$(TARGET_OBJDUMP)" \
-	RANLIB="$(TARGET_RANLIB)" \
-	READELF="$(TARGET_READELF)" \
-	STRIP="$(TARGET_STRIP)" \
-	ARCH=$(BOXARCH)
-
 BUILDENV = \
-	$(MAKE_OPTS) \
-	\
+	CC=$(TARGET)-gcc \
+	CXX=$(TARGET)-g++ \
+	LD=$(TARGET)-ld \
+	NM=$(TARGET)-nm \
+	AR=$(TARGET)-ar \
+	AS=$(TARGET)-as \
+	LDD=$(TARGET)-ldd \
+	RANLIB=$(TARGET)-ranlib \
+	STRIP=$(TARGET)-strip \
+	OBJCOPY=$(TARGET)-objcopy \
+	OBJDUMP=$(TARGET)-objdump \
+	READELF=$(TARGET)-readelf \
 	CFLAGS="$(TARGET_CFLAGS)" \
 	CPPFLAGS="$(TARGET_CPPFLAGS)" \
 	CXXFLAGS="$(TARGET_CXXFLAGS)" \
 	LDFLAGS="$(TARGET_LDFLAGS)" \
-
-BUILDENV += \
 	PKG_CONFIG=$(PKG_CONFIG) \
 	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH)
 
@@ -355,8 +318,6 @@ CONFIGURE = \
 	$(BUILDENV) \
 	./configure $(CONFIGURE_OPTS)
 
-# -----------------------------------------------------------------------------
-
 CMAKE_OPTS = \
 	-DBUILD_SHARED_LIBS=ON \
 	-DENABLE_STATIC=OFF \
@@ -368,27 +329,20 @@ CMAKE_OPTS = \
 	-DCMAKE_INSTALL_MANDIR="$(remove-mandir)" \
 	-DCMAKE_PREFIX_PATH="$(TARGET_DIR)" \
 	-DCMAKE_INCLUDE_PATH="$(TARGET_INCLUDE_DIR)" \
-	-DCMAKE_C_COMPILER="$(TARGET_CC)" \
+	-DCMAKE_C_COMPILER="$(TARGET)-gcc" \
 	-DCMAKE_C_FLAGS="$(TARGET_CFLAGS) -DNDEBUG" \
-	-DCMAKE_CPP_COMPILER="$(TARGET_CPP)" \
-	-DCMAKE_CPP_FLAGS="$(TARGET_CFLAGS) -DNDEBUG" \
-	-DCMAKE_CXX_COMPILER="$(TARGET_CXX)" \
+	-DCMAKE_CXX_COMPILER="$(TARGET)-g++" \
 	-DCMAKE_CXX_FLAGS="$(TARGET_CFLAGS) -DNDEBUG" \
-	-DCMAKE_LINKER="$(TARGET_LD)" \
-	-DCMAKE_AR="$(TARGET_AR)" \
-	-DCMAKE_AS="$(TARGET_AS)" \
-	-DCMAKE_NM="$(TARGET_NM)" \
-	-DCMAKE_OBJCOPY="$(TARGET_OBJCOPY)" \
-	-DCMAKE_OBJDUMP="$(TARGET_OBJDUMP)" \
-	-DCMAKE_RANLIB="$(TARGET_RANLIB)" \
-	-DCMAKE_READELF="$(TARGET_READELF)" \
-	-DCMAKE_STRIP="$(TARGET_STRIP)"
+	-DCMAKE_LINKER="$(TARGET)-ld" \
+	-DCMAKE_AR="$(TARGET)-ar" \
+	-DCMAKE_NM="$(TARGET)-nm" \
+	-DCMAKE_OBJDUMP="$(TARGET)-objdump" \
+	-DCMAKE_RANLIB="$(TARGET)-ranlib" \
+	-DCMAKE_STRIP="$(TARGET)-strip"
 
 CMAKE = \
 	rm -f CMakeCache.txt; \
 	cmake --no-warn-unused-cli $(CMAKE_OPTS)
-
-# -----------------------------------------------------------------------------
 
 GITHUB			= https://github.com
 BITBUCKET		= https://bitbucket.org

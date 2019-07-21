@@ -315,7 +315,7 @@ $(D)/libjpeg-turbo: $(ARCHIVE)/$(LIBJPEG-TURBO_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LIBJPEG-TURBO_TMP)
 	$(UNTAR)/$(LIBJPEG-TURBO_SOURCE)
 	$(CHDIR)/$(LIBJPEG-TURBO_TMP); \
-		export CC=$(TARGET_CC); \
+		export CC=$(TARGET)-gcc; \
 		$(CONFIGURE) \
 			--prefix= \
 			--enable-shared \
@@ -371,9 +371,11 @@ $(ARCHIVE)/$(OPENSSL_SOURCE):
 
 OPENSSL_PATCH  = openssl-add-ni-specific-target.patch
 
-OPENSSL_FLAGS = $(MAKE_OPTS) \
-		AR="$(TARGET_AR) r" \
-		MAKEDEPPROG=$(TARGET_CC) \
+OPENSSL_FLAGS = CC=$(TARGET)-gcc \
+		LD=$(TARGET)-ld \
+		AR="$(TARGET)-ar r" \
+		RANLIB=$(TARGET)-ranlib \
+		MAKEDEPPROG=$(TARGET)-gcc \
 		NI_OPTIMIZATION_FLAGS="$(TARGET_CFLAGS)" \
 		PROCESSOR=ARM
 
@@ -575,7 +577,7 @@ $(D)/libdpf: $(D)/libusb-compat | $(TARGET_DIR)
 	$(CPDIR)/$(LIBDPF_SOURCE)
 	$(CHDIR)/$(LIBDPF_TMP)/dpflib; \
 		$(call apply_patches, $(LIBDPF_PATCH)); \
-		make libdpf.a CC=$(TARGET_CC) PREFIX=$(TARGET_DIR); \
+		make libdpf.a CC=$(TARGET)-gcc PREFIX=$(TARGET_DIR); \
 		mkdir -p $(TARGET_INCLUDE_DIR)/libdpf; \
 		cp dpf.h $(TARGET_INCLUDE_DIR)/libdpf/libdpf.h; \
 		cp ../include/spiflash.h $(TARGET_INCLUDE_DIR)/libdpf/; \
@@ -950,7 +952,7 @@ $(D)/librtmp: $(D)/zlib $(D)/openssl $(SOURCE_DIR)/$(NI-RTMPDUMP) | $(TARGET_DIR
 	$(REMOVE)/$(NI-RTMPDUMP)
 	tar -C $(SOURCE_DIR) -cp $(NI-RTMPDUMP) --exclude-vcs | tar -C $(BUILD_TMP) -x
 	$(CHDIR)/$(NI-RTMPDUMP); \
-		make CROSS_COMPILE=$(TARGET_CROSS) XCFLAGS="-I$(TARGET_INCLUDE_DIR) -L$(TARGET_LIB_DIR)" LDFLAGS="-L$(TARGET_LIB_DIR)" prefix=$(TARGET_DIR);\
+		make CROSS_COMPILE=$(TARGET)- XCFLAGS="-I$(TARGET_INCLUDE_DIR) -L$(TARGET_LIB_DIR)" LDFLAGS="-L$(TARGET_LIB_DIR)" prefix=$(TARGET_DIR);\
 		make install DESTDIR=$(TARGET_DIR) prefix="" mandir=$(remove-mandir)
 	rm -rf $(TARGET_DIR)/sbin/rtmpgw
 	rm -rf $(TARGET_DIR)/sbin/rtmpsrv
