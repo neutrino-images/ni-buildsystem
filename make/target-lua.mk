@@ -28,11 +28,10 @@ $(D)/lua: $(D)/ncurses $(ARCHIVE)/$(LUA_SOURCE) | $(TARGET_DIR)
 		sed -i 's/^R=.*/R= $(LUA_VER)/' etc/lua.pc; \
 		$(MAKE) linux \
 			PKG_VERSION=$(LUA_VER) \
-			CC="$(TARGET)-gcc" \
-			LD="$(TARGET)-ld" \
-			AR="$(TARGET)-ar rcu" \
-			RANLIB=$(TARGET)-ranlib \
-			LDFLAGS="$(TARGET_LDFLAGS)"; \
+			$(MAKE_OPTS) \
+			AR="$(TARGET_AR) rcu" \
+			LDFLAGS="$(TARGET_LDFLAGS)" \
+			; \
 		$(MAKE) install INSTALL_TOP=$(TARGET_DIR)
 	install -D -m 0755 $(BUILD_TMP)/$(LUA_TMP)/src/liblua.so.$(LUA_VER) $(TARGET_LIB_DIR)/liblua.so.$(LUA_VER)
 	ln -sf liblua.so.$(LUA_VER) $(TARGET_LIB_DIR)/liblua.so

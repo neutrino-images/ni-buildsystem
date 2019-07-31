@@ -21,7 +21,7 @@ endif
 
 FFMPEG_CONFIGURE_GENERIC = \
 			--prefix=/ \
-			--cross-prefix=$(TARGET)- \
+			--cross-prefix=$(TARGET_CROSS) \
 			--datadir=$(remove-datadir) \
 			\
 			--disable-doc \

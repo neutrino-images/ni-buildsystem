@@ -310,8 +310,8 @@ HOST_LUAROCKS_CONFIG_FILE = $(HOST_DIR)/etc/luarocks/config-$(LUA_ABIVER).lua
 
 HOST_LUAROCKS_BUILDENV = \
 	LUA_PATH="$(HOST_DIR)/share/lua/$(LUA_ABIVER)/?.lua" \
-	TARGET_CC="$(TARGET)-gcc" \
-	TARGET_LD="$(TARGET)-ld" \
+	TARGET_CC="$(TARGET_CC)" \
+	TARGET_LD="$(TARGET_LD)" \
 	TARGET_CFLAGS="$(TARGET_CFLAGS) -fPIC" \
 	TARGET_LDFLAGS="-L$(TARGET_LIB_DIR)" \
 	TARGET_DIR="$(TARGET_DIR)" \
@@ -346,8 +346,8 @@ host-ccache: find-ccache $(CCACHE) $(HOST_DIR)/bin
 	@ln -sf $(CCACHE) $(HOST_DIR)/bin/cc
 	@ln -sf $(CCACHE) $(HOST_DIR)/bin/gcc
 	@ln -sf $(CCACHE) $(HOST_DIR)/bin/g++
-	@ln -sf $(CCACHE) $(HOST_DIR)/bin/$(TARGET)-gcc
-	@ln -sf $(CCACHE) $(HOST_DIR)/bin/$(TARGET)-g++
+	@ln -sf $(CCACHE) $(HOST_DIR)/bin/$(TARGET_CC)
+	@ln -sf $(CCACHE) $(HOST_DIR)/bin/$(TARGET_CXX)
 
 # -----------------------------------------------------------------------------
 

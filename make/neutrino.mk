@@ -111,22 +111,14 @@ N_WEATHER_DEV_KEY ?=
 # -----------------------------------------------------------------------------
 
 N_BUILDENV = \
-	CC=$(TARGET)-gcc \
-	CXX=$(TARGET)-g++ \
-	LD=$(TARGET)-ld \
-	NM=$(TARGET)-nm \
-	AR=$(TARGET)-ar \
-	AS=$(TARGET)-as \
-	LDD=$(TARGET)-ldd \
-	RANLIB=$(TARGET)-ranlib \
-	STRIP=$(TARGET)-strip \
-	OBJCOPY=$(TARGET)-objcopy \
-	OBJDUMP=$(TARGET)-objdump \
-	READELF=$(TARGET)-readelf \
+	$(MAKE_OPTS) \
+	\
 	CFLAGS="$(N_CFLAGS)" \
 	CPPFLAGS="$(N_CFLAGS)" \
 	CXXFLAGS="$(N_CFLAGS) -std=c++11" \
-	LDFLAGS="$(N_LDFLAGS)" \
+	LDFLAGS="$(N_LDFLAGS)"
+
+N_BUILDENV += \
 	PKG_CONFIG=$(PKG_CONFIG) \
 	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH)
 
@@ -246,7 +238,7 @@ endif
 	$(MAKE) -C $(N_OBJ_DIR) all DESTDIR=$(TARGET_DIR)
 	install -D -m 0755 $(N_OBJ_DIR)/src/neutrino $(TARGET_DIR)/bin/neutrino
 ifneq ($(DEBUG), yes)
-	$(TARGET)-strip $(TARGET_DIR)/bin/neutrino
+	$(TARGET_STRIP) $(TARGET_DIR)/bin/neutrino
 endif
 	make done
 
