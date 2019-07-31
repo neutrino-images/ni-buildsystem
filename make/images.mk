@@ -78,7 +78,7 @@ flash-image-coolstream: IMAGE_NAME=$(IMAGE_PREFIX)-$(IMAGE_SUFFIX)
 flash-image-coolstream: IMAGE_DESC="$(BOXNAME) [$(IMAGE_SUFFIX)][$(BOXSERIES)] $(shell echo $(IMAGE_TYPE_STRING) | sed 's/.*/\u&/')"
 flash-image-coolstream: IMAGE_MD5FILE=$(IMAGE_TYPE_STRING)-$(IMAGE_SUFFIX).txt
 flash-image-coolstream: IMAGE_DATE=$(shell cat $(ROOTFS)/.version | grep "^version=" | cut -d= -f2 | cut -c 5-)
-flash-image-coolstream:
+flash-image-coolstream: | $(IMAGE_DIR)
 	make devtable
 	mkfs.jffs2 -e $(ERASE_SIZE) $(MKFSFLAGS) -o $(IMAGE_DIR)/$(IMAGE_NAME).img
 	make devtable-remove
@@ -119,7 +119,7 @@ flash-image-armbox: IMAGE_NAME=$(IMAGE_PREFIX)-$(IMAGE_SUFFIX)
 flash-image-armbox: IMAGE_DESC="$(BOXNAME) [$(IMAGE_SUFFIX)] $(shell echo $(IMAGE_TYPE_STRING) | sed 's/.*/\u&/')"
 flash-image-armbox: IMAGE_MD5FILE=$(IMAGE_TYPE_STRING)-$(IMAGE_SUFFIX).txt
 flash-image-armbox: IMAGE_DATE=$(shell cat $(ROOTFS)/.version | grep "^version=" | cut -d= -f2 | cut -c 5-)
-flash-image-armbox:
+flash-image-armbox: | $(IMAGE_DIR)
 	mkdir -p $(IMAGE_BUILD_TMP)/$(BOXMODEL)
 	cp $(KERNEL_ZIMAGE_DTB) $(IMAGE_BUILD_TMP)/$(BOXMODEL)/kernel.bin
 	$(CD) $(ROOTFS); \
@@ -170,7 +170,7 @@ STORAGE_PARTITION_OFFSET = "$(shell expr $(LINUX_SWAP_PARTITION_OFFSET) \+ $(LIN
 #STORAGE_PARTITION_SIZE = 204800 # remaining flash memory
 
 flash-image-armbox-multi: IMAGE_NAME=$(IMAGE_PREFIX)-$(IMAGE_SUFFIX)
-flash-image-armbox-multi:
+flash-image-armbox-multi: | $(IMAGE_DIR)
 	mkdir -p $(IMAGE_BUILD_TMP)
 	# Create a sparse image block
 	dd if=/dev/zero of=$(IMAGE_BUILD_TMP)/$(HD51_IMAGE_LINK) seek=$(shell expr $(ROOTFS_PARTITION_SIZE) \* $(BLOCK_SECTOR)) count=0 bs=$(BLOCK_SIZE)
