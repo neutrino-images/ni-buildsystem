@@ -308,7 +308,7 @@ HOST_LUAROCKS_PATCH  = luarocks-0001-allow-libluajit-detection.patch
 
 HOST_LUAROCKS_CONFIG_FILE = $(HOST_DIR)/etc/luarocks/config-$(LUA_ABIVER).lua
 
-HOST_LUAROCKS_BUILDENV = \
+HOST_LUAROCKS_BUILD_ENV = \
 	LUA_PATH="$(HOST_DIR)/share/lua/$(LUA_ABIVER)/?.lua" \
 	TARGET_CC="$(TARGET_CC)" \
 	TARGET_LD="$(TARGET_LD)" \

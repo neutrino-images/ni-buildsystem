@@ -109,7 +109,7 @@ $(D)/bzip2: $(ARCHIVE)/$(BZIP2_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(BZIP2_TMP); \
 		$(call apply_patches, $(BZIP2_PATCH)); \
 		mv Makefile-libbz2_so Makefile; \
-		$(BUILDENV) \
+		$(BUILD_ENV) \
 		$(MAKE) all; \
 		$(MAKE) install PREFIX=$(TARGET_DIR)
 	rm -f $(TARGET_DIR)/bin/bzip2
@@ -195,7 +195,7 @@ $(D)/cairo: $(D)/fontconfig $(D)/glib2 $(D)/libpng $(D)/pixman $(D)/zlib $(ARCHI
 	$(UNTAR)/$(CAIRO_SOURCE)
 	$(CHDIR)/$(CAIRO_TMP); \
 		$(call apply_patches, $(CAIRO_PATCH)); \
-		$(BUILDENV) \
+		$(BUILD_ENV) \
 		ax_cv_c_float_words_bigendian="no" \
 		./configure $(CONFIGURE_OPTS) \
 			--prefix= \

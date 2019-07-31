@@ -19,7 +19,7 @@ $(D)/zlib: $(ARCHIVE)/$(ZLIB_SOURCE) | $(TARGET_DIR)
 	$(UNTAR)/$(ZLIB_SOURCE)
 	$(CHDIR)/$(ZLIB_TMP); \
 		$(call apply_patches, $(ZLIB_PATCH)); \
-		$(BUILDENV) \
+		$(BUILD_ENV) \
 		mandir=$(remove-mandir) \
 		./configure \
 			--prefix= \

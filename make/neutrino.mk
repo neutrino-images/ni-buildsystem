@@ -110,7 +110,7 @@ N_WEATHER_DEV_KEY ?=
 
 # -----------------------------------------------------------------------------
 
-N_BUILDENV = \
+N_BUILD_ENV = \
 	$(MAKE_OPTS) \
 	\
 	CFLAGS="$(N_CFLAGS)" \
@@ -118,7 +118,7 @@ N_BUILDENV = \
 	CXXFLAGS="$(N_CFLAGS) -std=c++11" \
 	LDFLAGS="$(N_LDFLAGS)"
 
-N_BUILDENV += \
+N_BUILD_ENV += \
 	PKG_CONFIG=$(PKG_CONFIG) \
 	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH)
 
@@ -130,7 +130,7 @@ $(N_OBJ_DIR)/config.status: $(N_DEPS)
 		git checkout $(NI-NEUTRINO_BRANCH)
 	$(SOURCE_DIR)/$(NI-NEUTRINO)/autogen.sh
 	$(CD) $(N_OBJ_DIR); \
-		$(N_BUILDENV) \
+		$(N_BUILD_ENV) \
 		$(SOURCE_DIR)/$(NI-NEUTRINO)/configure \
 			--host=$(TARGET) \
 			--build=$(BUILD) \
@@ -203,7 +203,7 @@ $(LH_OBJ_DIR)/config.status: $(LH_DEPS)
 	test -d $(LH_OBJ_DIR) || mkdir -p $(LH_OBJ_DIR)
 	$(SOURCE_DIR)/$(NI-LIBSTB-HAL)/autogen.sh
 	$(CD) $(LH_OBJ_DIR); \
-		$(N_BUILDENV) \
+		$(N_BUILD_ENV) \
 		$(SOURCE_DIR)/$(NI-LIBSTB-HAL)/configure \
 			--host=$(TARGET) \
 			--build=$(BUILD) \
