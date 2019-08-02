@@ -783,6 +783,7 @@ $(D)/ntfs-3g: $(ARCHIVE)/$(NTFS-3G_SOURCE) | $(TARGET_DIR)
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	-rm $(addprefix $(TARGET_DIR)/bin/,lowntfs-3g ntfs-3g.probe)
 	-rm $(addprefix $(TARGET_DIR)/sbin/,mount.lowntfs-3g)
+	ln -sf /bin/ntfs-3g $(TARGET_DIR)/sbin/mount.ntfs
 	$(REMOVE)/$(NTFS-3G_TMP)
 	$(TOUCH)
 
