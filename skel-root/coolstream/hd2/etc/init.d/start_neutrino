@@ -2,10 +2,6 @@
 
 . /etc/init.d/globals
 
-if [ -e /var/etc/.coredump ]; then
-	ulimit -c unlimited
-fi
-
 # Neutrino's exit codes
 ERROR=-1
 NORMAL=0

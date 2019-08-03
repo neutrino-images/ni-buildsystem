@@ -44,10 +44,6 @@ DOSCAM_Action()
 {
 	case $1 in
 		"start" )
-			if [ -e /var/etc/.coredump ]; then
-				ulimit -c unlimited
-			fi
-
 			SHOWINFO "start camd_datefix"
 			/etc/init.d/camd_datefix start doscam
 			SHOWINFO "start doscam"

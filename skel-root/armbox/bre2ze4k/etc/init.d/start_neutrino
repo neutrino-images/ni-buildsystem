@@ -8,10 +8,6 @@ NORMAL=0
 SHUTDOWN=1
 REBOOT=2
 
-if [ -e /var/etc/.coredump ]; then
-	ulimit -c unlimited
-fi
-
 # uncomment for gstreamer debugging
 #export GST_DEBUG=4
 
