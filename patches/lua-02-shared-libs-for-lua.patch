@@ -1,13 +1,43 @@
-Add the compilation of a shared library.
-Compile the lua binary with the shared library.
-
-Signed-off-by: Francois Perrad <francois.perrad@gadz.org>
-
-Index: b/src/Makefile
-===================================================================
+diff --git a/Makefile b/Makefile
+index 838bf74..3a71b1b 100644
+--- a/Makefile
++++ b/Makefile
+@@ -42,6 +42,7 @@ PLATS= aix ansi bsd freebsd generic linux macosx mingw posix solaris
+ TO_BIN= lua luac
+ TO_INC= lua.h luaconf.h lualib.h lauxlib.h lua.hpp
+ TO_LIB= liblua.a
++TO_SOLIB = liblua.so.$(R)
+ TO_MAN= lua.1 luac.1
+ 
+ # Lua version and release.
+@@ -62,12 +63,14 @@ install: dummy
+ 	cd src && $(INSTALL_EXEC) $(TO_BIN) $(INSTALL_BIN)
+ 	cd src && $(INSTALL_DATA) $(TO_INC) $(INSTALL_INC)
+ 	cd src && $(INSTALL_DATA) $(TO_LIB) $(INSTALL_LIB)
++	cd src && $(INSTALL_EXEC) $(TO_SOLIB) $(INSTALL_LIB) && ln -sf $(TO_SOLIB) $(INSTALL_LIB)/liblua.so
+ 	cd doc && $(INSTALL_DATA) $(TO_MAN) $(INSTALL_MAN)
+ 
+ uninstall:
+ 	cd src && cd $(INSTALL_BIN) && $(RM) $(TO_BIN)
+ 	cd src && cd $(INSTALL_INC) && $(RM) $(TO_INC)
+ 	cd src && cd $(INSTALL_LIB) && $(RM) $(TO_LIB)
++	cd src && cd $(INSTALL_LIB) && $(RM) $(TO_SOLIB) liblua.so
+ 	cd doc && cd $(INSTALL_MAN) && $(RM) $(TO_MAN)
+ 
+ local:
+diff --git a/src/Makefile b/src/Makefile
+index e8cceaa..5e1fa24 100644
 --- a/src/Makefile
 +++ b/src/Makefile
-@@ -29,6 +29,7 @@
+@@ -8,6 +8,7 @@ PLAT= none
+ 
+ CC= gcc
+ CFLAGS= -O2 -Wall -DLUA_COMPAT_ALL $(SYSCFLAGS) $(MYCFLAGS)
++CFLAGS+= -fPIC
+ LDFLAGS= $(SYSLDFLAGS) $(MYLDFLAGS)
+ LIBS= -lm $(SYSLIBS) $(MYLIBS)
+ 
+@@ -29,6 +30,7 @@ MYOBJS=
  PLATS= aix ansi bsd freebsd generic linux macosx mingw posix solaris
  
  LUA_A=	liblua.a
@@ -15,7 +45,7 @@ Index: b/src/Makefile
  CORE_O=	lapi.o lcode.o lctype.o ldebug.o ldo.o ldump.o lfunc.o lgc.o llex.o \
  	lmem.o lobject.o lopcodes.o lparser.o lstate.o lstring.o ltable.o \
  	ltm.o lundump.o lvm.o lzio.o
-@@ -43,8 +44,9 @@
+@@ -43,8 +45,9 @@ LUAC_T=	luac
  LUAC_O=	luac.o
  
  ALL_O= $(BASE_O) $(LUA_O) $(LUAC_O)
@@ -26,7 +56,7 @@ Index: b/src/Makefile
  
  # Targets start here.
  default: $(PLAT)
-@@ -55,12 +57,18 @@
+@@ -55,12 +58,18 @@ o:	$(ALL_O)
  
  a:	$(ALL_A)
  
