@@ -24,18 +24,14 @@ $(D)/lua: $(D)/ncurses $(ARCHIVE)/$(LUA_SOURCE) | $(TARGET_DIR)
 	$(UNTAR)/$(LUA_SOURCE)
 	$(CHDIR)/$(LUA_TMP); \
 		$(call apply_patches, $(LUA_PATCH)); \
-		sed -i 's/^V=.*/V= $(LUA_ABIVER)/' etc/lua.pc; \
-		sed -i 's/^R=.*/R= $(LUA_VER)/' etc/lua.pc; \
 		$(MAKE) linux \
 			PKG_VERSION=$(LUA_VER) \
 			$(MAKE_OPTS) \
 			AR="$(TARGET_AR) rcu" \
 			LDFLAGS="$(TARGET_LDFLAGS)" \
 			; \
-		$(MAKE) install INSTALL_TOP=$(TARGET_DIR)
-	install -D -m 0755 $(BUILD_TMP)/$(LUA_TMP)/src/liblua.so.$(LUA_VER) $(TARGET_LIB_DIR)/liblua.so.$(LUA_VER)
-	ln -sf liblua.so.$(LUA_VER) $(TARGET_LIB_DIR)/liblua.so
-	install -D -m 0644 $(BUILD_TMP)/$(LUA_TMP)/etc/lua.pc $(PKG_CONFIG_PATH)/lua.pc
+		$(MAKE) install INSTALL_TOP=$(TARGET_DIR); \
+		$(MAKE) pc > $(PKG_CONFIG_PATH)/lua.pc
 	$(REWRITE_PKGCONF)/lua.pc
 	rm -rf $(TARGET_DIR)/bin/luac
 	$(REMOVE)/$(LUA_TMP)
