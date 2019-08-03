@@ -39,6 +39,28 @@ endef
 # -----------------------------------------------------------------------------
 
 #
+# Manipulation of .config files based on the Kconfig infrastructure.
+# Used by the BusyBox package, the Linux kernel package, and more.
+#
+
+define KCONFIG_ENABLE_OPT # (option, file)
+	sed -i -e "/\\<$(1)\\>/d" $(2)
+	echo '$(1)=y' >> $(2)
+endef
+
+define KCONFIG_SET_OPT # (option, value, file)
+	sed -i -e "/\\<$(1)\\>/d" $(3)
+	echo '$(1)=$(2)' >> $(3)
+endef
+
+define KCONFIG_DISABLE_OPT # (option, file)
+	sed -i -e "/\\<$(1)\\>/d" $(2)
+	echo '# $(1) is not set' >> $(2)
+endef
+
+# -----------------------------------------------------------------------------
+
+#
 # $(1) = title
 # $(2) = color
 #	0 - Black
