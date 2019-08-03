@@ -157,14 +157,14 @@ $(D)/tzdata: $(HOST_ZIC) $(ARCHIVE)/$(TZDATA_SOURCE) | $(TARGET_DIR)
 		while read x; do \
 			find zoneinfo.tmp -type f -name $$x | sort | \
 			while read y; do \
-				install -m 0644 $$y zoneinfo/$$x; \
+				$(INSTALL_DATA) $$y zoneinfo/$$x; \
 			done; \
 			test -e zoneinfo/$$x || echo "WARNING: timezone $$x not found."; \
 		done; \
-		install -d $(TARGET_SHARE_DIR); \
+		mkdir -p $(TARGET_SHARE_DIR); \
 		mv zoneinfo/ $(TARGET_SHARE_DIR)/
-	install -m 0644 -D $(IMAGEFILES)/tzdata/timezone.xml $(TARGET_DIR)/etc/timezone.xml
-	install -m 0644 $(TARGET_SHARE_DIR)/zoneinfo/CET $(TARGET_DIR)/$(LOCALTIME)
+	$(INSTALL_DATA) -D $(IMAGEFILES)/tzdata/timezone.xml $(TARGET_DIR)/etc/timezone.xml
+	$(INSTALL_DATA) $(TARGET_SHARE_DIR)/zoneinfo/CET $(TARGET_DIR)/$(LOCALTIME)
 	$(REMOVE)/$(TZDATA_TMP)
 	$(TOUCH)
 
@@ -192,13 +192,13 @@ $(D)/mtd-utils: $(D)/zlib $(D)/lzo $(D)/e2fsprogs $(ARCHIVE)/$(MTD-UTILS_SOURCE)
 			; \
 		$(MAKE)
 ifeq ($(BOXSERIES), hd2)
-	install -D -m 0755 $(BUILD_TMP)/$(MTD-UTILS_TMP)/nanddump $(TARGET_DIR)/sbin
-	install -D -m 0755 $(BUILD_TMP)/$(MTD-UTILS_TMP)/nandtest $(TARGET_DIR)/sbin
-	install -D -m 0755 $(BUILD_TMP)/$(MTD-UTILS_TMP)/nandwrite $(TARGET_DIR)/sbin
-	install -D -m 0755 $(BUILD_TMP)/$(MTD-UTILS_TMP)/mtd_debug $(TARGET_DIR)/sbin
-	install -D -m 0755 $(BUILD_TMP)/$(MTD-UTILS_TMP)/mkfs.jffs2 $(TARGET_DIR)/sbin
+	$(INSTALL_EXEC) -D $(BUILD_TMP)/$(MTD-UTILS_TMP)/nanddump $(TARGET_DIR)/sbin
+	$(INSTALL_EXEC) -D $(BUILD_TMP)/$(MTD-UTILS_TMP)/nandtest $(TARGET_DIR)/sbin
+	$(INSTALL_EXEC) -D $(BUILD_TMP)/$(MTD-UTILS_TMP)/nandwrite $(TARGET_DIR)/sbin
+	$(INSTALL_EXEC) -D $(BUILD_TMP)/$(MTD-UTILS_TMP)/mtd_debug $(TARGET_DIR)/sbin
+	$(INSTALL_EXEC) -D $(BUILD_TMP)/$(MTD-UTILS_TMP)/mkfs.jffs2 $(TARGET_DIR)/sbin
 endif
-	install -D -m 0755 $(BUILD_TMP)/$(MTD-UTILS_TMP)/flash_erase $(TARGET_DIR)/sbin
+	$(INSTALL_EXEC) -D $(BUILD_TMP)/$(MTD-UTILS_TMP)/flash_erase $(TARGET_DIR)/sbin
 	$(REMOVE)/$(MTD-UTILS_TMP)
 	$(TOUCH)
 
@@ -285,7 +285,7 @@ $(D)/hdparm: $(ARCHIVE)/$(HDPARM_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(HDPARM_TMP); \
 		$(BUILD_ENV) \
 		$(MAKE); \
-		install -D -m 0755 hdparm $(TARGET_DIR)/sbin/hdparm
+		$(INSTALL_EXEC) -D hdparm $(TARGET_DIR)/sbin/hdparm
 	$(REMOVE)/$(HDPARM_TMP)
 	$(TOUCH)
 
@@ -305,7 +305,7 @@ $(D)/hd-idle: $(ARCHIVE)/$(HD-IDLE_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(HD-IDLE_TMP); \
 		$(BUILD_ENV) \
 		$(MAKE); \
-		install -D -m 0755 hd-idle $(TARGET_DIR)/sbin/hd-idle
+		$(INSTALL_EXEC) -D hd-idle $(TARGET_DIR)/sbin/hd-idle
 	$(REMOVE)/$(HD-IDLE_TMP)
 	$(TOUCH)
 
@@ -346,7 +346,7 @@ $(D)/coreutils: $(ARCHIVE)/$(COREUTILS_SOURCE) | $(TARGET_DIR)
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	for bin in $(COREUTILS_BIN); do \
 		rm -f $(TARGET_DIR)/bin/$$bin; \
-		install -m 0755 $(TARGET_DIR)/bin.coreutils/$$bin $(TARGET_DIR)/bin/$$bin; \
+		$(INSTALL_EXEC) $(TARGET_DIR)/bin.coreutils/$$bin $(TARGET_DIR)/bin/$$bin; \
 	done
 	$(REMOVE)/$(COREUTILS_TMP) \
 		$(TARGET_DIR)/bin.coreutils
@@ -403,8 +403,8 @@ $(D)/ntp: $(D)/openssl $(ARCHIVE)/$(NTP_SOURCE) | $(TARGET_DIR)
 			--without-ntpsnmpd \
 			; \
 		$(MAKE); \
-		install -D -m 0755 ntpdate/ntpdate $(TARGET_DIR)/sbin/ntpdate
-	install -D -m 0755 $(IMAGEFILES)/scripts/ntpdate.init $(TARGET_DIR)/etc/init.d/ntpdate
+		$(INSTALL_EXEC) -D ntpdate/ntpdate $(TARGET_DIR)/sbin/ntpdate
+	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/ntpdate.init $(TARGET_DIR)/etc/init.d/ntpdate
 	$(REMOVE)/$(NTP_TMP)
 	$(TOUCH)
 
@@ -439,7 +439,7 @@ $(D)/djmount: $(D)/libfuse $(ARCHIVE)/$(DJMOUNT_SOURCE) | $(TARGET_DIR)
 			; \
 		make; \
 		make install DESTDIR=$(TARGET_DIR)
-	install -D -m 0755 $(IMAGEFILES)/scripts/djmount.init $(TARGET_DIR)/etc/init.d/djmount
+	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/djmount.init $(TARGET_DIR)/etc/init.d/djmount
 	ln -sf djmount $(TARGET_DIR)/etc/init.d/S99djmount
 	ln -sf djmount $(TARGET_DIR)/etc/init.d/K01djmount
 	$(REMOVE)/$(DJMOUNT_TMP)
@@ -476,9 +476,9 @@ $(D)/ushare: $(D)/libupnp $(ARCHIVE)/$(USHARE_SOURCE)| $(TARGET_DIR)
 		ln -sf ../config.h src/; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	install -D -m 0644 $(IMAGEFILES)/scripts/ushare.conf $(TARGET_DIR)/etc/ushare.conf
+	$(INSTALL_DATA) -D $(IMAGEFILES)/scripts/ushare.conf $(TARGET_DIR)/etc/ushare.conf
 	sed -i 's|%(BOXTYPE)|$(BOXTYPE)|; s|%(BOXMODEL)|$(BOXMODEL)|' $(TARGET_DIR)/etc/ushare.conf
-	install -D -m 0755 $(IMAGEFILES)/scripts/ushare.init $(TARGET_DIR)/etc/init.d/ushare
+	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/ushare.init $(TARGET_DIR)/etc/init.d/ushare
 	ln -sf ushare $(TARGET_DIR)/etc/init.d/S99ushare
 	ln -sf ushare $(TARGET_DIR)/etc/init.d/K01ushare
 	$(REMOVE)/$(USHARE_TMP)
@@ -503,7 +503,7 @@ $(D)/smartmontools: $(ARCHIVE)/$(SMARTMONTOOLS_SOURCE) | $(TARGET_DIR)
 			--prefix= \
 			; \
 		$(MAKE); \
-		install -D -m 0755 smartctl $(TARGET_DIR)/sbin/smartctl
+		$(INSTALL_EXEC) -D smartctl $(TARGET_DIR)/sbin/smartctl
 	$(REMOVE)/$(SMARTMONTOOLS_TMP)
 	$(TOUCH)
 
@@ -532,9 +532,9 @@ $(D)/inadyn: $(D)/openssl $(D)/confuse $(D)/libite $(ARCHIVE)/$(INADYN_SOURCE) |
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	install -D -m 0644 $(IMAGEFILES)/scripts/inadyn.conf $(TARGET_DIR)/var/etc/inadyn.conf
+	$(INSTALL_DATA) -D $(IMAGEFILES)/scripts/inadyn.conf $(TARGET_DIR)/var/etc/inadyn.conf
 	ln -sf /var/etc/inadyn.conf $(TARGET_DIR)/etc/inadyn.conf
-	install -D -m 0755 $(IMAGEFILES)/scripts/inadyn.init $(TARGET_DIR)/etc/init.d/inadyn
+	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/inadyn.init $(TARGET_DIR)/etc/init.d/inadyn
 	ln -sf inadyn $(TARGET_DIR)/etc/init.d/S80inadyn
 	ln -sf inadyn $(TARGET_DIR)/etc/init.d/K60inadyn
 	$(REMOVE)/$(INADYN_TMP)
@@ -564,11 +564,11 @@ $(D)/vsftpd: $(D)/openssl $(ARCHIVE)/$(VSFTPD_SOURCE) | $(TARGET_DIR)
 		sed -i -e 's/.*VSF_BUILD_SSL/#define VSF_BUILD_SSL/' builddefs.h; \
 		$(MAKE) clean; \
 		$(MAKE) $(BUILD_ENV) LIBS="-lcrypt -lcrypto -lssl"; \
-		install -D -m 0755 vsftpd $(TARGET_DIR)/sbin/vsftpd
-	install -d $(TARGET_SHARE_DIR)/empty
-	install -D -m 0644 $(IMAGEFILES)/scripts/vsftpd.conf $(TARGET_DIR)/etc/vsftpd.conf
-	install -D -m 0644 $(IMAGEFILES)/scripts/vsftpd.chroot_list $(TARGET_DIR)/etc/vsftpd.chroot_list
-	install -D -m 0755 $(IMAGEFILES)/scripts/vsftpd.init $(TARGET_DIR)/etc/init.d/vsftpd
+		$(INSTALL_EXEC) -D vsftpd $(TARGET_DIR)/sbin/vsftpd
+	mkdir -p $(TARGET_SHARE_DIR)/empty
+	$(INSTALL_DATA) -D $(IMAGEFILES)/scripts/vsftpd.conf $(TARGET_DIR)/etc/vsftpd.conf
+	$(INSTALL_DATA) -D $(IMAGEFILES)/scripts/vsftpd.chroot_list $(TARGET_DIR)/etc/vsftpd.chroot_list
+	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/vsftpd.init $(TARGET_DIR)/etc/init.d/vsftpd
 	ln -sf vsftpd $(TARGET_DIR)/etc/init.d/S53vsftpd
 	ln -sf vsftpd $(TARGET_DIR)/etc/init.d/K80vsftpd
 	$(REMOVE)/$(VSFTPD_TMP)
@@ -608,7 +608,7 @@ $(D)/procps-ng: $(D)/ncurses $(ARCHIVE)/$(PROCPS-NG_SOURCE) | $(TARGET_DIR)
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	for bin in $(PROCPS-NG_BIN); do \
 		rm -f $(TARGET_DIR)/bin/$$bin; \
-		install -m 0755 $(TARGET_DIR)/bin.procps/$$bin $(TARGET_DIR)/bin/$$bin; \
+		$(INSTALL_EXEC) $(TARGET_DIR)/bin.procps/$$bin $(TARGET_DIR)/bin/$$bin; \
 	done
 	$(REWRITE_PKGCONF)/libprocps.pc
 	$(REWRITE_LIBTOOL)/libprocps.la
@@ -667,7 +667,7 @@ $(D)/minicom: $(D)/ncurses $(ARCHIVE)/$(MINICOM_SOURCE) | $(TARGET_DIR)
 			--disable-nls \
 			; \
 		$(MAKE); \
-		install -m 0755 src/minicom $(TARGET_DIR)/bin
+		$(INSTALL_EXEC) src/minicom $(TARGET_DIR)/bin
 	$(REMOVE)/$(MINICOM_TMP)
 	$(TOUCH)
 
@@ -907,8 +907,8 @@ $(D)/samba33: $(D)/zlib $(ARCHIVE)/$(SAMBA33_SOURCE) | $(TARGET_DIR)
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	mkdir -p $(TARGET_DIR)/var/samba/locks
-	install -m 0644 $(IMAGEFILES)/scripts/smb3.conf $(TARGET_DIR)/etc/samba/smb.conf
-	install -m 0755 $(IMAGEFILES)/scripts/samba3.init $(TARGET_DIR)/etc/init.d/samba
+	$(INSTALL_DATA) $(IMAGEFILES)/scripts/smb3.conf $(TARGET_DIR)/etc/samba/smb.conf
+	$(INSTALL_EXEC) $(IMAGEFILES)/scripts/samba3.init $(TARGET_DIR)/etc/init.d/samba
 	ln -sf samba $(TARGET_DIR)/etc/init.d/S99samba
 	ln -sf samba $(TARGET_DIR)/etc/init.d/K01samba
 	rm -rf $(TARGET_DIR)/bin/testparm
@@ -988,7 +988,7 @@ $(D)/samba36: $(D)/zlib $(ARCHIVE)/$(SAMBA36_SOURCE) | $(TARGET_DIR)
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	mkdir -p $(TARGET_DIR)/var/samba/locks
 	install $(IMAGEFILES)/scripts/smb3.conf $(TARGET_DIR)/etc/samba/smb.conf
-	install -m 0755 $(IMAGEFILES)/scripts/samba3.init $(TARGET_DIR)/etc/init.d/samba
+	$(INSTALL_EXEC) $(IMAGEFILES)/scripts/samba3.init $(TARGET_DIR)/etc/init.d/samba
 	ln -sf samba $(TARGET_DIR)/etc/init.d/S99samba
 	ln -sf samba $(TARGET_DIR)/etc/init.d/K01samba
 	rm -rf $(TARGET_DIR)/bin/testparm
@@ -1037,8 +1037,8 @@ $(D)/dropbear: $(D)/zlib $(ARCHIVE)/$(DROPBEAR_SOURCE) | $(TARGET_DIR)
 		sed -i 's|/usr/|/|g' default_options.h; \
 		$(MAKE) PROGRAMS="dropbear dbclient dropbearkey scp" SCPPROGRESS=1; \
 		$(MAKE) PROGRAMS="dropbear dbclient dropbearkey scp" install DESTDIR=$(TARGET_DIR)
-	install -d -m 0755 $(TARGET_DIR)/etc/dropbear
-	install -D -m 0755 $(IMAGEFILES)/scripts/dropbear.init $(TARGET_DIR)/etc/init.d/dropbear
+	mkdir -p $(TARGET_DIR)/etc/dropbear
+	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/dropbear.init $(TARGET_DIR)/etc/init.d/dropbear
 	ln -sf dropbear $(TARGET_DIR)/etc/init.d/S60dropbear
 	ln -sf dropbear $(TARGET_DIR)/etc/init.d/K60dropbear
 	$(REMOVE)/$(DROPBEAR_TMP)
@@ -1069,10 +1069,10 @@ $(D)/sg3_utils: $(ARCHIVE)/$(SG3_UTILS_SOURCE) | $(TARGET_DIR)
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	for bin in $(SG3_UTILS_BIN); do \
 		rm -f $(TARGET_DIR)/bin/$$bin; \
-		install -m 0755 $(TARGET_DIR)/bin.sg3_utils/$$bin $(TARGET_DIR)/bin/$$bin; \
+		$(INSTALL_EXEC) $(TARGET_DIR)/bin.sg3_utils/$$bin $(TARGET_DIR)/bin/$$bin; \
 	done
 	$(REWRITE_LIBTOOL)/libsgutils2.la
-	install -D -m 0755 $(IMAGEFILES)/scripts/sdX.init $(TARGET_DIR)/etc/init.d/sdX
+	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/sdX.init $(TARGET_DIR)/etc/init.d/sdX
 	ln -sf sdX $(TARGET_DIR)/etc/init.d/K97sdX
 	$(REMOVE)/$(SG3_UTILS_TMP) \
 		$(TARGET_DIR)/bin.sg3_utils
@@ -1099,7 +1099,7 @@ $(D)/fbshot: $(D)/libpng $(ARCHIVE)/$(FBSHOT_SOURCE) | $(TARGET_DIR)
 		sed -i 's|	gcc |	$(TARGET_CC) $(TARGET_CFLAGS) $(TARGET_LDFLAGS) |' Makefile; \
 		sed -i '/strip fbshot/d' Makefile; \
 		$(MAKE) all; \
-		install -D -m 0755 fbshot $(TARGET_DIR)/bin/fbshot
+		$(INSTALL_EXEC) -D fbshot $(TARGET_DIR)/bin/fbshot
 	$(REMOVE)/$(FBSHOT_TMP)
 	$(TOUCH)
 
@@ -1148,7 +1148,7 @@ $(D)/samsunglcd4linux: | $(TARGET_DIR)
 	get-git-source.sh $(SAMSUNGLCD4LINUX_URL)/$(SAMSUNGLCD4LINUX_SOURCE) $(ARCHIVE)/$(SAMSUNGLCD4LINUX_SOURCE)
 	$(CPDIR)/$(SAMSUNGLCD4LINUX_SOURCE)
 	$(CHDIR)/$(SAMSUNGLCD4LINUX_TMP)/ni; \
-		install -m 0600 etc/lcd4linux.conf $(TARGET_DIR)/etc; \
+		$(INSTALL) -m 0600 etc/lcd4linux.conf $(TARGET_DIR)/etc; \
 		cp -a share/* $(TARGET_SHARE_DIR)
 	$(REMOVE)/$(SAMSUNGLCD4LINUX_TMP)
 	$(TOUCH)
@@ -1171,8 +1171,8 @@ $(D)/wpa_supplicant: $(D)/openssl $(ARCHIVE)/$(WPA_SUPPLICANT_SOURCE) | $(TARGET
 		$(BUILD_ENV) \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR) BINDIR=/sbin
-	install -D -m 0755 $(IMAGEFILES)/scripts/pre-wlan0.sh $(TARGET_DIR)/etc/network/pre-wlan0.sh
-	install -D -m 0755 $(IMAGEFILES)/scripts/post-wlan0.sh $(TARGET_DIR)/etc/network/post-wlan0.sh
+	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/pre-wlan0.sh $(TARGET_DIR)/etc/network/pre-wlan0.sh
+	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/post-wlan0.sh $(TARGET_DIR)/etc/network/post-wlan0.sh
 	$(REMOVE)/$(WPA_SUPPLICANT_TMP)
 	$(TOUCH)
 
@@ -1198,15 +1198,15 @@ $(D)/xupnpd: $(D)/lua $(D)/openssl | $(TARGET_DIR)
 	$(CHDIR)/$(XUPNPD_TMP)/src; \
 		$(BUILD_ENV) \
 		$(MAKE) embedded TARGET=$(TARGET) CC=$(TARGET_CC) STRIP=$(TARGET_STRIP) LUAFLAGS="$(TARGET_LDFLAGS) -I$(TARGET_INCLUDE_DIR)"; \
-		install -D -m 0755 xupnpd $(TARGET_BIN_DIR)/; \
-		install -d $(TARGET_SHARE_DIR)/xupnpd/config; \
+		$(INSTALL_EXEC) -D xupnpd $(TARGET_BIN_DIR)/; \
+		mkdir -p $(TARGET_SHARE_DIR)/xupnpd/config; \
 		cp -a plugins profiles ui www *.lua $(TARGET_SHARE_DIR)/xupnpd/
 	rm $(TARGET_SHARE_DIR)/xupnpd/plugins/staff/xupnpd_18plus.lua
-	install -D -m 0644 $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-lua/xupnpd/xupnpd_18plus.lua $(TARGET_SHARE_DIR)/xupnpd/plugins/
-	install -D -m 0644 $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-lua/xupnpd/xupnpd_youtube.lua $(TARGET_SHARE_DIR)/xupnpd/plugins/
-	install -D -m 0644 $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-lua/xupnpd/xupnpd_coolstream.lua $(TARGET_SHARE_DIR)/xupnpd/plugins/
-	install -D -m 0644 $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-lua/xupnpd/xupnpd_cczwei.lua $(TARGET_SHARE_DIR)/xupnpd/plugins/
-	install -D -m 0755 $(IMAGEFILES)/scripts/xupnpd.init $(TARGET_DIR)/etc/init.d/xupnpd
+	$(INSTALL_DATA) -D $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-lua/xupnpd/xupnpd_18plus.lua $(TARGET_SHARE_DIR)/xupnpd/plugins/
+	$(INSTALL_DATA) -D $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-lua/xupnpd/xupnpd_youtube.lua $(TARGET_SHARE_DIR)/xupnpd/plugins/
+	$(INSTALL_DATA) -D $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-lua/xupnpd/xupnpd_coolstream.lua $(TARGET_SHARE_DIR)/xupnpd/plugins/
+	$(INSTALL_DATA) -D $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-lua/xupnpd/xupnpd_cczwei.lua $(TARGET_SHARE_DIR)/xupnpd/plugins/
+	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/xupnpd.init $(TARGET_DIR)/etc/init.d/xupnpd
 	ln -sf xupnpd $(TARGET_DIR)/etc/init.d/S99xupnpd
 	ln -sf xupnpd $(TARGET_DIR)/etc/init.d/K01xupnpd
 	cp -a $(IMAGEFILES)/xupnpd/* $(TARGET_DIR)/
@@ -1289,7 +1289,7 @@ $(D)/nfs-utils: $(D)/rpcbind $(ARCHIVE)/$(NFS-UTILS_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	chmod 755 $(TARGET_DIR)/sbin/mount.nfs
+	chmod 0755 $(TARGET_DIR)/sbin/mount.nfs
 	rm -rf $(TARGET_DIR)/sbin/mountstats
 	rm -rf $(TARGET_DIR)/sbin/nfsiostat
 	rm -rf $(TARGET_DIR)/sbin/osd_login
@@ -1298,7 +1298,7 @@ $(D)/nfs-utils: $(D)/rpcbind $(ARCHIVE)/$(NFS-UTILS_SOURCE) | $(TARGET_DIR)
 	rm -rf $(TARGET_DIR)/sbin/umount.nfs*
 	rm -rf $(TARGET_DIR)/sbin/showmount
 	rm -rf $(TARGET_DIR)/sbin/rpcdebug
-	install -D -m 0755 $(IMAGEFILES)/scripts/nfsd.init $(TARGET_DIR)/etc/init.d/nfsd
+	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/nfsd.init $(TARGET_DIR)/etc/init.d/nfsd
 	ln -s nfsd $(TARGET_DIR)/etc/init.d/S60nfsd
 	ln -s nfsd $(TARGET_DIR)/etc/init.d/K01nfsd
 	$(REMOVE)/$(NFS-UTILS_TMP)
@@ -1406,7 +1406,7 @@ $(D)/streamripper: $(D)/libvorbisidec $(D)/libmad $(D)/glib2 | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	install -m 0755 $(IMAGEFILES)/scripts/streamripper.sh $(TARGET_DIR)/bin/
+	$(INSTALL_EXEC) $(IMAGEFILES)/scripts/streamripper.sh $(TARGET_DIR)/bin/
 	$(REMOVE)/$(NI-STREAMRIPPER)
 	$(TOUCH)
 
@@ -1558,9 +1558,9 @@ $(D)/ofgwrite: $(SOURCE_DIR)/$(NI-OFGWRITE) | $(TARGET_DIR)
 	$(CHDIR)/$(NI-OFGWRITE); \
 		$(BUILD_ENV) \
 		$(MAKE)
-	install -m 0755 $(BUILD_TMP)/$(NI-OFGWRITE)/ofgwrite_bin $(TARGET_DIR)/bin
-	install -m 0755 $(BUILD_TMP)/$(NI-OFGWRITE)/ofgwrite_caller $(TARGET_DIR)/bin
-	install -m 0755 $(BUILD_TMP)/$(NI-OFGWRITE)/ofgwrite $(TARGET_DIR)/bin
+	$(INSTALL_EXEC) $(BUILD_TMP)/$(NI-OFGWRITE)/ofgwrite_bin $(TARGET_DIR)/bin
+	$(INSTALL_EXEC) $(BUILD_TMP)/$(NI-OFGWRITE)/ofgwrite_caller $(TARGET_DIR)/bin
+	$(INSTALL_EXEC) $(BUILD_TMP)/$(NI-OFGWRITE)/ofgwrite $(TARGET_DIR)/bin
 	$(REMOVE)/$(NI-OFGWRITE)
 	$(TOUCH)
 
@@ -1658,7 +1658,7 @@ $(D)/gptfdisk: $(D)/popt $(D)/e2fsprogs $(ARCHIVE)/$(GPTFDISK_SOURCE) | $(TARGET
 		sed -i 's|^CXX=.*|CXX=$(TARGET_CXX)|' Makefile; \
 		$(BUILD_ENV) \
 		$(MAKE) sgdisk; \
-		install -D -m 0755 sgdisk $(TARGET_DIR)/sbin/sgdisk
+		$(INSTALL_EXEC) -D sgdisk $(TARGET_DIR)/sbin/sgdisk
 	$(REMOVE)/$(GPTFDISK_TMP)
 	$(TOUCH)
 
@@ -1673,5 +1673,5 @@ $(ARCHIVE)/$(CA-BUNDLE_SOURCE):
 $(D)/ca-bundle: $(ARCHIVE)/$(CA-BUNDLE_SOURCE) | $(TARGET_DIR)
 	$(CD) $(ARCHIVE); \
 		curl --remote-name --time-cond $(CA-BUNDLE_SOURCE) $(CA-BUNDLE_URL)/$(CA-BUNDLE_SOURCE) || true
-	install -D -m 0644 $(ARCHIVE)/$(CA-BUNDLE_SOURCE) $(TARGET_DIR)/$(CA-BUNDLE_DIR)/$(CA-BUNDLE)
+	$(INSTALL_DATA) -D $(ARCHIVE)/$(CA-BUNDLE_SOURCE) $(TARGET_DIR)/$(CA-BUNDLE_DIR)/$(CA-BUNDLE)
 	$(TOUCH)

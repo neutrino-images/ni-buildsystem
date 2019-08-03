@@ -97,7 +97,7 @@ ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd2 hd51 bre2ze4k))
 endif
 	$(CHDIR)/$(CROSSTOOL-NG_TMP); \
 		unset CONFIG_SITE LIBRARY_PATH CPATH C_INCLUDE_PATH PKG_CONFIG_PATH CPLUS_INCLUDE_PATH INCLUDE; \
-		install -m 0644 $(CONFIGS)/ct-ng-$(BOXTYPE)-$(BOXSERIES).config .config; \
+		$(INSTALL_DATA) $(CONFIGS)/ct-ng-$(BOXTYPE)-$(BOXSERIES).config .config; \
 		sed -i "s|^CT_PARALLEL_JOBS=.*|CT_PARALLEL_JOBS=$(PARALLEL_JOBS)|" .config; \
 		export NI_LOCAL_TARBALLS_DIR=$(ARCHIVE); \
 		export NI_PREFIX_DIR=$@; \

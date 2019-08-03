@@ -108,10 +108,10 @@ neutrino-plugin-%: $(NP_OBJ_DIR)/config.status
 
 $(D)/channellogos: $(SOURCE_DIR)/$(NI-LOGO-STUFF) $(SHAREICONS)
 	rm -rf $(SHAREICONS)/logo
-	install -d $(SHAREICONS)/logo
-	install -m 0644 $(SOURCE_DIR)/$(NI-LOGO-STUFF)/logos/* $(SHAREICONS)/logo
-	install -d $(SHAREICONS)/logo/events
-	install -m 0644 $(SOURCE_DIR)/$(NI-LOGO-STUFF)/logos-events/* $(SHAREICONS)/logo/events
+	mkdir -p $(SHAREICONS)/logo
+	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI-LOGO-STUFF)/logos/* $(SHAREICONS)/logo
+	mkdir -p $(SHAREICONS)/logo/events
+	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI-LOGO-STUFF)/logos-events/* $(SHAREICONS)/logo/events
 	$(CD) $(SOURCE_DIR)/$(NI-LOGO-STUFF)/logo-links; \
 		./logo-linker.sh logo-links.db $(SHAREICONS)/logo
 	$(TOUCH)
@@ -119,16 +119,16 @@ $(D)/channellogos: $(SOURCE_DIR)/$(NI-LOGO-STUFF) $(SHAREICONS)
 # -----------------------------------------------------------------------------
 
 $(D)/logo-addon: $(SOURCE_DIR)/$(NI-LOGO-STUFF) $(SHAREPLUGINS)
-	install -m 0755 $(SOURCE_DIR)/$(NI-LOGO-STUFF)/logo-addon/*.sh $(SHAREPLUGINS)/
-	install -m 0644 $(SOURCE_DIR)/$(NI-LOGO-STUFF)/logo-addon/*.cfg $(SHAREPLUGINS)/
-	install -m 0644 $(SOURCE_DIR)/$(NI-LOGO-STUFF)/logo-addon/*.png $(SHAREPLUGINS)/
+	$(INSTALL_EXEC) $(SOURCE_DIR)/$(NI-LOGO-STUFF)/logo-addon/*.sh $(SHAREPLUGINS)/
+	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI-LOGO-STUFF)/logo-addon/*.cfg $(SHAREPLUGINS)/
+	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI-LOGO-STUFF)/logo-addon/*.png $(SHAREPLUGINS)/
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 $(D)/doscam-webif-skin:
-	install -D -m 0644 $(IMAGEFILES)/doscam-webif-skin/doscam_ni-dark.css $(TARGET_SHARE_DIR)/doscam/skin/doscam_ni-dark.css
-	install -D -m 0644 $(IMAGEFILES)/doscam-webif-skin/IC_doscam_ni.tpl $(TARGET_SHARE_DIR)/doscam/tpl/IC_doscam_ni.tpl
+	$(INSTALL_DATA) -D $(IMAGEFILES)/doscam-webif-skin/doscam_ni-dark.css $(TARGET_SHARE_DIR)/doscam/skin/doscam_ni-dark.css
+	$(INSTALL_DATA) -D $(IMAGEFILES)/doscam-webif-skin/IC_doscam_ni.tpl $(TARGET_SHARE_DIR)/doscam/tpl/IC_doscam_ni.tpl
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------

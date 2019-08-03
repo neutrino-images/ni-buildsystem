@@ -236,7 +236,7 @@ endif
 	$(MAKE) $(N_OBJ_DIR)/config.status
 	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
 	$(MAKE) -C $(N_OBJ_DIR) all DESTDIR=$(TARGET_DIR)
-	install -D -m 0755 $(N_OBJ_DIR)/src/neutrino $(TARGET_DIR)/bin/neutrino
+	$(INSTALL_EXEC) -D $(N_OBJ_DIR)/src/neutrino $(TARGET_DIR)/bin/neutrino
 ifneq ($(DEBUG), yes)
 	$(TARGET_STRIP) $(TARGET_DIR)/bin/neutrino
 endif

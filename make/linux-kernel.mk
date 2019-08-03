@@ -66,13 +66,13 @@ $(D)/kernel.do_prepare:
 		mv $(NI-LINUX-KERNEL) $(KERNEL_SRC)
 	$(MKDIR)/$(KERNEL_OBJ)
 	$(MKDIR)/$(KERNEL_MODULES)
-	install -m 644 $(KERNEL_CONFIG) $(BUILD_TMP)/$(KERNEL_OBJ)/.config
+	$(INSTALL_DATA) $(KERNEL_CONFIG) $(BUILD_TMP)/$(KERNEL_OBJ)/.config
 ifeq ($(BOXTYPE)-$(BOXSERIES), coolstream-hd1)
 	sed -i -e 's/EXTRAVERSION = .15/EXTRAVERSION = .13/g' $(BUILD_TMP)/$(KERNEL_SRC)/Makefile
 else ifeq ($(BOXTYPE)-$(BOXSERIES), coolstream-hd2)
 	sed -i -e 's/SUBLEVEL = 108/SUBLEVEL = 93/g' $(BUILD_TMP)/$(KERNEL_SRC)/Makefile
 else ifeq ($(BOXTYPE), armbox)
-	install -m 644 $(PATCHES)/initramfs-subdirboot.cpio.gz $(BUILD_TMP)/$(KERNEL_OBJ)
+	$(INSTALL_DATA) $(PATCHES)/initramfs-subdirboot.cpio.gz $(BUILD_TMP)/$(KERNEL_OBJ)
 endif
 	$(TOUCH)
 

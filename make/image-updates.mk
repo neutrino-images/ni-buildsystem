@@ -37,10 +37,10 @@ u-neutrino: neutrino-clean
 	echo "killall start_neutrino neutrino; sleep 5"	>> $(PREINSTALL_SH)
 	echo "sync; /bin/busybox reboot"		>> $(POSTINSTALL_SH)
 	$(MAKE) neutrino
-	install -D -m 0755 $(TARGET_DIR)/etc/init.d/start_neutrino $(UPDATE_INST_DIR)/etc/init.d/start_neutrino
-	install -D -m 0755 $(TARGET_DIR)/bin/neutrino $(UPDATE_INST_DIR)/bin/neutrino
-	install -D -m 0644 $(TARGET_SHARE_DIR)/tuxbox/neutrino/locale/deutsch.locale $(UPDATE_INST_DIR)/share/tuxbox/neutrino/locale/deutsch.locale
-	install -D -m 0644 $(TARGET_SHARE_DIR)/tuxbox/neutrino/locale/english.locale $(UPDATE_INST_DIR)/share/tuxbox/neutrino/locale/english.locale
+	$(INSTALL_EXEC) -D $(TARGET_DIR)/etc/init.d/start_neutrino $(UPDATE_INST_DIR)/etc/init.d/start_neutrino
+	$(INSTALL_EXEC) -D $(TARGET_DIR)/bin/neutrino $(UPDATE_INST_DIR)/bin/neutrino
+	$(INSTALL_DATA) -D $(TARGET_SHARE_DIR)/tuxbox/neutrino/locale/deutsch.locale $(UPDATE_INST_DIR)/share/tuxbox/neutrino/locale/deutsch.locale
+	$(INSTALL_DATA) -D $(TARGET_SHARE_DIR)/tuxbox/neutrino/locale/english.locale $(UPDATE_INST_DIR)/share/tuxbox/neutrino/locale/english.locale
 ifneq ($(DEBUG), yes)
 	find $(UPDATE_INST_DIR)/bin -type f ! -name *.sh -print0 | xargs -0 $(TARGET_STRIP) || true
 endif
@@ -54,7 +54,7 @@ u-neutrino-full: neutrino-clean
 	echo "killall start_neutrino neutrino; sleep 5"	>> $(PREINSTALL_SH)
 	echo "sync; /bin/busybox reboot"		>> $(POSTINSTALL_SH)
 	$(MAKE) neutrino N_INST_DIR=$(UPDATE_INST_DIR)
-	install -D -m 0755 $(TARGET_DIR)/etc/init.d/start_neutrino $(UPDATE_INST_DIR)/etc/init.d/start_neutrino
+	$(INSTALL_EXEC) -D $(TARGET_DIR)/etc/init.d/start_neutrino $(UPDATE_INST_DIR)/etc/init.d/start_neutrino
 ifneq ($(DEBUG), yes)
 	find $(UPDATE_INST_DIR)/bin -type f ! -name *.sh -print0 | xargs -0 $(TARGET_STRIP) || true
 endif
@@ -80,19 +80,19 @@ u-update.urls: update.urls
 
 u-pr-auto-timer:
 	$(MAKE) u-init
-	install -m 0755 $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-sh/plugins/pr-auto-timer/update-ctrl/preinstall.sh $(PREINSTALL_SH)
-	install -m 0755 $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-sh/plugins/pr-auto-timer/update-ctrl/postinstall.sh $(POSTINSTALL_SH)
-	install -d $(UPDATE_INST_DIR)/share/tuxbox/neutrino/plugins
-	install -m 0755 $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-sh/plugins/pr-auto-timer/pr-auto-timer.sh $(UPDATE_INST_DIR)/share/tuxbox/neutrino/plugins/
-	install -m 0644 $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-sh/plugins/pr-auto-timer/pr-auto-timer.cfg $(UPDATE_INST_DIR)/share/tuxbox/neutrino/plugins/
-	install -m 0755 $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-sh/plugins/pr-auto-timer/pr-auto-timer $(UPDATE_INST_DIR)/share/tuxbox/neutrino/plugins/
-	install -m 0755 $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-sh/plugins/pr-auto-timer/pr-auto-timer_hint.png $(UPDATE_INST_DIR)/share/tuxbox/neutrino/plugins/
-	install -m 0755 $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-sh/plugins/pr-auto-timer/auto-record-cleaner $(UPDATE_INST_DIR)/share/tuxbox/neutrino/plugins/
-	install -d $(UPDATE_INST_DIR)/var/tuxbox/config
-	install -m 0644 $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-sh/plugins/pr-auto-timer/pr-auto-timer.conf.template $(UPDATE_INST_DIR)/var/tuxbox/config/
-	install -m 0644 $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-sh/plugins/pr-auto-timer/pr-auto-timer.rules.template $(UPDATE_INST_DIR)/var/tuxbox/config/
-	install -m 0644 $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-sh/plugins/pr-auto-timer/auto-record-cleaner.conf.template $(UPDATE_INST_DIR)/var/tuxbox/config/
-	install -m 0644 $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-sh/plugins/pr-auto-timer/auto-record-cleaner.rules.template $(UPDATE_INST_DIR)/var/tuxbox/config/
+	$(INSTALL_EXEC) $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-sh/plugins/pr-auto-timer/update-ctrl/preinstall.sh $(PREINSTALL_SH)
+	$(INSTALL_EXEC) $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-sh/plugins/pr-auto-timer/update-ctrl/postinstall.sh $(POSTINSTALL_SH)
+	mkdir -p $(UPDATE_INST_DIR)/share/tuxbox/neutrino/plugins
+	$(INSTALL_EXEC) $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-sh/plugins/pr-auto-timer/pr-auto-timer.sh $(UPDATE_INST_DIR)/share/tuxbox/neutrino/plugins/
+	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-sh/plugins/pr-auto-timer/pr-auto-timer.cfg $(UPDATE_INST_DIR)/share/tuxbox/neutrino/plugins/
+	$(INSTALL_EXEC) $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-sh/plugins/pr-auto-timer/pr-auto-timer $(UPDATE_INST_DIR)/share/tuxbox/neutrino/plugins/
+	$(INSTALL_EXEC) $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-sh/plugins/pr-auto-timer/pr-auto-timer_hint.png $(UPDATE_INST_DIR)/share/tuxbox/neutrino/plugins/
+	$(INSTALL_EXEC) $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-sh/plugins/pr-auto-timer/auto-record-cleaner $(UPDATE_INST_DIR)/share/tuxbox/neutrino/plugins/
+	mkdir -p $(UPDATE_INST_DIR)/var/tuxbox/config
+	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-sh/plugins/pr-auto-timer/pr-auto-timer.conf.template $(UPDATE_INST_DIR)/var/tuxbox/config/
+	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-sh/plugins/pr-auto-timer/pr-auto-timer.rules.template $(UPDATE_INST_DIR)/var/tuxbox/config/
+	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-sh/plugins/pr-auto-timer/auto-record-cleaner.conf.template $(UPDATE_INST_DIR)/var/tuxbox/config/
+	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-sh/plugins/pr-auto-timer/auto-record-cleaner.rules.template $(UPDATE_INST_DIR)/var/tuxbox/config/
 	PKG_VERSION=`cat $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-sh/plugins/pr-auto-timer/pr-auto-timer | grep '^VERSION' | cut -d= -f2`; \
 	$(MAKE) u-update-bin \
 			UPDATE_MD5FILE=pr-auto-timer.txt \
@@ -112,8 +112,8 @@ matze-192 \
 matze-192-130 \
 pathauf-192:
 	$(MAKE) u-init
-	install -m 0755 $(IMAGEFILES)/channellists/update-ctrl/preinstall.sh $(PREINSTALL_SH)
-	install -m 0755 $(IMAGEFILES)/channellists/update-ctrl/postinstall.sh $(POSTINSTALL_SH)
+	$(INSTALL_EXEC) $(IMAGEFILES)/channellists/update-ctrl/preinstall.sh $(PREINSTALL_SH)
+	$(INSTALL_EXEC) $(IMAGEFILES)/channellists/update-ctrl/postinstall.sh $(POSTINSTALL_SH)
 	mkdir -pv $(UPDATE_INST_DIR)/var/tuxbox/config/zapit && \
 	cp -f $(IMAGEFILES)/channellists/$@/* $(UPDATE_INST_DIR)/var/tuxbox/config/zapit/
 	# remove non-printable chars and re-format xml-files

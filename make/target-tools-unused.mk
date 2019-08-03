@@ -61,8 +61,8 @@ $(D)/binutils: $(ARCHIVE)/$(BINUTILS_SOURCE) | $(TARGET_DIR)
 			--disable-gdb \
 			; \
 		$(MAKE); \
-		install -m 0755 binutils/objdump $(TARGET_BIN_DIR)/
-		install -m 0755 binutils/objcopy $(TARGET_BIN_DIR)/
+		$(INSTALL_EXEC) binutils/objdump $(TARGET_BIN_DIR)/
+		$(INSTALL_EXEC) binutils/objcopy $(TARGET_BIN_DIR)/
 	$(REMOVE)/$(BINUTILS_TMP)
 	$(TOUCH)
 
@@ -159,7 +159,7 @@ $(D)/iozone3: $(ARCHIVE)/$(IOZONE_SOURCE) | $(TARGET_DIR)
 		sed -i -e "s/= cc/= $(TARGET_CC)/" makefile; \
 		$(BUILD_ENV) \
 		$(MAKE) linux-arm; \
-		install -m 0755 iozone $(TARGET_BIN_DIR)/
+		$(INSTALL_EXEC) iozone $(TARGET_BIN_DIR)/
 	$(REMOVE)/$(IOZONE_TMP)
 	$(TOUCH)
 

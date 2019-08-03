@@ -307,6 +307,10 @@ MKDIR = mkdir -p $(BUILD_TMP)
 CPDIR = cp -a -t $(BUILD_TMP) $(ARCHIVE)
 TOUCH = @touch $@
 
+INSTALL      = install
+INSTALL_DATA = $(INSTALL) -m 0644
+INSTALL_EXEC = $(INSTALL) -m 0755
+
 # empty variable EMPTY for smoother comparisons
 EMPTY =
 

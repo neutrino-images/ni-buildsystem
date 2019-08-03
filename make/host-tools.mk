@@ -45,7 +45,7 @@ $(HOST_DIR)/bin/pkg-config: $(ARCHIVE)/$(HOST_PKG-CONFIG_SOURCE) | $(HOST_DIR)/b
 			--with-pc_path=$(PKG_CONFIG_PATH) \
 			; \
 		$(MAKE); \
-		install -D -m 0755 pkg-config $(HOST_DIR)/bin
+		$(INSTALL_EXEC) -D pkg-config $(HOST_DIR)/bin
 	$(REMOVE)/$(HOST_PKG-CONFIG_TMP)
 
 host-pkg-config-link: $(HOST_DIR)/bin/$(TARGET)-pkg-config
@@ -76,7 +76,7 @@ $(HOST_DIR)/bin/pkgconf: $(ARCHIVE)/$(HOST_PKGCONF_SOURCE) | $(HOST_DIR)/bin pkg
 			; \
 		$(MAKE); \
 		$(MAKE) install
-	install -m 0755 $(PATCHES)/pkgconf-pkg-config $(HOST_DIR)/bin/pkg-config
+	$(INSTALL_EXEC) $(PATCHES)/pkgconf-pkg-config $(HOST_DIR)/bin/pkg-config
 	$(REMOVE)/$(HOST_PKGCONF_TMP)
 
 # -----------------------------------------------------------------------------
@@ -107,8 +107,8 @@ $(HOST_DIR)/bin/sumtool: $(ARCHIVE)/$(HOST_MTD-UTILS_SOURCE) | $(HOST_DIR)/bin
 			--disable-tests \
 			; \
 		$(MAKE)
-	install -D -m 0755 $(BUILD_TMP)/$(HOST_MTD-UTILS_TMP)/mkfs.jffs2 $(HOST_DIR)/bin/
-	install -D -m 0755 $(BUILD_TMP)/$(HOST_MTD-UTILS_TMP)/sumtool $(HOST_DIR)/bin/
+	$(INSTALL_EXEC) -D $(BUILD_TMP)/$(HOST_MTD-UTILS_TMP)/mkfs.jffs2 $(HOST_DIR)/bin/
+	$(INSTALL_EXEC) -D $(BUILD_TMP)/$(HOST_MTD-UTILS_TMP)/sumtool $(HOST_DIR)/bin/
 	$(REMOVE)/$(HOST_MTD-UTILS_TMP)
 
 # -----------------------------------------------------------------------------
@@ -129,7 +129,7 @@ $(HOST_DIR)/bin/mkimage: $(ARCHIVE)/$(HOST_U-BOOT_SOURCE) | $(HOST_DIR)/bin
 		$(MAKE) defconfig; \
 		$(MAKE) silentoldconfig; \
 		$(MAKE) tools-only
-	install -D -m 0755 $(BUILD_TMP)/$(HOST_U-BOOT_TMP)/tools/mkimage $(HOST_DIR)/bin/
+	$(INSTALL_EXEC) -D $(BUILD_TMP)/$(HOST_U-BOOT_TMP)/tools/mkimage $(HOST_DIR)/bin/
 	$(REMOVE)/$(HOST_U-BOOT_TMP)
 
 # -----------------------------------------------------------------------------
@@ -160,7 +160,7 @@ $(HOST_ZIC): $(ARCHIVE)/$(HOST_TZDATA_SOURCE) $(ARCHIVE)/$(HOST_TZCODE_SOURCE) |
 		tar -xf $(ARCHIVE)/$(HOST_TZCODE_SOURCE); \
 		tar -xf $(ARCHIVE)/$(HOST_TZDATA_SOURCE); \
 		$(MAKE) zic
-	install -D -m 0755 $(BUILD_TMP)/$(HOST_TZCODE_TMP)/zic $(HOST_DIR)/bin/
+	$(INSTALL_EXEC) -D $(BUILD_TMP)/$(HOST_TZCODE_TMP)/zic $(HOST_DIR)/bin/
 	$(REMOVE)/$(HOST_TZCODE_TMP)
 
 # -----------------------------------------------------------------------------
@@ -190,7 +190,7 @@ $(HOST_DIR)/bin/parted: $(ARCHIVE)/$(HOST_PARTED_SOURCE) | $(HOST_DIR)/bin
 			--without-readline \
 			; \
 		$(MAKE)
-	install -D -m 0755 $(BUILD_TMP)/$(HOST_PARTED_TMP)/parted/parted $(HOST_DIR)/bin/
+	$(INSTALL_EXEC) -D $(BUILD_TMP)/$(HOST_PARTED_TMP)/parted/parted $(HOST_DIR)/bin/
 	$(REMOVE)/$(HOST_PARTED_TMP)
 
 # -----------------------------------------------------------------------------
@@ -212,7 +212,7 @@ $(HOST_DIR)/bin/mkfs.fat: $(ARCHIVE)/$(HOST_DOSFSTOOLS_SOURCE) | $(HOST_DIR)/bin
 			--without-udev \
 			; \
 		$(MAKE)
-	install -D -m 0755 $(BUILD_TMP)/$(HOST_DOSFSTOOLS_TMP)/src/mkfs.fat $(HOST_DIR)/bin/
+	$(INSTALL_EXEC) -D $(BUILD_TMP)/$(HOST_DOSFSTOOLS_TMP)/src/mkfs.fat $(HOST_DIR)/bin/
 	ln -sf mkfs.fat $(HOST_DIR)/bin/mkfs.vfat
 	ln -sf mkfs.fat $(HOST_DIR)/bin/mkfs.msdos
 	ln -sf mkfs.fat $(HOST_DIR)/bin/mkdosfs
@@ -235,7 +235,7 @@ $(HOST_DIR)/bin/mtools: $(ARCHIVE)/$(HOST_MTOOLS_SOURCE) | $(HOST_DIR)/bin
 	$(CHDIR)/$(HOST_MTOOLS_TMP); \
 		./configure; \
 		$(MAKE)
-	install -D -m 0755 $(BUILD_TMP)/$(HOST_MTOOLS_TMP)/mtools $(HOST_DIR)/bin/
+	$(INSTALL_EXEC) -D $(BUILD_TMP)/$(HOST_MTOOLS_TMP)/mtools $(HOST_DIR)/bin/
 	ln -sf mtools $(HOST_DIR)/bin/mcopy
 	$(REMOVE)/$(HOST_MTOOLS_TMP)
 
@@ -256,13 +256,13 @@ $(HOST_DIR)/bin/resize2fs: $(ARCHIVE)/$(HOST_E2FSPROGS_SOURCE) | $(HOST_DIR)/bin
 	$(CHDIR)/$(HOST_E2FSPROGS_TMP); \
 		./configure; \
 		$(MAKE)
-	install -D -m 0755 $(BUILD_TMP)/$(HOST_E2FSPROGS_TMP)/resize/resize2fs $(HOST_DIR)/bin/
-	install -D -m 0755 $(BUILD_TMP)/$(HOST_E2FSPROGS_TMP)/misc/mke2fs $(HOST_DIR)/bin/
+	$(INSTALL_EXEC) -D $(BUILD_TMP)/$(HOST_E2FSPROGS_TMP)/resize/resize2fs $(HOST_DIR)/bin/
+	$(INSTALL_EXEC) -D $(BUILD_TMP)/$(HOST_E2FSPROGS_TMP)/misc/mke2fs $(HOST_DIR)/bin/
 	ln -sf mke2fs $(HOST_DIR)/bin/mkfs.ext2
 	ln -sf mke2fs $(HOST_DIR)/bin/mkfs.ext3
 	ln -sf mke2fs $(HOST_DIR)/bin/mkfs.ext4
 	ln -sf mke2fs $(HOST_DIR)/bin/mkfs.ext4dev
-	install -D -m 0755 $(BUILD_TMP)/$(HOST_E2FSPROGS_TMP)/e2fsck/e2fsck $(HOST_DIR)/bin/
+	$(INSTALL_EXEC) -D $(BUILD_TMP)/$(HOST_E2FSPROGS_TMP)/e2fsck/e2fsck $(HOST_DIR)/bin/
 	ln -sf e2fsck $(HOST_DIR)/bin/fsck.ext2
 	ln -sf e2fsck $(HOST_DIR)/bin/fsck.ext3
 	ln -sf e2fsck $(HOST_DIR)/bin/fsck.ext4

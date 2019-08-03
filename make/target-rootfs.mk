@@ -65,7 +65,7 @@ ifeq ($(BOXSERIES), hd2)
 	$(CD) $(TARGET_DIR)/etc/network; \
 		ln -sf /var/etc/network/interfaces interfaces
 endif
-	install -d $(TARGET_DIR)/var/tuxbox/config
+	mkdir -p $(TARGET_DIR)/var/tuxbox/config
 	$(CD) $(TARGET_DIR)/var/tuxbox/config; \
 		ln -sf /var/keys/SoftCam.Key SoftCam.Key
 
