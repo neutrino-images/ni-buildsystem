@@ -1,40 +1,21 @@
-add lua.pc
-
-Signed-off-by: Francois Perrad <francois.perrad@gadz.org>
-
-Index: b/etc/lua.pc
-===================================================================
---- /dev/null
-+++ b/etc/lua.pc
-@@ -0,0 +1,31 @@
-+# lua.pc -- pkg-config data for Lua
-+
-+# vars from install Makefile
-+
-+# grep '^V=' ../Makefile
-+V=5.2
-+# grep '^R=' ../Makefile
-+R=5.2.4
-+
-+# grep '^INSTALL_.*=' ../Makefile | sed 's/INSTALL_TOP/prefix/'
-+prefix= /
-+INSTALL_BIN= ${prefix}/bin
-+INSTALL_INC= ${prefix}/include
-+INSTALL_LIB= ${prefix}/lib
-+INSTALL_MAN= ${prefix}/.remove
-+INSTALL_LMOD= ${prefix}/share/lua/${V}
-+INSTALL_CMOD= ${prefix}/lib/lua/${V}
-+
-+# canonical vars
-+exec_prefix=${prefix}
-+libdir=${exec_prefix}/lib
-+includedir=${prefix}/include
-+
-+Name: Lua
-+Description: An Extensible Extension Language
-+Version: ${R}
-+Requires: 
-+Libs: -L${libdir} -llua -lm -ldl
-+Cflags: -I${includedir}
-+
-+# (end of lua.pc)
+diff --git a/Makefile b/Makefile
+index b2a62cf..c199335 100644
+--- a/Makefile
++++ b/Makefile
+@@ -105,8 +105,16 @@ echo:
+ pc:
+ 	@echo "version=$R"
+ 	@echo "prefix=$(INSTALL_TOP)"
++	@echo "exec_prefix=$(INSTALL_TOP)"
+ 	@echo "libdir=$(INSTALL_LIB)"
+ 	@echo "includedir=$(INSTALL_INC)"
++	@echo ""
++	@echo "Name: Lua"
++	@echo "Description: An Extensible Extension Language"
++	@echo "Version: $R"
++	@echo "Requires:"
++	@echo "Libs: -L\$${libdir} -llua -lm -ldl"
++	@echo "Cflags: -I\$${includedir}"
+ 
+ # list targets that do not create files (but not all makes understand .PHONY)
+ .PHONY: all $(PLATS) clean test install local none dummy echo pecho lecho
