@@ -14,7 +14,6 @@ $(ARCHIVE)/$(LUA_SOURCE):
 
 LUA_PATCH  = lua-01-fix-LUA_ROOT.patch
 LUA_PATCH += lua-01-remove-readline.patch
-LUA_PATCH += lua-01-remove-man.patch
 LUA_PATCH += lua-02-shared-libs-for-lua.patch
 LUA_PATCH += lua-03-lua-pc.patch
 LUA_PATCH += lua-04-crashfix.diff
@@ -30,8 +29,8 @@ $(D)/lua: $(D)/ncurses $(ARCHIVE)/$(LUA_SOURCE) | $(TARGET_DIR)
 			AR="$(TARGET_AR) rcu" \
 			LDFLAGS="$(TARGET_LDFLAGS)" \
 			; \
-		$(MAKE) install INSTALL_TOP=$(TARGET_DIR); \
-		$(MAKE) pc > $(PKG_CONFIG_PATH)/lua.pc
+		$(MAKE) install INSTALL_TOP=$(TARGET_DIR) INSTALL_MAN=$(TARGET_DIR)$(remove-man1dir); \
+		$(MAKE) pc INSTALL_TOP=$(TARGET_DIR) > $(PKG_CONFIG_PATH)/lua.pc
 	$(REWRITE_PKGCONF)/lua.pc
 	rm -rf $(TARGET_DIR)/bin/luac
 	$(REMOVE)/$(LUA_TMP)
