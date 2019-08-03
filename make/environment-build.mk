@@ -260,11 +260,6 @@ TERM_YELLOW	= \033[40;0;33m
 TERM_YELLOW_BOLD= \033[40;1;33m
 TERM_NORMAL	= \033[0m
 
-USE_LIBSTB-HAL = no
-ifneq ($(BOXTYPE), coolstream)
-  USE_LIBSTB-HAL = yes
-endif
-
 PATH := $(HOST_DIR)/bin:$(CROSS_DIR)/bin:$(HELPERS_DIR):$(PATH)
 
 PKG_CONFIG = $(HOST_DIR)/bin/$(TARGET)-pkg-config

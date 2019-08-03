@@ -28,7 +28,7 @@ ifeq ($(BOXTYPE)-$(HAS_LIBCS), coolstream-yes)
   N_DEPS += $(D)/libcoolstream
 endif
 
-ifeq ($(USE_LIBSTB-HAL), yes)
+ifneq ($(BOXTYPE), coolstream)
   N_DEPS += $(D)/libstb-hal
 endif
 
@@ -75,7 +75,7 @@ endif
 # -----------------------------------------------------------------------------
 
 N_CONFIGURE_DEBUG =
-ifeq ($(HAS_LIBCS), yes)
+ifeq ($(BOXTYPE)-$(HAS_LIBCS), coolstream-yes)
   ifeq ($(DEBUG), yes)
     N_CONFIGURE_DEBUG += \
 		--enable-libcoolstream-static \
@@ -86,7 +86,7 @@ endif
 # -----------------------------------------------------------------------------
 
 N_CONFIGURE_LIBSTB-HAL =
-ifeq ($(USE_LIBSTB-HAL), yes)
+ifneq ($(BOXTYPE), coolstream)
   N_CONFIGURE_LIBSTB-HAL += \
 		--with-stb-hal-includes=$(SOURCE_DIR)/$(NI-LIBSTB-HAL)/include \
 		--with-stb-hal-build=$(LH_OBJ_DIR)
