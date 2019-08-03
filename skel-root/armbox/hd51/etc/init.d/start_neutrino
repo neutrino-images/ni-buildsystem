@@ -2,6 +2,12 @@
 
 . /etc/init.d/globals
 
+# Neutrino's exit codes
+ERROR=-1
+NORMAL=0
+SHUTDOWN=1
+REBOOT=2
+
 if [ -e /var/etc/.coredump ]; then
 	ulimit -c unlimited
 fi
@@ -33,13 +39,13 @@ while true; do
 	neutrino; RET=$?
 	LOGINFO "Neutrino exited with exit code $RET"
 
-	if [ $RET -eq 0 ]; then
+	if [ $RET -eq $NORMAL ]; then
 		# do nothing
 		break
-	elif [ $RET -eq 1 ]; then
+	elif [ $RET -eq $SHUTDOWN ]; then
 		do_shutdown
 		break
-	elif [ $RET -eq 2 ]; then
+	elif [ $RET -eq $REBOOT ]; then
 		do_cleanup
 		do_reboot
 		break
