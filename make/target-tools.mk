@@ -21,6 +21,7 @@ BUSYBOX_PATCH += busybox-mount_single_uuid.patch
 # mounting with BusyBox
 BUSYBOX_CFLAGS = $(TARGET_CFLAGS)
 BUSYBOX_CFLAGS += "`$(PKG_CONFIG) --cflags libtirpc`"
+
 # Don't use LDFLAGS for -ltirpc, because LDFLAGS is used for the non-final link
 # of modules as well.
 BUSYBOX_CFLAGS_busybox = "`$(PKG_CONFIG) --libs libtirpc`"
@@ -36,13 +37,59 @@ BUSYBOX_MAKE_OPTS = \
 	EXTRA_LDFLAGS="$(TARGET_LDFLAGS)" \
 	CONFIG_PREFIX="$(TARGET_DIR)"
 
+BUSYBOX_BUILD_CONFIG = $(BUILD_TMP)/$(BUSYBOX_TMP)/.config
+
+define BUSYBOX_INSTALL_CONFIG
+	$(INSTALL_DATA) $(CONFIGS)/busybox-minimal.config $(BUSYBOX_BUILD_CONFIG)
+	$(call KCONFIG_SET_OPT,CONFIG_PREFIX,"$(TARGET_DIR)",$(BUSYBOX_BUILD_CONFIG))
+endef
+
+ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd51 bre2ze4k))
+
+  define BUSYBOX_SET_BLKDISCARD
+	$(call KCONFIG_ENABLE_OPT,CONFIG_BLKDISCARD,$(BUSYBOX_BUILD_CONFIG))
+  endef
+
+  define BUSYBOX_SET_IPV6
+	$(call KCONFIG_ENABLE_OPT,CONFIG_FEATURE_IPV6,$(BUSYBOX_BUILD_CONFIG))
+	$(call KCONFIG_ENABLE_OPT,CONFIG_FEATURE_IFUPDOWN_IPV6,$(BUSYBOX_BUILD_CONFIG))
+  endef
+
+  ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 bre2ze4k))
+
+    define BUSYBOX_SET_SWAP
+	$(call KCONFIG_ENABLE_OPT,CONFIG_SWAPON,$(BUSYBOX_BUILD_CONFIG))
+	$(call KCONFIG_ENABLE_OPT,CONFIG_SWAPOFF,$(BUSYBOX_BUILD_CONFIG))
+    endef
+
+    define BUSYBOX_SET_HEXDUMP
+	$(call KCONFIG_ENABLE_OPT,CONFIG_HEXDUMP,$(BUSYBOX_BUILD_CONFIG))
+    endef
+
+    define BUSYBOX_SET_PKILL
+	$(call KCONFIG_ENABLE_OPT,CONFIG_PKILL,$(BUSYBOX_BUILD_CONFIG))
+    endef
+
+  endif
+
+endif
+
+define BUSYBOX_MODIFY_CONFIG
+	$(BUSYBOX_SET_BLKDISCARD)
+	$(BUSYBOX_SET_IPV6)
+	$(BUSYBOX_SET_SWAP)
+	$(BUSYBOX_SET_HEXDUMP)
+	$(BUSYBOX_SET_PKILL)
+endef
+
 $(D)/busybox: $(D)/libtirpc $(ARCHIVE)/$(BUSYBOX_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(BUSYBOX_TMP)
 	$(UNTAR)/$(BUSYBOX_SOURCE)
 	$(CHDIR)/$(BUSYBOX_TMP); \
-		$(call apply_patches, $(BUSYBOX_PATCH)); \
-		cp $(CONFIGS)/busybox-$(BOXTYPE)-$(BOXSERIES).config .config; \
-		sed -i -e 's|^CONFIG_PREFIX=.*|CONFIG_PREFIX="$(TARGET_DIR)"|' .config; \
+		$(call apply_patches, $(BUSYBOX_PATCH))
+	$(BUSYBOX_INSTALL_CONFIG)
+	$(BUSYBOX_MODIFY_CONFIG)
+	$(CHDIR)/$(BUSYBOX_TMP); \
 		$(BUSYBOX_MAKE_ENV) $(MAKE) $(BUSYBOX_MAKE_OPTS) busybox; \
 		$(BUSYBOX_MAKE_ENV) $(MAKE) $(BUSYBOX_MAKE_OPTS) install-noclobber
 	$(REMOVE)/$(BUSYBOX_TMP)
