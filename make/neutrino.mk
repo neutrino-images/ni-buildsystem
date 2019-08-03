@@ -168,7 +168,13 @@ $(D)/neutrino: $(N_OBJ_DIR)/config.status
 	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
 	$(MAKE) -C $(N_OBJ_DIR) all     DESTDIR=$(TARGET_DIR)
 	$(MAKE) -C $(N_OBJ_DIR) install DESTDIR=$(N_INST_DIR)
+	$(MAKE) $(TARGET_DIR)/etc/init.d/start_neutrino
 	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
+$(TARGET_DIR)/etc/init.d/start_neutrino:
+	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/start_neutrino.$(BOXTYPE) $@
 
 # -----------------------------------------------------------------------------
 
@@ -253,6 +259,7 @@ neutrino-distclean:
 neutrino-clean: neutrino-uninstall neutrino-distclean
 	rm -f $(N_OBJ_DIR)/config.status
 	rm -f $(D)/neutrino
+	rm -f $(TARGET_DIR)/etc/init.d/start_neutrino
 
 neutrino-clean-all: neutrino-clean
 	rm -rf $(N_OBJ_DIR)
