@@ -10,6 +10,7 @@ init-scripts: \
 	$(TARGET_DIR)/etc/init.d/camd_datefix \
 	$(TARGET_DIR)/etc/init.d/coredump \
 	$(TARGET_DIR)/etc/init.d/crond \
+	$(TARGET_DIR)/etc/init.d/custom-poweroff \
 	$(TARGET_DIR)/etc/init.d/hostname \
 	$(TARGET_DIR)/etc/init.d/inetd \
 	$(TARGET_DIR)/etc/init.d/swap \
@@ -38,6 +39,11 @@ $(TARGET_DIR)/etc/init.d/crond:
 	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/crond.init $@
 	ln -sf crond $(TARGET_DIR)/etc/init.d/S55crond
 	ln -sf crond $(TARGET_DIR)/etc/init.d/K55crond
+
+$(TARGET_DIR)/etc/init.d/custom-poweroff:
+ifeq ($(BOXTYPE), coolstream)
+	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/custom-poweroff.init $@
+endif
 
 $(TARGET_DIR)/etc/init.d/hostname:
 	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/hostname.init $@
