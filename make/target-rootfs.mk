@@ -50,8 +50,6 @@ endif
 	$(CD) $(TARGET_DIR)/etc; \
 		ln -sf /proc/mounts mtab
 	$(CD) $(TARGET_DIR)/etc/init.d; \
-		ln -sf fstab K99fstab; \
-		ln -sf fstab S01fstab; \
 		ln -sf networking K99networking
 ifeq ($(BOXSERIES), hd2)
 	$(CD) $(TARGET_DIR)/etc; \

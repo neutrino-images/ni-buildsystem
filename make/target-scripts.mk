@@ -11,6 +11,7 @@ init-scripts: \
 	$(TARGET_DIR)/etc/init.d/coredump \
 	$(TARGET_DIR)/etc/init.d/crond \
 	$(TARGET_DIR)/etc/init.d/custom-poweroff \
+	$(TARGET_DIR)/etc/init.d/fstab \
 	$(TARGET_DIR)/etc/init.d/hostname \
 	$(TARGET_DIR)/etc/init.d/inetd \
 	$(TARGET_DIR)/etc/init.d/swap \
@@ -44,6 +45,11 @@ $(TARGET_DIR)/etc/init.d/custom-poweroff:
 ifeq ($(BOXTYPE), coolstream)
 	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/custom-poweroff.init $@
 endif
+
+$(TARGET_DIR)/etc/init.d/fstab:
+	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/fstab.init $@
+	ln -sf fstab $(TARGET_DIR)/etc/init.d/S01fstab
+	ln -sf fstab $(TARGET_DIR)/etc/init.d/K99fstab
 
 $(TARGET_DIR)/etc/init.d/hostname:
 	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/hostname.init $@
