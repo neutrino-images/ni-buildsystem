@@ -45,8 +45,8 @@ endif
 	$(CD) $(TARGET_DIR)/usr; \
 		ln -sf /share share
 	$(CD) $(TARGET_DIR)/var; \
-		ln -sf /tmp run && \
-		ln -sf /tmp tmp
+		rm -rf run; ln -sf /tmp run; \
+		rm -rf tmp; ln -sf /tmp tmp
 	$(CD) $(TARGET_DIR)/etc; \
 		ln -sf /proc/mounts mtab
 	$(CD) $(TARGET_DIR)/etc/init.d; \
