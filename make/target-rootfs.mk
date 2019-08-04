@@ -4,6 +4,7 @@
 # -----------------------------------------------------------------------------
 
 target-finish: .version update.urls symbolic-links
+	sed -i 's|%(YEAR)|$(shell date +%Y)|' $(TARGET_DIR)/etc/init.d/rcS
 ifeq ($(BOXTYPE), armbox)
 	make e2-multiboot
 endif

@@ -42,8 +42,8 @@ mkdir -p /tmp/wget
 
 dmesg -n 1
 
-# set dummy time
-date -s "2017-01-01 00:00"
+# set dummy date
+date -s "%(YEAR)-01-01 00:00"
 
 # directory for wireless drivers
 mkdir -p /var/run/wpa_supplicant
