@@ -1048,7 +1048,7 @@ $(D)/samba36: $(D)/zlib $(ARCHIVE)/$(SAMBA36_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-DROPBEAR_VER    = 2018.76
+DROPBEAR_VER    = 2019.78
 DROPBEAR_TMP    = dropbear-$(DROPBEAR_VER)
 DROPBEAR_SOURCE = dropbear-$(DROPBEAR_VER).tar.bz2
 DROPBEAR_URL    = http://matt.ucc.asn.au/dropbear/releases
