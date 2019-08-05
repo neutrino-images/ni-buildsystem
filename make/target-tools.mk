@@ -1093,7 +1093,7 @@ $(D)/dropbear: $(D)/zlib $(ARCHIVE)/$(DROPBEAR_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-SG3_UTILS_VER    = 1.42
+SG3_UTILS_VER    = 1.44
 SG3_UTILS_TMP    = sg3_utils-$(SG3_UTILS_VER)
 SG3_UTILS_SOURCE = sg3_utils-$(SG3_UTILS_VER).tar.xz
 SG3_UTILS_URL    = http://sg.danny.cz/sg/p
