@@ -61,10 +61,12 @@ crosstool-arm-bre2ze4k: $(CROSS_BASE)/arm/bre2ze4k
 
 # -----------------------------------------------------------------------------
 
-CROSSTOOL-NG_VER     = git
-CROSSTOOL-NG_TMP     = crosstool-ng.$(CROSSTOOL-NG_VER)
-CROSSTOOL-NG_SOURCE  = crosstool-ng.$(CROSSTOOL-NG_VER)
-CROSSTOOL-NG_URL     = https://github.com/crosstool-ng
+CROSSTOOL-NG_VER    = git
+CROSSTOOL-NG_TMP    = crosstool-ng.$(CROSSTOOL-NG_VER)
+CROSSTOOL-NG_SOURCE = crosstool-ng.$(CROSSTOOL-NG_VER)
+CROSSTOOL-NG_URL    = https://github.com/crosstool-ng
+
+CROSSTOOL-NG_PATCH  = crosstool-ng-bash-version.diff
 
 # crosstool for hd2 depends on gcc-linaro
 GCC-LINARO_VER    = 4.9-2017.01
@@ -90,7 +92,8 @@ $(CROSS_BASE)/arm/hd51: | $(BUILD_TMP)
 	get-git-source.sh $(CROSSTOOL-NG_URL)/$(CROSSTOOL-NG_SOURCE) $(ARCHIVE)/$(CROSSTOOL-NG_SOURCE)
 	$(CPDIR)/$(CROSSTOOL-NG_SOURCE)
 	$(CHDIR)/$(CROSSTOOL-NG_TMP); \
-		git checkout 1dbb06f2
+		git checkout 1dbb06f2; \
+		$(call apply_patches, $(CROSSTOOL-NG_PATCH))
 ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd2 hd51 bre2ze4k))
 	$(CHDIR)/$(CROSSTOOL-NG_TMP); \
 		cp -a $(PATCHES)/crosstool-ng/gcc/* patches/gcc/linaro-6.3-2017.02
