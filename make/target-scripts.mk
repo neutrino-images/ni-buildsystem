@@ -15,6 +15,8 @@ init-scripts: \
 	$(TARGET_DIR)/etc/init.d/hostname \
 	$(TARGET_DIR)/etc/init.d/inetd \
 	$(TARGET_DIR)/etc/init.d/networking \
+	$(TARGET_DIR)/etc/init.d/partitions-by-name \
+	$(TARGET_DIR)/etc/init.d/resizerootfs \
 	$(TARGET_DIR)/etc/init.d/swap \
 	$(TARGET_DIR)/etc/init.d/syslogd
 
@@ -63,6 +65,16 @@ $(TARGET_DIR)/etc/init.d/inetd:
 $(TARGET_DIR)/etc/init.d/networking:
 	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/networking.init $@
 	ln -sf networking $(TARGET_DIR)/etc/init.d/K99networking
+
+$(TARGET_DIR)/etc/init.d/partitions-by-name:
+ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 bre2ze4k))
+	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/partitions-by-name.init $@
+endif
+
+$(TARGET_DIR)/etc/init.d/resizerootfs:
+ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 bre2ze4k))
+	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/resizerootfs.init $@
+endif
 
 $(TARGET_DIR)/etc/init.d/swap:
 ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 bre2ze4k))
