@@ -1414,7 +1414,7 @@ $(D)/fuse-exfat: $(D)/libfuse $(ARCHIVE)/$(FUSE-EXFAT_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-EXFAT-UTILS_VER    = 1.2.8
+EXFAT-UTILS_VER    = 1.3.0
 EXFAT-UTILS_TMP    = exfat-utils-$(EXFAT-UTILS_VER)
 EXFAT-UTILS_SOURCE = exfat-utils-$(EXFAT-UTILS_VER).tar.gz
 EXFAT-UTILS_URL    = https://github.com/relan/exfat/releases/download/v$(EXFAT-UTILS_VER)
