@@ -66,7 +66,7 @@ CROSSTOOL-NG_TMP    = crosstool-ng.$(CROSSTOOL-NG_VER)
 CROSSTOOL-NG_SOURCE = crosstool-ng.$(CROSSTOOL-NG_VER)
 CROSSTOOL-NG_URL    = https://github.com/crosstool-ng
 
-CROSSTOOL-NG_PATCH  = crosstool-ng-bash-version.diff
+CROSSTOOL-NG_PATCH  = crosstool-ng-bash-version.patch
 
 # crosstool for hd2 depends on gcc-linaro
 GCC-LINARO_VER    = 4.9-2017.01
