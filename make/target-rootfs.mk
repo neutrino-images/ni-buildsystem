@@ -50,8 +50,6 @@ endif
 		rm -rf tmp; ln -sf /tmp tmp
 	$(CD) $(TARGET_DIR)/etc; \
 		ln -sf /proc/mounts mtab
-	$(CD) $(TARGET_DIR)/etc/init.d; \
-		ln -sf networking K99networking
 ifeq ($(BOXSERIES), hd2)
 	$(CD) $(TARGET_DIR)/etc; \
 		ln -sf /var/etc/exports exports; \

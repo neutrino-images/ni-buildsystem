@@ -6,7 +6,7 @@
 . /etc/init.d/globals
 
 case $2 in
-	up)	ifup	$1 | LOGINFO ;;
-	down)	ifdown	$1 | LOGINFO ;;
+	up)	ifup   $1 | LOGINFO ;;
+	down)	ifdown $1 | LOGINFO ;;
 esac
 true

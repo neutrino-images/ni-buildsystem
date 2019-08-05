@@ -14,6 +14,7 @@ init-scripts: \
 	$(TARGET_DIR)/etc/init.d/fstab \
 	$(TARGET_DIR)/etc/init.d/hostname \
 	$(TARGET_DIR)/etc/init.d/inetd \
+	$(TARGET_DIR)/etc/init.d/networking \
 	$(TARGET_DIR)/etc/init.d/swap \
 	$(TARGET_DIR)/etc/init.d/syslogd
 
@@ -58,6 +59,10 @@ $(TARGET_DIR)/etc/init.d/inetd:
 	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/inetd.init $@
 	ln -sf inetd $(TARGET_DIR)/etc/init.d/S53inetd
 	ln -sf inetd $(TARGET_DIR)/etc/init.d/K80inetd
+
+$(TARGET_DIR)/etc/init.d/networking:
+	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/networking.init $@
+	ln -sf networking $(TARGET_DIR)/etc/init.d/K99networking
 
 $(TARGET_DIR)/etc/init.d/swap:
 ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 bre2ze4k))
