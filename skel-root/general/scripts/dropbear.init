@@ -5,7 +5,7 @@
 ETCDIR=/etc/dropbear
 
 genkeys() {
-	for keytype in dss rsa; do
+	for keytype in dss rsa ecdsa; do
 		keyfile=$ETCDIR/dropbear_${keytype}_host_key
 		test -e $keyfile && continue
 		/bin/dropbearkey -t $keytype -f $keyfile
