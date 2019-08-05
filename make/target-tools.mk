@@ -1389,7 +1389,7 @@ endif
 
 # -----------------------------------------------------------------------------
 
-FUSE-EXFAT_VER    = 1.2.8
+FUSE-EXFAT_VER    = 1.3.0
 FUSE-EXFAT_TMP    = fuse-exfat-$(FUSE-EXFAT_VER)
 FUSE-EXFAT_SOURCE = fuse-exfat-$(FUSE-EXFAT_VER).tar.gz
 FUSE-EXFAT_URL    = https://github.com/relan/exfat/releases/download/v$(FUSE-EXFAT_VER)
