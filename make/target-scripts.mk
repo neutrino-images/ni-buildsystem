@@ -18,6 +18,7 @@ init-scripts: \
 	$(TARGET_DIR)/etc/init.d/partitions-by-name \
 	$(TARGET_DIR)/etc/init.d/resizerootfs \
 	$(TARGET_DIR)/etc/init.d/swap \
+	$(TARGET_DIR)/etc/init.d/sys_update.sh \
 	$(TARGET_DIR)/etc/init.d/syslogd
 
 $(TARGET_DIR)/etc/init.d/globals:
@@ -81,6 +82,9 @@ ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 bre2ze4k))
 	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/swap.init $@
 	ln -sf swap $(TARGET_DIR)/etc/init.d/K99swap
 endif
+
+$(TARGET_DIR)/etc/init.d/sys_update.sh:
+	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/sys_update.sh $@
 
 $(TARGET_DIR)/etc/init.d/syslogd:
 	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/syslogd.init $@
