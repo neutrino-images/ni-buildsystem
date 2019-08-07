@@ -12,7 +12,7 @@ test -z "$1"		&& { usage; exit 1; }
 logfile=$(mktemp makelog.XXXXXX)
 trap "rm -f $logfile" EXIT
 
-time make S=1 $* 2>&1 | tee $logfile
+time make $* 2>&1 | tee $logfile
 
 mkdir -p build_tmp
 echo -e "\nmake $*:\n" >> build_tmp/make.log
