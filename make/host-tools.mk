@@ -54,20 +54,23 @@ $(HOST_DIR)/bin/$(TARGET)-pkg-config: | $(HOST_DIR)/bin
 
 # -----------------------------------------------------------------------------
 
-HOST_PKGCONF_VER    = 1.6.0
-HOST_PKGCONF_TMP    = pkgconf-pkgconf-$(HOST_PKGCONF_VER)
+HOST_PKGCONF_VER    = 1.6.1
+HOST_PKGCONF_TMP    = pkgconf-$(HOST_PKGCONF_VER)
 HOST_PKGCONF_SOURCE = pkgconf-$(HOST_PKGCONF_VER).tar.gz
-HOST_PKGCONF_URL    = https://github.com/pkgconf/pkgconf/archive
+HOST_PKGCONF_URL    = https://distfiles.dereferenced.org/pkgconf
 
 $(ARCHIVE)/$(HOST_PKGCONF_SOURCE):
 	$(DOWNLOAD) $(HOST_PKGCONF_URL)/$(HOST_PKGCONF_SOURCE)
+
+HOST_PKGCONF_PATCH  = 0001-Only-prefix-with-the-sysroot-a-subset-of-variables.patch
+HOST_PKGCONF_PATCH += 0002-Revert-main-assume-modversion-insted-of-version-if-o.patch
 
 host-pkgconf: $(HOST_DIR)/bin/pkgconf
 $(HOST_DIR)/bin/pkgconf: $(ARCHIVE)/$(HOST_PKGCONF_SOURCE) | $(HOST_DIR)/bin pkg-config-preqs
 	$(REMOVE)/$(HOST_PKGCONF_TMP)
 	$(UNTAR)/$(HOST_PKGCONF_SOURCE)
 	$(CHDIR)/$(HOST_PKGCONF_TMP); \
-		./autogen.sh -n; \
+		$(call apply_patches, $(addprefix $(@F)/,$(HOST_PKGCONF_PATCH))); \
 		./configure \
 			--prefix=$(HOST_DIR) \
 			--with-sysroot=$(TARGET_DIR) \
