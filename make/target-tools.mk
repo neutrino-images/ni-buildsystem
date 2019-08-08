@@ -631,7 +631,7 @@ PROCPS-NG_URL    = http://sourceforge.net/projects/procps-ng/files/Production
 $(ARCHIVE)/$(PROCPS-NG_SOURCE):
 	$(DOWNLOAD) $(PROCPS-NG_URL)/$(PROCPS-NG_SOURCE)
 
-PROCPS-NG_PATCH  = procps_0001-Fix-out-of-tree-builds.patch
+PROCPS-NG_PATCH  = procps-ng-0001-Fix-out-of-tree-builds.patch
 PROCPS-NG_PATCH += procps-ng-no-tests-docs.patch
 
 PROCPS-NG_BIN    = ps top
