@@ -379,7 +379,7 @@ $(D)/coreutils: $(ARCHIVE)/$(COREUTILS_SOURCE) | $(TARGET_DIR)
 		$(CONFIGURE) \
 			--target=$(TARGET) \
 			--prefix= \
-			--bindir=/bin.coreutils \
+			--bindir=/bin.$(@F) \
 			--libexecdir=$(remove-libexecdir) \
 			--datarootdir=$(remove-datarootdir) \
 			--enable-silent-rules \
@@ -393,10 +393,10 @@ $(D)/coreutils: $(ARCHIVE)/$(COREUTILS_SOURCE) | $(TARGET_DIR)
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	for bin in $(COREUTILS_BIN); do \
 		rm -f $(TARGET_DIR)/bin/$$bin; \
-		$(INSTALL_EXEC) $(TARGET_DIR)/bin.coreutils/$$bin $(TARGET_DIR)/bin/$$bin; \
+		$(INSTALL_EXEC) $(TARGET_DIR)/bin.$(@F)/$$bin $(TARGET_DIR)/bin/$$bin; \
 	done
 	$(REMOVE)/$(COREUTILS_TMP) \
-		$(TARGET_DIR)/bin.coreutils
+		$(TARGET_DIR)/bin.$(@F)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -647,21 +647,21 @@ $(D)/procps-ng: $(D)/ncurses $(ARCHIVE)/$(PROCPS-NG_SOURCE) | $(TARGET_DIR)
 		$(CONFIGURE) \
 			--target=$(TARGET) \
 			--prefix= \
-			--bindir=/bin.procps \
-			--sbindir=/sbin.procps \
+			--bindir=/bin.$(@F) \
+			--sbindir=/sbin.$(@F) \
 			--datarootdir=$(remove-datarootdir) \
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	for bin in $(PROCPS-NG_BIN); do \
 		rm -f $(TARGET_DIR)/bin/$$bin; \
-		$(INSTALL_EXEC) $(TARGET_DIR)/bin.procps/$$bin $(TARGET_DIR)/bin/$$bin; \
+		$(INSTALL_EXEC) $(TARGET_DIR)/bin.$(@F)/$$bin $(TARGET_DIR)/bin/$$bin; \
 	done
 	$(REWRITE_PKGCONF)/libprocps.pc
 	$(REWRITE_LIBTOOL)/libprocps.la
 	$(REMOVE)/$(PROCPS-NG_TMP) \
-		$(TARGET_DIR)/bin.procps \
-		$(TARGET_DIR)/sbin.procps
+		$(TARGET_DIR)/bin.$(@F) \
+		$(TARGET_DIR)/sbin.$(@F)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -1109,20 +1109,20 @@ $(D)/sg3_utils: $(ARCHIVE)/$(SG3_UTILS_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(SG3_UTILS_TMP); \
 		$(CONFIGURE) \
 			--prefix= \
-			--bindir=/bin.sg3_utils \
+			--bindir=/bin.$(@F) \
 			--mandir=$(remove-mandir) \
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	for bin in $(SG3_UTILS_BIN); do \
 		rm -f $(TARGET_DIR)/bin/$$bin; \
-		$(INSTALL_EXEC) $(TARGET_DIR)/bin.sg3_utils/$$bin $(TARGET_DIR)/bin/$$bin; \
+		$(INSTALL_EXEC) $(TARGET_DIR)/bin.$(@F)/$$bin $(TARGET_DIR)/bin/$$bin; \
 	done
 	$(REWRITE_LIBTOOL)/libsgutils2.la
 	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/sdX.init $(TARGET_DIR)/etc/init.d/sdX
 	ln -sf sdX $(TARGET_DIR)/etc/init.d/K97sdX
 	$(REMOVE)/$(SG3_UTILS_TMP) \
-		$(TARGET_DIR)/bin.sg3_utils
+		$(TARGET_DIR)/bin.$(@F)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
