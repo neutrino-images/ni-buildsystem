@@ -173,19 +173,21 @@ RSYNC_URL    = https://ftp.samba.org/pub/rsync
 $(ARCHIVE)/$(RSYNC_SOURCE):
 	$(DOWNLOAD) $(RSYNC_URL)/$(RSYNC_SOURCE)
 
-$(D)/rsync: $(ARCHIVE)/$(RSYNC_SOURCE) | $(TARGET_DIR)
+$(D)/rsync: $(D)/zlib $(D)/popt $(ARCHIVE)/$(RSYNC_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(RSYNC_TMP)
 	$(UNTAR)/$(RSYNC_SOURCE)
 	$(CHDIR)/$(RSYNC_TMP); \
 		$(CONFIGURE) \
 			--prefix= \
 			--mandir=$(remove-mandir) \
-			--sysconfdir=/etc \
 			--disable-debug \
 			--disable-locale \
+			--disable-acl-support \
+			--with-included-zlib=no \
+			--with-included-popt=no \
 			; \
-		$(MAKE) all; \
-		$(MAKE) install-all DESTDIR=$(TARGET_DIR)
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REMOVE)/$(RSYNC_TMP)
 	$(TOUCH)
 
