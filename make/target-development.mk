@@ -48,7 +48,7 @@ $(D)/valgrind3: $(ARCHIVE)/$(VALGRIND_SOURCE) | $(TARGET_DIR)
 VALGRIND12305_PATCH  = valgrind12305-nevis-patch.diff
 VALGRIND12305_PATCH += valgrind12305-automake-1.11.2.patch
 
-$(D)/valgrind12305:
+$(D)/valgrind12305: | $(TARGET_DIR)
 	$(REMOVE)/valgrind
 	svn co -r 12305 svn://svn.valgrind.org/valgrind/trunk $(BUILD_TMP)/valgrind; \
 	$(CHDIR)/valgrind; \
