@@ -1711,6 +1711,34 @@ $(D)/gptfdisk: $(D)/popt $(D)/e2fsprogs $(ARCHIVE)/$(GPTFDISK_SOURCE) | $(TARGET
 
 # -----------------------------------------------------------------------------
 
+RSYNC_VER    = 3.1.3
+RSYNC_TMP    = rsync-$(RSYNC_VER)
+RSYNC_SOURCE = rsync-$(RSYNC_VER).tar.gz
+RSYNC_URL    = https://ftp.samba.org/pub/rsync
+
+$(ARCHIVE)/$(RSYNC_SOURCE):
+	$(DOWNLOAD) $(RSYNC_URL)/$(RSYNC_SOURCE)
+
+$(D)/rsync: $(D)/zlib $(D)/popt $(ARCHIVE)/$(RSYNC_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(RSYNC_TMP)
+	$(UNTAR)/$(RSYNC_SOURCE)
+	$(CHDIR)/$(RSYNC_TMP); \
+		$(CONFIGURE) \
+			--prefix= \
+			--mandir=$(remove-mandir) \
+			--disable-debug \
+			--disable-locale \
+			--disable-acl-support \
+			--with-included-zlib=no \
+			--with-included-popt=no \
+			; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(REMOVE)/$(RSYNC_TMP)
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
 CA-BUNDLE_SOURCE = cacert.pem
 CA-BUNDLE_URL    = https://curl.haxx.se/ca
 

@@ -66,6 +66,7 @@ ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd51 bre2ze4k))
 	$(MAKE) mc
   endif
   ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 bre2ze4k))
+	$(MAKE) rsync
 	$(MAKE) ofgwrite
 	$(MAKE) aio-grab
 	$(MAKE) dvbsnoop
