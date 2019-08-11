@@ -13,7 +13,9 @@ $(ARCHIVE)/$(LIBID3TAG_SOURCE):
 
 LIBID3TAG_PATCH  = libid3tag-pc.patch
 
-$(D)/libid3tag: $(D)/zlib $(ARCHIVE)/$(LIBID3TAG_SOURCE) | $(TARGET_DIR)
+LIBID3TAG_DEPS   = $(D)/zlib
+
+$(D)/libid3tag: $(LIBID3TAG_DEPS) $(ARCHIVE)/$(LIBID3TAG_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LIBID3TAG_TMP)
 	$(UNTAR)/$(LIBID3TAG_SOURCE)
 	$(CHDIR)/$(LIBID3TAG_TMP); \
@@ -126,7 +128,9 @@ FONTCONFIG_URL    = https://www.freedesktop.org/software/fontconfig/release
 $(ARCHIVE)/$(FONTCONFIG_SOURCE):
 	$(DOWNLOAD) $(FONTCONFIG_URL)/$(FONTCONFIG_SOURCE)
 
-$(D)/fontconfig: $(D)/freetype $(D)/expat $(ARCHIVE)/$(FONTCONFIG_SOURCE) | $(TARGET_DIR)
+FONTCONFIG_DEPS   = $(D)/freetype $(D)/expat
+
+$(D)/fontconfig: $(FONTCONFIG_DEPS) $(ARCHIVE)/$(FONTCONFIG_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(FONTCONFIG_TMP)
 	$(UNTAR)/$(FONTCONFIG_SOURCE)
 	$(CHDIR)/$(FONTCONFIG_TMP); \
@@ -159,7 +163,9 @@ PIXMAN_PATCH  = pixman-0001-ARM-qemu-related-workarounds-in-cpu-features-detecti
 PIXMAN_PATCH += pixman-asm_include.patch
 PIXMAN_PATCH += pixman-0001-test-utils-Check-for-FE_INVALID-definition-before-us.patch
 
-$(D)/pixman: $(D)/zlib $(D)/libpng $(ARCHIVE)/$(PIXMAN_SOURCE) | $(TARGET_DIR)
+PIXMAN_DEPS   = $(D)/zlib $(D)/libpng
+
+$(D)/pixman: $(PIXMAN_DEPS) $(ARCHIVE)/$(PIXMAN_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PIXMAN_TMP)
 	$(UNTAR)/$(PIXMAN_SOURCE)
 	$(CHDIR)/$(PIXMAN_TMP); \
@@ -190,7 +196,9 @@ $(ARCHIVE)/$(CAIRO_SOURCE):
 
 CAIRO_PATCH  = cairo-get_bitmap_surface.diff
 
-$(D)/cairo: $(D)/fontconfig $(D)/glib2 $(D)/libpng $(D)/pixman $(D)/zlib $(ARCHIVE)/$(CAIRO_SOURCE) | $(TARGET_DIR)
+CAIRO_DEPS   = $(D)/fontconfig $(D)/glib2 $(D)/libpng $(D)/pixman $(D)/zlib
+
+$(D)/cairo: $(CAIRO_DEPS) $(ARCHIVE)/$(CAIRO_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(CAIRO_TMP)
 	$(UNTAR)/$(CAIRO_SOURCE)
 	$(CHDIR)/$(CAIRO_TMP); \
@@ -243,7 +251,9 @@ $(ARCHIVE)/$(HARFBUZZ_SOURCE):
 
 HARFBUZZ_PATCH  = harfbuzz-disable-docs.patch
 
-$(D)/harfbuzz: $(D)/fontconfig $(D)/glib2 $(D)/cairo $(D)/freetype $(ARCHIVE)/$(HARFBUZZ_SOURCE) | $(TARGET_DIR)
+HARFBUZZ_DEPS   = $(D)/fontconfig $(D)/glib2 $(D)/cairo $(D)/freetype
+
+$(D)/harfbuzz: $(HARFBUZZ_DEPS) $(ARCHIVE)/$(HARFBUZZ_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(HARFBUZZ_TMP)
 	$(UNTAR)/$(HARFBUZZ_SOURCE)
 	$(CHDIR)/$(HARFBUZZ_TMP); \

@@ -102,7 +102,9 @@ GDB_URL    = https://sourceware.org/pub/gdb/releases
 $(ARCHIVE)/$(GDB_SOURCE):
 	$(DOWNLOAD) $(GDB_URL)/$(GDB_SOURCE)
 
-$(D)/gdb: $(D)/zlib $(D)/ncurses $(ARCHIVE)/$(GDB_SOURCE) | $(TARGET_DIR)
+GDB_DEPS   = $(D)/zlib $(D)/ncurses
+
+$(D)/gdb: $(GDB_DEPS) $(ARCHIVE)/$(GDB_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(GDB_TMP)
 	$(UNTAR)/$(GDB_SOURCE)
 	$(CHDIR)/$(GDB_TMP); \

@@ -15,7 +15,9 @@ $(ARCHIVE)/$(USBUTILS_SOURCE):
 USBUTILS_PATCH  = usbutils-avoid-dependency-on-bash.patch
 USBUTILS_PATCH += usbutils-fix-null-pointer-crash.patch
 
-$(D)/usbutils: $(D)/libusb-compat $(ARCHIVE)/$(USBUTILS_SOURCE) | $(TARGET_DIR)
+USBUTILS_DEPS   = $(D)/libusb-compat
+
+$(D)/usbutils: $(USBUTILS_DEPS) $(ARCHIVE)/$(USBUTILS_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(USBUTILS_TMP)
 	$(UNTAR)/$(USBUTILS_SOURCE)
 	$(CHDIR)/$(USBUTILS_TMP); \
@@ -68,16 +70,18 @@ $(D)/binutils: $(ARCHIVE)/$(BINUTILS_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-UTIL_LINUX_ABIVER = 2.34
-UTIL_LINUX_VER    = 2.34
-UTIL_LINUX_TMP    = util-linux-$(UTIL_LINUX_VER)
-UTIL_LINUX_SOURCE = util-linux-$(UTIL_LINUX_VER).tar.xz
-UTIL_LINUX_URL    = https://www.kernel.org/pub/linux/utils/util-linux/v$(UTIL_LINUX_ABIVER)
+UTIL-LINUX_ABIVER = 2.34
+UTIL-LINUX_VER    = 2.34
+UTIL-LINUX_TMP    = util-linux-$(UTIL-LINUX_VER)
+UTIL-LINUX_SOURCE = util-linux-$(UTIL-LINUX_VER).tar.xz
+UTIL-LINUX_URL    = https://www.kernel.org/pub/linux/utils/util-linux/v$(UTIL-LINUX_ABIVER)
 
-$(ARCHIVE)/$(UTIL_LINUX_SOURCE):
-	$(DOWNLOAD) $(UTIL_LINUX_URL)/$(UTIL_LINUX_SOURCE)
+$(ARCHIVE)/$(UTIL-LINUX_SOURCE):
+	$(DOWNLOAD) $(UTIL-LINUX_URL)/$(UTIL-LINUX_SOURCE)
 
-$(D)/util-linux: $(D)/ncurses $(D)/zlib $(ARCHIVE)/$(UTIL_LINUX_SOURCE) | $(TARGET_DIR)
+UTUL-LINUX_DEPS   = $(D)/ncurses $(D)/zlib
+
+$(D)/util-linux: $(UTUL-LINUX_DEPS) $(ARCHIVE)/$(UTIL-LINUX_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(UTIL-LINUX_TMP)
 	$(UNTAR)/$(UTIL-LINUX_SOURCE)
 	$(CHDIR)/$(UTIL-LINUX_TMP); \
@@ -125,9 +129,11 @@ ASTRA-SM_TMP    = astra-sm.$(ASTRA-SM_VER)
 ASTRA-SM_SOURCE = astra-sm.$(ASTRA-SM_VER)
 ASTRA-SM_URL    = https://gitlab.com/crazycat69
 
+ASTRA-SM_DEPS   = $(D)/openssl
+
 # workaround unrecognized command line options
 $(D)/astra-sm: TARGET_ABI=""
-$(D)/astra-sm: $(D)/openssl | $(TARGET_DIR)
+$(D)/astra-sm: $(ASTRA-SM_DEPS) | $(TARGET_DIR)
 	$(REMOVE)/$(ASTRA-SM_TMP)
 	$(GET-GIT-SOURCE) $(ASTRA-SM_URL)/$(ASTRA-SM_SOURCE) $(ARCHIVE)/$(ASTRA-SM_SOURCE)
 	$(CPDIR)/$(ASTRA-SM_SOURCE)
