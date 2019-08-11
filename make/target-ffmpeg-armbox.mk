@@ -3,7 +3,7 @@
 #
 # -----------------------------------------------------------------------------
 
-FFMPEG_VER    = 4.1.3
+FFMPEG_VER    = 4.2
 FFMPEG_TMP    = ffmpeg-$(FFMPEG_VER)
 FFMPEG_SOURCE = ffmpeg-$(FFMPEG_VER).tar.xz
 FFMPEG_URL    = http://www.ffmpeg.org/releases
@@ -18,10 +18,6 @@ FFMPEG_PATCH += ffmpeg-06-optimize_aac.patch
 FFMPEG_PATCH += ffmpeg-07-increase_buffer_size.patch
 FFMPEG_PATCH += ffmpeg-08-recheck_discard_flags.patch
 FFMPEG_PATCH += ffmpeg-09-fix_edit_list_parsing.patch
-FFMPEG_PATCH += ffmpeg-10-remove_avpriv_request_sample.patch
-FFMPEG_PATCH += ffmpeg-A02-corrupt-h264-frames.patch
-FFMPEG_PATCH += ffmpeg-A10-mpeg-quarter-sample.patch
-FFMPEG_PATCH += ffmpeg-A11-FFmpeg-devel-amfenc-Add-support-for-pict_type-field.patch
 FFMPEG_PATCH += ffmpeg-mips64_cpu_detection.patch
 
 FFMPEG_UNPATCHED := no
