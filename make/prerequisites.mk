@@ -129,11 +129,18 @@ $(SOURCE_DIR)/$(NI-OFGWRITE):
 		git remote add upstream $(GITHUB)/oe-alliance/ofgwrite.git; \
 		git fetch --all
 
+# upstream for rebase
+$(SOURCE_DIR)/$(NI-RTMPDUMP):
+	$(CD) $(SOURCE_DIR); \
+		git clone $(NI-GIT)/$(notdir $@).git
+	$(CD) $@ && \
+		git remote add upstream git://git.ffmpeg.org/rtmpdump; \
+		git fetch --all
+
 $(SOURCE_DIR)/$(NI-DRIVERS-BIN) \
 $(SOURCE_DIR)/$(NI-LOGO-STUFF) \
 $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS) \
 $(SOURCE_DIR)/$(NI-OPENTHREADS) \
-$(SOURCE_DIR)/$(NI-RTMPDUMP) \
 $(SOURCE_DIR)/$(NI-STREAMRIPPER):
 	$(CD) $(SOURCE_DIR); \
 		git clone $(NI-GIT)/$(notdir $@).git
