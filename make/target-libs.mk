@@ -106,7 +106,7 @@ LIBDVBSI_PATCH  = libdvbsi++-content_identifier_descriptor.patch
 
 $(D)/libdvbsi: | $(TARGET_DIR)
 	$(REMOVE)/$(LIBDVBSI_TMP)
-	get-git-source.sh $(LIBDVBSI_URL)/$(LIBDVBSI_SOURCE) $(ARCHIVE)/$(LIBDVBSI_SOURCE)
+	$(GET-GIT-SOURCE) $(LIBDVBSI_URL)/$(LIBDVBSI_SOURCE) $(ARCHIVE)/$(LIBDVBSI_SOURCE)
 	$(CPDIR)/$(LIBDVBSI_SOURCE)
 	$(CHDIR)/$(LIBDVBSI_TMP); \
 		$(call apply_patches, $(LIBDVBSI_PATCH)); \
@@ -571,7 +571,7 @@ LIBDPF_PATCH  = libdpf-crossbuild.patch
 
 $(D)/libdpf: $(D)/libusb-compat | $(TARGET_DIR)
 	$(REMOVE)/$(LIBDPF_TMP)
-	get-git-source.sh $(LIBDPF_URL)/$(LIBDPF_SOURCE) $(ARCHIVE)/$(LIBDPF_SOURCE)
+	$(GET-GIT-SOURCE) $(LIBDPF_URL)/$(LIBDPF_SOURCE) $(ARCHIVE)/$(LIBDPF_SOURCE)
 	$(CPDIR)/$(LIBDPF_SOURCE)
 	$(CHDIR)/$(LIBDPF_TMP)/dpflib; \
 		$(call apply_patches, $(LIBDPF_PATCH)); \

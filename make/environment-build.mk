@@ -260,7 +260,7 @@ TERM_YELLOW	= \033[40;0;33m
 TERM_YELLOW_BOLD= \033[40;1;33m
 TERM_NORMAL	= \033[0m
 
-PATH := $(HOST_DIR)/bin:$(CROSS_DIR)/bin:$(HELPERS_DIR):$(PATH)
+PATH := $(HOST_DIR)/bin:$(CROSS_DIR)/bin:$(PATH)
 
 PKG_CONFIG = $(HOST_DIR)/bin/$(TARGET)-pkg-config
 PKG_CONFIG_LIBDIR = $(TARGET_LIB_DIR)
@@ -313,6 +313,10 @@ INSTALL_EXEC = $(INSTALL) -m 0755
 
 # empty variable EMPTY for smoother comparisons
 EMPTY =
+
+GET-GIT-ARCHIVE = $(HELPERS_DIR)/get-git-archive.sh
+GET-GIT-SOURCE  = $(HELPERS_DIR)/get-git-source.sh
+GET-SVN-SOURCE  = $(HELPERS_DIR)/get-svn-source.sh
 
 # -----------------------------------------------------------------------------
 

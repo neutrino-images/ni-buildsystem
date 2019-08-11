@@ -129,7 +129,7 @@ ASTRA-SM_URL    = https://gitlab.com/crazycat69
 $(D)/astra-sm: TARGET_ABI=""
 $(D)/astra-sm: $(D)/openssl | $(TARGET_DIR)
 	$(REMOVE)/$(ASTRA-SM_TMP)
-	get-git-source.sh $(ASTRA-SM_URL)/$(ASTRA-SM_SOURCE) $(ARCHIVE)/$(ASTRA-SM_SOURCE)
+	$(GET-GIT-SOURCE) $(ASTRA-SM_URL)/$(ASTRA-SM_SOURCE) $(ARCHIVE)/$(ASTRA-SM_SOURCE)
 	$(CPDIR)/$(ASTRA-SM_SOURCE)
 	$(CHDIR)/$(ASTRA-SM_TMP); \
 		autoreconf -fi; \

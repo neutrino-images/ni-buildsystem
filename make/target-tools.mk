@@ -1159,7 +1159,7 @@ LCD4LINUX_URL    = https://github.com/TangoCash
 
 $(D)/lcd4linux: $(D)/ncurses $(D)/libgd2 $(D)/libdpf | $(TARGET_DIR)
 	$(REMOVE)/$(LCD4LINUX_TMP)
-	get-git-source.sh $(LCD4LINUX_URL)/$(LCD4LINUX_SOURCE) $(ARCHIVE)/$(LCD4LINUX_SOURCE)
+	$(GET-GIT-SOURCE) $(LCD4LINUX_URL)/$(LCD4LINUX_SOURCE) $(ARCHIVE)/$(LCD4LINUX_SOURCE)
 	$(CPDIR)/$(LCD4LINUX_SOURCE)
 	$(CHDIR)/$(LCD4LINUX_TMP); \
 		./bootstrap; \
@@ -1192,7 +1192,7 @@ SAMSUNGLCD4LINUX_URL    = https://github.com/horsti58
 
 $(D)/samsunglcd4linux: | $(TARGET_DIR)
 	$(REMOVE)/$(SAMSUNGLCD4LINUX_TMP)
-	get-git-source.sh $(SAMSUNGLCD4LINUX_URL)/$(SAMSUNGLCD4LINUX_SOURCE) $(ARCHIVE)/$(SAMSUNGLCD4LINUX_SOURCE)
+	$(GET-GIT-SOURCE) $(SAMSUNGLCD4LINUX_URL)/$(SAMSUNGLCD4LINUX_SOURCE) $(ARCHIVE)/$(SAMSUNGLCD4LINUX_SOURCE)
 	$(CPDIR)/$(SAMSUNGLCD4LINUX_SOURCE)
 	$(CHDIR)/$(SAMSUNGLCD4LINUX_TMP)/ni; \
 		$(INSTALL) -m 0600 etc/lcd4linux.conf $(TARGET_DIR)/etc; \
@@ -1238,7 +1238,7 @@ XUPNPD_PATCH += xupnpd-add-configuration-files.diff
 
 $(D)/xupnpd: $(D)/lua $(D)/openssl | $(TARGET_DIR)
 	$(REMOVE)/$(XUPNPD_TMP)
-	get-git-source.sh $(XUPNPD_URL)/$(XUPNPD_SOURCE) $(ARCHIVE)/$(XUPNPD_SOURCE)
+	$(GET-GIT-SOURCE) $(XUPNPD_URL)/$(XUPNPD_SOURCE) $(ARCHIVE)/$(XUPNPD_SOURCE)
 	$(CPDIR)/$(XUPNPD_SOURCE)
 	$(CHDIR)/$(XUPNPD_TMP); \
 		$(call apply_patches, $(XUPNPD_PATCH))
@@ -1620,7 +1620,7 @@ AIO-GRAB_URL    = https://github.com/oe-alliance
 
 $(D)/aio-grab: $(D)/zlib $(D)/libpng $(D)/libjpeg | $(TARGET_DIR)
 	$(REMOVE)/$(AIO-GRAB_TMP)
-	get-git-source.sh $(AIO-GRAB_URL)/$(AIO-GRAB_SOURCE) $(ARCHIVE)/$(AIO-GRAB_SOURCE)
+	$(GET-GIT-SOURCE) $(AIO-GRAB_URL)/$(AIO-GRAB_SOURCE) $(ARCHIVE)/$(AIO-GRAB_SOURCE)
 	$(CPDIR)/$(AIO-GRAB_SOURCE)
 	$(CHDIR)/$(AIO-GRAB_TMP); \
 		aclocal --force -I m4; \
@@ -1646,7 +1646,7 @@ DVBSNOOP_URL    = https://github.com/Duckbox-Developers
 
 $(D)/dvbsnoop: | $(TARGET_DIR)
 	$(REMOVE)/$(DVBSNOOP_TMP)
-	get-git-source.sh $(DVBSNOOP_URL)/$(DVBSNOOP_SOURCE) $(ARCHIVE)/$(DVBSNOOP_SOURCE)
+	$(GET-GIT-SOURCE) $(DVBSNOOP_URL)/$(DVBSNOOP_SOURCE) $(ARCHIVE)/$(DVBSNOOP_SOURCE)
 	$(CPDIR)/$(DVBSNOOP_SOURCE)
 	$(CHDIR)/$(DVBSNOOP_TMP); \
 		$(CONFIGURE) \

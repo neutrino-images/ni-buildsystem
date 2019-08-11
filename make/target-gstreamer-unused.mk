@@ -267,7 +267,7 @@ GST_PLUGIN_SUBSINK_VER = 1.0
 
 $(D)/gst-plugin-subsink: $(D)/gst-plugins-base | $(TARGET_DIR)
 	$(REMOVE)/gstreamer$(GST_PLUGIN_SUBSINK_VER)-plugin-subsink.git
-	get-git-source.sh git://github.com/christophecvr/gstreamer$(GST_PLUGIN_SUBSINK_VER)-plugin-subsink.git $(ARCHIVE)/gstreamer$(GST_PLUGIN_SUBSINK_VER)-plugin-subsink.git
+	$(GET-GIT-SOURCE) git://github.com/christophecvr/gstreamer$(GST_PLUGIN_SUBSINK_VER)-plugin-subsink.git $(ARCHIVE)/gstreamer$(GST_PLUGIN_SUBSINK_VER)-plugin-subsink.git
 	$(CPDIR)/gstreamer$(GST_PLUGIN_SUBSINK_VER)-plugin-subsink.git
 	$(CHDIR)/gstreamer$(GST_PLUGIN_SUBSINK_VER)-plugin-subsink.git; \
 		aclocal --force -I m4; \
@@ -293,7 +293,7 @@ GST_PLUGINS_DVBMEDIASINK_VER = 1.0
 
 $(D)/gst-plugin-dvbmediasink: $(D)/gst-plugins-base $(D)/libdca | $(TARGET_DIR)
 	$(REMOVE)/gstreamer$(GST_PLUGINS_DVBMEDIASINK_VER)-plugin-dvbmediasink.git
-	get-git-source.sh https://github.com/OpenPLi/gst-plugin-dvbmediasink.git $(ARCHIVE)/gstreamer$(GST_PLUGINS_DVBMEDIASINK_VER)-plugin-dvbmediasink.git
+	$(GET-GIT-SOURCE) https://github.com/OpenPLi/gst-plugin-dvbmediasink.git $(ARCHIVE)/gstreamer$(GST_PLUGINS_DVBMEDIASINK_VER)-plugin-dvbmediasink.git
 	$(CPDIR)/gstreamer$(GST_PLUGINS_DVBMEDIASINK_VER)-plugin-dvbmediasink.git
 	$(CHDIR)/gstreamer$(GST_PLUGINS_DVBMEDIASINK_VER)-plugin-dvbmediasink.git; \
 		git checkout gst-1.0; \
@@ -390,7 +390,7 @@ $(D)/gst_libav: $(ARCHIVE)/$(GST_LIBAV_SOURCE) $(D)/gstreamer $(D)/gst-plugins-b
 
 $(D)/gmrender-resurrect: $(D)/gst-plugins-base $(D)/libupnp | $(TARGET_DIR)
 	$(REMOVE)/gmrender-resurrect.git
-	get-git-source.sh https://github.com/hzeller/gmrender-resurrect.git $(ARCHIVE)/gmrender-resurrect.git
+	$(GET-GIT-SOURCE) https://github.com/hzeller/gmrender-resurrect.git $(ARCHIVE)/gmrender-resurrect.git
 	$(CPDIR)/gmrender-resurrect.git
 	$(CHDIR)/gmrender-resurrect.git; \
 		$(CONFIGURE) \

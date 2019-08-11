@@ -18,7 +18,7 @@ CORTEX-STRINGS_SOURCE = cortex-strings-$(CORTEX-STRINGS_VER).tar.bz2
 CORTEX-STRINGS_URL    = http://git.linaro.org/git-ro/toolchain/cortex-strings.git
 
 $(ARCHIVE)/$(CORTEX-STRINGS_SOURCE):
-	get-git-archive.sh $(CORTEX-STRINGS_URL) $(CORTEX-STRINGS_VER) $(notdir $@) $(ARCHIVE)
+	$(GET-GIT-ARCHIVE) $(CORTEX-STRINGS_URL) $(CORTEX-STRINGS_VER) $(notdir $@) $(ARCHIVE)
 
 CORTEX-STRINGS_CONF =
 ifneq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 bre2ze4k))

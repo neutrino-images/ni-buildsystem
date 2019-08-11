@@ -106,7 +106,7 @@ LUACURL_URL    = https://github.com/lua-curl/$(LUACURL_SOURCE)
 
 $(D)/luacurl: $(D)/libcurl $(D)/lua | $(TARGET_DIR)
 	$(REMOVE)/$(LUACURL_TMP)
-	get-git-source.sh $(LUACURL_URL) $(ARCHIVE)/$(LUACURL_SOURCE)
+	$(GET-GIT-SOURCE) $(LUACURL_URL) $(ARCHIVE)/$(LUACURL_SOURCE)
 	$(CPDIR)/$(LUACURL_SOURCE)
 	$(CHDIR)/$(LUACURL_TMP); \
 		$(BUILD_ENV) \
