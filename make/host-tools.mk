@@ -54,7 +54,7 @@ $(HOST_DIR)/bin/$(TARGET)-pkg-config: | $(HOST_DIR)/bin
 
 # -----------------------------------------------------------------------------
 
-HOST_PKGCONF_VER    = 1.6.1
+HOST_PKGCONF_VER    = 1.6.3
 HOST_PKGCONF_TMP    = pkgconf-$(HOST_PKGCONF_VER)
 HOST_PKGCONF_SOURCE = pkgconf-$(HOST_PKGCONF_VER).tar.gz
 HOST_PKGCONF_URL    = https://distfiles.dereferenced.org/pkgconf
@@ -79,7 +79,7 @@ $(HOST_DIR)/bin/pkgconf: $(ARCHIVE)/$(HOST_PKGCONF_SOURCE) | $(HOST_DIR)/bin pkg
 			; \
 		$(MAKE); \
 		$(MAKE) install
-	$(INSTALL_EXEC) $(PATCHES)/pkgconf-pkg-config $(HOST_DIR)/bin/pkg-config
+	$(INSTALL_EXEC) $(PATCHES)/$(@F)/pkgconf-pkg-config $(HOST_DIR)/bin/pkg-config
 	$(REMOVE)/$(HOST_PKGCONF_TMP)
 
 # -----------------------------------------------------------------------------
