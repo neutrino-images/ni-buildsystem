@@ -24,7 +24,7 @@ FFMPEG_UNPATCHED := no
 
 # -----------------------------------------------------------------------------
 
-FFMPEG_DEPS = $(D)/openssl $(D)/freetype $(D)/librtmp $(D)/libbluray $(D)/libass $(D)/libxml2 $(D)/alsa-lib
+FFMPEG_DEPS = $(D)/openssl $(D)/freetype $(D)/rtmpdump $(D)/libbluray $(D)/libass $(D)/libxml2 $(D)/alsa-lib
 
 # -----------------------------------------------------------------------------
 

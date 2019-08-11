@@ -160,7 +160,7 @@ LIBCURL_URL    = https://curl.haxx.se/download
 $(ARCHIVE)/$(LIBCURL_SOURCE):
 	$(DOWNLOAD) $(LIBCURL_URL)/$(LIBCURL_SOURCE)
 
-LIBCURL_DEPS   = $(D)/zlib $(D)/openssl $(D)/librtmp $(D)/ca-bundle
+LIBCURL_DEPS   = $(D)/zlib $(D)/openssl $(D)/rtmpdump $(D)/ca-bundle
 
 LIBCURL_IPV6 = --enable-ipv6
 ifeq ($(BOXSERIES), hd1)
@@ -968,7 +968,7 @@ $(D)/pugixml: $(ARCHIVE)/$(PUGIXML_SOURCE) | $(TARGET_DIR)
 
 RTMPDUMP_DEPS   = $(D)/zlib $(D)/openssl
 
-$(D)/librtmp: $(RTMPDUMP_DEPS) $(SOURCE_DIR)/$(NI-RTMPDUMP) | $(TARGET_DIR)
+$(D)/rtmpdump: $(RTMPDUMP_DEPS) $(SOURCE_DIR)/$(NI-RTMPDUMP) | $(TARGET_DIR)
 	$(REMOVE)/$(NI-RTMPDUMP)
 	tar -C $(SOURCE_DIR) -cp $(NI-RTMPDUMP) --exclude-vcs | tar -C $(BUILD_TMP) -x
 	$(CHDIR)/$(NI-RTMPDUMP); \
