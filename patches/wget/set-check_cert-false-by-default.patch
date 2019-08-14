@@ -1,0 +1,13 @@
+diff --git a/src/init.c b/src/init.c
+index 9b6665a..cf78af8 100644
+--- a/src/init.c
++++ b/src/init.c
+@@ -445,7 +445,7 @@ defaults (void)
+   opt.retr_symlinks = true;
+ 
+ #ifdef HAVE_SSL
+-  opt.check_cert = CHECK_CERT_ON;
++  opt.check_cert = CHECK_CERT_OFF;
+   opt.ftps_resume_ssl = true;
+   opt.ftps_fallback_to_ftp = false;
+   opt.ftps_implicit = false;

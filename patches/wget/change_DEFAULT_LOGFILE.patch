@@ -1,13 +1,13 @@
 diff --git a/src/log.h b/src/log.h
-index c3b7fec..1eecf3a 100644
+index e298f5c..c86e4e8 100644
 --- a/src/log.h
 +++ b/src/log.h
 @@ -32,7 +32,7 @@ as that of the covered work.  */
  #define LOG_H
-
+ 
  /* The log file to which Wget writes to after HUP.  */
 -#define DEFAULT_LOGFILE "wget-log"
 +#define DEFAULT_LOGFILE "/var/run/wget/wget-log"
-
+ 
  #include <stdio.h>
-
+ 

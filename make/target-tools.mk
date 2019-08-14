@@ -1580,7 +1580,7 @@ $(D)/mc: $(MC_DEPS) $(ARCHIVE)/$(MC_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-WGET_VER    = 1.19.2
+WGET_VER    = 1.20.3
 WGET_TMP    = wget-$(WGET_VER)
 WGET_SOURCE = wget-$(WGET_VER).tar.gz
 WGET_URL    = https://ftp.gnu.org/gnu/wget
@@ -1588,17 +1588,18 @@ WGET_URL    = https://ftp.gnu.org/gnu/wget
 $(ARCHIVE)/$(WGET_SOURCE):
 	$(DOWNLOAD) $(WGET_URL)/$(WGET_SOURCE)
 
-WGET_PATCH  = wget-remove-hardcoded-engine-support-for-openssl.patch
-WGET_PATCH += wget-set-check_cert-false-by-default.patch
-WGET_PATCH += wget-change_DEFAULT_LOGFILE.patch
+WGET_PATCH  = set-check_cert-false-by-default.patch
+WGET_PATCH += change_DEFAULT_LOGFILE.patch
 
 WGET_DEPS   = $(D)/openssl
+
+WGET_CFLAGS = $(TARGET_CFLAGS) -DOPENSSL_NO_ENGINE
 
 $(D)/wget: $(WGET_DEPS) $(ARCHIVE)/$(WGET_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(WGET_TMP)
 	$(UNTAR)/$(WGET_SOURCE)
 	$(CHDIR)/$(WGET_TMP); \
-		$(call apply_patches, $(WGET_PATCH)); \
+		$(call apply_patches, $(addprefix $(@F)/,$(WGET_PATCH))); \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
 			--prefix= \
@@ -1607,6 +1608,7 @@ $(D)/wget: $(WGET_DEPS) $(ARCHIVE)/$(WGET_SOURCE) | $(TARGET_DIR)
 			--with-gnu-ld \
 			--with-ssl=openssl \
 			--disable-debug \
+			CFLAGS="$(WGET_CFLAGS)" \
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
