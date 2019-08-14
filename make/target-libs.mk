@@ -162,10 +162,7 @@ $(ARCHIVE)/$(LIBCURL_SOURCE):
 
 LIBCURL_DEPS   = $(D)/zlib $(D)/openssl $(D)/rtmpdump $(D)/ca-bundle
 
-LIBCURL_IPV6 = --enable-ipv6
-ifeq ($(BOXSERIES), hd1)
-  LIBCURL_IPV6 = --disable-ipv6
-endif
+LIBCURL_CONF   = $(if $(filter $(BOXSERIES), hd1), --disable-ipv6, --enable-ipv6)
 
 $(D)/libcurl: $(LIBCURL_DEPS) $(ARCHIVE)/$(LIBCURL_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LIBCURL_TMP)
@@ -194,8 +191,8 @@ $(D)/libcurl: $(LIBCURL_DEPS) $(ARCHIVE)/$(LIBCURL_SOURCE) | $(TARGET_DIR)
 			--with-random=/dev/urandom \
 			--with-ssl=$(TARGET_DIR) \
 			--with-librtmp=$(TARGET_LIB_DIR) \
-			$(LIBCURL_IPV6) \
 			--enable-optimize \
+			$(LIBCURL_CONF) \
 			; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
@@ -221,10 +218,7 @@ LIBPNG_PATCH  = libpng-Disable-pngfix-and-png-fix-itxt.patch
 
 LIBPNG_DEPS   = $(D)/zlib
 
-LIBPNG_CONF   = $(EMPTY)
-ifneq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 bre2ze4k))
-  LIBPNG_CONF = --disable-arm-neon
-endif
+LIBPNG_CONF   = $(if $(filter $(BOXSERIES), hd51 bre2ze4k), --enable-arm-neon, --disable-arm-neon)
 
 $(D)/libpng: $(LIBPNG_DEPS) $(ARCHIVE)/$(LIBPNG_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LIBPNG_TMP)
@@ -235,8 +229,8 @@ $(D)/libpng: $(LIBPNG_DEPS) $(ARCHIVE)/$(LIBPNG_SOURCE) | $(TARGET_DIR)
 			--prefix= \
 			--mandir=$(remove-mandir) \
 			--enable-silent-rules \
-			$(LIBPNG_CONF) \
 			--disable-static \
+			$(LIBPNG_CONF) \
 			; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
@@ -257,11 +251,11 @@ FREETYPE_URL    = https://sourceforge.net/projects/freetype/files/freetype2/$(FR
 $(ARCHIVE)/$(FREETYPE_SOURCE):
 	$(DOWNLOAD) $(FREETYPE_URL)/$(FREETYPE_SOURCE)
 
-FREETYPE_DEPS   = $(D)/zlib $(D)/libpng
-
 FREETYPE_PATCH  = freetype2-subpixel.patch
 FREETYPE_PATCH += freetype2-config.patch
 FREETYPE_PATCH += freetype2-pkgconf.patch
+
+FREETYPE_DEPS   = $(D)/zlib $(D)/libpng
 
 $(D)/freetype: $(FREETYPE_DEPS) $(ARCHIVE)/$(FREETYPE_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(FREETYPE_TMP)
@@ -298,11 +292,7 @@ $(D)/freetype: $(FREETYPE_DEPS) $(ARCHIVE)/$(FREETYPE_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-ifeq ($(BOXTYPE), armbox)
-  LIBJPEG-TURBO = libjpeg-turbo2
-else
-  LIBJPEG-TURBO = libjpeg-turbo
-endif
+LIBJPEG-TURBO = $(if $(filter $(BOXTYPE), coolstream), libjpeg-turbo, libjpeg-turbo2)
 
 $(D)/libjpeg: $(LIBJPEG-TURBO)
 	$(TOUCH)
@@ -377,11 +367,12 @@ $(ARCHIVE)/$(OPENSSL_SOURCE):
 
 OPENSSL_PATCH  = openssl-add-ni-specific-target.patch
 
-OPENSSL_FLAGS = $(MAKE_OPTS) \
-		AR="$(TARGET_AR) r" \
-		MAKEDEPPROG=$(TARGET_CC) \
-		NI_OPTIMIZATION_FLAGS="$(TARGET_CFLAGS)" \
-		PROCESSOR=ARM
+OPENSSL_MAKE_OPTS = \
+	$(MAKE_OPTS) \
+	AR="$(TARGET_AR) r" \
+	MAKEDEPPROG=$(TARGET_CC) \
+	NI_OPTIMIZATION_FLAGS="$(TARGET_CFLAGS)" \
+	PROCESSOR=ARM
 
 $(D)/openssl: $(ARCHIVE)/$(OPENSSL_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(OPENSSL_TMP)
@@ -402,9 +393,9 @@ $(D)/openssl: $(ARCHIVE)/$(OPENSSL_SOURCE) | $(TARGET_DIR)
 			--prefix=/ \
 			--openssldir=$(remove-dir)/ssl \
 			; \
-		make $(OPENSSL_FLAGS) depend; \
+		make $(OPENSSL_MAKE_OPTS) depend; \
 		sed -i "s# build_tests##" Makefile; \
-		make $(OPENSSL_FLAGS) all; \
+		make $(OPENSSL_MAKE_OPTS) all; \
 		make install_sw INSTALL_PREFIX=$(TARGET_DIR)
 	$(REWRITE_PKGCONF)/openssl.pc
 	$(REWRITE_PKGCONF)/libcrypto.pc
@@ -1210,10 +1201,7 @@ $(ARCHIVE)/$(LIBFFI_SOURCE):
 
 LIBFFI_PATCH  = libffi-install_headers.patch
 
-LIBFFI_CONF   = $(EMPTY)
-ifeq ($(BOXSERIES), hd1)
-  LIBFFI_CONF = --enable-static --disable-shared
-endif
+LIBFFI_CONF   = $(if $(filter $(BOXSERIES), hd1), --enable-static --disable-shared)
 
 $(D)/libffi: $(ARCHIVE)/$(LIBFFI_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LIBFFI_TMP)
@@ -1250,10 +1238,7 @@ ifeq ($(BOXSERIES), hd2)
   GLIB2_DEPS += $(D)/gettext
 endif
 
-GLIB2_CONF   = $(EMPTY)
-ifeq ($(BOXSERIES), hd1)
-  GLIB2_CONF = --enable-static --disable-shared
-endif
+GLIB2_CONF   = $(if $(filter $(BOXSERIES), hd1), --enable-static --disable-shared)
 
 $(D)/glib2: $(GLIB2_DEPS) $(ARCHIVE)/$(GLIB2_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(GLIB2_TMP)

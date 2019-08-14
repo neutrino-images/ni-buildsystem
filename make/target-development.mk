@@ -3,12 +3,10 @@
 #
 # -----------------------------------------------------------------------------
 
-VALGRIND_TARGET = valgrind3
-ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd1))
-  VALGRIND_TARGET = valgrind12305
-endif
+VALGRIND_TARGET = $(if $(filter $(BOXSERIES), hd1), valgrind12305, valgrind3)
 
-valgrind: $(VALGRIND_TARGET)
+$(D)/valgrind: $(VALGRIND_TARGET)
+	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
@@ -124,7 +122,3 @@ $(D)/gdb: $(GDB_DEPS) $(ARCHIVE)/$(GDB_SOURCE) | $(TARGET_DIR)
 	find $(TARGET_SHARE_DIR)/gdb/syscalls -type f -not -name 'arm-linux.xml' -not -name 'gdb-syscalls.dtd' -print0 | xargs -0 rm --
 	$(REMOVE)/$(GDB_TMP)
 	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
-PHONY += valgrind

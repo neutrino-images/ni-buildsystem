@@ -20,10 +20,7 @@ CORTEX-STRINGS_URL    = http://git.linaro.org/git-ro/toolchain/cortex-strings.gi
 $(ARCHIVE)/$(CORTEX-STRINGS_SOURCE):
 	$(GET-GIT-ARCHIVE) $(CORTEX-STRINGS_URL) $(CORTEX-STRINGS_VER) $(notdir $@) $(ARCHIVE)
 
-CORTEX-STRINGS_CONF   = $(EMPTY)
-ifneq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 bre2ze4k))
-  CORTEX-STRINGS_CONF = --without-neon
-endif
+CORTEX-STRINGS_CONF   = $(if $(filter $(BOXSERIES), hd51 bre2ze4k), --with-neon, --without-neon)
 
 cortex-strings: $(STATIC_LIB_DIR)/libcortex-strings.la
 $(STATIC_LIB_DIR)/libcortex-strings.la: $(ARCHIVE)/$(CORTEX-STRINGS_SOURCE) | $(TARGET_DIR)

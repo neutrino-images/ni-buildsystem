@@ -194,11 +194,7 @@ TZDATA_ZONELIST = \
 	africa antarctica asia australasia europe northamerica \
 	southamerica pacificnew etcetera backward
 
-ifeq ($(BOXSERIES), hd2)
-  LOCALTIME = var/etc/localtime
-else
-  LOCALTIME = etc/localtime
-endif
+ETC_LOCALTIME = $(if $(filter $(BOXSERIES), hd2),/var/etc/localtime,/etc/localtime)
 
 $(D)/tzdata: $(TZDATA_DEPS) $(ARCHIVE)/$(TZDATA_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(TZDATA_TMP)
@@ -217,9 +213,10 @@ $(D)/tzdata: $(TZDATA_DEPS) $(ARCHIVE)/$(TZDATA_SOURCE) | $(TARGET_DIR)
 			test -e zoneinfo/$$x || echo "WARNING: timezone $$x not found."; \
 		done; \
 		mkdir -p $(TARGET_SHARE_DIR); \
+		rm -rf $(TARGET_SHARE_DIR)/zoneinfo; \
 		mv zoneinfo/ $(TARGET_SHARE_DIR)/
 	$(INSTALL_DATA) -D $(IMAGEFILES)/tzdata/timezone.xml $(TARGET_DIR)/etc/timezone.xml
-	$(INSTALL_DATA) $(TARGET_SHARE_DIR)/zoneinfo/CET $(TARGET_DIR)/$(LOCALTIME)
+	$(INSTALL_DATA) $(TARGET_SHARE_DIR)/zoneinfo/CET $(TARGET_DIR)$(ETC_LOCALTIME)
 	$(REMOVE)/$(TZDATA_TMP)
 	$(TOUCH)
 
@@ -658,9 +655,9 @@ $(ARCHIVE)/$(PROCPS-NG_SOURCE):
 PROCPS-NG_PATCH  = procps-ng-0001-Fix-out-of-tree-builds.patch
 PROCPS-NG_PATCH += procps-ng-no-tests-docs.patch
 
-PROCPS-NG_BIN    = ps top
-
 PROCPS-NG_DEPS   = $(D)/ncurses
+
+PROCPS-NG_BIN    = ps top
 
 $(D)/procps-ng: $(PROCPS-NG_DEPS) $(ARCHIVE)/$(PROCPS-NG_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PROCPS-NG_TMP)
@@ -676,6 +673,7 @@ $(D)/procps-ng: $(PROCPS-NG_DEPS) $(ARCHIVE)/$(PROCPS-NG_SOURCE) | $(TARGET_DIR)
 			--bindir=/bin.$(@F) \
 			--sbindir=/sbin.$(@F) \
 			--datarootdir=$(remove-datarootdir) \
+			--without-systemd \
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
@@ -780,11 +778,8 @@ $(D)/bash: $(ARCHIVE)/$(BASH_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-E2FSPROGS_VER    = 1.44.5
-ifeq ($(BOXTYPE), coolstream)
-  # formatting ext4 failes with newer versions
-  E2FSPROGS_VER  = 1.43.8
-endif
+# for coolstream: formatting ext4 failes with newer versions then 1.43.8
+E2FSPROGS_VER    = $(if $(filter $(BOXTYPE), coolstream),1.43.8,1.44.5)
 E2FSPROGS_TMP    = e2fsprogs-$(E2FSPROGS_VER)
 E2FSPROGS_SOURCE = e2fsprogs-$(E2FSPROGS_VER).tar.gz
 E2FSPROGS_URL    = https://sourceforge.net/projects/e2fsprogs/files/e2fsprogs/v$(E2FSPROGS_VER)
@@ -919,12 +914,10 @@ $(D)/autofs: $(AUTOFS_DEPS) $(ARCHIVE)/$(AUTOFS_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-SAMBA_TARGET = samba36
-ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd1))
-  SAMBA_TARGET = samba33
-endif
+SAMBA_TARGET = $(if $(filter $(BOXSERIES), hd1), samba33, samba36)
 
-samba: $(SAMBA_TARGET)
+$(D)/samba: $(SAMBA_TARGET)
+	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
@@ -1258,7 +1251,7 @@ $(D)/wpa_supplicant: $(WPA_SUPPLICANT_DEPS) $(ARCHIVE)/$(WPA_SUPPLICANT_SOURCE) 
 	$(REMOVE)/$(WPA_SUPPLICANT_TMP)
 	$(UNTAR)/$(WPA_SUPPLICANT_SOURCE)
 	$(CHDIR)/$(WPA_SUPPLICANT_TMP)/wpa_supplicant; \
-		cp $(CONFIGS)/wpa_supplicant.config .config; \
+		$(INSTALL_DATA) $(CONFIGS)/wpa_supplicant.config .config; \
 		$(BUILD_ENV) \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR) BINDIR=/sbin
@@ -1354,10 +1347,7 @@ NFS-UTILS_PATCH += nfs-utils_05-sm-notify-use-sbin-instead-of-usr-sbin.patch
 
 NFS-UTILS_DEPS   = $(D)/rpcbind
 
-NFS-UTILS_IPV6   = --enable-ipv6
-ifeq ($(BOXSERIES), hd1)
-  NFS-UTILS_IPV6 = --disable-ipv6
-endif
+NFS-UTILS_CONF   = $(if $(filter $(BOXSERIES), hd1), --disable-ipv6, --enable-ipv6)
 
 $(D)/nfs-utils: $(NFS-UTILS_DEPS) $(ARCHIVE)/$(NFS-UTILS_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(NFS-UTILS_TMP)
@@ -1376,7 +1366,7 @@ $(D)/nfs-utils: $(NFS-UTILS_DEPS) $(ARCHIVE)/$(NFS-UTILS_SOURCE) | $(TARGET_DIR)
 			--disable-nfsv41 \
 			--disable-gss \
 			--disable-uuid \
-			$(NFS-UTILS_IPV6) \
+			$(NFS-UTILS_CONF) \
 			--without-tcp-wrappers \
 			--with-statedir=/var/lib/nfs \
 			--with-rpcgen=internal \
@@ -1446,7 +1436,6 @@ FUSE-EXFAT_URL    = https://github.com/relan/exfat/releases/download/v$(FUSE-EXF
 
 $(ARCHIVE)/$(FUSE-EXFAT_SOURCE):
 	$(DOWNLOAD) $(FUSE-EXFAT_URL)/$(FUSE-EXFAT_SOURCE)
-
 
 FUSE-EXFAT_DEPS   = $(D)/libfuse
 

@@ -5,7 +5,7 @@
 
 BOXMODEL_IMAGE = apollo kronos kronos_v2 hd51 bre2ze4k
 ifneq ($(DEBUG), yes)
-	BOXMODEL_IMAGE += nevis
+  BOXMODEL_IMAGE += nevis
 endif
 
 images \
