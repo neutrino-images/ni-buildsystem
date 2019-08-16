@@ -365,46 +365,51 @@ OPENSSL_URL    = https://www.openssl.org/source
 $(ARCHIVE)/$(OPENSSL_SOURCE):
 	$(DOWNLOAD) $(OPENSSL_URL)/$(OPENSSL_SOURCE)
 
-OPENSSL_PATCH  = openssl-add-ni-specific-target.patch
-
-OPENSSL_MAKE_OPTS = \
-	$(MAKE_OPTS) \
-	AR="$(TARGET_AR) r" \
-	MAKEDEPPROG=$(TARGET_CC) \
-	NI_OPTIMIZATION_FLAGS="$(TARGET_CFLAGS)" \
-	PROCESSOR=ARM
+OPENSSL_PATCH  = 0000-Configure-align-O-flag.patch
 
 $(D)/openssl: $(ARCHIVE)/$(OPENSSL_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(OPENSSL_TMP)
 	$(UNTAR)/$(OPENSSL_SOURCE)
 	$(CHDIR)/$(OPENSSL_TMP); \
-		$(call apply_patches, $(OPENSSL_PATCH)); \
+		$(call apply_patches, $(addprefix $(@F)/,$(OPENSSL_PATCH))); \
 		./Configure \
-			linux-armv4-ni \
+			linux-armv4 \
 			shared \
 			threads \
 			no-hw \
 			no-engine \
 			no-sse2 \
 			no-perlasm \
-			$(TARGET_CPPFLAGS) \
-			$(TARGET_LDFLAGS) \
+			no-tests \
+			no-fuzz-afl \
+			no-fuzz-libfuzzer \
+			\
+			$(TARGET_CFLAGS) \
+			-DTERMIOS -fomit-frame-pointer \
 			-DOPENSSL_SMALL_FOOTPRINT \
+			$(TARGET_LDFLAGS) \
+			\
+			--cross-compile-prefix=$(TARGET)- \
 			--prefix=/ \
-			--openssldir=$(remove-dir)/ssl \
+			--openssldir=/etc/ssl \
 			; \
-		make $(OPENSSL_MAKE_OPTS) depend; \
-		sed -i "s# build_tests##" Makefile; \
-		make $(OPENSSL_MAKE_OPTS) all; \
+		sed -i "s| build_tests||" Makefile; \
+		sed -i 's|^MANDIR=.*|MANDIR=$(remove-mandir)|' Makefile; \
+		sed -i 's|^HTMLDIR=.*|HTMLDIR=$(remove-htmldir)|' Makefile; \
+		make depend; \
+		make; \
 		make install_sw INSTALL_PREFIX=$(TARGET_DIR)
 	$(REWRITE_PKGCONF)/openssl.pc
 	$(REWRITE_PKGCONF)/libcrypto.pc
 	$(REWRITE_PKGCONF)/libssl.pc
-	rm -rf $(TARGET_BIN_DIR)/c_rehash $(TARGET_LIB_DIR)/engines
+	rm -rf $(TARGET_LIB_DIR)/engines
+	rm -f $(TARGET_BIN_DIR)/c_rehash
+	rm -f $(TARGET_DIR)/etc/ssl/misc/{CA.pl,tsget}
 ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd1 hd2))
-	rm -rf $(TARGET_BIN_DIR)/openssl
+	rm -f $(TARGET_BIN_DIR)/openssl
+	rm -f $(TARGET_DIR)/etc/ssl/misc/{CA.*,c_*}
 endif
-	chmod 0755 $(TARGET_LIB_DIR)/libcrypto.so.* $(TARGET_LIB_DIR)/libssl.so.*
+	chmod 0755 $(TARGET_LIB_DIR)/lib{crypto,ssl}.so.*
 	for version in 0.9.7 0.9.8 1.0.2; do \
 		ln -sf libcrypto.so.1.0.0 $(TARGET_LIB_DIR)/libcrypto.so.$$version; \
 		ln -sf libssl.so.1.0.0 $(TARGET_LIB_DIR)/libssl.so.$$version; \
