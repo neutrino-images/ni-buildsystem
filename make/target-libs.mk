@@ -972,7 +972,7 @@ $(D)/rtmpdump: $(RTMPDUMP_DEPS) $(SOURCE_DIR)/$(NI-RTMPDUMP) | $(TARGET_DIR)
 	$(REMOVE)/$(NI-RTMPDUMP)
 	tar -C $(SOURCE_DIR) -cp $(NI-RTMPDUMP) --exclude-vcs | tar -C $(BUILD_TMP) -x
 	$(CHDIR)/$(NI-RTMPDUMP); \
-		make $(RTMPDUMP_MAKE_OPTS) CROSS_COMPILE=$(TARGET_CROSS) XCFLAGS="$(TARGET_CFLAGS)" XLDFLAGS="$(TARGET_LDFLAGS)";\
+		make $(RTMPDUMP_MAKE_OPTS) CROSS_COMPILE=$(TARGET_CROSS) XCFLAGS="$(TARGET_CFLAGS)" XLDFLAGS="$(TARGET_LDFLAGS)"; \
 		make $(RTMPDUMP_MAKE_OPTS) install DESTDIR=$(TARGET_DIR)
 	rm -rf $(TARGET_DIR)/sbin/rtmpgw
 	rm -rf $(TARGET_DIR)/sbin/rtmpsrv
@@ -1002,7 +1002,7 @@ $(D)/libtirpc: $(ARCHIVE)/$(LIBTIRPC_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LIBTIRPC_TMP)
 	$(UNTAR)/$(LIBTIRPC_SOURCE)
 	$(CHDIR)/$(LIBTIRPC_TMP); \
-		$(call apply_patches, $(addprefix $(notdir $@)/,$(LIBTIRP_PATCH))); \
+		$(call apply_patches, $(addprefix $(@F)/,$(LIBTIRP_PATCH))); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--target=$(TARGET) \

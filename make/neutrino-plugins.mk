@@ -102,7 +102,7 @@ neutrino-plugins-clean-all: neutrino-plugins-clean
 
 neutrino-plugin-%: $(NP_OBJ_DIR)/config.status
 	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
-	$(MAKE) -C $(NP_OBJ_DIR)/$(subst neutrino-plugin-,,$@) all install DESTDIR=$(TARGET_DIR)
+	$(MAKE) -C $(NP_OBJ_DIR)/$(subst neutrino-plugin-,,$(@)) all install DESTDIR=$(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 

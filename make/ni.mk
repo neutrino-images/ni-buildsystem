@@ -20,7 +20,7 @@ personalized-image:
 
 image \
 ni-image:
-	@echo "starting 'make $@' build with "$(PARALLEL_JOBS)" threads!"
+	@echo "starting 'make $(@)' build with "$(PARALLEL_JOBS)" threads!"
 	$(MAKE) kernel
 	$(MAKE) neutrino
 	make plugins

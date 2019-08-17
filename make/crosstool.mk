@@ -49,7 +49,7 @@ kernel-tarball: $(BUILD_TMP)/linux-$(KERNEL_VERSION).tar
 # create kernel-tarball
 $(BUILD_TMP)/linux-$(KERNEL_VERSION).tar: | $(BUILD_TMP)
 	make kernel.do_checkout
-	tar cf $@ --exclude-vcs -C $(SOURCE_DIR)/$(NI-LINUX-KERNEL) .
+	tar cf $(@) --exclude-vcs -C $(SOURCE_DIR)/$(NI-LINUX-KERNEL) .
 
 # -----------------------------------------------------------------------------
 
@@ -103,7 +103,7 @@ endif
 		$(INSTALL_DATA) $(CONFIGS)/ct-ng-$(BOXTYPE)-$(BOXSERIES).config .config; \
 		sed -i "s|^CT_PARALLEL_JOBS=.*|CT_PARALLEL_JOBS=$(PARALLEL_JOBS)|" .config; \
 		export NI_LOCAL_TARBALLS_DIR=$(ARCHIVE); \
-		export NI_PREFIX_DIR=$@; \
+		export NI_PREFIX_DIR=$(@); \
 		export NI_KERNEL_VERSION=$(KERNEL_VERSION); \
 		export NI_KERNEL_LOCATION=$(BUILD_TMP)/linux-$(KERNEL_VERSION).tar; \
 		export NI_LIBC_UCLIBC_CONFIG_FILE=$(CONFIGS)/ct-ng-uClibc-$(UCLIBC_VER).config; \
@@ -126,7 +126,7 @@ endif
 # bre2ze4k uses same crosstool as hd51; so let's just create a symlink
 $(CROSS_BASE)/arm/bre2ze4k:
 	make $(CROSS_BASE)/arm/hd51
-	ln -sf hd51 $@
+	ln -sf hd51 $(@)
 
 # -----------------------------------------------------------------------------
 

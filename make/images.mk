@@ -24,25 +24,25 @@ devtable: $(BUILD_TMP)/devtable-$(BOXSERIES).txt
 
 $(BUILD_TMP)/devtable-hd1.txt:
 	#	<name>		<type>	<mode>	<uid>	<gid>	<major>	<minor>	<start>	<inc>	<count>
-	echo	"/dev/pts	d	755	0	0	-	-	-	-	-"	> $@
-	echo	"/dev/shm	d	755	0	0	-	-	-	-	-"	>> $@
-	echo	"/dev/shm/usb	d	755	0	0	-	-	-	-	-"	>> $@
-	echo	"/dev/null	c	666	0	0	1	3	0	0	-"	>> $@
-	echo	"/dev/console	c	666	0	0	5	1	-	-	-"	>> $@
-	echo	"/dev/ttyRI0	c	666	0	0	204	16	-	-	-"	>> $@
-	echo	"/dev/mtd	c	640	0	0	90	0	0	2	6"	>> $@
-	echo	"/dev/mtdblock	b	640	0	0	31	0	0	1	6"	>> $@
+	echo	"/dev/pts	d	755	0	0	-	-	-	-	-"	 > $(@)
+	echo	"/dev/shm	d	755	0	0	-	-	-	-	-"	>> $(@)
+	echo	"/dev/shm/usb	d	755	0	0	-	-	-	-	-"	>> $(@)
+	echo	"/dev/null	c	666	0	0	1	3	0	0	-"	>> $(@)
+	echo	"/dev/console	c	666	0	0	5	1	-	-	-"	>> $(@)
+	echo	"/dev/ttyRI0	c	666	0	0	204	16	-	-	-"	>> $(@)
+	echo	"/dev/mtd	c	640	0	0	90	0	0	2	6"	>> $(@)
+	echo	"/dev/mtdblock	b	640	0	0	31	0	0	1	6"	>> $(@)
 
 $(BUILD_TMP)/devtable-hd2.txt:
 	#	<name>		<type>	<mode>	<uid>	<gid>	<major>	<minor>	<start>	<inc>	<count>
-	echo	"/dev/pts	d	755	0	0	-	-	-	-	-"	> $@
-	echo	"/dev/shm	d	755	0	0	-	-	-	-	-"	>> $@
-	echo	"/dev/shm/usb	d	755	0	0	-	-	-	-	-"	>> $@
-	echo	"/dev/null	c	666	0	0	1	3	0	0	-"	>> $@
-	echo	"/dev/console	c	666	0	0	5	1	-	-	-"	>> $@
-	echo	"/dev/ttyS0	c	666	0	0	4	64	-	-	-"	>> $@
-	echo	"/dev/mtd	c	640	0	0	90	0	0	2	9"	>> $@
-	echo	"/dev/mtdblock	b	640	0	0	31	0	0	1	9"	>> $@
+	echo	"/dev/pts	d	755	0	0	-	-	-	-	-"	 > $(@)
+	echo	"/dev/shm	d	755	0	0	-	-	-	-	-"	>> $(@)
+	echo	"/dev/shm/usb	d	755	0	0	-	-	-	-	-"	>> $(@)
+	echo	"/dev/null	c	666	0	0	1	3	0	0	-"	>> $(@)
+	echo	"/dev/console	c	666	0	0	5	1	-	-	-"	>> $(@)
+	echo	"/dev/ttyS0	c	666	0	0	4	64	-	-	-"	>> $(@)
+	echo	"/dev/mtd	c	640	0	0	90	0	0	2	9"	>> $(@)
+	echo	"/dev/mtdblock	b	640	0	0	31	0	0	1	9"	>> $(@)
 
 devtable-remove:
 	$(REMOVE)/devtable-$(BOXSERIES).txt

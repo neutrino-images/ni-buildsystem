@@ -115,7 +115,7 @@ pathauf-192:
 	$(INSTALL_EXEC) $(IMAGEFILES)/channellists/update-ctrl/preinstall.sh $(PREINSTALL_SH)
 	$(INSTALL_EXEC) $(IMAGEFILES)/channellists/update-ctrl/postinstall.sh $(POSTINSTALL_SH)
 	mkdir -pv $(UPDATE_INST_DIR)/var/tuxbox/config/zapit && \
-	cp -f $(IMAGEFILES)/channellists/$@/* $(UPDATE_INST_DIR)/var/tuxbox/config/zapit/
+	cp -f $(IMAGEFILES)/channellists/$(@)/* $(UPDATE_INST_DIR)/var/tuxbox/config/zapit/
 	# remove non-printable chars and re-format xml-files
 	$(CD) $(UPDATE_INST_DIR)/var/tuxbox/config/zapit/; \
 	for file in *.xml; do \
@@ -143,7 +143,7 @@ pathauf-192:
 	#; \
 	i=0; \
 	for dir in $${DIR[*]}; do \
-		if [ $$dir = $@ ]; \
+		if [ $$dir = $(@) ]; \
 		then \
 			desc=$${DESC[$$i]}; \
 			date=$${DATE[$$i]}; \
@@ -156,7 +156,7 @@ pathauf-192:
 			UPDATE_TYPE=S \
 			UPDATE_URL=$(CHANNELLISTS_URL) \
 			UPDATE_MD5FILE=$(CHANNELLISTS_MD5FILE) \
-			UPDATE_NAME=$@ \
+			UPDATE_NAME=$(@) \
 			UPDATE_DESC="$$desc - " \
 			UPDATE_VERSION="$$date" \
 

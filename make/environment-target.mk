@@ -27,7 +27,7 @@ $(SHAREWEBTV) \
 $(VARCONFIG) \
 $(VARINITD) \
 $(VARPLUGINS) : | $(TARGET_DIR)
-	mkdir -p $@
+	mkdir -p $(@)
 
 # -----------------------------------------------------------------------------
 

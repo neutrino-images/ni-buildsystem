@@ -50,7 +50,7 @@ $(HOST_DIR)/bin/pkg-config: $(ARCHIVE)/$(HOST_PKG-CONFIG_SOURCE) | $(HOST_DIR)/b
 
 host-pkg-config-link: $(HOST_DIR)/bin/$(TARGET)-pkg-config
 $(HOST_DIR)/bin/$(TARGET)-pkg-config: | $(HOST_DIR)/bin
-	ln -sf pkg-config $@
+	ln -sf pkg-config $(@)
 
 # -----------------------------------------------------------------------------
 

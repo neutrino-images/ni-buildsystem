@@ -43,7 +43,7 @@ all-clean: rebuild-clean staging-clean host-clean static-base-clean
 	make cross-base-clean
 
 %-clean:
-	-find $(D) -name $(subst -clean,,$@) -delete
+	-find $(D) -name $(subst -clean,,$(@)) -delete
 
 clean: rebuild-clean bootstrap
 

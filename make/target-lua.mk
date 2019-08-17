@@ -72,7 +72,7 @@ LUA-FEEDPARSER_SOURCE = lua-feedparser-$(LUA-FEEDPARSER_VER).tar.gz
 LUA-FEEDPARSER_URL    = https://github.com/slact/lua-feedparser/archive
 
 $(ARCHIVE)/$(LUA-FEEDPARSER_SOURCE):
-	$(DOWNLOAD) $(LUA-FEEDPARSER_URL)/$(LUA-FEEDPARSER_SOURCE) -O $@
+	$(DOWNLOAD) $(LUA-FEEDPARSER_URL)/$(LUA-FEEDPARSER_SOURCE) -O $(@)
 
 LUA-FEEDPARSER_PATCH  = lua-feedparser.patch
 
@@ -135,7 +135,7 @@ LUAPOSIX_SOURCE = luaposix-$(LUAPOSIX_VER).tar.gz
 LUAPOSIX_URL    = https://github.com/luaposix/luaposix/archive
 
 $(ARCHIVE)/$(LUAPOSIX_SOURCE):
-	$(DOWNLOAD) $(LUAPOSIX_URL)/v$(LUAPOSIX_VER).tar.gz -O $@
+	$(DOWNLOAD) $(LUAPOSIX_URL)/v$(LUAPOSIX_VER).tar.gz -O $(@)
 
 LUAPOSIX_PATCH  = luaposix-fix-build.patch
 LUAPOSIX_PATCH += luaposix-fix-docdir-build.patch
@@ -154,7 +154,7 @@ SLINGSHOT_SOURCE = slingshot-$(SLINGSHOT_VER).tar.gz
 SLINGSHOT_URL    = https://github.com/gvvaughan/slingshot/archive
 
 $(ARCHIVE)/$(SLINGSHOT_SOURCE):
-	$(DOWNLOAD) $(SLINGSHOT_URL)/v$(SLINGSHOT_VER).tar.gz -O $@
+	$(DOWNLOAD) $(SLINGSHOT_URL)/v$(SLINGSHOT_VER).tar.gz -O $(@)
 
 $(D)/luaposix: $(LUAPOSIX_DEPS) $(ARCHIVE)/$(SLINGSHOT_SOURCE) $(ARCHIVE)/$(GNULIB_SOURCE) $(ARCHIVE)/$(LUAPOSIX_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LUAPOSIX_TMP)

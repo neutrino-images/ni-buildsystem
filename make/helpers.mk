@@ -14,7 +14,7 @@ endef
 
 # apply patch sets
 define apply_patches
-	l=`echo $(2)`; test -z $$l && l=1; \
+	l=$(strip $(2)); test -z $$l && l=1; \
 	for i in $(1); do \
 		if [ -d $$i ]; then \
 			for p in $$i/*; do \
@@ -95,8 +95,8 @@ endef
 # -----------------------------------------------------------------------------
 
 archives-list:
-	@rm -f $(BUILD_TMP)/$@
-	@make -qp | grep --only-matching '^\$(ARCHIVE).*:' | sed "s|:||g" > $(BUILD_TMP)/$@
+	@rm -f $(BUILD_TMP)/$(@)
+	@make -qp | grep --only-matching '^\$(ARCHIVE).*:' | sed "s|:||g" > $(BUILD_TMP)/$(@)
 
 DOCLEANUP ?= no
 GETMISSING ?= no

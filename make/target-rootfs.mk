@@ -13,25 +13,25 @@ endif
 
 .version: $(TARGET_DIR)/.version
 $(TARGET_DIR)/.version: | $(TARGET_DIR)
-	echo "distro=NI"							 > $@
-	echo "imagename=NI \o/ Neutrino-Image"					>> $@
-	echo "imageversion=$(IMAGE_VERSION)"					>> $@
-	echo "version=$(IMAGE_TYPE)$(IMAGE_VER)$(IMAGE_DATE)"	 		>> $@
-	echo "describe=$$(git describe --always --long --tags | sed 's/-/./2')"	>> $@
-	echo "builddate=$$(date)"						>> $@
-	echo "box_model=$(BOXMODEL)"						>> $@
-	echo "creator=$(MAINTAINER)"						>> $@
-	echo "homepage=www.neutrino-images.de"					>> $@
+	echo "distro=NI"							 > $(@)
+	echo "imagename=NI \o/ Neutrino-Image"					>> $(@)
+	echo "imageversion=$(IMAGE_VERSION)"					>> $(@)
+	echo "version=$(IMAGE_TYPE)$(IMAGE_VER)$(IMAGE_DATE)"	 		>> $(@)
+	echo "describe=$$(git describe --always --long --tags | sed 's/-/./2')"	>> $(@)
+	echo "builddate=$$(date)"						>> $(@)
+	echo "box_model=$(BOXMODEL)"						>> $(@)
+	echo "creator=$(MAINTAINER)"						>> $(@)
+	echo "homepage=www.neutrino-images.de"					>> $(@)
 ifeq ($(BOXTYPE), armbox)
-	echo "imagedir=$(BOXMODEL)"						>> $@
+	echo "imagedir=$(BOXMODEL)"						>> $(@)
 endif
 
 # -----------------------------------------------------------------------------
 
 update.urls: $(TARGET_DIR)/var/etc/update.urls
 $(TARGET_DIR)/var/etc/update.urls: | $(TARGET_DIR)
-	echo "$(NI-SERVER)/update.php"				 > $@
-	echo "$(CHANNELLISTS_URL)/$(CHANNELLISTS_MD5FILE)"	>> $@
+	echo "$(NI-SERVER)/update.php"				 > $(@)
+	echo "$(CHANNELLISTS_URL)/$(CHANNELLISTS_MD5FILE)"	>> $(@)
 
 # -----------------------------------------------------------------------------
 
@@ -86,12 +86,12 @@ e2-multiboot: | $(TARGET_DIR)
 # -----------------------------------------------------------------------------
 
 personalize: | $(TARGET_DIR)
-	$(call local-script,$(notdir $@),start)
+	$(call local-script,$(@F),start)
 	@LOCAL_ROOT=$(LOCAL_DIR)/root; \
 	if [ -n "$$(ls -A $$LOCAL_ROOT)" ]; then \
 		cp -a -v $$LOCAL_ROOT/* $(TARGET_DIR)/; \
 	fi
-	$(call local-script,$(notdir $@),stop)
+	$(call local-script,$(@F),stop)
 
 # -----------------------------------------------------------------------------
 

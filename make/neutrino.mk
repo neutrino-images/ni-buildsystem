@@ -174,7 +174,7 @@ $(D)/neutrino: $(N_OBJ_DIR)/config.status
 # -----------------------------------------------------------------------------
 
 $(TARGET_DIR)/etc/init.d/start_neutrino:
-	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/start_neutrino.$(BOXTYPE) $@
+	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/start_neutrino.$(BOXTYPE) $(@)
 
 # -----------------------------------------------------------------------------
 
