@@ -161,6 +161,8 @@ CCACHE        = /usr/bin/ccache
 CCACHE_DIR    = $(HOME)/.ccache-ni-buildsystem-$(BOXARCH)-$(BOXSERIES)
 export CCACHE_DIR
 
+# -----------------------------------------------------------------------------
+
 # create debug image
 DEBUG ?= no
 
@@ -250,8 +252,6 @@ TARGET_STRIP    = $(TARGET_CROSS)strip
 
 # -----------------------------------------------------------------------------
 
-VPATH = $(D)
-
 TERM_RED	= \033[40;0;31m
 TERM_RED_BOLD	= \033[40;1;31m
 TERM_GREEN	= \033[40;0;32m
@@ -260,7 +260,14 @@ TERM_YELLOW	= \033[40;0;33m
 TERM_YELLOW_BOLD= \033[40;1;33m
 TERM_NORMAL	= \033[0m
 
+# -----------------------------------------------------------------------------
+
+# search path(s) for all prerequisites
+VPATH = $(D)
+
 PATH := $(HOST_DIR)/bin:$(CROSS_DIR)/bin:$(PATH)
+
+# -----------------------------------------------------------------------------
 
 PKG_CONFIG = $(HOST_DIR)/bin/$(TARGET)-pkg-config
 PKG_CONFIG_LIBDIR = $(TARGET_LIB_DIR)
