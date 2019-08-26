@@ -3,6 +3,9 @@
 #
 # -----------------------------------------------------------------------------
 
+build-clean:
+	-rm -rf $(BUILD_TMP)
+
 cross-base-clean:
 	-rm -rf $(CROSS_BASE)
 
@@ -34,26 +37,23 @@ ccache-clean:
 	@echo "Clearing $$CCACHE_DIR"
 	@$(CCACHE) -C
 
-rebuild-clean: target-clean deps-clean host-bin-config-clean
-	-rm -rf $(BUILD_TMP)
+rebuild-clean: host-bin-config-clean target-clean deps-clean build-clean
 
 all-clean: rebuild-clean staging-clean host-clean static-base-clean
 	@echo -e "\n$(TERM_RED_BOLD)Any other key then CTRL-C will now remove CROSS_BASE$(TERM_NORMAL)"
 	@read
 	make cross-base-clean
 
+clean: rebuild-clean bootstrap
+
+clean-all: update-all staging-clean clean
+
 %-clean:
 	-find $(D) -name $(subst -clean,,$(@)) -delete
 
-clean: rebuild-clean bootstrap
-
-clean-all:
-	make update-all
-	make staging-clean
-	make clean
-
 # -----------------------------------------------------------------------------
 
+PHONY += build-clean
 PHONY += cross-base-clean
 PHONY += cross-clean
 PHONY += deps-clean
@@ -66,6 +66,6 @@ PHONY += target-clean
 PHONY += ccache-clean
 PHONY += rebuild-clean
 PHONY += all-clean
-PHONY += %-clean
 PHONY += clean
 PHONY += clean-all
+PHONY += %-clean
