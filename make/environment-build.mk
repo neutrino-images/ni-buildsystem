@@ -59,6 +59,28 @@ ifneq ($(BOXSERIES),)
     $(error $(BOXTYPE) BOXSERIES $(BOXSERIES) not supported)
   endif
 
+# assign by given BOXFAMILY
+else ifneq ($(BOXFAMILY),)
+  ifeq ($(BOXFAMILY), nevis)
+    BOXTYPE = coolstream
+    BOXSERIES = hd1
+    BOXMODEL = nevis
+  else ifeq ($(BOXFAMILY), apollo)
+    BOXTYPE = coolstream
+    BOXSERIES = hd2
+    BOXMODEL = apollo
+  else ifeq ($(BOXFAMILY), kronos)
+    BOXTYPE = coolstream
+    BOXSERIES = hd2
+    BOXMODEL = kronos
+  else ifeq ($(BOXFAMILY), bcm7251s)
+    BOXTYPE = armbox
+    BOXSERIES = hd51
+    BOXMODEL = hd51
+  else
+    $(error $(BOXTYPE) BOXFAMILY $(BOXFAMILY) not supported)
+  endif
+
 # assign by given BOXMODEL
 else ifneq ($(BOXMODEL),)
   ifeq ($(BOXMODEL), nevis)
