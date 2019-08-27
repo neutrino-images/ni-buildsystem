@@ -83,10 +83,10 @@ printenv:
 	@make --no-print-directory toolcheck
 	@make -i -s $(TARGET_DIR)
 	@PATH=$(PATH):$(CROSS_DIR)/bin && \
-	if type -p $(TARGET)-gcc >/dev/null 2>&1; then \
-		echo "$(TARGET)-gcc found in PATH or in \$$CROSS_DIR/bin."; \
+	if type -p $(TARGET_CC) >/dev/null 2>&1; then \
+		echo "$(TARGET_CC) found in PATH or in \$$CROSS_DIR/bin."; \
 	else \
-		echo "$(TARGET)-gcc not found in PATH or \$$CROSS_DIR/bin"; \
+		echo "$(TARGET_CC) not found in PATH or \$$CROSS_DIR/bin"; \
 		echo "=> please check your setup. Maybe you need to 'make crosstool'."; \
 	fi
 	@if ! LANG=C make -n preqs|grep -q "Nothing to be done"; then \

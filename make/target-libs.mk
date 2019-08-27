@@ -389,7 +389,7 @@ $(D)/openssl: $(ARCHIVE)/$(OPENSSL_SOURCE) | $(TARGET_DIR)
 			-DOPENSSL_SMALL_FOOTPRINT \
 			$(TARGET_LDFLAGS) \
 			\
-			--cross-compile-prefix=$(TARGET)- \
+			--cross-compile-prefix=$(TARGET_CROSS) \
 			--prefix=/ \
 			--openssldir=/etc/ssl \
 			; \
