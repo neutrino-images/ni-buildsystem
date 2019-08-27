@@ -5,7 +5,7 @@
 
 host-preqs: $(HOST_DIR)/bin \
 	host-pkg-config \
-	host-pkg-config-link \
+	$(PKG_CONFIG) \
 	host-mkfs.jffs2 \
 	host-sumtool \
 	host-mkimage \
@@ -48,10 +48,6 @@ $(HOST_DIR)/bin/pkg-config: $(ARCHIVE)/$(HOST_PKG-CONFIG_SOURCE) | $(HOST_DIR)/b
 		$(INSTALL_EXEC) -D pkg-config $(HOST_DIR)/bin
 	$(REMOVE)/$(HOST_PKG-CONFIG_TMP)
 
-host-pkg-config-link: $(HOST_DIR)/bin/$(TARGET)-pkg-config
-$(HOST_DIR)/bin/$(TARGET)-pkg-config: | $(HOST_DIR)/bin
-	ln -sf pkg-config $(@)
-
 # -----------------------------------------------------------------------------
 
 HOST_PKGCONF_VER    = 1.6.3
@@ -81,6 +77,11 @@ $(HOST_DIR)/bin/pkgconf: $(ARCHIVE)/$(HOST_PKGCONF_SOURCE) | $(HOST_DIR)/bin pkg
 		$(MAKE) install
 	$(INSTALL_EXEC) $(PATCHES)/$(@F)/pkgconf-pkg-config $(HOST_DIR)/bin/pkg-config
 	$(REMOVE)/$(HOST_PKGCONF_TMP)
+
+# -----------------------------------------------------------------------------
+
+$(PKG_CONFIG): | $(HOST_DIR)/bin
+	ln -sf pkg-config $(@)
 
 # -----------------------------------------------------------------------------
 
