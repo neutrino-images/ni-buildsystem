@@ -327,7 +327,7 @@ $(D)/parted: $(PARTED_DEPS) $(ARCHIVE)/$(PARTED_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-HDPARM_VER    = 9.56
+HDPARM_VER    = 9.58
 HDPARM_TMP    = hdparm-$(HDPARM_VER)
 HDPARM_SOURCE = hdparm-$(HDPARM_VER).tar.gz
 HDPARM_URL    = https://sourceforge.net/projects/hdparm/files/hdparm
