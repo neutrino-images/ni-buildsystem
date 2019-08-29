@@ -292,14 +292,7 @@ freetype: $(FREETYPE_DEPS) $(ARCHIVE)/$(FREETYPE_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-LIBJPEG-TURBO = $(if $(filter $(BOXTYPE), coolstream), libjpeg-turbo, libjpeg-turbo2)
-
-libjpeg: $(LIBJPEG-TURBO)
-	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
-LIBJPEG-TURBO_VER    = 1.5.3
+LIBJPEG-TURBO_VER    = 2.0.2
 LIBJPEG-TURBO_TMP    = libjpeg-turbo-$(LIBJPEG-TURBO_VER)
 LIBJPEG-TURBO_SOURCE = libjpeg-turbo-$(LIBJPEG-TURBO_VER).tar.gz
 LIBJPEG-TURBO_URL    = https://sourceforge.net/projects/libjpeg-turbo/files/$(LIBJPEG-TURBO_VER)
@@ -307,42 +300,13 @@ LIBJPEG-TURBO_URL    = https://sourceforge.net/projects/libjpeg-turbo/files/$(LI
 $(ARCHIVE)/$(LIBJPEG-TURBO_SOURCE):
 	$(DOWNLOAD) $(LIBJPEG-TURBO_URL)/$(LIBJPEG-TURBO_SOURCE)
 
-libjpeg-turbo: $(ARCHIVE)/$(LIBJPEG-TURBO_SOURCE) | $(TARGET_DIR)
+LIBJPEG-TURBO_PATCH  = libjpeg-tiff-ojpeg.patch
+
+libjpeg: $(ARCHIVE)/$(LIBJPEG-TURBO_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LIBJPEG-TURBO_TMP)
 	$(UNTAR)/$(LIBJPEG-TURBO_SOURCE)
 	$(CHDIR)/$(LIBJPEG-TURBO_TMP); \
-		export CC=$(TARGET_CC); \
-		$(CONFIGURE) \
-			--prefix= \
-			--enable-shared \
-			--bindir=$(remove-bindir) \
-			--datarootdir=$(remove-datarootdir) \
-			--disable-static \
-			; \
-		$(MAKE); \
-		make install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL)/libjpeg.la
-	rm -f $(TARGET_LIB_DIR)/libturbojpeg* $(TARGET_INCLUDE_DIR)/turbojpeg.h
-	$(REMOVE)/$(LIBJPEG-TURBO_TMP)
-	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
-LIBJPEG-TURBO2_VER    = 2.0.2
-LIBJPEG-TURBO2_TMP    = libjpeg-turbo-$(LIBJPEG-TURBO2_VER)
-LIBJPEG-TURBO2_SOURCE = libjpeg-turbo-$(LIBJPEG-TURBO2_VER).tar.gz
-LIBJPEG-TURBO2_URL    = https://sourceforge.net/projects/libjpeg-turbo/files/$(LIBJPEG-TURBO2_VER)
-
-$(ARCHIVE)/$(LIBJPEG-TURBO2_SOURCE):
-	$(DOWNLOAD) $(LIBJPEG-TURBO2_URL)/$(LIBJPEG-TURBO2_SOURCE)
-
-LIBJPEG-TURBO2_PATCH  = libjpeg-turbo-tiff-ojpeg.patch
-
-libjpeg-turbo2: $(ARCHIVE)/$(LIBJPEG-TURBO2_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(LIBJPEG-TURBO2_TMP)
-	$(UNTAR)/$(LIBJPEG-TURBO2_SOURCE)
-	$(CHDIR)/$(LIBJPEG-TURBO2_TMP); \
-		$(call apply_patches, $(LIBJPEG-TURBO2_PATCH)); \
+		$(call apply_patches, $(LIBJPEG-TURBO_PATCH)); \
 		$(CMAKE) \
 			-DWITH_SIMD=False \
 			-DWITH_JPEG8=80 \
@@ -352,7 +316,7 @@ libjpeg-turbo2: $(ARCHIVE)/$(LIBJPEG-TURBO2_SOURCE) | $(TARGET_DIR)
 	$(REWRITE_PKGCONF)/libturbojpeg.pc
 	$(REWRITE_PKGCONF)/libjpeg.pc
 	rm -f $(addprefix $(TARGET_BIN_DIR)/,cjpeg djpeg jpegtran rdjpgcom tjbench wrjpgcom)
-	$(REMOVE)/$(LIBJPEG-TURBO2_TMP)
+	$(REMOVE)/$(LIBJPEG-TURBO_TMP)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
