@@ -334,7 +334,7 @@ CD    = set -e; cd
 CHDIR = $(CD) $(BUILD_TMP)
 MKDIR = mkdir -p $(BUILD_TMP)
 CPDIR = cp -a -t $(BUILD_TMP) $(ARCHIVE)
-TOUCH = @touch $(@)
+TOUCH = @touch $(D)/$(@)
 
 INSTALL      = install
 INSTALL_DATA = $(INSTALL) -m 0644

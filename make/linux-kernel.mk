@@ -55,7 +55,7 @@ kernel.do_checkout: $(SOURCE_DIR)/$(NI-LINUX-KERNEL)
 	$(CD) $(SOURCE_DIR)/$(NI-LINUX-KERNEL); \
 		git checkout $(KERNEL_BRANCH)
 
-$(D)/kernel.do_prepare:
+kernel.do_prepare:
 	make kernel.do_checkout
 	#
 	$(REMOVE)/$(KERNEL_SRC)
@@ -76,7 +76,7 @@ else ifeq ($(BOXTYPE), armbox)
 endif
 	$(TOUCH)
 
-$(D)/kernel.do_compile: $(D)/kernel.do_prepare
+kernel.do_compile: kernel.do_prepare
 	$(CHDIR)/$(KERNEL_SRC); \
 		$(MAKE) $(KERNEL_MAKEVARS) silentoldconfig; \
 		$(MAKE) $(KERNEL_MAKEVARS) $(KERNEL_MAKEOPTS); \
@@ -88,20 +88,20 @@ endif
 
 # -----------------------------------------------------------------------------
 
-$(D)/kernel: $(D)/kernel-$(BOXTYPE) $(D)/kernel-modules-$(BOXTYPE)
+kernel: kernel-$(BOXTYPE) kernel-modules-$(BOXTYPE)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
-$(D)/kernel-coolstream: $(D)/kernel-coolstream-$(BOXSERIES)
+kernel-coolstream: kernel-coolstream-$(BOXSERIES)
 	$(TOUCH)
 
-$(D)/kernel-coolstream-hd1: $(D)/kernel.do_compile | $(IMAGE_DIR)
+kernel-coolstream-hd1: kernel.do_compile | $(IMAGE_DIR)
 	mkimage -A $(BOXARCH) -O linux -T kernel -C none -a 0x48000 -e 0x48000 -n "$(KERNEL_NAME)" -d $(KERNEL_UIMAGE) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-uImage.img
 	mkimage -A $(BOXARCH) -O linux -T kernel -C none -a 0x48000 -e 0x48000 -n "$(KERNEL_NAME)" -d $(KERNEL_ZIMAGE) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-zImage.img
 	$(TOUCH)
 
-$(D)/kernel-coolstream-hd2: $(D)/kernel.do_compile | $(IMAGE_DIR)
+kernel-coolstream-hd2: kernel.do_compile | $(IMAGE_DIR)
 	mkimage -A $(BOXARCH) -O linux -T kernel -C none -a 0x8000 -e 0x8000 -n "$(KERNEL_NAME)" -d $(KERNEL_ZIMAGE_DTB) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-vmlinux.ub.gz
 ifeq ($(BOXFAMILY), apollo)
   ifeq ($(BOXMODEL), apollo)
@@ -112,13 +112,13 @@ ifeq ($(BOXFAMILY), apollo)
 endif
 	$(TOUCH)
 
-$(D)/kernel-armbox: $(D)/kernel.do_compile | $(IMAGE_DIR)
+kernel-armbox: kernel.do_compile | $(IMAGE_DIR)
 	cp -a $(KERNEL_ZIMAGE_DTB) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL).bin
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
-$(D)/kernel-modules-coolstream: $(D)/kernel-modules-coolstream-$(BOXSERIES)
+kernel-modules-coolstream: kernel-modules-coolstream-$(BOXSERIES)
 	$(TOUCH)
 
 STRIP-MODULES-COOLSTREAM-HD1  =
@@ -133,7 +133,7 @@ STRIP-MODULES-COOLSTREAM-HD1 += kernel/fs/autofs4/autofs4.ko
 STRIP-MODULES-COOLSTREAM-HD1 += kernel/fs/cifs/cifs.ko
 STRIP-MODULES-COOLSTREAM-HD1 += kernel/fs/fuse/fuse.ko
 
-$(D)/kernel-modules-coolstream-hd1: $(D)/kernel-coolstream
+kernel-modules-coolstream-hd1: kernel-coolstream
 	for module in $(STRIP-MODULES-COOLSTREAM-HD1); do \
 		mkdir -p $(TARGET_MODULES_DIR)/$(dir "$$module"); \
 		$(TARGET_OBJCOPY) --strip-unneeded $(KERNEL_MODULES_DIR)/$$module $(TARGET_MODULES_DIR)/$$module; \
@@ -142,7 +142,7 @@ $(D)/kernel-modules-coolstream-hd1: $(D)/kernel-coolstream
 	make depmod
 	$(TOUCH)
 
-$(D)/kernel-modules-coolstream-hd2: $(D)/kernel-coolstream
+kernel-modules-coolstream-hd2: kernel-coolstream
 	rm -rf $(TARGET_MODULES_DIR)/kernel # nuke coolstream kernel-drivers but leave coolstream extra-drivers
 	cp -a $(KERNEL_MODULES_DIR)/kernel $(TARGET_MODULES_DIR) # copy own kernel-drivers
 	cp -a $(KERNEL_MODULES_DIR)/modules.builtin $(TARGET_MODULES_DIR)
@@ -151,7 +151,7 @@ $(D)/kernel-modules-coolstream-hd2: $(D)/kernel-coolstream
 	make rtl8192eu
 	$(TOUCH)
 
-$(D)/kernel-modules-armbox: $(D)/kernel-armbox
+kernel-modules-armbox: kernel-armbox
 	cp -a $(KERNEL_MODULES_DIR)/kernel $(TARGET_MODULES_DIR)
 	cp -a $(KERNEL_MODULES_DIR)/modules.builtin $(TARGET_MODULES_DIR)
 	cp -a $(KERNEL_MODULES_DIR)/modules.order $(TARGET_MODULES_DIR)
@@ -181,10 +181,10 @@ endif
 
 kernel-install-coolstream: kernel-install-coolstream-$(BOXSERIES)
 
-kernel-install-coolstream-hd1: $(D)/kernel-coolstream-hd1
+kernel-install-coolstream-hd1: kernel-coolstream-hd1
 	cp -af $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-zImage.img $(KERNEL_DESTDIR)/zImage
 
-kernel-install-coolstream-hd2: $(D)/kernel-coolstream-hd2
+kernel-install-coolstream-hd2: kernel-coolstream-hd2
 	cp -af $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-vmlinux.ub.gz $(KERNEL_DESTDIR)/vmlinux.ub.gz
 
 kernel-install-coolstream-all:

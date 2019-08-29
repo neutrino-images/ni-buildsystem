@@ -4,7 +4,7 @@
 # -----------------------------------------------------------------------------
 
 BOOTSTRAP  = target-dir
-BOOTSTRAP += $(D)
+BOOTSTRAP += $(DEPS_DIR)
 BOOTSTRAP += $(BUILD_TMP)
 BOOTSTRAP += $(STAGING_DIR)
 BOOTSTRAP += $(IMAGE_DIR)
@@ -67,7 +67,7 @@ $(TARGET_DIR):
 	$(call draw_line);
 	@false
 
-$(D) \
+$(DEPS_DIR) \
 $(BUILD_TMP) \
 $(STAGING_DIR) \
 $(IMAGE_DIR) \

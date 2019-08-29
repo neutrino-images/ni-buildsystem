@@ -15,9 +15,9 @@ $(ARCHIVE)/$(USBUTILS_SOURCE):
 USBUTILS_PATCH  = usbutils-avoid-dependency-on-bash.patch
 USBUTILS_PATCH += usbutils-fix-null-pointer-crash.patch
 
-USBUTILS_DEPS   = $(D)/libusb-compat
+USBUTILS_DEPS   = libusb-compat
 
-$(D)/usbutils: $(USBUTILS_DEPS) $(ARCHIVE)/$(USBUTILS_SOURCE) | $(TARGET_DIR)
+usbutils: $(USBUTILS_DEPS) $(ARCHIVE)/$(USBUTILS_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(USBUTILS_TMP)
 	$(UNTAR)/$(USBUTILS_SOURCE)
 	$(CHDIR)/$(USBUTILS_TMP); \
@@ -48,7 +48,7 @@ BINUTILS_URL    = https://ftp.gnu.org/gnu/binutils
 $(ARCHIVE)/$(BINUTILS_SOURCE):
 	$(DOWNLOAD) $(BINUTILS_URL)/$(BINUTILS_SOURCE)
 
-$(D)/binutils: $(ARCHIVE)/$(BINUTILS_SOURCE) | $(TARGET_DIR)
+binutils: $(ARCHIVE)/$(BINUTILS_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(BINUTILS_TMP)
 	$(UNTAR)/$(BINUTILS_SOURCE)
 	$(CHDIR)/$(BINUTILS_TMP); \
@@ -79,9 +79,9 @@ UTIL-LINUX_URL    = https://www.kernel.org/pub/linux/utils/util-linux/v$(UTIL-LI
 $(ARCHIVE)/$(UTIL-LINUX_SOURCE):
 	$(DOWNLOAD) $(UTIL-LINUX_URL)/$(UTIL-LINUX_SOURCE)
 
-UTUL-LINUX_DEPS   = $(D)/ncurses $(D)/zlib
+UTUL-LINUX_DEPS   = ncurses zlib
 
-$(D)/util-linux: $(UTUL-LINUX_DEPS) $(ARCHIVE)/$(UTIL-LINUX_SOURCE) | $(TARGET_DIR)
+util-linux: $(UTUL-LINUX_DEPS) $(ARCHIVE)/$(UTIL-LINUX_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(UTIL-LINUX_TMP)
 	$(UNTAR)/$(UTIL-LINUX_SOURCE)
 	$(CHDIR)/$(UTIL-LINUX_TMP); \
@@ -129,11 +129,11 @@ ASTRA-SM_TMP    = astra-sm.$(ASTRA-SM_VER)
 ASTRA-SM_SOURCE = astra-sm.$(ASTRA-SM_VER)
 ASTRA-SM_URL    = https://gitlab.com/crazycat69
 
-ASTRA-SM_DEPS   = $(D)/openssl
+ASTRA-SM_DEPS   = openssl
 
 # workaround unrecognized command line options
-$(D)/astra-sm: TARGET_ABI=""
-$(D)/astra-sm: $(ASTRA-SM_DEPS) | $(TARGET_DIR)
+astra-sm: TARGET_ABI=""
+astra-sm: $(ASTRA-SM_DEPS) | $(TARGET_DIR)
 	$(REMOVE)/$(ASTRA-SM_TMP)
 	$(GET-GIT-SOURCE) $(ASTRA-SM_URL)/$(ASTRA-SM_SOURCE) $(ARCHIVE)/$(ASTRA-SM_SOURCE)
 	$(CPDIR)/$(ASTRA-SM_SOURCE)
@@ -157,7 +157,7 @@ IOZONE_URL    = http://www.iozone.org/src/current
 $(ARCHIVE)/$(IOZONE_SOURCE):
 	$(DOWNLOAD) $(IOZONE_URL)/$(IOZONE_SOURCE)
 
-$(D)/iozone3: $(ARCHIVE)/$(IOZONE_SOURCE) | $(TARGET_DIR)
+iozone3: $(ARCHIVE)/$(IOZONE_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(IOZONE_TMP)
 	$(UNTAR)/$(IOZONE_SOURCE)
 	$(CHDIR)/$(IOZONE_TMP)/src/current; \
@@ -179,7 +179,7 @@ READLINE_URL    = https://ftp.gnu.org/gnu/readline
 $(ARCHIVE)/$(READLINE_SOURCE):
 	$(DOWNLOAD) $(READLINE_URL)/$(READLINE_SOURCE)
 
-$(D)/readline: $(ARCHIVE)/$(READLINE_SOURCE) | $(TARGET_DIR)
+readline: $(ARCHIVE)/$(READLINE_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(READLINE_TMP)
 	$(UNTAR)/$(READLINE_SOURCE)
 	$(CHDIR)/$(READLINE_TMP); \

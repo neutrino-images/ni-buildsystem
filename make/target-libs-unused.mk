@@ -13,9 +13,9 @@ $(ARCHIVE)/$(LIBID3TAG_SOURCE):
 
 LIBID3TAG_PATCH  = libid3tag-pc.patch
 
-LIBID3TAG_DEPS   = $(D)/zlib
+LIBID3TAG_DEPS   = zlib
 
-$(D)/libid3tag: $(LIBID3TAG_DEPS) $(ARCHIVE)/$(LIBID3TAG_SOURCE) | $(TARGET_DIR)
+libid3tag: $(LIBID3TAG_DEPS) $(ARCHIVE)/$(LIBID3TAG_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LIBID3TAG_TMP)
 	$(UNTAR)/$(LIBID3TAG_SOURCE)
 	$(CHDIR)/$(LIBID3TAG_TMP); \
@@ -42,7 +42,7 @@ FLAC_URL    = https://ftp.osuosl.org/pub/xiph/releases/flac
 $(ARCHIVE)/$(FLAC_SOURCE):
 	$(DOWNLOAD) $(FLAC_URL)/$(FLAC_SOURCE)
 
-$(D)/libFLAC: $(ARCHIVE)/$(FLAC_SOURCE) | $(TARGET_DIR)
+libFLAC: $(ARCHIVE)/$(FLAC_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LIBFLAC_TMP)
 	$(UNTAR)/$(LIBFLAC_SOURCE)
 	$(CHDIR)/$(LIBFLAC_TMP); \
@@ -76,7 +76,7 @@ LIBROXML_URL    = http://download.libroxml.net/pool/v2.x
 $(ARCHIVE)/$(LIBROXML_SOURCE):
 	$(DOWNLOAD) $(LIBROXML_URL)/$(LIBROXML_SOURCE)
 
-$(D)/libroxml: $(ARCHIVE)/$(LIBROXML_SOURCE) | $(TARGET_DIR)
+libroxml: $(ARCHIVE)/$(LIBROXML_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LIBROXML_TMP)
 	$(UNTAR)/$(LIBROXML_SOURCE)
 	$(CHDIR)/$(LIBROXML_TMP); \
@@ -105,7 +105,7 @@ $(ARCHIVE)/$(BZIP2_SOURCE):
 
 BZIP2_PATCH  = bzip2.patch
 
-$(D)/bzip2: $(ARCHIVE)/$(BZIP2_SOURCE) | $(TARGET_DIR)
+bzip2: $(ARCHIVE)/$(BZIP2_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(BZIP2_TMP)
 	$(UNTAR)/$(BZIP2_SOURCE)
 	$(CHDIR)/$(BZIP2_TMP); \
@@ -128,9 +128,9 @@ FONTCONFIG_URL    = https://www.freedesktop.org/software/fontconfig/release
 $(ARCHIVE)/$(FONTCONFIG_SOURCE):
 	$(DOWNLOAD) $(FONTCONFIG_URL)/$(FONTCONFIG_SOURCE)
 
-FONTCONFIG_DEPS   = $(D)/freetype $(D)/expat
+FONTCONFIG_DEPS   = freetype expat
 
-$(D)/fontconfig: $(FONTCONFIG_DEPS) $(ARCHIVE)/$(FONTCONFIG_SOURCE) | $(TARGET_DIR)
+fontconfig: $(FONTCONFIG_DEPS) $(ARCHIVE)/$(FONTCONFIG_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(FONTCONFIG_TMP)
 	$(UNTAR)/$(FONTCONFIG_SOURCE)
 	$(CHDIR)/$(FONTCONFIG_TMP); \
@@ -163,9 +163,9 @@ PIXMAN_PATCH  = pixman-0001-ARM-qemu-related-workarounds-in-cpu-features-detecti
 PIXMAN_PATCH += pixman-asm_include.patch
 PIXMAN_PATCH += pixman-0001-test-utils-Check-for-FE_INVALID-definition-before-us.patch
 
-PIXMAN_DEPS   = $(D)/zlib $(D)/libpng
+PIXMAN_DEPS   = zlib libpng
 
-$(D)/pixman: $(PIXMAN_DEPS) $(ARCHIVE)/$(PIXMAN_SOURCE) | $(TARGET_DIR)
+pixman: $(PIXMAN_DEPS) $(ARCHIVE)/$(PIXMAN_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PIXMAN_TMP)
 	$(UNTAR)/$(PIXMAN_SOURCE)
 	$(CHDIR)/$(PIXMAN_TMP); \
@@ -196,9 +196,9 @@ $(ARCHIVE)/$(CAIRO_SOURCE):
 
 CAIRO_PATCH  = cairo-get_bitmap_surface.diff
 
-CAIRO_DEPS   = $(D)/fontconfig $(D)/glib2 $(D)/libpng $(D)/pixman $(D)/zlib
+CAIRO_DEPS   = fontconfig glib2 libpng pixman zlib
 
-$(D)/cairo: $(CAIRO_DEPS) $(ARCHIVE)/$(CAIRO_SOURCE) | $(TARGET_DIR)
+cairo: $(CAIRO_DEPS) $(ARCHIVE)/$(CAIRO_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(CAIRO_TMP)
 	$(UNTAR)/$(CAIRO_SOURCE)
 	$(CHDIR)/$(CAIRO_TMP); \
@@ -251,9 +251,9 @@ $(ARCHIVE)/$(HARFBUZZ_SOURCE):
 
 HARFBUZZ_PATCH  = harfbuzz-disable-docs.patch
 
-HARFBUZZ_DEPS   = $(D)/fontconfig $(D)/glib2 $(D)/cairo $(D)/freetype
+HARFBUZZ_DEPS   = fontconfig glib2 cairo freetype
 
-$(D)/harfbuzz: $(HARFBUZZ_DEPS) $(ARCHIVE)/$(HARFBUZZ_SOURCE) | $(TARGET_DIR)
+harfbuzz: $(HARFBUZZ_DEPS) $(ARCHIVE)/$(HARFBUZZ_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(HARFBUZZ_TMP)
 	$(UNTAR)/$(HARFBUZZ_SOURCE)
 	$(CHDIR)/$(HARFBUZZ_TMP); \

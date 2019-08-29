@@ -49,7 +49,7 @@ clean: rebuild-clean bootstrap
 clean-all: update-all staging-clean clean
 
 %-clean:
-	-find $(D) -name $(subst -clean,,$(@)) -delete
+	-find $(DEPS_DIR) -name $(subst -clean,,$(@)) -delete
 
 # -----------------------------------------------------------------------------
 

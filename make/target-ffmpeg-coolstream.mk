@@ -3,15 +3,15 @@
 #
 # -----------------------------------------------------------------------------
 
-FFMPEG_DEPS = $(D)/openssl $(D)/rtmpdump $(D)/libbluray $(D)/libass
+FFMPEG_DEPS = openssl rtmpdump libbluray libass
 
 # -----------------------------------------------------------------------------
 
 ifeq ($(NI-FFMPEG_BRANCH), ni/ffmpeg/2.8)
-  FFMPEG_DEPS += $(D)/libroxml
+  FFMPEG_DEPS += libroxml
   FFMPEG_CONFIGURE_BRANCH =
 else
-  FFMPEG_DEPS +=  $(D)/libxml2
+  FFMPEG_DEPS +=  libxml2
   FFMPEG_CONFIGURE_BRANCH =	\
 			--enable-demuxer=dash \
 			--enable-libxml2
@@ -170,7 +170,7 @@ endif
 
 # -----------------------------------------------------------------------------
 
-$(D)/ffmpeg: $(FFMPEG_DEPS) | $(TARGET_DIR)
+ffmpeg: $(FFMPEG_DEPS) | $(TARGET_DIR)
 	$(REMOVE)/$(NI-FFMPEG)
 	$(CD) $(SOURCE_DIR)/$(NI-FFMPEG); \
 		git checkout $(NI-FFMPEG_BRANCH)

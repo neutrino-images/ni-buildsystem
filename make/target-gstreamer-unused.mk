@@ -4,13 +4,13 @@
 # -----------------------------------------------------------------------------
 
 gstreamer-all: \
-	$(D)/gstreamer \
-	$(D)/gst-plugins-base \
-	$(D)/gst-plugins-good \
-	$(D)/gst-plugins-bad \
-	$(D)/gst-plugins-ugly \
-	$(D)/gst-plugin-subsink \
-	$(D)/gst-plugin-dvbmediasink
+	gstreamer \
+	gst-plugins-base \
+	gst-plugins-good \
+	gst-plugins-bad \
+	gst-plugins-ugly \
+	gst-plugin-subsink \
+	gst-plugin-dvbmediasink
 
 # -----------------------------------------------------------------------------
 
@@ -35,7 +35,7 @@ $(ARCHIVE)/$(GSTREAMER_SOURCE):
 
 GSTREAMER_PATCH  = gstreamer-$(GSTREAMER_VER)-revert-use-new-gst-adapter-get-buffer.patch
 
-$(D)/gstreamer: $(D)/glib2 $(D)/libxml2 $(D)/glib-networking $(ARCHIVE)/$(GSTREAMER_SOURCE)
+gstreamer: glib2 libxml2 glib-networking $(ARCHIVE)/$(GSTREAMER_SOURCE)
 	$(REMOVE)/gstreamer-$(GSTREAMER_VER)
 	$(UNTAR)/$(GSTREAMER_SOURCE)
 	$(CHDIR)/gstreamer-$(GSTREAMER_VER); \
@@ -90,7 +90,7 @@ GST_PLUGINS_BASE_PATCH += gst-plugins-base-$(GST_PLUGINS_BASE_VER)-0004-subparse
 GST_PLUGINS_BASE_PATCH += gst-plugins-base-$(GST_PLUGINS_BASE_VER)-make-gio_unix_2_0-dependency-configurable.patch
 GST_PLUGINS_BASE_PATCH += gst-plugins-base-$(GST_PLUGINS_BASE_VER)-0003-riff-media-added-fourcc-to-all-ffmpeg-mpeg4-video-caps.patch
 
-$(D)/gst-plugins-base: $(ARCHIVE)/$(GST_PLUGINS_BASE_SOURCE) $(D)/gstreamer $(D)/zlib $(D)/glib2 $(D)/orc $(D)/alsa-lib $(D)/libogg $(D)/libvorbisidec | $(TARGET_DIR)
+gst-plugins-base: $(ARCHIVE)/$(GST_PLUGINS_BASE_SOURCE) gstreamer zlib glib2 orc alsa-lib libogg libvorbisidec | $(TARGET_DIR)
 	$(REMOVE)/gst-plugins-base-$(GST_PLUGINS_BASE_VER)
 	$(UNTAR)/$(GST_PLUGINS_BASE_SOURCE)
 	$(CHDIR)/gst-plugins-base-$(GST_PLUGINS_BASE_VER); \
@@ -146,7 +146,7 @@ $(ARCHIVE)/$(GST_PLUGINS_GOOD_SOURCE):
 
 GST_PLUGINS_GOOD_PATCH  = gst-plugins-good-$(GST_PLUGINS_GOOD_VER)-0001-gstrtpmp4gpay-set-dafault-value-for-MPEG4-without-co.patch
 
-$(D)/gst-plugins-good: $(ARCHIVE)/$(GST_PLUGINS_GOOD_SOURCE) $(D)/gst-plugins-base $(D)/libpng $(D)/libjpeg $(D)/libsoup $(D)/libFLAC | $(TARGET_DIR)
+gst-plugins-good: $(ARCHIVE)/$(GST_PLUGINS_GOOD_SOURCE) gst-plugins-base libpng libjpeg libsoup libFLAC | $(TARGET_DIR)
 	$(REMOVE)/gst-plugins-good-$(GST_PLUGINS_GOOD_VER)
 	$(UNTAR)/$(GST_PLUGINS_GOOD_SOURCE)
 	$(CHDIR)/gst-plugins-good-$(GST_PLUGINS_GOOD_VER); \
@@ -186,7 +186,7 @@ GST_PLUGINS_BAD_PATCH += gst-plugins-bad-$(GST_PLUGINS_BAD_VER)-0004-rtmp-hls-ts
 GST_PLUGINS_BAD_PATCH += gst-plugins-bad-$(GST_PLUGINS_BAD_VER)-dvbapi5-fix-old-kernel.patch
 GST_PLUGINS_BAD_PATCH += gst-plugins-bad-$(GST_PLUGINS_BAD_VER)-hls-main-thread-block.patch
 
-$(D)/gst-plugins-bad: $(ARCHIVE)/$(GST_PLUGINS_BAD_SOURCE) $(D)/gst-plugins-base $(D)/libass $(D)/libcurl $(D)/libxml2 $(D)/openssl $(D)/rtmpdump | $(TARGET_DIR)
+gst-plugins-bad: $(ARCHIVE)/$(GST_PLUGINS_BAD_SOURCE) gst-plugins-base libass libcurl libxml2 openssl rtmpdump | $(TARGET_DIR)
 	$(REMOVE)/gst-plugins-bad-$(GST_PLUGINS_BAD_VER)
 	$(UNTAR)/$(GST_PLUGINS_BAD_SOURCE)
 	$(CHDIR)/gst-plugins-bad-$(GST_PLUGINS_BAD_VER); \
@@ -239,7 +239,7 @@ GST_PLUGINS_UGLY_SOURCE = gst-plugins-ugly-$(GST_PLUGINS_UGLY_VER).tar.xz
 $(ARCHIVE)/$(GST_PLUGINS_UGLY_SOURCE):
 	$(DOWNLOAD) https://gstreamer.freedesktop.org/src/gst-plugins-ugly/$(GST_PLUGINS_UGLY_SOURCE)
 
-$(D)/gst-plugins-ugly: $(ARCHIVE)/$(GST_PLUGINS_UGLY_SOURCE) $(D)/gst-plugins-base | $(TARGET_DIR)
+gst-plugins-ugly: $(ARCHIVE)/$(GST_PLUGINS_UGLY_SOURCE) gst-plugins-base | $(TARGET_DIR)
 	$(REMOVE)/gst-plugins-ugly-$(GST_PLUGINS_UGLY_VER)
 	$(UNTAR)/$(GST_PLUGINS_UGLY_SOURCE)
 	$(CHDIR)/gst-plugins-ugly-$(GST_PLUGINS_UGLY_VER); \
@@ -265,7 +265,7 @@ $(D)/gst-plugins-ugly: $(ARCHIVE)/$(GST_PLUGINS_UGLY_SOURCE) $(D)/gst-plugins-ba
 
 GST_PLUGIN_SUBSINK_VER = 1.0
 
-$(D)/gst-plugin-subsink: $(D)/gst-plugins-base | $(TARGET_DIR)
+gst-plugin-subsink: gst-plugins-base | $(TARGET_DIR)
 	$(REMOVE)/gstreamer$(GST_PLUGIN_SUBSINK_VER)-plugin-subsink.git
 	$(GET-GIT-SOURCE) git://github.com/christophecvr/gstreamer$(GST_PLUGIN_SUBSINK_VER)-plugin-subsink.git $(ARCHIVE)/gstreamer$(GST_PLUGIN_SUBSINK_VER)-plugin-subsink.git
 	$(CPDIR)/gstreamer$(GST_PLUGIN_SUBSINK_VER)-plugin-subsink.git
@@ -291,7 +291,7 @@ $(D)/gst-plugin-subsink: $(D)/gst-plugins-base | $(TARGET_DIR)
 
 GST_PLUGINS_DVBMEDIASINK_VER = 1.0
 
-$(D)/gst-plugin-dvbmediasink: $(D)/gst-plugins-base $(D)/libdca | $(TARGET_DIR)
+gst-plugin-dvbmediasink: gst-plugins-base libdca | $(TARGET_DIR)
 	$(REMOVE)/gstreamer$(GST_PLUGINS_DVBMEDIASINK_VER)-plugin-dvbmediasink.git
 	$(GET-GIT-SOURCE) https://github.com/OpenPLi/gst-plugin-dvbmediasink.git $(ARCHIVE)/gstreamer$(GST_PLUGINS_DVBMEDIASINK_VER)-plugin-dvbmediasink.git
 	$(CPDIR)/gstreamer$(GST_PLUGINS_DVBMEDIASINK_VER)-plugin-dvbmediasink.git
@@ -338,7 +338,7 @@ GST_LIBAV_PATCH += gst-libav-$(GST_LIBAV_VER)-workaround-to-build-gst-libav-for-
 GST_LIBAV_PATCH += gst-libav-$(GST_LIBAV_VER)-mips64_cpu_detection.patch
 GST_LIBAV_PATCH += gst-libav-$(GST_LIBAV_VER)-0001-configure-check-for-armv7ve-variant.patch
 
-$(D)/gst_libav: $(ARCHIVE)/$(GST_LIBAV_SOURCE) $(D)/gstreamer $(D)/gst-plugins-base | $(TARGET_DIR)
+gst_libav: $(ARCHIVE)/$(GST_LIBAV_SOURCE) gstreamer gst-plugins-base | $(TARGET_DIR)
 	$(REMOVE)/gst-libav-$(GST_LIBAV_VER)
 	$(UNTAR)/$(GST_LIBAV_SOURCE)
 	$(CHDIR)/gst-libav-$(GST_LIBAV_VER); \
@@ -388,7 +388,7 @@ $(D)/gst_libav: $(ARCHIVE)/$(GST_LIBAV_SOURCE) $(D)/gstreamer $(D)/gst-plugins-b
 
 # -----------------------------------------------------------------------------
 
-$(D)/gmrender-resurrect: $(D)/gst-plugins-base $(D)/libupnp | $(TARGET_DIR)
+gmrender-resurrect: gst-plugins-base libupnp | $(TARGET_DIR)
 	$(REMOVE)/gmrender-resurrect.git
 	$(GET-GIT-SOURCE) https://github.com/hzeller/gmrender-resurrect.git $(ARCHIVE)/gmrender-resurrect.git
 	$(CPDIR)/gmrender-resurrect.git
@@ -409,7 +409,7 @@ ORC_SOURCE = orc-$(ORC_VER).tar.xz
 $(ARCHIVE)/$(ORC_SOURCE):
 	$(DOWNLOAD) https://gstreamer.freedesktop.org/src/orc/$(ORC_SOURCE)
 
-$(D)/orc: $(ARCHIVE)/$(ORC_SOURCE)
+orc: $(ARCHIVE)/$(ORC_SOURCE)
 	$(REMOVE)/orc-$(ORC_VER)
 	$(UNTAR)/$(ORC_SOURCE)
 	$(CHDIR)/orc-$(ORC_VER); \
@@ -434,7 +434,7 @@ LIBDCA_SOURCE = libdca-$(LIBDCA_VER).tar.bz2
 $(ARCHIVE)/$(LIBDCA_SOURCE):
 	$(DOWNLOAD) http://download.videolan.org/pub/videolan/libdca/$(LIBDCA_VER)/$(LIBDCA_SOURCE)
 
-$(D)/libdca: $(ARCHIVE)/$(LIBDCA_SOURCE)
+libdca: $(ARCHIVE)/$(LIBDCA_SOURCE)
 	$(REMOVE)/libdca-$(LIBDCA_VER)
 	$(UNTAR)/$(LIBDCA_SOURCE)
 	$(CHDIR)/libdca-$(LIBDCA_VER); \
@@ -459,7 +459,7 @@ NETTLE_SOURCE = nettle-$(NETTLE_VER).tar.gz
 $(ARCHIVE)/$(NETTLE_SOURCE):
 	$(DOWNLOAD) https://ftp.gnu.org/gnu/nettle/$(NETTLE_SOURCE)
 
-$(D)/nettle: $(D)/gmp $(ARCHIVE)/$(NETTLE_SOURCE)
+nettle: gmp $(ARCHIVE)/$(NETTLE_SOURCE)
 	$(REMOVE)/nettle-$(NETTLE_VER)
 	$(UNTAR)/$(NETTLE_SOURCE)
 	$(CHDIR)/nettle-$(NETTLE_VER); \
@@ -483,7 +483,7 @@ GMP_SOURCE = gmp-$(GMP_VER).tar.xz
 $(ARCHIVE)/$(GMP_SOURCE):
 	$(DOWNLOAD) ftp://ftp.gmplib.org/pub/gmp-$(GMP_VER)/$(GMP_SOURCE)
 
-$(D)/gmp: $(ARCHIVE)/$(GMP_SOURCE)
+gmp: $(ARCHIVE)/$(GMP_SOURCE)
 	$(REMOVE)/gmp-$(GMP_VER)
 	$(UNTAR)/$(GMP_SOURCE)
 	$(CHDIR)/gmp-$(GMP_VER); \
@@ -507,7 +507,7 @@ GNUTLS_SOURCE = gnutls-$(GNUTLS_VER).tar.xz
 $(ARCHIVE)/$(GNUTLS_SOURCE):
 	$(DOWNLOAD) ftp://ftp.gnutls.org/gcrypt/gnutls/v$(GNUTLS_VER_MAJOR)/$(GNUTLS_SOURCE)
 
-$(D)/gnutls: $(D)/nettle $(D)/ca-bundle $(ARCHIVE)/$(GNUTLS_SOURCE)
+gnutls: nettle ca-bundle $(ARCHIVE)/$(GNUTLS_SOURCE)
 	$(REMOVE)/gnutls-$(GNUTLS_VER)
 	$(UNTAR)/$(GNUTLS_SOURCE)
 	$(CHDIR)/gnutls-$(GNUTLS_VER); \
@@ -542,7 +542,7 @@ GLIB-NETWORKING_SOURCE = glib-networking-$(GLIB-NETWORKING_VER).tar.xz
 $(ARCHIVE)/$(GLIB-NETWORKING_SOURCE):
 	$(DOWNLOAD) https://ftp.acc.umu.se/pub/GNOME/sources/glib-networking/$(GLIB-NETWORKING_VER_MAJOR)/$(GLIB-NETWORKING_SOURCE)
 
-$(D)/glib-networking: $(D)/gnutls $(D)/glib2 $(ARCHIVE)/$(GLIB-NETWORKING_SOURCE)
+glib-networking: gnutls glib2 $(ARCHIVE)/$(GLIB-NETWORKING_SOURCE)
 	$(REMOVE)/glib-networking-$(GLIB-NETWORKING_VER)
 	$(UNTAR)/$(GLIB-NETWORKING_SOURCE)
 	$(CHDIR)/glib-networking-$(GLIB-NETWORKING_VER); \
@@ -565,7 +565,7 @@ LIBSOUP_SOURCE = libsoup-$(LIBSOUP_VER).tar.xz
 $(ARCHIVE)/$(LIBSOUP_SOURCE):
 	$(DOWNLOAD) https://download.gnome.org/sources/libsoup/$(LIBSOUP_VER_MAJOR)/$(LIBSOUP_SOURCE)
 
-$(D)/libsoup: $(D)/sqlite $(D)/libxml2 $(D)/glib2 $(ARCHIVE)/$(LIBSOUP_SOURCE)
+libsoup: sqlite libxml2 glib2 $(ARCHIVE)/$(LIBSOUP_SOURCE)
 	$(REMOVE)/libsoup-$(LIBSOUP_VER)
 	$(UNTAR)/$(LIBSOUP_SOURCE)
 	$(CHDIR)/libsoup-$(LIBSOUP_VER); \
@@ -593,7 +593,7 @@ SQLITE_SOURCE = sqlite-autoconf-$(SQLITE_VER).tar.gz
 $(ARCHIVE)/$(SQLITE_SOURCE):
 	$(DOWNLOAD) http://www.sqlite.org/2019/$(SQLITE_SOURCE)
 
-$(D)/sqlite: $(ARCHIVE)/$(SQLITE_SOURCE)
+sqlite: $(ARCHIVE)/$(SQLITE_SOURCE)
 	$(REMOVE)/sqlite-autoconf-$(SQLITE_VER)
 	$(UNTAR)/$(SQLITE_SOURCE)
 	$(CHDIR)/sqlite-autoconf-$(SQLITE_VER); \

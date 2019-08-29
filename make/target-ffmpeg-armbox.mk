@@ -24,7 +24,7 @@ FFMPEG_UNPATCHED := no
 
 # -----------------------------------------------------------------------------
 
-FFMPEG_DEPS = $(D)/openssl $(D)/freetype $(D)/rtmpdump $(D)/libbluray $(D)/libass $(D)/libxml2 $(D)/alsa-lib
+FFMPEG_DEPS = openssl freetype rtmpdump libbluray libass libxml2 alsa-lib
 
 # -----------------------------------------------------------------------------
 
@@ -344,7 +344,7 @@ FFMPEG_CONFIGURE_PLATFORM = \
 
 # -----------------------------------------------------------------------------
 
-$(D)/ffmpeg: $(FFMPEG_DEPS) $(ARCHIVE)/$(FFMPEG_SOURCE) | $(TARGET_DIR)
+ffmpeg: $(FFMPEG_DEPS) $(ARCHIVE)/$(FFMPEG_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(FFMPEG_TMP)
 	$(UNTAR)/$(FFMPEG_SOURCE)
 ifneq ($(FFMPEG_UNPATCHED), yes)

@@ -9,34 +9,34 @@ N_OBJ_DIR = $(BUILD_TMP)/$(NI-NEUTRINO)
 # -----------------------------------------------------------------------------
 
 N_DEPS  =
-N_DEPS += $(D)/ffmpeg
-N_DEPS += $(D)/freetype
-N_DEPS += $(D)/giflib
-N_DEPS += $(D)/libcurl
-N_DEPS += $(D)/libdvbsi
-N_DEPS += $(D)/fribidi
-N_DEPS += $(D)/libjpeg
-N_DEPS += $(D)/libsigc++
-N_DEPS += $(D)/lua
-N_DEPS += $(D)/ntp
-N_DEPS += $(D)/openssl
-N_DEPS += $(D)/openthreads
-N_DEPS += $(D)/pugixml
-N_DEPS += $(D)/zlib
+N_DEPS += ffmpeg
+N_DEPS += freetype
+N_DEPS += giflib
+N_DEPS += libcurl
+N_DEPS += libdvbsi
+N_DEPS += fribidi
+N_DEPS += libjpeg
+N_DEPS += libsigc++
+N_DEPS += lua
+N_DEPS += ntp
+N_DEPS += openssl
+N_DEPS += openthreads
+N_DEPS += pugixml
+N_DEPS += zlib
 
 ifeq ($(BOXTYPE)-$(HAS_LIBCS), coolstream-yes)
-  N_DEPS += $(D)/libcoolstream
+  N_DEPS += libcoolstream
 endif
 
 ifneq ($(BOXTYPE), coolstream)
-  N_DEPS += $(D)/libstb-hal
+  N_DEPS += libstb-hal
 endif
 
 # uncomment next lines to build neutrino without --enable-ffmpegdec
-#N_DEPS += $(D)/libFLAC
-#N_DEPS += $(D)/libid3tag
-#N_DEPS += $(D)/libmad
-#N_DEPS += $(D)/libvorbisidec
+#N_DEPS += libFLAC
+#N_DEPS += libid3tag
+#N_DEPS += libmad
+#N_DEPS += libvorbisidec
 
 # -----------------------------------------------------------------------------
 
@@ -164,7 +164,7 @@ $(N_OBJ_DIR)/config.status: $(N_DEPS)
 
 # -----------------------------------------------------------------------------
 
-$(D)/neutrino: $(N_OBJ_DIR)/config.status
+neutrino: $(N_OBJ_DIR)/config.status
 	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
 	$(MAKE) -C $(N_OBJ_DIR) all     DESTDIR=$(TARGET_DIR)
 	$(MAKE) -C $(N_OBJ_DIR) install DESTDIR=$(N_INST_DIR)
@@ -183,13 +183,13 @@ LH_OBJ_DIR = $(BUILD_TMP)/$(NI-LIBSTB-HAL)
 # -----------------------------------------------------------------------------
 
 LH_DEPS  =
-LH_DEPS += $(D)/ffmpeg
-LH_DEPS += $(D)/openthreads
+LH_DEPS += ffmpeg
+LH_DEPS += openthreads
 
 USE_GSTREAMER = no
 ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 bre2ze4k))
   ifeq ($(USE_GSTREAMER), yes)
-    LH_DEPS += $(D)/gstreamer-all
+    LH_DEPS += gstreamer-all
   endif
 endif
 
@@ -226,7 +226,7 @@ $(LH_OBJ_DIR)/config.status: $(LH_DEPS)
 
 # -----------------------------------------------------------------------------
 
-$(D)/libstb-hal: $(LH_OBJ_DIR)/config.status
+libstb-hal: $(LH_OBJ_DIR)/config.status
 	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
 	$(MAKE) -C $(LH_OBJ_DIR) all     DESTDIR=$(TARGET_DIR)
 	$(MAKE) -C $(LH_OBJ_DIR) install DESTDIR=$(N_INST_DIR)

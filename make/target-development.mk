@@ -5,7 +5,7 @@
 
 VALGRIND_TARGET = $(if $(filter $(BOXSERIES), hd1), valgrind12305, valgrind3)
 
-$(D)/valgrind: $(VALGRIND_TARGET)
+valgrind: $(VALGRIND_TARGET)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -20,7 +20,7 @@ $(ARCHIVE)/$(VALGRIND_SOURCE):
 
 VALGRIND_PATCH  = valgrind-fix-build-$(BOXSERIES).patch
 
-$(D)/valgrind3: $(ARCHIVE)/$(VALGRIND_SOURCE) | $(TARGET_DIR)
+valgrind3: $(ARCHIVE)/$(VALGRIND_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(VALGRIND_TMP)
 	$(UNTAR)/$(VALGRIND_SOURCE)
 	$(CHDIR)/$(VALGRIND_TMP); \
@@ -46,7 +46,7 @@ $(D)/valgrind3: $(ARCHIVE)/$(VALGRIND_SOURCE) | $(TARGET_DIR)
 VALGRIND12305_PATCH  = valgrind12305-nevis-patch.diff
 VALGRIND12305_PATCH += valgrind12305-automake-1.11.2.patch
 
-$(D)/valgrind12305: | $(TARGET_DIR)
+valgrind12305: | $(TARGET_DIR)
 	$(REMOVE)/valgrind
 	svn co -r 12305 svn://svn.valgrind.org/valgrind/trunk $(BUILD_TMP)/valgrind; \
 	$(CHDIR)/valgrind; \
@@ -75,7 +75,7 @@ STRACE_URL    = https://strace.io/files/$(STRACE_VER)
 $(ARCHIVE)/$(STRACE_SOURCE):
 	$(DOWNLOAD) $(STRACE_URL)/$(STRACE_SOURCE)
 
-$(D)/strace: $(ARCHIVE)/$(STRACE_SOURCE) | $(TARGET_DIR)
+strace: $(ARCHIVE)/$(STRACE_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(STRACE_TMP)
 	$(UNTAR)/$(STRACE_SOURCE)
 	$(CHDIR)/$(STRACE_TMP); \
@@ -100,9 +100,9 @@ GDB_URL    = https://sourceware.org/pub/gdb/releases
 $(ARCHIVE)/$(GDB_SOURCE):
 	$(DOWNLOAD) $(GDB_URL)/$(GDB_SOURCE)
 
-GDB_DEPS   = $(D)/zlib $(D)/ncurses
+GDB_DEPS   = zlib ncurses
 
-$(D)/gdb: $(GDB_DEPS) $(ARCHIVE)/$(GDB_SOURCE) | $(TARGET_DIR)
+gdb: $(GDB_DEPS) $(ARCHIVE)/$(GDB_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(GDB_TMP)
 	$(UNTAR)/$(GDB_SOURCE)
 	$(CHDIR)/$(GDB_TMP); \

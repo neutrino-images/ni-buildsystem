@@ -4,10 +4,10 @@
 # -----------------------------------------------------------------------------
 
 plugins: \
-	$(D)/neutrino-plugins \
-	$(D)/logo-addon \
-	$(D)/neutrino-mediathek \
-	$(D)/doscam-webif-skin
+	neutrino-plugins \
+	logo-addon \
+	neutrino-mediathek \
+	doscam-webif-skin
 	make plugins-$(BOXSERIES)
 
 plugins-hd1:
@@ -16,7 +16,7 @@ plugins-hd1:
 plugins-hd2 \
 plugins-hd51 \
 plugins-bre2ze4k: \
-	$(D)/channellogos
+	channellogos
 ifneq ($(BOXMODEL), kronos_v2)
 	make links
 endif
@@ -25,17 +25,17 @@ endif
 
 NP_OBJ_DIR = $(BUILD_TMP)/$(NI-NEUTRINO-PLUGINS)
 
-NP_DEPS  = $(D)/ffmpeg
-NP_DEPS += $(D)/libcurl
-NP_DEPS += $(D)/libpng
-NP_DEPS += $(D)/libjpeg
-NP_DEPS += $(D)/giflib
-NP_DEPS += $(D)/freetype
-NP_DEPS += $(D)/luaexpat
-NP_DEPS += $(D)/luajson
-NP_DEPS += $(D)/luacurl
-NP_DEPS += $(D)/luaposix
-NP_DEPS += $(D)/lua-feedparser
+NP_DEPS  = ffmpeg
+NP_DEPS += libcurl
+NP_DEPS += libpng
+NP_DEPS += libjpeg
+NP_DEPS += giflib
+NP_DEPS += freetype
+NP_DEPS += luaexpat
+NP_DEPS += luajson
+NP_DEPS += luacurl
+NP_DEPS += luaposix
+NP_DEPS += lua-feedparser
 
 NP_CONFIGURE_ADDITIONS = \
 		--disable-logoupdater \
@@ -74,7 +74,7 @@ $(NP_OBJ_DIR)/config.status: $(NP_DEPS)
 
 # -----------------------------------------------------------------------------
 
-$(D)/neutrino-plugins: $(D)/neutrino $(NP_OBJ_DIR)/config.status
+neutrino-plugins: neutrino $(NP_OBJ_DIR)/config.status
 	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
 	$(MAKE) -C $(NP_OBJ_DIR) all     DESTDIR=$(TARGET_DIR)
 	$(MAKE) -C $(NP_OBJ_DIR) install DESTDIR=$(TARGET_DIR)
@@ -106,7 +106,7 @@ neutrino-plugin-%: $(NP_OBJ_DIR)/config.status
 
 # -----------------------------------------------------------------------------
 
-$(D)/channellogos: $(SOURCE_DIR)/$(NI-LOGO-STUFF) $(SHAREICONS)
+channellogos: $(SOURCE_DIR)/$(NI-LOGO-STUFF) $(SHAREICONS)
 	rm -rf $(SHAREICONS)/logo
 	mkdir -p $(SHAREICONS)/logo
 	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI-LOGO-STUFF)/logos/* $(SHAREICONS)/logo
@@ -118,7 +118,7 @@ $(D)/channellogos: $(SOURCE_DIR)/$(NI-LOGO-STUFF) $(SHAREICONS)
 
 # -----------------------------------------------------------------------------
 
-$(D)/logo-addon: $(SOURCE_DIR)/$(NI-LOGO-STUFF) $(SHAREPLUGINS)
+logo-addon: $(SOURCE_DIR)/$(NI-LOGO-STUFF) $(SHAREPLUGINS)
 	$(INSTALL_EXEC) $(SOURCE_DIR)/$(NI-LOGO-STUFF)/logo-addon/*.sh $(SHAREPLUGINS)/
 	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI-LOGO-STUFF)/logo-addon/*.cfg $(SHAREPLUGINS)/
 	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI-LOGO-STUFF)/logo-addon/*.png $(SHAREPLUGINS)/
@@ -126,7 +126,7 @@ $(D)/logo-addon: $(SOURCE_DIR)/$(NI-LOGO-STUFF) $(SHAREPLUGINS)
 
 # -----------------------------------------------------------------------------
 
-$(D)/doscam-webif-skin:
+doscam-webif-skin:
 	$(INSTALL_DATA) -D $(IMAGEFILES)/doscam-webif-skin/doscam_ni-dark.css $(TARGET_SHARE_DIR)/doscam/skin/doscam_ni-dark.css
 	$(INSTALL_DATA) -D $(IMAGEFILES)/doscam-webif-skin/IC_doscam_ni.tpl $(TARGET_SHARE_DIR)/doscam/tpl/IC_doscam_ni.tpl
 	$(TOUCH)
@@ -138,7 +138,7 @@ NEUTRINO-MEDIATHEK_TMP    = mediathek.$(NEUTRINO-MEDIATHEK_VER)
 NEUTRINO-MEDIATHEK_SOURCE = mediathek.$(NEUTRINO-MEDIATHEK_VER)
 NEUTRINO-MEDIATHEK_URL    = https://github.com/neutrino-mediathek
 
-$(D)/neutrino-mediathek: $(SHAREPLUGINS) | $(TARGET_DIR)
+neutrino-mediathek: $(SHAREPLUGINS) | $(TARGET_DIR)
 	$(REMOVE)/$(NEUTRINO-MEDIATHEK_TMP)
 	$(GET-GIT-SOURCE) $(NEUTRINO-MEDIATHEK_URL)/$(NEUTRINO-MEDIATHEK_SOURCE) $(ARCHIVE)/$(NEUTRINO-MEDIATHEK_SOURCE)
 	$(CPDIR)/$(NEUTRINO-MEDIATHEK_SOURCE)
@@ -163,7 +163,7 @@ LINKS_PATCH += links-ac-prog-cxx.patch
 LINKS_PATCH += links-input-$(BOXTYPE).patch
 LINKS_PATCH += links-accept_https_play.patch
 
-$(D)/links: $(D)/libpng $(D)/libjpeg $(D)/openssl $(ARCHIVE)/$(LINKS_SOURCE) $(SHAREPLUGINS) | $(TARGET_DIR)
+links: libpng libjpeg openssl $(ARCHIVE)/$(LINKS_SOURCE) $(SHAREPLUGINS) | $(TARGET_DIR)
 	$(REMOVE)/$(LINKS_TMP)
 	$(UNTAR)/$(LINKS_SOURCE)
 	$(CHDIR)/$(LINKS_TMP)/intl; \
