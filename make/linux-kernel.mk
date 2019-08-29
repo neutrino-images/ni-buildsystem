@@ -56,7 +56,7 @@ kernel.do_checkout: $(SOURCE_DIR)/$(NI-LINUX-KERNEL)
 		git checkout $(KERNEL_BRANCH)
 
 kernel.do_prepare:
-	make kernel.do_checkout
+	$(MAKE) kernel.do_checkout
 	#
 	$(REMOVE)/$(KERNEL_SRC)
 	$(REMOVE)/$(KERNEL_OBJ)
@@ -135,7 +135,7 @@ STRIP-MODULES-COOLSTREAM-HD1 += kernel/fs/fuse/fuse.ko
 
 kernel-modules-coolstream-hd1: kernel-coolstream
 	for module in $(STRIP-MODULES-COOLSTREAM-HD1); do \
-		mkdir -p $(TARGET_MODULES_DIR)/$(dir "$$module"); \
+		mkdir -p $(TARGET_MODULES_DIR)/$$(dirname $$module); \
 		$(TARGET_OBJCOPY) --strip-unneeded $(KERNEL_MODULES_DIR)/$$module $(TARGET_MODULES_DIR)/$$module; \
 	done;
 	rm -f $(TARGET_MODULES_DIR)/usb-storage.ko # already builtin
