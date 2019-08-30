@@ -71,7 +71,7 @@ CROSSTOOL-NG_PATCH  = crosstool-ng-bash-version.patch
 # crosstool for hd2 depends on gcc-linaro
 GCC-LINARO_VER    = 4.9-2017.01
 GCC-LINARO_SOURCE = gcc-linaro-$(GCC-LINARO_VER).tar.xz
-GCC-LINARO_URL    = https://releases.linaro.org/components/toolchain/gcc-linaro
+GCC-LINARO_URL    = https://releases.linaro.org/components/toolchain/gcc-linaro/$(GCC-LINARO_VER)
 
 $(ARCHIVE)/$(GCC-LINARO_SOURCE):
 	$(DOWNLOAD) $(GCC-LINARO_URL)/$(GCC-LINARO_SOURCE)
