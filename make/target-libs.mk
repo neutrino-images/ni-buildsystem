@@ -300,7 +300,7 @@ LIBJPEG-TURBO_URL    = https://sourceforge.net/projects/libjpeg-turbo/files/$(LI
 $(ARCHIVE)/$(LIBJPEG-TURBO_SOURCE):
 	$(DOWNLOAD) $(LIBJPEG-TURBO_URL)/$(LIBJPEG-TURBO_SOURCE)
 
-LIBJPEG-TURBO_PATCH  = libjpeg-tiff-ojpeg.patch
+LIBJPEG-TURBO_PATCH  = libjpeg-turbo-tiff-ojpeg.patch
 
 libjpeg: $(ARCHIVE)/$(LIBJPEG-TURBO_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LIBJPEG-TURBO_TMP)
