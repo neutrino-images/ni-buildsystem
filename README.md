@@ -15,7 +15,7 @@ liblzo2-dev uuid-dev libssl-dev libcurl4-openssl-dev intltool
 
 ## 1) Buildsystem initialisieren
 ```bash
-git clone git@bitbucket.org:neutrino-images/ni-buildsystem.git
+ git clone https://github.com/neutrino-images/ni-buildsystem.git
 cd ni-buildsystem
 ```
 
