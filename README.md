@@ -1,8 +1,5 @@
 # NI \o/ - Neutrino-Images Buildsystem #
 
-> Voraussetzung für die Nutzung des Buildsystems ist ein Bitbucket Account.
-> Der Bitbucket Account muss einen SSH-Key hinterlegt haben.
-
 ## Für die Einrichtung unter Debian sind folgende Pakete nötig
 ```bash
 apt-get install \
@@ -15,7 +12,7 @@ liblzo2-dev uuid-dev libssl-dev libcurl4-openssl-dev intltool
 
 ## 1) Buildsystem initialisieren
 ```bash
- git clone https://github.com/neutrino-images/ni-buildsystem.git
+git clone https://github.com/neutrino-images/ni-buildsystem.git
 cd ni-buildsystem
 ```
 
