@@ -88,6 +88,27 @@ endif
 	$(CD) $(SOURCE_DIR)/$(NI-RTMPDUMP); git push
 	$(CD) $(SOURCE_DIR)/$(NI-STREAMRIPPER); git push
 
+status:
+	git status -s -b
+ifeq ($(HAS_INTERNALS), yes)
+	$(CD) $(BASE_DIR)/$(NI-INTERNALS); git status -s -b
+endif
+	$(CD) $(BUILD-GENERIC-PC); git status -s -b
+	$(CD) $(SOURCE_DIR)/$(NI-DRIVERS-BIN); git status -s -b
+	$(CD) $(SOURCE_DIR)/$(NI-FFMPEG); git status -s -b
+ifeq ($(HAS_LIBCS), yes)
+	$(CD) $(SOURCE_DIR)/$(NI-LIBCOOLSTREAM); git status -s -b
+endif
+	$(CD) $(SOURCE_DIR)/$(NI-LIBSTB-HAL); git status -s -b
+	$(CD) $(SOURCE_DIR)/$(NI-LINUX-KERNEL); git status -s -b
+	$(CD) $(SOURCE_DIR)/$(NI-LOGO-STUFF); git status -s -b
+	$(CD) $(SOURCE_DIR)/$(NI-NEUTRINO); git status -s -b
+	$(CD) $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS); git status -s -b
+	$(CD) $(SOURCE_DIR)/$(NI-OFGWRITE); git status -s -b
+	$(CD) $(SOURCE_DIR)/$(NI-OPENTHREADS); git status -s -b
+	$(CD) $(SOURCE_DIR)/$(NI-RTMPDUMP); git status -s -b
+	$(CD) $(SOURCE_DIR)/$(NI-STREAMRIPPER); git status -s -b
+
 # -----------------------------------------------------------------------------
 
 PHONY += update-self
@@ -99,3 +120,4 @@ PHONY += update-ni-sources
 PHONY += update-ni
 PHONY += update-all
 PHONY += push
+PHONY += status
