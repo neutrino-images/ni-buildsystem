@@ -423,10 +423,13 @@ CMAKE = \
 # -----------------------------------------------------------------------------
 
 GITHUB			= https://github.com
+GITHUB_SSH		= git@github.com
 BITBUCKET		= https://bitbucket.org
 BITBUCKET_SSH		= git@bitbucket.org
 
-NI-GIT			= $(BITBUCKET_SSH):neutrino-images
+NI-PUBLIC		= $(GITHUB)/neutrino-images
+NI-PRIVATE		= $(BITBUCKET_SSH):neutrino-images
+
 NI-NEUTRINO		= ni-neutrino
 NI-NEUTRINO_BRANCH	?= master
 NI-NEUTRINO-PLUGINS	= ni-neutrino-plugins

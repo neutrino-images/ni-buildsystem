@@ -71,11 +71,11 @@ $(SOURCE_DIR):
 	mkdir -p $(@)
 
 $(BUILD-GENERIC-PC):
-	git clone $(NI-GIT)/$(NI-BUILD-GENERIC-PC).git $(BUILD-GENERIC-PC)
+	git clone $(NI-PUBLIC)/$(NI-BUILD-GENERIC-PC).git $(BUILD-GENERIC-PC)
 
 $(SOURCE_DIR)/$(NI-NEUTRINO):
 	$(CD) $(SOURCE_DIR); \
-		git clone $(NI-GIT)/$(@F).git
+		git clone $(NI-PUBLIC)/$(@F).git
 	$(CD) $(@); \
 		git remote add tuxbox $(GITHUB)/tuxbox-neutrino/gui-neutrino.git; \
 		git remote add seife  $(GITHUB)/neutrino-mp/neutrino-mp.git; \
@@ -86,7 +86,7 @@ $(SOURCE_DIR)/$(NI-NEUTRINO):
 
 $(SOURCE_DIR)/$(NI-LIBSTB-HAL):
 	$(CD) $(SOURCE_DIR); \
-		git clone $(NI-GIT)/$(@F).git
+		git clone $(NI-PUBLIC)/$(@F).git
 	$(CD) $(@); \
 		git remote add tuxbox $(GITHUB)/tuxbox-neutrino/library-stb-hal.git; \
 		git remote add seife  $(GITHUB)/neutrino-mp/libstb-hal.git; \
@@ -98,7 +98,7 @@ $(SOURCE_DIR)/$(NI-LIBSTB-HAL):
 $(SOURCE_DIR)/$(NI-LIBCOOLSTREAM):
 ifeq ($(HAS_LIBCS), yes)
 	$(CD) $(SOURCE_DIR); \
-		git clone $(NI-GIT)/$(@F).git
+		git clone $(NI-PRIVATE)/$(@F).git
 	$(CD) $(@); \
 		git checkout $(NI-LIBCOOLSTREAM_BRANCH)
 endif
@@ -106,7 +106,7 @@ endif
 # upstream for rebase
 $(SOURCE_DIR)/$(NI-FFMPEG):
 	$(CD) $(SOURCE_DIR); \
-		git clone $(NI-GIT)/$(@F).git
+		git clone $(NI-PUBLIC)/$(@F).git
 	$(CD) $(@); \
 		git remote add upstream https://git.ffmpeg.org/ffmpeg.git; \
 		git fetch --all
@@ -115,7 +115,7 @@ $(SOURCE_DIR)/$(NI-FFMPEG):
 # torvalds for cherry-picking
 $(SOURCE_DIR)/$(NI-LINUX-KERNEL):
 	$(CD) $(SOURCE_DIR); \
-		git clone $(NI-GIT)/$(@F).git
+		git clone $(NI-PUBLIC)/$(@F).git
 	$(CD) $(@); \
 		git remote add upstream https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git; \
 		git remote add torvalds https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git; \
@@ -124,7 +124,7 @@ $(SOURCE_DIR)/$(NI-LINUX-KERNEL):
 # upstream for rebase
 $(SOURCE_DIR)/$(NI-OFGWRITE):
 	$(CD) $(SOURCE_DIR); \
-		git clone $(NI-GIT)/$(@F).git
+		git clone $(NI-PUBLIC)/$(@F).git
 	$(CD) $(@) && \
 		git remote add upstream $(GITHUB)/oe-alliance/ofgwrite.git; \
 		git fetch --all
@@ -132,7 +132,7 @@ $(SOURCE_DIR)/$(NI-OFGWRITE):
 # upstream for rebase
 $(SOURCE_DIR)/$(NI-RTMPDUMP):
 	$(CD) $(SOURCE_DIR); \
-		git clone $(NI-GIT)/$(@F).git
+		git clone $(NI-PUBLIC)/$(@F).git
 	$(CD) $(@) && \
 		git remote add upstream git://git.ffmpeg.org/rtmpdump; \
 		git fetch --all
@@ -143,7 +143,7 @@ $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS) \
 $(SOURCE_DIR)/$(NI-OPENTHREADS) \
 $(SOURCE_DIR)/$(NI-STREAMRIPPER):
 	$(CD) $(SOURCE_DIR); \
-		git clone $(NI-GIT)/$(@F).git
+		git clone $(NI-PUBLIC)/$(@F).git
 
 ni-sources: $(SOURCE_DIR) \
 	$(BUILD-GENERIC-PC) \
