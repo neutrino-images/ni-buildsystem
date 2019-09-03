@@ -81,7 +81,7 @@ $(SOURCE_DIR)/$(NI-NEUTRINO):
 		git remote add seife  $(GITHUB)/neutrino-mp/neutrino-mp.git; \
 		git remote add ddt    $(GITHUB)/duckbox-developers/neutrino-mp-ddt.git; \
 		git remote add tango  $(GITHUB)/tangocash/neutrino-mp-tangos.git; \
-		git remote add max_10 $(GITHUB)/max_10/neutrino-mp-max.git; \
+		git remote add max    $(GITHUB)/maxwiesel/neutrino-mp-max.git; \
 		git fetch --all
 
 $(SOURCE_DIR)/$(NI-LIBSTB-HAL):
@@ -92,7 +92,7 @@ $(SOURCE_DIR)/$(NI-LIBSTB-HAL):
 		git remote add seife  $(GITHUB)/neutrino-mp/libstb-hal.git; \
 		git remote add ddt    $(GITHUB)/duckbox-developers/libstb-hal-ddt.git; \
 		git remote add tango  $(GITHUB)/tangocash/libstb-hal-tangos.git; \
-		git remote add max_10 $(GITHUB)/max_10/libstb-hal-max.git; \
+		git remote add max    $(GITHUB)/maxwiesel/libstb-hal-max.git; \
 		git fetch --all
 
 $(SOURCE_DIR)/$(NI-LIBCOOLSTREAM):
