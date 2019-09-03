@@ -535,7 +535,7 @@ libgd2: $(LIBGD_DEPS) $(ARCHIVE)/$(LIBGD_SOURCE) | $(TARGET_DIR)
 LIBDPF_VER    = git
 LIBDPF_TMP    = dpf-ax.$(LIBDPF_VER)
 LIBDPF_SOURCE = dpf-ax.$(LIBDPF_VER)
-LIBDPF_URL    = https://bitbucket.org/max_10
+LIBDPF_URL    = $(GITHUB)/max_10
 
 LIBDPF_PATCH  = libdpf-crossbuild.patch
 
