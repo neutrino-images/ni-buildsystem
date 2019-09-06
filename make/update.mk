@@ -111,6 +111,31 @@ endif
 
 # -----------------------------------------------------------------------------
 
+REPOSITORIES = \
+	. \
+	$(BUILD-GENERIC-PC) \
+	$(SOURCE_DIR)/$(NI-DRIVERS-BIN) \
+	$(SOURCE_DIR)/$(NI-FFMPEG) \
+	$(SOURCE_DIR)/$(NI-LIBSTB-HAL) \
+	$(SOURCE_DIR)/$(NI-LINUX-KERNEL) \
+	$(SOURCE_DIR)/$(NI-LOGO-STUFF) \
+	$(SOURCE_DIR)/$(NI-NEUTRINO) \
+	$(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS) \
+	$(SOURCE_DIR)/$(NI-OFGWRITE) \
+	$(SOURCE_DIR)/$(NI-OPENTHREADS) \
+	$(SOURCE_DIR)/$(NI-RTMPDUMP) \
+	$(SOURCE_DIR)/$(NI-STREAMRIPPER)
+
+URL_OLD = $(BITBUCKET_SSH):neutrino-images
+URL_NEW = $(if $(filter $(USE_SSH),y),$(GITHUB_SSH):neutrino-images,$(GITHUB)/neutrino-images)
+
+switch-url:
+	for repo in $(REPOSITORIES); do \
+		sed -i -e 's|url = $(URL_OLD)|url = $(URL_NEW)|' $$repo/.git/config; \
+	done
+
+# -----------------------------------------------------------------------------
+
 PHONY += update-self
 PHONY += update-neutrino
 PHONY += update-remotes
