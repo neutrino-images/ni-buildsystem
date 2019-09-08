@@ -6,7 +6,7 @@
 crosstool: $(CROSS_BASE)/$(BOXARCH)/$(BOXSERIES)
 
 crosstools:
-	for boxseries in hd1 hd2 hd51 bre2ze4k; do \
+	for boxseries in hd1 hd2 hd51; do \
 		make BOXSERIES=$${boxseries} $(CROSS_BASE)/$(BOXARCH)/$${boxseries} || exit; \
 	done;
 
@@ -32,7 +32,7 @@ crosstool-restore: $(CROSSTOOL_BACKUP)
 # -----------------------------------------------------------------------------
 
 crosstools-renew:
-	for boxseries in hd1 hd2 hd51 bre2ze4k; do \
+	for boxseries in hd1 hd2 hd51; do \
 		make BOXSERIES=$${boxseries} ccache-clean || exit; \
 	done;
 	make host-clean
@@ -57,7 +57,6 @@ $(BUILD_TMP)/linux-$(KERNEL_VERSION).tar: | $(BUILD_TMP)
 crosstool-arm-hd1: $(CROSS_BASE)/arm/hd1
 crosstool-arm-hd2: $(CROSS_BASE)/arm/hd2
 crosstool-arm-hd51: $(CROSS_BASE)/arm/hd51
-crosstool-arm-bre2ze4k: $(CROSS_BASE)/arm/bre2ze4k
 
 # -----------------------------------------------------------------------------
 
@@ -94,7 +93,7 @@ $(CROSS_BASE)/arm/hd51: | $(BUILD_TMP)
 	$(CHDIR)/$(CROSSTOOL-NG_TMP); \
 		git checkout 1dbb06f2; \
 		$(call apply_patches, $(CROSSTOOL-NG_PATCH))
-ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd51 bre2ze4k))
+ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd51))
 	$(CHDIR)/$(CROSSTOOL-NG_TMP); \
 		cp -a $(PATCHES)/crosstool-ng/gcc/* patches/gcc/linaro-6.3-2017.02
 endif
@@ -120,13 +119,6 @@ endif
 	test -e $(CROSS_DIR)/$(TARGET)/lib || ln -sf sys-root/lib $(CROSS_DIR)/$(TARGET)/
 	rm -f $(CROSS_DIR)/$(TARGET)/sys-root/lib/libstdc++.so.6.0.*-gdb.py
 	$(REMOVE)/$(CROSSTOOL-NG_TMP)
-
-# -----------------------------------------------------------------------------
-
-# bre2ze4k uses same crosstool as hd51; so let's just create a symlink
-$(CROSS_BASE)/arm/bre2ze4k:
-	make $(CROSS_BASE)/arm/hd51
-	ln -sf hd51 $(@)
 
 # -----------------------------------------------------------------------------
 

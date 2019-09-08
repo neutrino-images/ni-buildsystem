@@ -14,8 +14,7 @@ plugins-hd1:
 	# nothing to do
 
 plugins-hd2 \
-plugins-hd51 \
-plugins-bre2ze4k: \
+plugins-hd51: \
 	channellogos
 ifneq ($(BOXMODEL), kronos_v2)
 	make links
@@ -202,7 +201,6 @@ PHONY += plugins
 PHONY += plugins-hd1
 PHONY += plugins-hd2
 PHONY += plugins-hd51
-PHONY += plugins-bre2ze4k
 
 PHONY += neutrino-plugins-uninstall neutrino-plugins-distclean
 PHONY += neutrino-plugins-clean neutrino-plugins-clean-all

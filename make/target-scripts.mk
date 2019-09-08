@@ -36,7 +36,7 @@ $(TARGET_DIR)/etc/init.d/camd_datefix:
 	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/camd_datefix.init $(@)
 
 $(TARGET_DIR)/etc/init.d/coredump:
-ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd51 bre2ze4k))
+ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd51))
 	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/coredump.init $(@)
 endif
 
@@ -68,17 +68,17 @@ $(TARGET_DIR)/etc/init.d/networking:
 	ln -sf networking $(TARGET_DIR)/etc/init.d/K99networking
 
 $(TARGET_DIR)/etc/init.d/partitions-by-name:
-ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 bre2ze4k))
+ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51))
 	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/partitions-by-name.init $(@)
 endif
 
 $(TARGET_DIR)/etc/init.d/resizerootfs:
-ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 bre2ze4k))
+ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51))
 	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/resizerootfs.init $(@)
 endif
 
 $(TARGET_DIR)/etc/init.d/swap:
-ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 bre2ze4k))
+ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51))
 	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/swap.init $(@)
 	ln -sf swap $(TARGET_DIR)/etc/init.d/K99swap
 endif

@@ -36,7 +36,7 @@ if ($revision == 1) // libstb-hal
 	{
 		# WWIO
 		$boxtype_sc = "arm";
-		$boxseries = "bre2ze4k";
+		$boxseries = "hd51";
 		$boxmodel = "bre2ze4k";
 	}
 }

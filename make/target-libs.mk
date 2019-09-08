@@ -218,7 +218,7 @@ LIBPNG_PATCH  = libpng-Disable-pngfix-and-png-fix-itxt.patch
 
 LIBPNG_DEPS   = zlib
 
-LIBPNG_CONF   = $(if $(filter $(BOXSERIES), hd51 bre2ze4k), --enable-arm-neon, --disable-arm-neon)
+LIBPNG_CONF   = $(if $(filter $(BOXSERIES), hd51), --enable-arm-neon, --disable-arm-neon)
 
 libpng: $(LIBPNG_DEPS) $(ARCHIVE)/$(LIBPNG_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LIBPNG_TMP)
