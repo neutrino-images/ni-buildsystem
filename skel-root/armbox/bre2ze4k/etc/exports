@@ -1,4 +1,4 @@
-# /var/etc/exports: the access control list for filesystems which may be exported to NFS clients.
+# /etc/exports: the access control list for filesystems which may be exported to NFS clients.
 #
 # Example for client mount: "mount -t nfs -o nolock,soft 192.168.0.6:/media/sda1/movies /tmp/movies"
 #
