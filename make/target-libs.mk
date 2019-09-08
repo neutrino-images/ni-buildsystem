@@ -448,10 +448,10 @@ openthreads: $(SOURCE_DIR)/$(NI-OPENTHREADS) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-LIBUSB_VER    = 1.0.22
+LIBUSB_VER    = 1.0.23
 LIBUSB_TMP    = libusb-$(LIBUSB_VER)
 LIBUSB_SOURCE = libusb-$(LIBUSB_VER).tar.bz2
-LIBUSB_URL    = https://sourceforge.net/projects/libusb/files/libusb-$(basename $(LIBUSB_VER))/libusb-$(LIBUSB_VER)
+LIBUSB_URL    = https://github.com/libusb/libusb/releases/download/v$(LIBUSB_VER)
 
 $(ARCHIVE)/$(LIBUSB_SOURCE):
 	$(DOWNLOAD) $(LIBUSB_URL)/$(LIBUSB_SOURCE)
