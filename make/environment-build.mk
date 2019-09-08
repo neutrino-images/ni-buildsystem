@@ -171,7 +171,11 @@ CROSS_BASE    = $(BASE_DIR)/cross
 CROSS_DIR    ?= $(CROSS_BASE)/$(BOXARCH)/$(BOXSERIES)
 CONFIGS       = $(BASE_DIR)/configs
 PATCHES       = $(BASE_DIR)/patches
-SKEL_ROOT     = $(BASE_DIR)/skel-root/$(BOXTYPE)/$(BOXSERIES)
+ifeq ($(BOXTYPE), coolstream)
+  SKEL_ROOT   = $(BASE_DIR)/skel-root/$(BOXTYPE)/$(BOXSERIES)
+else ifeq ($(BOXTYPE), armbox)
+  SKEL_ROOT   = $(BASE_DIR)/skel-root/$(BOXTYPE)/$(BOXMODEL)
+endif
 IMAGEFILES    = $(BASE_DIR)/skel-root/general
 
 BUILD        ?= $(shell /usr/share/libtool/config.guess 2>/dev/null || /usr/share/libtool/config/config.guess 2>/dev/null || /usr/share/misc/config.guess)
