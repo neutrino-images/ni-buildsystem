@@ -3,7 +3,7 @@
 #
 # -----------------------------------------------------------------------------
 
-FFMPEG_VER    = 4.2
+FFMPEG_VER    = 4.2.1
 FFMPEG_TMP    = ffmpeg-$(FFMPEG_VER)
 FFMPEG_SOURCE = ffmpeg-$(FFMPEG_VER).tar.xz
 FFMPEG_URL    = http://www.ffmpeg.org/releases
