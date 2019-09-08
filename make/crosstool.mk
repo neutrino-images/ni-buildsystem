@@ -94,7 +94,7 @@ $(CROSS_BASE)/arm/hd51: | $(BUILD_TMP)
 	$(CHDIR)/$(CROSSTOOL-NG_TMP); \
 		git checkout 1dbb06f2; \
 		$(call apply_patches, $(CROSSTOOL-NG_PATCH))
-ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd2 hd51 bre2ze4k))
+ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd51 bre2ze4k))
 	$(CHDIR)/$(CROSSTOOL-NG_TMP); \
 		cp -a $(PATCHES)/crosstool-ng/gcc/* patches/gcc/linaro-6.3-2017.02
 endif
@@ -114,7 +114,7 @@ endif
 		chmod 0755 ct-ng; \
 		./ct-ng oldconfig; \
 		./ct-ng build
-ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd1 hd2))
+ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd1 hd2))
 	test -e $(CROSS_DIR)/$(TARGET)/lib && mv $(CROSS_DIR)/$(TARGET)/lib $(CROSS_DIR)/$(TARGET)/lib.x
 endif
 	test -e $(CROSS_DIR)/$(TARGET)/lib || ln -sf sys-root/lib $(CROSS_DIR)/$(TARGET)/
