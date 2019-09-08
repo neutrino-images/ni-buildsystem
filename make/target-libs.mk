@@ -1105,7 +1105,7 @@ libvorbisidec: $(LIBVORBISIDEC_DEPS) $(ARCHIVE)/$(LIBVORBISIDEC_SOURCE) | $(TARG
 
 # -----------------------------------------------------------------------------
 
-LIBOGG_VER    = 1.3.3
+LIBOGG_VER    = 1.3.4
 LIBOGG_TMP    = libogg-$(LIBOGG_VER)
 LIBOGG_SOURCE = libogg-$(LIBOGG_VER).tar.gz
 LIBOGG_URL    = https://ftp.osuosl.org/pub/xiph/releases/ogg
