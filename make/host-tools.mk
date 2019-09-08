@@ -341,7 +341,6 @@ $(HOST_LUAROCKS): $(HOST_LUA) $(ARCHIVE)/$(HOST_LUAROCKS_SOURCE) | $(HOST_DIR)
 		$(MAKE) install
 	cat $(CONFIGS)/luarocks-config.lua >> $(HOST_LUAROCKS_CONFIG_FILE)
 	$(REMOVE)/$(HOST_LUAROCKS_TMP)
-	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 

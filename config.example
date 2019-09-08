@@ -6,6 +6,8 @@
 # Change it to your name.
 #MAINTAINER = NI-Team
 
+# -----------------------------------------------------------------------------
+
 # Choose one (1) of the following BOXMODELs. O n e !
 # Coolstream
 #BOXMODEL = nevis
@@ -20,6 +22,8 @@
 # WWIO
 #BOXMODEL = bre2ze4k
 
+# -----------------------------------------------------------------------------
+
 # Neutrino API keys
 #N_OMDB_API_KEY =
 #N_SHOUTCAST_DEV_KEY =
@@ -27,8 +31,12 @@
 #N_YOUTUBE_DEV_KEY =
 #N_WEATHER_DEV_KEY =
 
+# -----------------------------------------------------------------------------
+
 # Create debug-image. Not useful in real life.
 #DEBUG = yes
+
+# -----------------------------------------------------------------------------
 
 # NI administrator mode. Do not touch!
 #NI_ADMIN = true

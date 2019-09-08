@@ -25,12 +25,12 @@ SHELL := /bin/bash
 #                      /        /     | |     \
 # BOXMODEL          nevis apollo shiner kronos kronos_v2
 
-# - AX Technologies / Mutant --------------------------------------------------
+# - Armbox --------------------------------------------------------------------
 
 # BOXTYPE                     armbox
+#                               |
+# BOXSERIES                    hd51
 #                             /    \
-# BOXSERIES                hd51    bre2ze4k
-#                            |      |
 # BOXFAMILY                  bcm7251s
 #                            |      |
 # BOXMODEL                 hd51    bre2ze4k
