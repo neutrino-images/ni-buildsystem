@@ -473,10 +473,10 @@ libusb: $(ARCHIVE)/$(LIBUSB_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-LIBUSB-COMPAT_VER    = 0.1.5
+LIBUSB-COMPAT_VER    = 0.1.7
 LIBUSB-COMPAT_TMP    = libusb-compat-$(LIBUSB-COMPAT_VER)
 LIBUSB-COMPAT_SOURCE = libusb-compat-$(LIBUSB-COMPAT_VER).tar.bz2
-LIBUSB-COMPAT_URL    = https://sourceforge.net/projects/libusb/files/libusb-compat-$(basename $(LIBUSB-COMPAT_VER))/libusb-compat-$(LIBUSB-COMPAT_VER)
+LIBUSB-COMPAT_URL    = https://github.com/libusb/libusb-compat-0.1/releases/download/v$(LIBUSB-COMPAT_VER)
 
 $(ARCHIVE)/$(LIBUSB-COMPAT_SOURCE):
 	$(DOWNLOAD) $(LIBUSB-COMPAT_URL)/$(LIBUSB-COMPAT_SOURCE)
