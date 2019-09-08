@@ -146,7 +146,7 @@ MAKEFLAGS += --no-print-directory
 # -----------------------------------------------------------------------------
 
 BASE_DIR     := $(shell pwd)
-MAINTAINER   ?= NI-Team
+MAINTAINER   ?= unknown
 WHOAMI       := $(shell id -un)
 ARCHIVE       = $(BASE_DIR)/download
 BUILD_TMP     = $(BASE_DIR)/build_tmp
