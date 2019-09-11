@@ -15,7 +15,6 @@ BOOTSTRAP += includes
 BOOTSTRAP += libs
 BOOTSTRAP += firmware
 BOOTSTRAP += modules
-#BOOTSTRAP += kernel.do_prepare
 BOOTSTRAP += host-preqs
 
 ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2))
