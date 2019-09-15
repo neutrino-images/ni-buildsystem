@@ -149,7 +149,7 @@ neutrino-mediathek: $(SHAREPLUGINS) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-LINKS_VER    = 2.19
+LINKS_VER    = 2.20
 LINKS_TMP    = links-$(LINKS_VER)
 LINKS_SOURCE = links-$(LINKS_VER).tar.bz2
 LINKS_URL    = http://links.twibright.com/download
@@ -157,12 +157,14 @@ LINKS_URL    = http://links.twibright.com/download
 $(ARCHIVE)/$(LINKS_SOURCE):
 	$(DOWNLOAD) $(LINKS_URL)/$(LINKS_SOURCE)
 
+LINKS_DEPS   = libpng libjpeg openssl
+
 LINKS_PATCH  = links.patch
 LINKS_PATCH += links-ac-prog-cxx.patch
 LINKS_PATCH += links-input-$(BOXTYPE).patch
 LINKS_PATCH += links-accept_https_play.patch
 
-links: libpng libjpeg openssl $(ARCHIVE)/$(LINKS_SOURCE) $(SHAREPLUGINS) | $(TARGET_DIR)
+links: $(LINKS_DEPS) $(ARCHIVE)/$(LINKS_SOURCE) $(SHAREPLUGINS) | $(TARGET_DIR)
 	$(REMOVE)/$(LINKS_TMP)
 	$(UNTAR)/$(LINKS_SOURCE)
 	$(CHDIR)/$(LINKS_TMP)/intl; \

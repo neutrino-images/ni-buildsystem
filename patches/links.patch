@@ -15,7 +15,7 @@
 #
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -16,7 +16,7 @@
+@@ -24,7 +24,7 @@
  links_LDADD=builtin.o context.o ipret.o javascr.o javascript.o md5.o md5hl.o ns.o pomocny.o regexp.o
  endif
  
@@ -26,8 +26,8 @@
  dist-hook:
 --- a/Makefile.in
 +++ b/Makefile.in
-@@ -77,7 +77,7 @@
- @ATHEOS_GR_TRUE@links_LDADD = atheos.o
+@@ -78,7 +78,7 @@
+ @HAIKU_GR_TRUE@links_LDADD = haiku.o
  @JAVASCRIPT_TRUE@links_LDADD = builtin.o context.o ipret.o javascr.o javascript.o md5.o md5hl.o ns.o pomocny.o regexp.o
  
 -links_SOURCES = af_unix.c auth.c beos.c bfu.c block.c bookmark.c cache.c charsets.c compress.c connect.c cookies.c data.c default.c dip.c directfb.c dither.c dns.c dos.c drivers.c error.c file.c finger.c fn_impl.c fontconf.c font_inc.c framebuf.c freetype.c ftp.c gif.c grx.c hpux.c html.c html_gr.c html_r.c html_tbl.c http.c https.c img.c imgcache.c jpeg.c jsint.c kbd.c language.c listedit.c lru.c mailto.c main.c memory.c menu.c objreq.c os_dep.c pmshell.c png.c sched.c select.c session.c smb.c string.c suffix.c svg.c svgalib.c terminal.c tiff.c types.c url.c view.c view_gr.c vms.c x.c xbm.c beos.h bits.h cfg.h codepage.h com-defs.h config-vms.h dfb_cur.h hpux.h language.h links.h os_dep.h os_depx.h setup.h arrow.inc certs.inc codepage.inc entity.inc fbcommon.inc language.inc links_ic.inc locase.inc suffix.inc suffix_x.inc uni_7b.inc upcase.inc vpipe.inc
@@ -35,15 +35,15 @@
  
  CXXFLAGS = @CXXFLAGS@
  
-@@ -101,7 +101,7 @@
+@@ -102,7 +102,7 @@
  imgcache.o jpeg.o jsint.o kbd.o language.o listedit.o lru.o mailto.o \
  main.o memory.o menu.o objreq.o os_dep.o pmshell.o png.o sched.o \
  select.o session.o smb.o string.o suffix.o svg.o svgalib.o terminal.o \
 -tiff.o types.o url.o view.o view_gr.o vms.o x.o xbm.o
 +tiff.o types.o url.o view.o view_gr.o vms.o x.o xbm.o rcmouse.o rc.o rcinput.o
- @ATHEOS_GR_TRUE@links_DEPENDENCIES =  atheos.o
  @JAVASCRIPT_TRUE@links_DEPENDENCIES =  builtin.o context.o ipret.o \
  @JAVASCRIPT_TRUE@javascr.o javascript.o md5.o md5hl.o ns.o pomocny.o \
+ @JAVASCRIPT_TRUE@regexp.o
 --- a/bfu.c
 +++ b/bfu.c
 @@ -1544,7 +1544,7 @@
@@ -68,7 +68,7 @@
  #if SIZEOF_UNSIGNED_LONG >= 8 || defined(__x86_64__) || defined(__aarch64__)
 --- a/configure
 +++ b/configure
-@@ -8403,7 +8403,7 @@
+@@ -8578,7 +8578,7 @@
  fi
  done
  
@@ -79,7 +79,7 @@
  EOF
 --- a/configure.in
 +++ b/configure.in
-@@ -1050,7 +1050,7 @@
+@@ -1069,7 +1069,7 @@
  
  if test "$disable_fb" != yes; then
  	AC_CHECK_HEADERS(linux/fb.h linux/kd.h linux/vt.h sys/mman.h)
@@ -90,8 +90,8 @@
  	fi
 --- a/default.c
 +++ b/default.c
-@@ -750,7 +750,7 @@
- 		}
+@@ -761,7 +761,7 @@
+ 		home = NULL;
  	}
  #endif
 -	if (!home) home = stracpy(cast_uchar getenv("HOME"));
@@ -99,8 +99,8 @@
  #ifdef WIN
  /* When we run in Cygwin without Cygwin environment, it reports home "/".
     Unfortunatelly, it can't write anything to that directory */
-@@ -799,7 +799,7 @@
- #ifdef OPENVMS
+@@ -812,7 +812,7 @@
+ #elif defined(OPENVMS) || defined(HAIKU)
  		add_to_strn(&home_links, cast_uchar "links");
  #else
 -		add_to_strn(&home_links, cast_uchar ".links");
@@ -108,7 +108,7 @@
  #endif
  	}
  	EINTRLOOP(rs, stat(cast_const_char home_links, &st));
-@@ -2073,7 +2073,7 @@
+@@ -2086,7 +2086,7 @@
  	if (links_home) mem_free(links_home);
  }
  
@@ -148,7 +148,7 @@
  
  #include <sys/mman.h>
  #include <sys/ioctl.h>
-@@ -112,6 +112,7 @@
+@@ -116,6 +116,7 @@
  static struct fb_var_screeninfo vi;
  static struct fb_fix_screeninfo fi;
  
@@ -156,7 +156,7 @@
  static void fb_draw_bitmap(struct graphics_device *dev, struct bitmap *bmp, int x, int y);
  
  static unsigned char *fb_driver_param;
-@@ -272,7 +273,7 @@
+@@ -276,7 +277,7 @@
  
  static void redraw_mouse(void);
  
@@ -165,7 +165,7 @@
  {
  	struct links_event ev;
  	mouse_x += dx;
-@@ -698,6 +699,7 @@
+@@ -702,6 +703,7 @@
  
  static void set_palette(struct palette *pal)
  {
@@ -173,7 +173,7 @@
  	struct fb_cmap cmap;
  	int i;
  	unsigned short *red = pal->red;
-@@ -874,7 +876,7 @@
+@@ -878,7 +880,7 @@
  	EINTRLOOP(rs, ioctl(TTY, VT_GETMODE, &vt_omode));
  	if (rs == -1) {
  		in_gr_operation--;
@@ -182,7 +182,7 @@
  	}
  	memcpy(&vt_mode, &vt_omode, sizeof(vt_mode));
  
-@@ -886,7 +888,7 @@
+@@ -890,7 +892,7 @@
  	EINTRLOOP(rs, ioctl(TTY, VT_SETMODE, &vt_mode));
  	if (rs == -1) {
  		in_gr_operation--;
@@ -191,7 +191,7 @@
  	}
  
  	EINTRLOOP(rs, ioctl(TTY, VT_WAITACTIVE, fb_console));
-@@ -927,6 +929,7 @@
+@@ -931,6 +933,7 @@
  
  static void fb_gpm_in(void *nic)
  {
@@ -199,8 +199,8 @@
  	struct links_event ev;
  	int g;
  	Gpm_Event gev;
-@@ -1021,10 +1024,12 @@
- 	if (current_virtual_device->mouse_handler) current_virtual_device->mouse_handler(current_virtual_device, ev.x, ev.y, (int)ev.b);
+@@ -1103,10 +1106,12 @@
+ 	if (current_virtual_device->mouse_handler) current_virtual_device->mouse_handler(current_virtual_device, mouse_x, mouse_y, button);
  	redraw_mouse();
  	EINTRLOOP(rs, fsync(fb_handle));
 +#endif
@@ -210,9 +210,9 @@
  {
 +#if 0
  	Gpm_Connect conn;
- 	fb_hgpm = -2;
- 	conn.eventMask = (unsigned short)~0U;
-@@ -1049,6 +1054,7 @@
+ 
+ 	fb_hmice = c_open(cast_uchar "/dev/input/mice", O_RDWR | O_NOCTTY);
+@@ -1176,6 +1181,7 @@
  #ifdef SIGTTIN
  	install_signal_handler(SIGTTIN, sig_tstp, NULL, 0);
  #endif
@@ -220,7 +220,7 @@
  
  	return 0;
  }
-@@ -1056,12 +1062,14 @@
+@@ -1183,12 +1189,14 @@
  static void unhandle_fb_mouse(void)
  {
  	if (fb_hgpm >= 0) set_handlers(fb_hgpm, (void (*)(void *))NULL, (void (*)(void *))NULL, NULL);
@@ -232,10 +232,10 @@
  	}
  	fb_hgpm = -2;
 +#endif
+ 
+ 	close_socket(&fb_hmice);
  #ifdef SIGTSTP
- 	install_signal_handler(SIGTSTP, sig_tstp, NULL, 0);
- #endif
-@@ -1093,14 +1101,77 @@
+@@ -1222,14 +1230,77 @@
  {
  	fb_print(seq_show_cursor);
  }
@@ -313,7 +313,7 @@
  }
  
  static unsigned char *fb_init_driver(unsigned char *param, unsigned char *ignore)
-@@ -1217,6 +1288,16 @@
+@@ -1346,6 +1417,16 @@
  	} else {
  		border_bottom = border_top;
  	}
@@ -330,7 +330,7 @@
  	if (*param) goto bad_p;
  
  	EINTRLOOP(rs, fstat(TTY, &st));
-@@ -1252,6 +1333,17 @@
+@@ -1381,6 +1462,17 @@
  		e = stracpy(cast_uchar "Cannot get FB FSCREENINFO.\n");
  		goto fail4;
  	}
@@ -348,7 +348,7 @@
  
  #if 0
  	{
-@@ -1340,7 +1432,9 @@
+@@ -1469,7 +1561,9 @@
  	fb_mem_size = fi.smem_len;
  
  	init_virtual_devices(&fb_driver, NUMBER_OF_DEVICES);
@@ -358,7 +358,7 @@
  
  	/* Mikulas: nechodi to na sparcu */
  	if (fb_mem_size < (unsigned)((border_top + fb_ysize + border_bottom) * fb_linesize)) {
-@@ -1391,6 +1485,10 @@
+@@ -1520,6 +1614,10 @@
  		e = stracpy(cast_uchar "Cannot mmap graphics memory.\n");
  		goto fail5;
  	}
@@ -369,7 +369,7 @@
  	fb_vmem = fb_mem + border_left * fb_pixelsize + border_top * fb_linesize;
  	fb_driver.depth = fb_pixelsize & 7;
  	fb_driver.depth |= (fb_bits_pp & 31) << 3;
-@@ -1507,7 +1605,9 @@
+@@ -1637,7 +1735,9 @@
  	EINTRLOOP(rs, munmap(fb_mem, fb_mapped_size));
  	shutdown_virtual_devices();
  	fb_switch_shutdown();
@@ -379,8 +379,8 @@
  	if(fb_driver_param) mem_free(fb_driver_param);
  	/* show cursor */
  	fb_show_cursor();
-@@ -1615,6 +1715,27 @@
- 	dest->skip = dest->x * fb_pixelsize;
+@@ -1745,6 +1845,27 @@
+ 	dest->skip = (ssize_t)dest->x * fb_pixelsize;
  	dest->flags = 0;
  	return 0;
 +}
@@ -407,7 +407,7 @@
  }
  
  static void fb_register_bitmap(struct bitmap *bmp)
-@@ -1937,7 +2058,9 @@
+@@ -2067,7 +2188,9 @@
  	unhandle_fb_mouse();
  	fb_old_vd = current_virtual_device;
  	current_virtual_device=NULL;
@@ -417,7 +417,7 @@
  	if (have_cmap && fb_active) set_palette(&old_palette);
  	EINTRLOOP(rs, fsync(fb_handle));
  	fb_switch_shutdown();
-@@ -1952,7 +2075,9 @@
+@@ -2082,7 +2205,9 @@
  	unsigned char *e;
  	if (current_virtual_device) return 0;
  	if (dev != fb_block_dev) return -2;
@@ -1276,7 +1276,7 @@
  		FD_CLR(fd, &w_read);
  		FD_CLR(fd, &x_read);
  	}
-@@ -936,9 +941,14 @@
+@@ -943,9 +948,14 @@
  }
  
  int terminate_loop = 0;
@@ -1291,7 +1291,7 @@
  #if !defined(USE_LIBEVENT) || !defined(USE_POLL)
  	restrict_fds();
  #endif
-@@ -993,6 +1003,15 @@
+@@ -1000,6 +1010,15 @@
  		nopr();
  	} else
  #endif
@@ -1306,7 +1306,7 @@
 +		set_handlers(mousefd, (void (*)(void *))rc_mouse_event, NULL, NULL);
  
  	while (!terminate_loop) {
- 		volatile int n;	/* volatile because of setjmp */
+ 		volatile int n, i;	/* volatile because of setjmp */
 --- a/view_gr.c
 +++ b/view_gr.c
 @@ -1032,6 +1032,7 @@
