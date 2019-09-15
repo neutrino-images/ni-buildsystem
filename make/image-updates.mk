@@ -162,6 +162,19 @@ pathauf-192:
 
 # -----------------------------------------------------------------------------
 
+initial-settings: matze-192
+	$(REMOVE)/initial
+	mkdir $(BUILD_TMP)/initial
+	cd $(BUILD_TMP)/initial && \
+		tar -xf $(STAGING_DIR)/updates/matze-192.bin && \
+		cp temp_inst/inst/var/tuxbox/config/zapit/* $(SOURCE_DIR)/$(NI-NEUTRINO)/data/initial/
+	ASTRA192=`grep 'position=\"192\"' $(SOURCE_DIR)/$(NI-NEUTRINO)/data/config/satellites.xml`; \
+	ASTRA192=`echo $$ASTRA192`; \
+	sed -i "/position=\"192\"/c\	$$ASTRA192" $(SOURCE_DIR)/$(NI-NEUTRINO)/data/initial/services.xml
+	@echo -e "$(TERM_YELLOW)Commit your changes in $(SOURCE_DIR)/$(NI-NEUTRINO)/data/initial$(TERM_NORMAL)"
+
+# -----------------------------------------------------------------------------
+
 u-custom:
 	$(MAKE) u-update-bin \
 			UPDATE_MD5FILE=custom_bin.txt \
