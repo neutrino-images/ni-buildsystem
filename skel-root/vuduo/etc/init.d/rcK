@@ -24,4 +24,5 @@ run_initscripts stop
 
 SHOWINFO "done"
 
-/bin/turnoff_power
+# FIXME
+#/bin/turnoff_power
