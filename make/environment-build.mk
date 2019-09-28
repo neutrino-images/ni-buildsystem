@@ -218,10 +218,7 @@ endif
 # -----------------------------------------------------------------------------
 
 ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vusolo4k vuduo4k vuultimo4k vuzero4k vuduo))
-  BOXVENDOR = vuplus
   $(error VU+ not ready yet)
-else
-  BOXVENDOR = $(EMPTY)
 endif
 
 # -----------------------------------------------------------------------------
@@ -283,7 +280,7 @@ CROSS_DIR    ?= $(CROSS_BASE)/$(BOXARCH)/$(BOXSERIES)
 CONFIGS       = $(BASE_DIR)/configs
 PATCHES       = $(BASE_DIR)/patches
 SKEL-ROOT     = $(BASE_DIR)/skel-root/$(BOXSERIES)
-ifeq ($(BOXVENDOR), vuplus)
+ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vusolo4k vuduo4k vuultimo4k vuzero4k))
   SKEL-ROOT   = $(BASE_DIR)/skel-root/vuplus
 endif
 IMAGEFILES    = $(BASE_DIR)/skel-root/general
