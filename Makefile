@@ -36,19 +36,30 @@ config.local: $(eval BOXMODEL=hd51)
 	@echo "   3)  Coolstream Shiner (Trinity)"
 	@echo "   4)  Coolstream Kronos (Zee², Trinity V2)"
 	@echo "   5)  Coolstream Kronos V2 (Link, Trinity Duo)"
-	@echo "  11)  WWIO BRE2ZE4K"
-	@echo "  21)  AX/Mutant HD51"
+	@echo "  11)  AX/Mutant HD51"
+	@echo "  21)  WWIO BRE2ZE4K"
+	@echo "  31)  VU+ Solo 4k"
+	@echo "  32)  VU+ Duo 4k"
+	@echo "  33)  VU+ Ultimo 4k"
+	@echo "  34)  VU+ Zero 4k"
+	@echo "  41)  VU+ Duo"
 	@echo ""
-	@read -p "Select your boxmodel? [default: 21] " boxmodel; \
-	boxmodel=$${boxmodel:-21}; \
+	@read -p "Select your boxmodel? [default: 11] " boxmodel; \
+	boxmodel=$${boxmodel:-11}; \
 	case "$$boxmodel" in \
 		 1)	boxmodel=nevis;; \
 		 2)	boxmodel=apollo;; \
 		 3)	boxmodel=shiner;; \
 		 4)	boxmodel=kronos;; \
 		 5)	boxmodel=kronos_v2;; \
-		11)	boxmodel=bre2ze4k;; \
-		21|*)	boxmodel=hd51;; \
+		11)	boxmodel=hd51;; \
+		21)	boxmodel=bre2ze4k;; \
+		31)	boxmodel=vusolo4k;; \
+		32)	boxmodel=vuduo4k;; \
+		33)	boxmodel=vuultimo4k;; \
+		34)	boxmodel=vuzero4k;; \
+		41)	boxmodel=vuduo;; \
+		*)	boxmodel=hd51;; \
 	esac; \
 	cp config.example $@; \
 	sed -i -e "s|^#BOXMODEL = $$boxmodel|BOXMODEL = $$boxmodel|" $@
@@ -59,6 +70,7 @@ Makefile.local:
 
 -include config.local
 include make/environment-build.mk
+include make/environment-linux.mk
 include make/environment-image.mk
 include make/environment-target.mk
 include make/environment-update.mk
@@ -136,7 +148,7 @@ include make/neutrino.mk
 include make/neutrino-plugins.mk
 include make/prerequisites.mk
 include make/target-development.mk
-include make/target-ffmpeg-$(BOXTYPE).mk
+include make/target-ffmpeg$(if $(filter $(BOXTYPE),coolstream),-coolstream).mk
 include make/target-gstreamer-unused.mk
 include make/target-libs.mk
 include make/target-libs-static.mk

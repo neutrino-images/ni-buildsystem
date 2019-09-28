@@ -51,25 +51,28 @@ devtable-remove:
 
 flash-image:
 ifeq ($(BOXMODEL), nevis)
-	make flash-image-coolstream ERASE_SIZE=0x20000 BOXNAME="HD1, BSE, Neo, Neo², Zee"
+	make flash-image-coolstream ERASE_SIZE=0x20000
 endif
 ifeq ($(BOXFAMILY), apollo)
-	make flash-image-coolstream ERASE_SIZE=0x40000 BOXNAME="Tank"    IMAGE_SUFFIX=$(BOXTYPE_SC)-apollo
-	make flash-image-coolstream ERASE_SIZE=0x20000 BOXNAME="Trinity" IMAGE_SUFFIX=$(BOXTYPE_SC)-shiner
+	make flash-image-coolstream ERASE_SIZE=0x40000 IMAGE_SUFFIX=$(BOXTYPE_SC)-apollo
+	make flash-image-coolstream ERASE_SIZE=0x20000 IMAGE_SUFFIX=$(BOXTYPE_SC)-shiner
 endif
 ifeq ($(BOXMODEL), kronos)
-	make flash-image-coolstream ERASE_SIZE=0x20000 BOXNAME="Zee², Trinity V2"
+	make flash-image-coolstream ERASE_SIZE=0x20000
 endif
 ifeq ($(BOXMODEL), kronos_v2)
-	make flash-image-coolstream ERASE_SIZE=0x20000 BOXNAME="Link, Trinity Duo"
+	make flash-image-coolstream ERASE_SIZE=0x20000
 endif
-ifeq ($(BOXMODEL), hd51)
-	make flash-image-armbox BOXNAME="AX/Mut@nt HD51"
-	make flash-image-armbox-multi
+ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k))
+	make flash-image-hd51
+	make flash-image-hd51-multi
 endif
-ifeq ($(BOXMODEL), bre2ze4k)
-	make flash-image-armbox BOXNAME="WWIO BRE2ZE4K"
-	make flash-image-armbox-multi
+ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vusolo4k vuduo4k vuultimo4k vuzero4k))
+	make flash-image-vuplus
+	make flash-image-vuplus-multi
+endif
+ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vuduo))
+	make flash-image-vuduo
 endif
 
 # -----------------------------------------------------------------------------
@@ -115,21 +118,22 @@ endif
 
 # -----------------------------------------------------------------------------
 
-flash-image-armbox: IMAGE_NAME=$(IMAGE_PREFIX)-$(IMAGE_SUFFIX)
-flash-image-armbox: IMAGE_DESC="$(BOXNAME) [$(IMAGE_SUFFIX)] $(shell echo $(IMAGE_TYPE_STRING) | sed 's/.*/\u&/')"
-flash-image-armbox: IMAGE_MD5FILE=$(IMAGE_TYPE_STRING)-$(IMAGE_SUFFIX).txt
-flash-image-armbox: IMAGE_DATE=$(shell cat $(ROOTFS)/.version | grep "^version=" | cut -d= -f2 | cut -c 5-)
-flash-image-armbox: | $(IMAGE_DIR)
-	mkdir -p $(IMAGE_BUILD_TMP)/$(BOXMODEL)
-	cp $(KERNEL_ZIMAGE_DTB) $(IMAGE_BUILD_TMP)/$(BOXMODEL)/kernel.bin
+flash-image-hd51: IMAGE_NAME=$(IMAGE_PREFIX)-$(IMAGE_SUFFIX)
+flash-image-hd51: IMAGE_DESC="$(BOXNAME) [$(IMAGE_SUFFIX)] $(shell echo $(IMAGE_TYPE_STRING) | sed 's/.*/\u&/')"
+flash-image-hd51: IMAGE_MD5FILE=$(IMAGE_TYPE_STRING)-$(IMAGE_SUFFIX).txt
+flash-image-hd51: IMAGE_DATE=$(shell cat $(ROOTFS)/.version | grep "^version=" | cut -d= -f2 | cut -c 5-)
+flash-image-hd51: | $(IMAGE_DIR)
+	rm -rf $(IMAGE_BUILD_TMP)
+	mkdir -p $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)
+	cp $(KERNEL_ZIMAGE_DTB) $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/kernel.bin
 	$(CD) $(ROOTFS); \
-		tar -cvf $(IMAGE_BUILD_TMP)/$(BOXMODEL)/rootfs.tar -C $(ROOTFS) . >/dev/null 2>&1; \
-		bzip2 $(IMAGE_BUILD_TMP)/$(BOXMODEL)/rootfs.tar
+		tar -cvf $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/rootfs.tar -C $(ROOTFS) . >/dev/null 2>&1; \
+		bzip2 $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/rootfs.tar
 	# Create minimal image
-	$(CD) $(IMAGE_BUILD_TMP)/$(BOXMODEL); \
+	$(CD) $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR); \
 		tar -czf $(IMAGE_DIR)/$(IMAGE_NAME).tgz kernel.bin rootfs.tar.bz2
 	echo $(IMAGE_URL)/$(IMAGE_NAME).tgz $(IMAGE_TYPE)$(IMAGE_VER)$(IMAGE_DATE) `md5sum $(IMAGE_DIR)/$(IMAGE_NAME).tgz | cut -c1-32` $(IMAGE_DESC) $(IMAGE_VERSION) >> $(IMAGE_DIR)/$(IMAGE_MD5FILE)
-	rm -rf $(IMAGE_BUILD_TMP)/$(BOXMODEL)
+	rm -rf $(IMAGE_BUILD_TMP)
 
 # -----------------------------------------------------------------------------
 
@@ -169,8 +173,9 @@ LINUX_SWAP_PARTITION_SIZE = 204800
 STORAGE_PARTITION_OFFSET = "$(shell expr $(LINUX_SWAP_PARTITION_OFFSET) \+ $(LINUX_SWAP_PARTITION_SIZE))"
 #STORAGE_PARTITION_SIZE = 204800 # remaining flash memory
 
-flash-image-armbox-multi: IMAGE_NAME=$(IMAGE_PREFIX)-$(IMAGE_SUFFIX)
-flash-image-armbox-multi: | $(IMAGE_DIR)
+flash-image-hd51-multi: IMAGE_NAME=$(IMAGE_PREFIX)-$(IMAGE_SUFFIX)
+flash-image-hd51-multi: | $(IMAGE_DIR)
+	rm -rf $(IMAGE_BUILD_TMP)
 	mkdir -p $(IMAGE_BUILD_TMP)
 	# Create a sparse image block
 	dd if=/dev/zero of=$(IMAGE_BUILD_TMP)/$(HD51_IMAGE_LINK) seek=$(shell expr $(ROOTFS_PARTITION_SIZE) \* $(BLOCK_SECTOR)) count=0 bs=$(BLOCK_SIZE)
@@ -206,18 +211,71 @@ flash-image-armbox-multi: | $(IMAGE_DIR)
 	# Truncate on purpose
 	dd if=$(IMAGE_BUILD_TMP)/$(HD51_IMAGE_LINK) of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) seek=$(shell expr $(ROOTFS_PARTITION_OFFSET) \* $(BLOCK_SECTOR))
 	# Create final USB-image
-	mkdir -p $(IMAGE_DIR)/$(BOXMODEL)
-	cp $(KERNEL_ZIMAGE_DTB) $(IMAGE_DIR)/$(BOXMODEL)/kernel.bin
-	cp $(EMMC_IMAGE) $(IMAGE_DIR)/$(BOXMODEL)
+	mkdir -p $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)
+	cp $(EMMC_IMAGE) $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)
+	cp $(KERNEL_ZIMAGE_DTB) $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/kernel.bin
 	$(CD) $(ROOTFS); \
-		tar -cvf $(IMAGE_DIR)/$(BOXMODEL)/rootfs.tar -C $(ROOTFS) . >/dev/null 2>&1; \
-		bzip2 $(IMAGE_DIR)/$(BOXMODEL)/rootfs.tar
-	echo $(IMAGE_PREFIX) > $(IMAGE_DIR)/$(BOXMODEL)/imageversion
-	$(CD) $(IMAGE_DIR); \
-		zip -r $(IMAGE_NAME)_multi_usb.zip $(BOXMODEL)/*
-	# cleanup
-	rm -rf $(IMAGE_DIR)/$(BOXMODEL)
+		tar -cvf $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/rootfs.tar -C $(ROOTFS) . >/dev/null 2>&1; \
+		bzip2 $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/rootfs.tar
+	echo $(IMAGE_PREFIX) > $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/imageversion
+	$(CD) $(IMAGE_BUILD_TMP); \
+		zip -r $(IMAGE_DIR)/$(IMAGE_NAME)_multi_usb.zip $(IMAGE_SUBDIR)/*
 	rm -rf $(IMAGE_BUILD_TMP)
+
+# -----------------------------------------------------------------------------
+
+# armbox vu+
+flash-image-vuplus: IMAGE_NAME=$(IMAGE_PREFIX)-$(IMAGE_SUFFIX)
+flash-image-vuplus: IMAGE_DESC="$(BOXNAME) [$(IMAGE_SUFFIX)] $(shell echo $(IMAGE_TYPE_STRING) | sed 's/.*/\u&/')"
+flash-image-vuplus: IMAGE_MD5FILE=$(IMAGE_TYPE_STRING)-$(IMAGE_SUFFIX).txt
+flash-image-vuplus: IMAGE_DATE=$(shell cat $(ROOTFS)/.version | grep "^version=" | cut -d= -f2 | cut -c 5-)
+flash-image-vuplus: vmlinuz-initrd
+flash-image-vuplus: | $(IMAGE_DIR)
+	rm -rf $(IMAGE_BUILD_TMP)
+	mkdir -p $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)
+	cp $(BUILD_TMP)/$(VMLINUZ_INITRD) $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/initrd_auto.bin
+	cp $(KERNEL_ZIMAGE) $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/kernel_auto.bin
+	$(CD) $(ROOTFS); \
+		tar -cvf $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/rootfs.tar -C $(ROOTFS) . >/dev/null 2>&1; \
+		bzip2 $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/rootfs.tar
+ifeq ($(BOXMODEL), vuzero4k)
+	echo This file forces the update. > $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/force.update
+endif
+	echo This file forces a reboot after the update. > $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/reboot.update
+	echo This file forces creating partitions. > $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/mkpart.update
+	echo $(IMAGE_PREFIX) > $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/imageversion
+	# Create minimal image
+	$(CD) $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR); \
+		tar -czf $(IMAGE_DIR)/$(IMAGE_NAME).tgz rootfs.tar.bz2 initrd_auto.bin kernel_auto.bin *.update imageversion
+	echo $(IMAGE_URL)/$(IMAGE_NAME).tgz $(IMAGE_TYPE)$(IMAGE_VER)$(IMAGE_DATE) `md5sum $(IMAGE_DIR)/$(IMAGE_NAME).tgz | cut -c1-32` $(IMAGE_DESC) $(IMAGE_VERSION) >> $(IMAGE_DIR)/$(IMAGE_MD5FILE)
+	rm -rf $(IMAGE_BUILD_TMP)
+
+flash-image-vuplus-multi: IMAGE_NAME=$(IMAGE_PREFIX)-$(IMAGE_SUFFIX)
+flash-image-vuplus-multi: vmlinuz-initrd
+flash-image-vuplus-multi: | $(IMAGE_DIR)
+	rm -rf $(IMAGE_BUILD_TMP)
+	mkdir -p $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)
+	cp $(BUILD_TMP)/$(VMLINUZ_INITRD) $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/initrd_auto.bin
+	cp $(KERNEL_ZIMAGE) $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/kernel1_auto.bin
+	echo Dummy for update. > $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/kernel_auto.bin
+	$(CD) $(ROOTFS); \
+		tar -cvf $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/rootfs1.tar -C $(ROOTFS) . >/dev/null 2>&1; \
+		bzip2 $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/rootfs1.tar
+	echo Dummy for update. > $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/rootfs.tar.bz2
+ifeq ($(BOXMODEL), vuzero4k)
+	echo This file forces the update. > $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/force.update
+endif
+	echo This file forces a reboot after the update. > $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/reboot.update
+	echo This file forces creating partitions. > $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/mkpart.update
+	echo $(IMAGE_PREFIX) > $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/imageversion
+	# Create final USB-image
+	$(CD) $(IMAGE_BUILD_TMP); \
+		zip -r $(IMAGE_DIR)/$(IMAGE_NAME)_multi_usb.zip $(IMAGE_SUBDIR)/*
+	rm -rf $(IMAGE_BUILD_TMP)
+
+# -----------------------------------------------------------------------------
+
+flash-image-vuduo:
 
 # -----------------------------------------------------------------------------
 
@@ -225,5 +283,7 @@ PHONY += devtable
 PHONY += devtable-remove
 PHONY += flash-image-coolstream
 PHONY += check-image-size
-PHONY += flash-image-armbox
-PHONY += flash-image-armbox-multi
+PHONY += flash-image-hd51
+PHONY += flash-image-hd51-multi
+PHONY += flash-image-vuplus
+PHONY += flash-image-vuplus-multi

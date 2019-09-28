@@ -3,11 +3,12 @@
 #
 # -----------------------------------------------------------------------------
 
-crosstool: $(CROSS_BASE)/$(BOXARCH)/$(BOXSERIES)
+crosstool: $(CROSS_DIR)
 
 crosstools:
-	for boxseries in hd1 hd2 hd51; do \
-		make BOXSERIES=$${boxseries} $(CROSS_BASE)/$(BOXARCH)/$${boxseries} || exit; \
+	for boxseries in hd1 hd2 hd51 vusolo4k vuduo4k vuultimo4k vuzero4k vuduo; do \
+		echo "make crosstool-ng for $${boxseries}"; \
+		make BOXSERIES=$${boxseries} crosstool || exit; \
 	done;
 
 # -----------------------------------------------------------------------------
@@ -32,7 +33,7 @@ crosstool-restore: $(CROSSTOOL_BACKUP)
 # -----------------------------------------------------------------------------
 
 crosstools-renew:
-	for boxseries in hd1 hd2 hd51; do \
+	for boxseries in hd1 hd2 hd51 vusolo4k vuduo4k vuultimo4k vuzero4k vuduo; do \
 		make BOXSERIES=$${boxseries} ccache-clean || exit; \
 	done;
 	make host-clean
@@ -44,28 +45,26 @@ crosstools-renew:
 # -----------------------------------------------------------------------------
 
 # wrapper for manually call
-kernel-tarball: $(BUILD_TMP)/linux-$(KERNEL_VERSION).tar
+kernel-tarball: $(BUILD_TMP)/linux-$(KERNEL_VER).tar
 
 # create kernel-tarball
-$(BUILD_TMP)/linux-$(KERNEL_VERSION).tar: | $(BUILD_TMP)
-	make kernel.do_checkout
-	tar cf $(@) --exclude-vcs -C $(SOURCE_DIR)/$(NI-LINUX-KERNEL) .
-
-# -----------------------------------------------------------------------------
-
-# wrappers for manually call
-crosstool-arm-hd1: $(CROSS_BASE)/arm/hd1
-crosstool-arm-hd2: $(CROSS_BASE)/arm/hd2
-crosstool-arm-hd51: $(CROSS_BASE)/arm/hd51
+$(BUILD_TMP)/linux-$(KERNEL_VER).tar: | $(BUILD_TMP)
+	$(MAKE) kernel.do_prepare.$(if $(filter $(KERNEL_SOURCE),git),git,tar)
+	tar cf $(@) --exclude-vcs -C $(BUILD_TMP)/$(KERNEL_TMP) .
 
 # -----------------------------------------------------------------------------
 
 CROSSTOOL-NG_VER    = git
 CROSSTOOL-NG_TMP    = crosstool-ng.$(CROSSTOOL-NG_VER)
 CROSSTOOL-NG_SOURCE = crosstool-ng.$(CROSSTOOL-NG_VER)
-CROSSTOOL-NG_URL    = https://github.com/crosstool-ng
+CROSSTOOL-NG_URL    = https://github.com/MaxWiesel
 
 CROSSTOOL-NG_PATCH  = crosstool-ng-bash-version.patch
+
+CROSSTOOL-NG_CONFIG = $(CONFIGS)/ct-ng-$(BOXTYPE).config
+ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd1 hd2))
+  CROSSTOOL-NG_CONFIG = $(CONFIGS)/ct-ng-$(BOXTYPE)-$(BOXSERIES).config
+endif
 
 # crosstool for hd2 depends on gcc-linaro
 GCC-LINARO_VER    = 4.9-2017.01
@@ -79,32 +78,32 @@ UCLIBC_VER = 1.0.24
 
 # -----------------------------------------------------------------------------
 
-# crosstool for hd2 depends on gcc-linaro
+# crosstool for arm-hd2 depends on gcc-linaro
 $(CROSS_BASE)/arm/hd2: $(ARCHIVE)/$(GCC-LINARO_SOURCE)
 
-$(CROSS_BASE)/arm/hd1 \
-$(CROSS_BASE)/arm/hd2 \
-$(CROSS_BASE)/arm/hd51: | $(BUILD_TMP)
-	make $(BUILD_TMP)/linux-$(KERNEL_VERSION).tar
+$(CROSS_DIR): | $(BUILD_TMP)
+	make $(BUILD_TMP)/linux-$(KERNEL_VER).tar
 	#
 	$(REMOVE)/$(CROSSTOOL-NG_TMP)
 	$(GET-GIT-SOURCE) $(CROSSTOOL-NG_URL)/$(CROSSTOOL-NG_SOURCE) $(ARCHIVE)/$(CROSSTOOL-NG_SOURCE)
 	$(CPDIR)/$(CROSSTOOL-NG_SOURCE)
+ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd1 hd2))
 	$(CHDIR)/$(CROSSTOOL-NG_TMP); \
 		git checkout 1dbb06f2; \
 		$(call apply_patches, $(CROSSTOOL-NG_PATCH))
-ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd51))
+  ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2))
 	$(CHDIR)/$(CROSSTOOL-NG_TMP); \
 		cp -a $(PATCHES)/crosstool-ng/gcc/* patches/gcc/linaro-6.3-2017.02
+  endif
 endif
 	$(CHDIR)/$(CROSSTOOL-NG_TMP); \
 		unset CONFIG_SITE LIBRARY_PATH CPATH C_INCLUDE_PATH PKG_CONFIG_PATH CPLUS_INCLUDE_PATH INCLUDE; \
-		$(INSTALL_DATA) $(CONFIGS)/ct-ng-$(BOXTYPE)-$(BOXSERIES).config .config; \
+		$(INSTALL_DATA) $(CROSSTOOL-NG_CONFIG) .config; \
 		sed -i "s|^CT_PARALLEL_JOBS=.*|CT_PARALLEL_JOBS=$(PARALLEL_JOBS)|" .config; \
 		export NI_LOCAL_TARBALLS_DIR=$(ARCHIVE); \
 		export NI_PREFIX_DIR=$(@); \
-		export NI_KERNEL_VERSION=$(KERNEL_VERSION); \
-		export NI_KERNEL_LOCATION=$(BUILD_TMP)/linux-$(KERNEL_VERSION).tar; \
+		export NI_KERNEL_VERSION=$(KERNEL_VER); \
+		export NI_KERNEL_LOCATION=$(BUILD_TMP)/linux-$(KERNEL_VER).tar; \
 		export NI_LIBC_UCLIBC_CONFIG_FILE=$(CONFIGS)/ct-ng-uClibc-$(UCLIBC_VER).config; \
 		export LD_LIBRARY_PATH=; \
 		test -f ./configure || ./bootstrap; \

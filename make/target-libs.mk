@@ -218,7 +218,7 @@ LIBPNG_PATCH  = libpng-Disable-pngfix-and-png-fix-itxt.patch
 
 LIBPNG_DEPS   = zlib
 
-LIBPNG_CONF   = $(if $(filter $(BOXSERIES), hd51), --enable-arm-neon, --disable-arm-neon)
+LIBPNG_CONF   = $(if $(filter $(BOXSERIES), hd51 vusolo4k vuduo4k vuultimo4k vuzero4k), --enable-arm-neon, --disable-arm-neon)
 
 libpng: $(LIBPNG_DEPS) $(ARCHIVE)/$(LIBPNG_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LIBPNG_TMP)
@@ -331,13 +331,19 @@ $(ARCHIVE)/$(OPENSSL_SOURCE):
 
 OPENSSL_PATCH  = 0000-Configure-align-O-flag.patch
 
+ifeq ($(BOXARCH), arm)
+  OPENSSL_ARCH = linux-armv4
+else ifeq ($(BOXARCH), mips)
+  OPENSSL_ARCH = linux-generic32
+endif
+
 openssl: $(ARCHIVE)/$(OPENSSL_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(OPENSSL_TMP)
 	$(UNTAR)/$(OPENSSL_SOURCE)
 	$(CHDIR)/$(OPENSSL_TMP); \
 		$(call apply_patches, $(addprefix $(@F)/,$(OPENSSL_PATCH))); \
 		./Configure \
-			linux-armv4 \
+			$(OPENSSL_ARCH) \
 			shared \
 			threads \
 			no-hw \

@@ -12,7 +12,7 @@ ifeq ($(NI-FFMPEG_BRANCH), ni/ffmpeg/2.8)
   FFMPEG_CONFIGURE_BRANCH =
 else
   FFMPEG_DEPS +=  libxml2
-  FFMPEG_CONFIGURE_BRANCH =	\
+  FFMPEG_CONFIGURE_BRANCH = \
 			--enable-demuxer=dash \
 			--enable-libxml2
 endif

@@ -9,6 +9,9 @@ export CONFIG_SITE
 LD_LIBRARY_PATH =
 export LD_LIBRARY_PATH
 
+# empty variable EMPTY for smoother comparisons
+EMPTY =
+
 SHELL := /bin/bash
 
 # -----------------------------------------------------------------------------
@@ -27,13 +30,23 @@ SHELL := /bin/bash
 
 # - Armbox --------------------------------------------------------------------
 
-# BOXTYPE                     armbox
-#                               |
-# BOXSERIES                    hd51
-#                             /    \
-# BOXFAMILY                  bcm7251s
-#                            |      |
-# BOXMODEL                 hd51    bre2ze4k
+# BOXTYPE                   armbox ------ + ----- + -------- +
+#                          /      \        \       \          \
+# BOXSERIES             hd51      vusolo4k vuduo4k vuultimo4k vuzero4k
+#                         |          |        |        |         |
+# BOXFAMILY           bcm7251s    bcm7376  bcm7278  bcm7444s  bcm72604
+#                     |      |       |        |        |         |
+# BOXMODEL          hd51 bre2ze4k vusolo4k vuduo4k vuultimo4k vuzero4k
+
+# - Mipsbox --------------------------------------------------------------------
+
+# BOXTYPE           mipsbox
+#                      |
+# BOXSERIES          vuduo
+#                      |
+# BOXFAMILY         bcm7335
+#                      |
+# BOXMODEL           vuduo
 
 # -----------------------------------------------------------------------------
 
@@ -51,6 +64,26 @@ ifneq ($(BOXSERIES),)
     BOXTYPE = armbox
     BOXFAMILY = bcm7251s
     BOXMODEL = hd51
+  else ifeq ($(BOXSERIES), vusolo4k)
+    BOXTYPE = armbox
+    BOXFAMILY = bcm7376
+    BOXMODEL = vusolo4k
+  else ifeq ($(BOXSERIES), vuduo4k)
+    BOXTYPE = armbox
+    BOXFAMILY = bcm7278
+    BOXMODEL = vuduo4k
+  else ifeq ($(BOXSERIES), vuultimo4k)
+    BOXTYPE = armbox
+    BOXFAMILY = bcm7444s
+    BOXMODEL = vuultimo4k
+  else ifeq ($(BOXSERIES), vuzero4k)
+    BOXTYPE = armbox
+    BOXFAMILY = bcm72604
+    BOXMODEL = vuzero4k
+  else ifeq ($(BOXSERIES), vuduo)
+    BOXTYPE = mipsbox
+    BOXFAMILY = bcm7335
+    BOXMODEL = vuduo
   else
     $(error $(BOXTYPE) BOXSERIES $(BOXSERIES) not supported)
   endif
@@ -73,13 +106,33 @@ else ifneq ($(BOXFAMILY),)
     BOXTYPE = armbox
     BOXSERIES = hd51
     BOXMODEL = hd51
+  else ifeq ($(BOXFAMILY), bcm7376)
+    BOXTYPE = armbox
+    BOXSERIES = vusolo4k
+    BOXMODEL = vusolo4k
+  else ifeq ($(BOXFAMILY), bcm7278)
+    BOXTYPE = armbox
+    BOXSERIES = vuduo4k
+    BOXMODEL = vuduo4k
+  else ifeq ($(BOXFAMILY), bcm7444s)
+    BOXTYPE = armbox
+    BOXSERIES = vuultimo4k
+    BOXMODEL = vuultimo4k
+  else ifeq ($(BOXFAMILY), bcm72604)
+    BOXTYPE = armbox
+    BOXSERIES = vuzero4k
+    BOXMODEL = vuzero4k
+  else ifeq ($(BOXFAMILY), bcm7335)
+    BOXTYPE = mipsbox
+    BOXSERIES = vuduo
+    BOXMODEL = vuduo
   else
     $(error $(BOXTYPE) BOXFAMILY $(BOXFAMILY) not supported)
   endif
 
 # assign by given BOXMODEL
 else ifneq ($(BOXMODEL),)
-  ifeq ($(BOXMODEL), nevis)
+  ifeq ($(BOXMODEL), $(filter $(BOXMODEL), nevis))
     BOXTYPE = coolstream
     BOXSERIES = hd1
     BOXFAMILY = nevis
@@ -91,19 +144,37 @@ else ifneq ($(BOXMODEL),)
     BOXTYPE = coolstream
     BOXSERIES = hd2
     BOXFAMILY = kronos
-  else ifeq ($(BOXMODEL), hd51)
+  else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k))
     BOXTYPE = armbox
     BOXSERIES = hd51
     BOXFAMILY = bcm7251s
-  else ifeq ($(BOXMODEL), bre2ze4k)
+  else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vusolo4k))
     BOXTYPE = armbox
-    BOXSERIES = hd51
-    BOXFAMILY = bcm7251s
+    BOXSERIES = vusolo4k
+    BOXFAMILY = bcm7376
+  else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vuduo4k))
+    BOXTYPE = armbox
+    BOXSERIES = vuduo4k
+    BOXFAMILY = bcm7278
+  else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vuultimo4k))
+    BOXTYPE = armbox
+    BOXSERIES = vuultimo4k
+    BOXFAMILY = bcm7444s
+  else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vuzero4k))
+    BOXTYPE = armbox
+    BOXSERIES = vuzero4k
+    BOXFAMILY = bcm72604
+  else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vuduo))
+    BOXTYPE = mipsbox
+    BOXSERIES = vuduo
+    BOXFAMILY = bcm7335
   else
     $(error $(BOXTYPE) BOXMODEL $(BOXMODEL) not supported)
   endif
 
 endif
+
+# -----------------------------------------------------------------------------
 
 ifeq ($(BOXTYPE), coolstream)
   BOXTYPE_SC = cst
@@ -111,6 +182,46 @@ ifeq ($(BOXTYPE), coolstream)
 else ifeq ($(BOXTYPE), armbox)
   BOXTYPE_SC = arm
   BOXARCH = arm
+else ifeq ($(BOXTYPE), mipsbox)
+  BOXTYPE_SC = mips
+  BOXARCH = mips
+endif
+
+# -----------------------------------------------------------------------------
+
+ifeq ($(BOXMODEL), nevis)
+  BOXNAME="HD1, BSE, Neo, Neo², Zee"
+else ifeq ($(BOXMODEL), apollo)
+  BOXNAME="Tank"
+else ifeq ($(BOXMODEL), shiner)
+  BOXNAME="Trinity"
+else ifeq ($(BOXMODEL), kronos)
+  BOXNAME="Zee², Trinity V2"
+else ifeq ($(BOXMODEL), kronos_v2)
+  BOXNAME="Link, Trinity Duo"
+else ifeq ($(BOXMODEL), hd51)
+  BOXNAME="AX/Mut@nt HD51"
+else ifeq ($(BOXMODEL), bre2ze4k)
+  BOXNAME="WWIO BRE2ZE4K"
+else ifeq ($(BOXMODEL), vusolo4k)
+  BOXNAME="VU+ Solo 4K"
+else ifeq ($(BOXMODEL), vuduo4k)
+  BOXNAME="VU+ Duo 4K"
+else ifeq ($(BOXMODEL), vuultimo4k)
+  BOXNAME="VU+ Ultimo 4K"
+else ifeq ($(BOXMODEL), vuzero4k)
+  BOXNAME="VU+ Zero 4K"
+else ifeq ($(BOXMODEL), vuduo)
+  BOXNAME="VU+ Duo"
+endif
+
+# -----------------------------------------------------------------------------
+
+ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vusolo4k vuduo4k vuultimo4k vuzero4k vuduo))
+  BOXVENDOR = vuplus
+  $(error VU+ not ready yet)
+else
+  BOXVENDOR = $(EMPTY)
 endif
 
 # -----------------------------------------------------------------------------
@@ -151,7 +262,7 @@ WHOAMI       := $(shell id -un)
 ARCHIVE       = $(BASE_DIR)/download
 BUILD_TMP     = $(BASE_DIR)/build_tmp
 ROOTFS        = $(BUILD_TMP)/rootfs
-ifeq ($(BOXTYPE), armbox)
+ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51))
   ROOTFS      = $(BUILD_TMP)/rootfs/linuxrootfs1
 endif
 DEPS_DIR      = $(BASE_DIR)/deps
@@ -171,10 +282,9 @@ CROSS_BASE    = $(BASE_DIR)/cross
 CROSS_DIR    ?= $(CROSS_BASE)/$(BOXARCH)/$(BOXSERIES)
 CONFIGS       = $(BASE_DIR)/configs
 PATCHES       = $(BASE_DIR)/patches
-ifeq ($(BOXTYPE), coolstream)
-  SKEL_ROOT   = $(BASE_DIR)/skel-root/$(BOXTYPE)/$(BOXSERIES)
-else ifeq ($(BOXTYPE), armbox)
-  SKEL_ROOT   = $(BASE_DIR)/skel-root/$(BOXTYPE)/$(BOXMODEL)
+SKEL-ROOT     = $(BASE_DIR)/skel-root/$(BOXSERIES)
+ifeq ($(BOXVENDOR), vuplus)
+  SKEL-ROOT   = $(BASE_DIR)/skel-root/vuplus
 endif
 IMAGEFILES    = $(BASE_DIR)/skel-root/general
 
@@ -191,10 +301,7 @@ DEBUG ?= no
 # -----------------------------------------------------------------------------
 
 ifeq ($(BOXSERIES), hd1)
-  KERNEL_VERSION_MAJOR   = 2.6.34
-  KERNEL_VERSION         = 2.6.34.13
-
-  DRIVERS_DIR            = nevis
+  DRIVERS_DIR            = $(BOXFAMILY)
   CORTEX-STRINGS_LDFLAG  =
   TARGET                 = arm-cx2450x-linux-gnueabi
   TARGET_OPTIMIZATION    = -Os
@@ -205,15 +312,7 @@ ifeq ($(BOXSERIES), hd1)
   CXX11_ABI              =
 
 else ifeq ($(BOXSERIES), hd2)
-  KERNEL_VERSION_MAJOR   = 3.10
-  KERNEL_VERSION         = 3.10.93
-
-  ifeq ($(BOXFAMILY), apollo)
-    DRIVERS_DIR          = apollo
-  endif
-  ifeq ($(BOXFAMILY), kronos)
-    DRIVERS_DIR          = kronos
-  endif
+  DRIVERS_DIR            = $(BOXFAMILY)
   CORTEX-STRINGS_LDFLAG  = -lcortex-strings
   TARGET                 = arm-cortex-linux-uclibcgnueabi
   TARGET_OPTIMIZATION    = -O2
@@ -228,11 +327,8 @@ else ifeq ($(BOXSERIES), hd2)
   endif
   CXX11_ABI              = -D_GLIBCXX_USE_CXX11_ABI=0
 
-else ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51))
-  KERNEL_VERSION_MAJOR   = 4.10
-  KERNEL_VERSION         = 4.10.12
-
-  DRIVERS_DIR            = $(BOXSERIES)
+else ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 vusolo4k vuduo4k vuultimo4k vuzero4k))
+  DRIVERS_DIR            = $(BOXMODEL)
   CORTEX-STRINGS_LDFLAG  = -lcortex-strings
   TARGET                 = arm-cortex-linux-gnueabihf
   TARGET_OPTIMIZATION    = -O2
@@ -242,12 +338,23 @@ else ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51))
   TARGET_EXTRA_LDFLAGS   =
   CXX11_ABI              =
 
+else ifeq ($(BOXSERIES), $(filter $(BOXSERIES), vuduo))
+  DRIVERS_DIR            = $(BOXMODEL)
+  CORTEX-STRINGS_LDFLAG  =
+  TARGET                 = mipsel-unknown-linux-gnu
+  TARGET_OPTIMIZATION    = -O2
+  TARGET_DEBUGGING       = -g
+  TARGET_ABI             = -march=mips32 -mtune=mips32
+  TARGET_EXTRA_CFLAGS    =
+  TARGET_EXTRA_LDFLAGS   =
+  CXX11_ABI              =
+
 endif
 
 STATIC_LIB_DIR = $(STATIC_DIR)/lib
 TARGET_BIN_DIR = $(TARGET_DIR)/bin
 TARGET_LIB_DIR = $(TARGET_DIR)/lib
-TARGET_MODULES_DIR = $(TARGET_LIB_DIR)/modules/$(KERNEL_VERSION)
+TARGET_MODULES_DIR = $(TARGET_LIB_DIR)/modules/$(KERNEL_VER)
 TARGET_INCLUDE_DIR = $(TARGET_DIR)/include
 TARGET_SHARE_DIR = $(TARGET_DIR)/share
 
@@ -339,9 +446,6 @@ TOUCH = @touch $(D)/$(@)
 INSTALL      = install
 INSTALL_DATA = $(INSTALL) -m 0644
 INSTALL_EXEC = $(INSTALL) -m 0755
-
-# empty variable EMPTY for smoother comparisons
-EMPTY =
 
 GET-GIT-ARCHIVE = $(HELPERS_DIR)/get-git-archive.sh
 GET-GIT-SOURCE  = $(HELPERS_DIR)/get-git-source.sh

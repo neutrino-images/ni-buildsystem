@@ -22,8 +22,8 @@ $(TARGET_DIR)/.version: | $(TARGET_DIR)
 	echo "box_model=$(BOXMODEL)"						>> $(@)
 	echo "creator=$(MAINTAINER)"						>> $(@)
 	echo "homepage=www.neutrino-images.de"					>> $(@)
-ifeq ($(BOXTYPE), armbox)
-	echo "imagedir=$(BOXMODEL)"						>> $(@)
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), armbox mipsbox))
+	echo "imagedir=$(IMAGE_SUBDIR)"						>> $(@)
 endif
 
 # -----------------------------------------------------------------------------
@@ -39,7 +39,7 @@ $(TARGET_DIR)/var/etc/update.urls: | $(TARGET_DIR)
 symbolic-links: | $(TARGET_DIR)
 	$(CD) $(TARGET_DIR); \
 		ln -sf /var/root root
-ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51))
+ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 vusolo4k vuduo4k vuultimo4k vuzero4k vuduo))
 	$(CD) $(TARGET_DIR); \
 		ln -sf /var/root home
 endif
@@ -140,7 +140,7 @@ ifneq ($(DEBUG), yes)
 			-path $(ROOTFS)/lib/modules \) -prune -o \
 	-type f -print0 | xargs -0 $(TARGET_STRIP) || true
   ifeq ($(BOXSERIES), hd2)
-	find $(ROOTFS)/lib/modules/$(KERNEL_VERSION)/kernel -type f -name '*.ko' | xargs -n 1 $(TARGET_OBJCOPY) --strip-unneeded
+	find $(ROOTFS)/lib/modules/$(KERNEL_VER)/kernel -type f -name '*.ko' | xargs -n 1 $(TARGET_OBJCOPY) --strip-unneeded
   endif
 	@echo -e "$(TERM_YELLOW)"
 	@du -sh $(ROOTFS)

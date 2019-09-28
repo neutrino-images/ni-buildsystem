@@ -3,7 +3,8 @@
 #
 # -----------------------------------------------------------------------------
 
-BOOTSTRAP  = target-dir
+BOOTSTRAP  = $(CROSS_DIR)
+BOOTSTRAP += target-dir
 BOOTSTRAP += $(DEPS_DIR)
 BOOTSTRAP += $(BUILD_TMP)
 BOOTSTRAP += $(STAGING_DIR)
@@ -24,14 +25,16 @@ endif
 bootstrap: $(BOOTSTRAP)
 	@touch $(BUILD_TMP)/.$(BOXTYPE)-$(BOXMODEL)
 	$(call draw_line);
-	@echo -e "$(TERM_YELLOW)Bootstrapped for $(shell echo $(BOXTYPE) | sed 's/.*/\u&/') $(BOXMODEL)$(TERM_NORMAL)"
+	@echo -e "$(TERM_YELLOW)Bootstrapped for $(shell echo $(BOXTYPE) | sed 's/.*/\u&/') $(BOXNAME) ($(BOXMODEL))$(TERM_NORMAL)"
 	$(call draw_line);
 
 skeleton: | $(TARGET_DIR)
-	cp --remove-destination -a $(SKEL_ROOT)/. $(TARGET_DIR)/
-	if [ -d $(SKEL_ROOT)-$(BOXFAMILY)/ ]; then \
-		cp -a $(SKEL_ROOT)-$(BOXFAMILY)/. $(TARGET_DIR)/; \
-	fi
+	cp --remove-destination -a $(SKEL-ROOT)/. $(TARGET_DIR)/
+ifneq ($(wildcard $(SKEL-ROOT)-$(BOXFAMILY)),)
+	cp --remove-destination -a $(SKEL-ROOT)-$(BOXFAMILY)/. $(TARGET_DIR)/
+endif
+	find $(TARGET_DIR) -type f -print0 | xargs --no-run-if-empty -0 \
+		sed -i 's|%(BOXMODEL)|$(BOXMODEL)|'
 
 target-dir:
 	mkdir -p $(TARGET_DIR)
@@ -79,12 +82,11 @@ $(HOST_DIR)/bin: $(HOST_DIR)
 
 $(TARGET_BIN_DIR): | $(TARGET_DIR)
 	mkdir -p $(@)
+	cp -a $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/bin/. $(@)
 
 $(TARGET_INCLUDE_DIR): | $(TARGET_DIR)
 	mkdir -p $(@)
-ifeq ($(BOXTYPE), armbox)
 	cp -a $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/include/. $(@)
-endif
 
 $(TARGET_LIB_DIR): | $(TARGET_DIR)
 	mkdir -p $(@)
@@ -104,16 +106,14 @@ $(TARGET_LIB_DIR)/firmware: | $(TARGET_DIR)
 
 $(TARGET_LIB_DIR)/modules: | $(TARGET_DIR)
 	mkdir -p $(@)
-	cp -a $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/lib-modules/$(KERNEL_VERSION) $(@)
+	cp -a $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/lib-modules/$(KERNEL_VER) $(@)
 ifeq ($(BOXMODEL), nevis)
-	ln -sf $(KERNEL_VERSION) $(@)/$(KERNEL_VERSION)-$(BOXMODEL)
+	ln -sf $(KERNEL_VER) $(@)/$(KERNEL_VER)-$(BOXMODEL)
 endif
 
 $(STATIC_LIB_DIR): | $(TARGET_DIR)
 	mkdir -p $(@)
-	if [ -d $(STATIC_DIR)/ ]; then \
-		cp -a $(STATIC_DIR)/. $(TARGET_DIR)/; \
-	fi
+	cp -a $(STATIC_DIR)/. $(TARGET_DIR)/; \
 
 $(TARGET_DIR)/var/update: | $(TARGET_DIR)
 	mkdir -p $(@)
@@ -142,7 +142,7 @@ ifeq ($(BOXSERIES), hd2)
 		ln -sf libuClibc-$(UCLIBC_VER).so libpthread.so.0; \
 		ln -sf libuClibc-$(UCLIBC_VER).so librt.so.0
 endif
-ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51))
+ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 vusolo4k vuduo4k vuultimo4k vuzero4k))
 	$(CD) $(TARGET_LIB_DIR); \
 		ln -sf ld-2.23.so ld-linux.so.3
 endif

@@ -3,21 +3,16 @@
 #
 # -----------------------------------------------------------------------------
 
-plugins: \
-	neutrino-plugins \
-	logo-addon \
-	neutrino-mediathek \
-	doscam-webif-skin
-	make plugins-$(BOXSERIES)
-
-plugins-hd1:
-	# nothing to do
-
-plugins-hd2 \
-plugins-hd51: \
-	channellogos
-ifneq ($(BOXMODEL), kronos_v2)
-	make links
+plugins:
+	$(MAKE) neutrino-plugins
+	$(MAKE) logo-addon
+	$(MAKE) neutrino-mediathek
+	$(MAKE) doscam-webif-skin
+ifneq ($(BOXSERIES), hd1)
+	$(MAKE) channellogos
+  ifneq ($(BOXMODEL), kronos_v2)
+	$(MAKE) links
+  endif
 endif
 
 # -----------------------------------------------------------------------------
@@ -200,9 +195,6 @@ links: $(LINKS_DEPS) $(ARCHIVE)/$(LINKS_SOURCE) $(SHAREPLUGINS) | $(TARGET_DIR)
 # -----------------------------------------------------------------------------
 
 PHONY += plugins
-PHONY += plugins-hd1
-PHONY += plugins-hd2
-PHONY += plugins-hd51
 
 PHONY += neutrino-plugins-uninstall neutrino-plugins-distclean
 PHONY += neutrino-plugins-clean neutrino-plugins-clean-all

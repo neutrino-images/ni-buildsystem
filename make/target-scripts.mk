@@ -19,7 +19,8 @@ init-scripts: \
 	$(TARGET_DIR)/etc/init.d/resizerootfs \
 	$(TARGET_DIR)/etc/init.d/swap \
 	$(TARGET_DIR)/etc/init.d/sys_update.sh \
-	$(TARGET_DIR)/etc/init.d/syslogd
+	$(TARGET_DIR)/etc/init.d/syslogd \
+	$(TARGET_DIR)/etc/init.d/vuplus-platform-util
 
 $(TARGET_DIR)/etc/init.d/globals:
 	$(INSTALL_DATA) -D $(IMAGEFILES)/scripts/init.globals $(@)
@@ -36,7 +37,7 @@ $(TARGET_DIR)/etc/init.d/camd_datefix:
 	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/camd_datefix.init $(@)
 
 $(TARGET_DIR)/etc/init.d/coredump:
-ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd51))
+ifneq ($(BOXSERIES), hd1)
 	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/coredump.init $(@)
 endif
 
@@ -78,7 +79,7 @@ ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51))
 endif
 
 $(TARGET_DIR)/etc/init.d/swap:
-ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51))
+ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 vusolo4k vuduo4k vuultimo4k vuzero4k vuduo))
 	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/swap.init $(@)
 	ln -sf swap $(TARGET_DIR)/etc/init.d/K99swap
 endif
@@ -90,12 +91,23 @@ $(TARGET_DIR)/etc/init.d/syslogd:
 	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/syslogd.init $(@)
 	ln -sf syslogd $(TARGET_DIR)/etc/init.d/K98syslogd
 
+$(TARGET_DIR)/etc/init.d/vuplus-platform-util:
+ifeq ($(BOXSERIES), $(filter $(BOXSERIES), vusolo4k vuduo4k vuultimo4k vuzero4k))
+	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/$(BOXSERIES)-platform-util.init $(@)
+endif
+
 # -----------------------------------------------------------------------------
 
 scripts: \
+	$(TARGET_DIR)/bin/bp3flash.sh \
 	$(TARGET_DIR)/sbin/service \
 	$(TARGET_DIR)/sbin/flash_eraseall \
 	$(TARGET_SHARE_DIR)/udhcpc/default.script
+
+$(TARGET_DIR)/bin/bp3flash.sh:
+ifeq ($(BOXSERIES), $(filter $(BOXSERIES), vuduo4k))
+	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/bp3flash.sh $(@)
+endif
 
 $(TARGET_DIR)/sbin/service:
 	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/service $(@)

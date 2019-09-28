@@ -3,7 +3,7 @@
 #
 # -----------------------------------------------------------------------------
 
-BOXSERIES_UPDATE = hd2 hd51
+BOXSERIES_UPDATE = hd2 hd51 vusolo4k vuduo4k vuultimo4k vuzero4k vuduo
 ifneq ($(DEBUG), yes)
 	BOXSERIES_UPDATE += hd1
 endif
@@ -164,8 +164,8 @@ pathauf-192:
 
 initial-settings: matze-192
 	$(REMOVE)/initial
-	mkdir $(BUILD_TMP)/initial
-	cd $(BUILD_TMP)/initial && \
+	$(MKDIR)/initial
+	$(CHDIR)/initial && \
 		tar -xf $(STAGING_DIR)/updates/matze-192.bin && \
 		cp temp_inst/inst/var/tuxbox/config/zapit/* $(SOURCE_DIR)/$(NI-NEUTRINO)/data/initial/
 	ASTRA192=`grep 'position=\"192\"' $(SOURCE_DIR)/$(NI-NEUTRINO)/data/config/satellites.xml`; \

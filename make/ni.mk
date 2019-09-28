@@ -3,7 +3,7 @@
 #
 # -----------------------------------------------------------------------------
 
-BOXMODEL_IMAGE = apollo kronos kronos_v2 hd51 bre2ze4k
+BOXMODEL_IMAGE = apollo kronos kronos_v2 hd51 bre2ze4k # vusolo4k vuduo4k vuultimo4k vuzero4k vuduo
 ifneq ($(DEBUG), yes)
   BOXMODEL_IMAGE += nevis
 endif
@@ -53,7 +53,7 @@ ni-image:
 	$(MAKE) wget
 	$(MAKE) iconv
 	$(MAKE) streamripper
-ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd51))
+ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd51 vusolo4k vuduo4k vuultimo4k vuzero4k vuduo))
 	$(MAKE) less
 	$(MAKE) parted
 	$(MAKE) openvpn
@@ -65,7 +65,7 @@ ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd51))
 	$(MAKE) minicom
 	$(MAKE) mc
   endif
-  ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51))
+  ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 vusolo4k vuduo4k vuultimo4k vuzero4k vuduo))
 	$(MAKE) rsync
 	$(MAKE) ofgwrite
 	$(MAKE) aio-grab

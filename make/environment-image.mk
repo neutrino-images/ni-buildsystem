@@ -57,3 +57,9 @@ endif
 IMAGE_URL = $(NI-SERVER)/$(NI-SUBDIR)
 
 IMAGE_BUILD_TMP = $(BUILD_TMP)/image-build
+
+ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vusolo4k vuduo4k vuultimo4k vuzero4k vuduo))
+  IMAGE_SUBDIR = $(subst vu,vuplus/,$(BOXMODEL))
+else
+  IMAGE_SUBDIR = $(BOXMODEL)
+endif

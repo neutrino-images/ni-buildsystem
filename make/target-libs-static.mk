@@ -4,7 +4,7 @@
 # -----------------------------------------------------------------------------
 
 STATIC_LIBS =
-ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd51))
+ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd51 vusolo4k vuduo4k vuultimo4k vuzero4k))
   STATIC_LIBS += cortex-strings
 endif
 
@@ -20,7 +20,7 @@ CORTEX-STRINGS_URL    = http://git.linaro.org/git-ro/toolchain/cortex-strings.gi
 $(ARCHIVE)/$(CORTEX-STRINGS_SOURCE):
 	$(GET-GIT-ARCHIVE) $(CORTEX-STRINGS_URL) $(CORTEX-STRINGS_VER) $(@F) $(ARCHIVE)
 
-CORTEX-STRINGS_CONF   = $(if $(filter $(BOXSERIES), hd51), --with-neon, --without-neon)
+CORTEX-STRINGS_CONF   = $(if $(filter $(BOXSERIES), hd51 vusolo4k vuduo4k vuultimo4k vuzero4k),--with-neon,--without-neon)
 
 cortex-strings: $(STATIC_LIB_DIR)/libcortex-strings.la
 $(STATIC_LIB_DIR)/libcortex-strings.la: $(ARCHIVE)/$(CORTEX-STRINGS_SOURCE) | $(TARGET_DIR)
