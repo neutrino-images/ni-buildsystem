@@ -230,24 +230,16 @@ flash-image-vuplus: IMAGE_NAME=$(IMAGE_PREFIX)-$(IMAGE_SUFFIX)
 flash-image-vuplus: IMAGE_DESC="$(BOXNAME) [$(IMAGE_SUFFIX)] $(shell echo $(IMAGE_TYPE_STRING) | sed 's/.*/\u&/')"
 flash-image-vuplus: IMAGE_MD5FILE=$(IMAGE_TYPE_STRING)-$(IMAGE_SUFFIX).txt
 flash-image-vuplus: IMAGE_DATE=$(shell cat $(ROOTFS)/.version | grep "^version=" | cut -d= -f2 | cut -c 5-)
-flash-image-vuplus: vmlinuz-initrd
 flash-image-vuplus: | $(IMAGE_DIR)
 	rm -rf $(IMAGE_BUILD_TMP)
 	mkdir -p $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)
-	cp $(BUILD_TMP)/$(VMLINUZ_INITRD) $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/initrd_auto.bin
 	cp $(KERNEL_ZIMAGE) $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/kernel_auto.bin
 	$(CD) $(ROOTFS); \
 		tar -cvf $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/rootfs.tar -C $(ROOTFS) . >/dev/null 2>&1; \
 		bzip2 $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/rootfs.tar
-ifeq ($(BOXMODEL), vuzero4k)
-	echo This file forces the update. > $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/force.update
-endif
-	echo This file forces a reboot after the update. > $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/reboot.update
-	echo This file forces creating partitions. > $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/mkpart.update
-	echo $(IMAGE_PREFIX) > $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/imageversion
 	# Create minimal image
 	$(CD) $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR); \
-		tar -czf $(IMAGE_DIR)/$(IMAGE_NAME).tgz rootfs.tar.bz2 initrd_auto.bin kernel_auto.bin *.update imageversion
+		tar -czf $(IMAGE_DIR)/$(IMAGE_NAME).tgz kernel_auto.bin rootfs.tar.bz2
 	echo $(IMAGE_URL)/$(IMAGE_NAME).tgz $(IMAGE_TYPE)$(IMAGE_VER)$(IMAGE_DATE) `md5sum $(IMAGE_DIR)/$(IMAGE_NAME).tgz | cut -c1-32` $(IMAGE_DESC) $(IMAGE_VERSION) >> $(IMAGE_DIR)/$(IMAGE_MD5FILE)
 	rm -rf $(IMAGE_BUILD_TMP)
 
