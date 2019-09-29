@@ -213,6 +213,7 @@ flash-image-hd51-multi: | $(IMAGE_DIR)
 	# Create final USB-image
 	mkdir -p $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)
 	cp $(EMMC_IMAGE) $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)
+	cp $(IMAGEFILES)/splash-images/ni-splash.bmp $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/splash.bin
 	cp $(KERNEL_ZIMAGE_DTB) $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/kernel.bin
 	$(CD) $(ROOTFS); \
 		tar -cvf $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/rootfs.tar -C $(ROOTFS) . >/dev/null 2>&1; \
@@ -255,6 +256,7 @@ flash-image-vuplus-multi: vmlinuz-initrd
 flash-image-vuplus-multi: | $(IMAGE_DIR)
 	rm -rf $(IMAGE_BUILD_TMP)
 	mkdir -p $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)
+	cp $(IMAGEFILES)/splash-images/ni-splash.bmp $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/splash_auto.bin
 	cp $(BUILD_TMP)/$(VMLINUZ_INITRD) $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/initrd_auto.bin
 	cp $(KERNEL_ZIMAGE) $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/kernel1_auto.bin
 	echo Dummy for update. > $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/kernel_auto.bin
