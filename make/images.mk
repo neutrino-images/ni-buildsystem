@@ -264,8 +264,9 @@ flash-image-vuplus-multi: | $(IMAGE_DIR)
 	echo Dummy for update. > $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/rootfs4.tar.bz2
 ifeq ($(BOXMODEL), vuzero4k)
 	echo This file forces the update. > $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/force.update
-endif
+else
 	echo This file forces a reboot after the update. > $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/reboot.update
+endif
 	echo This file forces creating partitions. > $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/mkpart.update
 	echo $(IMAGE_PREFIX) > $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/imageversion
 	# Create final USB-image
