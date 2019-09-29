@@ -218,7 +218,7 @@ endif
 # -----------------------------------------------------------------------------
 
 ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vusolo4k vuduo4k vuultimo4k vuzero4k vuduo))
-  $(error VU+ not ready yet)
+  #$(error VU+ not ready yet)
 endif
 
 # -----------------------------------------------------------------------------
