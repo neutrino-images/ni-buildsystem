@@ -35,10 +35,12 @@ ifneq ($(wildcard $(SKEL-ROOT)-$(BOXFAMILY)),)
 endif
 	find $(TARGET_DIR) -type f -print0 | xargs --no-run-if-empty -0 \
 		sed -i 's|%(BOXMODEL)|$(BOXMODEL)|'
+	sed -i 's|%(BOOT_PARTITION)|$(BOOT_PARTITION)|' $(TARGET_DIR)/etc/mdev.conf
+
 
 target-dir:
 	mkdir -p $(TARGET_DIR)
-ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51))
+ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 vusolo4k vuduo4k vuultimo4k vuzero4k))
 	mkdir -p $(TARGET_DIR)/boot
 endif
 	mkdir -p $(TARGET_DIR)/dev

@@ -54,6 +54,8 @@ else ifeq ($(BOXFAMILY), bcm7376)
   VMLINUZ_INITRD_URL    = https://bitbucket.org/max_10/vmlinuz-initrd-$(BOXMODEL)/downloads
   VMLINUZ_INITRD        = vmlinuz-initrd-7366c0
 
+  BOOT_PARTITION = 1
+
 # arm-vuduo4k
 else ifeq ($(BOXFAMILY), bcm7278)
   KERNEL_VER    = 4.1.45-1.17
@@ -70,6 +72,8 @@ else ifeq ($(BOXFAMILY), bcm7278)
   VMLINUZ_INITRD_SOURCE = vmlinuz-initrd_$(BOXMODEL)_$(VMLINUZ_INITRD_VER).tar.gz
   VMLINUZ_INITRD_URL    = https://bitbucket.org/max_10/vmlinuz-initrd-$(BOXMODEL)/downloads
   VMLINUZ_INITRD        = vmlinuz-initrd-7278b1
+
+  BOOT_PARTITION = 1
 
 # arm-vuultimo4k
 else ifeq ($(BOXFAMILY), bcm7444s)
@@ -88,6 +92,8 @@ else ifeq ($(BOXFAMILY), bcm7444s)
   VMLINUZ_INITRD_URL    = https://bitbucket.org/max_10/vmlinuz-initrd-$(BOXMODEL)/downloads
   VMLINUZ_INITRD        = vmlinuz-initrd-7445d0
 
+  BOOT_PARTITION = 1
+
 # arm-vuzero4k
 else ifeq ($(BOXFAMILY), bcm72604)
   KERNEL_VER    = 4.1.20-1.9
@@ -104,6 +110,8 @@ else ifeq ($(BOXFAMILY), bcm72604)
   VMLINUZ_INITRD_SOURCE = vmlinuz-initrd_$(BOXMODEL)_$(VMLINUZ_INITRD_VER).tar.gz
   VMLINUZ_INITRD_URL    = https://bitbucket.org/max_10/vmlinuz-initrd-$(BOXMODEL)/downloads
   VMLINUZ_INITRD        = vmlinuz-initrd-7260a0
+
+  BOOT_PARTITION = 4
 
 # mips-vuduo
 else ifeq ($(BOXFAMILY), bcm7335)
