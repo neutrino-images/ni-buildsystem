@@ -73,7 +73,7 @@ else ifeq ($(BOXFAMILY), bcm7278)
   VMLINUZ_INITRD_URL    = https://bitbucket.org/max_10/vmlinuz-initrd-$(BOXMODEL)/downloads
   VMLINUZ_INITRD        = vmlinuz-initrd-7278b1
 
-  BOOT_PARTITION = 1
+  BOOT_PARTITION = 6
 
 # arm-vuultimo4k
 else ifeq ($(BOXFAMILY), bcm7444s)
