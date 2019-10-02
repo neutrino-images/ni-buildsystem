@@ -45,6 +45,38 @@ for i in $BLOCKS; do
 	fi
 done
 
+# vuplus mess
+if [ -e /proc/stb/info/vumodel ]; then
+	vumodel=$(cat /proc/stb/info/vumodel)
+
+	case $vumodel in
+		solo4k|ultimo4k)
+			KERNELDEVS="4 6 8 10"
+			ROOTFSDEVS="5 7 9 11"
+		;;
+		duo4k)
+			KERNELDEVS="9 11 13 15"
+			ROOTFSDEVS="10 12 14 16"
+		;;
+		zero4k)
+			KERNELDEVS="7 9 11 13"
+			ROOTFSDEVS="8 10 12 14"
+		;;
+	esac
+
+	for k in $KERNELDEVS; do
+		if [ "$MDEV" == "mmcblk0p$k" ]; then
+			KERNELDEV=$MDEV
+		fi
+	done
+
+	for r in $ROOTFSDEVS; do
+		if [ "$MDEV" == "mmcblk0p$r" ]; then
+			ROOTFSDEV=$MDEV
+		fi
+	done
+fi
+
 if [ "$SUBDIRBOOT" == "1" -o "$USE_PARTNAMES" == "1" ]; then
 	MOUNTPOINT="$MOUNTBASE/$R_PARTNAME"
 elif [ "$PARTNAME" == "storage" ]; then
