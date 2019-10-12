@@ -165,7 +165,7 @@
  {
  	struct links_event ev;
  	mouse_x += dx;
-@@ -702,6 +703,7 @@
+@@ -704,6 +705,7 @@
  
  static void set_palette(struct palette *pal)
  {
@@ -173,7 +173,7 @@
  	struct fb_cmap cmap;
  	int i;
  	unsigned short *red = pal->red;
-@@ -878,7 +880,7 @@
+@@ -880,7 +882,7 @@
  	EINTRLOOP(rs, ioctl(TTY, VT_GETMODE, &vt_omode));
  	if (rs == -1) {
  		in_gr_operation--;
@@ -182,7 +182,7 @@
  	}
  	memcpy(&vt_mode, &vt_omode, sizeof(vt_mode));
  
-@@ -890,7 +892,7 @@
+@@ -892,7 +894,7 @@
  	EINTRLOOP(rs, ioctl(TTY, VT_SETMODE, &vt_mode));
  	if (rs == -1) {
  		in_gr_operation--;
@@ -191,7 +191,7 @@
  	}
  
  	EINTRLOOP(rs, ioctl(TTY, VT_WAITACTIVE, fb_console));
-@@ -931,6 +933,7 @@
+@@ -933,6 +935,7 @@
  
  static void fb_gpm_in(void *nic)
  {
@@ -199,7 +199,7 @@
  	struct links_event ev;
  	int g;
  	Gpm_Event gev;
-@@ -1103,10 +1106,12 @@
+@@ -1106,10 +1109,12 @@
  	if (current_virtual_device->mouse_handler) current_virtual_device->mouse_handler(current_virtual_device, mouse_x, mouse_y, button);
  	redraw_mouse();
  	EINTRLOOP(rs, fsync(fb_handle));
@@ -212,7 +212,7 @@
  	Gpm_Connect conn;
  
  	fb_hmice = c_open(cast_uchar "/dev/input/mice", O_RDWR | O_NOCTTY);
-@@ -1176,6 +1181,7 @@
+@@ -1179,6 +1184,7 @@
  #ifdef SIGTTIN
  	install_signal_handler(SIGTTIN, sig_tstp, NULL, 0);
  #endif
@@ -220,7 +220,7 @@
  
  	return 0;
  }
-@@ -1183,12 +1189,14 @@
+@@ -1186,12 +1192,14 @@
  static void unhandle_fb_mouse(void)
  {
  	if (fb_hgpm >= 0) set_handlers(fb_hgpm, (void (*)(void *))NULL, (void (*)(void *))NULL, NULL);
@@ -235,7 +235,7 @@
  
  	close_socket(&fb_hmice);
  #ifdef SIGTSTP
-@@ -1222,14 +1230,77 @@
+@@ -1225,14 +1233,77 @@
  {
  	fb_print(seq_show_cursor);
  }
@@ -313,7 +313,7 @@
  }
  
  static unsigned char *fb_init_driver(unsigned char *param, unsigned char *ignore)
-@@ -1346,6 +1417,16 @@
+@@ -1349,6 +1420,16 @@
  	} else {
  		border_bottom = border_top;
  	}
@@ -330,7 +330,7 @@
  	if (*param) goto bad_p;
  
  	EINTRLOOP(rs, fstat(TTY, &st));
-@@ -1381,6 +1462,17 @@
+@@ -1384,6 +1465,17 @@
  		e = stracpy(cast_uchar "Cannot get FB FSCREENINFO.\n");
  		goto fail4;
  	}
@@ -348,7 +348,7 @@
  
  #if 0
  	{
-@@ -1469,7 +1561,9 @@
+@@ -1472,7 +1564,9 @@
  	fb_mem_size = fi.smem_len;
  
  	init_virtual_devices(&fb_driver, NUMBER_OF_DEVICES);
@@ -358,7 +358,7 @@
  
  	/* Mikulas: nechodi to na sparcu */
  	if (fb_mem_size < (unsigned)((border_top + fb_ysize + border_bottom) * fb_linesize)) {
-@@ -1520,6 +1614,10 @@
+@@ -1523,6 +1617,10 @@
  		e = stracpy(cast_uchar "Cannot mmap graphics memory.\n");
  		goto fail5;
  	}
@@ -369,7 +369,7 @@
  	fb_vmem = fb_mem + border_left * fb_pixelsize + border_top * fb_linesize;
  	fb_driver.depth = fb_pixelsize & 7;
  	fb_driver.depth |= (fb_bits_pp & 31) << 3;
-@@ -1637,7 +1735,9 @@
+@@ -1640,7 +1738,9 @@
  	EINTRLOOP(rs, munmap(fb_mem, fb_mapped_size));
  	shutdown_virtual_devices();
  	fb_switch_shutdown();
@@ -379,7 +379,7 @@
  	if(fb_driver_param) mem_free(fb_driver_param);
  	/* show cursor */
  	fb_show_cursor();
-@@ -1745,6 +1845,27 @@
+@@ -1748,6 +1848,27 @@
  	dest->skip = (ssize_t)dest->x * fb_pixelsize;
  	dest->flags = 0;
  	return 0;
@@ -407,7 +407,7 @@
  }
  
  static void fb_register_bitmap(struct bitmap *bmp)
-@@ -2067,7 +2188,9 @@
+@@ -2070,7 +2191,9 @@
  	unhandle_fb_mouse();
  	fb_old_vd = current_virtual_device;
  	current_virtual_device=NULL;
@@ -417,7 +417,7 @@
  	if (have_cmap && fb_active) set_palette(&old_palette);
  	EINTRLOOP(rs, fsync(fb_handle));
  	fb_switch_shutdown();
-@@ -2082,7 +2205,9 @@
+@@ -2085,7 +2208,9 @@
  	unsigned char *e;
  	if (current_virtual_device) return 0;
  	if (dev != fb_block_dev) return -2;
@@ -1276,7 +1276,7 @@
  		FD_CLR(fd, &w_read);
  		FD_CLR(fd, &x_read);
  	}
-@@ -943,9 +948,14 @@
+@@ -937,9 +942,14 @@
  }
  
  int terminate_loop = 0;
@@ -1291,7 +1291,7 @@
  #if !defined(USE_LIBEVENT) || !defined(USE_POLL)
  	restrict_fds();
  #endif
-@@ -1000,6 +1010,15 @@
+@@ -995,6 +1005,15 @@
  		nopr();
  	} else
  #endif
