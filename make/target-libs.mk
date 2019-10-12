@@ -321,7 +321,7 @@ libjpeg: $(ARCHIVE)/$(LIBJPEG-TURBO_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-OPENSSL_VER    = 1.0.2s
+OPENSSL_VER    = 1.0.2t
 OPENSSL_TMP    = openssl-$(OPENSSL_VER)
 OPENSSL_SOURCE = openssl-$(OPENSSL_VER).tar.gz
 OPENSSL_URL    = https://www.openssl.org/source
