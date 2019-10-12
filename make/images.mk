@@ -50,18 +50,12 @@ devtable-remove:
 # -----------------------------------------------------------------------------
 
 flash-image:
-ifeq ($(BOXMODEL), nevis)
+ifeq ($(BOXMODEL), $(filter $(BOXMODEL), nevis kronos kronos_v2))
 	make flash-image-coolstream ERASE_SIZE=0x20000
 endif
-ifeq ($(BOXFAMILY), apollo)
+ifeq ($(BOXMODEL), $(filter $(BOXMODEL), apollo shiner))
 	make flash-image-coolstream ERASE_SIZE=0x40000 IMAGE_SUFFIX=$(BOXTYPE_SC)-apollo
 	make flash-image-coolstream ERASE_SIZE=0x20000 IMAGE_SUFFIX=$(BOXTYPE_SC)-shiner
-endif
-ifeq ($(BOXMODEL), kronos)
-	make flash-image-coolstream ERASE_SIZE=0x20000
-endif
-ifeq ($(BOXMODEL), kronos_v2)
-	make flash-image-coolstream ERASE_SIZE=0x20000
 endif
 ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k))
 	make flash-image-hd51

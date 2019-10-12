@@ -4,7 +4,7 @@
 # -----------------------------------------------------------------------------
 
 # cst-nevis
-ifeq ($(BOXFAMILY), nevis)
+ifeq ($(BOXMODEL), nevis)
   KERNEL_VER    = 2.6.34.13
   KERNEL_TMP    = linux-$(KERNEL_VER)
   KERNEL_SOURCE = git
@@ -14,21 +14,23 @@ ifeq ($(BOXFAMILY), nevis)
   KERNEL_DTB    = $(EMPTY)
 
 # cst-apollo/cst-kronos
-else ifeq ($(BOXFAMILY), $(filter $(BOXFAMILY), apollo kronos))
+else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), apollo shiner kronos kronos_v2))
   KERNEL_VER    = 3.10.93
   KERNEL_TMP    = linux-$(KERNEL_VER)
   KERNEL_SOURCE = git
   KERNEL_URL    = $(EMPTY)
 
   KERNEL_BRANCH = ni/linux-3.10.108
-  ifeq ($(BOXFAMILY), apollo)
-    KERNEL_DTB  = $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/kernel-dtb/hd849x.dtb
-  else ifeq ($(BOXFAMILY), kronos)
-    KERNEL_DTB  = $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/kernel-dtb/en75x1.dtb
+  ifeq ($(BOXMODEL), $(filter $(BOXMODEL), apollo shiner))
+    KERNEL_DTB    = $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/kernel-dtb/hd849x.dtb
+    KERNEL_CONFIG = $(CONFIGS)/kernel-apollo.config
+  else
+    KERNEL_DTB    = $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/kernel-dtb/en75x1.dtb
+    KERNEL_CONFIG = $(CONFIGS)/kernel-kronos.config
   endif
 
 # arm-hd51
-else ifeq ($(BOXFAMILY), bcm7251s)
+else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k))
   KERNEL_VER    = 4.10.12
   KERNEL_TMP    = linux-$(KERNEL_VER)
   KERNEL_SOURCE = git
@@ -36,9 +38,10 @@ else ifeq ($(BOXFAMILY), bcm7251s)
 
   KERNEL_BRANCH = ni/linux-$(KERNEL_VER)
   KERNEL_DTB    = $(BUILD_TMP)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/dts/bcm7445-bcm97445svmb.dtb
+  KERNEL_CONFIG = $(CONFIGS)/kernel-hd51.config
 
 # arm-vusolo4k
-else ifeq ($(BOXFAMILY), bcm7376)
+else ifeq ($(BOXMODEL), vusolo4k)
   KERNEL_VER    = 3.14.28-1.8
   KERNEL_TMP    = linux
   KERNEL_SOURCE = stblinux-3.14-1.8.tar.bz2
@@ -57,7 +60,7 @@ else ifeq ($(BOXFAMILY), bcm7376)
   BOOT_PARTITION = 1
 
 # arm-vuduo4k
-else ifeq ($(BOXFAMILY), bcm7278)
+else ifeq ($(BOXMODEL), vuduo4k)
   KERNEL_VER    = 4.1.45-1.17
   KERNEL_TMP    = linux
   KERNEL_SOURCE = stblinux-4.1-1.17.tar.bz2
@@ -76,7 +79,7 @@ else ifeq ($(BOXFAMILY), bcm7278)
   BOOT_PARTITION = 6
 
 # arm-vuultimo4k
-else ifeq ($(BOXFAMILY), bcm7444s)
+else ifeq ($(BOXMODEL), vuultimo4k)
   KERNEL_VER    = 3.14.28-1.12
   KERNEL_TMP    = linux
   KERNEL_SOURCE = stblinux-3.14-1.12.tar.bz2
@@ -95,7 +98,7 @@ else ifeq ($(BOXFAMILY), bcm7444s)
   BOOT_PARTITION = 1
 
 # arm-vuzero4k
-else ifeq ($(BOXFAMILY), bcm72604)
+else ifeq ($(BOXMODEL), vuzero4k)
   KERNEL_VER    = 4.1.20-1.9
   KERNEL_TMP    = linux
   KERNEL_SOURCE = stblinux-4.1-1.9.tar.bz2
@@ -114,7 +117,7 @@ else ifeq ($(BOXFAMILY), bcm72604)
   BOOT_PARTITION = 4
 
 # mips-vuduo
-else ifeq ($(BOXFAMILY), bcm7335)
+else ifeq ($(BOXMODEL), vuduo)
   KERNEL_VER    = 3.9.6
   KERNEL_TMP    = linux
   KERNEL_SOURCE = stblinux-$(KERNEL_VER).tar.bz2
@@ -130,17 +133,17 @@ endif
 KERNEL_OBJ      = linux-$(KERNEL_VER)-obj
 KERNEL_MODULES  = linux-$(KERNEL_VER)-modules
 
+KERNEL_CONFIG  ?= $(CONFIGS)/kernel-$(BOXMODEL).config
 KERNEL_NAME     = NI $(shell echo $(BOXFAMILY) | sed 's/.*/\u&/') Kernel
 
 # -----------------------------------------------------------------------------
 
-KERNEL_MODULES_DIR	= $(BUILD_TMP)/$(KERNEL_MODULES)/lib/modules/$(KERNEL_VER)
-KERNEL_CONFIG		= $(CONFIGS)/kernel-$(KERNEL_VER)-$(BOXFAMILY).config
+KERNEL_MODULES_DIR  = $(BUILD_TMP)/$(KERNEL_MODULES)/lib/modules/$(KERNEL_VER)
 
-KERNEL_UIMAGE		= $(BUILD_TMP)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/Image
-KERNEL_ZIMAGE		= $(BUILD_TMP)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/zImage
-KERNEL_ZIMAGE_DTB	= $(BUILD_TMP)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/zImage_dtb
-KERNEL_VMLINUX		= $(BUILD_TMP)/$(KERNEL_OBJ)/vmlinux
+KERNEL_UIMAGE       = $(BUILD_TMP)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/Image
+KERNEL_ZIMAGE       = $(BUILD_TMP)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/zImage
+KERNEL_ZIMAGE_DTB   = $(BUILD_TMP)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/zImage_dtb
+KERNEL_VMLINUX      = $(BUILD_TMP)/$(KERNEL_OBJ)/vmlinux
 
 # -----------------------------------------------------------------------------
 
@@ -156,7 +159,7 @@ KERNEL_MAKEVARS += \
 	KVER=$(KERNEL_VER) \
 	KSRC=$(BUILD_TMP)/$(KERNEL_TMP)
 
-ifeq ($(BOXFAMILY), $(filter $(BOXFAMILY), bcm7335)) # mips-vuduo
+ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vuduo))
   KERNEL_IMAGE = vmlinux
 else
   KERNEL_IMAGE = zImage
@@ -165,6 +168,6 @@ endif
 KERNEL_MAKEOPTS = $(KERNEL_IMAGE) modules
 
 # build also the kernel-dtb for arm-hd51
-ifeq ($(BOXFAMILY), $(filter $(BOXFAMILY), bcm7251s))
+ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k))
   KERNEL_MAKEOPTS += $(notdir $(KERNEL_DTB))
 endif

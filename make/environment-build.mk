@@ -20,33 +20,33 @@ SHELL := /bin/bash
 
 # - Coolstream ----------------------------------------------------------------
 
-# BOXTYPE                   coolstream
-#                          /          \
-# BOXSERIES              hd1          hd2
-#                        /           /   \
-# BOXFAMILY           nevis      apollo kronos
-#                      /        /     | |     \
-# BOXMODEL          nevis apollo shiner kronos kronos_v2
+# BOXTYPE            coolstream
+#                   /          \
+# BOXSERIES       hd1          hd2
+#                 /           /   \
+# BOXFAMILY    nevis      apollo kronos
+#               /        /     | |     \
+# BOXMODEL   nevis apollo shiner kronos kronos_v2
 
 # - Armbox --------------------------------------------------------------------
 
-# BOXTYPE                   armbox ------ + ----- + -------- +
-#                          /      \        \       \          \
-# BOXSERIES             hd51      vusolo4k vuduo4k vuultimo4k vuzero4k
-#                         |          |        |        |         |
-# BOXFAMILY           bcm7251s    bcm7376  bcm7278  bcm7444s  bcm72604
-#                     |      |       |        |        |         |
-# BOXMODEL          hd51 bre2ze4k vusolo4k vuduo4k vuultimo4k vuzero4k
+# BOXTYPE            armbox ------ + ----- + -------- +
+#                   /      \        \       \          \
+# BOXSERIES      hd51      vusolo4k vuduo4k vuultimo4k vuzero4k
+#                  |          |        |        |         |
+# BOXFAMILY    bcm7251s    bcm7376  bcm7278  bcm7444s  bcm72604
+#              |      |       |        |        |         |
+# BOXMODEL   hd51 bre2ze4k vusolo4k vuduo4k vuultimo4k vuzero4k
 
 # - Mipsbox --------------------------------------------------------------------
 
-# BOXTYPE           mipsbox
-#                      |
-# BOXSERIES          vuduo
-#                      |
-# BOXFAMILY         bcm7335
-#                      |
-# BOXMODEL           vuduo
+# BOXTYPE          mipsbox
+#                 /
+# BOXSERIES    vuduo
+#                |
+# BOXFAMILY   bcm7335
+#                |
+# BOXMODEL     vuduo
 
 # -----------------------------------------------------------------------------
 

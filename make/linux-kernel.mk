@@ -149,7 +149,7 @@ kernel.do_prepare:
 	$(MKDIR)/$(KERNEL_OBJ)
 	$(MKDIR)/$(KERNEL_MODULES)
 	$(INSTALL_DATA) $(KERNEL_CONFIG) $(BUILD_TMP)/$(KERNEL_OBJ)/.config
-ifeq ($(BOXFAMILY), bcm7251s)
+ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k))
 	$(INSTALL_DATA) $(PATCHES)/initramfs-subdirboot.cpio.gz $(BUILD_TMP)/$(KERNEL_OBJ)
 endif
 	$(TOUCH)
@@ -195,7 +195,7 @@ kernel-coolstream-hd1: kernel.do_compile | $(IMAGE_DIR)
 
 kernel-coolstream-hd2: kernel.do_compile | $(IMAGE_DIR)
 	mkimage -A $(BOXARCH) -O linux -T kernel -C none -a 0x8000 -e 0x8000 -n "$(KERNEL_NAME)" -d $(KERNEL_ZIMAGE_DTB) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-vmlinux.ub.gz
-ifeq ($(BOXFAMILY), apollo)
+ifeq ($(BOXMODEL), $(filter $(BOXMODEL), apollo shiner))
   ifeq ($(BOXMODEL), apollo)
 	# create also shiner-kernel when building apollo
 	cp -a $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-vmlinux.ub.gz $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-shiner-vmlinux.ub.gz
