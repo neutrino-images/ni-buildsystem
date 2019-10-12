@@ -617,7 +617,7 @@ libsigc++: $(ARCHIVE)/$(LIBSIGC_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-EXPAT_VER    = 2.2.7
+EXPAT_VER    = 2.2.9
 EXPAT_TMP    = expat-$(EXPAT_VER)
 EXPAT_SOURCE = expat-$(EXPAT_VER).tar.bz2
 EXPAT_URL    = https://sourceforge.net/projects/expat/files/expat/$(EXPAT_VER)
