@@ -59,7 +59,7 @@ endif
 	mkdir -p $(TARGET_DIR)/var/spool/cron/crontabs
 	mkdir -p $(PKG_CONFIG_PATH)
 	make skeleton
-ifeq ($(PERSISTENT_VAR_PARTITION), yes)
+ifeq ($(BOXSERIES), hd2)
   ifeq ($(IMAGE_NEW), yes)
 	touch -f $(TARGET_DIR)/var/etc/.newimage
   endif

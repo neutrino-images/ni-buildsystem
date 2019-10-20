@@ -58,7 +58,7 @@ u-neutrino-full: neutrino-clean
 ifneq ($(DEBUG), yes)
 	find $(UPDATE_INST_DIR)/bin -type f ! -name *.sh -print0 | xargs -0 $(TARGET_STRIP) || true
 endif
-ifeq ($(PERSISTENT_VAR_PARTITION), yes)
+ifeq ($(BOXSERIES), hd2)
 	# avoid overrides in user's var-partition
 	mv $(UPDATE_INST_DIR)/var $(UPDATE_INST_DIR)/var_init
 endif
