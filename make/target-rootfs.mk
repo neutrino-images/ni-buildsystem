@@ -38,11 +38,8 @@ $(TARGET_DIR)/var/etc/update.urls: | $(TARGET_DIR)
 # create symbolic links in TARGET_DIR
 symbolic-links: | $(TARGET_DIR)
 	$(CD) $(TARGET_DIR); \
-		ln -sf /var/root root
-ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 vusolo4k vuduo4k vuultimo4k vuzero4k vuduo))
-	$(CD) $(TARGET_DIR); \
+		ln -sf /var/root root; \
 		ln -sf /var/root home
-endif
 	$(CD) $(TARGET_DIR)/usr; \
 		ln -sf /share share
 	$(CD) $(TARGET_DIR)/var; \
