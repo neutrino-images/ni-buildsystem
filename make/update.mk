@@ -136,6 +136,19 @@ switch-url:
 
 # -----------------------------------------------------------------------------
 
+# temporary target to move old crosstools to new destination; avoid re-builds
+crosstool-mv:
+	-mv $(CROSS_BASE)/arm/hd1 $(CROSS_BASE)/arm-linux-2.6.34.13
+	-mv $(CROSS_BASE)/arm/hd2 $(CROSS_BASE)/arm-linux-3.10.93
+	-mv $(CROSS_BASE)/arm/hd51 $(CROSS_BASE)/arm-linux-4.10.12
+	-mv $(CROSS_BASE)/arm/vuduo4k $(CROSS_BASE)/arm-linux-4.1.45-1.17
+	-mv $(CROSS_BASE)/arm/vusolo4k $(CROSS_BASE)/arm-linux-3.14.28-1.8
+	-mv $(CROSS_BASE)/arm/vuultimo4k $(CROSS_BASE)/arm-linux-3.14.28-1.12
+	-mv $(CROSS_BASE)/arm/vuzero4k $(CROSS_BASE)/arm-linux-4.1.20-1.9
+	-mv $(CROSS_BASE)/mips/vuduo $(CROSS_BASE)/mips-linux-3.9.6
+
+# -----------------------------------------------------------------------------
+
 PHONY += update-self
 PHONY += update-neutrino
 PHONY += update-remotes
