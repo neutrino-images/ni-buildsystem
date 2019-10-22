@@ -205,7 +205,7 @@ TZDATA_ZONELIST = \
 	africa antarctica asia australasia europe northamerica \
 	southamerica pacificnew etcetera backward
 
-ETC_LOCALTIME = $(if $(filter $(BOXSERIES), hd2),/var/etc/localtime,/etc/localtime)
+ETC_LOCALTIME = $(if $(filter $(PERSISTENT_VAR_PARTITION), yes),/var/etc/localtime,/etc/localtime)
 
 tzdata: $(TZDATA_DEPS) $(ARCHIVE)/$(TZDATA_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(TZDATA_TMP)

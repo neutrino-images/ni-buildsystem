@@ -65,4 +65,4 @@ CA-BUNDLE_DIR	= /etc/ssl/certs
 
 # -----------------------------------------------------------------------------
 
-PERSISTENT_VAR_PARTITION = $(if $(filter $(BOXMODEL), apollo shiner kronos kronos_v2), yes, no)
+PERSISTENT_VAR_PARTITION = $(if $(filter $(BOXMODEL), apollo shiner kronos kronos_v2),yes,no)
