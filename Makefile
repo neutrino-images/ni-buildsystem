@@ -70,8 +70,8 @@ Makefile.local:
 
 -include config.local
 include make/environment-box.mk
-include make/environment-build.mk
 include make/environment-linux.mk
+include make/environment-build.mk
 include make/environment-image.mk
 include make/environment-target.mk
 include make/environment-update.mk

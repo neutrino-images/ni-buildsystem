@@ -44,11 +44,11 @@ LOCAL_DIR     = $(BASE_DIR)/local
 STAGING_DIR   = $(BASE_DIR)/staging
 IMAGE_DIR     = $(STAGING_DIR)/images
 UPDATE_DIR    = $(STAGING_DIR)/updates
-STATIC_BASE   = $(BASE_DIR)/static
-STATIC_DIR    = $(STATIC_BASE)/$(BOXARCH)/$(BOXSERIES)
 HELPERS_DIR   = $(BASE_DIR)/helpers
 CROSS_BASE    = $(BASE_DIR)/cross
-CROSS_DIR    ?= $(CROSS_BASE)/$(BOXARCH)/$(BOXSERIES)
+CROSS_DIR    ?= $(CROSS_BASE)/$(BOXARCH)-linux-$(KERNEL_VER)
+STATIC_BASE   = $(BASE_DIR)/static
+STATIC_DIR    = $(STATIC_BASE)/$(BOXARCH)-linux-$(KERNEL_VER)
 CONFIGS       = $(BASE_DIR)/configs
 PATCHES       = $(BASE_DIR)/patches
 SKEL-ROOT     = $(BASE_DIR)/skel-root/$(BOXSERIES)
@@ -58,8 +58,11 @@ endif
 IMAGEFILES    = $(BASE_DIR)/skel-root/general
 
 BUILD        ?= $(shell /usr/share/libtool/config.guess 2>/dev/null || /usr/share/libtool/config/config.guess 2>/dev/null || /usr/share/misc/config.guess)
+
+# -----------------------------------------------------------------------------
+
 CCACHE        = /usr/bin/ccache
-CCACHE_DIR    = $(HOME)/.ccache-ni-buildsystem-$(BOXARCH)-$(BOXSERIES)
+CCACHE_DIR    = $(HOME)/.ccache-ni-buildsystem-$(BOXARCH)-linux-$(KERNEL_VER)
 export CCACHE_DIR
 
 # -----------------------------------------------------------------------------

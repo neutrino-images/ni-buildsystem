@@ -13,7 +13,7 @@ crosstools:
 
 # -----------------------------------------------------------------------------
 
-CROSSTOOL_BACKUP = $(ARCHIVE)/crosstool-$(BOXARCH)-$(BOXSERIES)-backup.tar.gz
+CROSSTOOL_BACKUP = $(ARCHIVE)/crosstool-ng-$(BOXARCH)-linux-$(KERNEL_VER)-backup.tar.gz
 
 $(CROSSTOOL_BACKUP):
 	$(call draw_line);
