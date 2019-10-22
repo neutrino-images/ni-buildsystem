@@ -147,7 +147,7 @@ KERNEL_VMLINUX      = $(BUILD_TMP)/$(KERNEL_OBJ)/vmlinux
 
 # -----------------------------------------------------------------------------
 
-KERNEL_MAKEVARS := \
+KERNEL_MAKEVARS = \
 	ARCH=$(BOXARCH) \
 	CROSS_COMPILE=$(TARGET_CROSS) \
 	INSTALL_MOD_PATH=$(BUILD_TMP)/$(KERNEL_MODULES) \
