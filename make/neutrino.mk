@@ -110,6 +110,14 @@ N_WEATHER_DEV_KEY ?=
 
 # -----------------------------------------------------------------------------
 
+ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd1 hd2))
+  N_BOXMODEL = $(BOXSERIES)
+else
+  N_BOXMODEL = $(BOXMODEL)
+endif
+
+# -----------------------------------------------------------------------------
+
 N_BUILD_ENV = \
 	$(MAKE_OPTS) \
 	\
@@ -160,7 +168,7 @@ $(N_OBJ_DIR)/config.status: $(N_DEPS)
 			--with-target=cdk \
 			--with-targetprefix= \
 			--with-boxtype=$(BOXTYPE) \
-			--with-boxmodel=$(BOXSERIES)
+			--with-boxmodel=$(N_BOXMODEL)
 
 # -----------------------------------------------------------------------------
 
@@ -222,7 +230,7 @@ $(LH_OBJ_DIR)/config.status: $(LH_DEPS)
 			\
 			--with-target=cdk \
 			--with-boxtype=$(BOXTYPE) \
-			--with-boxmodel=$(BOXSERIES)
+			--with-boxmodel=$(N_BOXMODEL)
 
 # -----------------------------------------------------------------------------
 
