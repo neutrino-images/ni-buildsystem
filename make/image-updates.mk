@@ -3,7 +3,7 @@
 #
 # -----------------------------------------------------------------------------
 
-BOXSERIES_UPDATE = hd2 hd51 vusolo4k vuduo4k vuultimo4k vuzero4k vuduo
+BOXSERIES_UPDATE = hd2 hd51 vusolo4k vuduo4k vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo
 ifneq ($(DEBUG), yes)
 	BOXSERIES_UPDATE += hd1
 endif

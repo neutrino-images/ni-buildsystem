@@ -116,6 +116,44 @@ else ifeq ($(BOXMODEL), vuzero4k)
 
   BOOT_PARTITION = 4
 
+# arm-vuuno4k
+else ifeq ($(BOXMODEL), vuuno4k)
+  KERNEL_VER    = 3.14.28-1.12
+  KERNEL_TMP    = linux
+  KERNEL_SOURCE = stblinux-3.14-1.12.tar.bz2
+  KERNEL_URL    = http://archive.vuplus.com/download/kernel
+
+  KERNEL_PATCH  = $(VUUNO4K_PATCH)
+
+  KERNEL_BRANCH = $(EMPTY)
+  KERNEL_DTB    = $(EMPTY)
+
+  VMLINUZ_INITRD_VER    = 20191010
+  VMLINUZ_INITRD_SOURCE = vmlinuz-initrd_$(BOXMODEL)_$(VMLINUZ_INITRD_VER).tar.gz
+  VMLINUZ_INITRD_URL    = https://bitbucket.org/max_10/vmlinuz-initrd-$(BOXMODEL)/downloads
+  VMLINUZ_INITRD        = vmlinuz-initrd-7439b0
+
+  BOOT_PARTITION = 4
+
+# arm-vuuno4kse
+else ifeq ($(BOXMODEL), vuuno4kse)
+  KERNEL_VER    = 4.1.20-1.9
+  KERNEL_TMP    = linux
+  KERNEL_SOURCE = stblinux-4.1-1.9.tar.bz2
+  KERNEL_URL    = http://archive.vuplus.com/download/kernel
+
+  KERNEL_PATCH  = $(VUUNO4KSE_PATCH)
+
+  KERNEL_BRANCH = $(EMPTY)
+  KERNEL_DTB    = $(EMPTY)
+
+  VMLINUZ_INITRD_VER    = 20191010
+  VMLINUZ_INITRD_SOURCE = vmlinuz-initrd_$(BOXMODEL)_$(VMLINUZ_INITRD_VER).tar.gz
+  VMLINUZ_INITRD_URL    = https://bitbucket.org/max_10/vmlinuz-initrd-$(BOXMODEL)/downloads
+  VMLINUZ_INITRD        = vmlinuz-initrd-7439b0
+
+  BOOT_PARTITION = 4
+
 # mips-vuduo
 else ifeq ($(BOXMODEL), vuduo)
   KERNEL_VER    = 3.9.6

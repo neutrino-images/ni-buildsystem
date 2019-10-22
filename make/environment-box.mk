@@ -15,13 +15,13 @@
 
 # - Armbox --------------------------------------------------------------------
 
-# BOXTYPE            armbox ------ + ----- + -------- +
-#                   /      \        \       \          \
-# BOXSERIES      hd51      vusolo4k vuduo4k vuultimo4k vuzero4k
-#                  |          |        |        |         |
-# BOXFAMILY    bcm7251s    bcm7376  bcm7278  bcm7444s  bcm72604
-#              |      |       |        |        |         |
-# BOXMODEL   hd51 bre2ze4k vusolo4k vuduo4k vuultimo4k vuzero4k
+# BOXTYPE            armbox ------ + ----- + -------- + ------ + ----- +
+#                   /      \        \       \          \        \       \
+# BOXSERIES      hd51      vusolo4k vuduo4k vuultimo4k vuzero4k vuuno4k vuuno4kse
+#                  |          |        |        |         |          |   |
+# BOXFAMILY    bcm7251s    bcm7376  bcm7278  bcm7444s  bcm72604     bcm7252s
+#              |      |       |        |        |         |          |   |
+# BOXMODEL   hd51 bre2ze4k vusolo4k vuduo4k vuultimo4k vuzero4k vuuno4k vuuno4kse
 
 # - Mipsbox --------------------------------------------------------------------
 
@@ -65,6 +65,14 @@ ifneq ($(BOXSERIES),)
     BOXTYPE = armbox
     BOXFAMILY = bcm72604
     BOXMODEL = vuzero4k
+  else ifeq ($(BOXSERIES), vuuno4k)
+    BOXTYPE = armbox
+    BOXFAMILY = bcm7252s
+    BOXMODEL = vuuno4k
+  else ifeq ($(BOXSERIES), vuuno4kse)
+    BOXTYPE = armbox
+    BOXFAMILY = bcm7252s
+    BOXMODEL = vuuno4kse
   else ifeq ($(BOXSERIES), vuduo)
     BOXTYPE = mipsbox
     BOXFAMILY = bcm7335
@@ -107,6 +115,10 @@ else ifneq ($(BOXFAMILY),)
     BOXTYPE = armbox
     BOXSERIES = vuzero4k
     BOXMODEL = vuzero4k
+  else ifeq ($(BOXFAMILY), bcm7252s)
+    BOXTYPE = armbox
+    BOXSERIES = vuuno4kse
+    BOXMODEL = vuuno4kse
   else ifeq ($(BOXFAMILY), bcm7335)
     BOXTYPE = mipsbox
     BOXSERIES = vuduo
@@ -149,6 +161,14 @@ else ifneq ($(BOXMODEL),)
     BOXTYPE = armbox
     BOXSERIES = vuzero4k
     BOXFAMILY = bcm72604
+  else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vuuno4k))
+    BOXTYPE = armbox
+    BOXSERIES = vuuno4k
+    BOXFAMILY = bcm7252s
+  else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vuuno4kse))
+    BOXTYPE = armbox
+    BOXSERIES = vuuno4k
+    BOXFAMILY = bcm7252s
   else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vuduo))
     BOXTYPE = mipsbox
     BOXSERIES = vuduo
@@ -196,6 +216,10 @@ else ifeq ($(BOXMODEL), vuultimo4k)
   BOXNAME="VU+ Ultimo 4K"
 else ifeq ($(BOXMODEL), vuzero4k)
   BOXNAME="VU+ Zero 4K"
+else ifeq ($(BOXMODEL), vuuno4k)
+  BOXNAME="VU+ Uno 4K"
+else ifeq ($(BOXMODEL), vuuno4kse)
+  BOXNAME="VU+ Uno 4K SE"
 else ifeq ($(BOXMODEL), vuduo)
   BOXNAME="VU+ Duo"
 endif

@@ -28,6 +28,8 @@ MAINTAINER = $(shell whoami)
 #BOXMODEL = vuduo4k
 #BOXMODEL = vuultimo4k
 #BOXMODEL = vuzero4k
+#BOXMODEL = vuuno4k
+#BOXMODEL = vuuno4kse
 #BOXMODEL = vuduo
 
 # -----------------------------------------------------------------------------

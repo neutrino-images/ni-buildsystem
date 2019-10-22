@@ -41,10 +41,12 @@ VUPLUS_3_9_PATCH = \
 	vuplus/3_9_tda18271-advertise-supported-delsys.patch \
 	vuplus/3_9_test.patch
 
-# arm-vusolo4k/arm-vuultimo4k
+# arm-vusolo4k/arm-vuultimo4k/arm-vuuno4k
 VUPLUS_3_14_PATCH = \
 	vuplus/3_14_bcm_genet_disable_warn.patch \
 	vuplus/3_14_linux_dvb-core.patch \
+	vuplus/3_14_dvbs2x.patch \
+	vuplus/3_14_dmx_source_dvr.patch \
 	vuplus/3_14_rt2800usb_fix_warn_tx_status_timeout_to_dbg.patch \
 	vuplus/3_14_usb_core_hub_msleep.patch \
 	vuplus/3_14_rtl8712_fix_build_error.patch \
@@ -69,11 +71,12 @@ VUPLUS_3_14_PATCH = \
 	vuplus/3_14_0006-makefile-disable-warnings.patch \
 	vuplus/3_14_linux_dvb_adapter.patch
 
-# arm-vuduo4k/arm-vuzero4k
+# arm-vuduo4k/arm-vuzero4k/arm-vuuno4kse
 VUPLUS_4_1_PATCH = \
 	vuplus/4_1_linux_dvb_adapter.patch \
 	vuplus/4_1_linux_dvb-core.patch \
 	vuplus/4_1_linux_4_1_45_dvbs2x.patch \
+	vuplus/4_1_dmx_source_dvr.patch \
 	vuplus/4_1_bcmsysport_4_1_45.patch \
 	vuplus/4_1_linux_usb_hub.patch \
 	vuplus/4_1_0001-regmap-add-regmap_write_bits.patch \
@@ -121,8 +124,18 @@ VUULTIMO4K_PATCH = \
 
 VUZERO4K_PATCH = \
 	$(VUPLUS_4_1_PATCH) \
-	vuplus/4_1_linux_rpmb_not_alloc.patch \
-	vuplus/4_1_bcmgenet-recovery-fix.patch
+	vuplus/4_1_bcmgenet-recovery-fix.patch \
+	vuplus/4_1_linux_rpmb_not_alloc.patch
+
+VUUNO4K_PATCH = \
+	$(VUPLUS_3_14_PATCH) \
+	vuplus/3_14_bcmsysport_3.14.28-1.12.patch \
+	vuplus/3_14_linux_prevent_usb_dma_from_bmem.patch
+
+VUUNO4KSE_PATCH = \
+	$(VUPLUS_4_1_PATCH) \
+	vuplus/4_1_bcmgenet-recovery-fix.patch \
+	vuplus/4_1_linux_rpmb_not_alloc.patch
 
 VUDUO_PATCH = \
 	$(VUPLUS_3_9_PATCH)

@@ -37,7 +37,7 @@ $(TARGET_DIR)/etc/init.d/camd_datefix:
 	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/camd_datefix.init $(@)
 
 $(TARGET_DIR)/etc/init.d/coredump:
-ifneq ($(BOXSERIES), hd1)
+ifneq ($(BOXMODEL), nevis)
 	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/coredump.init $(@)
 endif
 
@@ -69,17 +69,17 @@ $(TARGET_DIR)/etc/init.d/networking:
 	ln -sf networking $(TARGET_DIR)/etc/init.d/K99networking
 
 $(TARGET_DIR)/etc/init.d/partitions-by-name:
-ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51))
+ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k))
 	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/partitions-by-name.init $(@)
 endif
 
 $(TARGET_DIR)/etc/init.d/resizerootfs:
-ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51))
+ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k))
 	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/resizerootfs.init $(@)
 endif
 
 $(TARGET_DIR)/etc/init.d/swap:
-ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 vusolo4k vuduo4k vuultimo4k vuzero4k vuduo))
+ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k vusolo4k vuduo4k vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo))
 	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/swap.init $(@)
 	ln -sf swap $(TARGET_DIR)/etc/init.d/K99swap
 endif
@@ -92,8 +92,8 @@ $(TARGET_DIR)/etc/init.d/syslogd:
 	ln -sf syslogd $(TARGET_DIR)/etc/init.d/K98syslogd
 
 $(TARGET_DIR)/etc/init.d/vuplus-platform-util:
-ifeq ($(BOXSERIES), $(filter $(BOXSERIES), vusolo4k vuduo4k vuultimo4k vuzero4k))
-	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/$(BOXSERIES)-platform-util.init $(@)
+ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vusolo4k vuduo4k vuultimo4k vuzero4k vuuno4k vuuno4kse))
+	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/$(BOXMODEL)-platform-util.init $(@)
 endif
 
 # -----------------------------------------------------------------------------
@@ -105,7 +105,7 @@ scripts: \
 	$(TARGET_SHARE_DIR)/udhcpc/default.script
 
 $(TARGET_DIR)/bin/bp3flash.sh:
-ifeq ($(BOXSERIES), $(filter $(BOXSERIES), vuduo4k))
+ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vuduo4k))
 	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/bp3flash.sh $(@)
 endif
 
