@@ -50,7 +50,7 @@ endif
 		rm -rf tmp; ln -sf /tmp tmp
 	$(CD) $(TARGET_DIR)/etc; \
 		ln -sf /proc/mounts mtab
-ifeq ($(BOXSERIES), hd2)
+ifeq ($(PERSISTENT_VAR_PARTITION), yes)
 	$(CD) $(TARGET_DIR)/etc; \
 		ln -sf /var/etc/exports exports; \
 		ln -sf /var/etc/fstab fstab; \
