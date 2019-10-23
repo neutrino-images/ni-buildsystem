@@ -41,7 +41,7 @@ ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd1 hd2))
   NP_CONFIGURE_ADDITIONS += \
 		--disable-showiframe \
 		--disable-stb_startup \
-		--disable-imgbackup-hd51
+		--disable-imgbackup
 endif
 
 $(NP_OBJ_DIR)/config.status: $(NP_DEPS)
