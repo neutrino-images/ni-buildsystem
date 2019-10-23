@@ -61,6 +61,26 @@ endef
 # -----------------------------------------------------------------------------
 
 #
+# Case conversion macros.
+#
+
+[LOWER] := a b c d e f g h i j k l m n o p q r s t u v w x y z
+[UPPER] := A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
+
+define caseconvert-helper
+$(1) = $$(strip \
+	$$(eval __tmp := $$(1))\
+	$(foreach c, $(2),\
+		$$(eval __tmp := $$(subst $(word 1,$(subst :, ,$c)),$(word 2,$(subst :, ,$c)),$$(__tmp))))\
+	$$(__tmp))
+endef
+
+$(eval $(call caseconvert-helper,UPPERCASE,$(join $(addsuffix :,$([LOWER])),$([UPPER]))))
+$(eval $(call caseconvert-helper,LOWERCASE,$(join $(addsuffix :,$([UPPER])),$([LOWER]))))
+
+# -----------------------------------------------------------------------------
+
+#
 # $(1) = title
 # $(2) = color
 #	0 - Black
