@@ -15,19 +15,19 @@ case "$1" in
 			insmod $DRV_PATH/bcm_event.ko
 			insmod $DRV_PATH/dvb_base.ko
 
-			start-stop-daemon --start --quiet --exec /usr/bin/dvb_server -- &
+			start-stop-daemon --start --quiet --exec /bin/dvb_server -- &
 
 			mknod -m a=rw /dev/brcm0 c 30 0
 
-			start-stop-daemon --start --quiet --exec /usr/bin/init_client $DRV_PATH/dvb-bcm7252s.ko $DRV_PATH/brcmfb.ko -- &
+			start-stop-daemon --start --quiet --exec /bin/init_client $DRV_PATH/dvb-bcm7252s.ko $DRV_PATH/brcmfb.ko -- &
 		fi
 
 		while [ ! -c /dev/fb0 ]; do
 			usleep 100000
 		done
 
-		if [ -e /usr/bin/initfb ]; then
-			/usr/bin/initfb $(sed -n 's/osd_resolution=//p' /var/tuxbox/config/neutrino.conf)
+		if [ -e /bin/initfb ]; then
+			/bin/initfb $(sed -n 's/osd_resolution=//p' /var/tuxbox/config/neutrino.conf)
 		fi
 
 		echo "."
