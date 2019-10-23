@@ -48,15 +48,6 @@ ifeq ($(BOXSERIES), hd2)
   N_CFLAGS += -DFB_HW_ACCELERATION
 endif
 
-ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51))
-  ifeq ($(USE_GSTREAMER), yes)
-    N_CFLAGS += $(shell $(PKG_CONFIG) --cflags --libs gstreamer-1.0)
-    N_CFLAGS += $(shell $(PKG_CONFIG) --cflags --libs gstreamer-audio-1.0)
-    N_CFLAGS += $(shell $(PKG_CONFIG) --cflags --libs gstreamer-video-1.0)
-    N_CFLAGS += $(shell $(PKG_CONFIG) --cflags --libs glib-2.0)
-  endif
-endif
-
 ifeq ($(DEBUG), yes)
   N_CFLAGS += -ggdb3 -rdynamic -I$(TARGET_INCLUDE_DIR)
 else
@@ -194,23 +185,6 @@ LH_DEPS  =
 LH_DEPS += ffmpeg
 LH_DEPS += openthreads
 
-USE_GSTREAMER = no
-ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51))
-  ifeq ($(USE_GSTREAMER), yes)
-    LH_DEPS += gstreamer-all
-  endif
-endif
-
-# -----------------------------------------------------------------------------
-
-LH_CONFIGURE_GSTREAMER =
-ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51))
-  ifeq ($(USE_GSTREAMER), yes)
-    LH_CONFIGURE_GSTREAMER += \
-			--enable-gstreamer_10
-  endif
-endif
-
 # -----------------------------------------------------------------------------
 
 $(LH_OBJ_DIR)/config.status: $(LH_DEPS)
@@ -225,8 +199,6 @@ $(LH_OBJ_DIR)/config.status: $(LH_DEPS)
 			--enable-maintainer-mode \
 			--enable-silent-rules \
 			--enable-shared=no \
-			\
-			$(LH_CONFIGURE_GSTREAMER) \
 			\
 			--with-target=cdk \
 			--with-boxtype=$(BOXTYPE) \

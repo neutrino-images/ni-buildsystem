@@ -154,7 +154,6 @@ include make/neutrino-plugins.mk
 include make/prerequisites.mk
 include make/target-development.mk
 include make/target-ffmpeg$(if $(filter $(BOXTYPE),coolstream),-coolstream).mk
-include make/target-gstreamer-unused.mk
 include make/target-libs.mk
 include make/target-libs-static.mk
 include make/target-libs-unused.mk
