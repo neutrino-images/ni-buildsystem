@@ -42,8 +42,8 @@ config.local: $(eval BOXMODEL=hd51)
 	@echo "  32)  VU+ Duo 4k"
 	@echo "  33)  VU+ Ultimo 4k"
 	@echo "  34)  VU+ Zero 4k"
-	@echo "  34)  VU+ Uno 4k"
-	@echo "  34)  VU+ Uno 4k SE"
+	@echo "  35)  VU+ Uno 4k"
+	@echo "  36)  VU+ Uno 4k SE"
 	@echo "  41)  VU+ Duo"
 	@echo ""
 	@read -p "Select your boxmodel? [default: 11] " boxmodel; \
