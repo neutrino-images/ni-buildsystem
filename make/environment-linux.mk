@@ -133,7 +133,7 @@ else ifeq ($(BOXMODEL), vuuno4k)
   VMLINUZ_INITRD_URL    = https://bitbucket.org/max_10/vmlinuz-initrd-$(BOXMODEL)/downloads
   VMLINUZ_INITRD        = vmlinuz-initrd-7439b0
 
-  BOOT_PARTITION = 4
+  BOOT_PARTITION = 1
 
 # arm-vuuno4kse
 else ifeq ($(BOXMODEL), vuuno4kse)
@@ -152,7 +152,7 @@ else ifeq ($(BOXMODEL), vuuno4kse)
   VMLINUZ_INITRD_URL    = https://bitbucket.org/max_10/vmlinuz-initrd-$(BOXMODEL)/downloads
   VMLINUZ_INITRD        = vmlinuz-initrd-7439b0
 
-  BOOT_PARTITION = 4
+  BOOT_PARTITION = 1
 
 # mips-vuduo
 else ifeq ($(BOXMODEL), vuduo)
