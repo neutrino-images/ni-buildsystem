@@ -38,13 +38,14 @@ config.local: $(eval BOXMODEL=hd51)
 	@echo "   5)  Coolstream Kronos V2 (Link, Trinity Duo)"
 	@echo "  11)  AX/Mutant HD51"
 	@echo "  21)  WWIO BRE2ZE4K"
-	@echo "  31)  VU+ Solo 4k"
-	@echo "  32)  VU+ Duo 4k"
-	@echo "  33)  VU+ Ultimo 4k"
-	@echo "  34)  VU+ Zero 4k"
-	@echo "  35)  VU+ Uno 4k"
-	@echo "  36)  VU+ Uno 4k SE"
-	@echo "  41)  VU+ Duo"
+	@echo "  31)  Air Digital Zgemma H7S/C"
+	@echo "  41)  VU+ Solo 4k"
+	@echo "  42)  VU+ Duo 4k"
+	@echo "  43)  VU+ Ultimo 4k"
+	@echo "  44)  VU+ Zero 4k"
+	@echo "  45)  VU+ Uno 4k"
+	@echo "  46)  VU+ Uno 4k SE"
+	@echo "  51)  VU+ Duo"
 	@echo ""
 	@read -p "Select your boxmodel? [default: 11] " boxmodel; \
 	boxmodel=$${boxmodel:-11}; \
@@ -56,13 +57,14 @@ config.local: $(eval BOXMODEL=hd51)
 		 5)	boxmodel=kronos_v2;; \
 		11)	boxmodel=hd51;; \
 		21)	boxmodel=bre2ze4k;; \
-		31)	boxmodel=vusolo4k;; \
-		32)	boxmodel=vuduo4k;; \
-		33)	boxmodel=vuultimo4k;; \
-		34)	boxmodel=vuzero4k;; \
-		35)	boxmodel=vuuno4k;; \
-		36)	boxmodel=vuuno4kse;; \
-		41)	boxmodel=vuduo;; \
+		31)	boxmodel=h7;; \
+		41)	boxmodel=vusolo4k;; \
+		42)	boxmodel=vuduo4k;; \
+		43)	boxmodel=vuultimo4k;; \
+		44)	boxmodel=vuzero4k;; \
+		45)	boxmodel=vuuno4k;; \
+		46)	boxmodel=vuuno4kse;; \
+		51)	boxmodel=vuduo;; \
 		*)	boxmodel=hd51;; \
 	esac; \
 	cp config.example $@; \

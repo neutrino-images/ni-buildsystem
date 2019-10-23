@@ -3,10 +3,14 @@
 #
 # -----------------------------------------------------------------------------
 
-BOXMODEL_IMAGE = apollo kronos kronos_v2 hd51 bre2ze4k vusolo4k vuduo4k vuultimo4k vuzero4k vuuno4k vuuno4kse # vuduo
+BOXMODEL_IMAGE  = $(EMPTY)
 ifneq ($(DEBUG), yes)
   BOXMODEL_IMAGE += nevis
 endif
+BOXMODEL_IMAGE += apollo kronos kronos_v2
+BOXMODEL_IMAGE += hd51 bre2ze4k h7
+BOXMODEL_IMAGE += vusolo4k vuduo4k vuultimo4k vuzero4k vuuno4k vuuno4kse
+#BOXMODEL_IMAGE += vuduo
 
 images \
 ni-images:

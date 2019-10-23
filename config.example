@@ -23,6 +23,9 @@ MAINTAINER = $(shell whoami)
 # WWIO
 #BOXMODEL = bre2ze4k
 
+# Air Digital Zgemma H7S/C
+#BOXMODEL = h7
+
 # VU+
 #BOXMODEL = vusolo4k
 #BOXMODEL = vuduo4k

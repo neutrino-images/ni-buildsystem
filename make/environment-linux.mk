@@ -30,7 +30,7 @@ else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), apollo shiner kronos kronos_v2))
   endif
 
 # arm-hd51
-else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k))
+else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7))
   KERNEL_VER    = 4.10.12
   KERNEL_TMP    = linux-$(KERNEL_VER)
   KERNEL_SOURCE = git
@@ -206,6 +206,6 @@ endif
 KERNEL_MAKEOPTS = $(KERNEL_IMAGE) modules
 
 # build also the kernel-dtb for arm-hd51
-ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k))
+ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7))
   KERNEL_MAKEOPTS += $(notdir $(KERNEL_DTB))
 endif

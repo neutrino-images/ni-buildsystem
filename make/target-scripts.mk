@@ -69,17 +69,17 @@ $(TARGET_DIR)/etc/init.d/networking:
 	ln -sf networking $(TARGET_DIR)/etc/init.d/K99networking
 
 $(TARGET_DIR)/etc/init.d/partitions-by-name:
-ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k))
+ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7))
 	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/partitions-by-name.init $(@)
 endif
 
 $(TARGET_DIR)/etc/init.d/resizerootfs:
-ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k))
+ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7))
 	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/resizerootfs.init $(@)
 endif
 
 $(TARGET_DIR)/etc/init.d/swap:
-ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k vusolo4k vuduo4k vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo))
+ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7 vusolo4k vuduo4k vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo))
 	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/swap.init $(@)
 	ln -sf swap $(TARGET_DIR)/etc/init.d/K99swap
 endif

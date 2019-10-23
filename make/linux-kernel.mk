@@ -162,7 +162,7 @@ kernel.do_prepare:
 	$(MKDIR)/$(KERNEL_OBJ)
 	$(MKDIR)/$(KERNEL_MODULES)
 	$(INSTALL_DATA) $(KERNEL_CONFIG) $(BUILD_TMP)/$(KERNEL_OBJ)/.config
-ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k))
+ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7))
 	$(INSTALL_DATA) $(PATCHES)/initramfs-subdirboot.cpio.gz $(BUILD_TMP)/$(KERNEL_OBJ)
 endif
 	$(TOUCH)

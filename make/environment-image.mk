@@ -60,6 +60,8 @@ IMAGE_BUILD_TMP = $(BUILD_TMP)/image-build
 
 ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vusolo4k vuduo4k vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo))
   IMAGE_SUBDIR = $(subst vu,vuplus/,$(BOXMODEL))
+else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), h7))
+  IMAGE_SUBDIR = zgemma/$(BOXMODEL)
 else
   IMAGE_SUBDIR = $(BOXMODEL)
 endif
