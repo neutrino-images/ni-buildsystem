@@ -218,6 +218,7 @@ TOUCH = @touch $(D)/$(@)
 INSTALL      = install
 INSTALL_DATA = $(INSTALL) -m 0644
 INSTALL_EXEC = $(INSTALL) -m 0755
+INSTALL_COPY = cp -a
 
 GET-GIT-ARCHIVE = $(HELPERS_DIR)/get-git-archive.sh
 GET-GIT-SOURCE  = $(HELPERS_DIR)/get-git-source.sh
