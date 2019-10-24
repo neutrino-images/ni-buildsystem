@@ -145,8 +145,8 @@ VUDUO_PATCH = \
 $(ARCHIVE)/$(KERNEL_SOURCE):
 	$(DOWNLOAD) $(KERNEL_URL)/$(KERNEL_SOURCE)
 
-$(ARCHIVE)/$(VMLINUZ_INITRD_SOURCE):
-	$(DOWNLOAD) $(VMLINUZ_INITRD_URL)/$(VMLINUZ_INITRD_SOURCE)
+$(ARCHIVE)/$(VMLINUZ-INITRD_SOURCE):
+	$(DOWNLOAD) $(VMLINUZ-INITRD_URL)/$(VMLINUZ-INITRD_SOURCE)
 
 # -----------------------------------------------------------------------------
 
@@ -285,8 +285,8 @@ kernel-modules-mipsbox: kernel-mipsbox
 
 # -----------------------------------------------------------------------------
 
-vmlinuz-initrd: $(ARCHIVE)/$(VMLINUZ_INITRD_SOURCE)
-	$(UNTAR)/$(VMLINUZ_INITRD_SOURCE)
+vmlinuz-initrd: $(ARCHIVE)/$(VMLINUZ-INITRD_SOURCE)
+	$(UNTAR)/$(VMLINUZ-INITRD_SOURCE)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------

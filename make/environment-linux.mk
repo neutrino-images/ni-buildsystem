@@ -52,10 +52,10 @@ else ifeq ($(BOXMODEL), vusolo4k)
   KERNEL_BRANCH = $(EMPTY)
   KERNEL_DTB    = $(EMPTY)
 
-  VMLINUZ_INITRD_VER    = 20190911
-  VMLINUZ_INITRD_SOURCE = vmlinuz-initrd_$(BOXMODEL)_$(VMLINUZ_INITRD_VER).tar.gz
-  VMLINUZ_INITRD_URL    = https://bitbucket.org/max_10/vmlinuz-initrd-$(BOXMODEL)/downloads
-  VMLINUZ_INITRD        = vmlinuz-initrd-7366c0
+  VMLINUZ-INITRD_VER    = 20190911
+  VMLINUZ-INITRD_SOURCE = vmlinuz-initrd_$(BOXMODEL)_$(VMLINUZ-INITRD_VER).tar.gz
+  VMLINUZ-INITRD_URL    = https://bitbucket.org/max_10/vmlinuz-initrd-$(BOXMODEL)/downloads
+  VMLINUZ-INITRD        = vmlinuz-initrd-7366c0
 
   BOOT_PARTITION = 1
 
@@ -71,10 +71,10 @@ else ifeq ($(BOXMODEL), vuduo4k)
   KERNEL_BRANCH = $(EMPTY)
   KERNEL_DTB    = $(EMPTY)
 
-  VMLINUZ_INITRD_VER    = 20190911
-  VMLINUZ_INITRD_SOURCE = vmlinuz-initrd_$(BOXMODEL)_$(VMLINUZ_INITRD_VER).tar.gz
-  VMLINUZ_INITRD_URL    = https://bitbucket.org/max_10/vmlinuz-initrd-$(BOXMODEL)/downloads
-  VMLINUZ_INITRD        = vmlinuz-initrd-7278b1
+  VMLINUZ-INITRD_VER    = 20190911
+  VMLINUZ-INITRD_SOURCE = vmlinuz-initrd_$(BOXMODEL)_$(VMLINUZ-INITRD_VER).tar.gz
+  VMLINUZ-INITRD_URL    = https://bitbucket.org/max_10/vmlinuz-initrd-$(BOXMODEL)/downloads
+  VMLINUZ-INITRD        = vmlinuz-initrd-7278b1
 
   BOOT_PARTITION = 6
 
@@ -90,10 +90,10 @@ else ifeq ($(BOXMODEL), vuultimo4k)
   KERNEL_BRANCH = $(EMPTY)
   KERNEL_DTB    = $(EMPTY)
 
-  VMLINUZ_INITRD_VER    = 20190911
-  VMLINUZ_INITRD_SOURCE = vmlinuz-initrd_$(BOXMODEL)_$(VMLINUZ_INITRD_VER).tar.gz
-  VMLINUZ_INITRD_URL    = https://bitbucket.org/max_10/vmlinuz-initrd-$(BOXMODEL)/downloads
-  VMLINUZ_INITRD        = vmlinuz-initrd-7445d0
+  VMLINUZ-INITRD_VER    = 20190911
+  VMLINUZ-INITRD_SOURCE = vmlinuz-initrd_$(BOXMODEL)_$(VMLINUZ-INITRD_VER).tar.gz
+  VMLINUZ-INITRD_URL    = https://bitbucket.org/max_10/vmlinuz-initrd-$(BOXMODEL)/downloads
+  VMLINUZ-INITRD        = vmlinuz-initrd-7445d0
 
   BOOT_PARTITION = 1
 
@@ -109,10 +109,10 @@ else ifeq ($(BOXMODEL), vuzero4k)
   KERNEL_BRANCH = $(EMPTY)
   KERNEL_DTB    = $(EMPTY)
 
-  VMLINUZ_INITRD_VER    = 20190911
-  VMLINUZ_INITRD_SOURCE = vmlinuz-initrd_$(BOXMODEL)_$(VMLINUZ_INITRD_VER).tar.gz
-  VMLINUZ_INITRD_URL    = https://bitbucket.org/max_10/vmlinuz-initrd-$(BOXMODEL)/downloads
-  VMLINUZ_INITRD        = vmlinuz-initrd-7260a0
+  VMLINUZ-INITRD_VER    = 20190911
+  VMLINUZ-INITRD_SOURCE = vmlinuz-initrd_$(BOXMODEL)_$(VMLINUZ-INITRD_VER).tar.gz
+  VMLINUZ-INITRD_URL    = https://bitbucket.org/max_10/vmlinuz-initrd-$(BOXMODEL)/downloads
+  VMLINUZ-INITRD        = vmlinuz-initrd-7260a0
 
   BOOT_PARTITION = 4
 
@@ -128,10 +128,10 @@ else ifeq ($(BOXMODEL), vuuno4k)
   KERNEL_BRANCH = $(EMPTY)
   KERNEL_DTB    = $(EMPTY)
 
-  VMLINUZ_INITRD_VER    = 20191010
-  VMLINUZ_INITRD_SOURCE = vmlinuz-initrd_$(BOXMODEL)_$(VMLINUZ_INITRD_VER).tar.gz
-  VMLINUZ_INITRD_URL    = https://bitbucket.org/max_10/vmlinuz-initrd-$(BOXMODEL)/downloads
-  VMLINUZ_INITRD        = vmlinuz-initrd-7439b0
+  VMLINUZ-INITRD_VER    = 20191010
+  VMLINUZ-INITRD_SOURCE = vmlinuz-initrd_$(BOXMODEL)_$(VMLINUZ-INITRD_VER).tar.gz
+  VMLINUZ-INITRD_URL    = https://bitbucket.org/max_10/vmlinuz-initrd-$(BOXMODEL)/downloads
+  VMLINUZ-INITRD        = vmlinuz-initrd-7439b0
 
   BOOT_PARTITION = 1
 
@@ -147,10 +147,10 @@ else ifeq ($(BOXMODEL), vuuno4kse)
   KERNEL_BRANCH = $(EMPTY)
   KERNEL_DTB    = $(EMPTY)
 
-  VMLINUZ_INITRD_VER    = 20191010
-  VMLINUZ_INITRD_SOURCE = vmlinuz-initrd_$(BOXMODEL)_$(VMLINUZ_INITRD_VER).tar.gz
-  VMLINUZ_INITRD_URL    = https://bitbucket.org/max_10/vmlinuz-initrd-$(BOXMODEL)/downloads
-  VMLINUZ_INITRD        = vmlinuz-initrd-7439b0
+  VMLINUZ-INITRD_VER    = 20191010
+  VMLINUZ-INITRD_SOURCE = vmlinuz-initrd_$(BOXMODEL)_$(VMLINUZ-INITRD_VER).tar.gz
+  VMLINUZ-INITRD_URL    = https://bitbucket.org/max_10/vmlinuz-initrd-$(BOXMODEL)/downloads
+  VMLINUZ-INITRD        = vmlinuz-initrd-7439b0
 
   BOOT_PARTITION = 1
 
