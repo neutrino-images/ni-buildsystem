@@ -72,7 +72,7 @@ LUA-FEEDPARSER_SOURCE = lua-feedparser-$(LUA-FEEDPARSER_VER).tar.gz
 LUA-FEEDPARSER_URL    = https://github.com/slact/lua-feedparser/archive
 
 $(ARCHIVE)/$(LUA-FEEDPARSER_SOURCE):
-	$(DOWNLOAD) $(LUA-FEEDPARSER_URL)/$(LUA-FEEDPARSER_SOURCE) -O $(@)
+	$(DOWNLOAD) $(LUA-FEEDPARSER_URL)/$(LUA-FEEDPARSER_VER).tar.gz -O $(@)
 
 LUA-FEEDPARSER_PATCH  = lua-feedparser.patch
 
