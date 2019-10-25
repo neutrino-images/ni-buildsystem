@@ -33,8 +33,6 @@ else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7))
   KERNEL_SOURCE = linux-$(KERNEL_VER)-arm.tar.gz
   KERNEL_URL    = http://downloads.mutant-digital.net
 
-  KERNEL_PATCH  = $($(call UPPERCASE,$(BOXMODEL))_PATCH)
-
   KERNEL_BRANCH = $(EMPTY)
   KERNEL_DTB    = $(BUILD_TMP)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/dts/bcm7445-bcm97445svmb.dtb
   KERNEL_CONFIG = $(CONFIGS)/kernel-hd51.config
@@ -44,8 +42,6 @@ else ifeq ($(BOXMODEL), vusolo4k)
   KERNEL_TMP    = linux
   KERNEL_SOURCE = stblinux-3.14-1.8.tar.bz2
   KERNEL_URL    = http://archive.vuplus.com/download/kernel
-
-  KERNEL_PATCH  = $(VUSOLO4K_PATCH)
 
   KERNEL_BRANCH = $(EMPTY)
   KERNEL_DTB    = $(EMPTY)
@@ -63,8 +59,6 @@ else ifeq ($(BOXMODEL), vuduo4k)
   KERNEL_SOURCE = stblinux-4.1-1.17.tar.bz2
   KERNEL_URL    = http://archive.vuplus.com/download/kernel
 
-  KERNEL_PATCH  = $(VUDUO4K_PATCH)
-
   KERNEL_BRANCH = $(EMPTY)
   KERNEL_DTB    = $(EMPTY)
 
@@ -80,8 +74,6 @@ else ifeq ($(BOXMODEL), vuultimo4k)
   KERNEL_TMP    = linux
   KERNEL_SOURCE = stblinux-3.14-1.12.tar.bz2
   KERNEL_URL    = http://archive.vuplus.com/download/kernel
-
-  KERNEL_PATCH  = $(VUULTIMO4K_PATCH)
 
   KERNEL_BRANCH = $(EMPTY)
   KERNEL_DTB    = $(EMPTY)
@@ -99,8 +91,6 @@ else ifeq ($(BOXMODEL), vuzero4k)
   KERNEL_SOURCE = stblinux-4.1-1.9.tar.bz2
   KERNEL_URL    = http://archive.vuplus.com/download/kernel
 
-  KERNEL_PATCH  = $(VUZERO4K_PATCH)
-
   KERNEL_BRANCH = $(EMPTY)
   KERNEL_DTB    = $(EMPTY)
 
@@ -116,8 +106,6 @@ else ifeq ($(BOXMODEL), vuuno4k)
   KERNEL_TMP    = linux
   KERNEL_SOURCE = stblinux-3.14-1.12.tar.bz2
   KERNEL_URL    = http://archive.vuplus.com/download/kernel
-
-  KERNEL_PATCH  = $(VUUNO4K_PATCH)
 
   KERNEL_BRANCH = $(EMPTY)
   KERNEL_DTB    = $(EMPTY)
@@ -135,8 +123,6 @@ else ifeq ($(BOXMODEL), vuuno4kse)
   KERNEL_SOURCE = stblinux-4.1-1.9.tar.bz2
   KERNEL_URL    = http://archive.vuplus.com/download/kernel
 
-  KERNEL_PATCH  = $(VUUNO4KSE_PATCH)
-
   KERNEL_BRANCH = $(EMPTY)
   KERNEL_DTB    = $(EMPTY)
 
@@ -153,12 +139,12 @@ else ifeq ($(BOXMODEL), vuduo)
   KERNEL_SOURCE = stblinux-$(KERNEL_VER).tar.bz2
   KERNEL_URL    = http://archive.vuplus.com/download/kernel
 
-  KERNEL_PATCH  = $(VUDUO_PATCH)
-
   KERNEL_BRANCH = $(EMPTY)
   KERNEL_DTB    = $(EMPTY)
 
 endif
+
+KERNEL_PATCH    = $($(call UPPERCASE,$(BOXMODEL))_PATCH)
 
 KERNEL_OBJ      = linux-$(KERNEL_VER)-obj
 KERNEL_MODULES  = linux-$(KERNEL_VER)-modules
