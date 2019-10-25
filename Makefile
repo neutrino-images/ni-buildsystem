@@ -154,7 +154,6 @@ include make/linux-drivers.mk
 include make/neutrino.mk
 include make/neutrino-plugins.mk
 include make/prerequisites.mk
-include make/target-blobs.mk
 include make/target-development.mk
 include make/target-ffmpeg$(if $(filter $(BOXTYPE),coolstream),-coolstream).mk
 include make/target-libs.mk
