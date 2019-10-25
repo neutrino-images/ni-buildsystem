@@ -1,0 +1,12 @@
+--- a/include/uapi/asm-generic/int-ll64.h
++++ b/include/uapi/asm-generic/int-ll64.h
+@@ -8,7 +8,7 @@
+ #ifndef _UAPI_ASM_GENERIC_INT_LL64_H
+ #define _UAPI_ASM_GENERIC_INT_LL64_H
+ 
+-#include <asm/bitsperlong.h>
++#include <asm-generic/bitsperlong.h>
+ 
+ #ifndef __ASSEMBLY__
+ /*
+

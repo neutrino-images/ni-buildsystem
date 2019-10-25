@@ -3,7 +3,23 @@
 #
 # -----------------------------------------------------------------------------
 
-# arm-vuduo
+# arm hd51/bre2ze4k/h7
+GFUTURES_4_10_PATCH = \
+	gfutures/4_10_0001-export_pmpoweroffprepare.patch \
+	gfutures/4_10_0002-TBS-fixes-for-4.10-kernel.patch \
+	gfutures/4_10_0003-Support-TBS-USB-drivers-for-4.6-kernel.patch \
+	gfutures/4_10_0004-TBS-fixes-for-4.6-kernel.patch \
+	gfutures/4_10_0005-STV-Add-PLS-support.patch \
+	gfutures/4_10_0006-STV-Add-SNR-Signal-report-parameters.patch \
+	gfutures/4_10_0007-blindscan2.patch \
+	gfutures/4_10_0007-stv090x-optimized-TS-sync-control.patch \
+	gfutures/4_10_add-more-devices-rtl8xxxu.patch \
+	gfutures/4_10_bitsperlong.patch \
+	gfutures/4_10_blacklist_mmc0.patch \
+	gfutures/4_10_reserve_dvb_adapter_0.patch \
+	gfutures/4_10_t230c2.patch
+
+# arm vuduo
 VUPLUS_3_9_PATCH = \
 	vuplus/3_9_0001-rt2800usb-add-support-for-rt55xx.patch \
 	vuplus/3_9_0001-stv090x-optimized-TS-sync-control.patch \
@@ -41,7 +57,7 @@ VUPLUS_3_9_PATCH = \
 	vuplus/3_9_tda18271-advertise-supported-delsys.patch \
 	vuplus/3_9_test.patch
 
-# arm-vusolo4k/arm-vuultimo4k/arm-vuuno4k
+# arm vusolo4k/vuultimo4k/vuuno4k
 VUPLUS_3_14_PATCH = \
 	vuplus/3_14_bcm_genet_disable_warn.patch \
 	vuplus/3_14_linux_dvb-core.patch \
@@ -71,7 +87,7 @@ VUPLUS_3_14_PATCH = \
 	vuplus/3_14_0006-makefile-disable-warnings.patch \
 	vuplus/3_14_linux_dvb_adapter.patch
 
-# arm-vuduo4k/arm-vuzero4k/arm-vuuno4kse
+# arm vuduo4k/vuzero4k/vuuno4kse
 VUPLUS_4_1_PATCH = \
 	vuplus/4_1_linux_dvb_adapter.patch \
 	vuplus/4_1_linux_dvb-core.patch \
@@ -108,6 +124,17 @@ VUPLUS_4_1_PATCH = \
 	vuplus/4_1_0001-stv090x-optimized-TS-sync-control.patch \
 	vuplus/4_1_0002-log2-give-up-on-gcc-constant-optimizations.patch \
 	vuplus/4_1_0003-uaccess-dont-mark-register-as-const.patch
+
+# -----------------------------------------------------------------------------
+
+HD51_PATCH = \
+	$(GFUTURES_4_10_PATCH)
+
+BRE2ZE4K_PATCH = \
+	$(GFUTURES_4_10_PATCH)
+
+H7_PATCH = \
+	$(GFUTURES_4_10_PATCH)
 
 VUSOLO4K_PATCH = \
 	$(VUPLUS_3_14_PATCH) \

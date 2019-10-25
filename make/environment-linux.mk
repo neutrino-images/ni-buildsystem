@@ -3,7 +3,6 @@
 #
 # -----------------------------------------------------------------------------
 
-# cst-nevis
 ifeq ($(BOXMODEL), nevis)
   KERNEL_VER    = 2.6.34.13
   KERNEL_TMP    = linux-$(KERNEL_VER)
@@ -13,7 +12,6 @@ ifeq ($(BOXMODEL), nevis)
   KERNEL_BRANCH = ni/linux-2.6.34.15
   KERNEL_DTB    = $(EMPTY)
 
-# cst-apollo/cst-kronos
 else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), apollo shiner kronos kronos_v2))
   KERNEL_VER    = 3.10.93
   KERNEL_TMP    = linux-$(KERNEL_VER)
@@ -29,18 +27,18 @@ else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), apollo shiner kronos kronos_v2))
     KERNEL_CONFIG = $(CONFIGS)/kernel-kronos.config
   endif
 
-# arm-hd51
 else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7))
   KERNEL_VER    = 4.10.12
   KERNEL_TMP    = linux-$(KERNEL_VER)
-  KERNEL_SOURCE = git
-  KERNEL_URL    = $(EMPTY)
+  KERNEL_SOURCE = linux-$(KERNEL_VER)-arm.tar.gz
+  KERNEL_URL    = http://downloads.mutant-digital.net
 
-  KERNEL_BRANCH = ni/linux-$(KERNEL_VER)
+  KERNEL_PATCH  = $($(call UPPERCASE,$(BOXMODEL))_PATCH)
+
+  KERNEL_BRANCH = $(EMPTY)
   KERNEL_DTB    = $(BUILD_TMP)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/dts/bcm7445-bcm97445svmb.dtb
   KERNEL_CONFIG = $(CONFIGS)/kernel-hd51.config
 
-# arm-vusolo4k
 else ifeq ($(BOXMODEL), vusolo4k)
   KERNEL_VER    = 3.14.28-1.8
   KERNEL_TMP    = linux
@@ -59,7 +57,6 @@ else ifeq ($(BOXMODEL), vusolo4k)
 
   BOOT_PARTITION = 1
 
-# arm-vuduo4k
 else ifeq ($(BOXMODEL), vuduo4k)
   KERNEL_VER    = 4.1.45-1.17
   KERNEL_TMP    = linux
@@ -78,7 +75,6 @@ else ifeq ($(BOXMODEL), vuduo4k)
 
   BOOT_PARTITION = 6
 
-# arm-vuultimo4k
 else ifeq ($(BOXMODEL), vuultimo4k)
   KERNEL_VER    = 3.14.28-1.12
   KERNEL_TMP    = linux
@@ -97,7 +93,6 @@ else ifeq ($(BOXMODEL), vuultimo4k)
 
   BOOT_PARTITION = 1
 
-# arm-vuzero4k
 else ifeq ($(BOXMODEL), vuzero4k)
   KERNEL_VER    = 4.1.20-1.9
   KERNEL_TMP    = linux
@@ -116,7 +111,6 @@ else ifeq ($(BOXMODEL), vuzero4k)
 
   BOOT_PARTITION = 4
 
-# arm-vuuno4k
 else ifeq ($(BOXMODEL), vuuno4k)
   KERNEL_VER    = 3.14.28-1.12
   KERNEL_TMP    = linux
@@ -135,7 +129,6 @@ else ifeq ($(BOXMODEL), vuuno4k)
 
   BOOT_PARTITION = 1
 
-# arm-vuuno4kse
 else ifeq ($(BOXMODEL), vuuno4kse)
   KERNEL_VER    = 4.1.20-1.9
   KERNEL_TMP    = linux
@@ -154,7 +147,6 @@ else ifeq ($(BOXMODEL), vuuno4kse)
 
   BOOT_PARTITION = 1
 
-# mips-vuduo
 else ifeq ($(BOXMODEL), vuduo)
   KERNEL_VER    = 3.9.6
   KERNEL_TMP    = linux
