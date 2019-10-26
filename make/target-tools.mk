@@ -304,8 +304,9 @@ PARTED_URL    = https://ftp.gnu.org/gnu/parted
 $(ARCHIVE)/$(PARTED_SOURCE):
 	$(DOWNLOAD) $(PARTED_URL)/$(PARTED_SOURCE)
 
-PARTED_PATCH  = parted-devmapper-1.patch
+PARTED_PATCH  = parted-device-mapper.patch
 PARTED_PATCH += parted-sysmacros.patch
+PARTED_PATCH += parted-iconv.patch
 
 PARTED_DEPS   = e2fsprogs
 
@@ -530,6 +531,7 @@ $(ARCHIVE)/$(USHARE_SOURCE):
 
 USHARE_PATCH  = ushare.diff
 USHARE_PATCH += ushare-fix-building-with-gcc-5.x.patch
+USHARE_PATCH += ushare-disable-iconv-check.patch
 
 USHARE_DEPS   = libupnp
 
