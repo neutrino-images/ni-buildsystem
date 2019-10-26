@@ -1320,12 +1320,15 @@ DOSFSTOOLS_URL    = https://github.com/dosfstools/dosfstools/releases/download/v
 $(ARCHIVE)/$(DOSFSTOOLS_SOURCE):
 	$(DOWNLOAD) $(DOSFSTOOLS_URL)/$(DOSFSTOOLS_SOURCE)
 
+DOSFSTOOLS_PATCH  = switch-to-AC_CHECK_LIB-for-iconv-library-linking.patch
+
 DOSFSTOOLS_CFLAGS = $(TARGET_CFLAGS) -D_GNU_SOURCE -fomit-frame-pointer -D_FILE_OFFSET_BITS=64
 
 dosfstools: $(ARCHIVE)/$(DOSFSTOOLS_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(DOSFSTOOLS_TMP)
 	$(UNTAR)/$(DOSFSTOOLS_SOURCE)
 	$(CHDIR)/$(DOSFSTOOLS_TMP); \
+		$(call apply_patches, $(addprefix $(@F)/,$(DOSFSTOOLS_PATCH))); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--prefix= \
