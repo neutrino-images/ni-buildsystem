@@ -1628,40 +1628,6 @@ wget: $(WGET_DEPS) $(ARCHIVE)/$(WGET_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-LIBICONV_VER    = 1.13.1
-LIBICONV_TMP    = libiconv-$(LIBICONV_VER)
-LIBICONV_SOURCE = libiconv-$(LIBICONV_VER).tar.gz
-LIBICONV_URL    = https://ftp.gnu.org/gnu/libiconv
-
-$(ARCHIVE)/$(LIBICONV_SOURCE):
-	$(DOWNLOAD) $(LIBICONV_URL)/$(LIBICONV_SOURCE)
-
-LIBICONV_PATCH  = iconv-disable_transliterations.patch
-LIBICONV_PATCH += iconv-strip_charsets.patch
-
-# builds only stripped down iconv binary used for smarthomeinfo plugin
-iconv: $(ARCHIVE)/$(LIBICONV_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(LIBICONV_TMP)
-	$(UNTAR)/$(LIBICONV_SOURCE)
-	$(CHDIR)/$(LIBICONV_TMP); \
-		$(call apply_patches, $(LIBICONV_PATCH)); \
-		$(CONFIGURE) \
-			--target=$(TARGET) \
-			--prefix= \
-			--datarootdir=$(remove-datarootdir) \
-			--includedir=$(remove-includedir) \
-			--libdir=$(remove-libdir) \
-			--enable-static \
-			--disable-shared \
-			--enable-relocatable \
-			; \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/$(LIBICONV_TMP)
-	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
 ofgwrite: $(SOURCE_DIR)/$(NI-OFGWRITE) | $(TARGET_DIR)
 	$(REMOVE)/$(NI-OFGWRITE)
 	tar -C $(SOURCE_DIR) -cp $(NI-OFGWRITE) --exclude-vcs | tar -C $(BUILD_TMP) -x
