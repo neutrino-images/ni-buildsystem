@@ -285,8 +285,7 @@ kernel-modules-coolstream-hd1: kernel-coolstream
 	$(TOUCH)
 
 kernel-modules-coolstream-hd2: kernel-coolstream
-	rm -rf $(TARGET_MODULES_DIR)/kernel # nuke coolstream kernel-drivers but leave coolstream extra-drivers
-	cp -a $(KERNEL_MODULES_DIR)/kernel $(TARGET_MODULES_DIR) # copy own kernel-drivers
+	cp -a $(KERNEL_MODULES_DIR)/kernel $(TARGET_MODULES_DIR)
 	cp -a $(KERNEL_MODULES_DIR)/modules.builtin $(TARGET_MODULES_DIR)
 	cp -a $(KERNEL_MODULES_DIR)/modules.order $(TARGET_MODULES_DIR)
 	make depmod
