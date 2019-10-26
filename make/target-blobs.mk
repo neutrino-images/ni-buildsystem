@@ -3,7 +3,9 @@
 #
 # -----------------------------------------------------------------------------
 
-blobs:
+BLOBS_DEPS = kernel # because of depmod
+
+blobs: $(BLOBS_DEPS)
 	make $(BOXMODEL)-drivers
 ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7 vusolo4k vuduo4k vuultimo4k vuzero4k vuuno4k vuuno4kse))
 	make $(BOXMODEL)-libgles
