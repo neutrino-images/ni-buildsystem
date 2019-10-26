@@ -1211,7 +1211,8 @@ ifeq ($(BOXSERIES), hd2)
   GLIB2_DEPS += gettext
 endif
 
-GLIB2_CONF   = $(if $(filter $(BOXSERIES), hd1), --enable-static --disable-shared)
+GLIB2_CONF   = $(if $(filter $(BOXSERIES), hd1),--enable-static --disable-shared)
+GLIB2_CONF  += $(if $(filter $(BOXSERIES), vusolo4k vuduo4k vuultimo4k vuuno4kse),--with-libiconv=gnu)
 
 glib2: $(GLIB2_DEPS) $(ARCHIVE)/$(GLIB2_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(GLIB2_TMP)
@@ -1328,7 +1329,7 @@ popt: $(ARCHIVE)/$(POPT_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-LIBICONV_VER    = 1.13.1
+LIBICONV_VER    = 1.15
 LIBICONV_TMP    = libiconv-$(LIBICONV_VER)
 LIBICONV_SOURCE = libiconv-$(LIBICONV_VER).tar.gz
 LIBICONV_URL    = https://ftp.gnu.org/gnu/libiconv
@@ -1336,15 +1337,46 @@ LIBICONV_URL    = https://ftp.gnu.org/gnu/libiconv
 $(ARCHIVE)/$(LIBICONV_SOURCE):
 	$(DOWNLOAD) $(LIBICONV_URL)/$(LIBICONV_SOURCE)
 
-LIBICONV_PATCH  = disable_transliterations.patch
-LIBICONV_PATCH += strip_charsets.patch
-
-# builds only stripped down iconv binary used for smarthomeinfo plugin
-iconv: $(ARCHIVE)/$(LIBICONV_SOURCE) | $(TARGET_DIR)
+libiconv: $(ARCHIVE)/$(LIBICONV_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LIBICONV_TMP)
 	$(UNTAR)/$(LIBICONV_SOURCE)
 	$(CHDIR)/$(LIBICONV_TMP); \
-		$(call apply_patches, $(addprefix libiconv/,$(LIBICONV_PATCH))); \
+		sed -i -e '/preload/d' Makefile.in; \
+		$(CONFIGURE) CPPFLAGS="$(TARGET_CPPFLAGS) -fPIC" \
+			--target=$(TARGET) \
+			--prefix= \
+			--datarootdir=$(remove-datarootdir) \
+			--enable-static \
+			--disable-shared \
+			--enable-relocatable \
+			; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(REWRITE_LIBTOOL)/libcharset.la
+	$(REWRITE_LIBTOOL)/libiconv.la
+	$(REMOVE)/$(LIBICONV_TMP)
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
+LIBICONV-STRIPPED_VER    = 1.13.1
+LIBICONV-STRIPPED_TMP    = libiconv-$(LIBICONV-STRIPPED_VER)
+LIBICONV-STRIPPED_SOURCE = libiconv-$(LIBICONV-STRIPPED_VER).tar.gz
+LIBICONV-STRIPPED_URL    = https://ftp.gnu.org/gnu/libiconv
+
+$(ARCHIVE)/$(LIBICONV-STRIPPED_SOURCE):
+	$(DOWNLOAD) $(LIBICONV-STRIPPED_URL)/$(LIBICONV-STRIPPED_SOURCE)
+
+LIBICONV-STRIPPED_PATCH  = disable_transliterations.patch
+LIBICONV-STRIPPED_PATCH += strip_charsets.patch
+
+# builds only stripped down iconv binary used by smarthomeinfo plugin
+iconv-bin: $(ARCHIVE)/$(LIBICONV-STRIPPED_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(LIBICONV-STRIPPED_TMP)
+	$(UNTAR)/$(LIBICONV-STRIPPED_SOURCE)
+	$(CHDIR)/$(LIBICONV-STRIPPED_TMP); \
+		$(call apply_patches, $(addprefix libiconv/,$(LIBICONV-STRIPPED_PATCH))); \
+		sed -i -e '/preload/d' Makefile.in; \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
 			--prefix= \
@@ -1357,5 +1389,33 @@ iconv: $(ARCHIVE)/$(LIBICONV_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/$(LIBICONV_TMP)
+	$(REMOVE)/$(LIBICONV-STRIPPED_TMP)
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
+GRAPHLCD_VER    = git
+GRAPHLCD_TMP    = graphlcd-base.$(GRAPHLCD_VER)
+GRAPHLCD_SOURCE = graphlcd-base.$(GRAPHLCD_VER)
+GRAPHLCD_URL    = git://projects.vdr-developer.org
+
+GRAPHLCD_PATCH  = graphlcd.patch
+ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vuduo4k vusolo4k vuultimo4k vuuno4kse))
+  GRAPHLCD_PATCH += graphlcd-vuplus.patch
+endif
+
+GRAPHLCD_DEPS   = freetype libiconv libusb
+
+graphlcd: $(GRAPHLCD_DEPS) | $(TARGET_DIR)
+	$(REMOVE)/$(GRAPHLCD_TMP)
+	$(GET-GIT-SOURCE) $(GRAPHLCD_URL)/$(GRAPHLCD_SOURCE) $(ARCHIVE)/$(GRAPHLCD_SOURCE)
+	$(CPDIR)/$(GRAPHLCD_TMP)
+	$(CHDIR)/$(GRAPHLCD_TMP); \
+		$(call apply_patches, $(addprefix $(@)/,$(GRAPHLCD_PATCH))); \
+		$(MAKE) -C glcdgraphics all TARGET=$(TARGET_CROSS) PREFIX= DESTDIR=$(TARGET_DIR); \
+		$(MAKE) -C glcddrivers all TARGET=$(TARGET_CROSS) PREFIX= DESTDIR=$(TARGET_DIR); \
+		$(MAKE) -C glcdgraphics install PREFIX= DESTDIR=$(TARGET_DIR); \
+		$(MAKE) -C glcddrivers install PREFIX= DESTDIR=$(TARGET_DIR); \
+		cp -a graphlcd.conf $(TARGET_DIR)/etc
+	$(REMOVE)/$(GRAPHLCD_TMP)
 	$(TOUCH)

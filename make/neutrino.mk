@@ -24,6 +24,10 @@ N_DEPS += openthreads
 N_DEPS += pugixml
 N_DEPS += zlib
 
+ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vusolo4k vuduo4k vuultimo4k vuuno4kse))
+  N_DEPS += graphlcd
+endif
+
 ifeq ($(BOXTYPE)-$(HAS_LIBCS), coolstream-yes)
   N_DEPS += libcoolstream
 endif

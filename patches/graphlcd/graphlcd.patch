@@ -1,0 +1,1195 @@
+--- a/glcddrivers/ax206dpf.c
++++ b/glcddrivers/ax206dpf.c
+@@ -43,7 +43,7 @@
+ #include <algorithm>
+ #include <pthread.h>
+ #include <time.h>
+-#include <usb.h>
++#include <libusb.h>
+ 
+ #include "common.h"
+ #include "config.h"
+@@ -76,6 +76,8 @@
+         dh[i]->address[0] = 0;
+         dh[i]->dpfh = NULL;
+         dh[i]->LCD = NULL;
++        dh[i]->PRE = NULL;
++        dh[i]->justCleared = false;
+     }
+ 
+     lastbrightness = config->brightness ? config->brightness : 100;
+@@ -155,7 +157,9 @@
+         width /= zoom;
+     }
+     
++#if 0
+     ResetMinMax();
++#endif
+ 
+     *oldConfig = *config;
+ 
+@@ -177,8 +181,8 @@
+ bool cDriverAX206DPF::RescanUSB()
+ {
+     bool ret = false;
+-    usb_find_busses();
+-    if (usb_find_devices() > 0)
++    libusb_device **list;
++    if (libusb_get_device_list(NULL, &list) > 0)
+     {
+         unsigned int a = 0, b = 0;
+         for (unsigned int i = 0; i < numdisplays; i++)
+@@ -192,6 +196,8 @@
+             if (dh[i]->attached) b |= 0x01 << i;
+         }
+         ret = a != b;
++        
++        libusb_free_device_list(list, 1);
+     }
+     return ret;
+ }
+@@ -212,15 +218,11 @@
+     {
+         dh[di]->dpfh = NULL;
+         dh[di]->attached = false;
+-        return 0;
++        return error;
+     }
+     dh[di]->attached = true;
+-    struct usb_device *dev = usb_device(dh[di]->dpfh->dev.udev);
+-    char *s1 = dev->bus->dirname;
+-    char *s2 = dev->filename;
+-    if (strlen(s1) > 3) s1 = (char *) "???";
+-    if (strlen(s2) > 3) s2 = (char *) "???";
+-    sprintf(dh[di]->address, "%s:%s", s1, s2);
++    struct libusb_device *dev = libusb_get_device(dh[di]->dpfh->dev.udev);
++    sprintf(dh[di]->address, "%03u:%03u", libusb_get_bus_number(dev), libusb_get_device_address(dev));
+     
+     // See, if we have to rotate the display
+     dh[di]->isPortrait = dh[di]->dpfh->width < dh[di]->dpfh->height;
+@@ -250,6 +252,7 @@
+     }
+     // setup physical lcd arrays
+     dh[di]->LCD = (unsigned char *) malloc(dh[di]->dpfh->height * dh[di]->dpfh->width * dh[di]->dpfh->bpp);
++    dh[di]->PRE= (unsigned char *) malloc(dh[di]->dpfh->height * dh[di]->dpfh->width * dh[di]->dpfh->bpp);
+     ClearSingleDisplay(di);
+ 
+     // Set Display Brightness
+@@ -257,7 +260,9 @@
+ 
+ 
+     // Reorder displays
++#if 0
+     bool changed = false;
++#endif
+     for (unsigned int i = 0; i < MAX_DPFS - 1; i++)
+     {
+         for (unsigned int j = i + 1; j < MAX_DPFS; j++)
+@@ -267,7 +272,9 @@
+                 DISPLAYHANDLE *h = dh[i];
+                 dh[i] = dh[j];
+                 dh[j] = h;
++#if 0
+                 changed = true;
++#endif
+             }
+         }
+     }
+@@ -291,6 +298,10 @@
+     if (dh[di]->LCD != NULL)
+         free(dh[di]->LCD);
+     dh[di]->LCD = NULL;
++
++    if (dh[di]->PRE != NULL)
++        free(dh[di]->PRE);
++    dh[di]->PRE = NULL;
+     
+     dh[di]->attached = false;
+     dh[di]->address[0] = 0;
+@@ -353,7 +364,9 @@
+ {
+     if (dh[di]->attached)
+     {
++        dh[di]->justCleared = true;
+         memset(dh[di]->LCD, 0, dh[di]->dpfh->width * dh[di]->dpfh->height * dh[di]->dpfh->bpp);       //Black
++        memset(dh[di]->PRE, 1, dh[di]->dpfh->width * dh[di]->dpfh->height * dh[di]->dpfh->bpp);       //whatever
+         dh[di]->minx = 0;
+         dh[di]->maxx = dh[di]->dpfh->width - 1;
+         dh[di]->miny = 0;
+@@ -374,7 +387,9 @@
+ 
+ void cDriverAX206DPF::SetPixel(int x, int y, uint32_t data)
+ {
++#if 0
+     bool changed = false;
++#endif
+     
+     if (config->upsideDown)
+     {
+@@ -419,12 +434,16 @@
+     if (zoom == 1)
+     {
+         unsigned int i = (ly * dh[di]->dpfh->width + lx) * dh[di]->dpfh->bpp;
++#if 0
+         if (dh[di]->LCD[i] != c1 || dh[di]->LCD[i+1] != c2)
+         {
++#endif
+             dh[di]->LCD[i]   = c1;
+             dh[di]->LCD[i+1] = c2;
++#if 0
+             changed = true;
+         }
++#endif
+     }
+     else
+     {
+@@ -433,16 +452,21 @@
+             unsigned int i = ((ly + dy) * dh[di]->dpfh->width + lx) * dh[di]->dpfh->bpp;
+             for (int dx = 0; dx < zoom * dh[di]->dpfh->bpp; dx += dh[di]->dpfh->bpp)
+             {
++#if 0
+                 if (dh[di]->LCD[i+dx] != c1 || dh[di]->LCD[i+dx+1] != c2)
+                 {
++#endif
+                     dh[di]->LCD[i+dx]   = c1;
+                     dh[di]->LCD[i+dx+1] = c2;
++#if 0
+                     changed = true;
+                 }
++#endif
+             }
+         }
+     }
+ 
++#if 0
+     if (changed)
+     {
+         if (lx < dh[di]->minx) dh[di]->minx = lx;
+@@ -450,6 +474,7 @@
+         if (ly < dh[di]->miny) dh[di]->miny = ly;
+         if (ly > dh[di]->maxy) dh[di]->maxy = ly;
+     }
++#endif
+ }
+ 
+ void cDriverAX206DPF::Refresh(bool refreshAll)
+@@ -480,6 +505,60 @@
+             dh[di]->minx = 0; dh[di]->miny = 0;
+             dh[di]->maxx = dh[di]->dpfh->width - 1; dh[di]->maxy = dh[di]->dpfh->height - 1;
+         }
++	else if (dh[di]->justCleared) {
++	    dh[di]->justCleared = false;
++
++	    int height = dh[di]->dpfh->height;
++	    int width =  dh[di]->dpfh->width;
++	    int y_min = height;
++
++	    uint16_t *b0 = (uint16_t *) dh[di]->LCD;
++	    uint16_t *b1 = (uint16_t *) dh[di]->PRE;
++	    for (int y = 0; y < height && y_min == height; y++)
++		for (int x = 0; x < width; x++, b0++, b1++)
++		    if (b0 != b1) {
++			y_min = y;
++			break;
++		    }
++
++	    int y_max = y_min;
++	    b1 = (uint16_t *) dh[di]->LCD + height * width - 1;
++	    b0 = (uint16_t *) dh[di]->PRE + height * width - 1;
++	    for (int y = height - 1; y_min < y && y_max == y_min; y--)
++		for (int x = 0; x < width; x++, b0--, b1--)
++		    if (b0 != b1) {
++			y_max = y;
++			break;
++		    }
++
++	    int x_min = width;
++	    for (int x = 0; x < width && x_min == width; x++) {
++	        b0 = (uint16_t *) dh[di]->LCD + x + y_min * width;
++	        b1 = (uint16_t *) dh[di]->PRE + x + y_min * width;
++	        for (int y = y_min; y < y_max; y++, b0 += width, b1 += width)
++		    if (*b0 != *b1) {
++			x_min = x;
++			break;
++		    }
++	    }
++
++	    int x_max = x_min;
++	    for (int x = width - 1; x_min < x && x_max == x_min; x--) {
++		b0 = (uint16_t *) dh[di]->LCD + x + y_min * width;
++		b1 = (uint16_t *) dh[di]->PRE + x + y_min * width;
++		for (int y = y_min; y < y_max; y++, b0 += width, b1 += width)
++		    if (*b0 != *b1) {
++			x_max = x;
++			break;
++		    }
++	    }
++
++	    dh[di]->minx = x_min;
++	    dh[di]->maxx = x_max;
++	    dh[di]->miny = y_min;
++	    dh[di]->maxy = y_max;
++	}
++
+         //fprintf(stderr, "%d: (%d,%d)-(%d,%d) ", di, dh[di]->minx, dh[di]->miny, dh[di]->maxx, dh[di]->maxy);
+         if (dh[di]->minx > dh[di]->maxx || dh[di]->miny > dh[di]->maxy)
+             continue;
+@@ -506,9 +585,12 @@
+             RescanUSB();
+             lastscan = time(NULL);
+         }
+-    }
+-    
++        memcpy(dh[di]->PRE, dh[di]->LCD, dh[di]->dpfh->height * dh[di]->dpfh->width * dh[di]->dpfh->bpp);
++    }
++    
++#if 0
+     ResetMinMax();
++#endif
+     //fprintf(stderr, "\n");
+ }
+ 
+@@ -674,7 +756,7 @@
+ 	int error = 0;
+ 	DPFContext *dpf;
+ 	int i;
+-	usb_dev_handle *u;
++	libusb_device_handle *u;
+ 
+ 	//int fd;
+ 
+@@ -722,8 +804,8 @@
+ 	//		close(h->dev.fd);
+ 	//		break;
+ 	//	case MODE_USB:
+-			usb_release_interface(h->dev.udev, 0);
+-			usb_close(h->dev.udev);
++			libusb_release_interface(h->dev.udev, 0);
++			libusb_close(h->dev.udev);
+ 	//		break;
+ 	//}
+ 	free(h);
+@@ -841,19 +923,24 @@
+ 	return -1;
+ }
+ 
+-void usb_flush(usb_dev_handle *dev)
+-{
+-	char buf[20];
+-	usb_bulk_read(dev, ENDPT_IN, buf, 3, 1000);
+-}
+-
+-int check_known_device(struct usb_device *d)
++void usb_flush(libusb_device_handle *dev)
++{
++	unsigned char buf[20];
++	int transferred;
++	libusb_bulk_transfer(dev, ENDPT_IN, buf, 3, &transferred, 1000);
++}
++
++int check_known_device(struct libusb_device *d)
+ {
+ 	struct known_device *dev = g_known_devices;
++	libusb_device_descriptor desc;
++	int r = libusb_get_device_descriptor(d, &desc);
++	if (r < 0)
++		return 0;
+ 
+ 	while (dev->desc) {
+-		if ((d->descriptor.idVendor == dev->vid) &&
+-			(d->descriptor.idProduct == dev->pid)) { 
++		if ((desc.idVendor == dev->vid) &&
++			(desc.idProduct == dev->pid)) { 
+ 				//fprintf(stderr, "Found %s at %s:%s\n", dev->desc, d->bus->dirname, d->filename);
+ 				return 1;
+ 		}
+@@ -862,32 +949,35 @@
+ 	return 0;
+ }
+ 
+-static struct usb_device *find_dev(int index)
+-{
+-	struct usb_bus *b;
+-	struct usb_device *d;
++static struct libusb_device *find_dev(int index)
++{
++	struct libusb_device **list;
++	struct libusb_device *found = NULL;
+ 	int enumeration = 0;
+ 
+-	b = usb_get_busses();
+-
+-	while (b) {
+-		d = b->devices;
+-		while (d) {
+-			if (check_known_device(d)) {
+-				if (enumeration == index) return d;
+-				else enumeration++;
++	ssize_t cnt = libusb_get_device_list(NULL, &list);
++
++	for (int i = 0; i < cnt; i++) {
++		struct libusb_device *d = list[i];
++		if (check_known_device(d)) {
++			if (enumeration == index) {
++				found = d;
++				break;
+ 			}
++			else enumeration++;
++		}
+ 
+ #ifdef HAVE_DEBUG
+-			printf("%04x %04x\n",
+-				   d->descriptor.idVendor,
+-				   d->descriptor.idProduct);
+-#endif
+-			d = d->next;
+-		}
+-		b = b->next;
+-	}
+-	return NULL;
++		printf("%04x %04x\n",
++			   d->descriptor.idVendor,
++			   d->descriptor.idProduct);
++#endif
++	}
++	
++	if (cnt > 0)
++		libusb_free_device_list(list, 0);
++	
++	return found;
+ }
+ 
+ unsigned char g_buf[] = {
+@@ -905,12 +995,13 @@
+ 	0x00, 0x00, 0x00, 0x00,
+ };
+ 
+-int emulate_scsi(usb_dev_handle *dev, unsigned char *cmd, int cmdlen, char out,
++int emulate_scsi(libusb_device_handle *dev, unsigned char *cmd, int cmdlen, char out,
+ 	unsigned char *data, unsigned long block_len)
+ {
+ 	int len;
+ 	int ret;
+ 	static unsigned char ansbuf[13]; // Do not change size.
++	int transferred, received;
+ 
+ 	g_buf[14] = cmdlen;
+ 	memcpy(&g_buf[15], cmd, cmdlen);
+@@ -920,21 +1011,21 @@
+ 	g_buf[10] = block_len >> 16;
+ 	g_buf[11] = block_len >> 24;
+ 
+-	ret = usb_bulk_write(dev, ENDPT_OUT, (char*)g_buf, sizeof(g_buf), 1000);
++	ret = libusb_bulk_transfer(dev, ENDPT_OUT, g_buf, sizeof(g_buf), &transferred, 1000);
+ 	if (ret < 0) return ret;
+ 
+ 	if (out == DIR_OUT) {
+ 		if (data) {
+-			ret = usb_bulk_write(dev, ENDPT_OUT, (char* )data,
+-					block_len, 3000);
+-			if (ret != (int) block_len) {
++			ret = libusb_bulk_transfer(dev, ENDPT_OUT, data,
++					block_len, &transferred, 3000);
++			if (transferred != (int) block_len) {
+ 				perror("bulk write");
+ 				return ret;
+ 			}
+ 		}
+ 	} else if (data) {
+-		ret = usb_bulk_read(dev, ENDPT_IN, (char *) data, block_len, 4000);
+-		if (ret != (int) block_len) {
++		ret = libusb_bulk_transfer(dev, ENDPT_IN, data, block_len, &received, 4000);
++		if (received != (int) block_len) {
+ 			perror("bulk data read");
+ 		}
+ 	}
+@@ -942,8 +1033,8 @@
+ 	len = sizeof(ansbuf);
+ 	int retry = 0;
+ 	do {
+-		ret = usb_bulk_read(dev, ENDPT_IN, (char *) ansbuf, len, 5000);
+-		if (ret != len) {
++		ret = libusb_bulk_transfer(dev, ENDPT_IN, ansbuf, len, &received, 5000);
++		if (received != len) {
+ 			perror("bulk ACK read");
+ 			ret = DEVERR_TIMEOUT;
+ 		}
+@@ -956,14 +1047,22 @@
+ 	return ansbuf[12];
+ }
+ 
+-usb_dev_handle *dpf_usb_open(int index)
+-{
+-	struct usb_device *d;
+-	usb_dev_handle *usb_dev;
+-
+-	usb_init();
+-	usb_find_busses();
+-	usb_find_devices();
++libusb_device_handle *dpf_usb_open(int index)
++{
++	int r;
++	struct libusb_device *d;
++	struct libusb_device_handle *usb_dev;
++
++	r = libusb_init(NULL);
++	if (r < 0) {
++		handle_error("Could not initialise libusb!");
++		return NULL;
++	}
++#if LIBUSB_API_VERSION >= 0x01000106
++	libusb_set_option(NULL, LIBUSB_OPTION_LOG_LEVEL, 3);
++#else
++	libusb_set_debug(NULL, 3);
++#endif
+ 
+ 	d = find_dev(index);
+ 	if (!d) {
+@@ -971,12 +1070,12 @@
+ 		return NULL;
+ 	}
+ 
+-	usb_dev = usb_open(d);
++	libusb_open(d, &usb_dev);
+ 	if (usb_dev == NULL) {
+ 		handle_error("Failed to open usb device!");
+ 		return NULL;
+ 	}
+-	usb_claim_interface(usb_dev, 0);
++	libusb_claim_interface(usb_dev, 0);
+ 	return usb_dev;
+ }
+ 
+--- a/glcddrivers/ax206dpf.h
++++ b/glcddrivers/ax206dpf.h
+@@ -53,10 +53,12 @@
+     bool isPortrait;
+     bool rotate90;
+     bool flip;
++    bool justCleared;
+     int minx, maxx;
+     int miny, maxy;
+     LIBDPF::DPFContext *dpfh;
+     unsigned char * LCD;
++    unsigned char * PRE;
+ } DISPLAYHANDLE;
+ 
+ 
+@@ -131,7 +133,7 @@
+ // START SELECTIVE COPY & PASTE "usbuser.h"
+ // -------------------------------------------------------------------
+ 
+-#include <usb.h>
++#include <libusb.h>
+ 
+ namespace LIBDPF
+ {
+@@ -193,7 +195,7 @@
+ 	unsigned char mode;
+ 	unsigned char flags;
+ 	union {
+-		usb_dev_handle *udev;
++		libusb_device_handle *udev;
+ 		int fd;
+ 	} dev;
+ 	unsigned int width;
+@@ -251,13 +253,13 @@
+ 
+ /* USB raw */
+ 
+-int emulate_scsi(usb_dev_handle *d, unsigned char *cmd, int cmdlen, char out,
++int emulate_scsi(libusb_device_handle *d, unsigned char *cmd, int cmdlen, char out,
+ 	unsigned char *data, unsigned long block_len);
+ 
+ const char *dev_errstr(int err);
+ 
+ // Private stuff:
+-usb_dev_handle *dpf_usb_open(int index);
++libusb_device_handle *dpf_usb_open(int index);
+ int sgdev_open(const char *portname, int *fd);
+ 
+ #ifdef __cplusplus
+--- a/glcddrivers/Makefile
++++ b/glcddrivers/Makefile
+@@ -26,18 +26,18 @@
+ endif
+ 
+ 
+-ifeq ($(shell pkg-config --exists libusb && echo 1), 1)
++ifeq ($(shell pkg-config --exists libusb-1.0 && echo 1), 1)
+     DEFINES += -DHAVE_LIBUSB
+     ifdef HAVE_DRIVER_AX206DPF
+         OBJS += ax206dpf.o
+-        INCLUDES += $(shell pkg-config --cflags libusb)
+-        LIBS += $(shell pkg-config --libs libusb)
++        INCLUDES += $(shell pkg-config --cflags libusb-1.0)
++        LIBS += $(shell pkg-config --libs libusb-1.0)
+         DEFINES += -DHAVE_DRIVER_AX206DPF
+     endif
+     ifdef HAVE_DRIVER_picoLCD_256x64
+         OBJS += picoLCD_256x64.o
+-        INCLUDES += $(shell pkg-config --cflags libusb)
+-        LIBS += $(shell pkg-config --libs libusb)
++        INCLUDES += $(shell pkg-config --cflags libusb-1.0)
++        LIBS += $(shell pkg-config --libs libusb-1.0)
+         DEFINES += -DHAVE_DRIVER_picoLCD_256x64
+     endif
+ endif
+--- a/glcddrivers/port.c
++++ b/glcddrivers/port.c
+@@ -17,12 +17,34 @@
+ #include <syslog.h>
+ #include <unistd.h>
+ #include <pthread.h>
++#if defined(i386) || defined(__x86_64__)
+ #include <sys/io.h>
++#endif
+ #include <sys/ioctl.h>
+ #include <linux/ppdev.h>
+ #include <linux/parport.h>
+ 
+ 
++#if !defined(i386) && !defined(__x86_64__)
++/* konfetti: those are currently only dummy. not tested, not really
++ * thinking on it. it needs revise for the params etc. also we need
++ * to revise the assembler code below. but for now its ok because
++ * I (we) only want the peal lcd to be running ;)
++ */
++
++#define __NR_ioperm 101
++#define __NR_iopl 110
++
++static inline int ioperm(int port, unsigned long int from, unsigned long int num)
++{
++	return syscall(__NR_ioperm, port, from, num);
++}
++
++static inline int iopl(int level)
++{
++	return syscall(__NR_iopl, level);
++}
++#endif
+ 
+ #include "port.h"
+ 
+--- a/glcdgraphics/Makefile
++++ b/glcdgraphics/Makefile
+@@ -44,6 +44,8 @@
+ 	DEFINES += -DHAVE_FREETYPE2
+ 	INCLUDES += $(shell pkg-config freetype2 --cflags)
+ 	LIBS += $(shell pkg-config freetype2 --libs)
++	INCLUDES += -I$(DESTDIR)/usr/include/
++	LIBS += -L$(DESTDIR)/usr/lib -liconv
+ endif
+ 
+ # two ifdef/endif are used because older installations may not support 'else ifdef'
+--- a/graphlcd.conf
++++ b/graphlcd.conf
+@@ -29,7 +29,7 @@
+ #  Select the process priority that is used when sleeping.
+ #  Possible values: -20 <= x <= 19
+ #  Default value: 0
+-WaitPriority=0
++WaitPriority=19
+ 
+ # General driver settings
+ #  This section lists the display settings that are parsed and
+@@ -117,487 +117,6 @@
+ 
+ ########################################################################
+ 
+-[framebuffer]
+-# framebuffer driver
+-#  Output goes to a framebuffer device
+-Driver=framebuffer
+-
+-#UpsideDown=no
+-#Invert=no
+-
+-# Device
+-#  Framebuffer device
+-#  Default value: /dev/fb0
+-#Device=/dev/fb0
+-
+-# Damage | ReportDamage
+-#  Damage reporting for framebuffer devices with update problems
+-#  Possible values: none, auto, udlfb, ugly
+-#    none:  no damage reporting
+-#    auto:  automatic determination if damage reporting is needed
+-#    udlfb: damage reporting for udlfb-devices (displaylink)
+-#    ugly:  dirty damagereporting (a '\n' is written to the framebuffer file handle)
+-#  Default value: none
+-#Damage=none
+-
+-# Zoom
+-#  Determines if pixels should be drawn double sized.
+-#  If zoom is set, the actual resolution will be halved (both width and height)
+-#  e.g.: framebuffer has resolution 800x600: this driver will report a drawing area of 400x300
+-#  Possible values: 0, 1
+-#  Default value: 1
+-Zoom=1
+-
+-########################################################################
+-
+-[gu140x32f]
+-# gu140x32f driver
+-#  This is an 8-bit driver module for Noritake GU140x32-F7806 VFD
+-#  displays. The VFD is operating in it's 8 bit-mode connected to a
+-#  single PC parallel port.
+-#  Default size: 140 x 32
+-Driver=gu140x32f
+-
+-Device=/dev/parport0
+-#Port=0x378
+-#Width=140
+-#Height=32
+-#UpsideDown=no
+-#Invert=no
+-#Brightness=100
+-#AdjustTiming=0
+-#RefreshDisplay=1
+-
+-# Wiring
+-#  Select the type of wiring your display is connected with.
+-#  Possible values: 'Standard', 'Windows'
+-#  Default value: 'Standard'
+-Wiring=Standard
+-
+-########################################################################
+-
+-[gu256x64-372]
+-# gu256x64-372 driver
+-#  This is an 8-bit driver module for Noritake GU256x64-372 VFD
+-#  displays. The VFD is operating in it's 8 bit-mode connected to a
+-#  single PC parallel port.
+-#  Default size: 256 x 64
+-Driver=gu256x64-372
+-
+-Device=/dev/parport0
+-#Port=0x378
+-#Width=256
+-#Height=64
+-#UpsideDown=no
+-#Invert=no
+-#Brightness=100
+-#AdjustTiming=0
+-#RefreshDisplay=1
+-
+-# Wiring
+-#  Select the type of wiring your display is connected with.
+-#  Possible values: 'Standard', 'Windows'
+-#  Default value: 'Standard'
+-Wiring=Standard
+-
+-########################################################################
+-
+-[gu256x64-3900]
+-# gu256x64-3900 driver
+-#  This is a driver module for Noritake GU256X64x-3900 VFD displays. The
+-#  VFD is either operating in 8 bit-mode connected to a single PC
+-#  parallel port or in serial mode connected to a single PC serial port.
+-#  Default size: 256 x 64
+-Driver=gu256x64-3900
+-
+-Device=/dev/parport0
+-#Port=0x378
+-#Width=256
+-#Height=64
+-#UpsideDown=no
+-#Invert=no
+-#Brightness=100
+-#AdjustTiming=0
+-#RefreshDisplay=1
+-
+-# Wiring
+-#  Select the type of wiring your display is connected with.
+-#  Possible values: 'Standard', 'Satyr'
+-#  Default value: 'Standard'
+-Wiring=Standard
+-
+-# Interface
+-#  Select the interface your display is connnected to.
+-#  Possible values: 'Parallel', 'Serial'
+-#  Default value: 'Parallel'
+-Interface=Parallel
+-
+-# DMA
+-#  Enables/disables the usage of the controller's DMA mode which
+-#  increases writing speed. This only works in parallel interface mode.
+-#  Possible values: 'yes', 'no'
+-#  Default value: 'yes'
+-DMA=yes
+-
+-########################################################################
+-
+-[gu126x64D-K610A4]
+-# GU126x64D-K610A4 driver
+-#  This is a driver module for Noritake GU126x64D-K610A4 VFD displays.
+-#  The VFD is operating in 8 bit-mode connected to a single PC
+-#  parallel port.
+-#  Default size: 126 x 64
+-Driver=gu126x64D-K610A4
+-
+-Device=/dev/parport0
+-#Port=0x378
+-#Width=126
+-#Height=64
+-#UpsideDown=no
+-#Invert=no
+-#Brightness=100
+-#RefreshDisplay=1
+-#AdjustTiming=30
+-
+-#  Debug some methods of the driver
+-#  (add the values of interest)
+-#
+-#   1: show a log at the start of a refresh
+-#   2: show a log at the end of a refresh with timing information
+-#   4: show the rows (8 pixel) refreshed
+-#   8: show every commands/bytes sent to the display
+-#  16: log every unsuccessful waiting for display acknowledge
+-#
+-#Debug=0
+-
+-########################################################################
+-
+-[hd61830]
+-# hd61830 driver
+-#  This is a driver module for the Hitachi HD61830 LCD controller.
+-#  Default size: 240 x 128
+-Driver=hd61830
+-
+-Device=/dev/parport0
+-#Port=0x378
+-#Width=240
+-#Height=128
+-#UpsideDown=no
+-#Invert=no
+-#AdjustTiming=0
+-#RefreshDisplay=1
+-
+-########################################################################
+-
+-[image]
+-# image driver
+-#  This is a driver module for writing image sequences in PBM (Portable
+-#  Bit Map) format that show the plugin's output.
+-#  Default size: 240 x 128
+-Driver=image
+-#Width=240
+-#Height=128
+-#UpsideDown=no
+-#Invert=no
+-
+-########################################################################
+-
+-[ks0108]
+-# ks0108 driver
+-#  This is a driver module for the Samsung KS0108 LCD controller.
+-#  Default size: 128 x 64
+-Driver=ks0108
+-
+-Device=/dev/parport0
+-#Port=0x378
+-Width=128
+-#Width=192
+-#Height=64
+-#UpsideDown=no
+-#Invert=no
+-#AdjustTiming=0
+-#RefreshDisplay=1
+-
+-# Control
+-#  Select the variant of triggering the display's control lines.
+-#  Possible values: '0', '1'
+-#  Default value: '1'
+-Control=1
+-
+-########################################################################
+-
+-[sed1330]
+-# sed1330 driver
+-#  This is a driver module for the Epson SED1330/1335 LCD controller.
+-#  Default size: 320 x 240
+-Driver=sed1330
+-
+-Device=/dev/parport0
+-#Port=0x378
+-#Width=320
+-#Height=240
+-#UpsideDown=no
+-#Invert=no
+-#AdjustTiming=0
+-#refreshDisplay=1
+-
+-# Wiring
+-#  Select the type of wiring your display is connected with.
+-#  Possible values: 'Original', 'PowerLCD', 'LCDProc', 'Tweakers',
+-#                   'YASEDW'
+-#  Default value: 'Original'
+-Wiring=Original
+-
+-# OscillatorFrequency
+-#  Select the frequency the oscillator on your LCD board uses in kHz.
+-#  Possible values: 1000 <= x <= 15000)
+-#  Default value: 9600
+-OscillatorFrequency=9600
+-
+-# Interface
+-#  Select the interface mode your display is connected with.
+-#  Possible values: '6800', '8080'
+-#  Default value: '6800'
+-Interface=6800
+-
+-########################################################################
+-
+-[sed1520]
+-# sed1520 driver
+-#  This is a driver module for the Epson SED1520 LCD controller.
+-#  Default size: 120 x 32
+-Driver=sed1520
+-
+-Device=/dev/parport0
+-#Port=0x378
+-#Width=120
+-#Height=32
+-#UpsideDown=no
+-#Invert=no
+-#AdjustTiming=0
+-#RefreshDisplay=1
+-
+-########################################################################
+-
+-[simlcd]
+-# simlcd driver
+-#  This is the SimLCD driver module. Output goes to a file instead of
+-#  LCD. Use SimLCD tool to view this file.
+-#  Default size: 240 x 128
+-Driver=simlcd
+-#Width=240
+-#Height=128
+-#UpsideDown=no
+-#Invert=no
+-
+-########################################################################
+-
+-[t6963c]
+-# t6963c driver
+-#  This is a driver module for the Toshiba T6963C LCD controller.
+-#  Default size: 240 x 128
+-Driver=t6963c
+-
+-Device=/dev/parport0
+-#Port=0x378
+-#Width=240
+-#Height=128
+-#UpsideDown=no
+-#Invert=no
+-#RefreshDisplay=1
+-
+-# Wiring
+-#  Select the type of wiring your display is connected with.
+-#  Possible values: 'Standard', 'Windows', 'Serial'
+-#  Default value: 'Standard'
+-Wiring=Standard
+-
+-# FontSelect
+-#  Select the font width your display uses for text mode. In most cases
+-#  this is selectable through one of the pins of your LCD board
+-#  Possible values: '6', '8'
+-#  Default value: '6'
+-FontSelect=6
+-
+-# AutoMode
+-#  Enables or disables the usage of T6963C's auto mode which doubles
+-#  writing speed when enabled.
+-#  Possible values: 'yes', 'no'
+-#  Default value: 'yes'
+-AutoMode=yes
+-
+-# StatusCheck
+-#  Enables or disables the usage of T6963C's status check. When using a
+-#  shielded cable for connecting your display, the disabling may be
+-#  possible. This results in doubling the speed of writing data to the
+-#  LCD.
+-#  Possible values: 'yes', 'no'
+-#  Default value: 'yes'
+-StatusCheck=yes
+-
+-########################################################################
+-
+-[serdisp]
+-Driver=serdisp
+-# Controller
+-#  Select the serdisplib name of your display.
+-#  Possible values: See README in serdisplib package or http://serdisplib.sourceforge.net
+-#Controller=nokia7110
+-#Controller=sed1335
+-Controller=optrex323
+-#Controller=l4m132c
+-#Controller=l4m320t
+-
+-# Options
+-#  Pass display specific options
+-#  Possible values: See driver-specific hardware page at http://serdisplib.sourceforge.net
+-#
+-#  IMPORTANT: when using generic controllers like sed1330,sed1335,t6963c, width and height
+-#             need to be set here (if different from default settings)!
+-#             (serdisplib needs to be extended to be able to use 'Width' and 'Height'
+-#              settings directly - this will be added later)
+-#
+-#Options=MODE=8080
+-#Options=DELAY=2000;FONTWIDTH=8;CHECK=1
+-#Options=WIDTH=128;HEIGHT=64
+-#Options=WIDTH=128;HEIGHT=64;DELAY=2000;FONTWIDTH=8;CHECK=1
+-
+-# Wiring
+-#  Select Wiring
+-#  Possible values: See driver-specific hardware page at http://serdisplib.sourceforge.net
+-#Wiring=1
+-#Wiring=PowerLCD
+-#Wiring=DATA8,CS:nAUTO,A0:INIT,WR:nSTRB,RD:nSELIN
+-
+-# FGColour
+-#  Drawing colour for non-monochrome displays
+-#  Possible values: 0xRRGGBB (eg.: 0xFF0000)
+-#  Defaults to black (0x000000) if not set
+-#FGColour=0x000000
+-
+-# BGColour
+-#  Background colour for non-monochrome displays
+-#  Possible values: 0xRRGGBB (eg.: 0x00FFFF)
+-#  Defaults to white (0xFFFFFF) if not set
+-#BGColour=0xFFFFFF
+-
+-Device=/dev/parport0
+-#Port=0x378
+-#Device=HID:/dev/usb/hiddev0
+-#Device=HID:/dev/hiddev0
+-#Device=USB:USB:4243/ee20 # Linux4Media 320T TouchLCD
+-#UpsideDown=no
+-#Invert=no
+-Contrast=5
+-Backlight=yes
+-
+-# Settings 'Width' and 'Height' are ignored at the moment. For generic controllers # (sed1330/1335, t6963) width and height need to be set using setting 'Options' (look above)
+-##Width=240
+-##Height=128
+-
+-########################################################################
+-
+-[noritake800]
+-# noritake800 driver
+-#  This is an 8-bit driver module for Noritake Noritake 800(A) series VFD
+-#  displays. The VFD is operating in it's 8 bit-mode connected to a
+-#  single PC parallel port.
+-#  Default size: 128 x 64
+-Driver=noritake800
+-
+-Device=/dev/parport0
+-#Port=0x378
+-Width=128
+-Height=64
+-#UpsideDown=no
+-#Invert=no
+-Brightness=50
+-AdjustTiming=50
+-RefreshDisplay=50
+-
+-# Wiring
+-#  Select the type of wiring your display is connected with.
+-#  Possible values: 'LiquidMp3', 'MZ'
+-#  Default value: 'LiquidMp3'
+-Wiring=LiquidMp3
+-
+-########################################################################
+-
+-[avrctl]
+-# avrctl driver
+-#  This is an driver module for my AVR controlled LCD display connected via
+-#  USB port. It uses some simple commands to update the display content.
+-#  Default size: 256 x 128
+-Driver=avrctl
+-Device=/dev/ttyUSB0
+-Width=256
+-Height=128
+-#UpsideDown=no
+-#Invert=no
+-Brightness=50
+-RefreshDisplay=1
+-
+-########################################################################
+-
+-[g15daemon]
+-# pseudo device for the g15daemon meta driver
+-# Output goes to the g15daemon which then displays it
+-Driver=g15daemon
+-Width=160
+-Height=43
+-
+-########################################################################
+-
+-[network]
+-# network driver
+-#  Default size: 240 x 128
+-Driver=network
+-Width=256
+-Height=128
+-UpsideDown=no
+-Invert=no
+-Brightness=10
+-RefreshDisplay=1
+-
+-########################################################################
+-
+-[dm140gink]
+-#  dm140gink driver
+-#  This is an driver module for Futaba DM140-GINK VFD displays.
+-#  The VFD is built-in in some HTPC cases and connected to a
+-#  USB port.
+-#  Default size: 112 x 16
+-Driver=dm140gink
+-#Width=112
+-#Height=16
+-#UpsideDown=no
+-
+-# Invertion is not supported
+-#Invert=no
+-
+-# USB VendorID and ProductID
+-#Vendor=0x040b
+-#Product=0x7001
+-# USB ID activy 5xx:
+-#Vendor=0x1509
+-#Product=0x925d
+-########################################################################
+-
+-[futabaMDM166A]
+-#  futabaMDM166A driver
+-#  This is an driver module for Futaba MDM166A VFD displays.
+-#  The VFD is built-in in Targa HTPC cases and connected to USB port.
+-#  Default size: 96 x 16
+-Driver=futabaMDM166A
+-
+-#Width=96
+-#Height=16
+-#UpsideDown=no
+-#Invert=no
+-#Brightness=50
+-#RefreshDisplay=1000
+-########################################################################
+-
+ [ax206dpf]
+ #  THIS IS AN EXPERIMENTAL DRIVER!
+ #  You have to uncomment the variable HAVE_DRIVER_AX206DPF
+@@ -609,8 +128,8 @@
+ #
+ #  Default size: 320 x 240 or 240 x 320 (see "Portrait")
+ Driver=ax206dpf
+-#Width=320
+-#Height=240
++Width=320
++Height=240
+ #
+ # UpsideDown
+ #  Rotates the display output by 180 degrees. This might be useful, if
+--- a/Make.config
++++ b/Make.config
+@@ -3,13 +3,13 @@
+ 
+ ### The C compiler and options:
+ 
+-CC       ?= gcc
+-CFLAGS   ?= -O2
++CC       = $(TARGET)gcc
++CFLAGS   = -pipe -Os
+ 
+-CXX      ?= g++
++CXX      = $(TARGET)g++
+ 
+-CXXFLAGS ?= -g -O2 -Wall -Woverloaded-virtual
+-#CXXFLAGS ?= -g -ggdb -O0 -Wall -Woverloaded-virtual
++CXXFLAGS = -pipe -Os -Wall -Woverloaded-virtual
++#CXXFLAGS = -g -ggdb -O0 -Wall -Woverloaded-virtual
+ CXXFLAGS += -MMD -MP
+ 
+ # CXX set to clang++: force clang
+@@ -59,7 +59,7 @@
+ HAVE_FREETYPE2=1
+ 
+ # comment this variable out if you don't want to use fontconfig font names
+-HAVE_FONTCONFIG=1
++#HAVE_FONTCONFIG=1
+ 
+ # comment this variable out if you want binaries to be stripped when installing (for production-level binaries or packages)
+ #HAVE_STRIP = -s
+@@ -69,13 +69,13 @@
+ #HAVE_GRAPHICSMAGICK=1
+ 
+ # comment this variable or set to 0 if you do not want to build the vncserver driver, even if requirements (libvncserver) are fullfilled on the system
+-HAVE_DRIVER_VNCSERVER=1
++#HAVE_DRIVER_VNCSERVER=1
+ 
+ ### Experimental drivers
+ 
+ # uncomment this variable if you want to enable the experimental AX 206 based digital photo frame driver
+ # Read DRIVER.ax206dpf before use!
+-#HAVE_DRIVER_AX206DPF=1
++HAVE_DRIVER_AX206DPF=1
+ 
+ # uncomment this variable if you want to enable the experimental support for picoLCD 256x64 
+ #HAVE_DRIVER_picoLCD_256x64=1
+--- a/glcdgraphics/bitmap.c
++++ b/glcdgraphics/bitmap.c
+@@ -35,6 +35,16 @@ const uint32_t cColor::Blue        = 0xFF0000FF;
+ const uint32_t cColor::Magenta     = 0xFFFF00FF;
+ const uint32_t cColor::Cyan        = 0xFF00FFFF;
+ const uint32_t cColor::Yellow      = 0xFFFFFF00;
++const uint32_t cColor::Orange      = 0xFFFF4000;
++const uint32_t cColor::Light_Gray  = 0xFFBFBFBF;
++const uint32_t cColor::Gray        = 0xFF7F7F7F;
++const uint32_t cColor::Dark_Gray   = 0xFF3F3F3F;
++const uint32_t cColor::Dark_Red    = 0xFF3F0000;
++const uint32_t cColor::Dark_Green  = 0xFF003F00;
++const uint32_t cColor::Dark_Blue   = 0xFF00003F;
++const uint32_t cColor::Purple      = 0xFF7F007F;
++const uint32_t cColor::Mint        = 0xFF007F7F;
++const uint32_t cColor::Golden      = 0xFF7F7F00;
+ const uint32_t cColor::Transparent = GRAPHLCD_Transparent;
+ const uint32_t cColor::ERRCOL      = GRAPHLCD_ERRCOL;
+ 
+@@ -48,6 +58,16 @@ cColor cColor::ParseColor(std::string col) {
+     else if (col == "magenta")     return cColor(cColor::Magenta);
+     else if (col == "cyan")        return cColor(cColor::Cyan);
+     else if (col == "yellow")      return cColor(cColor::Yellow);
++    else if (col == "orange")      return cColor(cColor::Orange);
++    else if (col == "light_gray")  return cColor(cColor::Light_Gray);
++    else if (col == "gray")        return cColor(cColor::Gray);
++    else if (col == "dark_gray")   return cColor(cColor::Dark_Gray);
++    else if (col == "dark_red")    return cColor(cColor::Dark_Red);
++    else if (col == "dark_green")  return cColor(cColor::Dark_Green);
++    else if (col == "dark_blue")   return cColor(cColor::Dark_Blue);
++    else if (col == "purple")      return cColor(cColor::Purple);
++    else if (col == "mint")        return cColor(cColor::Mint);
++    else if (col == "golden")      return cColor(cColor::Golden);
+     else if (col == "transparent") return cColor(cColor::Transparent);
+     else if (col.substr(0, 2) == "0x" || col.substr(0, 2) == "0X") {
+         if (col.length() <= 2 || col.length() > 10)
+--- a/glcdgraphics/bitmap.h
++++ b/glcdgraphics/bitmap.h
+@@ -68,6 +68,16 @@ class cColor
+    static const uint32_t Magenta;
+    static const uint32_t Cyan;
+    static const uint32_t Yellow;
++   static const uint32_t Orange;
++   static const uint32_t Light_Gray;
++   static const uint32_t Gray;
++   static const uint32_t Dark_Gray;
++   static const uint32_t Dark_Red;
++   static const uint32_t Dark_Green;
++   static const uint32_t Dark_Blue;
++   static const uint32_t Purple;
++   static const uint32_t Mint;
++   static const uint32_t Golden;
+    static const uint32_t Transparent;
+    static const uint32_t ERRCOL;

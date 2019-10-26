@@ -31,6 +31,11 @@ NP_DEPS += luacurl
 NP_DEPS += luaposix
 NP_DEPS += lua-feedparser
 
+# build only stripped down iconv binary if not exists the full-blown version
+ifeq ($(wildcard $(TARGET_DIR)/bin/iconv),)
+  NP_DEPS += iconv-bin
+endif
+
 NP_CONFIGURE_ADDITIONS = \
 		--disable-logoupdater \
 		--disable-logoview \
