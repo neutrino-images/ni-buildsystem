@@ -315,6 +315,7 @@ parted: $(PARTED_DEPS) $(ARCHIVE)/$(PARTED_SOURCE) | $(TARGET_DIR)
 	$(UNTAR)/$(PARTED_SOURCE)
 	$(CHDIR)/$(PARTED_TMP); \
 		$(call apply_patches, $(PARTED_PATCH)); \
+		autoreconf -fi; \
 		$(CONFIGURE) \
 			--prefix= \
 			--target=$(TARGET) \
