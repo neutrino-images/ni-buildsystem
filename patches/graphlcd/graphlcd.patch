@@ -578,8 +578,8 @@
  	DEFINES += -DHAVE_FREETYPE2
  	INCLUDES += $(shell pkg-config freetype2 --cflags)
  	LIBS += $(shell pkg-config freetype2 --libs)
-+	INCLUDES += -I$(DESTDIR)/usr/include/
-+	LIBS += -L$(DESTDIR)/usr/lib -liconv
++	INCLUDES += -I$(DESTDIR)/include/
++	LIBS += -L$(DESTDIR)/lib -liconv
  endif
  
  # two ifdef/endif are used because older installations may not support 'else ifdef'
