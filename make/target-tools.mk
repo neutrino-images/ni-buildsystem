@@ -1364,7 +1364,7 @@ NFS-UTILS_PATCH += nfs-utils_05-sm-notify-use-sbin-instead-of-usr-sbin.patch
 
 NFS-UTILS_DEPS   = rpcbind
 
-NFS-UTILS_CONF   = $(if $(filter $(BOXSERIES), hd1), --disable-ipv6, --enable-ipv6)
+NFS-UTILS_CONF   = $(if $(filter $(BOXSERIES), hd1),--disable-ipv6,--enable-ipv6)
 
 nfs-utils: $(NFS-UTILS_DEPS) $(ARCHIVE)/$(NFS-UTILS_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(NFS-UTILS_TMP)

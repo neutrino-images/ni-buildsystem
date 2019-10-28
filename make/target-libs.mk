@@ -162,7 +162,7 @@ $(ARCHIVE)/$(LIBCURL_SOURCE):
 
 LIBCURL_DEPS   = zlib openssl rtmpdump ca-bundle
 
-LIBCURL_CONF   = $(if $(filter $(BOXSERIES), hd1), --disable-ipv6, --enable-ipv6)
+LIBCURL_CONF   = $(if $(filter $(BOXSERIES), hd1),--disable-ipv6,--enable-ipv6)
 
 libcurl: $(LIBCURL_DEPS) $(ARCHIVE)/$(LIBCURL_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LIBCURL_TMP)
@@ -1174,7 +1174,7 @@ $(ARCHIVE)/$(LIBFFI_SOURCE):
 
 LIBFFI_PATCH  = libffi-install_headers.patch
 
-LIBFFI_CONF   = $(if $(filter $(BOXSERIES), hd1), --enable-static --disable-shared)
+LIBFFI_CONF   = $(if $(filter $(BOXSERIES), hd1),--enable-static --disable-shared)
 
 libffi: $(ARCHIVE)/$(LIBFFI_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LIBFFI_TMP)
