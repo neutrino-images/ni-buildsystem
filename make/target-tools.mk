@@ -887,7 +887,8 @@ $(ARCHIVE)/$(AUTOFS_SOURCE):
 # wget -N https://mirrors.edge.kernel.org/pub/linux/daemons/autofs/v5/patches-5.1.6/patch_order_5.1.5
 # for p in $(cat patch_order_5.1.5); do test -f $p || wget https://mirrors.edge.kernel.org/pub/linux/daemons/autofs/v5/patches-5.1.6/$p; done
 
-AUTOFS_PATCH  = $(addprefix autofs/, $(shell cat $(PATCHES)/autofs/patch_order_$(AUTOFS_VER)))
+AUTOFS_PATCH  = $(shell cat $(PATCHES)/autofs/patch_order_$(AUTOFS_VER))
+AUTOFS_PATCH += force-STRIP-to-emtpy.patch
 
 AUTOFS_DEPS   = libtirpc
 
@@ -895,7 +896,7 @@ autofs: $(AUTOFS_DEPS) $(ARCHIVE)/$(AUTOFS_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(AUTOFS_TMP)
 	$(UNTAR)/$(AUTOFS_SOURCE)
 	$(CHDIR)/$(AUTOFS_TMP); \
-		$(call apply_patches, $(AUTOFS_PATCH)); \
+		$(call apply_patches, $(addprefix $(@F)/,$(AUTOFS_PATCH))); \
 		sed -i "s|nfs/nfs.h|linux/nfs.h|" include/rpc_subs.h; \
 		export ac_cv_linux_procfs=yes; \
 		export ac_cv_path_KRB5_CONFIG=no; \

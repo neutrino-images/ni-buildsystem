@@ -1,0 +1,16 @@
+diff --git a/Makefile.rules b/Makefile.rules
+index 2ccb1f6..b94f27e 100644
+--- a/Makefile.rules
++++ b/Makefile.rules
+@@ -35,9 +35,9 @@ LDFLAGS   ?= -s
+ endif
+ 
+ ifdef DONTSTRIP
+-STRIP     ?= :
++STRIP     = :
+ else
+-STRIP     ?= strip --strip-debug
++STRIP     = :
+ endif
+ 
+ CC        ?= gcc
