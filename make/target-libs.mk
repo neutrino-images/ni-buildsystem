@@ -1212,7 +1212,11 @@ ifeq ($(BOXSERIES), hd2)
 endif
 
 GLIB2_CONF   = $(if $(filter $(BOXSERIES), hd1),--enable-static --disable-shared)
-GLIB2_CONF  += $(if $(filter $(BOXSERIES), vusolo4k vuduo4k vuultimo4k vuuno4kse),--with-libiconv=gnu)
+
+ifeq ($(BOXSERIES), $(filter $(BOXSERIES), vusolo4k vuduo4k vuultimo4k vuuno4kse))
+  GLIB2_DEPS += libiconv
+  GLIB2_CONF += --with-libiconv=gnu
+endif
 
 glib2: $(GLIB2_DEPS) $(ARCHIVE)/$(GLIB2_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(GLIB2_TMP)
