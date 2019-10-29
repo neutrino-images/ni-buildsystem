@@ -50,7 +50,7 @@ if [ -e /proc/stb/info/vumodel ]; then
 	vumodel=$(cat /proc/stb/info/vumodel)
 
 	case $vumodel in
-		solo4k|ultimo4k)
+		solo4k|ultimo4k|uno4k|uno4kse)
 			KERNELDEVS="4 6 8 10"
 			ROOTFSDEVS="5 7 9 11"
 		;;
