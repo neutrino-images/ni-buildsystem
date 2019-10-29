@@ -167,7 +167,7 @@ else ifneq ($(BOXMODEL),)
     BOXFAMILY = bcm7252s
   else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vuuno4kse))
     BOXTYPE = armbox
-    BOXSERIES = vuuno4k
+    BOXSERIES = vuuno4kse
     BOXFAMILY = bcm7252s
   else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vuduo))
     BOXTYPE = mipsbox
