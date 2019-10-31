@@ -570,7 +570,7 @@ ushare: $(USHARE_DEPS) $(ARCHIVE)/$(USHARE_SOURCE)| $(TARGET_DIR)
 		ln -sf ../config.h src/; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(INSTALL_DATA) -D $(IMAGEFILES)/scripts/ushare.conf $(TARGET_DIR)/etc/ushare.conf
+	$(INSTALL_DATA) -D $(IMAGEFILES)/configs/ushare.conf $(TARGET_DIR)/etc/ushare.conf
 	sed -i 's|%(BOXTYPE)|$(BOXTYPE)|; s|%(BOXMODEL)|$(BOXMODEL)|' $(TARGET_DIR)/etc/ushare.conf
 	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/ushare.init $(TARGET_DIR)/etc/init.d/ushare
 	ln -sf ushare $(TARGET_DIR)/etc/init.d/S99ushare
@@ -664,8 +664,8 @@ vsftpd: $(VSFTPD_DEPS) $(ARCHIVE)/$(VSFTPD_SOURCE) | $(TARGET_DIR)
 		$(MAKE) $(BUILD_ENV) LIBS="-lcrypt -lcrypto -lssl"; \
 		$(INSTALL_EXEC) -D vsftpd $(TARGET_DIR)/sbin/vsftpd
 	mkdir -p $(TARGET_SHARE_DIR)/empty
-	$(INSTALL_DATA) -D $(IMAGEFILES)/scripts/vsftpd.conf $(TARGET_DIR)/etc/vsftpd.conf
-	$(INSTALL_DATA) -D $(IMAGEFILES)/scripts/vsftpd.chroot_list $(TARGET_DIR)/etc/vsftpd.chroot_list
+	$(INSTALL_DATA) -D $(IMAGEFILES)/configs/vsftpd.conf $(TARGET_DIR)/etc/vsftpd.conf
+	$(INSTALL_DATA) -D $(IMAGEFILES)/configs/vsftpd.chroot_list $(TARGET_DIR)/etc/vsftpd.chroot_list
 	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/vsftpd.init $(TARGET_DIR)/etc/init.d/vsftpd
 	ln -sf vsftpd $(TARGET_DIR)/etc/init.d/S53vsftpd
 	ln -sf vsftpd $(TARGET_DIR)/etc/init.d/K80vsftpd
@@ -1017,7 +1017,7 @@ samba33: $(SAMBA33_DEPS) $(ARCHIVE)/$(SAMBA33_SOURCE) | $(TARGET_DIR)
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	mkdir -p $(TARGET_DIR)/var/samba/locks
-	$(INSTALL_DATA) $(IMAGEFILES)/scripts/smb3.conf $(TARGET_DIR)/etc/samba/smb.conf
+	$(INSTALL_DATA) $(IMAGEFILES)/configs/smb3.conf $(TARGET_DIR)/etc/samba/smb.conf
 	$(INSTALL_EXEC) $(IMAGEFILES)/scripts/samba3.init $(TARGET_DIR)/etc/init.d/samba
 	ln -sf samba $(TARGET_DIR)/etc/init.d/S99samba
 	ln -sf samba $(TARGET_DIR)/etc/init.d/K01samba
@@ -1099,7 +1099,7 @@ samba36: $(SAMBA36_DEPS) $(ARCHIVE)/$(SAMBA36_SOURCE) | $(TARGET_DIR)
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	mkdir -p $(TARGET_DIR)/var/samba/locks
-	install $(IMAGEFILES)/scripts/smb3.conf $(TARGET_DIR)/etc/samba/smb.conf
+	$(INSTALL_DATA) $(IMAGEFILES)/configs/smb3.conf $(TARGET_DIR)/etc/samba/smb.conf
 	$(INSTALL_EXEC) $(IMAGEFILES)/scripts/samba3.init $(TARGET_DIR)/etc/init.d/samba
 	ln -sf samba $(TARGET_DIR)/etc/init.d/S99samba
 	ln -sf samba $(TARGET_DIR)/etc/init.d/K01samba
