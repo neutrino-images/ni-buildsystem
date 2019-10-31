@@ -95,6 +95,21 @@ define BUSYBOX_MODIFY_CONFIG
 	$(BUSYBOX_SET_START_STOP_DAEMON)
 endef
 
+define BUSYBOX_ADD_TO_SHELLS
+	if grep -q 'CONFIG_ASH=y' $(BUSYBOX_BUILD_CONFIG); then \
+		grep -qsE '^/bin/ash$$' $(TARGET_DIR)/etc/shells \
+			|| echo "/bin/ash" >> $(TARGET_DIR)/etc/shells; \
+	fi
+	if grep -q 'CONFIG_HUSH=y' $(BUSYBOX_BUILD_CONFIG); then \
+		grep -qsE '^/bin/hush$$' $(TARGET_DIR)/etc/shells \
+			|| echo "/bin/hush" >> $(TARGET_DIR)/etc/shells; \
+	fi
+	if grep -q 'CONFIG_SH_IS_ASH=y\|CONFIG_SH_IS_HUSH=y' $(BUSYBOX_BUILD_CONFIG); then \
+		grep -qsE '^/bin/sh$$' $(TARGET_DIR)/etc/shells \
+			|| echo "/bin/sh" >> $(TARGET_DIR)/etc/shells; \
+	fi
+endef
+
 busybox: $(BUSYBOX_DEPS) $(ARCHIVE)/$(BUSYBOX_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(BUSYBOX_TMP)
 	$(UNTAR)/$(BUSYBOX_SOURCE)
@@ -105,6 +120,7 @@ busybox: $(BUSYBOX_DEPS) $(ARCHIVE)/$(BUSYBOX_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(BUSYBOX_TMP); \
 		$(BUSYBOX_MAKE_ENV) $(MAKE) $(BUSYBOX_MAKE_OPTS) busybox; \
 		$(BUSYBOX_MAKE_ENV) $(MAKE) $(BUSYBOX_MAKE_OPTS) install-noclobber
+	$(BUSYBOX_ADD_TO_SHELLS)
 	$(REMOVE)/$(BUSYBOX_TMP)
 	$(TOUCH)
 
@@ -772,6 +788,11 @@ $(ARCHIVE)/$(BASH_SOURCE):
 
 BASH_PATCH  = $(PATCHES)/bash
 
+define BASH_ADD_TO_SHELLS
+	grep -qsE '^/bin/bash$$' $(TARGET_DIR)/etc/shells \
+		|| echo "/bin/bash" >> $(TARGET_DIR)/etc/shells
+endef
+
 bash: $(ARCHIVE)/$(BASH_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(BASH_TMP)
 	$(UNTAR)/$(BASH_SOURCE)
@@ -784,8 +805,8 @@ bash: $(ARCHIVE)/$(BASH_SOURCE) | $(TARGET_DIR)
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF)/bash.pc
-	rm -f $(TARGET_LIB_DIR)/bash/loadables.h
-	rm -f $(TARGET_LIB_DIR)/bash/Makefile.inc
+	-rm $(addprefix $(TARGET_LIB_DIR)/bash/, loadables.h Makefile.inc)
+	$(BASH_ADD_TO_SHELLS)
 	$(REMOVE)/$(BASH_TMP)
 	$(TOUCH)
 
