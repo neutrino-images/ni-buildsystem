@@ -126,8 +126,8 @@ logo-addon: $(SOURCE_DIR)/$(NI-LOGO-STUFF) $(SHAREPLUGINS)
 # -----------------------------------------------------------------------------
 
 doscam-webif-skin:
-	$(INSTALL_DATA) -D $(IMAGEFILES)/doscam-webif-skin/doscam_ni-dark.css $(TARGET_SHARE_DIR)/doscam/skin/doscam_ni-dark.css
-	$(INSTALL_DATA) -D $(IMAGEFILES)/doscam-webif-skin/IC_doscam_ni.tpl $(TARGET_SHARE_DIR)/doscam/tpl/IC_doscam_ni.tpl
+	$(INSTALL_DATA) -D $(TARGET_FILES)/doscam-webif-skin/doscam_ni-dark.css $(TARGET_SHARE_DIR)/doscam/skin/doscam_ni-dark.css
+	$(INSTALL_DATA) -D $(TARGET_FILES)/doscam-webif-skin/IC_doscam_ni.tpl $(TARGET_SHARE_DIR)/doscam/tpl/IC_doscam_ni.tpl
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -193,7 +193,7 @@ links: $(LINKS_DEPS) $(ARCHIVE)/$(LINKS_SOURCE) $(SHAREPLUGINS) | $(TARGET_DIR)
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	mv -f $(TARGET_BIN_DIR)/links $(SHAREPLUGINS)/links.so
-	cp -a $(IMAGEFILES)/links/* $(TARGET_DIR)/
+	cp -a $(TARGET_FILES)/links/* $(TARGET_DIR)/
 	$(REMOVE)/$(LINKS_TMP)
 	$(TOUCH)
 

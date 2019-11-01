@@ -55,7 +55,7 @@ SKEL-ROOT     = $(BASE_DIR)/skel-root/$(BOXSERIES)
 ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vusolo4k vuduo4k vuultimo4k vuzero4k vuuno4k vuuno4kse))
   SKEL-ROOT   = $(BASE_DIR)/skel-root/vuplus
 endif
-IMAGEFILES    = $(BASE_DIR)/skel-root/general
+TARGET_FILES  = $(BASE_DIR)/skel-root/general
 
 BUILD        ?= $(shell /usr/share/libtool/config.guess 2>/dev/null || /usr/share/libtool/config/config.guess 2>/dev/null || /usr/share/misc/config.guess)
 

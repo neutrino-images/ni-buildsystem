@@ -828,7 +828,7 @@ libaacs: $(LIBAACS_DEPS) $(ARCHIVE)/$(LIBAACS_SOURCE) | $(TARGET_DIR)
 	$(REWRITE_LIBTOOL)/libaacs.la
 	$(CD) $(TARGET_DIR); \
 		mkdir -p .config/aacs .cache/aacs/vuk
-	cp $(IMAGEFILES)/libaacs/KEYDB.cfg $(TARGET_DIR)/.config/aacs
+	cp $(TARGET_FILES)/libaacs/KEYDB.cfg $(TARGET_DIR)/.config/aacs
 	$(REMOVE)/$(LIBAACS_TMP)
 	$(TOUCH)
 
@@ -862,7 +862,7 @@ libbdplus: $(LIBBDPLUS_DEPS) $(ARCHIVE)/$(LIBBDPLUS_SOURCE) | $(TARGET_DIR)
 	$(REWRITE_LIBTOOL)/libbdplus.la
 	$(CD) $(TARGET_DIR); \
 		mkdir -p .config/bdplus/vm0
-	cp -f $(IMAGEFILES)/libbdplus/* $(TARGET_DIR)/.config/bdplus/vm0
+	cp -f $(TARGET_FILES)/libbdplus/* $(TARGET_DIR)/.config/bdplus/vm0
 	$(REMOVE)/$(LIBBDPLUS_TMP)
 	$(TOUCH)
 

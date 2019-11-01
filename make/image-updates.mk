@@ -112,10 +112,10 @@ matze-192 \
 matze-192-130 \
 pathauf-192:
 	$(MAKE) u-init
-	$(INSTALL_EXEC) $(IMAGEFILES)/channellists/update-ctrl/preinstall.sh $(PREINSTALL_SH)
-	$(INSTALL_EXEC) $(IMAGEFILES)/channellists/update-ctrl/postinstall.sh $(POSTINSTALL_SH)
+	$(INSTALL_EXEC) $(TARGET_FILES)/channellists/update-ctrl/preinstall.sh $(PREINSTALL_SH)
+	$(INSTALL_EXEC) $(TARGET_FILES)/channellists/update-ctrl/postinstall.sh $(POSTINSTALL_SH)
 	mkdir -pv $(UPDATE_INST_DIR)/var/tuxbox/config/zapit && \
-	cp -f $(IMAGEFILES)/channellists/$(@)/* $(UPDATE_INST_DIR)/var/tuxbox/config/zapit/
+	cp -f $(TARGET_FILES)/channellists/$(@)/* $(UPDATE_INST_DIR)/var/tuxbox/config/zapit/
 	# remove non-printable chars and re-format xml-files
 	$(CD) $(UPDATE_INST_DIR)/var/tuxbox/config/zapit/; \
 	for file in *.xml; do \

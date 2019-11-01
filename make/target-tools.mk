@@ -231,7 +231,7 @@ tzdata: $(TZDATA_DEPS) $(ARCHIVE)/$(TZDATA_SOURCE) | $(TARGET_DIR)
 		unset ${!LC_*}; LANG=POSIX; LC_ALL=POSIX; export LANG LC_ALL; \
 		$(HOST_ZIC) -d zoneinfo.tmp $(TZDATA_ZONELIST); \
 		mkdir zoneinfo; \
-		sed -n '/zone=/{s/.*zone="\(.*\)".*$$/\1/; p}' $(IMAGEFILES)/tzdata/timezone.xml | sort -u | \
+		sed -n '/zone=/{s/.*zone="\(.*\)".*$$/\1/; p}' $(TARGET_FILES)/tzdata/timezone.xml | sort -u | \
 		while read x; do \
 			find zoneinfo.tmp -type f -name $$x | sort | \
 			while read y; do \
@@ -242,7 +242,7 @@ tzdata: $(TZDATA_DEPS) $(ARCHIVE)/$(TZDATA_SOURCE) | $(TARGET_DIR)
 		mkdir -p $(TARGET_SHARE_DIR); \
 		rm -rf $(TARGET_SHARE_DIR)/zoneinfo; \
 		mv zoneinfo/ $(TARGET_SHARE_DIR)/
-	$(INSTALL_DATA) -D $(IMAGEFILES)/tzdata/timezone.xml $(TARGET_DIR)/etc/timezone.xml
+	$(INSTALL_DATA) -D $(TARGET_FILES)/tzdata/timezone.xml $(TARGET_DIR)/etc/timezone.xml
 	$(INSTALL_DATA) $(TARGET_SHARE_DIR)/zoneinfo/CET $(TARGET_DIR)$(ETC_LOCALTIME)
 	$(REMOVE)/$(TZDATA_TMP)
 	$(TOUCH)
@@ -493,7 +493,7 @@ ntp: $(NTP_DEPS) $(ARCHIVE)/$(NTP_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		$(INSTALL_EXEC) -D ntpdate/ntpdate $(TARGET_DIR)/sbin/ntpdate
-	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/ntpdate.init $(TARGET_DIR)/etc/init.d/ntpdate
+	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/ntpdate.init $(TARGET_DIR)/etc/init.d/ntpdate
 	$(REMOVE)/$(NTP_TMP)
 	$(TOUCH)
 
@@ -530,7 +530,7 @@ djmount: $(DJMOUNT_DEPS) $(ARCHIVE)/$(DJMOUNT_SOURCE) | $(TARGET_DIR)
 			; \
 		make; \
 		make install DESTDIR=$(TARGET_DIR)
-	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/djmount.init $(TARGET_DIR)/etc/init.d/djmount
+	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/djmount.init $(TARGET_DIR)/etc/init.d/djmount
 	ln -sf djmount $(TARGET_DIR)/etc/init.d/S99djmount
 	ln -sf djmount $(TARGET_DIR)/etc/init.d/K01djmount
 	$(REMOVE)/$(DJMOUNT_TMP)
@@ -570,9 +570,9 @@ ushare: $(USHARE_DEPS) $(ARCHIVE)/$(USHARE_SOURCE)| $(TARGET_DIR)
 		ln -sf ../config.h src/; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(INSTALL_DATA) -D $(IMAGEFILES)/configs/ushare.conf $(TARGET_DIR)/etc/ushare.conf
+	$(INSTALL_DATA) -D $(TARGET_FILES)/configs/ushare.conf $(TARGET_DIR)/etc/ushare.conf
 	sed -i 's|%(BOXTYPE)|$(BOXTYPE)|; s|%(BOXMODEL)|$(BOXMODEL)|' $(TARGET_DIR)/etc/ushare.conf
-	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/ushare.init $(TARGET_DIR)/etc/init.d/ushare
+	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/ushare.init $(TARGET_DIR)/etc/init.d/ushare
 	ln -sf ushare $(TARGET_DIR)/etc/init.d/S99ushare
 	ln -sf ushare $(TARGET_DIR)/etc/init.d/K01ushare
 	$(REMOVE)/$(USHARE_TMP)
@@ -628,9 +628,9 @@ inadyn: $(INADYN_DEPS) $(ARCHIVE)/$(INADYN_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(INSTALL_DATA) -D $(IMAGEFILES)/scripts/inadyn.conf $(TARGET_DIR)/var/etc/inadyn.conf
+	$(INSTALL_DATA) -D $(TARGET_FILES)/scripts/inadyn.conf $(TARGET_DIR)/var/etc/inadyn.conf
 	ln -sf /var/etc/inadyn.conf $(TARGET_DIR)/etc/inadyn.conf
-	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/inadyn.init $(TARGET_DIR)/etc/init.d/inadyn
+	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/inadyn.init $(TARGET_DIR)/etc/init.d/inadyn
 	ln -sf inadyn $(TARGET_DIR)/etc/init.d/S80inadyn
 	ln -sf inadyn $(TARGET_DIR)/etc/init.d/K60inadyn
 	$(REMOVE)/$(INADYN_TMP)
@@ -664,9 +664,9 @@ vsftpd: $(VSFTPD_DEPS) $(ARCHIVE)/$(VSFTPD_SOURCE) | $(TARGET_DIR)
 		$(MAKE) $(BUILD_ENV) LIBS="-lcrypt -lcrypto -lssl"; \
 		$(INSTALL_EXEC) -D vsftpd $(TARGET_DIR)/sbin/vsftpd
 	mkdir -p $(TARGET_SHARE_DIR)/empty
-	$(INSTALL_DATA) -D $(IMAGEFILES)/configs/vsftpd.conf $(TARGET_DIR)/etc/vsftpd.conf
-	$(INSTALL_DATA) -D $(IMAGEFILES)/configs/vsftpd.chroot_list $(TARGET_DIR)/etc/vsftpd.chroot_list
-	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/vsftpd.init $(TARGET_DIR)/etc/init.d/vsftpd
+	$(INSTALL_DATA) -D $(TARGET_FILES)/configs/vsftpd.conf $(TARGET_DIR)/etc/vsftpd.conf
+	$(INSTALL_DATA) -D $(TARGET_FILES)/configs/vsftpd.chroot_list $(TARGET_DIR)/etc/vsftpd.chroot_list
+	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/vsftpd.init $(TARGET_DIR)/etc/init.d/vsftpd
 	ln -sf vsftpd $(TARGET_DIR)/etc/init.d/S53vsftpd
 	ln -sf vsftpd $(TARGET_DIR)/etc/init.d/K80vsftpd
 	$(REMOVE)/$(VSFTPD_TMP)
@@ -942,7 +942,7 @@ autofs: $(AUTOFS_DEPS) $(ARCHIVE)/$(AUTOFS_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE) SUBDIRS="lib daemon modules" DONTSTRIP=1; \
 		$(MAKE) SUBDIRS="lib daemon modules" install DESTDIR=$(TARGET_DIR)
-	cp -a $(IMAGEFILES)/autofs/* $(TARGET_DIR)/
+	cp -a $(TARGET_FILES)/autofs/* $(TARGET_DIR)/
 	ln -sf autofs $(TARGET_DIR)/etc/init.d/S60autofs
 	ln -sf autofs $(TARGET_DIR)/etc/init.d/K40autofs
 	$(REMOVE)/$(AUTOFS_TMP)
@@ -1017,8 +1017,8 @@ samba33: $(SAMBA33_DEPS) $(ARCHIVE)/$(SAMBA33_SOURCE) | $(TARGET_DIR)
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	mkdir -p $(TARGET_DIR)/var/samba/locks
-	$(INSTALL_DATA) $(IMAGEFILES)/configs/smb3.conf $(TARGET_DIR)/etc/samba/smb.conf
-	$(INSTALL_EXEC) $(IMAGEFILES)/scripts/samba3.init $(TARGET_DIR)/etc/init.d/samba
+	$(INSTALL_DATA) $(TARGET_FILES)/configs/smb3.conf $(TARGET_DIR)/etc/samba/smb.conf
+	$(INSTALL_EXEC) $(TARGET_FILES)/scripts/samba3.init $(TARGET_DIR)/etc/init.d/samba
 	ln -sf samba $(TARGET_DIR)/etc/init.d/S99samba
 	ln -sf samba $(TARGET_DIR)/etc/init.d/K01samba
 	rm -rf $(TARGET_DIR)/bin/testparm
@@ -1099,8 +1099,8 @@ samba36: $(SAMBA36_DEPS) $(ARCHIVE)/$(SAMBA36_SOURCE) | $(TARGET_DIR)
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	mkdir -p $(TARGET_DIR)/var/samba/locks
-	$(INSTALL_DATA) $(IMAGEFILES)/configs/smb3.conf $(TARGET_DIR)/etc/samba/smb.conf
-	$(INSTALL_EXEC) $(IMAGEFILES)/scripts/samba3.init $(TARGET_DIR)/etc/init.d/samba
+	$(INSTALL_DATA) $(TARGET_FILES)/configs/smb3.conf $(TARGET_DIR)/etc/samba/smb.conf
+	$(INSTALL_EXEC) $(TARGET_FILES)/scripts/samba3.init $(TARGET_DIR)/etc/init.d/samba
 	ln -sf samba $(TARGET_DIR)/etc/init.d/S99samba
 	ln -sf samba $(TARGET_DIR)/etc/init.d/K01samba
 	rm -rf $(TARGET_DIR)/bin/testparm
@@ -1152,7 +1152,7 @@ dropbear: $(DROPBEAR_DEPS) $(ARCHIVE)/$(DROPBEAR_SOURCE) | $(TARGET_DIR)
 		$(MAKE) PROGRAMS="dropbear dbclient dropbearkey scp" SCPPROGRESS=1; \
 		$(MAKE) PROGRAMS="dropbear dbclient dropbearkey scp" install DESTDIR=$(TARGET_DIR)
 	mkdir -p $(TARGET_DIR)/etc/dropbear
-	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/dropbear.init $(TARGET_DIR)/etc/init.d/dropbear
+	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/dropbear.init $(TARGET_DIR)/etc/init.d/dropbear
 	ln -sf dropbear $(TARGET_DIR)/etc/init.d/S60dropbear
 	ln -sf dropbear $(TARGET_DIR)/etc/init.d/K60dropbear
 	$(REMOVE)/$(DROPBEAR_TMP)
@@ -1186,7 +1186,7 @@ sg3_utils: $(ARCHIVE)/$(SG3_UTILS_SOURCE) | $(TARGET_DIR)
 		$(INSTALL_EXEC) $(TARGET_DIR)/bin.$(@F)/$$bin $(TARGET_DIR)/bin/$$bin; \
 	done
 	$(REWRITE_LIBTOOL)/libsgutils2.la
-	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/sdX.init $(TARGET_DIR)/etc/init.d/sdX
+	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/sdX.init $(TARGET_DIR)/etc/init.d/sdX
 	ln -sf sdX $(TARGET_DIR)/etc/init.d/K97sdX
 	$(REMOVE)/$(SG3_UTILS_TMP) \
 		$(TARGET_DIR)/bin.$(@F)
@@ -1249,7 +1249,7 @@ lcd4linux: $(LCD4LINUX_DEPS) | $(TARGET_DIR)
 		$(MAKE) vcs_version; \
 		$(MAKE) all; \
 		$(MAKE) install
-	cp -a $(IMAGEFILES)/lcd4linux/* $(TARGET_DIR)/
+	cp -a $(TARGET_FILES)/lcd4linux/* $(TARGET_DIR)/
 	#make samsunglcd4linux
 	$(REMOVE)/$(LCD4LINUX_TMP)
 	$(TOUCH)
@@ -1291,8 +1291,8 @@ wpa_supplicant: $(WPA_SUPPLICANT_DEPS) $(ARCHIVE)/$(WPA_SUPPLICANT_SOURCE) | $(T
 		$(BUILD_ENV) \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR) BINDIR=/sbin
-	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/pre-wlan0.sh $(TARGET_DIR)/etc/network/pre-wlan0.sh
-	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/post-wlan0.sh $(TARGET_DIR)/etc/network/post-wlan0.sh
+	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/pre-wlan0.sh $(TARGET_DIR)/etc/network/pre-wlan0.sh
+	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/post-wlan0.sh $(TARGET_DIR)/etc/network/post-wlan0.sh
 	$(REMOVE)/$(WPA_SUPPLICANT_TMP)
 	$(TOUCH)
 
@@ -1328,10 +1328,10 @@ xupnpd: $(XUPNPD_DEPS) | $(TARGET_DIR)
 	$(INSTALL_DATA) -D $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-lua/xupnpd/xupnpd_youtube.lua $(TARGET_SHARE_DIR)/xupnpd/plugins/
 	$(INSTALL_DATA) -D $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-lua/xupnpd/xupnpd_coolstream.lua $(TARGET_SHARE_DIR)/xupnpd/plugins/
 	$(INSTALL_DATA) -D $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-lua/xupnpd/xupnpd_cczwei.lua $(TARGET_SHARE_DIR)/xupnpd/plugins/
-	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/xupnpd.init $(TARGET_DIR)/etc/init.d/xupnpd
+	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/xupnpd.init $(TARGET_DIR)/etc/init.d/xupnpd
 	ln -sf xupnpd $(TARGET_DIR)/etc/init.d/S99xupnpd
 	ln -sf xupnpd $(TARGET_DIR)/etc/init.d/K01xupnpd
-	cp -a $(IMAGEFILES)/xupnpd/* $(TARGET_DIR)/
+	cp -a $(TARGET_FILES)/xupnpd/* $(TARGET_DIR)/
 	$(REMOVE)/$(XUPNPD_TMP)
 	$(TOUCH)
 
@@ -1422,7 +1422,7 @@ nfs-utils: $(NFS-UTILS_DEPS) $(ARCHIVE)/$(NFS-UTILS_SOURCE) | $(TARGET_DIR)
 	rm -rf $(TARGET_DIR)/sbin/umount.nfs*
 	rm -rf $(TARGET_DIR)/sbin/showmount
 	rm -rf $(TARGET_DIR)/sbin/rpcdebug
-	$(INSTALL_EXEC) -D $(IMAGEFILES)/scripts/nfsd.init $(TARGET_DIR)/etc/init.d/nfsd
+	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/nfsd.init $(TARGET_DIR)/etc/init.d/nfsd
 	ln -s nfsd $(TARGET_DIR)/etc/init.d/S60nfsd
 	ln -s nfsd $(TARGET_DIR)/etc/init.d/K01nfsd
 	$(REMOVE)/$(NFS-UTILS_TMP)
@@ -1538,7 +1538,7 @@ streamripper: $(STREAMRIPPER_DEPS) | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(INSTALL_EXEC) $(IMAGEFILES)/scripts/streamripper.sh $(TARGET_DIR)/bin/
+	$(INSTALL_EXEC) $(TARGET_FILES)/scripts/streamripper.sh $(TARGET_DIR)/bin/
 	$(REMOVE)/$(NI-STREAMRIPPER)
 	$(TOUCH)
 
