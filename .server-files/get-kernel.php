@@ -9,8 +9,8 @@ $boxtype_sc = ""; # autofilled
 $boxseries = trim($_GET["boxseries"]);
 $boxmodel = trim($_GET["boxmodel"]);
 
-$kernel_name = "";
-$image_type = "release";
+$kernel_prefix = "";
+$image_type = "nightly";
 
 # convert strings to lower case
 $boxtype = strtolower($boxtype);
@@ -21,27 +21,27 @@ $image_type = strtolower($image_type);
 
 if ($boxtype == "coolstream" || $boxtype == "cst")
 {
-	# CST
 	$boxtype_sc = "cst";
 
 	if ($boxmodel == "nevis")
 	{
-		$kernel_name = "zImage.img";
+		$kernel_prefix = "-zImage.img";
 	}
 	elseif ($boxmodel == "apollo" || $boxmodel == "shiner" || $boxmodel == "kronos" || $boxmodel == "kronos_v2")
 	{
-		$kernel_name = "vmlinux.ub.gz";
+		$kernel_prefix = "-vmlinux.ub.gz";
 	}
 }
 elseif ($boxtype == "armbox" || $boxtype == "arm")
 {
-	# AX Tech
 	$boxtype_sc = "arm";
+
+	$kernel_prefix = ".bin";
 }
 
 # release/kernel-cst-kronos-vmlinux.ub.gz
 $directory = $image_type;
-$kernel = $directory . "/kernel-" . $boxtype_sc . "-" . $boxmodel . "-" . $kernel_name;
+$kernel = $directory . "/kernel-" . $boxtype_sc . "-" . $boxmodel . $kernel_prefix;
 
 if (!file_exists($kernel))
 {

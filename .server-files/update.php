@@ -1,5 +1,9 @@
 <?php
 header('Content-Type: text/plain');
+/*
+	Example:
+	http://www.neutrino-images.de/neutrino-images/update.php?revision=1&boxname=hd51&chip_type=0&image_type=nightly
+*/
 
 # uncomment next line to deactivate online update
 #die();
@@ -37,7 +41,7 @@ if ($revision == 1) // libstb-hal
 		$boxseries = "hd51";
 		$boxmodel = "bre2ze4k";
 	}
-	elseif ($boxname == "h7")
+	elseif ($boxname == "zgemma h7c/s")
 	{
 		$boxtype_sc = "arm";
 		$boxseries = "hd51";
