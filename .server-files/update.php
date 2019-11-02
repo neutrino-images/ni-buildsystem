@@ -27,17 +27,27 @@ if ($revision == 1) // libstb-hal
 {
 	if ($boxname == "hd51")
 	{
-		# AX/Mutant
 		$boxtype_sc = "arm";
 		$boxseries = "hd51";
 		$boxmodel = "hd51";
 	}
 	elseif ($boxname == "bre2ze4k")
 	{
-		# WWIO
 		$boxtype_sc = "arm";
 		$boxseries = "hd51";
 		$boxmodel = "bre2ze4k";
+	}
+	elseif ($boxname == "h7")
+	{
+		$boxtype_sc = "arm";
+		$boxseries = "hd51";
+		$boxmodel = "h7";
+	}
+	elseif ($boxname == "solo4k" || $boxname == "duo4k" || $boxname == "ultimo4k" || $boxname == "zero4k" || $boxname == "uno4k" || $boxname == "uno4kse")
+	{
+		$boxtype_sc = "arm";
+		$boxseries = "vu" .  $boxname;
+		$boxmodel = "vu" . $boxname;
 	}
 }
 elseif ($revision == 6 || $revision == 7 || $revision == 8 || $revision == 10)
