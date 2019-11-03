@@ -121,14 +121,19 @@ rootfs-cleanup: $(ROOTFS)
 
 # -----------------------------------------------------------------------------
 
+ROOTFS-STRIP_DIRS  = /bin
+ROOTFS-STRIP_DIRS += /sbin
+ROOTFS-STRIP_DIRS += /share/tuxbox/neutrino/plugins
+
 # strip bins and libs in root filesystem
 rootfs-strip: $(ROOTFS)
 ifneq ($(DEBUG), yes)
 	$(call draw_line);
 	@echo "The following warnings from strip are harmless!"
 	$(call draw_line);
-	find $(ROOTFS)/bin -type f -print0 | xargs -0 $(TARGET_STRIP) || true
-	find $(ROOTFS)/sbin -type f -print0 | xargs -0 $(TARGET_STRIP) || true
+	for dir in $(ROOTFS-STRIP_DIRS); do \
+		find $(ROOTFS)$${dir} -type f -print0 | xargs -0 $(TARGET_STRIP) || true; \
+	done
 	find $(ROOTFS)/lib \( \
 			-path $(ROOTFS)/lib/libnexus.so -o \
 			-path $(ROOTFS)/lib/libnxpl.so -o \
