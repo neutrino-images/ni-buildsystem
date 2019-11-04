@@ -243,9 +243,9 @@ libpng: $(LIBPNG_DEPS) $(ARCHIVE)/$(LIBPNG_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-FREETYPE_VER    = 2.10.0
+FREETYPE_VER    = 2.10.1
 FREETYPE_TMP    = freetype-$(FREETYPE_VER)
-FREETYPE_SOURCE = freetype-$(FREETYPE_VER).tar.bz2
+FREETYPE_SOURCE = freetype-$(FREETYPE_VER).tar.xz
 FREETYPE_URL    = https://sourceforge.net/projects/freetype/files/freetype2/$(FREETYPE_VER)
 
 $(ARCHIVE)/$(FREETYPE_SOURCE):
