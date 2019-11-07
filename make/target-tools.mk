@@ -942,7 +942,7 @@ autofs: $(AUTOFS_DEPS) $(ARCHIVE)/$(AUTOFS_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE) SUBDIRS="lib daemon modules" DONTSTRIP=1; \
 		$(MAKE) SUBDIRS="lib daemon modules" install DESTDIR=$(TARGET_DIR)
-	cp -a $(TARGET_FILES)/autofs/* $(TARGET_DIR)/
+	$(INSTALL_COPY) $(TARGET_FILES)/autofs/* $(TARGET_DIR)/
 	ln -sf autofs $(TARGET_DIR)/etc/init.d/S60autofs
 	ln -sf autofs $(TARGET_DIR)/etc/init.d/K40autofs
 	$(REMOVE)/$(AUTOFS_TMP)
@@ -1249,7 +1249,7 @@ lcd4linux: $(LCD4LINUX_DEPS) | $(TARGET_DIR)
 		$(MAKE) vcs_version; \
 		$(MAKE) all; \
 		$(MAKE) install
-	cp -a $(TARGET_FILES)/lcd4linux/* $(TARGET_DIR)/
+	$(INSTALL_COPY) $(TARGET_FILES)/lcd4linux/* $(TARGET_DIR)/
 	#make samsunglcd4linux
 	$(REMOVE)/$(LCD4LINUX_TMP)
 	$(TOUCH)
@@ -1267,7 +1267,7 @@ samsunglcd4linux: | $(TARGET_DIR)
 	$(CPDIR)/$(SAMSUNGLCD4LINUX_SOURCE)
 	$(CHDIR)/$(SAMSUNGLCD4LINUX_TMP)/ni; \
 		$(INSTALL) -m 0600 etc/lcd4linux.conf $(TARGET_DIR)/etc; \
-		cp -a share/* $(TARGET_SHARE_DIR)
+		$(INSTALL_COPY) share/* $(TARGET_SHARE_DIR)
 	$(REMOVE)/$(SAMSUNGLCD4LINUX_TMP)
 	$(TOUCH)
 
@@ -1322,7 +1322,7 @@ xupnpd: $(XUPNPD_DEPS) | $(TARGET_DIR)
 		$(MAKE) embedded TARGET=$(TARGET) CC=$(TARGET_CC) STRIP=$(TARGET_STRIP) LUAFLAGS="$(TARGET_LDFLAGS) -I$(TARGET_INCLUDE_DIR)"; \
 		$(INSTALL_EXEC) -D xupnpd $(TARGET_BIN_DIR)/; \
 		mkdir -p $(TARGET_SHARE_DIR)/xupnpd/config; \
-		cp -a plugins profiles ui www *.lua $(TARGET_SHARE_DIR)/xupnpd/
+		$(INSTALL_COPY) plugins profiles ui www *.lua $(TARGET_SHARE_DIR)/xupnpd/
 	rm $(TARGET_SHARE_DIR)/xupnpd/plugins/staff/xupnpd_18plus.lua
 	$(INSTALL_DATA) -D $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-lua/xupnpd/xupnpd_18plus.lua $(TARGET_SHARE_DIR)/xupnpd/plugins/
 	$(INSTALL_DATA) -D $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-lua/xupnpd/xupnpd_youtube.lua $(TARGET_SHARE_DIR)/xupnpd/plugins/
@@ -1331,7 +1331,7 @@ xupnpd: $(XUPNPD_DEPS) | $(TARGET_DIR)
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/xupnpd.init $(TARGET_DIR)/etc/init.d/xupnpd
 	ln -sf xupnpd $(TARGET_DIR)/etc/init.d/S99xupnpd
 	ln -sf xupnpd $(TARGET_DIR)/etc/init.d/K01xupnpd
-	cp -a $(TARGET_FILES)/xupnpd/* $(TARGET_DIR)/
+	$(INSTALL_COPY) $(TARGET_FILES)/xupnpd/* $(TARGET_DIR)/
 	$(REMOVE)/$(XUPNPD_TMP)
 	$(TOUCH)
 

@@ -93,7 +93,7 @@ ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd1 hd2))
 		$(call apply_patches, $(CROSSTOOL-NG_PATCH))
   ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2))
 	$(CHDIR)/$(CROSSTOOL-NG_TMP); \
-		cp -a $(PATCHES)/crosstool-ng/gcc/* patches/gcc/linaro-6.3-2017.02
+		$(INSTALL_COPY) $(PATCHES)/crosstool-ng/gcc/* patches/gcc/linaro-6.3-2017.02
   endif
 endif
 	$(CHDIR)/$(CROSSTOOL-NG_TMP); \

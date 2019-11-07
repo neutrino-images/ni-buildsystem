@@ -78,7 +78,7 @@ e2-multiboot: | $(TARGET_DIR)
 	mkdir -p $(TARGET_DIR)/var/lib/opkg
 	touch $(TARGET_DIR)/var/lib/opkg/status
 	#
-	cp -a $(TARGET_DIR)/.version $(TARGET_DIR)/etc/image-version
+	$(INSTALL_DATA) $(TARGET_DIR)/.version $(TARGET_DIR)/etc/image-version
 
 # -----------------------------------------------------------------------------
 
@@ -86,7 +86,7 @@ personalize: | $(TARGET_DIR)
 	$(call local-script,$(@F),start)
 	@LOCAL_ROOT=$(LOCAL_DIR)/root; \
 	if [ -n "$$(ls -A $$LOCAL_ROOT)" ]; then \
-		cp -a -v $$LOCAL_ROOT/* $(TARGET_DIR)/; \
+		$(INSTALL_COPY) -v $$LOCAL_ROOT/* $(TARGET_DIR)/; \
 	fi
 	$(call local-script,$(@F),stop)
 
@@ -100,7 +100,7 @@ rootfs: target-finish $(ROOTFS) rootfs-cleanup rootfs-strip
 $(ROOTFS): | $(TARGET_DIR)
 	rm -rf $(ROOTFS)
 	mkdir -p $(dir $(ROOTFS))
-	cp -a $(TARGET_DIR) $(ROOTFS)
+	$(INSTALL_COPY) $(TARGET_DIR) $(ROOTFS)
 
 # -----------------------------------------------------------------------------
 

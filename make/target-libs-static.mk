@@ -3,12 +3,12 @@
 #
 # -----------------------------------------------------------------------------
 
-STATIC_LIBS =
+LIBS-STATIC =
 ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd51 vusolo4k vuduo4k vuultimo4k vuzero4k vuuno4k vuuno4kse))
-  STATIC_LIBS += cortex-strings
+  LIBS-STATIC += cortex-strings
 endif
 
-static-libs: $(STATIC_LIBS)
+libs-static: $(LIBS-STATIC)
 
 # -----------------------------------------------------------------------------
 
@@ -46,5 +46,5 @@ $(STATIC_LIB_DIR)/libcortex-strings.la: $(ARCHIVE)/$(CORTEX-STRINGS_SOURCE) | $(
 
 # -----------------------------------------------------------------------------
 
-PHONY += static-libs
+PHONY += libs-static
 PHONY += cortex-strings

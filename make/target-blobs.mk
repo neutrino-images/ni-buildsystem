@@ -3,7 +3,7 @@
 #
 # -----------------------------------------------------------------------------
 
-BLOBS_DEPS = kernel # because of depmod
+#BLOBS_DEPS = kernel # because of depmod
 
 blobs: $(BLOBS_DEPS)
 	make $(BOXMODEL)-drivers
@@ -11,7 +11,7 @@ ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7 vusolo4k vuduo4k vuult
 	make $(BOXMODEL)-libgles
 endif
 ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vusolo4k vuduo4k vuultimo4k vuzero4k vuuno4k vuuno4kse))
-	make $(BOXMODEL)-platform-util
+	make vuplus-platform-util
 endif
 
 # -----------------------------------------------------------------------------
@@ -62,8 +62,30 @@ BOXMODEL-DRIVERS_VER    = $($(call UPPERCASE,$(BOXMODEL))-DRIVERS_VER)
 BOXMODEL-DRIVERS_SOURCE = $($(call UPPERCASE,$(BOXMODEL))-DRIVERS_SOURCE)
 BOXMODEL-DRIVERS_URL    = $($(call UPPERCASE,$(BOXMODEL))-DRIVERS_URL)
 
+ifneq ($(BOXMODEL-DRIVERS_SOURCE),$(EMPTY))
 $(ARCHIVE)/$(BOXMODEL-DRIVERS_SOURCE):
 	$(DOWNLOAD) $(BOXMODEL-DRIVERS_URL)/$(BOXMODEL-DRIVERS_SOURCE)
+endif
+
+nevis-drivers \
+apollo-drivers \
+shiner-drivers \
+kronos-drivers \
+kronos_v2-drivers \
+coolstream-drivers: | $(TARGET_DIR)
+	mkdir -p $(TARGET_LIB_DIR)
+	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/lib/. $(TARGET_LIB_DIR)
+	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/libcoolstream/$(shell echo -n $(NI-FFMPEG_BRANCH) | sed 's,/,-,g')/. $(TARGET_LIB_DIR)
+ifeq ($(BOXMODEL), nevis)
+	ln -sf libnxp.so $(TARGET_LIB_DIR)/libconexant.so
+endif
+	mkdir -p $(TARGET_MODULES_DIR)
+	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/lib-modules/$(KERNEL_VER)/. $(TARGET_MODULES_DIR)
+ifeq ($(BOXMODEL), nevis)
+	ln -sf $(KERNEL_VER) $(TARGET_MODULES_DIR)-$(BOXMODEL)
+endif
+	make depmod
+	$(TOUCH)
 
 hd51-drivers \
 bre2ze4k-drivers \
@@ -79,7 +101,8 @@ vuultimo4k-drivers \
 vuzero4k-drivers \
 vuuno4k-drivers \
 vuuno4kse-drivers \
-vuduo-drivers: $(ARCHIVE)/$(BOXMODEL-DRIVERS_SOURCE) | $(TARGET_DIR)
+vuduo-drivers \
+vuplus-drivers: $(ARCHIVE)/$(BOXMODEL-DRIVERS_SOURCE) | $(TARGET_DIR)
 	mkdir -p $(TARGET_MODULES_DIR)/extra
 	tar -xf $(ARCHIVE)/$(BOXMODEL-DRIVERS_SOURCE) -C $(TARGET_MODULES_DIR)/extra
 	make depmod
@@ -139,8 +162,10 @@ BOXMODEL-LIBGLES_TMP    = $($(call UPPERCASE,$(BOXMODEL))-LIBGLES_TMP)
 BOXMODEL-LIBGLES_SOURCE = $($(call UPPERCASE,$(BOXMODEL))-LIBGLES_SOURCE)
 BOXMODEL-LIBGLES_URL    = $($(call UPPERCASE,$(BOXMODEL))-LIBGLES_URL)
 
+ifneq ($(BOXMODEL-LIBGLES_SOURCE),$(EMPTY))
 $(ARCHIVE)/$(BOXMODEL-LIBGLES_SOURCE):
 	$(DOWNLOAD) $(BOXMODEL-LIBGLES_URL)/$(BOXMODEL-LIBGLES_SOURCE)
+endif
 
 hd51-libgles \
 bre2ze4k-libgles \
@@ -155,7 +180,8 @@ vuduo4k-libgles \
 vuultimo4k-libgles \
 vuzero4k-libgles \
 vuuno4k-libgles \
-vuuno4kse-libgles: $(ARCHIVE)/$(BOXMODEL-LIBGLES_SOURCE) | $(TARGET_DIR)
+vuuno4kse-libgles \
+vuplus-libgles: $(ARCHIVE)/$(BOXMODEL-LIBGLES_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(BOXMODEL-LIBGLES_TMP)
 	$(UNTAR)/$(BOXMODEL-LIBGLES_SOURCE)
 	$(INSTALL_EXEC) $(BUILD_TMP)/$(BOXMODEL-LIBGLES_TMP)/lib/* $(TARGET_LIB_DIR)
@@ -204,19 +230,18 @@ BOXMODEL-PLATFORM-UTIL_TMP    = $($(call UPPERCASE,$(BOXMODEL))-PLATFORM-UTIL_TM
 BOXMODEL-PLATFORM-UTIL_SOURCE = $($(call UPPERCASE,$(BOXMODEL))-PLATFORM-UTIL_SOURCE)
 BOXMODEL-PLATFORM-UTIL_URL    = $($(call UPPERCASE,$(BOXMODEL))-PLATFORM-UTIL_URL)
 
+ifneq ($(BOXMODEL-PLATFORM-UTIL_SOURCE),$(EMPTY))
 $(ARCHIVE)/$(BOXMODEL-PLATFORM-UTIL_SOURCE):
 	$(DOWNLOAD) $(BOXMODEL-PLATFORM-UTIL_URL)/$(BOXMODEL-PLATFORM-UTIL_SOURCE)
+endif
 
-vusolo4k-platform-util \
-vuduo4k-platform-util \
-vuultimo4k-platform-util \
-vuzero4k-platform-util \
-vuuno4k-platform-util \
-vuuno4kse-platform-util: $(ARCHIVE)/$(BOXMODEL-PLATFORM-UTIL_SOURCE) | $(TARGET_DIR)
+vuplus-platform-util: $(ARCHIVE)/$(BOXMODEL-PLATFORM-UTIL_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(BOXMODEL-PLATFORM-UTIL_TMP)
 	$(UNTAR)/$(BOXMODEL-PLATFORM-UTIL_SOURCE)
 	$(INSTALL_EXEC) $(BUILD_TMP)/$(BOXMODEL-PLATFORM-UTIL_TMP)/* $(TARGET_BIN_DIR)
+	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/$(BOXMODEL)-platform-util.init $(TARGET_DIR)/etc/init.d/vuplus-platform-util
+ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vuduo4k))
+	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/bp3flash.sh $(TARGET_DIR)/bin/bp3flash.sh
+endif
 	$(REMOVE)/$(BOXMODEL-PLATFORM-UTIL_TMP)
 	$(TOUCH)
-	make $(TARGET_DIR)/etc/init.d/vuplus-platform-util
-	make $(TARGET_DIR)/bin/bp3flash.sh

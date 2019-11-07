@@ -3,24 +3,27 @@
 #
 # -----------------------------------------------------------------------------
 
+# buildsystem related
 BOOTSTRAP  = $(CROSS_DIR)
-BOOTSTRAP += target-dir
+BOOTSTRAP += $(STATIC_DIR)
 BOOTSTRAP += $(DEPS_DIR)
 BOOTSTRAP += $(BUILD_TMP)
 BOOTSTRAP += $(STAGING_DIR)
 BOOTSTRAP += $(IMAGE_DIR)
 BOOTSTRAP += $(UPDATE_DIR)
-BOOTSTRAP += cross-libs
-BOOTSTRAP += bins
-BOOTSTRAP += includes
-BOOTSTRAP += libs
-BOOTSTRAP += firmware
-BOOTSTRAP += modules
 BOOTSTRAP += host-preqs
+
+# target related
+BOOTSTRAP += target-dir
+BOOTSTRAP += firmware
+BOOTSTRAP += libs-static
+BOOTSTRAP += libs-cross
 
 ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2))
   BOOTSTRAP += var-update
 endif
+
+# -----------------------------------------------------------------------------
 
 bootstrap: $(BOOTSTRAP)
 	@touch $(BUILD_TMP)/.$(BOXTYPE)-$(BOXMODEL)
@@ -28,18 +31,25 @@ bootstrap: $(BOOTSTRAP)
 	@echo -e "$(TERM_YELLOW)Bootstrapped for $(shell echo $(BOXTYPE) | sed 's/.*/\u&/') $(BOXNAME) ($(BOXMODEL))$(TERM_NORMAL)"
 	$(call draw_line);
 
+# -----------------------------------------------------------------------------
+
 skeleton: | $(TARGET_DIR)
-	cp --remove-destination -a $(SKEL-ROOT)/. $(TARGET_DIR)/
+	$(INSTALL_COPY) --remove-destination $(SKEL-ROOT)/. $(TARGET_DIR)/
 ifneq ($(wildcard $(SKEL-ROOT)-$(BOXFAMILY)),)
-	cp --remove-destination -a $(SKEL-ROOT)-$(BOXFAMILY)/. $(TARGET_DIR)/
+	$(INSTALL_COPY) --remove-destination $(SKEL-ROOT)-$(BOXFAMILY)/. $(TARGET_DIR)/
 endif
 	find $(TARGET_DIR) -type f -print0 | xargs --no-run-if-empty -0 \
 		sed -i 's|%(BOXMODEL)|$(BOXMODEL)|'
 	sed -i 's|%(BOOT_PARTITION)|$(BOOT_PARTITION)|' $(TARGET_DIR)/etc/mdev.conf
+	$(INSTALL_COPY) $(STATIC_DIR)/. $(TARGET_DIR)/
 
+# -----------------------------------------------------------------------------
 
 target-dir:
 	mkdir -p $(TARGET_DIR)
+	mkdir -p $(TARGET_BIN_DIR)
+	mkdir -p $(TARGET_INCLUDE_DIR)
+	mkdir -p $(TARGET_LIB_DIR)
 ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 vusolo4k vuduo4k vuultimo4k vuzero4k vuuno4k vuuno4kse))
 	mkdir -p $(TARGET_DIR)/boot
 endif
@@ -65,12 +75,17 @@ ifeq ($(PERSISTENT_VAR_PARTITION), yes)
   endif
 endif
 
+# -----------------------------------------------------------------------------
+
 $(TARGET_DIR):
 	$(call draw_line);
 	@echo "TARGET_DIR does not exist. You probably need to run 'make bootstrap'"
 	$(call draw_line);
 	@false
 
+# -----------------------------------------------------------------------------
+
+$(STATIC_DIR) \
 $(DEPS_DIR) \
 $(BUILD_TMP) \
 $(STAGING_DIR) \
@@ -82,57 +97,25 @@ $(HOST_DIR):
 $(HOST_DIR)/bin: $(HOST_DIR)
 	mkdir -p $(@)
 
-$(TARGET_BIN_DIR): | $(TARGET_DIR)
-	mkdir -p $(@)
-	cp -a $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/bin/. $(@)
+# -----------------------------------------------------------------------------
 
-$(TARGET_INCLUDE_DIR): | $(TARGET_DIR)
-	mkdir -p $(@)
-	cp -a $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/include/. $(@)
-
-$(TARGET_LIB_DIR): | $(TARGET_DIR)
-	mkdir -p $(@)
-	cp -a $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/lib/. $(@)
-ifeq ($(BOXTYPE), coolstream)
-	cp -a $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/libcoolstream/$(shell echo -n $(NI-FFMPEG_BRANCH) | sed 's,/,-,g')/. $(@)
-  ifeq ($(BOXSERIES), hd1)
-	ln -sf libnxp.so $(@)/libconexant.so
-  endif
-endif
+firmware: $(TARGET_LIB_DIR)/firmware
 
 $(TARGET_LIB_DIR)/firmware: | $(TARGET_DIR)
 	mkdir -p $(@)
-	cp -a $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/lib-firmware/. $(@)
-	cp -a $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/lib-firmware-dvb/. $(@)
-	cp -a $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/lib-firmware-rt/. $(@)
-
-$(TARGET_LIB_DIR)/modules: | $(TARGET_DIR)
-	mkdir -p $(@)
-	cp -a $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/lib-modules/$(KERNEL_VER) $(@)
-ifeq ($(BOXMODEL), nevis)
-	ln -sf $(KERNEL_VER) $(@)/$(KERNEL_VER)-$(BOXMODEL)
-endif
-
-$(STATIC_LIB_DIR): | $(TARGET_DIR)
-	mkdir -p $(@)
-	cp -a $(STATIC_DIR)/. $(TARGET_DIR)/; \
-
-$(TARGET_DIR)/var/update: | $(TARGET_DIR)
-	mkdir -p $(@)
 ifeq ($(BOXTYPE), coolstream)
-	cp -a $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/uldr.bin $(@)
-  ifeq ($(BOXMODEL), kronos_v2)
-	cp -a $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/u-boot.bin.kronos_v2 $(@)/u-boot.bin
-  else
-	cp -a $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/u-boot.bin $(@)
-  endif
+	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/lib-firmware/. $(@)
+	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/lib-firmware-dvb/. $(@)
 endif
+	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/lib-firmware-rt/. $(@)
 
-cross-libs: | $(TARGET_DIR)
+# -----------------------------------------------------------------------------
+
+libs-cross: | $(TARGET_DIR)
 	if [ -d $(CROSS_DIR)/$(TARGET)/sys-root/lib/ ]; then \
-		cp -a $(CROSS_DIR)/$(TARGET)/sys-root/lib/*so* $(TARGET_LIB_DIR); \
+		$(INSTALL_COPY) $(CROSS_DIR)/$(TARGET)/sys-root/lib/*so* $(TARGET_LIB_DIR); \
 	elif [ -d $(CROSS_DIR)/$(TARGET)/lib/ ]; then \
-		cp -a $(CROSS_DIR)/$(TARGET)/lib/*so* $(TARGET_LIB_DIR); \
+		$(INSTALL_COPY) $(CROSS_DIR)/$(TARGET)/lib/*so* $(TARGET_LIB_DIR); \
 	else \
 		false; \
 	fi
@@ -149,38 +132,31 @@ ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 vusolo4k vuduo4k vuultimo4k vuze
 		ln -sf ld-2.23.so ld-linux.so.3
 endif
 
-bins: $(TARGET_BIN_DIR)
-
-includes: $(TARGET_INCLUDE_DIR)
-
-libs: $(TARGET_LIB_DIR) static-libs $(STATIC_LIB_DIR)
-
-firmware: $(TARGET_LIB_DIR)/firmware
-
-modules: $(TARGET_LIB_DIR)/modules
+# -----------------------------------------------------------------------------
 
 var-update: $(TARGET_DIR)/var/update
+
+$(TARGET_DIR)/var/update: | $(TARGET_DIR)
+	mkdir -p $(@)
+ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2))
+	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/uldr.bin $(@)
+  ifeq ($(BOXMODEL), kronos_v2)
+	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/u-boot.bin.kronos_v2 $(@)/u-boot.bin
+  else
+	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/u-boot.bin $(@)
+  endif
+endif
 
 # -----------------------------------------------------------------------------
 
 # hack to make sure they are always copied
-PHONY += $(TARGET_BIN_DIR)
-PHONY += $(TARGET_INCLUDE_DIR)
-PHONY += $(TARGET_LIB_DIR)
 PHONY += $(TARGET_LIB_DIR)/firmware
-PHONY += $(TARGET_LIB_DIR)/modules
 PHONY += $(TARGET_DIR)/var/update
-PHONY += $(STATIC_LIB_DIR)
 
 # -----------------------------------------------------------------------------
 
 PHONY += bootstrap
 PHONY += skeleton
 PHONY += target-dir
-PHONY += cross-libs
-PHONY += bins
-PHONY += includes
-PHONY += libs
+PHONY += libs-cross
 PHONY += firmware
-PHONY += modules
-PHONY += var-update

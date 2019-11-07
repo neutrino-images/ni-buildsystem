@@ -1420,6 +1420,6 @@ graphlcd: $(GRAPHLCD_DEPS) | $(TARGET_DIR)
 		$(MAKE) -C glcddrivers all TARGET=$(TARGET_CROSS) PREFIX= DESTDIR=$(TARGET_DIR); \
 		$(MAKE) -C glcdgraphics install PREFIX= DESTDIR=$(TARGET_DIR); \
 		$(MAKE) -C glcddrivers install PREFIX= DESTDIR=$(TARGET_DIR); \
-		cp -a graphlcd.conf $(TARGET_DIR)/etc
+		$(INSTALL_DATA) -D graphlcd.conf $(TARGET_DIR)/etc/graphlcd.conf
 	$(REMOVE)/$(GRAPHLCD_TMP)
 	$(TOUCH)

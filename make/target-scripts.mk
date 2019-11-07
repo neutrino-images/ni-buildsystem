@@ -19,8 +19,7 @@ init-scripts: \
 	$(TARGET_DIR)/etc/init.d/resizerootfs \
 	$(TARGET_DIR)/etc/init.d/swap \
 	$(TARGET_DIR)/etc/init.d/sys_update.sh \
-	$(TARGET_DIR)/etc/init.d/syslogd \
-	$(TARGET_DIR)/etc/init.d/vuplus-platform-util
+	$(TARGET_DIR)/etc/init.d/syslogd
 
 $(TARGET_DIR)/etc/init.d/globals:
 	$(INSTALL_DATA) -D $(TARGET_FILES)/scripts/init.globals $(@)
@@ -91,23 +90,12 @@ $(TARGET_DIR)/etc/init.d/syslogd:
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/syslogd.init $(@)
 	ln -sf syslogd $(TARGET_DIR)/etc/init.d/K98syslogd
 
-$(TARGET_DIR)/etc/init.d/vuplus-platform-util:
-ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vusolo4k vuduo4k vuultimo4k vuzero4k vuuno4k vuuno4kse))
-	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/$(BOXMODEL)-platform-util.init $(@)
-endif
-
 # -----------------------------------------------------------------------------
 
 scripts: \
-	$(TARGET_DIR)/bin/bp3flash.sh \
 	$(TARGET_DIR)/sbin/service \
 	$(TARGET_DIR)/sbin/flash_eraseall \
 	$(TARGET_SHARE_DIR)/udhcpc/default.script
-
-$(TARGET_DIR)/bin/bp3flash.sh:
-ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vuduo4k))
-	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/bp3flash.sh $(@)
-endif
 
 $(TARGET_DIR)/sbin/service:
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/service $(@)

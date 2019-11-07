@@ -238,19 +238,19 @@ kernel-coolstream-hd2: kernel.do_compile | $(IMAGE_DIR)
 ifeq ($(BOXMODEL), $(filter $(BOXMODEL), apollo shiner))
   ifeq ($(BOXMODEL), apollo)
 	# create also shiner-kernel when building apollo
-	cp -a $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-vmlinux.ub.gz $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-shiner-vmlinux.ub.gz
+	$(INSTALL_DATA) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-vmlinux.ub.gz $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-shiner-vmlinux.ub.gz
   else ifeq ($(BOXMODEL), shiner)
 	# create also apollo-kernel when building shiner
-	cp -a $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-vmlinux.ub.gz $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-apollo-vmlinux.ub.gz
+	$(INSTALL_DATA) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-vmlinux.ub.gz $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-apollo-vmlinux.ub.gz
   endif
 endif
 	$(TOUCH)
 
 kernel-armbox: kernel.do_compile | $(IMAGE_DIR)
 ifneq ($(KERNEL_DTB), $(EMPTY))
-	cp -a $(KERNEL_ZIMAGE_DTB) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL).bin
+	$(INSTALL_DATA) $(KERNEL_ZIMAGE_DTB) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL).bin
 else
-	cp -a $(KERNEL_ZIMAGE) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL).bin
+	$(INSTALL_DATA) $(KERNEL_ZIMAGE) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL).bin
 endif
 	$(TOUCH)
 
@@ -276,6 +276,7 @@ STRIP-MODULES-COOLSTREAM-HD1 += kernel/fs/cifs/cifs.ko
 STRIP-MODULES-COOLSTREAM-HD1 += kernel/fs/fuse/fuse.ko
 
 kernel-modules-coolstream-hd1: kernel-coolstream
+	mkdir -p $(TARGET_MODULES_DIR)
 	for module in $(STRIP-MODULES-COOLSTREAM-HD1); do \
 		mkdir -p $(TARGET_MODULES_DIR)/$$(dirname $$module); \
 		$(TARGET_OBJCOPY) --strip-unneeded $(KERNEL_MODULES_DIR)/$$module $(TARGET_MODULES_DIR)/$$module; \
@@ -285,17 +286,19 @@ kernel-modules-coolstream-hd1: kernel-coolstream
 	$(TOUCH)
 
 kernel-modules-coolstream-hd2: kernel-coolstream
-	cp -a $(KERNEL_MODULES_DIR)/kernel $(TARGET_MODULES_DIR)
-	cp -a $(KERNEL_MODULES_DIR)/modules.builtin $(TARGET_MODULES_DIR)
-	cp -a $(KERNEL_MODULES_DIR)/modules.order $(TARGET_MODULES_DIR)
+	mkdir -p $(TARGET_MODULES_DIR)
+	$(INSTALL_COPY) $(KERNEL_MODULES_DIR)/kernel $(TARGET_MODULES_DIR)
+	$(INSTALL_DATA) $(KERNEL_MODULES_DIR)/modules.builtin $(TARGET_MODULES_DIR)
+	$(INSTALL_DATA) $(KERNEL_MODULES_DIR)/modules.order $(TARGET_MODULES_DIR)
 	make depmod
 	make rtl8192eu
 	$(TOUCH)
 
 kernel-modules-armbox: kernel-armbox
-	cp -a $(KERNEL_MODULES_DIR)/kernel $(TARGET_MODULES_DIR)
-	cp -a $(KERNEL_MODULES_DIR)/modules.builtin $(TARGET_MODULES_DIR)
-	cp -a $(KERNEL_MODULES_DIR)/modules.order $(TARGET_MODULES_DIR)
+	mkdir -p $(TARGET_MODULES_DIR)
+	$(INSTALL_COPY) $(KERNEL_MODULES_DIR)/kernel $(TARGET_MODULES_DIR)
+	$(INSTALL_DATA) $(KERNEL_MODULES_DIR)/modules.builtin $(TARGET_MODULES_DIR)
+	$(INSTALL_DATA) $(KERNEL_MODULES_DIR)/modules.order $(TARGET_MODULES_DIR)
 	make depmod
 ifeq ($(BOXSERIES), hd51)
 	make rtl8192eu
@@ -303,9 +306,10 @@ endif
 	$(TOUCH)
 
 kernel-modules-mipsbox: kernel-mipsbox
-	cp -a $(KERNEL_MODULES_DIR)/kernel $(TARGET_MODULES_DIR)
-	cp -a $(KERNEL_MODULES_DIR)/modules.builtin $(TARGET_MODULES_DIR)
-	cp -a $(KERNEL_MODULES_DIR)/modules.order $(TARGET_MODULES_DIR)
+	mkdir -p $(TARGET_MODULES_DIR)
+	$(INSTALL_COPY) $(KERNEL_MODULES_DIR)/kernel $(TARGET_MODULES_DIR)
+	$(INSTALL_DATA) $(KERNEL_MODULES_DIR)/modules.builtin $(TARGET_MODULES_DIR)
+	$(INSTALL_DATA) $(KERNEL_MODULES_DIR)/modules.order $(TARGET_MODULES_DIR)
 	make depmod
 	$(TOUCH)
 
@@ -338,10 +342,10 @@ endif
 kernel-install-coolstream: kernel-install-coolstream-$(BOXSERIES)
 
 kernel-install-coolstream-hd1: kernel-coolstream-hd1
-	cp -af $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-zImage.img $(KERNEL_DESTDIR)/zImage
+	$(INSTALL_DATA) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-zImage.img $(KERNEL_DESTDIR)/zImage
 
 kernel-install-coolstream-hd2: kernel-coolstream-hd2
-	cp -af $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-vmlinux.ub.gz $(KERNEL_DESTDIR)/vmlinux.ub.gz
+	$(INSTALL_DATA) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-vmlinux.ub.gz $(KERNEL_DESTDIR)/vmlinux.ub.gz
 
 kernel-install-coolstream-all:
 	make clean BOXFAMILY=nevis
