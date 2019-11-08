@@ -104,10 +104,10 @@ firmware: $(TARGET_LIB_DIR)/firmware
 $(TARGET_LIB_DIR)/firmware: | $(TARGET_DIR)
 	mkdir -p $(@)
 ifeq ($(BOXTYPE), coolstream)
-	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/lib-firmware/. $(@)
-	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/lib-firmware-dvb/. $(@)
+	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/lib-firmware/. $(@)
+	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/lib-firmware-dvb/. $(@)
 endif
-	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/lib-firmware-rt/. $(@)
+	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/lib-firmware-rt/. $(@)
 
 # -----------------------------------------------------------------------------
 
@@ -139,11 +139,11 @@ var-update: $(TARGET_DIR)/var/update
 $(TARGET_DIR)/var/update: | $(TARGET_DIR)
 	mkdir -p $(@)
 ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2))
-	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/uldr.bin $(@)
+	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/uldr.bin $(@)
   ifeq ($(BOXMODEL), kronos_v2)
-	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/u-boot.bin.kronos_v2 $(@)/u-boot.bin
+	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/u-boot.bin.kronos_v2 $(@)/u-boot.bin
   else
-	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/u-boot.bin $(@)
+	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/u-boot.bin $(@)
   endif
 endif
 

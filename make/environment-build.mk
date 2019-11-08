@@ -73,7 +73,7 @@ DEBUG ?= no
 # -----------------------------------------------------------------------------
 
 ifeq ($(BOXSERIES), hd1)
-  DRIVERS_DIR            = $(BOXFAMILY)
+  DRIVERS-BIN_DIR        = $(BOXTYPE)/$(BOXFAMILY)
   CORTEX-STRINGS_LDFLAG  =
   TARGET                 = arm-cx2450x-linux-gnueabi
   TARGET_OPTIMIZATION    = -Os
@@ -84,7 +84,7 @@ ifeq ($(BOXSERIES), hd1)
   CXX11_ABI              =
 
 else ifeq ($(BOXSERIES), hd2)
-  DRIVERS_DIR            = $(BOXFAMILY)
+  DRIVERS-BIN_DIR        = $(BOXTYPE)/$(BOXFAMILY)
   CORTEX-STRINGS_LDFLAG  = -lcortex-strings
   TARGET                 = arm-cortex-linux-uclibcgnueabi
   TARGET_OPTIMIZATION    = -O2
@@ -100,7 +100,7 @@ else ifeq ($(BOXSERIES), hd2)
   CXX11_ABI              = -D_GLIBCXX_USE_CXX11_ABI=0
 
 else ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 vusolo4k vuduo4k vuultimo4k vuzero4k vuuno4k vuuno4kse))
-  DRIVERS_DIR            = $(BOXMODEL)
+  DRIVERS-BIN_DIR        = $(BOXTYPE)/$(BOXMODEL)
   CORTEX-STRINGS_LDFLAG  = -lcortex-strings
   TARGET                 = arm-cortex-linux-gnueabihf
   TARGET_OPTIMIZATION    = -O2
@@ -111,7 +111,7 @@ else ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 vusolo4k vuduo4k vuultimo4k
   CXX11_ABI              =
 
 else ifeq ($(BOXSERIES), $(filter $(BOXSERIES), vuduo))
-  DRIVERS_DIR            = $(BOXMODEL)
+  DRIVERS-BIN_DIR        = $(BOXTYPE)/$(BOXMODEL)
   CORTEX-STRINGS_LDFLAG  =
   TARGET                 = mipsel-unknown-linux-gnu
   TARGET_OPTIMIZATION    = -O2

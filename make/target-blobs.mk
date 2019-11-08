@@ -74,13 +74,13 @@ kronos-drivers \
 kronos_v2-drivers \
 coolstream-drivers: | $(TARGET_DIR)
 	mkdir -p $(TARGET_LIB_DIR)
-	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/lib/. $(TARGET_LIB_DIR)
-	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/libcoolstream/$(shell echo -n $(NI-FFMPEG_BRANCH) | sed 's,/,-,g')/. $(TARGET_LIB_DIR)
+	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/lib/. $(TARGET_LIB_DIR)
+	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/libcoolstream/$(shell echo -n $(NI-FFMPEG_BRANCH) | sed 's,/,-,g')/. $(TARGET_LIB_DIR)
 ifeq ($(BOXMODEL), nevis)
 	ln -sf libnxp.so $(TARGET_LIB_DIR)/libconexant.so
 endif
 	mkdir -p $(TARGET_MODULES_DIR)
-	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/lib-modules/$(KERNEL_VER)/. $(TARGET_MODULES_DIR)
+	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/lib-modules/$(KERNEL_VER)/. $(TARGET_MODULES_DIR)
 ifeq ($(BOXMODEL), nevis)
 	ln -sf $(KERNEL_VER) $(TARGET_MODULES_DIR)-$(BOXMODEL)
 endif

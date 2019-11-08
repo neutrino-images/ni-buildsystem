@@ -20,10 +20,10 @@ else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), apollo shiner kronos kronos_v2))
 
   KERNEL_BRANCH = ni/linux-3.10.108
   ifeq ($(BOXMODEL), $(filter $(BOXMODEL), apollo shiner))
-    KERNEL_DTB    = $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/kernel-dtb/hd849x.dtb
+    KERNEL_DTB    = $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/kernel-dtb/hd849x.dtb
     KERNEL_CONFIG = $(CONFIGS)/kernel-apollo.config
   else
-    KERNEL_DTB    = $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(BOXTYPE)/$(DRIVERS_DIR)/kernel-dtb/en75x1.dtb
+    KERNEL_DTB    = $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/kernel-dtb/en75x1.dtb
     KERNEL_CONFIG = $(CONFIGS)/kernel-kronos.config
   endif
 
