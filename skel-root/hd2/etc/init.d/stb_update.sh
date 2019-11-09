@@ -4,16 +4,16 @@
 
 DO_REBOOT=0
 
-if [ -e /etc/init.d/stb_update.data ]; then
-	. /etc/init.d/stb_update.data 2> /dev/null
+if [ -e /var/update/stb_update.data ]; then
+	. /var/update/stb_update.data 2> /dev/null
 fi
 
 if [ -e /var/etc/.stb_update ]; then
 	rm /var/etc/.stb_update
 	# force an update with a bogus date
 	V_KERNEL="Sun Jan 1 00:00:00 CET 2042"
-	V_UBOOT="Sun Jan 01 2042  - 00:00:00"
-	V_ULDR="Sun Jan 01 2042 00:00:00"
+	#V_UBOOT="Sun Jan 01 2042  - 00:00:00"
+	#V_ULDR="Sun Jan 01 2042 00:00:00"
 fi
 
 if [ -f /var/update/vmlinux.ub.gz ]; then

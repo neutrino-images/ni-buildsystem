@@ -4,8 +4,8 @@
 
 DO_REBOOT=0
 
-if [ -e /etc/init.d/stb_update.data ]; then
-	. /etc/init.d/stb_update.data 2> /dev/null
+if [ -e /var/update/stb_update.data ]; then
+	. /var/update/stb_update.data 2> /dev/null
 fi
 
 if [ -e /var/etc/.stb_update ]; then

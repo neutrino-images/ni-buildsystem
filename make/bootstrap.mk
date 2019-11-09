@@ -18,7 +18,7 @@ BOOTSTRAP += target-dir
 BOOTSTRAP += libs-static
 BOOTSTRAP += libs-cross
 
-ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2))
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), coolstream))
   BOOTSTRAP += var-update
 endif
 
@@ -34,9 +34,6 @@ bootstrap: $(BOOTSTRAP)
 
 skeleton: | $(TARGET_DIR)
 	$(INSTALL_COPY) --remove-destination $(SKEL-ROOT)/. $(TARGET_DIR)/
-ifneq ($(wildcard $(SKEL-ROOT)-$(BOXFAMILY)),)
-	$(INSTALL_COPY) --remove-destination $(SKEL-ROOT)-$(BOXFAMILY)/. $(TARGET_DIR)/
-endif
 	find $(TARGET_DIR) -type f -print0 | xargs --no-run-if-empty -0 \
 		sed -i 's|%(BOXMODEL)|$(BOXMODEL)|'
 	sed -i 's|%(BOOT_PARTITION)|$(BOOT_PARTITION)|' $(TARGET_DIR)/etc/mdev.conf
@@ -121,17 +118,25 @@ endif
 
 # -----------------------------------------------------------------------------
 
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), coolstream))
+
 var-update: $(TARGET_DIR)/var/update
 
 $(TARGET_DIR)/var/update: | $(TARGET_DIR)
 	mkdir -p $(@)
-ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2))
-	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/uldr.bin $(@)
+ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd1))
+	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/zImage $(@)
+else ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2))
+	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/vmlinux.ub.gz $(@)
+	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/uldr.bin $(@)
   ifeq ($(BOXMODEL), kronos_v2)
-	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/u-boot.bin.kronos_v2 $(@)/u-boot.bin
+	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/u-boot.bin.kronos_v2 $(@)/u-boot.bin
   else
-	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/u-boot.bin $(@)
+	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/u-boot.bin $(@)
   endif
+endif
+	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/stb_update.data $(@)
+
 endif
 
 # -----------------------------------------------------------------------------

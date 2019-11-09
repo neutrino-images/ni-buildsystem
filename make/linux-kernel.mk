@@ -331,21 +331,17 @@ endif
 
 # -----------------------------------------------------------------------------
 
-# install coolstream kernels to skel-root
-
-ifneq ($(wildcard $(SKEL-ROOT)-$(BOXFAMILY)),)
-  KERNEL_DESTDIR = $(SKEL-ROOT)-$(BOXFAMILY)/var/update
-else
-  KERNEL_DESTDIR = $(SKEL-ROOT)/var/update
-endif
+# install coolstream kernels into ni-drivers-bin repository
 
 kernel-install-coolstream: kernel-install-coolstream-$(BOXSERIES)
 
 kernel-install-coolstream-hd1: kernel-coolstream-hd1
-	$(INSTALL_DATA) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-zImage.img $(KERNEL_DESTDIR)/zImage
+	$(INSTALL_DATA) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-zImage.img \
+		$(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/zImage
 
 kernel-install-coolstream-hd2: kernel-coolstream-hd2
-	$(INSTALL_DATA) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-vmlinux.ub.gz $(KERNEL_DESTDIR)/vmlinux.ub.gz
+	$(INSTALL_DATA) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-vmlinux.ub.gz \
+		$(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/vmlinux.ub.gz
 
 kernel-install-coolstream-all:
 	make clean BOXFAMILY=nevis
@@ -370,6 +366,9 @@ kernel-install-coolstream-all:
 	make get-update-info-hd2 BOXFAMILY=kronos
 	#
 	make clean > /dev/null 2>&1
+	#
+	@echo -e "$(TERM_YELLOW)Align stb_update.data in $(SOURCE_DIR)/$(NI-DRIVERS-BIN)$(TERM_NORMAL)"
+	@echo -e "$(TERM_YELLOW)and commit your changes in $(SOURCE_DIR)/$(NI-DRIVERS-BIN)$(TERM_NORMAL)"
 
 # -----------------------------------------------------------------------------
 

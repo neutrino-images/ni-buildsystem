@@ -151,36 +151,39 @@ endif
 
 # -----------------------------------------------------------------------------
 
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), coolstream))
+
 get-update-info: get-update-info-$(BOXSERIES)
 
 get-update-info-hd2:
 	$(call draw_line);
-	@echo "Get update info for model $(shell echo $(BOXMODEL) | sed 's/.*/\u&/')"
+	@echo "Get update info for boxmodel $(BOXMODEL)"
 	@echo
 	@$(CD) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR); \
-	test -e ./u-boot.bin && ( \
+	if [ -e vmlinux.ub.gz ]; then \
+		dd status=none if=vmlinux.ub.gz bs=1 skip=$$(LC_ALL=C grep -a -b -o $$'\x1f\x8b\x08\x00\x00\x00\x00\x00' vmlinux.ub.gz \
+		| cut -d ':' -f 1) | zcat -q | grep -a "Linux version"; \
+	fi; \
+	if [ -e u-boot.bin ]; then \
 		strings u-boot.bin | grep -m1 "U-Boot "; \
-	); \
-	test -e ./uldr.bin && ( \
+	fi; \
+	if [ -e uldr.bin ]; then \
 		strings uldr.bin | grep -m1 "Microloader "; \
-	); \
-	$(CD) $(TARGET_DIR)/var/update; \
-	test -e ./vmlinux.ub.gz && ( \
-		dd if=./vmlinux.ub.gz bs=1 skip=$$(LC_ALL=C grep -a -b -o $$'\x1f\x8b\x08\x00\x00\x00\x00\x00' ./vmlinux.ub.gz \
-		| cut -d ':' -f 1) | zcat | grep -a "Linux version"; \
-	);
+	fi
 	$(call draw_line);
 
 get-update-info-hd1:
 	$(call draw_line);
-	@echo "Get update info for model $(shell echo $(BOXMODEL) | sed 's/.*/\u&/')"
+	@echo "Get update info for boxmodel $(BOXMODEL)"
 	@echo
-	@$(CD) $(TARGET_DIR)/var/update; \
-	test -e ./zImage && ( \
-		dd if=./zImage bs=1 skip=$$(LC_ALL=C grep -a -b -o $$'\x1f\x8b\x08\x00\x00\x00\x00\x00' ./zImage \
-		| cut -d ':' -f 1) | zcat | grep -a "Linux version"; \
-	);
+	@$(CD) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR); \
+	if [ -e zImage ]; then \
+		dd if=zImage bs=1 skip=$$(LC_ALL=C grep -a -b -o $$'\x1f\x8b\x08\x00\x00\x00\x00\x00' zImage \
+		| cut -d ':' -f 1) | zcat -q | grep -a "Linux version"; \
+	fi
 	$(call draw_line);
+
+endif
 
 # -----------------------------------------------------------------------------
 
