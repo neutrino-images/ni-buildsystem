@@ -16,9 +16,7 @@ case "$1" in
 			insmod $DRV_PATH/dvb_base.ko
 
 			start-stop-daemon --start --quiet --exec /bin/dvb_server -- &
-
 			mknod -m a=rw /dev/brcm0 c 30 0
-
 			start-stop-daemon --start --quiet --exec /bin/init_client $DRV_PATH/dvb-bcm7252s.ko $DRV_PATH/brcmfb.ko -- &
 		fi
 
