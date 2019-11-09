@@ -15,7 +15,6 @@ BOOTSTRAP += host-preqs
 
 # target related
 BOOTSTRAP += target-dir
-BOOTSTRAP += firmware
 BOOTSTRAP += libs-static
 BOOTSTRAP += libs-cross
 
@@ -99,18 +98,6 @@ $(HOST_DIR)/bin: $(HOST_DIR)
 
 # -----------------------------------------------------------------------------
 
-firmware: $(TARGET_LIB_DIR)/firmware
-
-$(TARGET_LIB_DIR)/firmware: | $(TARGET_DIR)
-	mkdir -p $(@)
-ifeq ($(BOXTYPE), coolstream)
-	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/lib-firmware/. $(@)
-	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/lib-firmware-dvb/. $(@)
-endif
-	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/lib-firmware-rt/. $(@)
-
-# -----------------------------------------------------------------------------
-
 libs-cross: | $(TARGET_DIR)
 	if [ -d $(CROSS_DIR)/$(TARGET)/sys-root/lib/ ]; then \
 		$(INSTALL_COPY) $(CROSS_DIR)/$(TARGET)/sys-root/lib/*so* $(TARGET_LIB_DIR); \
@@ -150,7 +137,6 @@ endif
 # -----------------------------------------------------------------------------
 
 # hack to make sure they are always copied
-PHONY += $(TARGET_LIB_DIR)/firmware
 PHONY += $(TARGET_DIR)/var/update
 
 # -----------------------------------------------------------------------------
@@ -159,4 +145,3 @@ PHONY += bootstrap
 PHONY += skeleton
 PHONY += target-dir
 PHONY += libs-cross
-PHONY += firmware

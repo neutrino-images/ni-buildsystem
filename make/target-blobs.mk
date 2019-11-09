@@ -6,6 +6,7 @@
 #BLOBS_DEPS = kernel # because of depmod
 
 blobs: $(BLOBS_DEPS)
+	make firmware
 	make $(BOXMODEL)-drivers
 ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7 vusolo4k vuduo4k vuultimo4k vuzero4k vuuno4k vuuno4kse))
 	make $(BOXMODEL)-libgles
@@ -13,6 +14,29 @@ endif
 ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vusolo4k vuduo4k vuultimo4k vuzero4k vuuno4k vuuno4kse))
 	make vuplus-platform-util
 endif
+
+# -----------------------------------------------------------------------------
+
+firmware: firmware-boxmodel firmware-wireless
+
+firmware-boxmodel: $(SOURCE_DIR)/$(NI-DRIVERS-BIN) | $(TARGET_DIR)
+	$(call INSTALL_EXIST,$(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/lib-firmware/.,$(TARGET_LIB_DIR)/firmware)
+	$(call INSTALL_EXIST,$(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/lib-firmware-dvb/.,$(TARGET_LIB_DIR)/firmware)
+
+ifeq ($(BOXMODEL), nevis)
+  FIRMWARE-WIRELESS  = rt2870.bin
+  FIRMWARE-WIRELESS += rt3070.bin
+  FIRMWARE-WIRELESS += rt3071.bin
+  FIRMWARE-WIRELESS += rtlwifi/rtl8192cufw.bin
+  FIRMWARE-WIRELESS += rtlwifi/rtl8712u.bin
+else
+  FIRMWARE-WIRELESS  = $(shell cd $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/general/firmware-wireless; find * -type f)
+endif
+
+firmware-wireless: $(SOURCE_DIR)/$(NI-DRIVERS-BIN) | $(TARGET_DIR)
+	for firmware in $(FIRMWARE-WIRELESS); do \
+		$(INSTALL_DATA) -D $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/general/firmware-wireless/$$firmware $(TARGET_LIB_DIR)/firmware/$$firmware; \
+	done
 
 # -----------------------------------------------------------------------------
 
@@ -72,7 +96,7 @@ apollo-drivers \
 shiner-drivers \
 kronos-drivers \
 kronos_v2-drivers \
-coolstream-drivers: | $(TARGET_DIR)
+coolstream-drivers: $(SOURCE_DIR)/$(NI-DRIVERS-BIN) | $(TARGET_DIR)
 	mkdir -p $(TARGET_LIB_DIR)
 	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/lib/. $(TARGET_LIB_DIR)
 	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/libcoolstream/$(shell echo -n $(NI-FFMPEG_BRANCH) | sed 's,/,-,g')/. $(TARGET_LIB_DIR)
