@@ -628,7 +628,7 @@ inadyn: $(INADYN_DEPS) $(ARCHIVE)/$(INADYN_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(INSTALL_DATA) -D $(TARGET_FILES)/scripts/inadyn.conf $(TARGET_DIR)/var/etc/inadyn.conf
+	$(INSTALL_DATA) -D $(TARGET_FILES)/configs/inadyn.conf $(TARGET_DIR)/var/etc/inadyn.conf
 	ln -sf /var/etc/inadyn.conf $(TARGET_DIR)/etc/inadyn.conf
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/inadyn.init $(TARGET_DIR)/etc/init.d/inadyn
 	ln -sf inadyn $(TARGET_DIR)/etc/init.d/S80inadyn
