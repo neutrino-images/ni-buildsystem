@@ -10,10 +10,10 @@ fi
 
 if [ -e /var/etc/.stb_update ]; then
 	rm /var/etc/.stb_update
-	#force an update with a bogus date
-	V_KERNEL="Jan 01 00:00:00 MSK 2042"
-	V_UBOOT="Jan 01 2042  - 00:00:00"
-	V_ULDR="Jan 01 2042 00:00:00"
+	# force an update with a bogus date
+	V_KERNEL="Sun Jan 1 00:00:00 CET 2042"
+	V_UBOOT="Sun Jan 01 2042  - 00:00:00"
+	V_ULDR="Sun Jan 01 2042 00:00:00"
 fi
 
 if [ -f /var/update/vmlinux.ub.gz ]; then
