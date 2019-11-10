@@ -40,7 +40,7 @@ firmware-wireless: $(SOURCE_DIR)/$(NI-DRIVERS-BIN) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-HD51-DRIVERS_VER    = 20180424
+HD51-DRIVERS_VER    = 20191101
 HD51-DRIVERS_SOURCE = hd51-drivers-$(KERNEL_VER)-$(HD51-DRIVERS_VER).zip
 HD51-DRIVERS_URL    = http://source.mynonpublic.com/gfutures
 
@@ -134,7 +134,7 @@ vuplus-drivers: $(ARCHIVE)/$(BOXMODEL-DRIVERS_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-HD51-LIBGLES_VER    = 20170322
+HD51-LIBGLES_VER    = 20191101
 HD51-LIBGLES_TMP    = $(EMPTY)
 HD51-LIBGLES_SOURCE = hd51-v3ddriver-$(HD51-LIBGLES_VER).zip
 HD51-LIBGLES_URL    = http://downloads.mutant-digital.net/v3ddriver
