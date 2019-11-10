@@ -1802,6 +1802,42 @@ rsync: $(RSYNC_DEPS) $(ARCHIVE)/$(RSYNC_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
+SYSVINIT_VER    = 2.88dsf
+SYSVINIT_TMP    = sysvinit-$(SYSVINIT_VER)
+SYSVINIT_SOURCE = sysvinit-$(SYSVINIT_VER).tar.bz2
+SYSVINIT_URL    = http://download.savannah.nongnu.org/releases/sysvinit
+
+$(ARCHIVE)/$(SYSVINIT_SOURCE):
+	$(DOWNLOAD) $(SYSVINIT_URL)/$(SYSVINIT_SOURCE)
+
+SYSVINIT_PATCH  = crypt-lib.patch
+SYSVINIT_PATCH += pidof-add-m-option.patch
+SYSVINIT_PATCH += realpath.patch
+SYSVINIT_PATCH += 0001-include-sys-sysmacros.h-for-major-minor-defines-in-g.patch
+SYSVINIT_PATCH += 0001-This-fixes-an-issue-that-clang-reports-about-mutlipl.patch
+
+define SYSVINIT_INSTALL
+	for sbin in halt init shutdown killall5; do \
+		$(INSTALL_EXEC) -D $(BUILD_TMP)/$(SYSVINIT_TMP)/src/$$sbin $(TARGET_DIR)/sbin/$$sbin || exit 1; \
+	done
+	ln -sf /sbin/halt $(TARGET_DIR)/sbin/reboot
+	ln -sf /sbin/halt $(TARGET_DIR)/sbin/poweroff
+	ln -sf killall5 $(TARGET_DIR)/sbin/pidof
+endef
+
+sysvinit: $(ARCHIVE)/$(SYSVINIT_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(SYSVINIT_TMP)
+	$(UNTAR)/$(SYSVINIT_SOURCE)
+	$(CHDIR)/$(SYSVINIT_TMP); \
+		$(call apply_patches, $(addprefix $(@F)/,$(SYSVINIT_PATCH))); \
+		$(BUILD_ENV) \
+		$(MAKE) -C src SULOGINLIBS=-lcrypt
+	$(SYSVINIT_INSTALL)
+	$(REMOVE)/$(SYSVINIT_TMP)
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
 CA-BUNDLE_SOURCE = cacert.pem
 CA-BUNDLE_URL    = https://curl.haxx.se/ca
 
