@@ -44,7 +44,7 @@ HD51-DRIVERS_VER    = 20191101
 HD51-DRIVERS_SOURCE = hd51-drivers-$(KERNEL_VER)-$(HD51-DRIVERS_VER).zip
 HD51-DRIVERS_URL    = http://source.mynonpublic.com/gfutures
 
-BRE2ZE4K-DRIVERS_VER    = 20180424
+BRE2ZE4K-DRIVERS_VER    = 20191101
 BRE2ZE4K-DRIVERS_SOURCE = bre2ze4k-drivers-$(KERNEL_VER)-$(BRE2ZE4K-DRIVERS_VER).zip
 BRE2ZE4K-DRIVERS_URL    = http://source.mynonpublic.com/gfutures
 
@@ -139,7 +139,7 @@ HD51-LIBGLES_TMP    = $(EMPTY)
 HD51-LIBGLES_SOURCE = hd51-v3ddriver-$(HD51-LIBGLES_VER).zip
 HD51-LIBGLES_URL    = http://downloads.mutant-digital.net/v3ddriver
 
-BRE2ZE4K-LIBGLES_VER    = 20170322
+BRE2ZE4K-LIBGLES_VER    = 20191101
 BRE2ZE4K-LIBGLES_TMP    = $(EMPTY)
 BRE2ZE4K-LIBGLES_SOURCE = bre2ze4k-v3ddriver-$(BRE2ZE4K-LIBGLES_VER).zip
 BRE2ZE4K-LIBGLES_URL    = http://downloads.mutant-digital.net/v3ddriver
