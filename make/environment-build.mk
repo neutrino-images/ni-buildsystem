@@ -230,6 +230,7 @@ endef
 GET-GIT-ARCHIVE = $(HELPERS_DIR)/get-git-archive.sh
 GET-GIT-SOURCE  = $(HELPERS_DIR)/get-git-source.sh
 GET-SVN-SOURCE  = $(HELPERS_DIR)/get-svn-source.sh
+UPDATE-RC.D     = $(HELPERS_DIR)/update-rc.d -r $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
