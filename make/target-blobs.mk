@@ -48,7 +48,7 @@ BRE2ZE4K-DRIVERS_VER    = 20191101
 BRE2ZE4K-DRIVERS_SOURCE = bre2ze4k-drivers-$(KERNEL_VER)-$(BRE2ZE4K-DRIVERS_VER).zip
 BRE2ZE4K-DRIVERS_URL    = http://source.mynonpublic.com/gfutures
 
-H7-DRIVERS_VER    = 20190405
+H7-DRIVERS_VER    = 20191110
 H7-DRIVERS_SOURCE = h7-drivers-$(KERNEL_VER)-$(H7-DRIVERS_VER).zip
 H7-DRIVERS_URL    = http://source.mynonpublic.com/zgemma
 
@@ -144,7 +144,7 @@ BRE2ZE4K-LIBGLES_TMP    = $(EMPTY)
 BRE2ZE4K-LIBGLES_SOURCE = bre2ze4k-v3ddriver-$(BRE2ZE4K-LIBGLES_VER).zip
 BRE2ZE4K-LIBGLES_URL    = http://downloads.mutant-digital.net/v3ddriver
 
-H7-LIBGLES_VER    = 20170320
+H7-LIBGLES_VER    = 20191110
 H7-LIBGLES_TMP    = $(EMPTY)
 H7-LIBGLES_SOURCE = h7-v3ddriver-$(H7-LIBGLES_VER).zip
 H7-LIBGLES_URL    = http://source.mynonpublic.com/zgemma
