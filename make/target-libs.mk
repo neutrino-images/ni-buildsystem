@@ -868,7 +868,7 @@ libbdplus: $(LIBBDPLUS_DEPS) $(ARCHIVE)/$(LIBBDPLUS_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-LIBXML2_VER    = 2.9.9
+LIBXML2_VER    = 2.9.10
 LIBXML2_TMP    = libxml2-$(LIBXML2_VER)
 LIBXML2_SOURCE = libxml2-$(LIBXML2_VER).tar.gz
 LIBXML2_URL    = http://xmlsoft.org/sources
