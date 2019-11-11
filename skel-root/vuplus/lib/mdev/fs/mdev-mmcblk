@@ -2,6 +2,8 @@
 
 . /etc/init.d/globals
 
+LOGINFO "[$ACTION] processing $MDEV"
+
 MOUNTBASE=/mnt
 MOUNTPOINT="$MOUNTBASE/$MDEV"
 ROOTDEV=$(readlink /dev/root)
@@ -73,6 +75,35 @@ if [ -e /proc/stb/info/vumodel ]; then
 	for r in $ROOTFSDEVS; do
 		if [ "$MDEV" == "mmcblk0p$r" ]; then
 			ROOTFSDEV=$MDEV
+			case $vumodel in
+				solo4k|ultimo4k|uno4k|uno4kse)
+					case $r in
+						5)  R_PARTNAME="rootfs1" ;;
+						7)  R_PARTNAME="rootfs2" ;;
+						9)  R_PARTNAME="rootfs3" ;;
+						11) R_PARTNAME="rootfs4" ;;
+					esac
+				;;
+				duo4k)
+					case $r in
+						10) R_PARTNAME="rootfs1" ;;
+						12) R_PARTNAME="rootfs2" ;;
+						14) R_PARTNAME="rootfs3" ;;
+						16) R_PARTNAME="rootfs4" ;;
+					esac
+				;;
+				zero4k)
+					case $r in
+						8)  R_PARTNAME="rootfs1" ;;
+						10) R_PARTNAME="rootfs2" ;;
+						12) R_PARTNAME="rootfs3" ;;
+						14) R_PARTNAME="rootfs4" ;;
+					esac
+				;;
+			esac
+			if [ $R_PARTNAME != "" ]; then
+				USE_PARTNAMES=1
+			fi
 		fi
 	done
 fi
@@ -84,7 +115,10 @@ elif [ "$PARTNAME" == "storage" ]; then
 fi
 
 # do not add or remove root device again...
-[ "$ROOTDEV" = "$MDEV" -a "$R_PARTNAME" != "userdata" ] && exit 0
+if [ "$ROOTDEV" = "$MDEV" -a "$R_PARTNAME" != "userdata" ]; then
+	LOGINFO "/dev/$MDEV already mounted - not mounting again"
+	exit 0
+fi
 
 if [ -e /tmp/.nomdevmount ]; then
 	LOGINFO "no action on $MDEV -- /tmp/.nomdevmount exists"
