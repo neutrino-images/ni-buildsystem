@@ -161,8 +161,15 @@ LINKS_DEPS   = libpng libjpeg openssl
 
 LINKS_PATCH  = links.patch
 LINKS_PATCH += links-ac-prog-cxx.patch
-LINKS_PATCH += links-input-$(BOXTYPE).patch
 LINKS_PATCH += links-accept_https_play.patch
+
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), coolstream))
+  LINKS_PATCH += links-input-nevis_ir.patch
+else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k))
+  LINKS_PATCH += links-input-event1.patch
+else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), h7))
+  LINKS_PATCH += links-input-event2.patch
+endif
 
 links: $(LINKS_DEPS) $(ARCHIVE)/$(LINKS_SOURCE) $(SHAREPLUGINS) | $(TARGET_DIR)
 	$(REMOVE)/$(LINKS_TMP)
