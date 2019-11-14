@@ -2,7 +2,7 @@ From 9901cac770d0d81ccf1ee8e5a02abf54d18e3a04 Mon Sep 17 00:00:00 2001
 Message-Id: <9901cac770d0d81ccf1ee8e5a02abf54d18e3a04.1509108606.git.thomas.harfmann@gmail.com>
 From: gixxpunk <thomas.harfmann@gmail.com>
 Date: Fri, 27 Oct 2017 14:50:01 +0200
-Subject: [PATCH] - valgrind-fix-build-hd51
+Subject: [PATCH] - valgrind-fix-build-armv7ve
 
 ---
  Makefile.all.am | 6 +++---

@@ -2,7 +2,7 @@ From f0b4fd4d1c96b77cbf6c881b7d2d29882a05ab89 Mon Sep 17 00:00:00 2001
 Message-Id: <f0b4fd4d1c96b77cbf6c881b7d2d29882a05ab89.1509108332.git.thomas.harfmann@gmail.com>
 From: gixxpunk <thomas.harfmann@gmail.com>
 Date: Fri, 27 Oct 2017 14:45:27 +0200
-Subject: [PATCH] - valgrind-fix-build-hd2
+Subject: [PATCH] - valgrind-fix-build-armv7-a
 
 ---
  Makefile.all.am | 6 +++---

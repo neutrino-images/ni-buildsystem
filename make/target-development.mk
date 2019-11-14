@@ -3,7 +3,7 @@
 #
 # -----------------------------------------------------------------------------
 
-VALGRIND_TARGET = $(if $(filter $(BOXSERIES), hd1), valgrind12305, valgrind3)
+VALGRIND_TARGET = $(if $(filter $(BOXMODEL), nevis), valgrind12305, valgrind3)
 
 valgrind: $(VALGRIND_TARGET)
 	$(TOUCH)
@@ -18,7 +18,7 @@ VALGRIND_URL    = ftp://sourceware.org/pub/valgrind
 $(ARCHIVE)/$(VALGRIND_SOURCE):
 	$(DOWNLOAD) $(VALGRIND_URL)/$(VALGRIND_SOURCE)
 
-VALGRIND_PATCH  = valgrind-fix-build-$(BOXSERIES).patch
+VALGRIND_PATCH  = valgrind-fix-build-$(TARGET_ARCH).patch
 
 valgrind3: $(ARCHIVE)/$(VALGRIND_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(VALGRIND_TMP)
