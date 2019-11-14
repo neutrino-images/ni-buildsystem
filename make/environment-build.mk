@@ -78,7 +78,8 @@ ifeq ($(BOXSERIES), hd1)
   TARGET                 = arm-cx2450x-linux-gnueabi
   TARGET_OPTIMIZATION    = -Os
   TARGET_DEBUGGING       = -g
-  TARGET_ABI             = -march=armv6 -mfloat-abi=soft -mlittle-endian
+  TARGET_ARCH            = armv6
+  TARGET_ABI             = -march=$(TARGET_ARCH) -mfloat-abi=soft -mlittle-endian
   TARGET_EXTRA_CFLAGS    = -fdata-sections -ffunction-sections
   TARGET_EXTRA_LDFLAGS   = -Wl,--gc-sections
   CXX11_ABI              =
@@ -89,7 +90,8 @@ else ifeq ($(BOXSERIES), hd2)
   TARGET                 = arm-cortex-linux-uclibcgnueabi
   TARGET_OPTIMIZATION    = -O2
   TARGET_DEBUGGING       = -g
-  TARGET_ABI             = -march=armv7-a -mtune=cortex-a9 -mfpu=vfpv3-d16 -mfloat-abi=hard -mlittle-endian
+  TARGET_ARCH            = armv7-a
+  TARGET_ABI             = -march=$(TARGET_ARCH) -mtune=cortex-a9 -mfpu=vfpv3-d16 -mfloat-abi=hard -mlittle-endian
   TARGET_EXTRA_CFLAGS    =
   TARGET_EXTRA_LDFLAGS   =
   ifeq ($(BOXMODEL), kronos_v2)
@@ -105,7 +107,8 @@ else ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 vusolo4k vuduo4k vuultimo4k
   TARGET                 = arm-cortex-linux-gnueabihf
   TARGET_OPTIMIZATION    = -O2
   TARGET_DEBUGGING       = -g
-  TARGET_ABI             = -march=armv7ve -mtune=cortex-a15 -mfpu=neon-vfpv4 -mfloat-abi=hard
+  TARGET_ARCH            = armv7ve
+  TARGET_ABI             = -march=$(TARGET_ARCH) -mtune=cortex-a15 -mfpu=neon-vfpv4 -mfloat-abi=hard
   TARGET_EXTRA_CFLAGS    =
   TARGET_EXTRA_LDFLAGS   =
   CXX11_ABI              =
@@ -116,7 +119,8 @@ else ifeq ($(BOXSERIES), $(filter $(BOXSERIES), vuduo))
   TARGET                 = mipsel-unknown-linux-gnu
   TARGET_OPTIMIZATION    = -O2
   TARGET_DEBUGGING       = -g
-  TARGET_ABI             = -march=mips32 -mtune=mips32
+  TARGET_ARCH            = mips32
+  TARGET_ABI             = -march=$(TARGET_ARCH) -mtune=mips32
   TARGET_EXTRA_CFLAGS    =
   TARGET_EXTRA_LDFLAGS   =
   CXX11_ABI              =
