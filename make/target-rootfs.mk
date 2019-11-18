@@ -15,6 +15,7 @@ endif
 $(TARGET_DIR)/.version: | $(TARGET_DIR)
 	echo "distro=NI"							 > $(@)
 	echo "imagename=NI \o/ Neutrino-Image"					>> $(@)
+	echo "imagedescription=$(IMAGE_DESC)"					>> $(@)
 	echo "imageversion=$(IMAGE_VERSION)"					>> $(@)
 	echo "version=$(IMAGE_TYPE)$(IMAGE_VER)$(IMAGE_DATE)"	 		>> $(@)
 	echo "describe=$$(git describe --always --long --tags | sed 's/-/./2')"	>> $(@)

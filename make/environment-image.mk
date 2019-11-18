@@ -21,12 +21,12 @@ IMAGE_DATE = $(shell date +%Y%m%d%H%M)
 IMAGE_PREFIX = ni$(IMAGE_VER)-$(IMAGE_DATE)
 IMAGE_SUFFIX = $(BOXTYPE_SC)-$(BOXMODEL)
 
-# Image-Type
-# Release	= 0
-# Beta		= 1
-# Nightly	= 2
-# Selfmade	= 9
-IMAGE_TYPE	?= 9
+IMAGE_NAME   = $(IMAGE_PREFIX)-$(IMAGE_SUFFIX)
+IMAGE_TYPE  ?= 9
+# Release    = 0
+# Beta       = 1
+# Nightly    = 2
+# Selfmade   = 9
 
 # JFFS2-Summary
 IMAGE_SUMMARIZE = yes
@@ -54,7 +54,14 @@ else
   IMAGE_TYPE_STRING = selfmade
 endif
 
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), coolstream))
+  IMAGE_DESC ="$(BOXNAME) [$(IMAGE_SUFFIX)][$(BOXSERIES)] $(shell echo $(IMAGE_TYPE_STRING) | sed 's/.*/\u&/')"
+else
+  IMAGE_DESC ="$(BOXNAME) [$(IMAGE_SUFFIX)] $(shell echo $(IMAGE_TYPE_STRING) | sed 's/.*/\u&/')"
+endif
+
 IMAGE_URL = $(NI-SERVER)/$(NI-SUBDIR)
+IMAGE_MD5FILE = $(IMAGE_TYPE_STRING)-$(IMAGE_SUFFIX).txt
 
 IMAGE_BUILD_TMP = $(BUILD_TMP)/image-build
 

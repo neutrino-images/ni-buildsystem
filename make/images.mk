@@ -71,9 +71,6 @@ endif
 
 # -----------------------------------------------------------------------------
 
-flash-image-coolstream: IMAGE_NAME=$(IMAGE_PREFIX)-$(IMAGE_SUFFIX)
-flash-image-coolstream: IMAGE_DESC="$(BOXNAME) [$(IMAGE_SUFFIX)][$(BOXSERIES)] $(shell echo $(IMAGE_TYPE_STRING) | sed 's/.*/\u&/')"
-flash-image-coolstream: IMAGE_MD5FILE=$(IMAGE_TYPE_STRING)-$(IMAGE_SUFFIX).txt
 flash-image-coolstream: IMAGE_DATE=$(shell cat $(ROOTFS)/.version | grep "^version=" | cut -d= -f2 | cut -c 5-)
 flash-image-coolstream: | $(IMAGE_DIR)
 	make devtable
@@ -112,9 +109,6 @@ endif
 
 # -----------------------------------------------------------------------------
 
-flash-image-hd51: IMAGE_NAME=$(IMAGE_PREFIX)-$(IMAGE_SUFFIX)
-flash-image-hd51: IMAGE_DESC="$(BOXNAME) [$(IMAGE_SUFFIX)] $(shell echo $(IMAGE_TYPE_STRING) | sed 's/.*/\u&/')"
-flash-image-hd51: IMAGE_MD5FILE=$(IMAGE_TYPE_STRING)-$(IMAGE_SUFFIX).txt
 flash-image-hd51: IMAGE_DATE=$(shell cat $(ROOTFS)/.version | grep "^version=" | cut -d= -f2 | cut -c 5-)
 flash-image-hd51: | $(IMAGE_DIR)
 	rm -rf $(IMAGE_BUILD_TMP)
@@ -167,7 +161,6 @@ LINUX_SWAP_PARTITION_SIZE = 204800
 STORAGE_PARTITION_OFFSET = "$(shell expr $(LINUX_SWAP_PARTITION_OFFSET) \+ $(LINUX_SWAP_PARTITION_SIZE))"
 #STORAGE_PARTITION_SIZE = 204800 # remaining flash memory
 
-flash-image-hd51-multi: IMAGE_NAME=$(IMAGE_PREFIX)-$(IMAGE_SUFFIX)
 flash-image-hd51-multi: | $(IMAGE_DIR)
 	rm -rf $(IMAGE_BUILD_TMP)
 	mkdir -p $(IMAGE_BUILD_TMP)
@@ -220,9 +213,6 @@ flash-image-hd51-multi: | $(IMAGE_DIR)
 # -----------------------------------------------------------------------------
 
 # armbox vu+
-flash-image-vuplus: IMAGE_NAME=$(IMAGE_PREFIX)-$(IMAGE_SUFFIX)
-flash-image-vuplus: IMAGE_DESC="$(BOXNAME) [$(IMAGE_SUFFIX)] $(shell echo $(IMAGE_TYPE_STRING) | sed 's/.*/\u&/')"
-flash-image-vuplus: IMAGE_MD5FILE=$(IMAGE_TYPE_STRING)-$(IMAGE_SUFFIX).txt
 flash-image-vuplus: IMAGE_DATE=$(shell cat $(ROOTFS)/.version | grep "^version=" | cut -d= -f2 | cut -c 5-)
 flash-image-vuplus: | $(IMAGE_DIR)
 	rm -rf $(IMAGE_BUILD_TMP)
@@ -237,7 +227,6 @@ flash-image-vuplus: | $(IMAGE_DIR)
 	echo $(IMAGE_URL)/$(IMAGE_NAME).tgz $(IMAGE_TYPE)$(IMAGE_VER)$(IMAGE_DATE) `md5sum $(IMAGE_DIR)/$(IMAGE_NAME).tgz | cut -c1-32` $(IMAGE_DESC) $(IMAGE_VERSION) >> $(IMAGE_DIR)/$(IMAGE_MD5FILE)
 	rm -rf $(IMAGE_BUILD_TMP)
 
-flash-image-vuplus-multi: IMAGE_NAME=$(IMAGE_PREFIX)-$(IMAGE_SUFFIX)
 flash-image-vuplus-multi: vmlinuz-initrd
 flash-image-vuplus-multi: | $(IMAGE_DIR)
 	rm -rf $(IMAGE_BUILD_TMP)
