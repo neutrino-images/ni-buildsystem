@@ -73,16 +73,48 @@ $(NP_OBJ_DIR)/config.status: $(NP_DEPS)
 
 # -----------------------------------------------------------------------------
 
+NP_INIT-SCRIPTS-DEFAULTS  = emmrd
+NP_INIT-SCRIPTS-DEFAULTS += fritzcallmonitor
+NP_INIT-SCRIPTS-DEFAULTS += ovpn
+#NP_INIT-SCRIPTS-DEFAULTS += stbup
+NP_INIT-SCRIPTS-DEFAULTS += tuxcald
+NP_INIT-SCRIPTS-DEFAULTS += tuxmaild
+
+NP_INIT-SCRIPTS  = $(NP_INIT-SCRIPTS_DEFAULTS)
+NP_INIT-SCRIPTS += turnoff_power
+
+define NP_RUNLEVEL-LINKS_INSTALL
+	for script in $(NP_INIT-SCRIPTS-DEFAULTS); do \
+		if [ -x $(TARGET_DIR)/etc/init.d/$$script ]; then \
+			$(UPDATE-RC.D) $$script defaults 80 20; \
+		fi; \
+	done
+	if [ -x $(TARGET_DIR)/etc/init.d/turnoff_power ]; then \
+		$(UPDATE-RC.D) turnoff_power start 99 0 .; \
+	fi
+endef
+
+define NP_RUNLEVEL-LINKS_UNINSTALL
+	for link in $(NP_INIT-SCRIPTS); do \
+		find $(TARGET_DIR)/etc -type l -name [SK]??$$link -print0 | \
+			xargs --no-run-if-empty -0 rm -f; \
+	done
+endef
+
+# -----------------------------------------------------------------------------
+
 neutrino-plugins: neutrino $(NP_OBJ_DIR)/config.status
 	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
 	$(MAKE) -C $(NP_OBJ_DIR) all     DESTDIR=$(TARGET_DIR)
 	$(MAKE) -C $(NP_OBJ_DIR) install DESTDIR=$(TARGET_DIR)
+	$(NP_RUNLEVEL-LINKS_INSTALL)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 neutrino-plugins-uninstall:
 	-make -C $(NP_OBJ_DIR) uninstall DESTDIR=$(TARGET_DIR)
+	$(NP_RUNLEVEL-LINKS_UNINSTALL)
 
 neutrino-plugins-distclean:
 	-make -C $(NP_OBJ_DIR) distclean
