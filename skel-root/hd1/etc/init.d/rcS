@@ -166,8 +166,4 @@ trap ":" INT QUIT TSTP
 # call all parts in order
 exec /etc/init.d/rc S
 
-# starting services and daemons in order of the symlink names
-LOGINFO "run initscripts start ..."
-run_initscripts start
-
 SHOWINFO "done"

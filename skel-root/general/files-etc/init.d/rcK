@@ -18,8 +18,4 @@ fi
 test -d /tmp/lcd/ && echo ${lcd4l_msg} > /tmp/lcd/goodbye
 service lcd4linux ${lcd4l_cmd}
 
-# stopping services and daemons in order of the symlink names
-LOGINFO "run initscripts stop ..."
-run_initscripts stop
-
 SHOWINFO "done"

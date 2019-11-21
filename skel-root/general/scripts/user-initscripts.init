@@ -1,0 +1,18 @@
+#!/bin/sh
+
+. /etc/init.d/functions
+. /etc/init.d/globals
+
+case "$1" in
+	start)
+		LOGINFO "run users initscripts start ..."
+		run_initscripts start
+	;;
+	stop)
+		LOGINFO "run users initscripts stop ..."
+		run_initscripts stop
+	;;
+	*)
+		echo "[$BASENAME] Usage: $0 {start|stop}"
+	;;
+esac

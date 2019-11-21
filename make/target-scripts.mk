@@ -21,7 +21,8 @@ init-scripts: \
 	$(TARGET_DIR)/etc/init.d/resizerootfs \
 	$(TARGET_DIR)/etc/init.d/swap \
 	$(TARGET_DIR)/etc/init.d/sys_update.sh \
-	$(TARGET_DIR)/etc/init.d/syslogd
+	$(TARGET_DIR)/etc/init.d/syslogd \
+	$(TARGET_DIR)/etc/init.d/user-initscripts
 
 $(TARGET_DIR)/etc/init.d/globals:
 	$(INSTALL_DATA) -D $(TARGET_FILES)/scripts/init.globals $(@)
@@ -95,6 +96,10 @@ $(TARGET_DIR)/etc/init.d/sys_update.sh:
 $(TARGET_DIR)/etc/init.d/syslogd:
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/syslogd.init $(@)
 	$(UPDATE-RC.D) $(@F) stop 98 0 6 .
+
+$(TARGET_DIR)/etc/init.d/user-initscripts:
+	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/user-initscripts.init $(@)
+	$(UPDATE-RC.D) $(@F) defaults 98 01
 
 # -----------------------------------------------------------------------------
 
