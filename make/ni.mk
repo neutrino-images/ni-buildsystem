@@ -51,6 +51,7 @@ ni-image:
 	make dropbear
 	$(MAKE) hdparm
 	$(MAKE) busybox
+	$(MAKE) sysvinit
 	$(MAKE) coreutils
 	$(MAKE) dosfstools
 	$(MAKE) wpa_supplicant
@@ -82,6 +83,7 @@ ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd51 vusolo4k vuduo4k vuultimo4k 
   endif
 endif
 	make autofs
+	make files-etc
 	make scripts
 	make init-scripts
 ifeq ($(PERSONALIZE), yes)

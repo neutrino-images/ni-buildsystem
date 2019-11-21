@@ -1,5 +1,13 @@
 #!/bin/sh
 
+runlevel=S
+prevlevel=N
+umask 022
+export runlevel prevlevel
+
+# source defaults
+. /etc/default/rcS
+
 . /etc/profile
 . /etc/init.d/functions
 . /etc/init.d/globals
@@ -64,7 +72,7 @@ LOGINFO "init frontpanel ..."
 # Frontpanel
 insmod cs_frontpanel.ko
 
-# update
+# update kernel
 if [ -x /etc/init.d/stb_update.sh ]; then
 	/etc/init.d/stb_update.sh
 fi
@@ -151,6 +159,12 @@ dt -t"BOOT NI-IMAGE"
 
 # change default core pattern
 echo "/tmp/core.%e.%p.%t" > /proc/sys/kernel/core_pattern
+
+# trap CTRL-C only in this shell so we can interrupt subprocesses
+trap ":" INT QUIT TSTP
+
+# call all parts in order
+exec /etc/init.d/rc S
 
 # starting services and daemons in order of the symlink names
 LOGINFO "run initscripts start ..."

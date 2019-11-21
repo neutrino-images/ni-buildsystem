@@ -23,6 +23,3 @@ LOGINFO "run initscripts stop ..."
 run_initscripts stop
 
 SHOWINFO "done"
-
-# FIXME
-#/bin/turnoff_power

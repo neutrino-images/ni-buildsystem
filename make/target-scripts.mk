@@ -6,6 +6,7 @@
 init-scripts: \
 	$(TARGET_DIR)/etc/init.d/globals \
 	$(TARGET_DIR)/etc/init.d/functions \
+	$(TARGET_DIR)/etc/init.d/rc \
 	$(TARGET_DIR)/etc/init.d/camd \
 	$(TARGET_DIR)/etc/init.d/camd_datefix \
 	$(TARGET_DIR)/etc/init.d/coredump \
@@ -27,10 +28,12 @@ $(TARGET_DIR)/etc/init.d/globals:
 $(TARGET_DIR)/etc/init.d/functions:
 	$(INSTALL_DATA) -D $(TARGET_FILES)/scripts/init.functions $(@)
 
+$(TARGET_DIR)/etc/init.d/rc:
+	$(INSTALL_EXEC) -D $(TARGET_FILES)/files-etc/init.d/rc $(@)
+
 $(TARGET_DIR)/etc/init.d/camd:
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/camd.init $(@)
-	ln -sf camd $(TARGET_DIR)/etc/init.d/S99camd
-	ln -sf camd $(TARGET_DIR)/etc/init.d/K01camd
+	$(UPDATE-RC.D) $(@F) defaults 98 01
 
 $(TARGET_DIR)/etc/init.d/camd_datefix:
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/camd_datefix.init $(@)
@@ -38,12 +41,12 @@ $(TARGET_DIR)/etc/init.d/camd_datefix:
 $(TARGET_DIR)/etc/init.d/coredump:
 ifneq ($(BOXMODEL), nevis)
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/coredump.init $(@)
+	$(UPDATE-RC.D) $(@F) start 40 S .
 endif
 
 $(TARGET_DIR)/etc/init.d/crond:
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/crond.init $(@)
-	ln -sf crond $(TARGET_DIR)/etc/init.d/S55crond
-	ln -sf crond $(TARGET_DIR)/etc/init.d/K55crond
+	$(UPDATE-RC.D) $(@F) defaults 50
 
 $(TARGET_DIR)/etc/init.d/custom-poweroff:
 ifeq ($(BOXTYPE), coolstream)
@@ -52,20 +55,18 @@ endif
 
 $(TARGET_DIR)/etc/init.d/fstab:
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/fstab.init $(@)
-	ln -sf fstab $(TARGET_DIR)/etc/init.d/S01fstab
-	ln -sf fstab $(TARGET_DIR)/etc/init.d/K99fstab
+	$(UPDATE-RC.D) $(@F) defaults 01 98
 
 $(TARGET_DIR)/etc/init.d/hostname:
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/hostname.init $(@)
 
 $(TARGET_DIR)/etc/init.d/inetd:
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/inetd.init $(@)
-	ln -sf inetd $(TARGET_DIR)/etc/init.d/S53inetd
-	ln -sf inetd $(TARGET_DIR)/etc/init.d/K80inetd
+	$(UPDATE-RC.D) $(@F) defaults 50
 
 $(TARGET_DIR)/etc/init.d/networking:
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/networking.init $(@)
-	ln -sf networking $(TARGET_DIR)/etc/init.d/K99networking
+	$(UPDATE-RC.D) $(@F) stop 98 0 6 .
 
 $(TARGET_DIR)/etc/init.d/partitions-by-name:
 ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7))
@@ -80,7 +81,7 @@ endif
 $(TARGET_DIR)/etc/init.d/swap:
 ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7 vusolo4k vuduo4k vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo))
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/swap.init $(@)
-	ln -sf swap $(TARGET_DIR)/etc/init.d/K99swap
+	$(UPDATE-RC.D) $(@F) stop 98 0 6 .
 endif
 
 $(TARGET_DIR)/etc/init.d/sys_update.sh:
@@ -88,13 +89,14 @@ $(TARGET_DIR)/etc/init.d/sys_update.sh:
 
 $(TARGET_DIR)/etc/init.d/syslogd:
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/syslogd.init $(@)
-	ln -sf syslogd $(TARGET_DIR)/etc/init.d/K98syslogd
+	$(UPDATE-RC.D) $(@F) stop 98 0 6 .
 
 # -----------------------------------------------------------------------------
 
 scripts: \
 	$(TARGET_DIR)/sbin/service \
 	$(TARGET_DIR)/sbin/flash_eraseall \
+	$(TARGET_DIR)/sbin/update-rc.d \
 	$(TARGET_SHARE_DIR)/udhcpc/default.script
 
 $(TARGET_DIR)/sbin/service:
@@ -104,6 +106,9 @@ $(TARGET_DIR)/sbin/flash_eraseall:
 ifeq ($(BOXTYPE), coolstream)
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/flash_eraseall $(@)
 endif
+
+$(TARGET_DIR)/sbin/update-rc.d:
+	$(INSTALL_EXEC) -D $(HELPERS_DIR)/update-rc.d $(@)
 
 $(TARGET_SHARE_DIR)/udhcpc/default.script:
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/udhcpc-default.script $(@)

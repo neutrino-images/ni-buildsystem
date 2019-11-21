@@ -1,5 +1,13 @@
 #!/bin/sh
 
+runlevel=S
+prevlevel=N
+umask 022
+export runlevel prevlevel
+
+# source defaults
+. /etc/default/rcS
+
 . /etc/profile
 . /etc/init.d/functions
 . /etc/init.d/globals
@@ -91,10 +99,14 @@ service ntpdate start
 # say hi to everyone
 echo "Booting... NI" > /dev/dbox/oled0
 
+# trap CTRL-C only in this shell so we can interrupt subprocesses
+trap ":" INT QUIT TSTP
+
+# call all parts in order
+exec /etc/init.d/rc S
+
 # starting services and daemons in order of the symlink names
 LOGINFO "run initscripts start ..."
 run_initscripts start
-
-service coredump start
 
 SHOWINFO "done"

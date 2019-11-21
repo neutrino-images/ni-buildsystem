@@ -157,6 +157,7 @@ include make/prerequisites.mk
 include make/target-blobs.mk
 include make/target-development.mk
 include make/target-ffmpeg$(if $(filter $(BOXTYPE),coolstream),-coolstream).mk
+include make/target-files.mk
 include make/target-libs.mk
 include make/target-libs-static.mk
 include make/target-libs-unused.mk

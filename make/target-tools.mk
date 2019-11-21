@@ -531,8 +531,7 @@ djmount: $(DJMOUNT_DEPS) $(ARCHIVE)/$(DJMOUNT_SOURCE) | $(TARGET_DIR)
 		make; \
 		make install DESTDIR=$(TARGET_DIR)
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/djmount.init $(TARGET_DIR)/etc/init.d/djmount
-	ln -sf djmount $(TARGET_DIR)/etc/init.d/S99djmount
-	ln -sf djmount $(TARGET_DIR)/etc/init.d/K01djmount
+	$(UPDATE-RC.D) djmount defaults 75 25
 	$(REMOVE)/$(DJMOUNT_TMP)
 	$(TOUCH)
 
@@ -573,8 +572,7 @@ ushare: $(USHARE_DEPS) $(ARCHIVE)/$(USHARE_SOURCE)| $(TARGET_DIR)
 	$(INSTALL_DATA) -D $(TARGET_FILES)/configs/ushare.conf $(TARGET_DIR)/etc/ushare.conf
 	sed -i 's|%(BOXTYPE)|$(BOXTYPE)|; s|%(BOXMODEL)|$(BOXMODEL)|' $(TARGET_DIR)/etc/ushare.conf
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/ushare.init $(TARGET_DIR)/etc/init.d/ushare
-	ln -sf ushare $(TARGET_DIR)/etc/init.d/S99ushare
-	ln -sf ushare $(TARGET_DIR)/etc/init.d/K01ushare
+	$(UPDATE-RC.D) ushare defaults 75 25
 	$(REMOVE)/$(USHARE_TMP)
 	$(TOUCH)
 
@@ -631,8 +629,7 @@ inadyn: $(INADYN_DEPS) $(ARCHIVE)/$(INADYN_SOURCE) | $(TARGET_DIR)
 	$(INSTALL_DATA) -D $(TARGET_FILES)/configs/inadyn.conf $(TARGET_DIR)/var/etc/inadyn.conf
 	ln -sf /var/etc/inadyn.conf $(TARGET_DIR)/etc/inadyn.conf
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/inadyn.init $(TARGET_DIR)/etc/init.d/inadyn
-	ln -sf inadyn $(TARGET_DIR)/etc/init.d/S80inadyn
-	ln -sf inadyn $(TARGET_DIR)/etc/init.d/K60inadyn
+	$(UPDATE-RC.D) inadyn defaults 75 25
 	$(REMOVE)/$(INADYN_TMP)
 	$(TOUCH)
 
@@ -667,8 +664,7 @@ vsftpd: $(VSFTPD_DEPS) $(ARCHIVE)/$(VSFTPD_SOURCE) | $(TARGET_DIR)
 	$(INSTALL_DATA) -D $(TARGET_FILES)/configs/vsftpd.conf $(TARGET_DIR)/etc/vsftpd.conf
 	$(INSTALL_DATA) -D $(TARGET_FILES)/configs/vsftpd.chroot_list $(TARGET_DIR)/etc/vsftpd.chroot_list
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/vsftpd.init $(TARGET_DIR)/etc/init.d/vsftpd
-	ln -sf vsftpd $(TARGET_DIR)/etc/init.d/S53vsftpd
-	ln -sf vsftpd $(TARGET_DIR)/etc/init.d/K80vsftpd
+	$(UPDATE-RC.D) vsftpd defaults 75 25
 	$(REMOVE)/$(VSFTPD_TMP)
 	$(TOUCH)
 
@@ -943,8 +939,7 @@ autofs: $(AUTOFS_DEPS) $(ARCHIVE)/$(AUTOFS_SOURCE) | $(TARGET_DIR)
 		$(MAKE) SUBDIRS="lib daemon modules" DONTSTRIP=1; \
 		$(MAKE) SUBDIRS="lib daemon modules" install DESTDIR=$(TARGET_DIR)
 	$(INSTALL_COPY) $(TARGET_FILES)/autofs/* $(TARGET_DIR)/
-	ln -sf autofs $(TARGET_DIR)/etc/init.d/S60autofs
-	ln -sf autofs $(TARGET_DIR)/etc/init.d/K40autofs
+	$(UPDATE-RC.D) autofs defaults 75 25
 	$(REMOVE)/$(AUTOFS_TMP)
 	$(TOUCH)
 
@@ -1019,8 +1014,7 @@ samba33: $(SAMBA33_DEPS) $(ARCHIVE)/$(SAMBA33_SOURCE) | $(TARGET_DIR)
 	mkdir -p $(TARGET_DIR)/var/samba/locks
 	$(INSTALL_DATA) $(TARGET_FILES)/configs/smb3.conf $(TARGET_DIR)/etc/samba/smb.conf
 	$(INSTALL_EXEC) $(TARGET_FILES)/scripts/samba3.init $(TARGET_DIR)/etc/init.d/samba
-	ln -sf samba $(TARGET_DIR)/etc/init.d/S99samba
-	ln -sf samba $(TARGET_DIR)/etc/init.d/K01samba
+	$(UPDATE-RC.D) samba defaults 75 25
 	rm -rf $(TARGET_DIR)/bin/testparm
 	rm -rf $(TARGET_DIR)/bin/findsmb
 	rm -rf $(TARGET_DIR)/bin/smbtar
@@ -1101,8 +1095,7 @@ samba36: $(SAMBA36_DEPS) $(ARCHIVE)/$(SAMBA36_SOURCE) | $(TARGET_DIR)
 	mkdir -p $(TARGET_DIR)/var/samba/locks
 	$(INSTALL_DATA) $(TARGET_FILES)/configs/smb3.conf $(TARGET_DIR)/etc/samba/smb.conf
 	$(INSTALL_EXEC) $(TARGET_FILES)/scripts/samba3.init $(TARGET_DIR)/etc/init.d/samba
-	ln -sf samba $(TARGET_DIR)/etc/init.d/S99samba
-	ln -sf samba $(TARGET_DIR)/etc/init.d/K01samba
+	$(UPDATE-RC.D) samba defaults 75 25
 	rm -rf $(TARGET_DIR)/bin/testparm
 	rm -rf $(TARGET_DIR)/bin/findsmb
 	rm -rf $(TARGET_DIR)/bin/smbtar
@@ -1153,8 +1146,7 @@ dropbear: $(DROPBEAR_DEPS) $(ARCHIVE)/$(DROPBEAR_SOURCE) | $(TARGET_DIR)
 		$(MAKE) PROGRAMS="dropbear dbclient dropbearkey scp" install DESTDIR=$(TARGET_DIR)
 	mkdir -p $(TARGET_DIR)/etc/dropbear
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/dropbear.init $(TARGET_DIR)/etc/init.d/dropbear
-	ln -sf dropbear $(TARGET_DIR)/etc/init.d/S60dropbear
-	ln -sf dropbear $(TARGET_DIR)/etc/init.d/K60dropbear
+	$(UPDATE-RC.D) dropbear defaults 75 25
 	$(REMOVE)/$(DROPBEAR_TMP)
 	$(TOUCH)
 
@@ -1187,7 +1179,7 @@ sg3_utils: $(ARCHIVE)/$(SG3_UTILS_SOURCE) | $(TARGET_DIR)
 	done
 	$(REWRITE_LIBTOOL)/libsgutils2.la
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/sdX.init $(TARGET_DIR)/etc/init.d/sdX
-	ln -sf sdX $(TARGET_DIR)/etc/init.d/K97sdX
+	$(UPDATE-RC.D) sdX stop 97 0 6 .
 	$(REMOVE)/$(SG3_UTILS_TMP) \
 		$(TARGET_DIR)/bin.$(@F)
 	$(TOUCH)
@@ -1329,8 +1321,7 @@ xupnpd: $(XUPNPD_DEPS) | $(TARGET_DIR)
 	$(INSTALL_DATA) -D $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-lua/xupnpd/xupnpd_coolstream.lua $(TARGET_SHARE_DIR)/xupnpd/plugins/
 	$(INSTALL_DATA) -D $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-lua/xupnpd/xupnpd_cczwei.lua $(TARGET_SHARE_DIR)/xupnpd/plugins/
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/xupnpd.init $(TARGET_DIR)/etc/init.d/xupnpd
-	ln -sf xupnpd $(TARGET_DIR)/etc/init.d/S99xupnpd
-	ln -sf xupnpd $(TARGET_DIR)/etc/init.d/K01xupnpd
+	$(UPDATE-RC.D) xupnpd defaults 75 25
 	$(INSTALL_COPY) $(TARGET_FILES)/xupnpd/* $(TARGET_DIR)/
 	$(REMOVE)/$(XUPNPD_TMP)
 	$(TOUCH)
@@ -1423,8 +1414,7 @@ nfs-utils: $(NFS-UTILS_DEPS) $(ARCHIVE)/$(NFS-UTILS_SOURCE) | $(TARGET_DIR)
 	rm -rf $(TARGET_DIR)/sbin/showmount
 	rm -rf $(TARGET_DIR)/sbin/rpcdebug
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/nfsd.init $(TARGET_DIR)/etc/init.d/nfsd
-	ln -s nfsd $(TARGET_DIR)/etc/init.d/S60nfsd
-	ln -s nfsd $(TARGET_DIR)/etc/init.d/K01nfsd
+	$(UPDATE-RC.D) nfsd defaults 75 25
 	$(REMOVE)/$(NFS-UTILS_TMP)
 	$(TOUCH)
 
@@ -1822,7 +1812,7 @@ define SYSVINIT_INSTALL
 	done
 	ln -sf /sbin/halt $(TARGET_DIR)/sbin/reboot
 	ln -sf /sbin/halt $(TARGET_DIR)/sbin/poweroff
-	ln -sf killall5 $(TARGET_DIR)/sbin/pidof
+	ln -sf /sbin/killall5 $(TARGET_DIR)/sbin/pidof
 endef
 
 sysvinit: $(ARCHIVE)/$(SYSVINIT_SOURCE) | $(TARGET_DIR)
