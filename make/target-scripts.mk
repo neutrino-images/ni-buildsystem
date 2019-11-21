@@ -51,6 +51,7 @@ $(TARGET_DIR)/etc/init.d/crond:
 $(TARGET_DIR)/etc/init.d/custom-poweroff:
 ifeq ($(BOXTYPE), coolstream)
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/custom-poweroff.init $(@)
+	$(UPDATE-RC.D) $(@F) start 99 0 6 .
 endif
 
 $(TARGET_DIR)/etc/init.d/fstab:
