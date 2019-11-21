@@ -7,6 +7,7 @@ init-scripts: \
 	$(TARGET_DIR)/etc/init.d/globals \
 	$(TARGET_DIR)/etc/init.d/functions \
 	$(TARGET_DIR)/etc/init.d/rc \
+	$(TARGET_DIR)/etc/init.d/rcK \
 	$(TARGET_DIR)/etc/init.d/camd \
 	$(TARGET_DIR)/etc/init.d/camd_datefix \
 	$(TARGET_DIR)/etc/init.d/coredump \
@@ -30,6 +31,9 @@ $(TARGET_DIR)/etc/init.d/functions:
 
 $(TARGET_DIR)/etc/init.d/rc:
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/files-etc/init.d/rc $(@)
+
+$(TARGET_DIR)/etc/init.d/rcK:
+	$(INSTALL_EXEC) -D $(TARGET_FILES)/files-etc/init.d/rcK $(@)
 
 $(TARGET_DIR)/etc/init.d/camd:
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/camd.init $(@)
