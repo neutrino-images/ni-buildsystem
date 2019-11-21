@@ -6,13 +6,13 @@
 #BLOBS_DEPS = kernel # because of depmod
 
 blobs: $(BLOBS_DEPS)
-	make firmware
-	make $(BOXMODEL)-drivers
+	$(MAKE) firmware
+	$(MAKE) $(BOXMODEL)-drivers
 ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7 vusolo4k vuduo4k vuultimo4k vuzero4k vuuno4k vuuno4kse))
-	make $(BOXMODEL)-libgles
+	$(MAKE) $(BOXMODEL)-libgles
 endif
 ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vusolo4k vuduo4k vuultimo4k vuzero4k vuuno4k vuuno4kse))
-	make vuplus-platform-util
+	$(MAKE) vuplus-platform-util
 endif
 
 # -----------------------------------------------------------------------------
