@@ -16,6 +16,7 @@ init-scripts: \
 	$(TARGET_DIR)/etc/init.d/fstab \
 	$(TARGET_DIR)/etc/init.d/hostname \
 	$(TARGET_DIR)/etc/init.d/inetd \
+	$(TARGET_DIR)/etc/init.d/mdev \
 	$(TARGET_DIR)/etc/init.d/networking \
 	$(TARGET_DIR)/etc/init.d/partitions-by-name \
 	$(TARGET_DIR)/etc/init.d/resizerootfs \
@@ -69,6 +70,9 @@ $(TARGET_DIR)/etc/init.d/hostname:
 $(TARGET_DIR)/etc/init.d/inetd:
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/inetd.init $(@)
 	$(UPDATE-RC.D) $(@F) defaults 50
+
+$(TARGET_DIR)/etc/init.d/mdev:
+	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/mdev.init $(@)
 
 $(TARGET_DIR)/etc/init.d/networking:
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/networking.init $(@)

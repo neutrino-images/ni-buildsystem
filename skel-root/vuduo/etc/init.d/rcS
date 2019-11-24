@@ -76,22 +76,8 @@ load_module extra/procmk.ko
 # show bootlogo
 showiframe.sh bootlogo.m2v
 
-## mdev coldplug for node permissions
-LOGINFO "mdev coldplug ..."
-echo >/dev/mdev.seq
-echo $(which mdev) > /proc/sys/kernel/hotplug
-mdev -s
-
-# mdev -s does not poke usb devices, so we need to do it here.
-LOGINFO "scanning /sys/bus/usb/devices/ to help mdev with usb-coldplug"
-for i in /sys/bus/usb/devices/*; do
-	case "${i##*/}" in
-		*-*:1.0)
-			LOGINFO "usb device $i found"
-			echo add >$i/uevent
-		;;
-	esac
-done
+# mdev coldplug for node permissions
+service mdev start
 
 service networking start
 service ntpdate start
