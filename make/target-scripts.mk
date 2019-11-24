@@ -45,10 +45,8 @@ $(TARGET_DIR)/etc/init.d/camd_datefix:
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/camd_datefix.init $(@)
 
 $(TARGET_DIR)/etc/init.d/coredump:
-ifneq ($(BOXMODEL), nevis)
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/coredump.init $(@)
 	$(UPDATE-RC.D) $(@F) start 40 S .
-endif
 
 $(TARGET_DIR)/etc/init.d/crond:
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/crond.init $(@)

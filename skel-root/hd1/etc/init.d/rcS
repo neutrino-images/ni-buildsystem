@@ -143,9 +143,6 @@ dt -ls02
 dt -c
 dt -t"BOOT NI-IMAGE"
 
-# change default core pattern
-echo "/tmp/core.%e.%p.%t" > /proc/sys/kernel/core_pattern
-
 # trap CTRL-C only in this shell so we can interrupt subprocesses
 trap ":" INT QUIT TSTP
 
