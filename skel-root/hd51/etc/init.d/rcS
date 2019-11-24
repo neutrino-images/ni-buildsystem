@@ -31,9 +31,6 @@ mkdir -p /dev/pts
 mount -t devpts devpts /dev/pts
 mkdir -p /dev/shm/usb
 
-# mount var-partition
-# FIXME
-
 service partitions-by-name start
 service resizerootfs start
 

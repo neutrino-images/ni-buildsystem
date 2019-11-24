@@ -31,9 +31,6 @@ mkdir -p /dev/pts
 mount -t devpts devpts /dev/pts
 mkdir -p /dev/shm/usb
 
-# mount var-partition
-# FIXME
-
 # for nfsd
 mkdir -p /var/lib/nfs
 mount -t tmpfs nfs /var/lib/nfs
