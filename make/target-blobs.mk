@@ -40,15 +40,15 @@ firmware-wireless: $(SOURCE_DIR)/$(NI-DRIVERS-BIN) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-HD51-DRIVERS_VER    = 20191101
+HD51-DRIVERS_VER    = 20191120
 HD51-DRIVERS_SOURCE = hd51-drivers-$(KERNEL_VER)-$(HD51-DRIVERS_VER).zip
 HD51-DRIVERS_URL    = http://source.mynonpublic.com/gfutures
 
-BRE2ZE4K-DRIVERS_VER    = 20191101
+BRE2ZE4K-DRIVERS_VER    = 20191120
 BRE2ZE4K-DRIVERS_SOURCE = bre2ze4k-drivers-$(KERNEL_VER)-$(BRE2ZE4K-DRIVERS_VER).zip
 BRE2ZE4K-DRIVERS_URL    = http://source.mynonpublic.com/gfutures
 
-H7-DRIVERS_VER    = 20191110
+H7-DRIVERS_VER    = 20191123
 H7-DRIVERS_SOURCE = h7-drivers-$(KERNEL_VER)-$(H7-DRIVERS_VER).zip
 H7-DRIVERS_URL    = http://source.mynonpublic.com/zgemma
 
