@@ -14,33 +14,41 @@ export runlevel prevlevel
 
 SHOWINFO "start"
 
-# system directories
-SHOWINFO "creating system directories ..."
+# init system
+SHOWINFO "creating and mounting system directories ..."
 mount -t proc proc /proc
 mount -t sysfs sys /sys
 mount -t tmpfs tmp /tmp
 mount -t tmpfs media /media
+mount -t tmpfs srv /srv
 mount -t tmpfs mnt /mnt
-for dir in epg movies music pictures streaming autofs plugins; do
+for dir in autofs epg logos logos/events movies music pictures plugins; do
 	mkdir -p /mnt/${dir}
 done
-mount -t tmpfs srv /srv
 mkdir -p /dev/pts
 mount -t devpts devpts /dev/pts
 mkdir -p /dev/shm/usb
 mount -t usbfs none /proc/bus/usb
+
+# for nfsd
 mkdir -p /var/lib/nfs
 mount -t tmpfs nfs /var/lib/nfs
+
+# for samba
 mkdir -p /var/samba
 mount -t tmpfs samba /var/samba
 
+# for wget
+mkdir -p /var/run/wget
+
+# for wireless drivers
+mkdir -p /var/run/wpa_supplicant
+
+# set level of messages printed to console
 dmesg -n 1
 
 # set dummy date
 date -s "%(YEAR)-01-01 00:00"
-
-# directory for wireless drivers
-mkdir -p /var/run/wpa_supplicant
 
 # create nodes
 # <name>		<type>	<mode>	<uid>	<gid>	<major>	<minor>	<start>	<inc>	<count>
@@ -63,13 +71,13 @@ EONODES
 ln -sf nevis_ir /dev/input/event0
 ln -sf nevis_ir /dev/input/input0
 
+# set hostname
 service hostname start
 
 # logging as much as possible
 service syslogd start
 
 LOGINFO "init frontpanel ..."
-# Frontpanel
 insmod cs_frontpanel.ko
 
 # update kernel
@@ -113,11 +121,12 @@ insmod cnxt_sata_drv.ko
 
 LOGINFO "init drivers ..."
 dt -t"INIT DRIVERS"
-## fire up network/wlan
+
 insmod 8712u.ko
 insmod 8192cu.ko
 insmod rt2870sta.ko
 
+# fire up network/wlan
 service networking start
 service ntpdate start
 
