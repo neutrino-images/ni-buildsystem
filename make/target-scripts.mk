@@ -8,6 +8,7 @@ init-scripts: \
 	$(TARGET_DIR)/etc/init.d/functions \
 	$(TARGET_DIR)/etc/init.d/rc \
 	$(TARGET_DIR)/etc/init.d/rcK \
+	\
 	$(TARGET_DIR)/etc/init.d/camd \
 	$(TARGET_DIR)/etc/init.d/camd_datefix \
 	$(TARGET_DIR)/etc/init.d/coredump \

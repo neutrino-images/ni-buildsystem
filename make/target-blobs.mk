@@ -56,7 +56,7 @@ VUSOLO4K-DRIVERS_VER    = 20190424
 VUSOLO4K-DRIVERS_SOURCE = vuplus-dvb-proxy-vusolo4k-3.14.28-$(VUSOLO4K-DRIVERS_VER).r0.tar.gz
 VUSOLO4K-DRIVERS_URL    = http://archive.vuplus.com/download/build_support/vuplus
 
-VUDUO4K-DRIVERS_VER    = 20190212
+VUDUO4K-DRIVERS_VER    = 20191125
 VUDUO4K-DRIVERS_SOURCE = vuplus-dvb-proxy-vuduo4k-4.1.45-$(VUDUO4K-DRIVERS_VER).r0.tar.gz
 VUDUO4K-DRIVERS_URL    = http://archive.vuplus.com/download/build_support/vuplus
 
