@@ -245,7 +245,7 @@ flash-image-vuplus-multi: | $(IMAGE_DIR)
 	echo Dummy for update. > $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/rootfs2.tar.bz2
 	echo Dummy for update. > $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/rootfs3.tar.bz2
 	echo Dummy for update. > $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/rootfs4.tar.bz2
-ifeq ($(BOXMODEL), vuzero4k)
+ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vuzero4k vuuno4k))
 	echo This file forces the update. > $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/force.update
 else
 	echo This file forces a reboot after the update. > $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/reboot.update
