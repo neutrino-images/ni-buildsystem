@@ -152,7 +152,7 @@ giflib: $(ARCHIVE)/$(GIFLIB_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-LIBCURL_VER    = 7.66.0
+LIBCURL_VER    = 7.67.0
 LIBCURL_TMP    = curl-$(LIBCURL_VER)
 LIBCURL_SOURCE = curl-$(LIBCURL_VER).tar.bz2
 LIBCURL_URL    = https://curl.haxx.se/download
