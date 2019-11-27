@@ -18,6 +18,9 @@
 . /etc/default/rcS
 export VERBOSE
 
+. /etc/init.d/functions
+. /etc/init.d/globals
+
 startup_progress() {
     step=$(($step + $step_change))
     if [ "$num_steps" != "0" ]; then
@@ -47,6 +50,7 @@ startup_progress() {
 startup() {
   # Handle verbosity
   [ "$VERBOSE" = very ] && echo "INIT: Running $@..."
+  LOGINFO "running $@"
 
   case "$1" in
 	*.sh)
