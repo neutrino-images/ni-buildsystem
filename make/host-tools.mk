@@ -177,7 +177,7 @@ HOST_PARTED_URL    = https://ftp.gnu.org/gnu/parted
 #$(ARCHIVE)/$(HOST_PARTED_SOURCE):
 #	$(DOWNLOAD) $(HOST_PARTED_URL)/$(HOST_PARTED_SOURCE)
 
-HOST_PARTED_PATCH  = parted-devmapper-1.patch
+HOST_PARTED_PATCH  = parted-device-mapper.patch
 HOST_PARTED_PATCH += parted-sysmacros.patch
 
 host-parted: $(HOST_DIR)/bin/parted
