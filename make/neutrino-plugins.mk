@@ -36,6 +36,8 @@ ifeq ($(wildcard $(TARGET_DIR)/bin/iconv),)
   NP_DEPS += iconv-bin
 endif
 
+# -----------------------------------------------------------------------------
+
 NP_CONFIGURE_ADDITIONS = \
 		--disable-logoupdater \
 		--disable-logoview \
@@ -48,6 +50,16 @@ ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd1 hd2))
 		--disable-stb_startup \
 		--disable-imgbackup
 endif
+
+# -----------------------------------------------------------------------------
+
+ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd1 hd2))
+  NP_BOXMODEL = $(BOXSERIES)
+else
+  NP_BOXMODEL = $(BOXMODEL)
+endif
+
+# -----------------------------------------------------------------------------
 
 $(NP_OBJ_DIR)/config.status: $(NP_DEPS)
 	test -d $(NP_OBJ_DIR) || mkdir -p $(NP_OBJ_DIR)
@@ -69,7 +81,7 @@ $(NP_OBJ_DIR)/config.status: $(NP_DEPS)
 			--with-target=cdk \
 			--with-targetprefix= \
 			--with-boxtype=$(BOXTYPE) \
-			--with-boxmodel=$(BOXSERIES)
+			--with-boxmodel=$(NP_BOXMODEL)
 
 # -----------------------------------------------------------------------------
 
