@@ -264,8 +264,8 @@ mtd-utils: $(MTD-UTILS_DEPS) $(ARCHIVE)/$(MTD-UTILS_SOURCE) | $(TARGET_DIR)
 	$(UNTAR)/$(MTD-UTILS_SOURCE)
 	$(CHDIR)/$(MTD-UTILS_TMP); \
 		$(CONFIGURE) \
-			--prefix= \
 			--target=$(TARGET) \
+			--prefix= \
 			--mandir=$(remove-mandir) \
 			--enable-silent-rules \
 			--disable-tests \
@@ -333,8 +333,8 @@ parted: $(PARTED_DEPS) $(ARCHIVE)/$(PARTED_SOURCE) | $(TARGET_DIR)
 		$(call apply_patches, $(PARTED_PATCH)); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
-			--prefix= \
 			--target=$(TARGET) \
+			--prefix= \
 			--mandir=$(remove-mandir) \
 			--infodir=$(remove-infodir) \
 			--enable-silent-rules \
@@ -454,8 +454,8 @@ less: $(LESS_DEPS) $(ARCHIVE)/$(LESS_SOURCE) | $(TARGET_DIR)
 	$(UNTAR)/$(LESS_SOURCE)
 	$(CHDIR)/$(LESS_TMP); \
 		$(CONFIGURE) \
-			--prefix= \
 			--target=$(TARGET) \
+			--prefix= \
 			--mandir=$(remove-mandir) \
 			; \
 		$(MAKE); \
@@ -483,8 +483,8 @@ ntp: $(NTP_DEPS) $(ARCHIVE)/$(NTP_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(NTP_TMP); \
 		$(call apply_patches, $(NTP_PATCH)); \
 		$(CONFIGURE) \
-			--prefix= \
 			--target=$(TARGET) \
+			--prefix= \
 			--disable-debugging \
 			--with-shared \
 			--with-crypto \
@@ -763,8 +763,8 @@ minicom: $(MINICOM_DEPS) $(ARCHIVE)/$(MINICOM_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(MINICOM_TMP); \
 		$(call apply_patches, $(MINICOM_PATCH)); \
 		$(CONFIGURE) \
-			--prefix= \
 			--target=$(TARGET) \
+			--prefix= \
 			--disable-nls \
 			; \
 		$(MAKE); \
@@ -1387,11 +1387,11 @@ nfs-utils: $(NFS-UTILS_DEPS) $(ARCHIVE)/$(NFS-UTILS_SOURCE) | $(TARGET_DIR)
 		export knfsd_cv_bsd_signals=no; \
 		autoreconf -fi; \
 		$(CONFIGURE) \
-			--prefix= \
 			--target=$(TARGET) \
-			--enable-maintainer-mode \
+			--prefix= \
 			--docdir=$(remove-docdir) \
 			--mandir=$(remove-mandir) \
+			--enable-maintainer-mode \
 			--disable-nfsv4 \
 			--disable-nfsv41 \
 			--disable-gss \
