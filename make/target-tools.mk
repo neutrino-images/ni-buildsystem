@@ -3,7 +3,7 @@
 #
 # -----------------------------------------------------------------------------
 
-BUSYBOX_VER    = 1.30.1
+BUSYBOX_VER    = 1.31.1
 BUSYBOX_TMP    = busybox-$(BUSYBOX_VER)
 BUSYBOX_SOURCE = busybox-$(BUSYBOX_VER).tar.bz2
 BUSYBOX_URL    = https://busybox.net/downloads
