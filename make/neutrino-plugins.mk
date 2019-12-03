@@ -48,7 +48,8 @@ ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd1 hd2))
   NP_CONFIGURE_ADDITIONS += \
 		--disable-showiframe \
 		--disable-stb_startup \
-		--disable-imgbackup
+		--disable-imgbackup \
+		--disable-rcu_switcher
 endif
 
 # -----------------------------------------------------------------------------
