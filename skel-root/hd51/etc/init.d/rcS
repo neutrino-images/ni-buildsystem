@@ -18,6 +18,7 @@ mount -t proc proc /proc
 
 # init system
 SHOWINFO "creating and mounting system directories ..."
+mount -t devtmpfs devtmpfs /dev
 mount -t sysfs sys /sys
 mount -t tmpfs tmp /tmp
 mount -t tmpfs media /media
