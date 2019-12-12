@@ -51,7 +51,6 @@ symbolic-links: | $(TARGET_DIR)
 ifeq ($(PERSISTENT_VAR_PARTITION), yes)
 	$(CD) $(TARGET_DIR)/etc; \
 		ln -sf /var/etc/exports exports; \
-		ln -sf /var/etc/fstab fstab; \
 		ln -sf /var/etc/hostname hostname; \
 		ln -sf /var/etc/localtime localtime; \
 		ln -sf /var/etc/passwd passwd; \

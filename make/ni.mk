@@ -84,6 +84,7 @@ ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd51 vusolo4k vuduo4k vuultimo4k 
 endif
 	make autofs
 	make files-etc
+	make files-var-etc
 	make scripts
 	make init-scripts
 ifeq ($(PERSONALIZE), yes)

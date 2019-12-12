@@ -1,5 +1,0 @@
-# /etc/auto.master: automounter map definitions
-#
-# <mount-point> [map-type[,format]:]<map> [options]
-#
-/mnt/autofs	/etc/auto.net

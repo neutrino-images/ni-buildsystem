@@ -15,7 +15,7 @@ if ! grep -q autofs /proc/filesystems; then # the kernel does not know it
 	if [ -e /lib/modules/$(uname_r)/autofs4.ko ]; then
 		MODULE=/lib/modules/$(uname_r)/autofs4.ko # hd1
 	else
-		MODULE=/lib/modules/$(uname_r)/kernel/fs/autofs4/autofs4.ko # hd2
+		MODULE=/lib/modules/$(uname_r)/kernel/fs/autofs4/autofs4.ko
 	fi
 
 	if ! insmod $MODULE > /dev/null 2>&1; then # module loading failed
@@ -27,10 +27,6 @@ DEVICE="autofs"
 
 # the MAPFILE is the "configfile" for automount
 MAPFILE=/var/etc/auto.master
-if [ ! -e $MAPFILE ]; then
-	# fallback to /etc/auto.master
-	MAPFILE=/etc/auto.master
-fi
 
 # allow stopping the daemon even without a mapfile
 if [ ! -e $MAPFILE -a "x$1" = "xstart" ]; then
@@ -56,7 +52,7 @@ PIDFILE=/var/run/automount.pid
 #
 # load customized configuation settings
 #
-CUSTOMCONF=/etc/autofs
+CUSTOMCONF=/etc/default/autofs
 if [ -e $CUSTOMCONF ]; then
 	. $CUSTOMCONF
 fi

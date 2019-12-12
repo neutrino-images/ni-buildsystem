@@ -1,6 +1,0 @@
-# /etc/auto.net: dynamic file system information.
-#
-# Every single mount point below will be available in /mnt/autofs during start
-# or possibly even later if you request it.
-#
-# <mount point> -fstype=<type>,<options> <file system>

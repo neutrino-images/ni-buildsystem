@@ -6,21 +6,24 @@ SRVFLAG=/var/etc/.srv
 
 MTAB=/etc/mtab
 FSTAB=/etc/fstab
-if [ -e /var/etc/fstab ]; then
-	FSTAB=/var/etc/fstab
-fi
+FSTAB_VAR=/var/etc/fstab
 
 is_mount()
 {
 	RET=1
 	test -f $MTAB || return $RET
-	while read _DEV _MTPT _FSTYPE _OPTS _REST
+	while read DEV MTPT FSTYPE OPTS REST
 	do
-		case "$_FSTYPE" in
-			"tmpfs") continue ;;
+		case "$FSTYPE" in
+			"tmpfs")
+				continue
+			;;
 		esac
 		case "$1" in
-			"$_DEV"|"$_MTPT") RET=0; break ;;
+			"$DEV"|"$MTPT")
+				RET=0
+				break
+			;;
 		esac
 	done < $MTAB
 	return $RET
@@ -71,8 +74,8 @@ mount_local()
 
 mount_netfs()
 {
-	SHOWINFO "mount all netfs stuff from $FSTAB"
-	test -f $FSTAB || return
+	SHOWINFO "mount all netfs stuff from $FSTAB_VAR"
+	test -f $FSTAB_VAR || return
 	rm -f $SRVFLAG
 	while read DEV MTPT FSTYPE OPTS REST
 	do
@@ -122,7 +125,7 @@ mount_netfs()
 				continue
 			;;
 		esac
-	done < $FSTAB
+	done < $FSTAB_VAR
 }
 
 umount_netfs()
