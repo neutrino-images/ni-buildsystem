@@ -12,15 +12,15 @@ is_mount()
 {
 	RET=1
 	test -f $MTAB || return $RET
-	while read DEV MTPT FSTYPE OPTS REST
+	while read _DEV _MTPT _FSTYPE _OPTS _REST
 	do
-		case "$FSTYPE" in
+		case "$_FSTYPE" in
 			"tmpfs")
 				continue
 			;;
 		esac
 		case "$1" in
-			"$DEV"|"$MTPT")
+			"$_DEV"|"$_MTPT")
 				RET=0
 				break
 			;;
@@ -97,7 +97,7 @@ mount_netfs()
 					(
 					try=51
 					while(true); do
-						if OUT=$(mount $MTPT 2>&1 >/dev/null); then
+						if OUT=$(mount -t $FSTYPE -o $OPTS $DEV $MTPT 2>&1 >/dev/null); then
 							RET=$?
 							LOGINFO "mount: $MTPT - success ($RET)"
 							test -e $SRVFLAG || touch $SRVFLAG
