@@ -58,6 +58,8 @@ else
   N_CFLAGS += $(TARGET_CFLAGS)
 endif
 
+N_CFLAGS += -Wno-psabi
+
 # -----------------------------------------------------------------------------
 
 N_LDFLAGS = -lcrypto -ldl -lz $(CORTEX-STRINGS_LDFLAG) -L$(TARGET_LIB_DIR)
