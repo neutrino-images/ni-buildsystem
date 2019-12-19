@@ -174,6 +174,7 @@ startup() {
 		fi
 		case "$runlevel" in
 			0|6)
+				# Runlevels 0 and 6 are always stop runlevels
 				startup $i stop
 				;;
 			*)

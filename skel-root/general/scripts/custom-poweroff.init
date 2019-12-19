@@ -3,7 +3,7 @@
 . /etc/init.d/globals
 
 case $1 in
-	start)
+	stop)
 		TIMER="/tmp/.timer"
 		test -e $TIMER || exit 0
 
@@ -15,6 +15,6 @@ case $1 in
 		fi
 	;;
 	*)
-		echo "[$BASENAME] Usage: $0 {start}"
+		echo "[$BASENAME] Usage: $0 {stop}"
 	;;
 esac
