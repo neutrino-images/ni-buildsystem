@@ -28,11 +28,12 @@ ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vusolo4k vuduo4k vuultimo4k vuuno4kse))
   N_DEPS += graphlcd
 endif
 
-ifeq ($(BOXTYPE)-$(HAS_LIBCS), coolstream-yes)
-  N_DEPS += libcoolstream
-endif
-
-ifneq ($(BOXTYPE), coolstream)
+ifeq ($(BOXTYPE), coolstream)
+  N_DEPS += coolstream-drivers
+  ifeq ($(HAS_LIBCS), yes)
+    N_DEPS += libcoolstream
+  endif
+else
   N_DEPS += libstb-hal
 endif
 
