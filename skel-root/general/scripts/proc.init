@@ -1,0 +1,15 @@
+#!/bin/sh
+
+. /etc/init.d/globals
+
+case $1 in
+	start)
+		test -e /proc/cpu/alignment && \
+			echo -n "3" > /proc/cpu/alignment
+		test -e /proc/stb/video/zapmode && \
+			echo -n "mute" > /proc/stb/video/zapmode
+	;;
+	*)
+		echo "[$BASENAME] Usage: $0 {start}"
+	;;
+esac

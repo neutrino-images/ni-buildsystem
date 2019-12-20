@@ -20,6 +20,7 @@ init-scripts: \
 	$(TARGET_DIR)/etc/init.d/mdev \
 	$(TARGET_DIR)/etc/init.d/networking \
 	$(TARGET_DIR)/etc/init.d/partitions-by-name \
+	$(TARGET_DIR)/etc/init.d/proc \
 	$(TARGET_DIR)/etc/init.d/resizerootfs \
 	$(TARGET_DIR)/etc/init.d/swap \
 	$(TARGET_DIR)/etc/init.d/sys_update.sh \
@@ -80,6 +81,12 @@ $(TARGET_DIR)/etc/init.d/networking:
 $(TARGET_DIR)/etc/init.d/partitions-by-name:
 ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7))
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/partitions-by-name.init $(@)
+endif
+
+$(TARGET_DIR)/etc/init.d/proc:
+ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7 vusolo4k vuduo4k vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo))
+	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/proc.init $(@)
+	$(UPDATE-RC.D) $(@F) start 90 S .
 endif
 
 $(TARGET_DIR)/etc/init.d/resizerootfs:
