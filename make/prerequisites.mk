@@ -76,6 +76,7 @@ $(BUILD-GENERIC-PC):
 $(SOURCE_DIR)/$(NI-NEUTRINO):
 	$(CD) $(SOURCE_DIR); \
 		git clone $(NI-PUBLIC)/$(@F).git
+ifeq ($(NI_ADMIN), true)
 	$(CD) $(@); \
 		git remote add tuxbox $(GITHUB)/tuxbox-neutrino/gui-neutrino.git; \
 		git remote add seife  $(GITHUB)/neutrino-mp/neutrino-mp.git; \
@@ -83,10 +84,12 @@ $(SOURCE_DIR)/$(NI-NEUTRINO):
 		git remote add tango  $(GITHUB)/tangocash/neutrino-mp-tangos.git; \
 		git remote add max    $(GITHUB)/maxwiesel/neutrino-mp-max.git; \
 		git fetch --all
+endif
 
 $(SOURCE_DIR)/$(NI-LIBSTB-HAL):
 	$(CD) $(SOURCE_DIR); \
 		git clone $(NI-PUBLIC)/$(@F).git
+ifeq ($(NI_ADMIN), true)
 	$(CD) $(@); \
 		git remote add tuxbox $(GITHUB)/tuxbox-neutrino/library-stb-hal.git; \
 		git remote add seife  $(GITHUB)/neutrino-mp/libstb-hal.git; \
@@ -94,6 +97,7 @@ $(SOURCE_DIR)/$(NI-LIBSTB-HAL):
 		git remote add tango  $(GITHUB)/tangocash/libstb-hal-tangos.git; \
 		git remote add max    $(GITHUB)/maxwiesel/libstb-hal-max.git; \
 		git fetch --all
+endif
 
 $(SOURCE_DIR)/$(NI-LIBCOOLSTREAM):
 ifeq ($(HAS_LIBCS), yes)
@@ -107,35 +111,43 @@ endif
 $(SOURCE_DIR)/$(NI-FFMPEG):
 	$(CD) $(SOURCE_DIR); \
 		git clone $(NI-PUBLIC)/$(@F).git
+ifeq ($(NI_ADMIN), true)
 	$(CD) $(@); \
 		git remote add upstream https://git.ffmpeg.org/ffmpeg.git; \
 		git fetch --all
+endif
 
 # upstream for rebase
 # torvalds for cherry-picking
 $(SOURCE_DIR)/$(NI-LINUX-KERNEL):
 	$(CD) $(SOURCE_DIR); \
 		git clone $(NI-PUBLIC)/$(@F).git
+ifeq ($(NI_ADMIN), true)
 	$(CD) $(@); \
 		git remote add upstream https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git; \
 		git remote add torvalds https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git; \
 		git fetch --all
+endif
 
 # upstream for rebase
 $(SOURCE_DIR)/$(NI-OFGWRITE):
 	$(CD) $(SOURCE_DIR); \
 		git clone $(NI-PUBLIC)/$(@F).git
-	$(CD) $(@) && \
+ifeq ($(NI_ADMIN), true)
+	$(CD) $(@); \
 		git remote add upstream $(GITHUB)/oe-alliance/ofgwrite.git; \
 		git fetch --all
+endif
 
 # upstream for rebase
 $(SOURCE_DIR)/$(NI-RTMPDUMP):
 	$(CD) $(SOURCE_DIR); \
 		git clone $(NI-PUBLIC)/$(@F).git
-	$(CD) $(@) && \
+ifeq ($(NI_ADMIN), true)
+	$(CD) $(@); \
 		git remote add upstream git://git.ffmpeg.org/rtmpdump; \
 		git fetch --all
+endif
 
 $(SOURCE_DIR)/$(NI-DRIVERS-BIN) \
 $(SOURCE_DIR)/$(NI-LOGO-STUFF) \
