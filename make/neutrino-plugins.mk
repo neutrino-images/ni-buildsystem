@@ -52,11 +52,6 @@ ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd1 hd2))
 		--disable-rcu_switcher
 endif
 
-ifeq ($(BOXSERIES), $(filter $(BOXSERIES), vusolo4k vuduo4k vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo))
-  NP_CONFIGURE_ADDITIONS += \
-		--disable-rcu_switcher
-endif
-
 # -----------------------------------------------------------------------------
 
 ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd1 hd2))
