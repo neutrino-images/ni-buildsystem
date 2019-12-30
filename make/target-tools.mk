@@ -1791,19 +1791,15 @@ rsync: $(RSYNC_DEPS) $(ARCHIVE)/$(RSYNC_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-SYSVINIT_VER    = 2.88dsf
+SYSVINIT_VER    = 2.96
 SYSVINIT_TMP    = sysvinit-$(SYSVINIT_VER)
-SYSVINIT_SOURCE = sysvinit-$(SYSVINIT_VER).tar.bz2
+SYSVINIT_SOURCE = sysvinit-$(SYSVINIT_VER).tar.xz
 SYSVINIT_URL    = http://download.savannah.nongnu.org/releases/sysvinit
 
 $(ARCHIVE)/$(SYSVINIT_SOURCE):
 	$(DOWNLOAD) $(SYSVINIT_URL)/$(SYSVINIT_SOURCE)
 
 SYSVINIT_PATCH  = crypt-lib.patch
-SYSVINIT_PATCH += pidof-add-m-option.patch
-SYSVINIT_PATCH += realpath.patch
-SYSVINIT_PATCH += 0001-include-sys-sysmacros.h-for-major-minor-defines-in-g.patch
-SYSVINIT_PATCH += 0001-This-fixes-an-issue-that-clang-reports-about-mutlipl.patch
 
 define SYSVINIT_INSTALL
 	for sbin in halt init shutdown killall5; do \

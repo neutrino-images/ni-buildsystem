@@ -5,21 +5,29 @@ Upstream-Status: Inappropriate [configuration]
 # and uses it if it's there.
 # - jdike@linux.intel.com
 
-Index: sysvinit-2.88dsf/src/Makefile
+Index: sysvinit-2.96/src/Makefile
 ===================================================================
---- sysvinit-2.88dsf.orig/src/Makefile
-+++ sysvinit-2.88dsf/src/Makefile
-@@ -78,9 +78,13 @@ else
+diff --git a/src/Makefile b/src/Makefile
+index 9f9f09e..9ae35df 100644
+--- a/src/Makefile
++++ b/src/Makefile
+@@ -89,6 +89,10 @@ else
+   SULOGINLIBS	=
  endif
  
- # Additional libs for GNU libc.
 +ifneq ($(LCRYPT),)
 +  SULOGINLIBS	+= $(LCRYPT)
 +else
- ifneq ($(wildcard /usr/lib*/libcrypt.a),)
++
+ # Additional libs for GNU libc.
+ ifneq ($(wildcard /usr/lib*/libcrypt.*),)
+   SULOGINLIBS	+= -lcrypt
+@@ -99,6 +103,8 @@ ifneq ($(wildcard /usr/lib/*/libcrypt.*),)
    SULOGINLIBS	+= -lcrypt
  endif
-+endif
  
++endif
++
  all:		$(BIN) $(SBIN) $(USRBIN)
  
+ #%: %.o
