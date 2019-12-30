@@ -16,6 +16,7 @@ GFUTURES_4_10_PATCH = \
 	gfutures/4_10_add-more-devices-rtl8xxxu.patch \
 	gfutures/4_10_bitsperlong.patch \
 	gfutures/4_10_blacklist_mmc0.patch \
+	gfutures/4_10_dvbs2x.patch \
 	gfutures/4_10_reserve_dvb_adapter_0.patch \
 	gfutures/4_10_t230c2.patch
 
