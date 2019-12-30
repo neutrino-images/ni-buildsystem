@@ -82,7 +82,6 @@ ifeq ($(NI_ADMIN), true)
 		git remote add seife  $(GITHUB)/neutrino-mp/neutrino-mp.git; \
 		git remote add ddt    $(GITHUB)/duckbox-developers/neutrino-mp-ddt.git; \
 		git remote add tango  $(GITHUB)/tangocash/neutrino-mp-tangos.git; \
-		git remote add max    $(GITHUB)/maxwiesel/neutrino-mp-max.git; \
 		git fetch --all
 endif
 
@@ -95,7 +94,6 @@ ifeq ($(NI_ADMIN), true)
 		git remote add seife  $(GITHUB)/neutrino-mp/libstb-hal.git; \
 		git remote add ddt    $(GITHUB)/duckbox-developers/libstb-hal-ddt.git; \
 		git remote add tango  $(GITHUB)/tangocash/libstb-hal-tangos.git; \
-		git remote add max    $(GITHUB)/maxwiesel/libstb-hal-max.git; \
 		git fetch --all
 endif
 
