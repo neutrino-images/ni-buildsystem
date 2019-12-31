@@ -1800,6 +1800,9 @@ $(ARCHIVE)/$(SYSVINIT_SOURCE):
 	$(DOWNLOAD) $(SYSVINIT_URL)/$(SYSVINIT_SOURCE)
 
 SYSVINIT_PATCH  = crypt-lib.patch
+ifeq ($(BOXSERIES), hd2)
+  SYSVINIT_PATCH += remove-fstack-protector-strong.patch
+endif
 
 define SYSVINIT_INSTALL
 	for sbin in halt init shutdown killall5; do \
