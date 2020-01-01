@@ -185,7 +185,7 @@ $(HOST_DIR)/bin/parted: $(ARCHIVE)/$(HOST_PARTED_SOURCE) | $(HOST_DIR)/bin
 	$(REMOVE)/$(HOST_PARTED_TMP)
 	$(UNTAR)/$(HOST_PARTED_SOURCE)
 	$(CHDIR)/$(HOST_PARTED_TMP); \
-		#$(call apply_patches, $(HOST_PARTED_PATCH)); \
+		$(call apply_patches, $(HOST_PARTED_PATCH)); \
 		./configure \
 			--enable-silent-rules \
 			--enable-static \

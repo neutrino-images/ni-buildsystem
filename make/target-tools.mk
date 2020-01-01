@@ -311,7 +311,7 @@ iperf: $(ARCHIVE)/$(IPERF_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-PARTED_VER    = 3.3
+PARTED_VER    = 3.2
 PARTED_TMP    = parted-$(PARTED_VER)
 PARTED_SOURCE = parted-$(PARTED_VER).tar.xz
 PARTED_URL    = https://ftp.gnu.org/gnu/parted
@@ -329,7 +329,7 @@ parted: $(PARTED_DEPS) $(ARCHIVE)/$(PARTED_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PARTED_TMP)
 	$(UNTAR)/$(PARTED_SOURCE)
 	$(CHDIR)/$(PARTED_TMP); \
-		#$(call apply_patches, $(PARTED_PATCH)); \
+		$(call apply_patches, $(PARTED_PATCH)); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
@@ -350,7 +350,7 @@ parted: $(PARTED_DEPS) $(ARCHIVE)/$(PARTED_SOURCE) | $(TARGET_DIR)
 	$(REWRITE_LIBTOOL)/libparted.la
 	$(REWRITE_LIBTOOL)/libparted-fs-resize.la
 	$(REWRITE_PKGCONF)/libparted.pc
-	#$(REMOVE)/$(PARTED_TMP)
+	$(REMOVE)/$(PARTED_TMP)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
