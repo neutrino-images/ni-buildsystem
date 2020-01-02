@@ -95,7 +95,7 @@ libroxml: $(ARCHIVE)/$(LIBROXML_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-BZIP2_VER    = 1.0.7
+BZIP2_VER    = 1.0.8
 BZIP2_TMP    = bzip2-$(BZIP2_VER)
 BZIP2_SOURCE = bzip2-$(BZIP2_VER).tar.gz
 BZIP2_URL    = https://sourceware.org/pub/bzip2
