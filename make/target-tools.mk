@@ -1811,6 +1811,8 @@ define SYSVINIT_INSTALL
 	ln -sf /sbin/halt $(TARGET_DIR)/sbin/reboot
 	ln -sf /sbin/halt $(TARGET_DIR)/sbin/poweroff
 	ln -sf /sbin/killall5 $(TARGET_DIR)/sbin/pidof
+	# needed to create /run/initctl on startup
+	mkdir -p $(TARGET_DIR)/run
 endef
 
 sysvinit: $(ARCHIVE)/$(SYSVINIT_SOURCE) | $(TARGET_DIR)
