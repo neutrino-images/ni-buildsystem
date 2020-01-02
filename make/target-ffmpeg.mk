@@ -3,7 +3,7 @@
 #
 # -----------------------------------------------------------------------------
 
-FFMPEG_VER    = 4.2.1
+FFMPEG_VER    = 4.2.2
 FFMPEG_TMP    = ffmpeg-$(FFMPEG_VER)
 FFMPEG_SOURCE = ffmpeg-$(FFMPEG_VER).tar.xz
 FFMPEG_URL    = http://www.ffmpeg.org/releases
@@ -356,7 +356,7 @@ ffmpeg: $(FFMPEG_DEPS) $(ARCHIVE)/$(FFMPEG_SOURCE) | $(TARGET_DIR)
 	$(UNTAR)/$(FFMPEG_SOURCE)
 ifneq ($(FFMPEG_UNPATCHED), yes)
 	$(CHDIR)/$(FFMPEG_TMP); \
-		$(call apply_patches, $(FFMPEG_PATCH))
+		$(call apply_patches, $(addprefix $(@F)/,$(FFMPEG_PATCH)))
 endif
 	$(CHDIR)/$(FFMPEG_TMP); \
 		./configure \

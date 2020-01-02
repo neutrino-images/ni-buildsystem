@@ -1,6 +1,6 @@
 --- a/libavcodec/aacdec_template.c
 +++ b/libavcodec/aacdec_template.c
-@@ -2482,7 +2482,7 @@ static int decode_extension_payload(AACContext *ac, GetBitContext *gb, int cnt,
+@@ -2485,7 +2485,7 @@ static int decode_extension_payload(AACContext *ac, GetBitContext *gb, int cnt,
   * @param   decode  1 if tool is used normally, 0 if tool is used in LTP.
   * @param   coef    spectral coefficients
   */
