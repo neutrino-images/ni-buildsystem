@@ -1137,7 +1137,7 @@ libogg: $(ARCHIVE)/$(LIBOGG_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-FRIBIDI_VER    = 1.0.7
+FRIBIDI_VER    = 1.0.8
 FRIBIDI_TMP    = fribidi-$(FRIBIDI_VER)
 FRIBIDI_SOURCE = fribidi-$(FRIBIDI_VER).tar.bz2
 FRIBIDI_URL    = https://github.com/fribidi/fribidi/releases/download/v$(FRIBIDI_VER)
