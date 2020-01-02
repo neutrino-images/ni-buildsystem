@@ -1800,6 +1800,7 @@ $(ARCHIVE)/$(SYSVINIT_SOURCE):
 	$(DOWNLOAD) $(SYSVINIT_URL)/$(SYSVINIT_SOURCE)
 
 SYSVINIT_PATCH  = crypt-lib.patch
+SYSVINIT_PATCH += change-INIT_FIFO.patch
 ifeq ($(BOXSERIES), hd2)
   SYSVINIT_PATCH += remove-fstack-protector-strong.patch
 endif
@@ -1811,8 +1812,6 @@ define SYSVINIT_INSTALL
 	ln -sf /sbin/halt $(TARGET_DIR)/sbin/reboot
 	ln -sf /sbin/halt $(TARGET_DIR)/sbin/poweroff
 	ln -sf /sbin/killall5 $(TARGET_DIR)/sbin/pidof
-	# needed to create /run/initctl on startup
-	mkdir -p $(TARGET_DIR)/run
 endef
 
 sysvinit: $(ARCHIVE)/$(SYSVINIT_SOURCE) | $(TARGET_DIR)
