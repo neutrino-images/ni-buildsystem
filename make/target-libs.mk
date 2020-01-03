@@ -908,7 +908,7 @@ libxml2: $(ARCHIVE)/$(LIBXML2_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-PUGIXML_VER    = 1.9
+PUGIXML_VER    = 1.10
 PUGIXML_TMP    = pugixml-$(PUGIXML_VER)
 PUGIXML_SOURCE = pugixml-$(PUGIXML_VER).tar.gz
 PUGIXML_URL    = https://github.com/zeux/pugixml/releases/download/v$(PUGIXML_VER)
