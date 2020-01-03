@@ -891,7 +891,7 @@ ntfs-3g: $(ARCHIVE)/$(NTFS-3G_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-AUTOFS_VER    = 5.1.5
+AUTOFS_VER    = 5.1.6
 AUTOFS_TMP    = autofs-$(AUTOFS_VER)
 AUTOFS_SOURCE = autofs-$(AUTOFS_VER).tar.xz
 AUTOFS_URL    = https://www.kernel.org/pub/linux/daemons/autofs/v5
@@ -903,8 +903,8 @@ $(ARCHIVE)/$(AUTOFS_SOURCE):
 # wget -N https://mirrors.edge.kernel.org/pub/linux/daemons/autofs/v5/patches-5.1.6/patch_order_5.1.5
 # for p in $(cat patch_order_5.1.5); do test -f $p || wget https://mirrors.edge.kernel.org/pub/linux/daemons/autofs/v5/patches-5.1.6/$p; done
 
-AUTOFS_PATCH  = $(shell cat $(PATCHES)/autofs/patch_order_$(AUTOFS_VER))
-AUTOFS_PATCH += force-STRIP-to-emtpy.patch
+AUTOFS_PATCH  = force-STRIP-to-emtpy.patch
+#AUTOFS_PATCH += $(shell cat $(PATCHES)/autofs/patch_order_$(AUTOFS_VER))
 
 AUTOFS_DEPS   = libtirpc
 
@@ -926,7 +926,6 @@ autofs: $(AUTOFS_DEPS) $(ARCHIVE)/$(AUTOFS_SOURCE) | $(TARGET_DIR)
 			--disable-mount-locking \
 			--without-openldap \
 			--without-sasl \
-			--enable-ignore-busy \
 			--with-path=$(PATH) \
 			--with-libtirpc \
 			--with-hesiod=no \
