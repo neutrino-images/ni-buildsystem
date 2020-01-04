@@ -45,7 +45,7 @@ VUPLUS_3_9_PATCH = \
 	vuplus/3_9_fix_fuse_for_linux_mips_3-9.patch \
 	vuplus/3_9_genksyms_fix_typeof_handling.patch \
 	vuplus/3_9_it913x-switch-off-PID-filter-by-default.patch \
-	vuplus/3_9_kernel-add-support-for-gcc-5.patch \
+	vuplus/3_9_kernel-add-support-for-gcc5.patch \
 	vuplus/3_9_kernel-add-support-for-gcc6.patch \
 	vuplus/3_9_kernel-add-support-for-gcc7.patch \
 	vuplus/3_9_linux-3.9-gcc-4.9.3-build-error-fixed.patch \
