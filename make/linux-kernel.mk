@@ -48,6 +48,8 @@ VUPLUS_3_9_PATCH = \
 	vuplus/3_9_kernel-add-support-for-gcc5.patch \
 	vuplus/3_9_kernel-add-support-for-gcc6.patch \
 	vuplus/3_9_kernel-add-support-for-gcc7.patch \
+	vuplus/3_9_kernel-add-support-for-gcc8.patch \
+	vuplus/3_9_kernel-add-support-for-gcc9.patch \
 	vuplus/3_9_linux-3.9-gcc-4.9.3-build-error-fixed.patch \
 	vuplus/3_9_linux-sata_bcm.patch \
 	vuplus/3_9_mxl5007t-add-no_probe-and-no_reset-parameters.patch \
@@ -70,6 +72,7 @@ VUPLUS_3_14_PATCH = \
 	vuplus/3_14_kernel-add-support-for-gcc6.patch \
 	vuplus/3_14_kernel-add-support-for-gcc7.patch \
 	vuplus/3_14_kernel-add-support-for-gcc8.patch \
+	vuplus/3_14_kernel-add-support-for-gcc9.patch \
 	vuplus/3_14_0001-Support-TBS-USB-drivers.patch \
 	vuplus/3_14_0001-STV-Add-PLS-support.patch \
 	vuplus/3_14_0001-STV-Add-SNR-Signal-report-parameters.patch \
@@ -117,6 +120,7 @@ VUPLUS_4_1_PATCH = \
 	vuplus/4_1_kernel-add-support-for-gcc6.patch \
 	vuplus/4_1_kernel-add-support-for-gcc7.patch \
 	vuplus/4_1_kernel-add-support-for-gcc8.patch \
+	vuplus/4_1_kernel-add-support-for-gcc9.patch \
 	vuplus/4_1_0001-Support-TBS-USB-drivers-for-4.1-kernel.patch \
 	vuplus/4_1_0001-TBS-fixes-for-4.1-kernel.patch \
 	vuplus/4_1_0001-STV-Add-PLS-support.patch \
