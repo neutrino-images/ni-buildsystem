@@ -669,7 +669,7 @@ vsftpd: $(VSFTPD_DEPS) $(ARCHIVE)/$(VSFTPD_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-PROCPS-NG_VER    = 3.3.15
+PROCPS-NG_VER    = 3.3.16
 PROCPS-NG_TMP    = procps-ng-$(PROCPS-NG_VER)
 PROCPS-NG_SOURCE = procps-ng-$(PROCPS-NG_VER).tar.xz
 PROCPS-NG_URL    = http://sourceforge.net/projects/procps-ng/files/Production
@@ -677,8 +677,7 @@ PROCPS-NG_URL    = http://sourceforge.net/projects/procps-ng/files/Production
 $(ARCHIVE)/$(PROCPS-NG_SOURCE):
 	$(DOWNLOAD) $(PROCPS-NG_URL)/$(PROCPS-NG_SOURCE)
 
-PROCPS-NG_PATCH  = procps-ng-0001-Fix-out-of-tree-builds.patch
-PROCPS-NG_PATCH += procps-ng-no-tests-docs.patch
+PROCPS-NG_PATCH  = procps-ng-no-tests-docs.patch
 
 PROCPS-NG_DEPS   = ncurses
 
