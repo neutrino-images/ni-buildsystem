@@ -577,7 +577,7 @@ ushare: $(USHARE_DEPS) $(ARCHIVE)/$(USHARE_SOURCE)| $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-SMARTMONTOOLS_VER    = 6.6
+SMARTMONTOOLS_VER    = 7.1
 SMARTMONTOOLS_TMP    = smartmontools-$(SMARTMONTOOLS_VER)
 SMARTMONTOOLS_SOURCE = smartmontools-$(SMARTMONTOOLS_VER).tar.gz
 SMARTMONTOOLS_URL    = https://sourceforge.net/projects/smartmontools/files/smartmontools/$(SMARTMONTOOLS_VER)
