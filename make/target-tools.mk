@@ -715,7 +715,7 @@ procps-ng: $(PROCPS-NG_DEPS) $(ARCHIVE)/$(PROCPS-NG_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-NANO_VER    = 4.3
+NANO_VER    = 4.7
 NANO_TMP    = nano-$(NANO_VER)
 NANO_SOURCE = nano-$(NANO_VER).tar.gz
 NANO_URL    = https://www.nano-editor.org/dist/v$(basename $(NANO_VER))
