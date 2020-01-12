@@ -809,7 +809,7 @@ bash: $(ARCHIVE)/$(BASH_SOURCE) | $(TARGET_DIR)
 # -----------------------------------------------------------------------------
 
 # for coolstream: formatting ext4 failes with newer versions then 1.43.8
-E2FSPROGS_VER    = $(if $(filter $(BOXTYPE), coolstream),1.43.8,1.45.4)
+E2FSPROGS_VER    = $(if $(filter $(BOXTYPE), coolstream),1.43.8,1.45.5)
 E2FSPROGS_TMP    = e2fsprogs-$(E2FSPROGS_VER)
 E2FSPROGS_SOURCE = e2fsprogs-$(E2FSPROGS_VER).tar.gz
 E2FSPROGS_URL    = https://sourceforge.net/projects/e2fsprogs/files/e2fsprogs/v$(E2FSPROGS_VER)
