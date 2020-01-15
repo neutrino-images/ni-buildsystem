@@ -1305,6 +1305,7 @@ xupnpd: $(XUPNPD_DEPS) | $(TARGET_DIR)
 	$(GET-GIT-SOURCE) $(XUPNPD_URL)/$(XUPNPD_SOURCE) $(ARCHIVE)/$(XUPNPD_SOURCE)
 	$(CPDIR)/$(XUPNPD_SOURCE)
 	$(CHDIR)/$(XUPNPD_TMP); \
+		git checkout 25d6d44; \
 		$(call apply_patches, $(XUPNPD_PATCH))
 	$(CHDIR)/$(XUPNPD_TMP)/src; \
 		$(BUILD_ENV) \
