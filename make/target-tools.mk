@@ -600,7 +600,7 @@ smartmontools: $(ARCHIVE)/$(SMARTMONTOOLS_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-INADYN_VER    = 2.5
+INADYN_VER    = 2.6
 INADYN_TMP    = inadyn-$(INADYN_VER)
 INADYN_SOURCE = inadyn-$(INADYN_VER).tar.xz
 INADYN_URL    = https://github.com/troglobit/inadyn/releases/download/v$(INADYN_VER)
