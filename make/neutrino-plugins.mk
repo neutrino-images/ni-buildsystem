@@ -45,6 +45,11 @@ NP_CONFIGURE_ADDITIONS = \
 		--disable-stbup
 
 ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd1 hd2))
+  ifeq ($(BOXSERIES), hd1)
+    NP_CONFIGURE_ADDITIONS += \
+		--disable-spiegel_tv_doc \
+		--disable-tierwelt_tv
+  endif
   NP_CONFIGURE_ADDITIONS += \
 		--disable-showiframe \
 		--disable-stb_startup \
