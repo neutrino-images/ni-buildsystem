@@ -106,11 +106,10 @@ u-pr-auto-timer:
 CHANNELLISTS_URL = $(NI-SERVER)/channellists
 CHANNELLISTS_MD5FILE = lists.txt
 
-channellists: matze-192 matze-192-130 pathauf-192
+channellists: matze-192 matze-192-130
 
 matze-192 \
-matze-192-130 \
-pathauf-192:
+matze-192-130:
 	$(MAKE) u-init
 	$(INSTALL_EXEC) $(TARGET_FILES)/channellists/update-ctrl/preinstall.sh $(PREINSTALL_SH)
 	$(INSTALL_EXEC) $(TARGET_FILES)/channellists/update-ctrl/postinstall.sh $(POSTINSTALL_SH)
@@ -126,20 +125,19 @@ pathauf-192:
 	done
 	# sync sat-names with current satellites.xml
 	# Astra 19.2
-	A192=`grep 'position=\"192\"' $(SOURCE_DIR)/$(NI-NEUTRINO)/data/config/satellites.xml`; \
-	A192=`echo $$A192`; \
-	sed -i "/position=\"192\"/c\	$$A192" $(UPDATE_INST_DIR)/var/tuxbox/config/zapit/services.xml
+	P192=`grep -m 1 'position=\"192\"' $(SOURCE_DIR)/$(NI-NEUTRINO)/data/config/satellites.xml`; \
+	P192=`echo $$P192`; \
+	sed -i "/position=\"192\"/c\	$$P192" $(UPDATE_INST_DIR)/var/tuxbox/config/zapit/services.xml
 	# Hotbird 13.0
-	H130=`grep 'position=\"130\"' $(SOURCE_DIR)/$(NI-NEUTRINO)/data/config/satellites.xml`; \
-	H130=`echo $$H130`; \
-	sed -i "/position=\"130\"/c\	$$H130" $(UPDATE_INST_DIR)/var/tuxbox/config/zapit/services.xml
+	P130=`grep -m 1 'position=\"130\"' $(SOURCE_DIR)/$(NI-NEUTRINO)/data/config/satellites.xml`; \
+	P130=`echo $$P130`; \
+	sed -i "/position=\"130\"/c\	$$P130" $(UPDATE_INST_DIR)/var/tuxbox/config/zapit/services.xml
 	#
 	# we should try to keep this array table up-to-date ;-)
 	#
 	DIR[0]="#directory"	&& DESC[0]="#description"		&& DATE[0]="#date"	 ; \
 	DIR[1]="matze-192"	&& DESC[1]="matze-Settings 19.2"	&& DATE[1]="16.03.2020"	 ; \
 	DIR[2]="matze-192-130"	&& DESC[2]="matze-Settings 19.2, 13.0"	&& DATE[2]="16.03.2020"	 ; \
-	DIR[3]="pathauf-192"	&& DESC[3]="pathAuf-Settings 19.2"	&& DATE[3]="10.01.2019"	 ; \
 	#; \
 	i=0; \
 	for dir in $${DIR[*]}; do \
@@ -168,9 +166,9 @@ initial-settings: matze-192
 	$(CHDIR)/initial && \
 		tar -xf $(STAGING_DIR)/updates/matze-192.bin && \
 		cp temp_inst/inst/var/tuxbox/config/zapit/* $(SOURCE_DIR)/$(NI-NEUTRINO)/data/initial/
-	ASTRA192=`grep 'position=\"192\"' $(SOURCE_DIR)/$(NI-NEUTRINO)/data/config/satellites.xml`; \
-	ASTRA192=`echo $$ASTRA192`; \
-	sed -i "/position=\"192\"/c\	$$ASTRA192" $(SOURCE_DIR)/$(NI-NEUTRINO)/data/initial/services.xml
+	P192=`grep -m 1 'position=\"192\"' $(SOURCE_DIR)/$(NI-NEUTRINO)/data/config/satellites.xml`; \
+	P192=`echo $$P192`; \
+	sed -i "/position=\"192\"/c\	$$P192" $(SOURCE_DIR)/$(NI-NEUTRINO)/data/initial/services.xml
 	@echo -e "$(TERM_YELLOW)Commit your changes in $(SOURCE_DIR)/$(NI-NEUTRINO)/data/initial$(TERM_NORMAL)"
 
 # -----------------------------------------------------------------------------
