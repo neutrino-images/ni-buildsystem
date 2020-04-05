@@ -196,6 +196,9 @@ neutrino-mediathek: $(SHAREPLUGINS) | $(TARGET_DIR)
 		$(INSTALL_COPY) plugins/* $(SHAREPLUGINS)/; \
 		$(INSTALL_COPY) share $(TARGET_DIR)
 	$(REMOVE)/$(NEUTRINO-MEDIATHEK_TMP)
+	# temporarily use beta-version from our board
+	rm -rf $(SHAREPLUGINS)/neutrino-mediathek*
+	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-lua/plugins/mediathek/* $(SHAREPLUGINS)/
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
