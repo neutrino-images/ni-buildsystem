@@ -764,7 +764,7 @@ libgpg-error: $(ARCHIVE)/$(LIBGPG-ERROR_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-LIBGCRYPT_VER    = 1.8.3
+LIBGCRYPT_VER    = 1.8.5
 LIBGCRYPT_TMP    = libgcrypt-$(LIBGCRYPT_VER)
 LIBGCRYPT_SOURCE = libgcrypt-$(LIBGCRYPT_VER).tar.gz
 LIBGCRYPT_URL    = ftp://ftp.gnupg.org/gcrypt/libgcrypt
@@ -785,6 +785,7 @@ libgcrypt: $(LIBGCRYPT_DEPS) $(ARCHIVE)/$(LIBGCRYPT_SOURCE) | $(TARGET_DIR)
 			--enable-silent-rules \
 			--enable-shared \
 			--disable-static \
+			--disable-tests \
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
