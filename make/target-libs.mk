@@ -487,12 +487,15 @@ LIBUSB-COMPAT_URL    = https://github.com/libusb/libusb-compat-0.1/releases/down
 $(ARCHIVE)/$(LIBUSB-COMPAT_SOURCE):
 	$(DOWNLOAD) $(LIBUSB-COMPAT_URL)/$(LIBUSB-COMPAT_SOURCE)
 
+LIBUSB-COMPAT_PATCH  = 0001-fix-a-build-issue-on-linux.patch
+
 LUBUSB-COMPAT_DEPS   = libusb
 
 libusb-compat: $(LUBUSB-COMPAT_DEPS) $(ARCHIVE)/$(LIBUSB-COMPAT_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LIBUSB-COMPAT_TMP)
 	$(UNTAR)/$(LIBUSB-COMPAT_SOURCE)
 	$(CHDIR)/$(LIBUSB-COMPAT_TMP); \
+		$(call apply_patches, $(addprefix $(@F)/,$(LIBUSB-COMPAT_PATCH))); \
 		$(CONFIGURE) \
 			--prefix= \
 			; \
