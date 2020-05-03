@@ -1215,7 +1215,7 @@ LCD4LINUX_TMP    = lcd4linux.$(LCD4LINUX_VER)
 LCD4LINUX_SOURCE = lcd4linux.$(LCD4LINUX_VER)
 LCD4LINUX_URL    = https://github.com/TangoCash
 
-LCD4LINUX_DEPS   = ncurses libgd2 libdpf
+LCD4LINUX_DEPS   = ncurses libgd libdpf
 
 lcd4linux: $(LCD4LINUX_DEPS) | $(TARGET_DIR)
 	$(REMOVE)/$(LCD4LINUX_TMP)
