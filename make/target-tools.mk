@@ -1574,12 +1574,15 @@ MC_URL    = ftp.midnight-commander.org
 $(ARCHIVE)/$(MC_SOURCE):
 	$(DOWNLOAD) $(MC_URL)/$(MC_SOURCE)
 
+MC_PATCH  = 0001-Ticket-4070-misc-Makefile-am-install-mc-lib-only-once.patch
+
 MC_DEPS   = glib2 ncurses
 
 mc: $(MC_DEPS) $(ARCHIVE)/$(MC_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(MC_TMP)
 	$(UNTAR)/$(MC_SOURCE)
 	$(CHDIR)/$(MC_TMP); \
+		$(call apply_patches, $(addprefix $(@F)/,$(MC_PATCH))); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--prefix= \
