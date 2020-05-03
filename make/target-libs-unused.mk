@@ -68,31 +68,6 @@ libFLAC: $(ARCHIVE)/$(FLAC_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-LIBROXML_VER    = 3.0.2
-LIBROXML_TMP    = libroxml-$(LIBROXML_VER)
-LIBROXML_SOURCE = libroxml-$(LIBROXML_VER).tar.gz
-LIBROXML_URL    = http://download.libroxml.net/pool/v3.x
-
-$(ARCHIVE)/$(LIBROXML_SOURCE):
-	$(DOWNLOAD) $(LIBROXML_URL)/$(LIBROXML_SOURCE)
-
-libroxml: $(ARCHIVE)/$(LIBROXML_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(LIBROXML_TMP)
-	$(UNTAR)/$(LIBROXML_SOURCE)
-	$(CHDIR)/$(LIBROXML_TMP); \
-		$(CONFIGURE) \
-			--prefix= \
-			--disable-roxml \
-			; \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF)/libroxml.pc
-	$(REWRITE_LIBTOOL)/libroxml.la
-	$(REMOVE)/$(LIBROXML_TMP)
-	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
 BZIP2_VER    = 1.0.8
 BZIP2_TMP    = bzip2-$(BZIP2_VER)
 BZIP2_SOURCE = bzip2-$(BZIP2_VER).tar.gz
