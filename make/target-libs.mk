@@ -730,7 +730,7 @@ libass: $(LIBASS_DEPS) $(ARCHIVE)/$(LIBASS_SOURCE) | $(TARGET_DIR)
 	
 # -----------------------------------------------------------------------------
 
-LIBGPG-ERROR_VER    = 1.32
+LIBGPG-ERROR_VER    = 1.37
 LIBGPG-ERROR_TMP    = libgpg-error-$(LIBGPG-ERROR_VER)
 LIBGPG-ERROR_SOURCE = libgpg-error-$(LIBGPG-ERROR_VER).tar.bz2
 LIBGPG-ERROR_URL    = ftp://ftp.gnupg.org/gcrypt/libgpg-error
@@ -751,6 +751,7 @@ libgpg-error: $(ARCHIVE)/$(LIBGPG-ERROR_SOURCE) | $(TARGET_DIR)
 			--enable-maintainer-mode \
 			--enable-shared \
 			--disable-static \
+			--disable-tests \
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
