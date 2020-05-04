@@ -69,7 +69,7 @@ libfuse: $(ARCHIVE)/$(FUSE_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-LIBUPNP_VER    = 1.6.22
+LIBUPNP_VER    = 1.6.25
 LIBUPNP_TMP    = libupnp-$(LIBUPNP_VER)
 LIBUPNP_SOURCE = libupnp-$(LIBUPNP_VER).tar.bz2
 LIBUPNP_URL    = http://sourceforge.net/projects/pupnp/files/pupnp/libUPnP%20$(LIBUPNP_VER)
