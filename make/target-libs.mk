@@ -584,7 +584,7 @@ lzo: $(ARCHIVE)/$(LZO_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-LIBSIGC_VER    = 2.10.2
+LIBSIGC_VER    = 2.10.3
 LIBSIGC_TMP    = libsigc++-$(LIBSIGC_VER)
 LIBSIGC_SOURCE = libsigc++-$(LIBSIGC_VER).tar.xz
 LIBSIGC_URL    = https://download.gnome.org/sources/libsigc++/$(basename $(LIBSIGC_VER))
