@@ -137,16 +137,9 @@ giflib: $(ARCHIVE)/$(GIFLIB_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(GIFLIB_TMP)
 	$(UNTAR)/$(GIFLIB_SOURCE)
 	$(CHDIR)/$(GIFLIB_TMP); \
-		export ac_cv_prog_have_xmlto=no; \
-		$(CONFIGURE) \
-			--prefix= \
-			--disable-static \
-			--enable-shared \
-			--bindir=$(remove-bindir) \
-			; \
-		$(MAKE) all; \
-		make install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL)/libgif.la
+		$(BUILD_ENV) \
+		$(MAKE); \
+		make install-include install-lib DESTDIR=$(TARGET_DIR) PREFIX=
 	$(REMOVE)/$(GIFLIB_TMP)
 	$(TOUCH)
 
