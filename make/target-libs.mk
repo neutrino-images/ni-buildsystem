@@ -125,9 +125,9 @@ libdvbsi: | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-GIFLIB_VER    = 5.2.1
+GIFLIB_VER    = 5.1.4
 GIFLIB_TMP    = giflib-$(GIFLIB_VER)
-GIFLIB_SOURCE = giflib-$(GIFLIB_VER).tar.gz
+GIFLIB_SOURCE = giflib-$(GIFLIB_VER).tar.bz2
 GIFLIB_URL    = https://sourceforge.net/projects/giflib/files
 
 $(ARCHIVE)/$(GIFLIB_SOURCE):
