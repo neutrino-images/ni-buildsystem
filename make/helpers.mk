@@ -18,7 +18,7 @@ define apply_patches
 	for i in $(1); do \
 		if [ -d $$i ]; then \
 			for p in $$i/*; do \
-				echo -e "$(TERM_YELLOW)Applying $$p$(TERM_NORMAL)"; \
+				echo -e "$(TERM_YELLOW)Applying $${p#$(PATCHES)/}$(TERM_NORMAL)"; \
 				if [ $${p:0:1} == "/" ]; then \
 					patch -p$$l -i $$p; \
 				else \
@@ -26,7 +26,7 @@ define apply_patches
 				fi; \
 			done; \
 		else \
-			echo -e "$(TERM_YELLOW)Applying $$i$(TERM_NORMAL)"; \
+			echo -e "$(TERM_YELLOW)Applying $${i#$(PATCHES)/}$(TERM_NORMAL)"; \
 			if [ $${i:0:1} == "/" ]; then \
 				patch -p$$l -i $$i; \
 			else \
@@ -35,6 +35,9 @@ define apply_patches
 		fi; \
 	done
 endef
+
+# apply patch sets automatically
+APPLY_PATCHES = $(call apply_patches, $(PKG_PATCHES_DIR))
 
 # -----------------------------------------------------------------------------
 
