@@ -877,6 +877,7 @@ libxml2: $(ARCHIVE)/$(LIBXML2_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LIBXML2_TMP)
 	$(UNTAR)/$(LIBXML2_SOURCE)
 	$(CHDIR)/$(LIBXML2_TMP); \
+		$(APPLY_PATCHES); \
 		$(CONFIGURE) \
 			--prefix= \
 			--enable-shared \
