@@ -61,6 +61,18 @@ BUILD        ?= $(shell /usr/share/libtool/config.guess 2>/dev/null || /usr/shar
 
 # -----------------------------------------------------------------------------
 
+PKG_NAME        = $(basename $(@F))
+PKG_UPPER       = $(call UPPERCASE,$(PKG_NAME))
+PKG_LOWER       = $(call LOWERCASE,$(PKG_NAME))
+PKG_VER         = $($(PKG_UPPER)_VER)
+PKG_TMP         = $($(PKG_UPPER)_TMP)
+PKG_SOURCE      = $($(PKG_UPPER)_SOURCE)
+PKG_URL         = $($(PKG_UPPER)_URL)
+PKG_BUILD_TMP   = $(BUILD_TMP)/$(PKG_TMP)
+PKG_PATCHES_DIR = $(PATCHES)/$(PKG_NAME)
+
+# -----------------------------------------------------------------------------
+
 CCACHE        = /usr/bin/ccache
 CCACHE_DIR    = $(HOME)/.ccache-ni-buildsystem-$(BOXARCH)-linux-$(KERNEL_VER)
 export CCACHE_DIR
