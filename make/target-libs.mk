@@ -740,6 +740,7 @@ libgpg-error: $(ARCHIVE)/$(LIBGPG-ERROR_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(LIBGPG-ERROR_TMP); \
 		pushd src/syscfg; \
 			ln -s lock-obj-pub.arm-unknown-linux-gnueabi.h lock-obj-pub.$(TARGET).h; \
+			ln -s lock-obj-pub.arm-unknown-linux-gnueabi.h lock-obj-pub.linux-uclibcgnueabi.h; \
 		popd; \
 		$(CONFIGURE) \
 			--prefix= \
