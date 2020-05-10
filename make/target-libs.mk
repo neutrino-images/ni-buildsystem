@@ -747,6 +747,8 @@ libgpg-error: $(ARCHIVE)/$(LIBGPG-ERROR_SOURCE) | $(TARGET_DIR)
 			--datarootdir=$(remove-datarootdir) \
 			--enable-maintainer-mode \
 			--enable-shared \
+			--disable-doc \
+			--disable-languages \
 			--disable-static \
 			--disable-tests \
 			; \
@@ -755,8 +757,8 @@ libgpg-error: $(ARCHIVE)/$(LIBGPG-ERROR_SOURCE) | $(TARGET_DIR)
 	mv $(TARGET_BIN_DIR)/gpg-error-config $(HOST_DIR)/bin
 	$(REWRITE_CONFIG) $(HOST_DIR)/bin/gpg-error-config
 	$(REWRITE_LIBTOOL)/libgpg-error.la
-	rm -rf $(TARGET_BIN_DIR)/gpg-error
-	rm -rf $(TARGET_SHARE_DIR)/common-lisp
+	$(REWRITE_PKGCONF)/gpg-error.pc
+	rm -f $(addprefix $(TARGET_BIN_DIR)/,gpg-error gpgrt-config)
 	$(REMOVE)/$(LIBGPG-ERROR_TMP)
 	$(TOUCH)
 
@@ -897,9 +899,9 @@ libxml2: $(ARCHIVE)/$(LIBXML2_SOURCE) | $(TARGET_DIR)
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	mv $(TARGET_BIN_DIR)/xml2-config $(HOST_DIR)/bin
+	$(REWRITE_CONFIG) $(HOST_DIR)/bin/xml2-config
 	$(REWRITE_LIBTOOL)/libxml2.la
 	$(REWRITE_PKGCONF)/libxml-2.0.pc
-	$(REWRITE_CONFIG) $(HOST_DIR)/bin/xml2-config
 	rm -rf $(TARGET_LIB_DIR)/xml2Conf.sh
 	rm -rf $(TARGET_LIB_DIR)/cmake
 	$(REMOVE)/$(LIBXML2_TMP)
