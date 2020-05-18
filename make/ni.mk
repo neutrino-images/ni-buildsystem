@@ -71,6 +71,7 @@ ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd51 vusolo4k vuduo4k vuultimo4k 
 	$(MAKE) mc
   endif
   ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 vusolo4k vuduo4k vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo))
+	$(MAKE) gptfdisk
 	$(MAKE) rsync
 	$(MAKE) ofgwrite
 	$(MAKE) aio-grab
