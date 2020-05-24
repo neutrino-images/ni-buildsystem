@@ -80,8 +80,8 @@ ifeq ($(NI_ADMIN), true)
 	$(CD) $(@); \
 		git remote add tuxbox $(GITHUB)/tuxbox-neutrino/gui-neutrino.git; \
 		git remote add seife  $(GITHUB)/neutrino-mp/neutrino-mp.git; \
-		git remote add ddt    $(GITHUB)/duckbox-developers/neutrino-mp-ddt.git; \
-		git remote add tango  $(GITHUB)/tangocash/neutrino-mp-tangos.git; \
+		git remote add ddt    $(GITHUB)/duckbox-developers/neutrino-ddt.git; \
+		git remote add tango  $(GITHUB)/tangocash/neutrino-tangos.git; \
 		git fetch --all
 endif
 
