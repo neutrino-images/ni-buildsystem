@@ -214,7 +214,7 @@ REWRITE_PKGCONF        = $(REWRITE_CONFIG_RULES) $(PKG_CONFIG_PATH)
 # -----------------------------------------------------------------------------
 
 # download archives into archives directory
-DOWNLOAD = wget -t3 -T60 -c -P $(ARCHIVE)
+DOWNLOAD = wget --no-check-certificate -t3 -T60 -c -P $(ARCHIVE)
 
 # unpack archives into build directory
 UNTAR = tar -C $(BUILD_TMP) -xf $(ARCHIVE)
