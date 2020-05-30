@@ -57,7 +57,7 @@ $(BUILD_TMP)/linux-$(KERNEL_VER).tar: | $(BUILD_TMP)
 CROSSTOOL-NG_VER    = git
 CROSSTOOL-NG_TMP    = crosstool-ng.$(CROSSTOOL-NG_VER)
 CROSSTOOL-NG_SOURCE = crosstool-ng.$(CROSSTOOL-NG_VER)
-CROSSTOOL-NG_URL    = https://github.com/MaxWiesel
+CROSSTOOL-NG_URL    = https://github.com/neutrino-images
 
 CROSSTOOL-NG_PATCH  = crosstool-ng-bash-version.patch
 
