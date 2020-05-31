@@ -4,7 +4,7 @@
 
 feeds=
 {
-   { 'coolstream',     'localhost',            'CST' },
+   { 'neutrino',       'localhost',            'Neutrino' },
    { 'youtube',        'simonscat',            'YouTube - Simon\'s Cat' },
    { 'youtube',        'redbullracing',        'YouTube - Infiniti Red Bull Racing' },
    { 'youtube',        'Postillon24',          'YouTube - Postillon24' },
