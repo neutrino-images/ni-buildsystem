@@ -1316,7 +1316,7 @@ xupnpd: $(XUPNPD_DEPS) | $(TARGET_DIR)
 	rm $(TARGET_SHARE_DIR)/xupnpd/plugins/staff/xupnpd_18plus.lua
 	$(INSTALL_DATA) -D $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-lua/xupnpd/xupnpd_18plus.lua $(TARGET_SHARE_DIR)/xupnpd/plugins/
 	$(INSTALL_DATA) -D $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-lua/xupnpd/xupnpd_cczwei.lua $(TARGET_SHARE_DIR)/xupnpd/plugins/
-	$(INSTALL_DATA) -D $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-lua/xupnpd/xupnpd_coolstream.lua $(TARGET_SHARE_DIR)/xupnpd/plugins/
+	$(INSTALL_DATA) -D $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-lua/xupnpd/xupnpd_neutrino.lua $(TARGET_SHARE_DIR)/xupnpd/plugins/
 	$(INSTALL_DATA) -D $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-lua/xupnpd/xupnpd_vimeo.lua $(TARGET_SHARE_DIR)/xupnpd/plugins/
 	$(INSTALL_DATA) -D $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-lua/xupnpd/xupnpd_youtube.lua $(TARGET_SHARE_DIR)/xupnpd/plugins/
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/xupnpd.init $(TARGET_DIR)/etc/init.d/xupnpd
