@@ -1663,7 +1663,7 @@ AIO-GRAB_TMP    = aio-grab.$(AIO-GRAB_VER)
 AIO-GRAB_SOURCE = aio-grab.$(AIO-GRAB_VER)
 AIO-GRAB_URL    = https://github.com/oe-alliance
 
-AIO-GRAB_DEPS   = zlib libpng libjpeg
+AIO-GRAB_DEPS   = zlib libpng libjpeg-turbo
 
 aio-grab: $(AIO-GRAB_DEPS) | $(TARGET_DIR)
 	$(REMOVE)/$(AIO-GRAB_TMP)

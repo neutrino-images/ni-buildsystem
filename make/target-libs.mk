@@ -34,18 +34,18 @@ zlib: $(ARCHIVE)/$(ZLIB_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-FUSE_VER    = 2.9.9
-FUSE_TMP    = fuse-$(FUSE_VER)
-FUSE_SOURCE = fuse-$(FUSE_VER).tar.gz
-FUSE_URL    = https://github.com/libfuse/libfuse/releases/download/fuse-$(FUSE_VER)
+LIBFUSE_VER    = 2.9.9
+LIBFUSE_TMP    = fuse-$(LIBFUSE_VER)
+LIBFUSE_SOURCE = fuse-$(LIBFUSE_VER).tar.gz
+LIBFUSE_URL    = https://github.com/libfuse/libfuse/releases/download/fuse-$(LIBFUSE_VER)
 
-$(ARCHIVE)/$(FUSE_SOURCE):
-	$(DOWNLOAD) $(FUSE_URL)/$(FUSE_SOURCE)
+$(ARCHIVE)/$(LIBFUSE_SOURCE):
+	$(DOWNLOAD) $(LIBFUSE_URL)/$(LIBFUSE_SOURCE)
 
-libfuse: $(ARCHIVE)/$(FUSE_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(FUSE_TMP)
-	$(UNTAR)/$(FUSE_SOURCE)
-	$(CHDIR)/$(FUSE_TMP); \
+libfuse: $(ARCHIVE)/$(LIBFUSE_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(LIBFUSE_TMP)
+	$(UNTAR)/$(LIBFUSE_SOURCE)
+	$(CHDIR)/$(LIBFUSE_TMP); \
 		$(CONFIGURE) \
 			--prefix= \
 			--datarootdir=$(remove-datarootdir) \
@@ -64,7 +64,7 @@ libfuse: $(ARCHIVE)/$(FUSE_SOURCE) | $(TARGET_DIR)
 	$(REWRITE_PKGCONF)/fuse.pc
 	rm -rf $(TARGET_DIR)/etc/udev
 	rm -rf $(TARGET_DIR)/etc/init.d/fuse
-	$(REMOVE)/$(FUSE_TMP)
+	$(REMOVE)/$(LIBFUSE_TMP)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -295,7 +295,7 @@ $(ARCHIVE)/$(LIBJPEG-TURBO_SOURCE):
 
 LIBJPEG-TURBO_PATCH  = libjpeg-turbo-tiff-ojpeg.patch
 
-libjpeg: $(ARCHIVE)/$(LIBJPEG-TURBO_SOURCE) | $(TARGET_DIR)
+libjpeg-turbo: $(ARCHIVE)/$(LIBJPEG-TURBO_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LIBJPEG-TURBO_TMP)
 	$(UNTAR)/$(LIBJPEG-TURBO_SOURCE)
 	$(CHDIR)/$(LIBJPEG-TURBO_TMP); \
@@ -511,7 +511,7 @@ LIBGD_URL    = https://github.com/libgd/libgd/releases/download/gd-$(LIBGD_VER)
 $(ARCHIVE)/$(LIBGD_SOURCE):
 	$(DOWNLOAD) $(LIBGD_URL)/$(LIBGD_SOURCE)
 
-LIBGD_DEPS   = zlib libpng libjpeg freetype
+LIBGD_DEPS   = zlib libpng libjpeg-turbo freetype
 
 libgd: $(LIBGD_DEPS) $(ARCHIVE)/$(LIBGD_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LIBGD_TMP)
@@ -593,7 +593,7 @@ LIBSIGC_URL    = https://download.gnome.org/sources/libsigc++/$(basename $(LIBSI
 $(ARCHIVE)/$(LIBSIGC_SOURCE):
 	$(DOWNLOAD) $(LIBSIGC_URL)/$(LIBSIGC_SOURCE)
 
-libsigc++: $(ARCHIVE)/$(LIBSIGC_SOURCE) | $(TARGET_DIR)
+libsigc: $(ARCHIVE)/$(LIBSIGC_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LIBSIGC_TMP)
 	$(UNTAR)/$(LIBSIGC_SOURCE)
 	$(CHDIR)/$(LIBSIGC_TMP); \
