@@ -1388,41 +1388,6 @@ libiconv: $(ARCHIVE)/$(LIBICONV_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-LIBICONV-STRIPPED_VER    = 1.13.1
-LIBICONV-STRIPPED_TMP    = libiconv-$(LIBICONV-STRIPPED_VER)
-LIBICONV-STRIPPED_SOURCE = libiconv-$(LIBICONV-STRIPPED_VER).tar.gz
-LIBICONV-STRIPPED_URL    = https://ftp.gnu.org/gnu/libiconv
-
-$(ARCHIVE)/$(LIBICONV-STRIPPED_SOURCE):
-	$(DOWNLOAD) $(LIBICONV-STRIPPED_URL)/$(LIBICONV-STRIPPED_SOURCE)
-
-LIBICONV-STRIPPED_PATCH  = disable_transliterations.patch
-LIBICONV-STRIPPED_PATCH += strip_charsets.patch
-
-# builds only stripped down iconv binary used by smarthomeinfo plugin
-iconv-bin: $(ARCHIVE)/$(LIBICONV-STRIPPED_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(LIBICONV-STRIPPED_TMP)
-	$(UNTAR)/$(LIBICONV-STRIPPED_SOURCE)
-	$(CHDIR)/$(LIBICONV-STRIPPED_TMP); \
-		$(call apply_patches, $(addprefix libiconv/,$(LIBICONV-STRIPPED_PATCH))); \
-		sed -i -e '/preload/d' Makefile.in; \
-		$(CONFIGURE) \
-			--target=$(TARGET) \
-			--prefix= \
-			--datarootdir=$(remove-datarootdir) \
-			--includedir=$(remove-includedir) \
-			--libdir=$(remove-libdir) \
-			--enable-static \
-			--disable-shared \
-			--enable-relocatable \
-			; \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/$(LIBICONV-STRIPPED_TMP)
-	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
 GRAPHLCD_VER    = git
 GRAPHLCD_TMP    = graphlcd-base.$(GRAPHLCD_VER)
 GRAPHLCD_SOURCE = graphlcd-base.$(GRAPHLCD_VER)
