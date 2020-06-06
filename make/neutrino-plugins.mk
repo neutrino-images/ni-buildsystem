@@ -22,7 +22,7 @@ NP_OBJ_DIR = $(BUILD_TMP)/$(NI-NEUTRINO-PLUGINS)
 NP_DEPS  = ffmpeg
 NP_DEPS += libcurl
 NP_DEPS += libpng
-NP_DEPS += libjpeg
+NP_DEPS += libjpeg-turbo
 NP_DEPS += giflib
 NP_DEPS += freetype
 NP_DEPS += luaexpat
@@ -206,7 +206,7 @@ LINKS_URL    = http://links.twibright.com/download
 $(ARCHIVE)/$(LINKS_SOURCE):
 	$(DOWNLOAD) $(LINKS_URL)/$(LINKS_SOURCE)
 
-LINKS_DEPS   = libpng libjpeg openssl
+LINKS_DEPS   = libpng libjpeg-turbo openssl
 
 LINKS_PATCH  = links.patch
 LINKS_PATCH += links-ac-prog-cxx.patch
