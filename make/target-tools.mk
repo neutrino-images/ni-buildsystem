@@ -347,8 +347,7 @@ parted: $(PARTED_DEPS) $(ARCHIVE)/$(PARTED_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL)/libparted.la
-	$(REWRITE_LIBTOOL)/libparted-fs-resize.la
+	$(REWRITE_LIBTOOL_LA)
 	$(REWRITE_PKGCONF)/libparted.pc
 	$(REMOVE)/$(PARTED_TMP)
 	$(TOUCH)
@@ -706,7 +705,7 @@ procps-ng: $(PROCPS-NG_DEPS) $(ARCHIVE)/$(PROCPS-NG_SOURCE) | $(TARGET_DIR)
 		$(INSTALL_EXEC) $(TARGET_DIR)/bin.$(@F)/$$bin $(TARGET_DIR)/bin/$$bin; \
 	done
 	$(REWRITE_PKGCONF)/libprocps.pc
-	$(REWRITE_LIBTOOL)/libprocps.la
+	$(REWRITE_LIBTOOL_LA)
 	$(REMOVE)/$(PROCPS-NG_TMP) \
 		$(TARGET_DIR)/bin.$(@F) \
 		$(TARGET_DIR)/sbin.$(@F)
@@ -1174,7 +1173,7 @@ sg3_utils: $(ARCHIVE)/$(SG3_UTILS_SOURCE) | $(TARGET_DIR)
 		rm -f $(TARGET_DIR)/bin/$$bin; \
 		$(INSTALL_EXEC) $(TARGET_DIR)/bin.$(@F)/$$bin $(TARGET_DIR)/bin/$$bin; \
 	done
-	$(REWRITE_LIBTOOL)/libsgutils2.la
+	$(REWRITE_LIBTOOL_LA)
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/sdX.init $(TARGET_DIR)/etc/init.d/sdX
 	$(UPDATE-RC.D) sdX stop 97 0 6 .
 	$(REMOVE)/$(SG3_UTILS_TMP) \
@@ -1557,7 +1556,7 @@ gettext: $(ARCHIVE)/$(GETTEXT_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL)/libintl.la
+	$(REWRITE_LIBTOOL_LA)
 	$(REMOVE)/$(GETTEXT_TMP)
 	$(TOUCH)
 

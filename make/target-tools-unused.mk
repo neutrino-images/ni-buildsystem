@@ -116,9 +116,7 @@ util-linux: $(UTUL-LINUX_DEPS) $(ARCHIVE)/$(UTIL-LINUX_SOURCE) | $(TARGET_DIR)
 	$(REWRITE_PKGCONF)/fdisk.pc
 	$(REWRITE_PKGCONF)/smartcols.pc
 	$(REWRITE_PKGCONF)/uuid.pc
-	$(REWRITE_LIBTOOL)/libfdisk.la
-	$(REWRITE_LIBTOOL)/libsmartcols.la
-	$(REWRITE_LIBTOOL)/libuuid.la
+	$(REWRITE_LIBTOOL_LA)
 	$(REMOVE)/$(UTIL-LINUX_TMP)
 	$(TOUCH)
 

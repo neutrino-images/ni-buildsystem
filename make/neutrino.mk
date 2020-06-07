@@ -217,7 +217,7 @@ libstb-hal: $(LH_OBJ_DIR)/config.status
 	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
 	$(MAKE) -C $(LH_OBJ_DIR) all     DESTDIR=$(TARGET_DIR)
 	$(MAKE) -C $(LH_OBJ_DIR) install DESTDIR=$(N_INST_DIR)
-	$(REWRITE_LIBTOOL)/libstb-hal.la
+	$(REWRITE_LIBTOOL_LA)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------

@@ -28,7 +28,7 @@ libid3tag: $(LIBID3TAG_DEPS) $(ARCHIVE)/$(LIBID3TAG_SOURCE) | $(TARGET_DIR)
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF)/id3tag.pc
-	$(REWRITE_LIBTOOL)/libid3tag.la
+	$(REWRITE_LIBTOOL_LA)
 	$(REMOVE)/$(LIBID3TAG_TMP)
 	$(TOUCH)
 
@@ -60,7 +60,7 @@ libFLAC: $(ARCHIVE)/$(FLAC_SOURCE) | $(TARGET_DIR)
 		$(MAKE) all; \
 		make install DESTDIR=$(TARGET_DIR); \
 	$(REWRITE_PKGCONF)/flac.pc
-	$(REWRITE_LIBTOOL)/libFLAC.la
+	$(REWRITE_LIBTOOL_LA)
 	rm -rf $(TARGET_DIR)/bin/flac
 	rm -rf $(TARGET_DIR)/bin/metaflac
 	$(REMOVE)/$(LIBFLAC_TMP)
@@ -117,7 +117,7 @@ fontconfig: $(FONTCONFIG_DEPS) $(ARCHIVE)/$(FONTCONFIG_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL)/libfontconfig.la
+	$(REWRITE_LIBTOOL_LA)
 	$(REWRITE_PKGCONF)/fontconfig.pc
 	$(REMOVE)/$(FONTCONFIG_TMP)
 	$(TOUCH)
@@ -152,7 +152,7 @@ pixman: $(PIXMAN_DEPS) $(ARCHIVE)/$(PIXMAN_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL)/libpixman-1.la
+	$(REWRITE_LIBTOOL_LA)
 	$(REWRITE_PKGCONF)/pixman-1.pc
 	$(REMOVE)/$(PIXMAN_TMP)
 	$(TOUCH)
@@ -195,10 +195,7 @@ cairo: $(CAIRO_DEPS) $(ARCHIVE)/$(CAIRO_SOURCE) | $(TARGET_DIR)
 	rm -rf $(TARGET_LIB_DIR)/cairo/cairo-sphinx*
 	rm -rf $(TARGET_LIB_DIR)/cairo/.debug/cairo-fdr*
 	rm -rf $(TARGET_LIB_DIR)/cairo/.debug/cairo-sphinx*
-	$(REWRITE_LIBTOOL)/libcairo.la
-	$(REWRITE_LIBTOOL)/libcairo-script-interpreter.la
-	$(REWRITE_LIBTOOL)/libcairo-gobject.la
-	$(REWRITE_LIBTOOL)/cairo/libcairo-trace.la
+	$(REWRITE_LIBTOOL_LA)
 	$(REWRITE_PKGCONF)/cairo.pc
 	$(REWRITE_PKGCONF)/cairo-fc.pc
 	$(REWRITE_PKGCONF)/cairo-ft.pc
@@ -243,8 +240,7 @@ harfbuzz: $(HARFBUZZ_DEPS) $(ARCHIVE)/$(HARFBUZZ_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL)/libharfbuzz.la
-	$(REWRITE_LIBTOOL)/libharfbuzz-subset.la
+	$(REWRITE_LIBTOOL_LA)
 	$(REWRITE_PKGCONF)/harfbuzz.pc
 	$(REWRITE_PKGCONF)/harfbuzz-subset.pc
 	$(REMOVE)/$(HARFBUZZ_TMP)
