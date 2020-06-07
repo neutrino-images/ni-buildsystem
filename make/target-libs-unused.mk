@@ -27,8 +27,8 @@ libid3tag: $(LIBID3TAG_DEPS) $(ARCHIVE)/$(LIBID3TAG_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF)/id3tag.pc
 	$(REWRITE_LIBTOOL_LA)
+	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(LIBID3TAG_TMP)
 	$(TOUCH)
 
@@ -59,8 +59,8 @@ libFLAC: $(ARCHIVE)/$(FLAC_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE) all; \
 		make install DESTDIR=$(TARGET_DIR); \
-	$(REWRITE_PKGCONF)/flac.pc
 	$(REWRITE_LIBTOOL_LA)
+	$(REWRITE_PKGCONF_PC)
 	rm -rf $(TARGET_DIR)/bin/flac
 	rm -rf $(TARGET_DIR)/bin/metaflac
 	$(REMOVE)/$(LIBFLAC_TMP)
@@ -118,7 +118,7 @@ fontconfig: $(FONTCONFIG_DEPS) $(ARCHIVE)/$(FONTCONFIG_SOURCE) | $(TARGET_DIR)
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL_LA)
-	$(REWRITE_PKGCONF)/fontconfig.pc
+	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(FONTCONFIG_TMP)
 	$(TOUCH)
 
@@ -153,7 +153,7 @@ pixman: $(PIXMAN_DEPS) $(ARCHIVE)/$(PIXMAN_SOURCE) | $(TARGET_DIR)
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL_LA)
-	$(REWRITE_PKGCONF)/pixman-1.pc
+	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(PIXMAN_TMP)
 	$(TOUCH)
 
@@ -196,16 +196,7 @@ cairo: $(CAIRO_DEPS) $(ARCHIVE)/$(CAIRO_SOURCE) | $(TARGET_DIR)
 	rm -rf $(TARGET_LIB_DIR)/cairo/.debug/cairo-fdr*
 	rm -rf $(TARGET_LIB_DIR)/cairo/.debug/cairo-sphinx*
 	$(REWRITE_LIBTOOL_LA)
-	$(REWRITE_PKGCONF)/cairo.pc
-	$(REWRITE_PKGCONF)/cairo-fc.pc
-	$(REWRITE_PKGCONF)/cairo-ft.pc
-	$(REWRITE_PKGCONF)/cairo-gobject.pc
-	$(REWRITE_PKGCONF)/cairo-pdf.pc
-	$(REWRITE_PKGCONF)/cairo-png.pc
-	$(REWRITE_PKGCONF)/cairo-ps.pc
-	$(REWRITE_PKGCONF)/cairo-script.pc
-	$(REWRITE_PKGCONF)/cairo-svg.pc
-	$(REWRITE_PKGCONF)/cairo-tee.pc
+	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(CAIRO_TMP)
 	$(TOUCH)
 
@@ -241,7 +232,6 @@ harfbuzz: $(HARFBUZZ_DEPS) $(ARCHIVE)/$(HARFBUZZ_SOURCE) | $(TARGET_DIR)
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL_LA)
-	$(REWRITE_PKGCONF)/harfbuzz.pc
-	$(REWRITE_PKGCONF)/harfbuzz-subset.pc
+	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(HARFBUZZ_TMP)
 	$(TOUCH)

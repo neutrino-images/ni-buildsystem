@@ -113,10 +113,8 @@ util-linux: $(UTUL-LINUX_DEPS) $(ARCHIVE)/$(UTIL-LINUX_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF)/fdisk.pc
-	$(REWRITE_PKGCONF)/smartcols.pc
-	$(REWRITE_PKGCONF)/uuid.pc
 	$(REWRITE_LIBTOOL_LA)
+	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(UTIL-LINUX_TMP)
 	$(TOUCH)
 
@@ -187,6 +185,6 @@ readline: $(ARCHIVE)/$(READLINE_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF)/readline.pc
+	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(READLINE_TMP)
 	$(TOUCH)

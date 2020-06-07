@@ -28,7 +28,7 @@ zlib: $(ARCHIVE)/$(ZLIB_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF)/zlib.pc
+	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(ZLIB_TMP)
 	$(TOUCH)
 
@@ -60,7 +60,7 @@ libfuse: $(ARCHIVE)/$(LIBFUSE_SOURCE) | $(TARGET_DIR)
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL_LA)
-	$(REWRITE_PKGCONF)/fuse.pc
+	$(REWRITE_PKGCONF_PC)
 	rm -rf $(TARGET_DIR)/etc/udev
 	rm -rf $(TARGET_DIR)/etc/init.d/fuse
 	$(REMOVE)/$(LIBFUSE_TMP)
@@ -88,7 +88,7 @@ libupnp: $(ARCHIVE)/$(LIBUPNP_SOURCE) | $(TARGET_DIR)
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR); \
 	$(REWRITE_LIBTOOL_LA)
-	$(REWRITE_PKGCONF)/libupnp.pc
+	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(LIBUPNP_TMP)
 	$(TOUCH)
 	
@@ -116,7 +116,7 @@ libdvbsi: | $(TARGET_DIR)
 		$(MAKE); \
 		make install DESTDIR=$(TARGET_DIR); \
 	$(REWRITE_LIBTOOL_LA)
-	$(REWRITE_PKGCONF)/libdvbsi++.pc
+	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(LIBDVBSI_TMP)
 	$(TOUCH)
 
@@ -190,7 +190,7 @@ libcurl: $(LIBCURL_DEPS) $(ARCHIVE)/$(LIBCURL_SOURCE) | $(TARGET_DIR)
 	$(REWRITE_CONFIG) $(HOST_DIR)/bin/curl-config
 	rm -f $(TARGET_SHARE_DIR)/zsh
 	$(REWRITE_LIBTOOL_LA)
-	$(REWRITE_PKGCONF)/libcurl.pc
+	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(LIBCURL_TMP)
 	$(TOUCH)
 
@@ -226,8 +226,8 @@ libpng: $(LIBPNG_DEPS) $(ARCHIVE)/$(LIBPNG_SOURCE) | $(TARGET_DIR)
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	mv $(TARGET_BIN_DIR)/libpng*-config $(HOST_DIR)/bin/
 	$(REWRITE_CONFIG) $(HOST_DIR)/bin/libpng16-config
-	$(REWRITE_PKGCONF)/libpng16.pc
 	$(REWRITE_LIBTOOL_LA)
+	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(LIBPNG_TMP)
 	$(TOUCH)
 
@@ -274,8 +274,8 @@ freetype: $(FREETYPE_DEPS) $(ARCHIVE)/$(FREETYPE_SOURCE) | $(TARGET_DIR)
 	ln -sf freetype2 $(TARGET_INCLUDE_DIR)/freetype
 	mv $(TARGET_BIN_DIR)/freetype-config $(HOST_DIR)/bin
 	$(REWRITE_CONFIG) $(HOST_DIR)/bin/freetype-config
-	$(REWRITE_PKGCONF)/freetype2.pc
 	$(REWRITE_LIBTOOL_LA)
+	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(FREETYPE_TMP) \
 		$(TARGET_SHARE_DIR)/aclocal
 	$(TOUCH)
@@ -303,8 +303,7 @@ libjpeg-turbo: $(ARCHIVE)/$(LIBJPEG-TURBO_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF)/libturbojpeg.pc
-	$(REWRITE_PKGCONF)/libjpeg.pc
+	$(REWRITE_PKGCONF_PC)
 	rm -f $(addprefix $(TARGET_BIN_DIR)/,cjpeg djpeg jpegtran rdjpgcom tjbench wrjpgcom)
 	$(REMOVE)/$(LIBJPEG-TURBO_TMP)
 	$(TOUCH)
@@ -359,9 +358,7 @@ openssl: $(ARCHIVE)/$(OPENSSL_SOURCE) | $(TARGET_DIR)
 		make depend; \
 		make; \
 		make install_sw INSTALL_PREFIX=$(TARGET_DIR)
-	$(REWRITE_PKGCONF)/openssl.pc
-	$(REWRITE_PKGCONF)/libcrypto.pc
-	$(REWRITE_PKGCONF)/libssl.pc
+	$(REWRITE_PKGCONF_PC)
 	rm -rf $(TARGET_LIB_DIR)/engines
 	rm -f $(TARGET_BIN_DIR)/c_rehash
 	rm -f $(TARGET_DIR)/etc/ssl/misc/{CA.pl,tsget}
@@ -418,7 +415,7 @@ ncurses: $(ARCHIVE)/$(NCURSES_SOURCE) | $(TARGET_DIR)
 	rm -f $(HOST_DIR)/bin/ncurses*
 	mv $(TARGET_BIN_DIR)/ncurses6-config $(HOST_DIR)/bin
 	$(REWRITE_CONFIG) $(HOST_DIR)/bin/ncurses6-config
-	$(REWRITE_PKGCONF)/ncurses.pc
+	$(REWRITE_PKGCONF_PC)
 	ln -sf ./ncurses/curses.h $(TARGET_INCLUDE_DIR)/curses.h
 	ln -sf ./ncurses/curses.h $(TARGET_INCLUDE_DIR)/ncurses.h
 	ln -sf ./ncurses/term.h $(TARGET_INCLUDE_DIR)/term.h
@@ -439,7 +436,7 @@ openthreads: $(SOURCE_DIR)/$(NI-OPENTHREADS) | $(TARGET_DIR)
 		make install DESTDIR=$(TARGET_DIR)
 	rm -f $(TARGET_LIB_DIR)/cmake
 	$(REMOVE)/$(NI-OPENTHREADS)
-	$(REWRITE_PKGCONF)/openthreads.pc
+	$(REWRITE_PKGCONF_PC)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -463,7 +460,7 @@ libusb: $(ARCHIVE)/$(LIBUSB_SOURCE) | $(TARGET_DIR)
 		$(MAKE); \
 		make install DESTDIR=$(TARGET_DIR); \
 	$(REWRITE_LIBTOOL_LA)
-	$(REWRITE_PKGCONF)/libusb-$(basename $(LIBUSB_VER)).pc
+	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(LIBUSB_TMP)
 	$(TOUCH)
 
@@ -494,7 +491,7 @@ libusb-compat: $(LUBUSB-COMPAT_DEPS) $(ARCHIVE)/$(LIBUSB-COMPAT_SOURCE) | $(TARG
 	mv $(TARGET_BIN_DIR)/libusb-config $(HOST_DIR)/bin
 	$(REWRITE_CONFIG) $(HOST_DIR)/bin/libusb-config
 	$(REWRITE_LIBTOOL_LA)
-	$(REWRITE_PKGCONF)/libusb.pc
+	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(LIBUSB-COMPAT_TMP)
 	$(TOUCH)
 
@@ -525,7 +522,7 @@ libgd: $(LIBGD_DEPS) $(ARCHIVE)/$(LIBGD_SOURCE) | $(TARGET_DIR)
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL_LA)
-	$(REWRITE_PKGCONF)/gdlib.pc
+	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(LIBGD_TMP)
 	$(TOUCH)
 
@@ -604,7 +601,7 @@ libsigc: $(ARCHIVE)/$(LIBSIGC_SOURCE) | $(TARGET_DIR)
 		cp sigc++config.h $(TARGET_INCLUDE_DIR)
 	ln -sf ./sigc++-2.0/sigc++ $(TARGET_INCLUDE_DIR)/sigc++
 	$(REWRITE_LIBTOOL_LA)
-	$(REWRITE_PKGCONF)/sigc++-2.0.pc
+	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(LIBSIGC_TMP)
 	$(TOUCH)
 
@@ -636,8 +633,8 @@ expat: $(ARCHIVE)/$(EXPAT_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		make install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF)/expat.pc
 	$(REWRITE_LIBTOOL_LA)
+	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(EXPAT_TMP)
 	$(TOUCH)
 
@@ -683,7 +680,7 @@ libbluray: $(LIBBLURAY_DEPS) $(ARCHIVE)/$(LIBBLURAY_SOURCE) | $(TARGET_DIR)
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL_LA)
-	$(REWRITE_PKGCONF)/libbluray.pc
+	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(LIBBLURAY_TMP)
 	$(TOUCH)
 
@@ -718,7 +715,7 @@ libass: $(LIBASS_DEPS) $(ARCHIVE)/$(LIBASS_SOURCE) | $(TARGET_DIR)
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL_LA)
-	$(REWRITE_PKGCONF)/libass.pc
+	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(LIBASS_TMP)
 	$(TOUCH)
 	
@@ -755,7 +752,7 @@ libgpg-error: $(ARCHIVE)/$(LIBGPG-ERROR_SOURCE) | $(TARGET_DIR)
 	mv $(TARGET_BIN_DIR)/gpg-error-config $(HOST_DIR)/bin
 	$(REWRITE_CONFIG) $(HOST_DIR)/bin/gpg-error-config
 	$(REWRITE_LIBTOOL_LA)
-	$(REWRITE_PKGCONF)/gpg-error.pc
+	$(REWRITE_PKGCONF_PC)
 	rm -f $(addprefix $(TARGET_BIN_DIR)/,gpg-error gpgrt-config)
 	$(REMOVE)/$(LIBGPG-ERROR_TMP)
 	$(TOUCH)
@@ -822,8 +819,8 @@ libaacs: $(LIBAACS_DEPS) $(ARCHIVE)/$(LIBAACS_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF)/libaacs.pc
 	$(REWRITE_LIBTOOL_LA)
+	$(REWRITE_PKGCONF_PC)
 	$(CD) $(TARGET_DIR); \
 		mkdir -p .config/aacs .cache/aacs/vuk
 	cp $(TARGET_FILES)/libaacs/KEYDB.cfg $(TARGET_DIR)/.config/aacs
@@ -856,8 +853,8 @@ libbdplus: $(LIBBDPLUS_DEPS) $(ARCHIVE)/$(LIBBDPLUS_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF)/libbdplus.pc
 	$(REWRITE_LIBTOOL_LA)
+	$(REWRITE_PKGCONF_PC)
 	$(CD) $(TARGET_DIR); \
 		mkdir -p .config/bdplus/vm0
 	cp -f $(TARGET_FILES)/libbdplus/* $(TARGET_DIR)/.config/bdplus/vm0
@@ -899,7 +896,7 @@ libxml2: $(ARCHIVE)/$(LIBXML2_SOURCE) | $(TARGET_DIR)
 	mv $(TARGET_BIN_DIR)/xml2-config $(HOST_DIR)/bin
 	$(REWRITE_CONFIG) $(HOST_DIR)/bin/xml2-config
 	$(REWRITE_LIBTOOL_LA)
-	$(REWRITE_PKGCONF)/libxml-2.0.pc
+	$(REWRITE_PKGCONF_PC)
 	rm -rf $(TARGET_LIB_DIR)/xml2Conf.sh
 	rm -rf $(TARGET_LIB_DIR)/cmake
 	$(REMOVE)/$(LIBXML2_TMP)
@@ -949,8 +946,8 @@ libroxml: $(ARCHIVE)/$(LIBROXML_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF)/libroxml.pc
 	$(REWRITE_LIBTOOL_LA)
+	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(LIBROXML_TMP)
 	$(TOUCH)
 
@@ -971,7 +968,7 @@ rtmpdump: $(RTMPDUMP_DEPS) $(SOURCE_DIR)/$(NI-RTMPDUMP) | $(TARGET_DIR)
 	rm -rf $(TARGET_DIR)/sbin/rtmpgw
 	rm -rf $(TARGET_DIR)/sbin/rtmpsrv
 	rm -rf $(TARGET_DIR)/sbin/rtmpsuck
-	$(REWRITE_PKGCONF)/librtmp.pc
+	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(NI-RTMPDUMP)
 	$(TOUCH)
 
@@ -1005,7 +1002,7 @@ libtirpc: $(ARCHIVE)/$(LIBTIRPC_SOURCE) | $(TARGET_DIR)
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL_LA)
-	$(REWRITE_PKGCONF)/libtirpc.pc
+	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(LIBTIRPC_TMP)
 	$(TOUCH)
 
@@ -1033,7 +1030,7 @@ confuse: $(ARCHIVE)/$(CONFUSE_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF)/libconfuse.pc
+	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(CONFUSE_TMP)
 	$(TOUCH)
 
@@ -1061,7 +1058,7 @@ libite: $(ARCHIVE)/$(LIBITE_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF)/libite.pc
+	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(LIBITE_TMP)
 	$(TOUCH)
 
@@ -1097,8 +1094,8 @@ libmad: $(ARCHIVE)/$(LIBMAD_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE) all; \
 		make install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF)/mad.pc
 	$(REWRITE_LIBTOOL_LA)
+	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(LIBMAD_TMP)
 	$(TOUCH)
 
@@ -1125,8 +1122,8 @@ libvorbisidec: $(LIBVORBISIDEC_DEPS) $(ARCHIVE)/$(LIBVORBISIDEC_SOURCE) | $(TARG
 			; \
 		make all; \
 		make install DESTDIR=$(TARGET_DIR); \
-	$(REWRITE_PKGCONF)/vorbisidec.pc
 	$(REWRITE_LIBTOOL_LA)
+	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(LIBVORBISIDEC_TMP)
 	$(TOUCH)
 
@@ -1151,8 +1148,8 @@ libogg: $(ARCHIVE)/$(LIBOGG_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		make install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF)/ogg.pc
 	$(REWRITE_LIBTOOL_LA)
+	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(LIBOGG_TMP)
 	$(TOUCH)
 
@@ -1178,8 +1175,8 @@ fribidi: $(ARCHIVE)/$(FRIBIDI_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF)/fribidi.pc
 	$(REWRITE_LIBTOOL_LA)
+	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(FRIBIDI_TMP)
 	$(TOUCH)
 
@@ -1209,8 +1206,8 @@ libffi: $(ARCHIVE)/$(LIBFFI_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF)/libffi.pc
 	$(REWRITE_LIBTOOL_LA)
+	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(LIBFFI_TMP)
 	$(TOUCH)
 
@@ -1269,15 +1266,8 @@ glib2: $(GLIB2_DEPS) $(ARCHIVE)/$(GLIB2_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	rm -f $(addprefix $(TARGET_BIN_DIR)/,gapplication gdbus* gio* glib* gobject-query gresource gsettings gtester*)
-	$(REWRITE_PKGCONF)/gio-2.0.pc
-	$(REWRITE_PKGCONF)/gio-unix-2.0.pc
-	$(REWRITE_PKGCONF)/glib-2.0.pc
-	$(REWRITE_PKGCONF)/gmodule-2.0.pc
-	$(REWRITE_PKGCONF)/gmodule-export-2.0.pc
-	$(REWRITE_PKGCONF)/gmodule-no-export-2.0.pc
-	$(REWRITE_PKGCONF)/gobject-2.0.pc
-	$(REWRITE_PKGCONF)/gthread-2.0.pc
 	$(REWRITE_LIBTOOL_LA)
+	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(GLIB2_TMP)
 	$(TOUCH)
 
@@ -1319,8 +1309,8 @@ alsa-lib: $(ARCHIVE)/$(ALSA-LIB_SOURCE)
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF)/alsa.pc
 	$(REWRITE_LIBTOOL_LA)
+	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(ALSA-LIB_TMP)
 	$(TOUCH)
 
@@ -1344,8 +1334,8 @@ popt: $(ARCHIVE)/$(POPT_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF)/popt.pc
 	$(REWRITE_LIBTOOL_LA)
+	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(POPT_TMP)
 	$(TOUCH)
 

@@ -33,7 +33,7 @@ lua: $(LUA_DEPS) $(ARCHIVE)/$(LUA_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE) install INSTALL_TOP=$(TARGET_DIR) INSTALL_MAN=$(TARGET_DIR)$(remove-man1dir); \
 		$(MAKE) pc INSTALL_TOP=$(TARGET_DIR) > $(PKG_CONFIG_PATH)/lua.pc
-	$(REWRITE_PKGCONF)/lua.pc
+	$(REWRITE_PKGCONF_PC)
 	rm -rf $(TARGET_DIR)/bin/luac
 	$(REMOVE)/$(LUA_TMP)
 	$(TOUCH)

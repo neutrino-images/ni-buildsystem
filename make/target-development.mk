@@ -35,7 +35,7 @@ valgrind3: $(ARCHIVE)/$(VALGRIND_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE) all; \
 		make install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF)/valgrind.pc
+	$(REWRITE_PKGCONF_PC)
 	rm -f $(addprefix $(TARGET_LIB_DIR)/valgrind/,*.a *.xml)
 	rm -f $(addprefix $(TARGET_BIN_DIR)/,cg_* callgrind_* ms_print)
 	$(REMOVE)/$(VALGRIND_TMP)
@@ -61,7 +61,7 @@ valgrind12305: | $(TARGET_DIR)
 			; \
 		$(MAKE) all; \
 		make install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF)/valgrind.pc
+	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/valgrind
 	$(TOUCH)
 

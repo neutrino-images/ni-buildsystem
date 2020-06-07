@@ -348,7 +348,7 @@ parted: $(PARTED_DEPS) $(ARCHIVE)/$(PARTED_SOURCE) | $(TARGET_DIR)
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL_LA)
-	$(REWRITE_PKGCONF)/libparted.pc
+	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(PARTED_TMP)
 	$(TOUCH)
 
@@ -704,8 +704,8 @@ procps-ng: $(PROCPS-NG_DEPS) $(ARCHIVE)/$(PROCPS-NG_SOURCE) | $(TARGET_DIR)
 		rm -f $(TARGET_DIR)/bin/$$bin; \
 		$(INSTALL_EXEC) $(TARGET_DIR)/bin.$(@F)/$$bin $(TARGET_DIR)/bin/$$bin; \
 	done
-	$(REWRITE_PKGCONF)/libprocps.pc
 	$(REWRITE_LIBTOOL_LA)
+	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(PROCPS-NG_TMP) \
 		$(TARGET_DIR)/bin.$(@F) \
 		$(TARGET_DIR)/sbin.$(@F)
@@ -797,7 +797,7 @@ bash: $(ARCHIVE)/$(BASH_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF)/bash.pc
+	$(REWRITE_PKGCONF_PC)
 	-rm $(addprefix $(TARGET_LIB_DIR)/bash/, loadables.h Makefile.inc)
 	$(BASH_ADD_TO_SHELLS)
 	$(REMOVE)/$(BASH_TMP)
@@ -853,7 +853,7 @@ e2fsprogs: $(ARCHIVE)/$(E2FSPROGS_SOURCE) | $(TARGET_DIR)
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	-rm $(addprefix $(TARGET_DIR)/bin/, chattr compile_et lsattr mk_cmds uuidgen)
 	-rm $(addprefix $(TARGET_DIR)/sbin/, dumpe2fs e2freefrag e2mmpstatus e2undo e4crypt filefrag logsave)
-	$(REWRITE_PKGCONF)/uuid.pc
+	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(E2FSPROGS_TMP)
 	$(TOUCH)
 
