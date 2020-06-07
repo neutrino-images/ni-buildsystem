@@ -41,6 +41,32 @@ APPLY_PATCHES = $(call apply_patches, $(PKG_PATCHES_DIR))
 
 # -----------------------------------------------------------------------------
 
+# rewrite libtool libraries
+REWRITE_LIBTOOL_RULES  = sed -i \
+				-e "s,^libdir=.*,libdir='$(TARGET_LIB_DIR)'," \
+				-e "s,\(^dependency_libs='\| \|-L\|^dependency_libs='\)/lib,\ $(TARGET_LIB_DIR),g"
+
+REWRITE_LIBTOOL        = $(REWRITE_LIBTOOL_RULES) $(TARGET_LIB_DIR)
+REWRITE_LIBTOOL_STATIC = $(REWRITE_LIBTOOL_RULES) $(STATIC_LIB_DIR)
+
+REWRITE_TAG = rewritten=1
+
+define rewrite_libtool
+	cd $(TARGET_LIB_DIR); \
+	for la in *.la; do \
+		if ! grep -q "$(REWRITE_TAG)" $${la}; then \
+			echo -e "$(TERM_YELLOW)Rewriting $${la}$(TERM_NORMAL)"; \
+			$(REWRITE_LIBTOOL)/$${la}; \
+			echo -e "\n# Adapted to buildsystem\n$(REWRITE_TAG)" >> $${la}; \
+		fi; \
+	done
+endef
+
+# rewrite libtool libraries automatically
+REWRITE_LIBTOOL_LA = $(call rewrite_libtool)
+
+# -----------------------------------------------------------------------------
+
 #
 # Manipulation of .config files based on the Kconfig infrastructure.
 # Used by the BusyBox package, the Linux kernel package, and more.
