@@ -53,7 +53,8 @@ REWRITE_TAG = rewritten=1
 
 define rewrite_libtool
 	cd $(TARGET_LIB_DIR); \
-	for la in *.la; do \
+	LA=$$(find . -name "*.la" -type f); \
+	for la in $${LA}; do \
 		if ! grep -q "$(REWRITE_TAG)" $${la}; then \
 			echo -e "$(TERM_YELLOW)Rewriting $${la}$(TERM_NORMAL)"; \
 			$(REWRITE_LIBTOOL)/$${la}; \
