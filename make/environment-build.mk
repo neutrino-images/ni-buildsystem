@@ -194,17 +194,6 @@ PKG_CONFIG_PATH = $(PKG_CONFIG_LIBDIR)/pkgconfig
 
 # -----------------------------------------------------------------------------
 
-REWRITE_CONFIG_RULES   = sed -i \
-				-e "s,^prefix=.*,prefix='$(TARGET_DIR)'," \
-				-e "s,^exec_prefix=.*,exec_prefix='$(TARGET_DIR)'," \
-				-e "s,^libdir=.*,libdir='$(TARGET_LIB_DIR)'," \
-				-e "s,^includedir=.*,includedir='$(TARGET_INCLUDE_DIR)',"
-
-REWRITE_CONFIG         = $(REWRITE_CONFIG_RULES)
-REWRITE_PKGCONF        = $(REWRITE_CONFIG_RULES) $(PKG_CONFIG_PATH)
-
-# -----------------------------------------------------------------------------
-
 # download archives into archives directory
 DOWNLOAD = wget --no-check-certificate -t3 -T60 -c -P $(ARCHIVE)
 

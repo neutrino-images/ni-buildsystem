@@ -49,22 +49,51 @@ REWRITE_LIBTOOL_RULES  = sed -i \
 REWRITE_LIBTOOL        = $(REWRITE_LIBTOOL_RULES) $(TARGET_LIB_DIR)
 REWRITE_LIBTOOL_STATIC = $(REWRITE_LIBTOOL_RULES) $(STATIC_LIB_DIR)
 
-REWRITE_TAG = rewritten=1
+REWRITE_LIBTOOL_TAG    = rewritten=1
 
 define rewrite_libtool
 	cd $(TARGET_LIB_DIR); \
 	LA=$$(find . -name "*.la" -type f); \
 	for la in $${LA}; do \
-		if ! grep -q "$(REWRITE_TAG)" $${la}; then \
+		if ! grep -q "$(REWRITE_LIBTOOL_TAG)" $${la}; then \
 			echo -e "$(TERM_YELLOW)Rewriting $${la}$(TERM_NORMAL)"; \
 			$(REWRITE_LIBTOOL)/$${la}; \
-			echo -e "\n# Adapted to buildsystem\n$(REWRITE_TAG)" >> $${la}; \
+			echo -e "\n# Adapted to buildsystem\n$(REWRITE_LIBTOOL_TAG)" >> $${la}; \
 		fi; \
 	done
 endef
 
 # rewrite libtool libraries automatically
 REWRITE_LIBTOOL_LA = $(call rewrite_libtool)
+
+# -----------------------------------------------------------------------------
+
+# rewrite pkg-config files
+REWRITE_CONFIG_RULES   = sed -i \
+				-e "s,^prefix=.*,prefix='$(TARGET_DIR)'," \
+				-e "s,^exec_prefix=.*,exec_prefix='$(TARGET_DIR)'," \
+				-e "s,^libdir=.*,libdir='$(TARGET_LIB_DIR)'," \
+				-e "s,^includedir=.*,includedir='$(TARGET_INCLUDE_DIR)',"
+
+REWRITE_CONFIG         = $(REWRITE_CONFIG_RULES)
+REWRITE_PKGCONF        = $(REWRITE_CONFIG_RULES) $(PKG_CONFIG_PATH)
+
+REWRITE_CONFIG_TAG     = rewritten=1
+
+define rewrite_pkgconf
+	cd $(PKG_CONFIG_PATH); \
+	PC=$$(find . -name "*.pc" -type f); \
+	for pc in $${PC}; do \
+		if ! grep -q "$(REWRITE_CONFIG_TAG)" $${pc}; then \
+			echo -e "$(TERM_YELLOW)Rewriting $${pc}$(TERM_NORMAL)"; \
+			$(REWRITE_PKGCONF)/$${pc}; \
+			echo -e "\n$(REWRITE_CONFIG_TAG)" >> $${pc}; \
+		fi; \
+	done
+endef
+
+# rewrite pkg-config files automatically
+REWRITE_PKGCONF_PC = $(call rewrite_pkgconf)
 
 # -----------------------------------------------------------------------------
 
