@@ -23,7 +23,7 @@ $(ARCHIVE)/$(CORTEX-STRINGS_SOURCE):
 CORTEX-STRINGS_CONF   = $(if $(filter $(BOXSERIES), hd51 vusolo4k vuduo4k vuultimo4k vuzero4k vuuno4k vuuno4kse),--with-neon,--without-neon)
 
 cortex-strings: $(STATIC_LIB_DIR)/libcortex-strings.la
-$(STATIC_LIB_DIR)/libcortex-strings.la: $(ARCHIVE)/$(CORTEX-STRINGS_SOURCE) | $(TARGET_DIR)
+$(STATIC_LIB_DIR)/libcortex-strings.la: $(ARCHIVE)/$(CORTEX-STRINGS_SOURCE) | $(STATIC_DIR)
 	$(REMOVE)/$(CORTEX-STRINGS_TMP)
 	$(UNTAR)/$(CORTEX-STRINGS_SOURCE)
 	$(CHDIR)/$(CORTEX-STRINGS_TMP); \
