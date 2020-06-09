@@ -14,8 +14,8 @@ BOOTSTRAP += $(UPDATE_DIR)
 BOOTSTRAP += host-preqs
 
 # target related
-BOOTSTRAP += target-dir
 BOOTSTRAP += libs-static
+BOOTSTRAP += target-dir
 BOOTSTRAP += libs-cross
 
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), coolstream))
