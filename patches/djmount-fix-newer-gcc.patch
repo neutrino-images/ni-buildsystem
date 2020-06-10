@@ -1,0 +1,13 @@
+diff --git a/libupnp/upnp/src/genlib/net/http/webserver.c b/libupnp/upnp/src/genlib/net/http/webserver.c
+index f5dc1c9..70c7993 100644
+--- a/libupnp/upnp/src/genlib/net/http/webserver.c
++++ b/libupnp/upnp/src/genlib/net/http/webserver.c
+@@ -280,7 +280,7 @@ search_extension( IN const char *extension,
+ *	 0 - On Sucess														
+ *	 UPNP_E_OUTOF_MEMORY - on memory allocation failures				
+ ************************************************************************/
+-XINLINE int
++static XINLINE int
+ get_content_type( IN const char *filename,
+                   OUT DOMString * content_type )
+ {

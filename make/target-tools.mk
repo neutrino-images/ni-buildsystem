@@ -508,6 +508,7 @@ $(ARCHIVE)/$(DJMOUNT_SOURCE):
 DJMOUNT_PATCH  = djmount-fix-hang-with-asset-upnp.patch
 DJMOUNT_PATCH += djmount-fix-incorrect-range-when-retrieving-content-via-HTTP.patch
 DJMOUNT_PATCH += djmount-fix-new-autotools.diff
+DJMOUNT_PATCH += djmount-fix-newer-gcc.patch
 DJMOUNT_PATCH += djmount-fixed-crash-when-using-UTF-8-charset.patch
 DJMOUNT_PATCH += djmount-fixed-crash.patch
 DJMOUNT_PATCH += djmount-support-fstab-mounting.diff
