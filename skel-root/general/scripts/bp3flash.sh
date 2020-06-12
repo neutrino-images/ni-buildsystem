@@ -1,8 +1,8 @@
-#!/bin/sh
+#!/bin/bash
 
 bp3_find() {
 	if ls /dev/mmc* 1> /dev/null 2>&1 && for f in /dev/mmcblk?; do sgdisk -p $f | grep $1; done 1> /dev/null 2>&1 ; then
-		export bp3=$(for f in /dev/mmcblk?; do sgdisk -p $f | grep $1 | awk '{print $1}'; done)
+		export bp3=($(for f in /dev/mmcblk?; do sgdisk -p $f | grep $1; done))
 		export part=$(ls /dev/mmcblk*p$bp3)
 	elif grep $1 /sys/class/mtd/mtd*/name 1> /dev/null 2>&1 ; then
 		export bp3=$(dirname `grep $1 /sys/class/mtd/mtd*/name`)
@@ -42,7 +42,7 @@ bp3_israw() {
 	if [ "$ver" = "BP30" ]; then
 		export md5=$(dd if=$part bs=1 skip=4 count=32)
 		export bp3_size=$(echo `dd if=$part bs=1 skip=36 count=8`)
-		export cal=$(dd if=$part bs=1 skip=44 count=$bp3_size | md5sum)
+		export cal=($(dd if=$part bs=1 skip=44 count=$bp3_size | md5sum))
 		if [ "$md5" = "$cal" ]; then
 			dd if=$part of=bp3.bin bs=1 skip=44 count=$bp3_size
 			return 0
@@ -51,13 +51,13 @@ bp3_israw() {
 			return 2
 		fi
 	else
-	# check if file system exists
+		# check if file system exists
 		mount | grep /mnt/$1 > /dev/null 2>&1
 		if [ "$?" != "0" ]; then
 			mkdir -p /mnt/$1
 			mount -r $part /mnt/$1
 			if [ "$?" != "0" ]; then
-	# old format, no version, 9 bytes size
+				# old format, no version, 9 bytes size
 				export bp3_size=$(echo `dd if=$part bs=9 count=1`)
 				dd if=$part of=bp3.bin bs=1 skip=9 count=$bp3_size
 			else
@@ -121,7 +121,7 @@ bp3_main() {
 			bp3_mount bp30
 			exists=$?
 			if [ -e bp3.bin -a ! -h bp3.bin ] || [ -e pak.bin -a ! -h pak.bin ] || [ -e drm.bin -a ! -h drm.bin ]; then
-	# new bin file found
+				# new bin file found
 				bp3_find bp31
 				mount $part /mnt/bp31
 				bp3_backup bp3.bin
@@ -133,10 +133,10 @@ bp3_main() {
 	fi
 
 	if [ "$exists" = "0" ]; then
-	# bp30 file system is newly created
+		# bp30 file system is newly created
 		bp3_mount bp31
 		if [ "$?" = "0" ]; then
-	# bp31 also newly created
+			# bp31 also newly created
 			bp3_backup bp3.bin
 			bp3_backup pak.bin
 			bp3_backup drm.bin
