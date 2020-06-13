@@ -1376,6 +1376,7 @@ GRAPHLCD_SOURCE = graphlcd-base.$(GRAPHLCD_VER)
 GRAPHLCD_URL    = git://projects.vdr-developer.org
 
 GRAPHLCD_PATCH  = graphlcd.patch
+GRAPHLCD_PATCH += 0004-material-colors.patch
 ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vuduo4k vusolo4k vuultimo4k vuuno4kse))
   GRAPHLCD_PATCH += graphlcd-vuplus.patch
 endif

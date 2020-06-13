@@ -1,0 +1,107 @@
+From 8cd14c8ff93bf80b0c92168a9a24716104ec6c3e Mon Sep 17 00:00:00 2001
+From: vanhofen <vanhofen@gmx.de>
+Date: Sat, 13 Jun 2020 11:53:34 +0200
+Subject: [PATCH 2/2] material colors
+
+---
+ glcdgraphics/bitmap.c | 42 ++++++++++++++++++++++++++++++++++--------
+ glcdgraphics/bitmap.h | 17 +++++++++++++++--
+ 2 files changed, 49 insertions(+), 10 deletions(-)
+
+diff --git a/glcdgraphics/bitmap.c b/glcdgraphics/bitmap.c
+index 227e140..e659955 100644
+--- a/glcdgraphics/bitmap.c
++++ b/glcdgraphics/bitmap.c
+@@ -29,12 +29,25 @@ namespace GLCD
+ 
+ const uint32_t cColor::Black       = GRAPHLCD_Black;
+ const uint32_t cColor::White       = GRAPHLCD_White;
+-const uint32_t cColor::Red         = 0xFFFF0000;
+-const uint32_t cColor::Green       = 0xFF00FF00;
+-const uint32_t cColor::Blue        = 0xFF0000FF;
+-const uint32_t cColor::Magenta     = 0xFFFF00FF;
+-const uint32_t cColor::Cyan        = 0xFF00FFFF;
+-const uint32_t cColor::Yellow      = 0xFFFFFF00;
++const uint32_t cColor::Red         = 0xFFF44336;
++const uint32_t cColor::Pink        = 0xFFE91E63;
++const uint32_t cColor::Purple      = 0xFF9C27B0;
++const uint32_t cColor::DeepPurple  = 0xFF673AB7;
++const uint32_t cColor::Indigo      = 0xFF3F51B5;
++const uint32_t cColor::Blue        = 0xFF2196F3;
++const uint32_t cColor::LightBlue   = 0xFF03A9F4;
++const uint32_t cColor::Cyan        = 0xFF00BCD4;
++const uint32_t cColor::Teal        = 0xFF009688;
++const uint32_t cColor::Green       = 0xFF4CAF50;
++const uint32_t cColor::LightGreen  = 0xFF8BC34A;
++const uint32_t cColor::Lime        = 0xFFCDDC39;
++const uint32_t cColor::Yellow      = 0xFFFFEB3B;
++const uint32_t cColor::Amber       = 0xFFFFC107;
++const uint32_t cColor::Orange      = 0xFFFF9800;
++const uint32_t cColor::DeepOrange  = 0xFFFF5722;
++const uint32_t cColor::Brown       = 0xFF795548;
++const uint32_t cColor::Gray        = 0xFF9E9E9E;
++const uint32_t cColor::BlueGray    = 0xFF607D8B;
+ const uint32_t cColor::Transparent = GRAPHLCD_Transparent;
+ const uint32_t cColor::ERRCOL      = GRAPHLCD_ERRCOL;
+ 
+@@ -43,11 +56,24 @@ cColor cColor::ParseColor(std::string col) {
+     if (col == "black")            return cColor(cColor::Black);
+     else if (col == "white")       return cColor(cColor::White);
+     else if (col == "red")         return cColor(cColor::Red);
+-    else if (col == "green")       return cColor(cColor::Green);
++    else if (col == "pink")        return cColor(cColor::Pink);
++    else if (col == "purple")      return cColor(cColor::Purple);
++    else if (col == "deeppurple")  return cColor(cColor::DeepPurple);
++    else if (col == "indigo")      return cColor(cColor::Indigo);
+     else if (col == "blue")        return cColor(cColor::Blue);
+-    else if (col == "magenta")     return cColor(cColor::Magenta);
++    else if (col == "lightblue")   return cColor(cColor::LightBlue);
+     else if (col == "cyan")        return cColor(cColor::Cyan);
++    else if (col == "teal")        return cColor(cColor::Teal);
++    else if (col == "green")       return cColor(cColor::Green);
++    else if (col == "lightgreen")  return cColor(cColor::LightGreen);
++    else if (col == "lime")        return cColor(cColor::Lime);
+     else if (col == "yellow")      return cColor(cColor::Yellow);
++    else if (col == "amber")       return cColor(cColor::Amber);
++    else if (col == "orange")      return cColor(cColor::Orange);
++    else if (col == "deeporange")  return cColor(cColor::DeepOrange);
++    else if (col == "brown")       return cColor(cColor::Brown);
++    else if (col == "gray")        return cColor(cColor::Gray);
++    else if (col == "bluegray")    return cColor(cColor::BlueGray);
+     else if (col == "transparent") return cColor(cColor::Transparent);
+     else if (col.substr(0, 2) == "0x" || col.substr(0, 2) == "0X") {
+         if (col.length() <= 2 || col.length() > 10)
+diff --git a/glcdgraphics/bitmap.h b/glcdgraphics/bitmap.h
+index 2c4a2af..6d14f59 100644
+--- a/glcdgraphics/bitmap.h
++++ b/glcdgraphics/bitmap.h
+@@ -63,11 +63,24 @@ public:
+    static const uint32_t Black;
+    static const uint32_t White;
+    static const uint32_t Red;
+-   static const uint32_t Green;
++   static const uint32_t Pink;
++   static const uint32_t Purple;
++   static const uint32_t DeepPurple;
++   static const uint32_t Indigo;
+    static const uint32_t Blue;
+-   static const uint32_t Magenta;
++   static const uint32_t LightBlue;
+    static const uint32_t Cyan;
++   static const uint32_t Teal;
++   static const uint32_t Green;
++   static const uint32_t LightGreen;
++   static const uint32_t Lime;
+    static const uint32_t Yellow;
++   static const uint32_t Amber;
++   static const uint32_t Orange;
++   static const uint32_t DeepOrange;
++   static const uint32_t Brown;
++   static const uint32_t Gray;
++   static const uint32_t BlueGray;
+    static const uint32_t Transparent;
+    static const uint32_t ERRCOL;
+ 
+-- 
+2.20.1
+
