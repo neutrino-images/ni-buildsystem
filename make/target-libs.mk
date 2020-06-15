@@ -1379,7 +1379,7 @@ GRAPHLCD_BASE_PATCH  = graphlcd.patch
 GRAPHLCD_BASE_PATCH += 0003-strip-graphlcd-conf.patch
 GRAPHLCD_BASE_PATCH += 0004-material-colors.patch
 ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vuduo4k vusolo4k vuultimo4k vuuno4kse))
-  GRAPHLCD_BASE_PATCH += graphlcd-vuplus.patch
+  GRAPHLCD_BASE_PATCH += 0005-add-vuplus-driver.patch
 endif
 
 GRAPHLCD_BASE_DEPS   = freetype libiconv libusb
