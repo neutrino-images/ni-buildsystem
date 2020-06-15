@@ -1384,16 +1384,23 @@ endif
 
 GRAPHLCD_BASE_DEPS   = freetype libiconv libusb
 
+GRAPHLCD_BASE_MAKE_OPTS = \
+	$(BUILD_ENV) \
+	CXXFLAGS+="-fPIC" \
+	TARGET=$(TARGET_CROSS) \
+	PREFIX= \
+	DESTDIR=$(TARGET_DIR)
+
 graphlcd-base: $(GRAPHLCD_BASE_DEPS) | $(TARGET_DIR)
 	$(REMOVE)/$(GRAPHLCD_BASE_TMP)
 	$(GET-GIT-SOURCE) $(GRAPHLCD_BASE_URL)/$(GRAPHLCD_BASE_SOURCE) $(ARCHIVE)/$(GRAPHLCD_BASE_SOURCE)
 	$(CPDIR)/$(GRAPHLCD_BASE_TMP)
 	$(CHDIR)/$(GRAPHLCD_BASE_TMP); \
 		$(call apply_patches, $(addprefix $(@)/,$(GRAPHLCD_BASE_PATCH))); \
-		$(MAKE) -C glcdgraphics all TARGET=$(TARGET_CROSS) PREFIX= DESTDIR=$(TARGET_DIR); \
-		$(MAKE) -C glcddrivers all TARGET=$(TARGET_CROSS) PREFIX= DESTDIR=$(TARGET_DIR); \
-		$(MAKE) -C glcdgraphics install PREFIX= DESTDIR=$(TARGET_DIR); \
-		$(MAKE) -C glcddrivers install PREFIX= DESTDIR=$(TARGET_DIR); \
+		$(MAKE) $(GRAPHLCD_BASE_MAKE_OPTS) -C glcdgraphics all; \
+		$(MAKE) $(GRAPHLCD_BASE_MAKE_OPTS) -C glcddrivers all; \
+		$(MAKE) $(GRAPHLCD_BASE_MAKE_OPTS) -C glcdgraphics install; \
+		$(MAKE) $(GRAPHLCD_BASE_MAKE_OPTS) -C glcddrivers install; \
 		$(INSTALL_DATA) -D graphlcd.conf $(TARGET_DIR)/etc/graphlcd.conf
-	$(REMOVE)/$(GRAPHLCD_BASE_TMP)
+	#$(REMOVE)/$(GRAPHLCD_BASE_TMP)
 	$(TOUCH)

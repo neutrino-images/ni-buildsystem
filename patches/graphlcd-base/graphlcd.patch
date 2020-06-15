@@ -577,25 +577,6 @@
  # two ifdef/endif are used because older installations may not support 'else ifdef'
 --- a/Make.config
 +++ b/Make.config
-@@ -3,13 +3,13 @@
- 
- ### The C compiler and options:
- 
--CC       ?= gcc
--CFLAGS   ?= -O2
-+CC       = $(TARGET)gcc
-+CFLAGS   = -pipe -Os
- 
--CXX      ?= g++
-+CXX      = $(TARGET)g++
- 
--CXXFLAGS ?= -g -O2 -Wall -Woverloaded-virtual
--#CXXFLAGS ?= -g -ggdb -O0 -Wall -Woverloaded-virtual
-+CXXFLAGS = -pipe -Os -Wall -Woverloaded-virtual
-+#CXXFLAGS = -g -ggdb -O0 -Wall -Woverloaded-virtual
- CXXFLAGS += -MMD -MP
- 
- # CXX set to clang++: force clang
 @@ -59,7 +59,7 @@
  HAVE_FREETYPE2=1
  
