@@ -1,6 +1,6 @@
 # /etc/profile: system-wide profile file for the shell
 
-PATH=/sbin:/bin:/usr/bin:/var/bin
+PATH=/sbin:/bin:/usr/sbin:/usr/bin:/var/bin
 TERM=linux
 
 PS1='[\h] \w \$ '
