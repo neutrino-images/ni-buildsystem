@@ -1,0 +1,594 @@
+From 1d8158ae37abd429df9b00ee9b77b6667b7f2f47 Mon Sep 17 00:00:00 2001
+From: vanhofen <vanhofen@gmx.de>
+Date: Mon, 15 Jun 2020 16:52:53 +0200
+Subject: [PATCH] strip graphlcd.conf
+
+---
+ graphlcd.conf | 553 +-------------------------------------------------
+ 1 file changed, 3 insertions(+), 550 deletions(-)
+
+diff --git a/graphlcd.conf b/graphlcd.conf
+index becdd54..4b59fc2 100644
+--- a/graphlcd.conf
++++ b/graphlcd.conf
+@@ -29,7 +29,7 @@ WaitMethod=3
+ #  Select the process priority that is used when sleeping.
+ #  Possible values: -20 <= x <= 19
+ #  Default value: 0
+-WaitPriority=0
++WaitPriority=19
+ 
+ # General driver settings
+ #  This section lists the display settings that are parsed and
+@@ -117,487 +117,6 @@ WaitPriority=0
+ 
+ ########################################################################
+ 
+-[framebuffer]
+-# framebuffer driver
+-#  Output goes to a framebuffer device
+-Driver=framebuffer
+-
+-#UpsideDown=no
+-#Invert=no
+-
+-# Device
+-#  Framebuffer device
+-#  Default value: /dev/fb0
+-#Device=/dev/fb0
+-
+-# Damage | ReportDamage
+-#  Damage reporting for framebuffer devices with update problems
+-#  Possible values: none, auto, udlfb, ugly
+-#    none:  no damage reporting
+-#    auto:  automatic determination if damage reporting is needed
+-#    udlfb: damage reporting for udlfb-devices (displaylink)
+-#    ugly:  dirty damagereporting (a '\n' is written to the framebuffer file handle)
+-#  Default value: none
+-#Damage=none
+-
+-# Zoom
+-#  Determines if pixels should be drawn double sized.
+-#  If zoom is set, the actual resolution will be halved (both width and height)
+-#  e.g.: framebuffer has resolution 800x600: this driver will report a drawing area of 400x300
+-#  Possible values: 0, 1
+-#  Default value: 1
+-Zoom=1
+-
+-########################################################################
+-
+-[gu140x32f]
+-# gu140x32f driver
+-#  This is an 8-bit driver module for Noritake GU140x32-F7806 VFD
+-#  displays. The VFD is operating in it's 8 bit-mode connected to a
+-#  single PC parallel port.
+-#  Default size: 140 x 32
+-Driver=gu140x32f
+-
+-Device=/dev/parport0
+-#Port=0x378
+-#Width=140
+-#Height=32
+-#UpsideDown=no
+-#Invert=no
+-#Brightness=100
+-#AdjustTiming=0
+-#RefreshDisplay=1
+-
+-# Wiring
+-#  Select the type of wiring your display is connected with.
+-#  Possible values: 'Standard', 'Windows'
+-#  Default value: 'Standard'
+-Wiring=Standard
+-
+-########################################################################
+-
+-[gu256x64-372]
+-# gu256x64-372 driver
+-#  This is an 8-bit driver module for Noritake GU256x64-372 VFD
+-#  displays. The VFD is operating in it's 8 bit-mode connected to a
+-#  single PC parallel port.
+-#  Default size: 256 x 64
+-Driver=gu256x64-372
+-
+-Device=/dev/parport0
+-#Port=0x378
+-#Width=256
+-#Height=64
+-#UpsideDown=no
+-#Invert=no
+-#Brightness=100
+-#AdjustTiming=0
+-#RefreshDisplay=1
+-
+-# Wiring
+-#  Select the type of wiring your display is connected with.
+-#  Possible values: 'Standard', 'Windows'
+-#  Default value: 'Standard'
+-Wiring=Standard
+-
+-########################################################################
+-
+-[gu256x64-3900]
+-# gu256x64-3900 driver
+-#  This is a driver module for Noritake GU256X64x-3900 VFD displays. The
+-#  VFD is either operating in 8 bit-mode connected to a single PC
+-#  parallel port or in serial mode connected to a single PC serial port.
+-#  Default size: 256 x 64
+-Driver=gu256x64-3900
+-
+-Device=/dev/parport0
+-#Port=0x378
+-#Width=256
+-#Height=64
+-#UpsideDown=no
+-#Invert=no
+-#Brightness=100
+-#AdjustTiming=0
+-#RefreshDisplay=1
+-
+-# Wiring
+-#  Select the type of wiring your display is connected with.
+-#  Possible values: 'Standard', 'Satyr'
+-#  Default value: 'Standard'
+-Wiring=Standard
+-
+-# Interface
+-#  Select the interface your display is connnected to.
+-#  Possible values: 'Parallel', 'Serial'
+-#  Default value: 'Parallel'
+-Interface=Parallel
+-
+-# DMA
+-#  Enables/disables the usage of the controller's DMA mode which
+-#  increases writing speed. This only works in parallel interface mode.
+-#  Possible values: 'yes', 'no'
+-#  Default value: 'yes'
+-DMA=yes
+-
+-########################################################################
+-
+-[gu126x64D-K610A4]
+-# GU126x64D-K610A4 driver
+-#  This is a driver module for Noritake GU126x64D-K610A4 VFD displays.
+-#  The VFD is operating in 8 bit-mode connected to a single PC
+-#  parallel port.
+-#  Default size: 126 x 64
+-Driver=gu126x64D-K610A4
+-
+-Device=/dev/parport0
+-#Port=0x378
+-#Width=126
+-#Height=64
+-#UpsideDown=no
+-#Invert=no
+-#Brightness=100
+-#RefreshDisplay=1
+-#AdjustTiming=30
+-
+-#  Debug some methods of the driver
+-#  (add the values of interest)
+-#
+-#   1: show a log at the start of a refresh
+-#   2: show a log at the end of a refresh with timing information
+-#   4: show the rows (8 pixel) refreshed
+-#   8: show every commands/bytes sent to the display
+-#  16: log every unsuccessful waiting for display acknowledge
+-#
+-#Debug=0
+-
+-########################################################################
+-
+-[hd61830]
+-# hd61830 driver
+-#  This is a driver module for the Hitachi HD61830 LCD controller.
+-#  Default size: 240 x 128
+-Driver=hd61830
+-
+-Device=/dev/parport0
+-#Port=0x378
+-#Width=240
+-#Height=128
+-#UpsideDown=no
+-#Invert=no
+-#AdjustTiming=0
+-#RefreshDisplay=1
+-
+-########################################################################
+-
+-[image]
+-# image driver
+-#  This is a driver module for writing image sequences in PBM (Portable
+-#  Bit Map) format that show the plugin's output.
+-#  Default size: 240 x 128
+-Driver=image
+-#Width=240
+-#Height=128
+-#UpsideDown=no
+-#Invert=no
+-
+-########################################################################
+-
+-[ks0108]
+-# ks0108 driver
+-#  This is a driver module for the Samsung KS0108 LCD controller.
+-#  Default size: 128 x 64
+-Driver=ks0108
+-
+-Device=/dev/parport0
+-#Port=0x378
+-Width=128
+-#Width=192
+-#Height=64
+-#UpsideDown=no
+-#Invert=no
+-#AdjustTiming=0
+-#RefreshDisplay=1
+-
+-# Control
+-#  Select the variant of triggering the display's control lines.
+-#  Possible values: '0', '1'
+-#  Default value: '1'
+-Control=1
+-
+-########################################################################
+-
+-[sed1330]
+-# sed1330 driver
+-#  This is a driver module for the Epson SED1330/1335 LCD controller.
+-#  Default size: 320 x 240
+-Driver=sed1330
+-
+-Device=/dev/parport0
+-#Port=0x378
+-#Width=320
+-#Height=240
+-#UpsideDown=no
+-#Invert=no
+-#AdjustTiming=0
+-#refreshDisplay=1
+-
+-# Wiring
+-#  Select the type of wiring your display is connected with.
+-#  Possible values: 'Original', 'PowerLCD', 'LCDProc', 'Tweakers',
+-#                   'YASEDW'
+-#  Default value: 'Original'
+-Wiring=Original
+-
+-# OscillatorFrequency
+-#  Select the frequency the oscillator on your LCD board uses in kHz.
+-#  Possible values: 1000 <= x <= 15000)
+-#  Default value: 9600
+-OscillatorFrequency=9600
+-
+-# Interface
+-#  Select the interface mode your display is connected with.
+-#  Possible values: '6800', '8080'
+-#  Default value: '6800'
+-Interface=6800
+-
+-########################################################################
+-
+-[sed1520]
+-# sed1520 driver
+-#  This is a driver module for the Epson SED1520 LCD controller.
+-#  Default size: 120 x 32
+-Driver=sed1520
+-
+-Device=/dev/parport0
+-#Port=0x378
+-#Width=120
+-#Height=32
+-#UpsideDown=no
+-#Invert=no
+-#AdjustTiming=0
+-#RefreshDisplay=1
+-
+-########################################################################
+-
+-[simlcd]
+-# simlcd driver
+-#  This is the SimLCD driver module. Output goes to a file instead of
+-#  LCD. Use SimLCD tool to view this file.
+-#  Default size: 240 x 128
+-Driver=simlcd
+-#Width=240
+-#Height=128
+-#UpsideDown=no
+-#Invert=no
+-
+-########################################################################
+-
+-[t6963c]
+-# t6963c driver
+-#  This is a driver module for the Toshiba T6963C LCD controller.
+-#  Default size: 240 x 128
+-Driver=t6963c
+-
+-Device=/dev/parport0
+-#Port=0x378
+-#Width=240
+-#Height=128
+-#UpsideDown=no
+-#Invert=no
+-#RefreshDisplay=1
+-
+-# Wiring
+-#  Select the type of wiring your display is connected with.
+-#  Possible values: 'Standard', 'Windows', 'Serial'
+-#  Default value: 'Standard'
+-Wiring=Standard
+-
+-# FontSelect
+-#  Select the font width your display uses for text mode. In most cases
+-#  this is selectable through one of the pins of your LCD board
+-#  Possible values: '6', '8'
+-#  Default value: '6'
+-FontSelect=6
+-
+-# AutoMode
+-#  Enables or disables the usage of T6963C's auto mode which doubles
+-#  writing speed when enabled.
+-#  Possible values: 'yes', 'no'
+-#  Default value: 'yes'
+-AutoMode=yes
+-
+-# StatusCheck
+-#  Enables or disables the usage of T6963C's status check. When using a
+-#  shielded cable for connecting your display, the disabling may be
+-#  possible. This results in doubling the speed of writing data to the
+-#  LCD.
+-#  Possible values: 'yes', 'no'
+-#  Default value: 'yes'
+-StatusCheck=yes
+-
+-########################################################################
+-
+-[serdisp]
+-Driver=serdisp
+-# Controller
+-#  Select the serdisplib name of your display.
+-#  Possible values: See README in serdisplib package or http://serdisplib.sourceforge.net
+-#Controller=nokia7110
+-#Controller=sed1335
+-Controller=optrex323
+-#Controller=l4m132c
+-#Controller=l4m320t
+-
+-# Options
+-#  Pass display specific options
+-#  Possible values: See driver-specific hardware page at http://serdisplib.sourceforge.net
+-#
+-#  IMPORTANT: when using generic controllers like sed1330,sed1335,t6963c, width and height
+-#             need to be set here (if different from default settings)!
+-#             (serdisplib needs to be extended to be able to use 'Width' and 'Height'
+-#              settings directly - this will be added later)
+-#
+-#Options=MODE=8080
+-#Options=DELAY=2000;FONTWIDTH=8;CHECK=1
+-#Options=WIDTH=128;HEIGHT=64
+-#Options=WIDTH=128;HEIGHT=64;DELAY=2000;FONTWIDTH=8;CHECK=1
+-
+-# Wiring
+-#  Select Wiring
+-#  Possible values: See driver-specific hardware page at http://serdisplib.sourceforge.net
+-#Wiring=1
+-#Wiring=PowerLCD
+-#Wiring=DATA8,CS:nAUTO,A0:INIT,WR:nSTRB,RD:nSELIN
+-
+-# FGColour
+-#  Drawing colour for non-monochrome displays
+-#  Possible values: 0xRRGGBB (eg.: 0xFF0000)
+-#  Defaults to black (0x000000) if not set
+-#FGColour=0x000000
+-
+-# BGColour
+-#  Background colour for non-monochrome displays
+-#  Possible values: 0xRRGGBB (eg.: 0x00FFFF)
+-#  Defaults to white (0xFFFFFF) if not set
+-#BGColour=0xFFFFFF
+-
+-Device=/dev/parport0
+-#Port=0x378
+-#Device=HID:/dev/usb/hiddev0
+-#Device=HID:/dev/hiddev0
+-#Device=USB:USB:4243/ee20 # Linux4Media 320T TouchLCD
+-#UpsideDown=no
+-#Invert=no
+-Contrast=5
+-Backlight=yes
+-
+-# Settings 'Width' and 'Height' are ignored at the moment. For generic controllers # (sed1330/1335, t6963) width and height need to be set using setting 'Options' (look above)
+-##Width=240
+-##Height=128
+-
+-########################################################################
+-
+-[noritake800]
+-# noritake800 driver
+-#  This is an 8-bit driver module for Noritake Noritake 800(A) series VFD
+-#  displays. The VFD is operating in it's 8 bit-mode connected to a
+-#  single PC parallel port.
+-#  Default size: 128 x 64
+-Driver=noritake800
+-
+-Device=/dev/parport0
+-#Port=0x378
+-Width=128
+-Height=64
+-#UpsideDown=no
+-#Invert=no
+-Brightness=50
+-AdjustTiming=50
+-RefreshDisplay=50
+-
+-# Wiring
+-#  Select the type of wiring your display is connected with.
+-#  Possible values: 'LiquidMp3', 'MZ'
+-#  Default value: 'LiquidMp3'
+-Wiring=LiquidMp3
+-
+-########################################################################
+-
+-[avrctl]
+-# avrctl driver
+-#  This is an driver module for my AVR controlled LCD display connected via
+-#  USB port. It uses some simple commands to update the display content.
+-#  Default size: 256 x 128
+-Driver=avrctl
+-Device=/dev/ttyUSB0
+-Width=256
+-Height=128
+-#UpsideDown=no
+-#Invert=no
+-Brightness=50
+-RefreshDisplay=1
+-
+-########################################################################
+-
+-[g15daemon]
+-# pseudo device for the g15daemon meta driver
+-# Output goes to the g15daemon which then displays it
+-Driver=g15daemon
+-Width=160
+-Height=43
+-
+-########################################################################
+-
+-[network]
+-# network driver
+-#  Default size: 240 x 128
+-Driver=network
+-Width=256
+-Height=128
+-UpsideDown=no
+-Invert=no
+-Brightness=10
+-RefreshDisplay=1
+-
+-########################################################################
+-
+-[dm140gink]
+-#  dm140gink driver
+-#  This is an driver module for Futaba DM140-GINK VFD displays.
+-#  The VFD is built-in in some HTPC cases and connected to a
+-#  USB port.
+-#  Default size: 112 x 16
+-Driver=dm140gink
+-#Width=112
+-#Height=16
+-#UpsideDown=no
+-
+-# Invertion is not supported
+-#Invert=no
+-
+-# USB VendorID and ProductID
+-#Vendor=0x040b
+-#Product=0x7001
+-# USB ID activy 5xx:
+-#Vendor=0x1509
+-#Product=0x925d
+-########################################################################
+-
+-[futabaMDM166A]
+-#  futabaMDM166A driver
+-#  This is an driver module for Futaba MDM166A VFD displays.
+-#  The VFD is built-in in Targa HTPC cases and connected to USB port.
+-#  Default size: 96 x 16
+-Driver=futabaMDM166A
+-
+-#Width=96
+-#Height=16
+-#UpsideDown=no
+-#Invert=no
+-#Brightness=50
+-#RefreshDisplay=1000
+-########################################################################
+-
+ [ax206dpf]
+ #  THIS IS AN EXPERIMENTAL DRIVER!
+ #  You have to uncomment the variable HAVE_DRIVER_AX206DPF
+@@ -609,8 +128,8 @@ Driver=futabaMDM166A
+ #
+ #  Default size: 320 x 240 or 240 x 320 (see "Portrait")
+ Driver=ax206dpf
+-#Width=320
+-#Height=240
++Width=320
++Height=240
+ #
+ # UpsideDown
+ #  Rotates the display output by 180 degrees. This might be useful, if
+@@ -668,69 +187,3 @@ Driver=ax206dpf
+ #  Default value: 'nnnn'
+ #Flip=nnnn
+ #
+-
+-########################################################################
+-
+-[vncserver]
+-# vncserver driver
+-#  Output goes to a vncserver device
+-#  Default size: 320 x 240
+-Driver=vncserver
+-Width=320
+-Height=240
+-#
+-# HttpDir
+-#  Webclients directory of libvncserver installation (only needed for webclient access)
+-#HttpDir=/usr/share/webclients
+-
+-########################################################################
+-
+-[ssd1306]
+-# ssd1306 driver
+-#  This is a driver module for the SSD1306 OLED display controller.
+-#  Default size: 128 x 64
+-Driver=ssd1306
+-Device=0
+-Width=128
+-Height=64
+-
+-[ili9341]
+-# ili9341 driver
+-#  This is a driver module for the ILI9341 TFT display controller.
+-#  Default size: 320x240
+-Driver=ili9341
+-Device=0
+-Width=320
+-Height=240
+-
+-[alphacool]
+-# Driver setting for the Alphacool USB LCD (240x128 pixels)
+-# Requires serdisplib to be installed
+-Driver=serdisp
+-Controller=alphacool
+-Device=USB:060c/04eb
+-Backlight=yes
+-
+-[sdcmegtron]
+-# Driver setting for the SDC Megtron USB LCD (240x128 pixels)
+-# Requires serdisplib to be installed
+-Driver=serdisp
+-Controller=sdcmegtron
+-Device=USB:152a/8380
+-Backlight=yes
+-
+-[usbserlcd]
+-# This is the driver for displays based on the USBserLCD firmware:
+-# https://github.com/M-Reimer/usbserlcd
+-Driver=usbserlcd
+-Device=/dev/ttyUSB0
+-RefreshDisplay=0
+-
+-[st7565r-reel]
+-# st7565r driver
+-#  This is a driver module for the ST7565R based Reelbox frontpanel LCD
+-#  Default size: 128 x 64
+-Driver=st7565r-reel
+-Device=/dev/ttyS0
+-Brightness=100
+-Contrast=80
+-- 
+2.20.1
+
