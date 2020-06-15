@@ -25,7 +25,7 @@ N_DEPS += pugixml
 N_DEPS += zlib
 
 ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vusolo4k vuduo4k vuultimo4k vuuno4kse))
-  N_DEPS += graphlcd
+  N_DEPS += graphlcd-base
 endif
 
 ifeq ($(BOXTYPE), coolstream)

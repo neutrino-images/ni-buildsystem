@@ -1370,30 +1370,30 @@ libiconv: $(ARCHIVE)/$(LIBICONV_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-GRAPHLCD_VER    = git
-GRAPHLCD_TMP    = graphlcd-base.$(GRAPHLCD_VER)
-GRAPHLCD_SOURCE = graphlcd-base.$(GRAPHLCD_VER)
-GRAPHLCD_URL    = git://projects.vdr-developer.org
+GRAPHLCD_BASE_VER    = git
+GRAPHLCD_BASE_TMP    = graphlcd-base.$(GRAPHLCD_BASE_VER)
+GRAPHLCD_BASE_SOURCE = graphlcd-base.$(GRAPHLCD_BASE_VER)
+GRAPHLCD_BASE_URL    = git://projects.vdr-developer.org
 
-GRAPHLCD_PATCH  = graphlcd.patch
-GRAPHLCD_PATCH += 0003-strip-graphlcd-conf.patch
-GRAPHLCD_PATCH += 0004-material-colors.patch
+GRAPHLCD_BASE_PATCH  = graphlcd.patch
+GRAPHLCD_BASE_PATCH += 0003-strip-graphlcd-conf.patch
+GRAPHLCD_BASE_PATCH += 0004-material-colors.patch
 ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vuduo4k vusolo4k vuultimo4k vuuno4kse))
-  GRAPHLCD_PATCH += graphlcd-vuplus.patch
+  GRAPHLCD_BASE_PATCH += graphlcd-vuplus.patch
 endif
 
-GRAPHLCD_DEPS   = freetype libiconv libusb
+GRAPHLCD_BASE_DEPS   = freetype libiconv libusb
 
-graphlcd: $(GRAPHLCD_DEPS) | $(TARGET_DIR)
-	$(REMOVE)/$(GRAPHLCD_TMP)
-	$(GET-GIT-SOURCE) $(GRAPHLCD_URL)/$(GRAPHLCD_SOURCE) $(ARCHIVE)/$(GRAPHLCD_SOURCE)
-	$(CPDIR)/$(GRAPHLCD_TMP)
-	$(CHDIR)/$(GRAPHLCD_TMP); \
-		$(call apply_patches, $(addprefix $(@)/,$(GRAPHLCD_PATCH))); \
+graphlcd-base: $(GRAPHLCD_BASE_DEPS) | $(TARGET_DIR)
+	$(REMOVE)/$(GRAPHLCD_BASE_TMP)
+	$(GET-GIT-SOURCE) $(GRAPHLCD_BASE_URL)/$(GRAPHLCD_BASE_SOURCE) $(ARCHIVE)/$(GRAPHLCD_BASE_SOURCE)
+	$(CPDIR)/$(GRAPHLCD_BASE_TMP)
+	$(CHDIR)/$(GRAPHLCD_BASE_TMP); \
+		$(call apply_patches, $(addprefix $(@)/,$(GRAPHLCD_BASE_PATCH))); \
 		$(MAKE) -C glcdgraphics all TARGET=$(TARGET_CROSS) PREFIX= DESTDIR=$(TARGET_DIR); \
 		$(MAKE) -C glcddrivers all TARGET=$(TARGET_CROSS) PREFIX= DESTDIR=$(TARGET_DIR); \
 		$(MAKE) -C glcdgraphics install PREFIX= DESTDIR=$(TARGET_DIR); \
 		$(MAKE) -C glcddrivers install PREFIX= DESTDIR=$(TARGET_DIR); \
 		$(INSTALL_DATA) -D graphlcd.conf $(TARGET_DIR)/etc/graphlcd.conf
-	$(REMOVE)/$(GRAPHLCD_TMP)
+	$(REMOVE)/$(GRAPHLCD_BASE_TMP)
 	$(TOUCH)
