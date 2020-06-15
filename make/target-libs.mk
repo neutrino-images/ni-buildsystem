@@ -1402,5 +1402,5 @@ graphlcd-base: $(GRAPHLCD_BASE_DEPS) | $(TARGET_DIR)
 		$(MAKE) $(GRAPHLCD_BASE_MAKE_OPTS) -C glcdgraphics install; \
 		$(MAKE) $(GRAPHLCD_BASE_MAKE_OPTS) -C glcddrivers install; \
 		$(INSTALL_DATA) -D graphlcd.conf $(TARGET_DIR)/etc/graphlcd.conf
-	#$(REMOVE)/$(GRAPHLCD_BASE_TMP)
+	$(REMOVE)/$(GRAPHLCD_BASE_TMP)
 	$(TOUCH)
