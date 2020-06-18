@@ -175,10 +175,10 @@ VUDUO_PATCH = \
 # -----------------------------------------------------------------------------
 
 $(ARCHIVE)/$(KERNEL_SOURCE):
-	$(DOWNLOAD) $(KERNEL_URL)/$(KERNEL_SOURCE)
+	$(DOWNLOAD) $(KERNEL_SITE)/$(KERNEL_SOURCE)
 
 $(ARCHIVE)/$(VMLINUZ-INITRD_SOURCE):
-	$(DOWNLOAD) $(VMLINUZ-INITRD_URL)/$(VMLINUZ-INITRD_SOURCE)
+	$(DOWNLOAD) $(VMLINUZ-INITRD_SITE)/$(VMLINUZ-INITRD_SOURCE)
 
 # -----------------------------------------------------------------------------
 

@@ -67,7 +67,7 @@ PKG_LOWER       = $(call LOWERCASE,$(PKG_NAME))
 PKG_VER         = $($(PKG_UPPER)_VER)
 PKG_TMP         = $($(PKG_UPPER)_TMP)
 PKG_SOURCE      = $($(PKG_UPPER)_SOURCE)
-PKG_URL         = $($(PKG_UPPER)_URL)
+PKG_SITE        = $($(PKG_UPPER)_SITE)
 PKG_BUILD_TMP   = $(BUILD_TMP)/$(PKG_TMP)
 PKG_PATCHES_DIR = $(PATCHES)/$(subst host-,,$(PKG_NAME))
 

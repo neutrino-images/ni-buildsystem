@@ -13,10 +13,10 @@ valgrind: $(VALGRIND_TARGET)
 VALGRIND_VER    = 3.13.0
 VALGRIND_TMP    = valgrind-$(VALGRIND_VER)
 VALGRIND_SOURCE = valgrind-$(VALGRIND_VER).tar.bz2
-VALGRIND_URL    = ftp://sourceware.org/pub/valgrind
+VALGRIND_SITE   = ftp://sourceware.org/pub/valgrind
 
 $(ARCHIVE)/$(VALGRIND_SOURCE):
-	$(DOWNLOAD) $(VALGRIND_URL)/$(VALGRIND_SOURCE)
+	$(DOWNLOAD) $(VALGRIND_SITE)/$(VALGRIND_SOURCE)
 
 VALGRIND_PATCH  = valgrind-fix-build-$(TARGET_ARCH).patch
 
@@ -70,10 +70,10 @@ valgrind12305: | $(TARGET_DIR)
 STRACE_VER    = 5.1
 STRACE_TMP    = strace-$(STRACE_VER)
 STRACE_SOURCE = strace-$(STRACE_VER).tar.xz
-STRACE_URL    = https://strace.io/files/$(STRACE_VER)
+STRACE_SITE   = https://strace.io/files/$(STRACE_VER)
 
 $(ARCHIVE)/$(STRACE_SOURCE):
-	$(DOWNLOAD) $(STRACE_URL)/$(STRACE_SOURCE)
+	$(DOWNLOAD) $(STRACE_SITE)/$(STRACE_SOURCE)
 
 strace: $(ARCHIVE)/$(STRACE_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(STRACE_TMP)
@@ -95,10 +95,10 @@ strace: $(ARCHIVE)/$(STRACE_SOURCE) | $(TARGET_DIR)
 GDB_VER    = 8.3
 GDB_TMP    = gdb-$(GDB_VER)
 GDB_SOURCE = gdb-$(GDB_VER).tar.xz
-GDB_URL    = https://sourceware.org/pub/gdb/releases
+GDB_SITE   = https://sourceware.org/pub/gdb/releases
 
 $(ARCHIVE)/$(GDB_SOURCE):
-	$(DOWNLOAD) $(GDB_URL)/$(GDB_SOURCE)
+	$(DOWNLOAD) $(GDB_SITE)/$(GDB_SOURCE)
 
 GDB_DEPS   = zlib ncurses
 

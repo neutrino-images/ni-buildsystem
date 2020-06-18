@@ -6,10 +6,10 @@
 BUSYBOX_VER    = 1.31.1
 BUSYBOX_TMP    = busybox-$(BUSYBOX_VER)
 BUSYBOX_SOURCE = busybox-$(BUSYBOX_VER).tar.bz2
-BUSYBOX_URL    = https://busybox.net/downloads
+BUSYBOX_SITE   = https://busybox.net/downloads
 
 $(ARCHIVE)/$(BUSYBOX_SOURCE):
-	$(DOWNLOAD) $(BUSYBOX_URL)/$(BUSYBOX_SOURCE)
+	$(DOWNLOAD) $(BUSYBOX_SITE)/$(BUSYBOX_SOURCE)
 
 BUSYBOX_PATCH  = busybox-fix-config-header.diff
 BUSYBOX_PATCH += busybox-insmod-hack.patch
@@ -128,10 +128,10 @@ busybox: $(BUSYBOX_DEPS) $(ARCHIVE)/$(BUSYBOX_SOURCE) | $(TARGET_DIR)
 OPENVPN_VER    = 2.4.9
 OPENVPN_TMP    = openvpn-$(OPENVPN_VER)
 OPENVPN_SOURCE = openvpn-$(OPENVPN_VER).tar.xz
-OPENVPN_URL    = http://build.openvpn.net/downloads/releases
+OPENVPN_SITE   = http://build.openvpn.net/downloads/releases
 
 $(ARCHIVE)/$(OPENVPN_SOURCE):
-	$(DOWNLOAD) $(OPENVPN_URL)/$(OPENVPN_SOURCE)
+	$(DOWNLOAD) $(OPENVPN_SITE)/$(OPENVPN_SOURCE)
 
 OPENVPN_DEPS   = lzo openssl
 
@@ -167,10 +167,10 @@ openvpn: $(OPENVPN_DEPS) $(ARCHIVE)/$(OPENVPN_SOURCE) | $(TARGET_DIR)
 OPENSSH_VER    = 8.2p1
 OPENSSH_TMP    = openssh-$(OPENSSH_VER)
 OPENSSH_SOURCE = openssh-$(OPENSSH_VER).tar.gz
-OPENSSH_URL    = https://artfiles.org/openbsd/OpenSSH/portable
+OPENSSH_SITE   = https://artfiles.org/openbsd/OpenSSH/portable
 
 $(ARCHIVE)/$(OPENSSH_SOURCE):
-	$(DOWNLOAD) $(OPENSSH_URL)/$(OPENSSH_SOURCE)
+	$(DOWNLOAD) $(OPENSSH_SITE)/$(OPENSSH_SOURCE)
 
 OPENSSH_DEPS   = openssl zlib
 
@@ -209,10 +209,10 @@ openssh: $(OPENSSH_DEPS) $(ARCHIVE)/$(OPENSSH_SOURCE) | $(TARGET_DIR)
 TZDATA_VER    = 2019b
 TZDATA_TMP    = tzdata$(TZDATA_VER)
 TZDATA_SOURCE = tzdata$(TZDATA_VER).tar.gz
-TZDATA_URL    = ftp://ftp.iana.org/tz/releases
+TZDATA_SITE   = ftp://ftp.iana.org/tz/releases
 
 $(ARCHIVE)/$(TZDATA_SOURCE):
-	$(DOWNLOAD) $(TZDATA_URL)/$(TZDATA_SOURCE)
+	$(DOWNLOAD) $(TZDATA_SITE)/$(TZDATA_SOURCE)
 
 TZDATA_DEPS   = $(HOST_ZIC)
 
@@ -251,10 +251,10 @@ tzdata: $(TZDATA_DEPS) $(ARCHIVE)/$(TZDATA_SOURCE) | $(TARGET_DIR)
 MTD-UTILS_VER    = 2.0.2
 MTD-UTILS_TMP    = mtd-utils-$(MTD-UTILS_VER)
 MTD-UTILS_SOURCE = mtd-utils-$(MTD-UTILS_VER).tar.bz2
-MTD-UTILS_URL    = ftp://ftp.infradead.org/pub/mtd-utils
+MTD-UTILS_SITE   = ftp://ftp.infradead.org/pub/mtd-utils
 
 $(ARCHIVE)/$(MTD-UTILS_SOURCE):
-	$(DOWNLOAD) $(MTD-UTILS_URL)/$(MTD-UTILS_SOURCE)
+	$(DOWNLOAD) $(MTD-UTILS_SITE)/$(MTD-UTILS_SOURCE)
 
 MTD-UTILS_DEPS   = zlib lzo e2fsprogs
 
@@ -287,10 +287,10 @@ endif
 IPERF_VER    = 3.1.3
 IPERF_TMP    = iperf-$(IPERF_VER)
 IPERF_SOURCE = iperf-$(IPERF_VER)-source.tar.gz
-IPERF_URL    = https://iperf.fr/download/source
+IPERF_SITE   = https://iperf.fr/download/source
 
 $(ARCHIVE)/$(IPERF_SOURCE):
-	$(DOWNLOAD) $(IPERF_URL)/$(IPERF_SOURCE)
+	$(DOWNLOAD) $(IPERF_SITE)/$(IPERF_SOURCE)
 
 IPERF_PATCH  = iperf-disable-profiling.patch
 
@@ -314,10 +314,10 @@ iperf: $(ARCHIVE)/$(IPERF_SOURCE) | $(TARGET_DIR)
 PARTED_VER    = 3.2
 PARTED_TMP    = parted-$(PARTED_VER)
 PARTED_SOURCE = parted-$(PARTED_VER).tar.xz
-PARTED_URL    = https://ftp.gnu.org/gnu/parted
+PARTED_SITE   = https://ftp.gnu.org/gnu/parted
 
 $(ARCHIVE)/$(PARTED_SOURCE):
-	$(DOWNLOAD) $(PARTED_URL)/$(PARTED_SOURCE)
+	$(DOWNLOAD) $(PARTED_SITE)/$(PARTED_SOURCE)
 
 PARTED_PATCH  = parted-device-mapper.patch
 PARTED_PATCH += parted-sysmacros.patch
@@ -357,10 +357,10 @@ parted: $(PARTED_DEPS) $(ARCHIVE)/$(PARTED_SOURCE) | $(TARGET_DIR)
 HDPARM_VER    = 9.58
 HDPARM_TMP    = hdparm-$(HDPARM_VER)
 HDPARM_SOURCE = hdparm-$(HDPARM_VER).tar.gz
-HDPARM_URL    = https://sourceforge.net/projects/hdparm/files/hdparm
+HDPARM_SITE   = https://sourceforge.net/projects/hdparm/files/hdparm
 
 $(ARCHIVE)/$(HDPARM_SOURCE):
-	$(DOWNLOAD) $(HDPARM_URL)/$(HDPARM_SOURCE)
+	$(DOWNLOAD) $(HDPARM_SITE)/$(HDPARM_SOURCE)
 
 hdparm: $(ARCHIVE)/$(HDPARM_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(HDPARM_TMP)
@@ -377,10 +377,10 @@ hdparm: $(ARCHIVE)/$(HDPARM_SOURCE) | $(TARGET_DIR)
 HD-IDLE_VER    = 1.05
 HD-IDLE_TMP    = hd-idle
 HD-IDLE_SOURCE = hd-idle-$(HD-IDLE_VER).tgz
-HD-IDLE_URL    = https://sourceforge.net/projects/hd-idle/files
+HD-IDLE_SITE   = https://sourceforge.net/projects/hd-idle/files
 
 $(ARCHIVE)/$(HD-IDLE_SOURCE):
-	$(DOWNLOAD) $(HD-IDLE_URL)/$(HD-IDLE_SOURCE)
+	$(DOWNLOAD) $(HD-IDLE_SITE)/$(HD-IDLE_SOURCE)
 
 hd-idle: $(ARCHIVE)/$(HD-IDLE_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(HD-IDLE_TMP)
@@ -397,10 +397,10 @@ hd-idle: $(ARCHIVE)/$(HD-IDLE_SOURCE) | $(TARGET_DIR)
 COREUTILS_VER    = 8.30
 COREUTILS_TMP    = coreutils-$(COREUTILS_VER)
 COREUTILS_SOURCE = coreutils-$(COREUTILS_VER).tar.xz
-COREUTILS_URL    = https://ftp.gnu.org/gnu/coreutils
+COREUTILS_SITE   = https://ftp.gnu.org/gnu/coreutils
 
 $(ARCHIVE)/$(COREUTILS_SOURCE):
-	$(DOWNLOAD) $(COREUTILS_URL)/$(COREUTILS_SOURCE)
+	$(DOWNLOAD) $(COREUTILS_SITE)/$(COREUTILS_SOURCE)
 
 COREUTILS_PATCH  = coreutils-fix-build.patch
 
@@ -440,10 +440,10 @@ coreutils: $(ARCHIVE)/$(COREUTILS_SOURCE) | $(TARGET_DIR)
 LESS_VER    = 530
 LESS_TMP    = less-$(LESS_VER)
 LESS_SOURCE = less-$(LESS_VER).tar.gz
-LESS_URL    = http://www.greenwoodsoftware.com/less
+LESS_SITE   = http://www.greenwoodsoftware.com/less
 
 $(ARCHIVE)/$(LESS_SOURCE):
-	$(DOWNLOAD) $(LESS_URL)/$(LESS_SOURCE)
+	$(DOWNLOAD) $(LESS_SITE)/$(LESS_SOURCE)
 
 LESS_DEPS   = ncurses
 
@@ -466,10 +466,10 @@ less: $(LESS_DEPS) $(ARCHIVE)/$(LESS_SOURCE) | $(TARGET_DIR)
 NTP_VER    = 4.2.8
 NTP_TMP    = ntp-$(NTP_VER)
 NTP_SOURCE = ntp-$(NTP_VER).tar.gz
-NTP_URL    = https://www.eecis.udel.edu/~ntp/ntp_spool/ntp4/ntp-$(basename $(NTP_VER))
+NTP_SITE   = https://www.eecis.udel.edu/~ntp/ntp_spool/ntp4/ntp-$(basename $(NTP_VER))
 
 $(ARCHIVE)/$(NTP_SOURCE):
-	$(DOWNLOAD) $(NTP_URL)/$(NTP_SOURCE)
+	$(DOWNLOAD) $(NTP_SITE)/$(NTP_SOURCE)
 
 NTP_PATCH  = ntp.patch
 
@@ -500,10 +500,10 @@ ntp: $(NTP_DEPS) $(ARCHIVE)/$(NTP_SOURCE) | $(TARGET_DIR)
 DJMOUNT_VER    = 0.71
 DJMOUNT_TMP    = djmount-$(DJMOUNT_VER)
 DJMOUNT_SOURCE = djmount-$(DJMOUNT_VER).tar.gz
-DJMOUNT_URL    = https://sourceforge.net/projects/djmount/files/djmount/$(DJMOUNT_VER)
+DJMOUNT_SITE   = https://sourceforge.net/projects/djmount/files/djmount/$(DJMOUNT_VER)
 
 $(ARCHIVE)/$(DJMOUNT_SOURCE):
-	$(DOWNLOAD) $(DJMOUNT_URL)/$(DJMOUNT_SOURCE)
+	$(DOWNLOAD) $(DJMOUNT_SITE)/$(DJMOUNT_SOURCE)
 
 DJMOUNT_PATCH  = djmount-fix-hang-with-asset-upnp.patch
 DJMOUNT_PATCH += djmount-fix-incorrect-range-when-retrieving-content-via-HTTP.patch
@@ -539,10 +539,10 @@ djmount: $(DJMOUNT_DEPS) $(ARCHIVE)/$(DJMOUNT_SOURCE) | $(TARGET_DIR)
 USHARE_VER    = 1.1a
 USHARE_TMP    = ushare-uShare_v$(USHARE_VER)
 USHARE_SOURCE = uShare_v$(USHARE_VER).tar.gz
-USHARE_URL    = https://github.com/GeeXboX/ushare/archive
+USHARE_SITE   = https://github.com/GeeXboX/ushare/archive
 
 $(ARCHIVE)/$(USHARE_SOURCE):
-	$(DOWNLOAD) $(USHARE_URL)/$(USHARE_SOURCE)
+	$(DOWNLOAD) $(USHARE_SITE)/$(USHARE_SOURCE)
 
 USHARE_PATCH  = ushare.diff
 USHARE_PATCH += ushare-fix-building-with-gcc-5.x.patch
@@ -580,10 +580,10 @@ ushare: $(USHARE_DEPS) $(ARCHIVE)/$(USHARE_SOURCE)| $(TARGET_DIR)
 SMARTMONTOOLS_VER    = 7.1
 SMARTMONTOOLS_TMP    = smartmontools-$(SMARTMONTOOLS_VER)
 SMARTMONTOOLS_SOURCE = smartmontools-$(SMARTMONTOOLS_VER).tar.gz
-SMARTMONTOOLS_URL    = https://sourceforge.net/projects/smartmontools/files/smartmontools/$(SMARTMONTOOLS_VER)
+SMARTMONTOOLS_SITE   = https://sourceforge.net/projects/smartmontools/files/smartmontools/$(SMARTMONTOOLS_VER)
 
 $(ARCHIVE)/$(SMARTMONTOOLS_SOURCE):
-	$(DOWNLOAD) $(SMARTMONTOOLS_URL)/$(SMARTMONTOOLS_SOURCE)
+	$(DOWNLOAD) $(SMARTMONTOOLS_SITE)/$(SMARTMONTOOLS_SOURCE)
 
 smartmontools: $(ARCHIVE)/$(SMARTMONTOOLS_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(SMARTMONTOOLS_TMP)
@@ -603,10 +603,10 @@ smartmontools: $(ARCHIVE)/$(SMARTMONTOOLS_SOURCE) | $(TARGET_DIR)
 INADYN_VER    = 2.6
 INADYN_TMP    = inadyn-$(INADYN_VER)
 INADYN_SOURCE = inadyn-$(INADYN_VER).tar.xz
-INADYN_URL    = https://github.com/troglobit/inadyn/releases/download/v$(INADYN_VER)
+INADYN_SITE   = https://github.com/troglobit/inadyn/releases/download/v$(INADYN_VER)
 
 $(ARCHIVE)/$(INADYN_SOURCE):
-	$(DOWNLOAD) $(INADYN_URL)/$(INADYN_SOURCE)
+	$(DOWNLOAD) $(INADYN_SITE)/$(INADYN_SOURCE)
 
 INADYN_DEPS   = openssl confuse libite
 
@@ -637,10 +637,10 @@ inadyn: $(INADYN_DEPS) $(ARCHIVE)/$(INADYN_SOURCE) | $(TARGET_DIR)
 VSFTPD_VER    = 3.0.3
 VSFTPD_TMP    = vsftpd-$(VSFTPD_VER)
 VSFTPD_SOURCE = vsftpd-$(VSFTPD_VER).tar.gz
-VSFTPD_URL    = https://security.appspot.com/downloads
+VSFTPD_SITE   = https://security.appspot.com/downloads
 
 $(ARCHIVE)/$(VSFTPD_SOURCE):
-	$(DOWNLOAD) $(VSFTPD_URL)/$(VSFTPD_SOURCE)
+	$(DOWNLOAD) $(VSFTPD_SITE)/$(VSFTPD_SOURCE)
 
 VSFTPD_PATCH  = vsftpd-fix-CVE-2015-1419.patch
 VSFTPD_PATCH += vsftpd-disable-capabilities.patch
@@ -672,10 +672,10 @@ vsftpd: $(VSFTPD_DEPS) $(ARCHIVE)/$(VSFTPD_SOURCE) | $(TARGET_DIR)
 PROCPS-NG_VER    = 3.3.16
 PROCPS-NG_TMP    = procps-ng-$(PROCPS-NG_VER)
 PROCPS-NG_SOURCE = procps-ng-$(PROCPS-NG_VER).tar.xz
-PROCPS-NG_URL    = http://sourceforge.net/projects/procps-ng/files/Production
+PROCPS-NG_SITE   = http://sourceforge.net/projects/procps-ng/files/Production
 
 $(ARCHIVE)/$(PROCPS-NG_SOURCE):
-	$(DOWNLOAD) $(PROCPS-NG_URL)/$(PROCPS-NG_SOURCE)
+	$(DOWNLOAD) $(PROCPS-NG_SITE)/$(PROCPS-NG_SOURCE)
 
 PROCPS-NG_PATCH  = procps-ng-no-tests-docs.patch
 
@@ -717,10 +717,10 @@ procps-ng: $(PROCPS-NG_DEPS) $(ARCHIVE)/$(PROCPS-NG_SOURCE) | $(TARGET_DIR)
 NANO_VER    = 4.7
 NANO_TMP    = nano-$(NANO_VER)
 NANO_SOURCE = nano-$(NANO_VER).tar.gz
-NANO_URL    = https://www.nano-editor.org/dist/v$(basename $(NANO_VER))
+NANO_SITE   = https://www.nano-editor.org/dist/v$(basename $(NANO_VER))
 
 $(ARCHIVE)/$(NANO_SOURCE):
-	$(DOWNLOAD) $(NANO_URL)/$(NANO_SOURCE)
+	$(DOWNLOAD) $(NANO_SITE)/$(NANO_SOURCE)
 
 NANO_DEPS   = ncurses
 
@@ -746,10 +746,10 @@ nano: $(NANO_DEPS) $(ARCHIVE)/$(NANO_SOURCE) | $(TARGET_DIR)
 MINICOM_VER    = 2.7.1
 MINICOM_TMP    = minicom-$(MINICOM_VER)
 MINICOM_SOURCE = minicom-$(MINICOM_VER).tar.gz
-MINICOM_URL    = http://fossies.org/linux/misc
+MINICOM_SITE   = http://fossies.org/linux/misc
 
 $(ARCHIVE)/$(MINICOM_SOURCE):
-	$(DOWNLOAD) $(MINICOM_URL)/$(MINICOM_SOURCE)
+	$(DOWNLOAD) $(MINICOM_SITE)/$(MINICOM_SOURCE)
 
 MINICOM_PATCH  = minicom-fix-h-v-return-value-is-not-0.patch
 
@@ -775,10 +775,10 @@ minicom: $(MINICOM_DEPS) $(ARCHIVE)/$(MINICOM_SOURCE) | $(TARGET_DIR)
 BASH_VER    = 5.0
 BASH_TMP    = bash-$(BASH_VER)
 BASH_SOURCE = bash-$(BASH_VER).tar.gz
-BASH_URL    = http://ftp.gnu.org/gnu/bash
+BASH_SITE   = http://ftp.gnu.org/gnu/bash
 
 $(ARCHIVE)/$(BASH_SOURCE):
-	$(DOWNLOAD) $(BASH_URL)/$(BASH_SOURCE)
+	$(DOWNLOAD) $(BASH_SITE)/$(BASH_SOURCE)
 
 BASH_PATCH  = $(PATCHES)/bash
 
@@ -811,10 +811,10 @@ bash: $(ARCHIVE)/$(BASH_SOURCE) | $(TARGET_DIR)
 E2FSPROGS_VER    = $(if $(filter $(BOXTYPE), coolstream),1.43.8,1.45.6)
 E2FSPROGS_TMP    = e2fsprogs-$(E2FSPROGS_VER)
 E2FSPROGS_SOURCE = e2fsprogs-$(E2FSPROGS_VER).tar.gz
-E2FSPROGS_URL    = https://sourceforge.net/projects/e2fsprogs/files/e2fsprogs/v$(E2FSPROGS_VER)
+E2FSPROGS_SITE   = https://sourceforge.net/projects/e2fsprogs/files/e2fsprogs/v$(E2FSPROGS_VER)
 
 $(ARCHIVE)/$(E2FSPROGS_SOURCE):
-	$(DOWNLOAD) $(E2FSPROGS_URL)/$(E2FSPROGS_SOURCE)
+	$(DOWNLOAD) $(E2FSPROGS_SITE)/$(E2FSPROGS_SOURCE)
 
 e2fsprogs: $(ARCHIVE)/$(E2FSPROGS_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(E2FSPROGS_TMP)
@@ -863,10 +863,10 @@ e2fsprogs: $(ARCHIVE)/$(E2FSPROGS_SOURCE) | $(TARGET_DIR)
 NTFS-3G_VER    = 2017.3.23
 NTFS-3G_TMP    = ntfs-3g_ntfsprogs-$(NTFS-3G_VER)
 NTFS-3G_SOURCE = ntfs-3g_ntfsprogs-$(NTFS-3G_VER).tgz
-NTFS-3G_URL    = https://tuxera.com/opensource
+NTFS-3G_SITE   = https://tuxera.com/opensource
 
 $(ARCHIVE)/$(NTFS-3G_SOURCE):
-	$(DOWNLOAD) $(NTFS-3G_URL)/$(NTFS-3G_SOURCE)
+	$(DOWNLOAD) $(NTFS-3G_SITE)/$(NTFS-3G_SOURCE)
 
 ntfs-3g: $(ARCHIVE)/$(NTFS-3G_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(NTFS-3G_TMP)
@@ -893,10 +893,10 @@ ntfs-3g: $(ARCHIVE)/$(NTFS-3G_SOURCE) | $(TARGET_DIR)
 AUTOFS_VER    = 5.1.6
 AUTOFS_TMP    = autofs-$(AUTOFS_VER)
 AUTOFS_SOURCE = autofs-$(AUTOFS_VER).tar.xz
-AUTOFS_URL    = https://www.kernel.org/pub/linux/daemons/autofs/v5
+AUTOFS_SITE   = https://www.kernel.org/pub/linux/daemons/autofs/v5
 
 $(ARCHIVE)/$(AUTOFS_SOURCE):
-	$(DOWNLOAD) $(AUTOFS_URL)/$(AUTOFS_SOURCE)
+	$(DOWNLOAD) $(AUTOFS_SITE)/$(AUTOFS_SOURCE)
 
 # cd $(PATCHES)\autofs
 # wget -N https://mirrors.edge.kernel.org/pub/linux/daemons/autofs/v5/patches-5.1.6/patch_order_5.1.5
@@ -952,10 +952,10 @@ samba: $(SAMBA_TARGET)
 SAMBA33_VER    = 3.3.16
 SAMBA33_TMP    = samba-$(SAMBA33_VER)
 SAMBA33_SOURCE = samba-$(SAMBA33_VER).tar.gz
-SAMBA33_URL    = https://download.samba.org/pub/samba
+SAMBA33_SITE   = https://download.samba.org/pub/samba
 
 $(ARCHIVE)/$(SAMBA33_SOURCE):
-	$(DOWNLOAD) $(SAMBA33_URL)/$(SAMBA33_SOURCE)
+	$(DOWNLOAD) $(SAMBA33_SITE)/$(SAMBA33_SOURCE)
 
 SAMBA33_PATCH  = samba33-build-only-what-we-need.patch
 SAMBA33_PATCH += samba33-configure.in-make-getgrouplist_ok-test-cross-compile.patch
@@ -1025,10 +1025,10 @@ samba33: $(SAMBA33_DEPS) $(ARCHIVE)/$(SAMBA33_SOURCE) | $(TARGET_DIR)
 SAMBA36_VER    = 3.6.25
 SAMBA36_TMP    = samba-$(SAMBA36_VER)
 SAMBA36_SOURCE = samba-$(SAMBA36_VER).tar.gz
-SAMBA36_URL    = https://download.samba.org/pub/samba/stable
+SAMBA36_SITE   = https://download.samba.org/pub/samba/stable
 
 $(ARCHIVE)/$(SAMBA36_SOURCE):
-	$(DOWNLOAD) $(SAMBA36_URL)/$(SAMBA36_SOURCE)
+	$(DOWNLOAD) $(SAMBA36_SITE)/$(SAMBA36_SOURCE)
 
 SAMBA36_PATCH1  = samba36-build-only-what-we-need.patch
 SAMBA36_PATCH1 += samba36-remove_printer_support.patch
@@ -1106,10 +1106,10 @@ samba36: $(SAMBA36_DEPS) $(ARCHIVE)/$(SAMBA36_SOURCE) | $(TARGET_DIR)
 DROPBEAR_VER    = 2019.78
 DROPBEAR_TMP    = dropbear-$(DROPBEAR_VER)
 DROPBEAR_SOURCE = dropbear-$(DROPBEAR_VER).tar.bz2
-DROPBEAR_URL    = http://matt.ucc.asn.au/dropbear/releases
+DROPBEAR_SITE   = http://matt.ucc.asn.au/dropbear/releases
 
 $(ARCHIVE)/$(DROPBEAR_SOURCE):
-	$(DOWNLOAD) $(DROPBEAR_URL)/$(DROPBEAR_SOURCE)
+	$(DOWNLOAD) $(DROPBEAR_SITE)/$(DROPBEAR_SOURCE)
 
 DROPBEAR_DEPS   = zlib
 
@@ -1152,10 +1152,10 @@ dropbear: $(DROPBEAR_DEPS) $(ARCHIVE)/$(DROPBEAR_SOURCE) | $(TARGET_DIR)
 SG3_UTILS_VER    = 1.45
 SG3_UTILS_TMP    = sg3_utils-$(SG3_UTILS_VER)
 SG3_UTILS_SOURCE = sg3_utils-$(SG3_UTILS_VER).tar.xz
-SG3_UTILS_URL    = http://sg.danny.cz/sg/p
+SG3_UTILS_SITE   = http://sg.danny.cz/sg/p
 
 $(ARCHIVE)/$(SG3_UTILS_SOURCE):
-	$(DOWNLOAD) $(SG3_UTILS_URL)/$(SG3_UTILS_SOURCE)
+	$(DOWNLOAD) $(SG3_UTILS_SITE)/$(SG3_UTILS_SOURCE)
 
 SG3_UTILS_BIN    = sg_start
 
@@ -1186,10 +1186,10 @@ sg3_utils: $(ARCHIVE)/$(SG3_UTILS_SOURCE) | $(TARGET_DIR)
 FBSHOT_VER    = 0.3
 FBSHOT_TMP    = fbshot-$(FBSHOT_VER)
 FBSHOT_SOURCE = fbshot-$(FBSHOT_VER).tar.gz
-FBSHOT_URL    = http://distro.ibiblio.org/amigolinux/download/Utils/fbshot
+FBSHOT_SITE   = http://distro.ibiblio.org/amigolinux/download/Utils/fbshot
 
 $(ARCHIVE)/$(FBSHOT_SOURCE):
-	$(DOWNLOAD) $(FBSHOT_URL)/$(FBSHOT_SOURCE)
+	$(DOWNLOAD) $(FBSHOT_SITE)/$(FBSHOT_SOURCE)
 
 FBSHOT_PATCH  = fbshot-32bit_cs_fb.diff
 FBSHOT_PATCH += fbshot_cs_hd2.diff
@@ -1213,13 +1213,13 @@ fbshot: $(FBSHOT_DEPS) $(ARCHIVE)/$(FBSHOT_SOURCE) | $(TARGET_DIR)
 LCD4LINUX_VER    = git
 LCD4LINUX_TMP    = lcd4linux.$(LCD4LINUX_VER)
 LCD4LINUX_SOURCE = lcd4linux.$(LCD4LINUX_VER)
-LCD4LINUX_URL    = https://github.com/TangoCash
+LCD4LINUX_SITE   = https://github.com/TangoCash
 
 LCD4LINUX_DEPS   = ncurses libgd libdpf
 
 lcd4linux: $(LCD4LINUX_DEPS) | $(TARGET_DIR)
 	$(REMOVE)/$(LCD4LINUX_TMP)
-	$(GET-GIT-SOURCE) $(LCD4LINUX_URL)/$(LCD4LINUX_SOURCE) $(ARCHIVE)/$(LCD4LINUX_SOURCE)
+	$(GET-GIT-SOURCE) $(LCD4LINUX_SITE)/$(LCD4LINUX_SOURCE) $(ARCHIVE)/$(LCD4LINUX_SOURCE)
 	$(CPDIR)/$(LCD4LINUX_SOURCE)
 	$(CHDIR)/$(LCD4LINUX_TMP); \
 		./bootstrap; \
@@ -1248,11 +1248,11 @@ lcd4linux: $(LCD4LINUX_DEPS) | $(TARGET_DIR)
 SAMSUNGLCD4LINUX_VER    = git
 SAMSUNGLCD4LINUX_TMP    = samsunglcd4linux.$(LCD4LINUX_VER)
 SAMSUNGLCD4LINUX_SOURCE = samsunglcd4linux.$(LCD4LINUX_VER)
-SAMSUNGLCD4LINUX_URL    = https://github.com/horsti58
+SAMSUNGLCD4LINUX_SITE   = https://github.com/horsti58
 
 samsunglcd4linux: | $(TARGET_DIR)
 	$(REMOVE)/$(SAMSUNGLCD4LINUX_TMP)
-	$(GET-GIT-SOURCE) $(SAMSUNGLCD4LINUX_URL)/$(SAMSUNGLCD4LINUX_SOURCE) $(ARCHIVE)/$(SAMSUNGLCD4LINUX_SOURCE)
+	$(GET-GIT-SOURCE) $(SAMSUNGLCD4LINUX_SITE)/$(SAMSUNGLCD4LINUX_SOURCE) $(ARCHIVE)/$(SAMSUNGLCD4LINUX_SOURCE)
 	$(CPDIR)/$(SAMSUNGLCD4LINUX_SOURCE)
 	$(CHDIR)/$(SAMSUNGLCD4LINUX_TMP)/ni; \
 		$(INSTALL) -m 0600 etc/lcd4linux.conf $(TARGET_DIR)/etc; \
@@ -1265,10 +1265,10 @@ samsunglcd4linux: | $(TARGET_DIR)
 WPA_SUPPLICANT_VER    = 0.7.3
 WPA_SUPPLICANT_TMP    = wpa_supplicant-$(WPA_SUPPLICANT_VER)
 WPA_SUPPLICANT_SOURCE = wpa_supplicant-$(WPA_SUPPLICANT_VER).tar.gz
-WPA_SUPPLICANT_URL    = https://w1.fi/releases
+WPA_SUPPLICANT_SITE   = https://w1.fi/releases
 
 $(ARCHIVE)/$(WPA_SUPPLICANT_SOURCE):
-	$(DOWNLOAD) $(WPA_SUPPLICANT_URL)/$(WPA_SUPPLICANT_SOURCE)
+	$(DOWNLOAD) $(WPA_SUPPLICANT_SITE)/$(WPA_SUPPLICANT_SOURCE)
 
 WPA_SUPPLICANT_DEPS   = openssl
 
@@ -1290,7 +1290,7 @@ wpa_supplicant: $(WPA_SUPPLICANT_DEPS) $(ARCHIVE)/$(WPA_SUPPLICANT_SOURCE) | $(T
 XUPNPD_VER    = git
 XUPNPD_TMP    = xupnpd.$(XUPNPD_VER)
 XUPNPD_SOURCE = xupnpd.$(XUPNPD_VER)
-XUPNPD_URL    = https://github.com/clark15b
+XUPNPD_SITE   = https://github.com/clark15b
 
 XUPNPD_PATCH  = xupnpd-dynamic-lua.patch
 XUPNPD_PATCH += xupnpd-fix-memleak.patch
@@ -1302,7 +1302,7 @@ XUPNPD_DEPS   = lua openssl
 
 xupnpd: $(XUPNPD_DEPS) | $(TARGET_DIR)
 	$(REMOVE)/$(XUPNPD_TMP)
-	$(GET-GIT-SOURCE) $(XUPNPD_URL)/$(XUPNPD_SOURCE) $(ARCHIVE)/$(XUPNPD_SOURCE)
+	$(GET-GIT-SOURCE) $(XUPNPD_SITE)/$(XUPNPD_SOURCE) $(ARCHIVE)/$(XUPNPD_SOURCE)
 	$(CPDIR)/$(XUPNPD_SOURCE)
 	$(CHDIR)/$(XUPNPD_TMP); \
 		git checkout 25d6d44; \
@@ -1330,10 +1330,10 @@ xupnpd: $(XUPNPD_DEPS) | $(TARGET_DIR)
 DOSFSTOOLS_VER    = 4.1
 DOSFSTOOLS_TMP    = dosfstools-$(DOSFSTOOLS_VER)
 DOSFSTOOLS_SOURCE = dosfstools-$(DOSFSTOOLS_VER).tar.xz
-DOSFSTOOLS_URL    = https://github.com/dosfstools/dosfstools/releases/download/v$(DOSFSTOOLS_VER)
+DOSFSTOOLS_SITE   = https://github.com/dosfstools/dosfstools/releases/download/v$(DOSFSTOOLS_VER)
 
 $(ARCHIVE)/$(DOSFSTOOLS_SOURCE):
-	$(DOWNLOAD) $(DOSFSTOOLS_URL)/$(DOSFSTOOLS_SOURCE)
+	$(DOWNLOAD) $(DOSFSTOOLS_SITE)/$(DOSFSTOOLS_SOURCE)
 
 DOSFSTOOLS_PATCH  = switch-to-AC_CHECK_LIB-for-iconv-library-linking.patch
 
@@ -1363,10 +1363,10 @@ dosfstools: $(ARCHIVE)/$(DOSFSTOOLS_SOURCE) | $(TARGET_DIR)
 NFS-UTILS_VER    = 2.4.3
 NFS-UTILS_TMP    = nfs-utils-$(NFS-UTILS_VER)
 NFS-UTILS_SOURCE = nfs-utils-$(NFS-UTILS_VER).tar.bz2
-NFS-UTILS_URL    = https://sourceforge.net/projects/nfs/files/nfs-utils/$(NFS-UTILS_VER)
+NFS-UTILS_SITE   = https://sourceforge.net/projects/nfs/files/nfs-utils/$(NFS-UTILS_VER)
 
 $(ARCHIVE)/$(NFS-UTILS_SOURCE):
-	$(DOWNLOAD) $(NFS-UTILS_URL)/$(NFS-UTILS_SOURCE)
+	$(DOWNLOAD) $(NFS-UTILS_SITE)/$(NFS-UTILS_SOURCE)
 
 NFS-UTILS_PATCH  = 0001-nfs-utils-print-time-in-64-bit.patch
 
@@ -1418,10 +1418,10 @@ nfs-utils: $(NFS-UTILS_DEPS) $(ARCHIVE)/$(NFS-UTILS_SOURCE) | $(TARGET_DIR)
 RPCBIND_VER    = 1.2.5
 RPCBIND_TMP    = rpcbind-$(RPCBIND_VER)
 RPCBIND_SOURCE = rpcbind-$(RPCBIND_VER).tar.bz2
-RPCBIND_URL    = https://sourceforge.net/projects/rpcbind/files/rpcbind/$(RPCBIND_VER)
+RPCBIND_SITE   = https://sourceforge.net/projects/rpcbind/files/rpcbind/$(RPCBIND_VER)
 
 $(ARCHIVE)/$(RPCBIND_SOURCE):
-	$(DOWNLOAD) $(RPCBIND_URL)/$(RPCBIND_SOURCE)
+	$(DOWNLOAD) $(RPCBIND_SITE)/$(RPCBIND_SOURCE)
 
 RPCBIND_PATCH  = rpcbind-0001-Remove-yellow-pages-support.patch
 RPCBIND_PATCH += rpcbind-0002-add_option_to_fix_port_number.patch
@@ -1456,10 +1456,10 @@ endif
 FUSE-EXFAT_VER    = 1.3.0
 FUSE-EXFAT_TMP    = fuse-exfat-$(FUSE-EXFAT_VER)
 FUSE-EXFAT_SOURCE = fuse-exfat-$(FUSE-EXFAT_VER).tar.gz
-FUSE-EXFAT_URL    = https://github.com/relan/exfat/releases/download/v$(FUSE-EXFAT_VER)
+FUSE-EXFAT_SITE   = https://github.com/relan/exfat/releases/download/v$(FUSE-EXFAT_VER)
 
 $(ARCHIVE)/$(FUSE-EXFAT_SOURCE):
-	$(DOWNLOAD) $(FUSE-EXFAT_URL)/$(FUSE-EXFAT_SOURCE)
+	$(DOWNLOAD) $(FUSE-EXFAT_SITE)/$(FUSE-EXFAT_SOURCE)
 
 FUSE-EXFAT_DEPS   = libfuse
 
@@ -1483,10 +1483,10 @@ fuse-exfat: $(FUSE-EXFAT_DEPS) $(ARCHIVE)/$(FUSE-EXFAT_SOURCE) | $(TARGET_DIR)
 EXFAT-UTILS_VER    = 1.3.0
 EXFAT-UTILS_TMP    = exfat-utils-$(EXFAT-UTILS_VER)
 EXFAT-UTILS_SOURCE = exfat-utils-$(EXFAT-UTILS_VER).tar.gz
-EXFAT-UTILS_URL    = https://github.com/relan/exfat/releases/download/v$(EXFAT-UTILS_VER)
+EXFAT-UTILS_SITE   = https://github.com/relan/exfat/releases/download/v$(EXFAT-UTILS_VER)
 
 $(ARCHIVE)/$(EXFAT-UTILS_SOURCE):
-	$(DOWNLOAD) $(EXFAT-UTILS_URL)/$(EXFAT-UTILS_SOURCE)
+	$(DOWNLOAD) $(EXFAT-UTILS_SITE)/$(EXFAT-UTILS_SOURCE)
 
 EXFAT-UTILS_DEPS   = fuse-exfat
 
@@ -1532,10 +1532,10 @@ streamripper: $(STREAMRIPPER_DEPS) | $(TARGET_DIR)
 GETTEXT_VER    = 0.19.8.1
 GETTEXT_TMP    = gettext-$(GETTEXT_VER)
 GETTEXT_SOURCE = gettext-$(GETTEXT_VER).tar.xz
-GETTEXT_URL    = ftp://ftp.gnu.org/gnu/gettext
+GETTEXT_SITE   = ftp://ftp.gnu.org/gnu/gettext
 
 $(ARCHIVE)/$(GETTEXT_SOURCE):
-	$(DOWNLOAD) $(GETTEXT_URL)/$(GETTEXT_SOURCE)
+	$(DOWNLOAD) $(GETTEXT_SITE)/$(GETTEXT_SOURCE)
 
 gettext: $(ARCHIVE)/$(GETTEXT_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(GETTEXT_TMP)
@@ -1566,10 +1566,10 @@ gettext: $(ARCHIVE)/$(GETTEXT_SOURCE) | $(TARGET_DIR)
 MC_VER    = 4.8.24
 MC_TMP    = mc-$(MC_VER)
 MC_SOURCE = mc-$(MC_VER).tar.xz
-MC_URL    = ftp.midnight-commander.org
+MC_SITE   = ftp.midnight-commander.org
 
 $(ARCHIVE)/$(MC_SOURCE):
-	$(DOWNLOAD) $(MC_URL)/$(MC_SOURCE)
+	$(DOWNLOAD) $(MC_SITE)/$(MC_SOURCE)
 
 MC_PATCH  = 0001-Ticket-4070-misc-Makefile-am-install-mc-lib-only-once.patch
 
@@ -1610,10 +1610,10 @@ mc: $(MC_DEPS) $(ARCHIVE)/$(MC_SOURCE) | $(TARGET_DIR)
 WGET_VER    = 1.20.3
 WGET_TMP    = wget-$(WGET_VER)
 WGET_SOURCE = wget-$(WGET_VER).tar.gz
-WGET_URL    = https://ftp.gnu.org/gnu/wget
+WGET_SITE   = https://ftp.gnu.org/gnu/wget
 
 $(ARCHIVE)/$(WGET_SOURCE):
-	$(DOWNLOAD) $(WGET_URL)/$(WGET_SOURCE)
+	$(DOWNLOAD) $(WGET_SITE)/$(WGET_SOURCE)
 
 WGET_PATCH  = set-check_cert-false-by-default.patch
 WGET_PATCH += change_DEFAULT_LOGFILE.patch
@@ -1661,13 +1661,13 @@ ofgwrite: $(SOURCE_DIR)/$(NI-OFGWRITE) | $(TARGET_DIR)
 AIO-GRAB_VER    = git
 AIO-GRAB_TMP    = aio-grab.$(AIO-GRAB_VER)
 AIO-GRAB_SOURCE = aio-grab.$(AIO-GRAB_VER)
-AIO-GRAB_URL    = https://github.com/oe-alliance
+AIO-GRAB_SITE   = https://github.com/oe-alliance
 
 AIO-GRAB_DEPS   = zlib libpng libjpeg-turbo
 
 aio-grab: $(AIO-GRAB_DEPS) | $(TARGET_DIR)
 	$(REMOVE)/$(AIO-GRAB_TMP)
-	$(GET-GIT-SOURCE) $(AIO-GRAB_URL)/$(AIO-GRAB_SOURCE) $(ARCHIVE)/$(AIO-GRAB_SOURCE)
+	$(GET-GIT-SOURCE) $(AIO-GRAB_SITE)/$(AIO-GRAB_SOURCE) $(ARCHIVE)/$(AIO-GRAB_SOURCE)
 	$(CPDIR)/$(AIO-GRAB_SOURCE)
 	$(CHDIR)/$(AIO-GRAB_TMP); \
 		aclocal --force -I m4; \
@@ -1689,11 +1689,11 @@ aio-grab: $(AIO-GRAB_DEPS) | $(TARGET_DIR)
 DVBSNOOP_VER    = git
 DVBSNOOP_TMP    = dvbsnoop.$(DVBSNOOP_VER)
 DVBSNOOP_SOURCE = dvbsnoop.$(DVBSNOOP_VER)
-DVBSNOOP_URL    = https://github.com/Duckbox-Developers
+DVBSNOOP_SITE   = https://github.com/Duckbox-Developers
 
 dvbsnoop: | $(TARGET_DIR)
 	$(REMOVE)/$(DVBSNOOP_TMP)
-	$(GET-GIT-SOURCE) $(DVBSNOOP_URL)/$(DVBSNOOP_SOURCE) $(ARCHIVE)/$(DVBSNOOP_SOURCE)
+	$(GET-GIT-SOURCE) $(DVBSNOOP_SITE)/$(DVBSNOOP_SOURCE) $(ARCHIVE)/$(DVBSNOOP_SOURCE)
 	$(CPDIR)/$(DVBSNOOP_SOURCE)
 	$(CHDIR)/$(DVBSNOOP_TMP); \
 		$(CONFIGURE) \
@@ -1711,10 +1711,10 @@ dvbsnoop: | $(TARGET_DIR)
 ETHTOOL_VER    = 5.4
 ETHTOOL_TMP    = ethtool-$(ETHTOOL_VER)
 ETHTOOL_SOURCE = ethtool-$(ETHTOOL_VER).tar.xz
-ETHTOOL_URL    = https://www.kernel.org/pub/software/network/ethtool
+ETHTOOL_SITE   = https://www.kernel.org/pub/software/network/ethtool
 
 $(ARCHIVE)/$(ETHTOOL_SOURCE):
-	$(DOWNLOAD) $(ETHTOOL_URL)/$(ETHTOOL_SOURCE)
+	$(DOWNLOAD) $(ETHTOOL_SITE)/$(ETHTOOL_SOURCE)
 
 ethtool: $(ARCHIVE)/$(ETHTOOL_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(ETHTOOL_TMP)
@@ -1736,10 +1736,10 @@ ethtool: $(ARCHIVE)/$(ETHTOOL_SOURCE) | $(TARGET_DIR)
 GPTFDISK_VER    = 1.0.4
 GPTFDISK_TMP    = gptfdisk-$(GPTFDISK_VER)
 GPTFDISK_SOURCE = gptfdisk-$(GPTFDISK_VER).tar.gz
-GPTFDISK_URL    = https://sourceforge.net/projects/gptfdisk/files/gptfdisk/$(GPTFDISK_VER)
+GPTFDISK_SITE   = https://sourceforge.net/projects/gptfdisk/files/gptfdisk/$(GPTFDISK_VER)
 
 $(ARCHIVE)/$(GPTFDISK_SOURCE):
-	$(DOWNLOAD) $(GPTFDISK_URL)/$(GPTFDISK_SOURCE)
+	$(DOWNLOAD) $(GPTFDISK_SITE)/$(GPTFDISK_SOURCE)
 
 GPTFDISK_PATCH  = gptfdisk-ldlibs.patch
 
@@ -1763,10 +1763,10 @@ gptfdisk: $(GPTFDISK_DEPS) $(ARCHIVE)/$(GPTFDISK_SOURCE) | $(TARGET_DIR)
 RSYNC_VER    = 3.1.3
 RSYNC_TMP    = rsync-$(RSYNC_VER)
 RSYNC_SOURCE = rsync-$(RSYNC_VER).tar.gz
-RSYNC_URL    = https://ftp.samba.org/pub/rsync
+RSYNC_SITE   = https://ftp.samba.org/pub/rsync
 
 $(ARCHIVE)/$(RSYNC_SOURCE):
-	$(DOWNLOAD) $(RSYNC_URL)/$(RSYNC_SOURCE)
+	$(DOWNLOAD) $(RSYNC_SITE)/$(RSYNC_SOURCE)
 
 RSYNC_DEPS   = zlib popt
 
@@ -1793,10 +1793,10 @@ rsync: $(RSYNC_DEPS) $(ARCHIVE)/$(RSYNC_SOURCE) | $(TARGET_DIR)
 SYSVINIT_VER    = 2.96
 SYSVINIT_TMP    = sysvinit-$(SYSVINIT_VER)
 SYSVINIT_SOURCE = sysvinit-$(SYSVINIT_VER).tar.xz
-SYSVINIT_URL    = http://download.savannah.nongnu.org/releases/sysvinit
+SYSVINIT_SITE   = http://download.savannah.nongnu.org/releases/sysvinit
 
 $(ARCHIVE)/$(SYSVINIT_SOURCE):
-	$(DOWNLOAD) $(SYSVINIT_URL)/$(SYSVINIT_SOURCE)
+	$(DOWNLOAD) $(SYSVINIT_SITE)/$(SYSVINIT_SOURCE)
 
 SYSVINIT_PATCH  = crypt-lib.patch
 SYSVINIT_PATCH += change-INIT_FIFO.patch
@@ -1824,13 +1824,13 @@ sysvinit: $(ARCHIVE)/$(SYSVINIT_SOURCE) | $(TARGET_DIR)
 # -----------------------------------------------------------------------------
 
 CA-BUNDLE_SOURCE = cacert.pem
-CA-BUNDLE_URL    = https://curl.haxx.se/ca
+CA-BUNDLE_SITE   = https://curl.haxx.se/ca
 
 $(ARCHIVE)/$(CA-BUNDLE_SOURCE):
-	$(DOWNLOAD) $(CA-BUNDLE_URL)/$(CA-BUNDLE_SOURCE)
+	$(DOWNLOAD) $(CA-BUNDLE_SITE)/$(CA-BUNDLE_SOURCE)
 
 ca-bundle: $(ARCHIVE)/$(CA-BUNDLE_SOURCE) | $(TARGET_DIR)
 	$(CD) $(ARCHIVE); \
-		curl --remote-name --time-cond $(CA-BUNDLE_SOURCE) $(CA-BUNDLE_URL)/$(CA-BUNDLE_SOURCE) || true
+		curl --remote-name --time-cond $(CA-BUNDLE_SOURCE) $(CA-BUNDLE_SITE)/$(CA-BUNDLE_SOURCE) || true
 	$(INSTALL_DATA) -D $(ARCHIVE)/$(CA-BUNDLE_SOURCE) $(TARGET_DIR)/$(CA-BUNDLE_DIR)/$(CA-BUNDLE)
 	$(TOUCH)

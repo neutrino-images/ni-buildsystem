@@ -15,10 +15,10 @@ libs-static: $(LIBS-STATIC)
 CORTEX-STRINGS_VER    = 48fd30c
 CORTEX-STRINGS_TMP    = cortex-strings-$(CORTEX-STRINGS_VER)
 CORTEX-STRINGS_SOURCE = cortex-strings-$(CORTEX-STRINGS_VER).tar.bz2
-CORTEX-STRINGS_URL    = http://git.linaro.org/git-ro/toolchain/cortex-strings.git
+CORTEX-STRINGS_SITE   = http://git.linaro.org/git-ro/toolchain/cortex-strings.git
 
 $(ARCHIVE)/$(CORTEX-STRINGS_SOURCE):
-	$(GET-GIT-ARCHIVE) $(CORTEX-STRINGS_URL) $(CORTEX-STRINGS_VER) $(@F) $(ARCHIVE)
+	$(GET-GIT-ARCHIVE) $(CORTEX-STRINGS_SITE) $(CORTEX-STRINGS_VER) $(@F) $(ARCHIVE)
 
 CORTEX-STRINGS_CONF   = $(if $(filter $(BOXSERIES), hd51 vusolo4k vuduo4k vuultimo4k vuzero4k vuuno4k vuuno4kse),--with-neon,--without-neon)
 

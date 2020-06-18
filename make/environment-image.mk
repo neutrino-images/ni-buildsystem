@@ -60,7 +60,7 @@ else
   IMAGE_DESC ="$(BOXNAME) [$(IMAGE_SUFFIX)] $(shell echo $(IMAGE_TYPE_STRING) | sed 's/.*/\u&/')"
 endif
 
-IMAGE_URL = $(NI-SERVER)/$(NI-SUBDIR)
+IMAGE_SITE = $(NI-SERVER)/$(NI-SUBDIR)
 IMAGE_MD5FILE = $(IMAGE_TYPE_STRING)-$(IMAGE_SUFFIX).txt
 
 IMAGE_BUILD_TMP = $(BUILD_TMP)/image-build

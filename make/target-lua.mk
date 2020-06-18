@@ -7,10 +7,10 @@ LUA_ABIVER = 5.2
 LUA_VER    = 5.2.4
 LUA_TMP    = lua-$(LUA_VER)
 LUA_SOURCE = lua-$(LUA_VER).tar.gz
-LUA_URL    = https://www.lua.org
+LUA_SITE   = https://www.lua.org
 
 $(ARCHIVE)/$(LUA_SOURCE):
-	$(DOWNLOAD) $(LUA_URL)/ftp/$(LUA_SOURCE)
+	$(DOWNLOAD) $(LUA_SITE)/ftp/$(LUA_SOURCE)
 
 LUA_PATCH  = lua-01-fix-LUA_ROOT.patch
 LUA_PATCH += lua-01-remove-readline.patch
@@ -43,10 +43,10 @@ lua: $(LUA_DEPS) $(ARCHIVE)/$(LUA_SOURCE) | $(TARGET_DIR)
 LUAEXPAT_VER    = 1.3.3
 LUAEXPAT_TMP    = luaexpat-$(LUAEXPAT_VER)
 LUAEXPAT_SOURCE = luaexpat-$(LUAEXPAT_VER).tar.gz
-LUAEXPAT_URL    = https://github.com/tomasguisasola/luaexpat/archive
+LUAEXPAT_SITE   = https://github.com/tomasguisasola/luaexpat/archive
 
 $(ARCHIVE)/$(LUAEXPAT_SOURCE):
-	$(DOWNLOAD) $(LUAEXPAT_URL)/v$(LUAEXPAT_VER).tar.gz -O $(@)
+	$(DOWNLOAD) $(LUAEXPAT_SITE)/v$(LUAEXPAT_VER).tar.gz -O $(@)
 
 LUAEXPAT_DEPS   = expat lua
 
@@ -72,10 +72,10 @@ luaexpat: $(LUAEXPAT_DEPS) $(ARCHIVE)/$(LUAEXPAT_SOURCE) | $(TARGET_DIR)
 LUA-FEEDPARSER_VER    = 0.71
 LUA-FEEDPARSER_TMP    = lua-feedparser-$(LUA-FEEDPARSER_VER)
 LUA-FEEDPARSER_SOURCE = lua-feedparser-$(LUA-FEEDPARSER_VER).tar.gz
-LUA-FEEDPARSER_URL    = https://github.com/slact/lua-feedparser/archive
+LUA-FEEDPARSER_SITE   = https://github.com/slact/lua-feedparser/archive
 
 $(ARCHIVE)/$(LUA-FEEDPARSER_SOURCE):
-	$(DOWNLOAD) $(LUA-FEEDPARSER_URL)/$(LUA-FEEDPARSER_VER).tar.gz -O $(@)
+	$(DOWNLOAD) $(LUA-FEEDPARSER_SITE)/$(LUA-FEEDPARSER_VER).tar.gz -O $(@)
 
 LUA-FEEDPARSER_PATCH  = lua-feedparser.patch
 
@@ -94,14 +94,14 @@ lua-feedparser: $(LUA-DEEDPARSER_DEPS) $(ARCHIVE)/$(LUA-FEEDPARSER_SOURCE) | $(T
 # -----------------------------------------------------------------------------
 
 LUAJSON_SOURCE = JSON.lua
-LUAJSON_URL    = http://regex.info/code
+LUAJSON_SITE   = http://regex.info/code
 
 $(ARCHIVE)/$(LUAJSON_SOURCE):
-	$(DOWNLOAD) $(LUAJSON_URL)/$(LUAJSON_SOURCE)
+	$(DOWNLOAD) $(LUAJSON_SITE)/$(LUAJSON_SOURCE)
 
 luajson: $(ARCHIVE)/$(LUAJSON_SOURCE) | $(TARGET_DIR)
 	$(CD) $(ARCHIVE); \
-		curl --remote-name --time-cond $(LUAJSON_SOURCE) $(LUAJSON_URL) || true
+		curl --remote-name --time-cond $(LUAJSON_SOURCE) $(LUAJSON_SITE)/$(LUAJSON_SOURCE) || true
 	$(INSTALL_DATA) -D $(ARCHIVE)/$(LUAJSON_SOURCE) $(TARGET_SHARE_DIR)/lua/$(LUA_ABIVER)
 	ln -sf $(LUAJSON_SOURCE) $(TARGET_SHARE_DIR)/lua/$(LUA_ABIVER)/json.lua
 	$(TOUCH)
@@ -111,13 +111,13 @@ luajson: $(ARCHIVE)/$(LUAJSON_SOURCE) | $(TARGET_DIR)
 LUACURL_VER    = git
 LUACURL_TMP    = lua-curlv3.$(LUACURL_VER)
 LUACURL_SOURCE = lua-curlv3.$(LUACURL_VER)
-LUACURL_URL    = https://github.com/lua-curl/$(LUACURL_SOURCE)
+LUACURL_SITE   = https://github.com/lua-curl/$(LUACURL_SOURCE)
 
 LUACURL_DEPS   = libcurl lua
 
 luacurl: $(LUACURL_DEPS) | $(TARGET_DIR)
 	$(REMOVE)/$(LUACURL_TMP)
-	$(GET-GIT-SOURCE) $(LUACURL_URL) $(ARCHIVE)/$(LUACURL_SOURCE)
+	$(GET-GIT-SOURCE) $(LUACURL_SITE) $(ARCHIVE)/$(LUACURL_SOURCE)
 	$(CPDIR)/$(LUACURL_SOURCE)
 	$(CHDIR)/$(LUACURL_TMP); \
 		$(BUILD_ENV) \
@@ -135,10 +135,10 @@ luacurl: $(LUACURL_DEPS) | $(TARGET_DIR)
 LUAPOSIX_VER    = 31
 LUAPOSIX_TMP    = luaposix-$(LUAPOSIX_VER)
 LUAPOSIX_SOURCE = luaposix-$(LUAPOSIX_VER).tar.gz
-LUAPOSIX_URL    = https://github.com/luaposix/luaposix/archive
+LUAPOSIX_SITE   = https://github.com/luaposix/luaposix/archive
 
 $(ARCHIVE)/$(LUAPOSIX_SOURCE):
-	$(DOWNLOAD) $(LUAPOSIX_URL)/v$(LUAPOSIX_VER).tar.gz -O $(@)
+	$(DOWNLOAD) $(LUAPOSIX_SITE)/v$(LUAPOSIX_VER).tar.gz -O $(@)
 
 LUAPOSIX_PATCH  = luaposix-fix-build.patch
 LUAPOSIX_PATCH += luaposix-fix-docdir-build.patch
@@ -147,17 +147,17 @@ LUAPOSIX_DEPS   = $(HOST_LUA) lua luaexpat
 
 GNULIB_VER    = 20140202
 GNULIB_SOURCE = gnulib-$(GNULIB_VER)-stable.tar.gz
-GNULIB_URL    = http://erislabs.net/ianb/projects/gnulib
+GNULIB_SITE   = http://erislabs.net/ianb/projects/gnulib
 
 $(ARCHIVE)/$(GNULIB_SOURCE):
-	$(DOWNLOAD) $(GNULIB_URL)/$(GNULIB_SOURCE)
+	$(DOWNLOAD) $(GNULIB_SITE)/$(GNULIB_SOURCE)
 
 SLINGSHOT_VER    = 6
 SLINGSHOT_SOURCE = slingshot-$(SLINGSHOT_VER).tar.gz
-SLINGSHOT_URL    = https://github.com/gvvaughan/slingshot/archive
+SLINGSHOT_SITE   = https://github.com/gvvaughan/slingshot/archive
 
 $(ARCHIVE)/$(SLINGSHOT_SOURCE):
-	$(DOWNLOAD) $(SLINGSHOT_URL)/v$(SLINGSHOT_VER).tar.gz -O $(@)
+	$(DOWNLOAD) $(SLINGSHOT_SITE)/v$(SLINGSHOT_VER).tar.gz -O $(@)
 
 luaposix: $(LUAPOSIX_DEPS) $(ARCHIVE)/$(SLINGSHOT_SOURCE) $(ARCHIVE)/$(GNULIB_SOURCE) $(ARCHIVE)/$(LUAPOSIX_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LUAPOSIX_TMP)

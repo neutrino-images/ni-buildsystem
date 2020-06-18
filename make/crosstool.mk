@@ -57,7 +57,7 @@ $(BUILD_TMP)/linux-$(KERNEL_VER).tar: | $(BUILD_TMP)
 CROSSTOOL-NG_VER    = git
 CROSSTOOL-NG_TMP    = crosstool-ng.$(CROSSTOOL-NG_VER)
 CROSSTOOL-NG_SOURCE = crosstool-ng.$(CROSSTOOL-NG_VER)
-CROSSTOOL-NG_URL    = https://github.com/neutrino-images
+CROSSTOOL-NG_SITE   = https://github.com/neutrino-images
 
 CROSSTOOL-NG_PATCH  = crosstool-ng-bash-version.patch
 
@@ -69,10 +69,10 @@ endif
 # crosstool for hd2 depends on gcc-linaro
 GCC-LINARO_VER    = 4.9-2017.01
 GCC-LINARO_SOURCE = gcc-linaro-$(GCC-LINARO_VER).tar.xz
-GCC-LINARO_URL    = https://releases.linaro.org/components/toolchain/gcc-linaro/$(GCC-LINARO_VER)
+GCC-LINARO_SITE   = https://releases.linaro.org/components/toolchain/gcc-linaro/$(GCC-LINARO_VER)
 
 $(ARCHIVE)/$(GCC-LINARO_SOURCE):
-	$(DOWNLOAD) $(GCC-LINARO_URL)/$(GCC-LINARO_SOURCE)
+	$(DOWNLOAD) $(GCC-LINARO_SITE)/$(GCC-LINARO_SOURCE)
 
 UCLIBC_VER = 1.0.24
 
@@ -85,7 +85,7 @@ $(CROSS_DIR): | $(BUILD_TMP)
 	make $(BUILD_TMP)/linux-$(KERNEL_VER).tar
 	#
 	$(REMOVE)/$(CROSSTOOL-NG_TMP)
-	$(GET-GIT-SOURCE) $(CROSSTOOL-NG_URL)/$(CROSSTOOL-NG_SOURCE) $(ARCHIVE)/$(CROSSTOOL-NG_SOURCE)
+	$(GET-GIT-SOURCE) $(CROSSTOOL-NG_SITE)/$(CROSSTOOL-NG_SOURCE) $(ARCHIVE)/$(CROSSTOOL-NG_SOURCE)
 	$(CPDIR)/$(CROSSTOOL-NG_SOURCE)
 ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd1 hd2))
 	$(CHDIR)/$(CROSSTOOL-NG_TMP); \

@@ -7,10 +7,10 @@
 USBUTILS_VER    = 007
 USBUTILS_TMP    = usbutils-$(USBUTILS_VER)
 USBUTILS_SOURCE = usbutils-$(USBUTILS_VER).tar.xz
-USBUTILS_URL    = https://www.kernel.org/pub/linux/utils/usb/usbutils
+USBUTILS_SITE   = https://www.kernel.org/pub/linux/utils/usb/usbutils
 
 $(ARCHIVE)/$(USBUTILS_SOURCE):
-	$(DOWNLOAD) $(USBUTILS_URL)/$(USBUTILS_SOURCE)
+	$(DOWNLOAD) $(USBUTILS_SITE)/$(USBUTILS_SOURCE)
 
 USBUTILS_PATCH  = usbutils-avoid-dependency-on-bash.patch
 USBUTILS_PATCH += usbutils-fix-null-pointer-crash.patch
@@ -43,10 +43,10 @@ usbutils: $(USBUTILS_DEPS) $(ARCHIVE)/$(USBUTILS_SOURCE) | $(TARGET_DIR)
 BINUTILS_VER    = 2.25
 BINUTILS_TMP    = binutils-$(BINUTILS_VER)
 BINUTILS_SOURCE = binutils-$(BINUTILS_VER).tar.bz2
-BINUTILS_URL    = https://ftp.gnu.org/gnu/binutils
+BINUTILS_SITE   = https://ftp.gnu.org/gnu/binutils
 
 $(ARCHIVE)/$(BINUTILS_SOURCE):
-	$(DOWNLOAD) $(BINUTILS_URL)/$(BINUTILS_SOURCE)
+	$(DOWNLOAD) $(BINUTILS_SITE)/$(BINUTILS_SOURCE)
 
 binutils: $(ARCHIVE)/$(BINUTILS_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(BINUTILS_TMP)
@@ -74,10 +74,10 @@ UTIL-LINUX_ABIVER = 2.35
 UTIL-LINUX_VER    = 2.35
 UTIL-LINUX_TMP    = util-linux-$(UTIL-LINUX_VER)
 UTIL-LINUX_SOURCE = util-linux-$(UTIL-LINUX_VER).tar.xz
-UTIL-LINUX_URL    = https://www.kernel.org/pub/linux/utils/util-linux/v$(UTIL-LINUX_ABIVER)
+UTIL-LINUX_SITE   = https://www.kernel.org/pub/linux/utils/util-linux/v$(UTIL-LINUX_ABIVER)
 
 $(ARCHIVE)/$(UTIL-LINUX_SOURCE):
-	$(DOWNLOAD) $(UTIL-LINUX_URL)/$(UTIL-LINUX_SOURCE)
+	$(DOWNLOAD) $(UTIL-LINUX_SITE)/$(UTIL-LINUX_SOURCE)
 
 UTUL-LINUX_DEPS   = ncurses zlib
 
@@ -123,7 +123,7 @@ util-linux: $(UTUL-LINUX_DEPS) $(ARCHIVE)/$(UTIL-LINUX_SOURCE) | $(TARGET_DIR)
 ASTRA-SM_VER    = git
 ASTRA-SM_TMP    = astra-sm.$(ASTRA-SM_VER)
 ASTRA-SM_SOURCE = astra-sm.$(ASTRA-SM_VER)
-ASTRA-SM_URL    = https://gitlab.com/crazycat69
+ASTRA-SM_SITE   = https://gitlab.com/crazycat69
 
 ASTRA-SM_DEPS   = openssl
 
@@ -131,7 +131,7 @@ ASTRA-SM_DEPS   = openssl
 astra-sm: TARGET_ABI=""
 astra-sm: $(ASTRA-SM_DEPS) | $(TARGET_DIR)
 	$(REMOVE)/$(ASTRA-SM_TMP)
-	$(GET-GIT-SOURCE) $(ASTRA-SM_URL)/$(ASTRA-SM_SOURCE) $(ARCHIVE)/$(ASTRA-SM_SOURCE)
+	$(GET-GIT-SOURCE) $(ASTRA-SM_SITE)/$(ASTRA-SM_SOURCE) $(ARCHIVE)/$(ASTRA-SM_SOURCE)
 	$(CPDIR)/$(ASTRA-SM_SOURCE)
 	$(CHDIR)/$(ASTRA-SM_TMP); \
 		autoreconf -fi; \
@@ -148,10 +148,10 @@ astra-sm: $(ASTRA-SM_DEPS) | $(TARGET_DIR)
 IOZONE_VER    = 482
 IOZONE_TMP    = iozone3_$(IOZONE_VER)
 IOZONE_SOURCE = iozone3_$(IOZONE_VER).tar
-IOZONE_URL    = http://www.iozone.org/src/current
+IOZONE_SITE   = http://www.iozone.org/src/current
 
 $(ARCHIVE)/$(IOZONE_SOURCE):
-	$(DOWNLOAD) $(IOZONE_URL)/$(IOZONE_SOURCE)
+	$(DOWNLOAD) $(IOZONE_SITE)/$(IOZONE_SOURCE)
 
 iozone3: $(ARCHIVE)/$(IOZONE_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(IOZONE_TMP)
@@ -170,10 +170,10 @@ iozone3: $(ARCHIVE)/$(IOZONE_SOURCE) | $(TARGET_DIR)
 READLINE_VER    = 8.0
 READLINE_TMP    = readline-$(READLINE_VER)
 READLINE_SOURCE = readline-$(READLINE_VER).tar.gz
-READLINE_URL    = https://ftp.gnu.org/gnu/readline
+READLINE_SITE   = https://ftp.gnu.org/gnu/readline
 
 $(ARCHIVE)/$(READLINE_SOURCE):
-	$(DOWNLOAD) $(READLINE_URL)/$(READLINE_SOURCE)
+	$(DOWNLOAD) $(READLINE_SITE)/$(READLINE_SOURCE)
 
 readline: $(ARCHIVE)/$(READLINE_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(READLINE_TMP)

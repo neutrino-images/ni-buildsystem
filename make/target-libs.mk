@@ -6,10 +6,10 @@
 ZLIB_VER    = 1.2.11
 ZLIB_TMP    = zlib-$(ZLIB_VER)
 ZLIB_SOURCE = zlib-$(ZLIB_VER).tar.xz
-ZLIB_URL    = https://sourceforge.net/projects/libpng/files/zlib/$(ZLIB_VER)
+ZLIB_SITE   = https://sourceforge.net/projects/libpng/files/zlib/$(ZLIB_VER)
 
 $(ARCHIVE)/$(ZLIB_SOURCE):
-	$(DOWNLOAD) $(ZLIB_URL)/$(ZLIB_SOURCE)
+	$(DOWNLOAD) $(ZLIB_SITE)/$(ZLIB_SOURCE)
 
 ZLIB_PATCH  = zlib-ldflags-tests.patch
 ZLIB_PATCH += zlib-remove.ldconfig.call.patch
@@ -37,10 +37,10 @@ zlib: $(ARCHIVE)/$(ZLIB_SOURCE) | $(TARGET_DIR)
 LIBFUSE_VER    = 2.9.9
 LIBFUSE_TMP    = fuse-$(LIBFUSE_VER)
 LIBFUSE_SOURCE = fuse-$(LIBFUSE_VER).tar.gz
-LIBFUSE_URL    = https://github.com/libfuse/libfuse/releases/download/fuse-$(LIBFUSE_VER)
+LIBFUSE_SITE   = https://github.com/libfuse/libfuse/releases/download/fuse-$(LIBFUSE_VER)
 
 $(ARCHIVE)/$(LIBFUSE_SOURCE):
-	$(DOWNLOAD) $(LIBFUSE_URL)/$(LIBFUSE_SOURCE)
+	$(DOWNLOAD) $(LIBFUSE_SITE)/$(LIBFUSE_SOURCE)
 
 libfuse: $(ARCHIVE)/$(LIBFUSE_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LIBFUSE_TMP)
@@ -71,10 +71,10 @@ libfuse: $(ARCHIVE)/$(LIBFUSE_SOURCE) | $(TARGET_DIR)
 LIBUPNP_VER    = 1.6.25
 LIBUPNP_TMP    = libupnp-$(LIBUPNP_VER)
 LIBUPNP_SOURCE = libupnp-$(LIBUPNP_VER).tar.bz2
-LIBUPNP_URL    = http://sourceforge.net/projects/pupnp/files/pupnp/libUPnP%20$(LIBUPNP_VER)
+LIBUPNP_SITE   = http://sourceforge.net/projects/pupnp/files/pupnp/libUPnP%20$(LIBUPNP_VER)
 
 $(ARCHIVE)/$(LIBUPNP_SOURCE):
-	$(DOWNLOAD) $(LIBUPNP_URL)/$(LIBUPNP_SOURCE)
+	$(DOWNLOAD) $(LIBUPNP_SITE)/$(LIBUPNP_SOURCE)
 
 libupnp: $(ARCHIVE)/$(LIBUPNP_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LIBUPNP_TMP)
@@ -97,13 +97,13 @@ libupnp: $(ARCHIVE)/$(LIBUPNP_SOURCE) | $(TARGET_DIR)
 LIBDVBSI_VER    = git
 LIBDVBSI_TMP    = libdvbsi.$(LIBDVBSI_VER)
 LIBDVBSI_SOURCE = libdvbsi.$(LIBDVBSI_VER)
-LIBDVBSI_URL    = https://github.com/OpenVisionE2
+LIBDVBSI_SITE   = https://github.com/OpenVisionE2
 
 LIBDVBSI_PATCH  = libdvbsi++-content_identifier_descriptor.patch
 
 libdvbsi: | $(TARGET_DIR)
 	$(REMOVE)/$(LIBDVBSI_TMP)
-	$(GET-GIT-SOURCE) $(LIBDVBSI_URL)/$(LIBDVBSI_SOURCE) $(ARCHIVE)/$(LIBDVBSI_SOURCE)
+	$(GET-GIT-SOURCE) $(LIBDVBSI_SITE)/$(LIBDVBSI_SOURCE) $(ARCHIVE)/$(LIBDVBSI_SOURCE)
 	$(CPDIR)/$(LIBDVBSI_SOURCE)
 	$(CHDIR)/$(LIBDVBSI_TMP); \
 		$(call apply_patches, $(LIBDVBSI_PATCH)); \
@@ -125,10 +125,10 @@ libdvbsi: | $(TARGET_DIR)
 GIFLIB_VER    = 5.2.1
 GIFLIB_TMP    = giflib-$(GIFLIB_VER)
 GIFLIB_SOURCE = giflib-$(GIFLIB_VER).tar.gz
-GIFLIB_URL    = https://sourceforge.net/projects/giflib/files
+GIFLIB_SITE   = https://sourceforge.net/projects/giflib/files
 
 $(ARCHIVE)/$(GIFLIB_SOURCE):
-	$(DOWNLOAD) $(GIFLIB_URL)/$(GIFLIB_SOURCE)
+	$(DOWNLOAD) $(GIFLIB_SITE)/$(GIFLIB_SOURCE)
 
 giflib: $(ARCHIVE)/$(GIFLIB_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(GIFLIB_TMP)
@@ -145,10 +145,10 @@ giflib: $(ARCHIVE)/$(GIFLIB_SOURCE) | $(TARGET_DIR)
 LIBCURL_VER    = 7.70.0
 LIBCURL_TMP    = curl-$(LIBCURL_VER)
 LIBCURL_SOURCE = curl-$(LIBCURL_VER).tar.bz2
-LIBCURL_URL    = https://curl.haxx.se/download
+LIBCURL_SITE   = https://curl.haxx.se/download
 
 $(ARCHIVE)/$(LIBCURL_SOURCE):
-	$(DOWNLOAD) $(LIBCURL_URL)/$(LIBCURL_SOURCE)
+	$(DOWNLOAD) $(LIBCURL_SITE)/$(LIBCURL_SOURCE)
 
 LIBCURL_DEPS   = zlib openssl rtmpdump ca-bundle
 
@@ -199,10 +199,10 @@ libcurl: $(LIBCURL_DEPS) $(ARCHIVE)/$(LIBCURL_SOURCE) | $(TARGET_DIR)
 LIBPNG_VER    = 1.6.37
 LIBPNG_TMP    = libpng-$(LIBPNG_VER)
 LIBPNG_SOURCE = libpng-$(LIBPNG_VER).tar.xz
-LIBPNG_URL    = https://sourceforge.net/projects/libpng/files/libpng16/$(LIBPNG_VER)
+LIBPNG_SITE   = https://sourceforge.net/projects/libpng/files/libpng16/$(LIBPNG_VER)
 
 $(ARCHIVE)/$(LIBPNG_SOURCE):
-	$(DOWNLOAD) $(LIBPNG_URL)/$(LIBPNG_SOURCE)
+	$(DOWNLOAD) $(LIBPNG_SITE)/$(LIBPNG_SOURCE)
 
 LIBPNG_PATCH  = libpng-Disable-pngfix-and-png-fix-itxt.patch
 
@@ -236,10 +236,10 @@ libpng: $(LIBPNG_DEPS) $(ARCHIVE)/$(LIBPNG_SOURCE) | $(TARGET_DIR)
 FREETYPE_VER    = 2.10.1
 FREETYPE_TMP    = freetype-$(FREETYPE_VER)
 FREETYPE_SOURCE = freetype-$(FREETYPE_VER).tar.xz
-FREETYPE_URL    = https://sourceforge.net/projects/freetype/files/freetype2/$(FREETYPE_VER)
+FREETYPE_SITE   = https://sourceforge.net/projects/freetype/files/freetype2/$(FREETYPE_VER)
 
 $(ARCHIVE)/$(FREETYPE_SOURCE):
-	$(DOWNLOAD) $(FREETYPE_URL)/$(FREETYPE_SOURCE)
+	$(DOWNLOAD) $(FREETYPE_SITE)/$(FREETYPE_SOURCE)
 
 FREETYPE_PATCH  = freetype2-subpixel.patch
 FREETYPE_PATCH += freetype2-config.patch
@@ -285,10 +285,10 @@ freetype: $(FREETYPE_DEPS) $(ARCHIVE)/$(FREETYPE_SOURCE) | $(TARGET_DIR)
 LIBJPEG-TURBO_VER    = 2.0.4
 LIBJPEG-TURBO_TMP    = libjpeg-turbo-$(LIBJPEG-TURBO_VER)
 LIBJPEG-TURBO_SOURCE = libjpeg-turbo-$(LIBJPEG-TURBO_VER).tar.gz
-LIBJPEG-TURBO_URL    = https://sourceforge.net/projects/libjpeg-turbo/files/$(LIBJPEG-TURBO_VER)
+LIBJPEG-TURBO_SITE   = https://sourceforge.net/projects/libjpeg-turbo/files/$(LIBJPEG-TURBO_VER)
 
 $(ARCHIVE)/$(LIBJPEG-TURBO_SOURCE):
-	$(DOWNLOAD) $(LIBJPEG-TURBO_URL)/$(LIBJPEG-TURBO_SOURCE)
+	$(DOWNLOAD) $(LIBJPEG-TURBO_SITE)/$(LIBJPEG-TURBO_SOURCE)
 
 LIBJPEG-TURBO_PATCH  = libjpeg-turbo-tiff-ojpeg.patch
 
@@ -313,10 +313,10 @@ libjpeg-turbo: $(ARCHIVE)/$(LIBJPEG-TURBO_SOURCE) | $(TARGET_DIR)
 OPENSSL_VER    = 1.0.2t
 OPENSSL_TMP    = openssl-$(OPENSSL_VER)
 OPENSSL_SOURCE = openssl-$(OPENSSL_VER).tar.gz
-OPENSSL_URL    = https://www.openssl.org/source
+OPENSSL_SITE   = https://www.openssl.org/source
 
 $(ARCHIVE)/$(OPENSSL_SOURCE):
-	$(DOWNLOAD) $(OPENSSL_URL)/$(OPENSSL_SOURCE)
+	$(DOWNLOAD) $(OPENSSL_SITE)/$(OPENSSL_SOURCE)
 
 OPENSSL_PATCH  = 0000-Configure-align-O-flag.patch
 
@@ -379,10 +379,10 @@ endif
 NCURSES_VER    = 6.1
 NCURSES_TMP    = ncurses-$(NCURSES_VER)
 NCURSES_SOURCE = ncurses-$(NCURSES_VER).tar.gz
-NCURSES_URL    = https://ftp.gnu.org/pub/gnu/ncurses
+NCURSES_SITE   = https://ftp.gnu.org/pub/gnu/ncurses
 
 $(ARCHIVE)/$(NCURSES_SOURCE):
-	$(DOWNLOAD) $(NCURSES_URL)/$(NCURSES_SOURCE)
+	$(DOWNLOAD) $(NCURSES_SITE)/$(NCURSES_SOURCE)
 
 NCURSES_PATCH  = ncurses-gcc-5.x-MKlib_gen.patch
 
@@ -444,10 +444,10 @@ openthreads: $(SOURCE_DIR)/$(NI-OPENTHREADS) | $(TARGET_DIR)
 LIBUSB_VER    = 1.0.23
 LIBUSB_TMP    = libusb-$(LIBUSB_VER)
 LIBUSB_SOURCE = libusb-$(LIBUSB_VER).tar.bz2
-LIBUSB_URL    = https://github.com/libusb/libusb/releases/download/v$(LIBUSB_VER)
+LIBUSB_SITE   = https://github.com/libusb/libusb/releases/download/v$(LIBUSB_VER)
 
 $(ARCHIVE)/$(LIBUSB_SOURCE):
-	$(DOWNLOAD) $(LIBUSB_URL)/$(LIBUSB_SOURCE)
+	$(DOWNLOAD) $(LIBUSB_SITE)/$(LIBUSB_SOURCE)
 
 libusb: $(ARCHIVE)/$(LIBUSB_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LIBUSB_TMP)
@@ -469,10 +469,10 @@ libusb: $(ARCHIVE)/$(LIBUSB_SOURCE) | $(TARGET_DIR)
 LIBUSB-COMPAT_VER    = 0.1.7
 LIBUSB-COMPAT_TMP    = libusb-compat-$(LIBUSB-COMPAT_VER)
 LIBUSB-COMPAT_SOURCE = libusb-compat-$(LIBUSB-COMPAT_VER).tar.bz2
-LIBUSB-COMPAT_URL    = https://github.com/libusb/libusb-compat-0.1/releases/download/v$(LIBUSB-COMPAT_VER)
+LIBUSB-COMPAT_SITE   = https://github.com/libusb/libusb-compat-0.1/releases/download/v$(LIBUSB-COMPAT_VER)
 
 $(ARCHIVE)/$(LIBUSB-COMPAT_SOURCE):
-	$(DOWNLOAD) $(LIBUSB-COMPAT_URL)/$(LIBUSB-COMPAT_SOURCE)
+	$(DOWNLOAD) $(LIBUSB-COMPAT_SITE)/$(LIBUSB-COMPAT_SOURCE)
 
 LIBUSB-COMPAT_PATCH  = 0001-fix-a-build-issue-on-linux.patch
 
@@ -500,10 +500,10 @@ libusb-compat: $(LUBUSB-COMPAT_DEPS) $(ARCHIVE)/$(LIBUSB-COMPAT_SOURCE) | $(TARG
 LIBGD_VER    = 2.2.5
 LIBGD_TMP    = libgd-$(LIBGD_VER)
 LIBGD_SOURCE = libgd-$(LIBGD_VER).tar.xz
-LIBGD_URL    = https://github.com/libgd/libgd/releases/download/gd-$(LIBGD_VER)
+LIBGD_SITE   = https://github.com/libgd/libgd/releases/download/gd-$(LIBGD_VER)
 
 $(ARCHIVE)/$(LIBGD_SOURCE):
-	$(DOWNLOAD) $(LIBGD_URL)/$(LIBGD_SOURCE)
+	$(DOWNLOAD) $(LIBGD_SITE)/$(LIBGD_SOURCE)
 
 LIBGD_DEPS   = zlib libpng libjpeg-turbo freetype
 
@@ -531,7 +531,7 @@ libgd: $(LIBGD_DEPS) $(ARCHIVE)/$(LIBGD_SOURCE) | $(TARGET_DIR)
 LIBDPF_VER    = git
 LIBDPF_TMP    = dpf-ax.$(LIBDPF_VER)
 LIBDPF_SOURCE = dpf-ax.$(LIBDPF_VER)
-LIBDPF_URL    = $(GITHUB)/MaxWiesel
+LIBDPF_SITE   = $(GITHUB)/MaxWiesel
 
 LIBDPF_PATCH  = libdpf-crossbuild.patch
 
@@ -539,7 +539,7 @@ LIBDPF_DEPS   = libusb-compat
 
 libdpf: $(LIBDPF_DEPS) | $(TARGET_DIR)
 	$(REMOVE)/$(LIBDPF_TMP)
-	$(GET-GIT-SOURCE) $(LIBDPF_URL)/$(LIBDPF_SOURCE) $(ARCHIVE)/$(LIBDPF_SOURCE)
+	$(GET-GIT-SOURCE) $(LIBDPF_SITE)/$(LIBDPF_SOURCE) $(ARCHIVE)/$(LIBDPF_SOURCE)
 	$(CPDIR)/$(LIBDPF_SOURCE)
 	$(CHDIR)/$(LIBDPF_TMP)/dpflib; \
 		$(call apply_patches, $(LIBDPF_PATCH)); \
@@ -557,10 +557,10 @@ libdpf: $(LIBDPF_DEPS) | $(TARGET_DIR)
 LZO_VER    = 2.10
 LZO_TMP    = lzo-$(LZO_VER)
 LZO_SOURCE = lzo-$(LZO_VER).tar.gz
-LZO_URL    = https://www.oberhumer.com/opensource/lzo/download
+LZO_SITE   = https://www.oberhumer.com/opensource/lzo/download
 
 $(ARCHIVE)/$(LZO_SOURCE):
-	$(DOWNLOAD) $(LZO_URL)/$(LZO_SOURCE)
+	$(DOWNLOAD) $(LZO_SITE)/$(LZO_SOURCE)
 
 lzo: $(ARCHIVE)/$(LZO_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LZO_TMP)
@@ -582,10 +582,10 @@ lzo: $(ARCHIVE)/$(LZO_SOURCE) | $(TARGET_DIR)
 LIBSIGC_VER    = 2.10.3
 LIBSIGC_TMP    = libsigc++-$(LIBSIGC_VER)
 LIBSIGC_SOURCE = libsigc++-$(LIBSIGC_VER).tar.xz
-LIBSIGC_URL    = https://download.gnome.org/sources/libsigc++/$(basename $(LIBSIGC_VER))
+LIBSIGC_SITE   = https://download.gnome.org/sources/libsigc++/$(basename $(LIBSIGC_VER))
 
 $(ARCHIVE)/$(LIBSIGC_SOURCE):
-	$(DOWNLOAD) $(LIBSIGC_URL)/$(LIBSIGC_SOURCE)
+	$(DOWNLOAD) $(LIBSIGC_SITE)/$(LIBSIGC_SOURCE)
 
 libsigc: $(ARCHIVE)/$(LIBSIGC_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LIBSIGC_TMP)
@@ -610,10 +610,10 @@ libsigc: $(ARCHIVE)/$(LIBSIGC_SOURCE) | $(TARGET_DIR)
 EXPAT_VER    = 2.2.9
 EXPAT_TMP    = expat-$(EXPAT_VER)
 EXPAT_SOURCE = expat-$(EXPAT_VER).tar.bz2
-EXPAT_URL    = https://sourceforge.net/projects/expat/files/expat/$(EXPAT_VER)
+EXPAT_SITE   = https://sourceforge.net/projects/expat/files/expat/$(EXPAT_VER)
 
 $(ARCHIVE)/$(EXPAT_SOURCE):
-	$(DOWNLOAD) $(EXPAT_URL)/$(EXPAT_SOURCE)
+	$(DOWNLOAD) $(EXPAT_SITE)/$(EXPAT_SOURCE)
 
 EXPAT_PATCH  = expat-libtool-tag.patch
 
@@ -643,10 +643,10 @@ expat: $(ARCHIVE)/$(EXPAT_SOURCE) | $(TARGET_DIR)
 LIBBLURAY_VER    = 0.9.3
 LIBBLURAY_TMP    = libbluray-$(LIBBLURAY_VER)
 LIBBLURAY_SOURCE = libbluray-$(LIBBLURAY_VER).tar.bz2
-LIBBLURAY_URL    = ftp.videolan.org/pub/videolan/libbluray/$(LIBBLURAY_VER)
+LIBBLURAY_SITE   = ftp.videolan.org/pub/videolan/libbluray/$(LIBBLURAY_VER)
 
 $(ARCHIVE)/$(LIBBLURAY_SOURCE):
-	$(DOWNLOAD) $(LIBBLURAY_URL)/$(LIBBLURAY_SOURCE)
+	$(DOWNLOAD) $(LIBBLURAY_SITE)/$(LIBBLURAY_SOURCE)
 
 LIBBLURAY_PATCH  = libbluray.patch
 
@@ -689,10 +689,10 @@ libbluray: $(LIBBLURAY_DEPS) $(ARCHIVE)/$(LIBBLURAY_SOURCE) | $(TARGET_DIR)
 LIBASS_VER    = 0.14.0
 LIBASS_TMP    = libass-$(LIBASS_VER)
 LIBASS_SOURCE = libass-$(LIBASS_VER).tar.xz
-LIBASS_URL    = https://github.com/libass/libass/releases/download/$(LIBASS_VER)
+LIBASS_SITE   = https://github.com/libass/libass/releases/download/$(LIBASS_VER)
 
 $(ARCHIVE)/$(LIBASS_SOURCE):
-	$(DOWNLOAD) $(LIBASS_URL)/$(LIBASS_SOURCE)
+	$(DOWNLOAD) $(LIBASS_SITE)/$(LIBASS_SOURCE)
 
 LIBASS_PATCH  = libass.patch
 
@@ -724,10 +724,10 @@ libass: $(LIBASS_DEPS) $(ARCHIVE)/$(LIBASS_SOURCE) | $(TARGET_DIR)
 LIBGPG-ERROR_VER    = 1.37
 LIBGPG-ERROR_TMP    = libgpg-error-$(LIBGPG-ERROR_VER)
 LIBGPG-ERROR_SOURCE = libgpg-error-$(LIBGPG-ERROR_VER).tar.bz2
-LIBGPG-ERROR_URL    = ftp://ftp.gnupg.org/gcrypt/libgpg-error
+LIBGPG-ERROR_SITE   = ftp://ftp.gnupg.org/gcrypt/libgpg-error
 
 $(ARCHIVE)/$(LIBGPG-ERROR_SOURCE):
-	$(DOWNLOAD) $(LIBGPG-ERROR_URL)/$(LIBGPG-ERROR_SOURCE)
+	$(DOWNLOAD) $(LIBGPG-ERROR_SITE)/$(LIBGPG-ERROR_SOURCE)
 
 libgpg-error: $(ARCHIVE)/$(LIBGPG-ERROR_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LIBGPG-ERROR_TMP)
@@ -762,10 +762,10 @@ libgpg-error: $(ARCHIVE)/$(LIBGPG-ERROR_SOURCE) | $(TARGET_DIR)
 LIBGCRYPT_VER    = 1.8.5
 LIBGCRYPT_TMP    = libgcrypt-$(LIBGCRYPT_VER)
 LIBGCRYPT_SOURCE = libgcrypt-$(LIBGCRYPT_VER).tar.gz
-LIBGCRYPT_URL    = ftp://ftp.gnupg.org/gcrypt/libgcrypt
+LIBGCRYPT_SITE   = ftp://ftp.gnupg.org/gcrypt/libgcrypt
 
 $(ARCHIVE)/$(LIBGCRYPT_SOURCE):
-	$(DOWNLOAD) $(LIBGCRYPT_URL)/$(LIBGCRYPT_SOURCE)
+	$(DOWNLOAD) $(LIBGCRYPT_SITE)/$(LIBGCRYPT_SOURCE)
 
 LIBGCRYPT_DEPS   = libgpg-error
 
@@ -798,10 +798,10 @@ libgcrypt: $(LIBGCRYPT_DEPS) $(ARCHIVE)/$(LIBGCRYPT_SOURCE) | $(TARGET_DIR)
 LIBAACS_VER    = 0.9.0
 LIBAACS_TMP    = libaacs-$(LIBAACS_VER)
 LIBAACS_SOURCE = libaacs-$(LIBAACS_VER).tar.bz2
-LIBAACS_URL    = ftp://ftp.videolan.org/pub/videolan/libaacs/$(LIBAACS_VER)
+LIBAACS_SITE   = ftp://ftp.videolan.org/pub/videolan/libaacs/$(LIBAACS_VER)
 
 $(ARCHIVE)/$(LIBAACS_SOURCE):
-	$(DOWNLOAD) $(LIBAACS_URL)/$(LIBAACS_SOURCE)
+	$(DOWNLOAD) $(LIBAACS_SITE)/$(LIBAACS_SOURCE)
 
 LIBAACS_DEPS   = libgcrypt
 
@@ -832,10 +832,10 @@ libaacs: $(LIBAACS_DEPS) $(ARCHIVE)/$(LIBAACS_SOURCE) | $(TARGET_DIR)
 LIBBDPLUS_VER    = 0.1.2
 LIBBDPLUS_TMP    = libbdplus-$(LIBBDPLUS_VER)
 LIBBDPLUS_SOURCE = libbdplus-$(LIBBDPLUS_VER).tar.bz2
-LIBBDPLUS_URL    = ftp://ftp.videolan.org/pub/videolan/libbdplus/$(LIBBDPLUS_VER)
+LIBBDPLUS_SITE   = ftp://ftp.videolan.org/pub/videolan/libbdplus/$(LIBBDPLUS_VER)
 
 $(ARCHIVE)/$(LIBBDPLUS_SOURCE):
-	$(DOWNLOAD) $(LIBBDPLUS_URL)/$(LIBBDPLUS_SOURCE)
+	$(DOWNLOAD) $(LIBBDPLUS_SITE)/$(LIBBDPLUS_SOURCE)
 
 LIBBDPLUS_DEPS   = libaacs
 
@@ -866,10 +866,10 @@ libbdplus: $(LIBBDPLUS_DEPS) $(ARCHIVE)/$(LIBBDPLUS_SOURCE) | $(TARGET_DIR)
 LIBXML2_VER    = 2.9.10
 LIBXML2_TMP    = libxml2-$(LIBXML2_VER)
 LIBXML2_SOURCE = libxml2-$(LIBXML2_VER).tar.gz
-LIBXML2_URL    = http://xmlsoft.org/sources
+LIBXML2_SITE   = http://xmlsoft.org/sources
 
 $(ARCHIVE)/$(LIBXML2_SOURCE):
-	$(DOWNLOAD) $(LIBXML2_URL)/$(LIBXML2_SOURCE)
+	$(DOWNLOAD) $(LIBXML2_SITE)/$(LIBXML2_SOURCE)
 
 libxml2: $(ARCHIVE)/$(LIBXML2_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LIBXML2_TMP)
@@ -907,10 +907,10 @@ libxml2: $(ARCHIVE)/$(LIBXML2_SOURCE) | $(TARGET_DIR)
 PUGIXML_VER    = 1.10
 PUGIXML_TMP    = pugixml-$(PUGIXML_VER)
 PUGIXML_SOURCE = pugixml-$(PUGIXML_VER).tar.gz
-PUGIXML_URL    = https://github.com/zeux/pugixml/releases/download/v$(PUGIXML_VER)
+PUGIXML_SITE   = https://github.com/zeux/pugixml/releases/download/v$(PUGIXML_VER)
 
 $(ARCHIVE)/$(PUGIXML_SOURCE):
-	$(DOWNLOAD) $(PUGIXML_URL)/$(PUGIXML_SOURCE)
+	$(DOWNLOAD) $(PUGIXML_SITE)/$(PUGIXML_SOURCE)
 
 PUGIXML_PATCH  = pugixml-config.patch
 
@@ -931,10 +931,10 @@ pugixml: $(ARCHIVE)/$(PUGIXML_SOURCE) | $(TARGET_DIR)
 LIBROXML_VER    = 3.0.2
 LIBROXML_TMP    = libroxml-$(LIBROXML_VER)
 LIBROXML_SOURCE = libroxml-$(LIBROXML_VER).tar.gz
-LIBROXML_URL    = http://download.libroxml.net/pool/v3.x
+LIBROXML_SITE   = http://download.libroxml.net/pool/v3.x
 
 $(ARCHIVE)/$(LIBROXML_SOURCE):
-	$(DOWNLOAD) $(LIBROXML_URL)/$(LIBROXML_SOURCE)
+	$(DOWNLOAD) $(LIBROXML_SITE)/$(LIBROXML_SOURCE)
 
 libroxml: $(ARCHIVE)/$(LIBROXML_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LIBROXML_TMP)
@@ -977,10 +977,10 @@ rtmpdump: $(RTMPDUMP_DEPS) $(SOURCE_DIR)/$(NI-RTMPDUMP) | $(TARGET_DIR)
 LIBTIRPC_VER    = 1.2.6
 LIBTIRPC_TMP    = libtirpc-$(LIBTIRPC_VER)
 LIBTIRPC_SOURCE = libtirpc-$(LIBTIRPC_VER).tar.bz2
-LIBTIRPC_URL    = https://sourceforge.net/projects/libtirpc/files/libtirpc/$(LIBTIRPC_VER)
+LIBTIRPC_SITE   = https://sourceforge.net/projects/libtirpc/files/libtirpc/$(LIBTIRPC_VER)
 
 $(ARCHIVE)/$(LIBTIRPC_SOURCE):
-	$(DOWNLOAD) $(LIBTIRPC_URL)/$(LIBTIRPC_SOURCE)
+	$(DOWNLOAD) $(LIBTIRPC_SITE)/$(LIBTIRPC_SOURCE)
 
 LIBTIRP_PATCH  = 0001-Disable-parts-of-TIRPC-requiring-NIS-support.patch
 LIBTIRP_PATCH += 0003-Automatically-generate-XDR-header-files-from-.x-sour.patch
@@ -1011,10 +1011,10 @@ libtirpc: $(ARCHIVE)/$(LIBTIRPC_SOURCE) | $(TARGET_DIR)
 CONFUSE_VER    = 3.2.2
 CONFUSE_TMP    = confuse-$(CONFUSE_VER)
 CONFUSE_SOURCE = confuse-$(CONFUSE_VER).tar.xz
-CONFUSE_URL    = https://github.com/martinh/libconfuse/releases/download/v$(CONFUSE_VER)
+CONFUSE_SITE   = https://github.com/martinh/libconfuse/releases/download/v$(CONFUSE_VER)
 
 $(ARCHIVE)/$(CONFUSE_SOURCE):
-	$(DOWNLOAD) $(CONFUSE_URL)/$(CONFUSE_SOURCE)
+	$(DOWNLOAD) $(CONFUSE_SITE)/$(CONFUSE_SOURCE)
 
 confuse: $(ARCHIVE)/$(CONFUSE_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(CONFUSE_TMP)
@@ -1039,10 +1039,10 @@ confuse: $(ARCHIVE)/$(CONFUSE_SOURCE) | $(TARGET_DIR)
 LIBITE_VER    = 2.0.2
 LIBITE_TMP    = libite-$(LIBITE_VER)
 LIBITE_SOURCE = libite-$(LIBITE_VER).tar.xz
-LIBITE_URL    = https://github.com/troglobit/libite/releases/download/v$(LIBITE_VER)
+LIBITE_SITE   = https://github.com/troglobit/libite/releases/download/v$(LIBITE_VER)
 
 $(ARCHIVE)/$(LIBITE_SOURCE):
-	$(DOWNLOAD) $(LIBITE_URL)/$(LIBITE_SOURCE)
+	$(DOWNLOAD) $(LIBITE_SITE)/$(LIBITE_SOURCE)
 
 libite: $(ARCHIVE)/$(LIBITE_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LIBITE_TMP)
@@ -1067,10 +1067,10 @@ libite: $(ARCHIVE)/$(LIBITE_SOURCE) | $(TARGET_DIR)
 LIBMAD_VER    = 0.15.1b
 LIBMAD_TMP    = libmad-$(LIBMAD_VER)
 LIBMAD_SOURCE = libmad-$(LIBMAD_VER).tar.gz
-LIBMAD_URL    = https://sourceforge.net/projects/mad/files/libmad/$(LIBMAD_VER)
+LIBMAD_SITE   = https://sourceforge.net/projects/mad/files/libmad/$(LIBMAD_VER)
 
 $(ARCHIVE)/$(LIBMAD_SOURCE):
-	$(DOWNLOAD) $(LIBMAD_URL)/$(LIBMAD_SOURCE)
+	$(DOWNLOAD) $(LIBMAD_SITE)/$(LIBMAD_SOURCE)
 
 LIBMAD_PATCH  = libmad-pc.patch
 LIBMAD_PATCH += libmad-frame_length.diff
@@ -1104,10 +1104,10 @@ libmad: $(ARCHIVE)/$(LIBMAD_SOURCE) | $(TARGET_DIR)
 LIBVORBISIDEC_VER    = 1.2.1+git20180316
 LIBVORBISIDEC_TMP    = libvorbisidec-$(LIBVORBISIDEC_VER)
 LIBVORBISIDEC_SOURCE = libvorbisidec_$(LIBVORBISIDEC_VER).orig.tar.gz
-LIBVORBISIDEC_URL    = https://ftp.de.debian.org/debian/pool/main/libv/libvorbisidec
+LIBVORBISIDEC_SITE   = https://ftp.de.debian.org/debian/pool/main/libv/libvorbisidec
 
 $(ARCHIVE)/$(LIBVORBISIDEC_SOURCE):
-	$(DOWNLOAD) $(LIBVORBISIDEC_URL)/$(LIBVORBISIDEC_SOURCE)
+	$(DOWNLOAD) $(LIBVORBISIDEC_SITE)/$(LIBVORBISIDEC_SOURCE)
 
 LIBVORBISIDEC_DEPS   = libogg
 
@@ -1132,10 +1132,10 @@ libvorbisidec: $(LIBVORBISIDEC_DEPS) $(ARCHIVE)/$(LIBVORBISIDEC_SOURCE) | $(TARG
 LIBOGG_VER    = 1.3.4
 LIBOGG_TMP    = libogg-$(LIBOGG_VER)
 LIBOGG_SOURCE = libogg-$(LIBOGG_VER).tar.gz
-LIBOGG_URL    = https://ftp.osuosl.org/pub/xiph/releases/ogg
+LIBOGG_SITE   = https://ftp.osuosl.org/pub/xiph/releases/ogg
 
 $(ARCHIVE)/$(LIBOGG_SOURCE):
-	$(DOWNLOAD) $(LIBOGG_URL)/$(LIBOGG_SOURCE)
+	$(DOWNLOAD) $(LIBOGG_SITE)/$(LIBOGG_SOURCE)
 
 libogg: $(ARCHIVE)/$(LIBOGG_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LIBOGG_TMP)
@@ -1158,10 +1158,10 @@ libogg: $(ARCHIVE)/$(LIBOGG_SOURCE) | $(TARGET_DIR)
 FRIBIDI_VER    = 1.0.9
 FRIBIDI_TMP    = fribidi-$(FRIBIDI_VER)
 FRIBIDI_SOURCE = fribidi-$(FRIBIDI_VER).tar.xz
-FRIBIDI_URL    = https://github.com/fribidi/fribidi/releases/download/v$(FRIBIDI_VER)
+FRIBIDI_SITE   = https://github.com/fribidi/fribidi/releases/download/v$(FRIBIDI_VER)
 
 $(ARCHIVE)/$(FRIBIDI_SOURCE):
-	$(DOWNLOAD) $(FRIBIDI_URL)/$(FRIBIDI_SOURCE)
+	$(DOWNLOAD) $(FRIBIDI_SITE)/$(FRIBIDI_SOURCE)
 
 fribidi: $(ARCHIVE)/$(FRIBIDI_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(FRIBIDI_TMP)
@@ -1185,10 +1185,10 @@ fribidi: $(ARCHIVE)/$(FRIBIDI_SOURCE) | $(TARGET_DIR)
 LIBFFI_VER    = 3.2.1
 LIBFFI_TMP    = libffi-$(LIBFFI_VER)
 LIBFFI_SOURCE = libffi-$(LIBFFI_VER).tar.gz
-LIBFFI_URL    = ftp://sourceware.org/pub/libffi
+LIBFFI_SITE   = ftp://sourceware.org/pub/libffi
 
 $(ARCHIVE)/$(LIBFFI_SOURCE):
-	$(DOWNLOAD) $(LIBFFI_URL)/$(LIBFFI_SOURCE)
+	$(DOWNLOAD) $(LIBFFI_SITE)/$(LIBFFI_SOURCE)
 
 LIBFFI_PATCH  = libffi-install_headers.patch
 
@@ -1216,10 +1216,10 @@ libffi: $(ARCHIVE)/$(LIBFFI_SOURCE) | $(TARGET_DIR)
 GLIB2_VER    = 2.56.3
 GLIB2_TMP    = glib-$(GLIB2_VER)
 GLIB2_SOURCE = glib-$(GLIB2_VER).tar.xz
-GLIB2_URL    = https://ftp.gnome.org/pub/gnome/sources/glib/$(basename $(GLIB2_VER))
+GLIB2_SITE   = https://ftp.gnome.org/pub/gnome/sources/glib/$(basename $(GLIB2_VER))
 
 $(ARCHIVE)/$(GLIB2_SOURCE):
-	$(DOWNLOAD) $(GLIB2_URL)/$(GLIB2_SOURCE)
+	$(DOWNLOAD) $(GLIB2_SITE)/$(GLIB2_SOURCE)
 
 GLIB2_PATCH  = glib2-disable-tests.patch
 GLIB2_PATCH += glib2-automake.patch
@@ -1276,10 +1276,10 @@ glib2: $(GLIB2_DEPS) $(ARCHIVE)/$(GLIB2_SOURCE) | $(TARGET_DIR)
 ALSA-LIB_VER    = 1.2.2
 ALSA-LIB_TMP    = alsa-lib-$(ALSA-LIB_VER)
 ALSA-LIB_SOURCE = alsa-lib-$(ALSA-LIB_VER).tar.bz2
-ALSA-LIB_URL    = https://www.alsa-project.org/files/pub/lib
+ALSA-LIB_SITE   = https://www.alsa-project.org/files/pub/lib
 
 $(ARCHIVE)/$(ALSA-LIB_SOURCE):
-	$(DOWNLOAD) $(ALSA-LIB_URL)/$(ALSA-LIB_SOURCE)
+	$(DOWNLOAD) $(ALSA-LIB_SITE)/$(ALSA-LIB_SOURCE)
 
 ALSA-LIB_PATCH  = alsa-lib.patch
 ALSA-LIB_PATCH += alsa-lib-link_fix.patch
@@ -1319,10 +1319,10 @@ alsa-lib: $(ARCHIVE)/$(ALSA-LIB_SOURCE)
 POPT_VER    = 1.16
 POPT_TMP    = popt-$(POPT_VER)
 POPT_SOURCE = popt-$(POPT_VER).tar.gz
-POPT_URL    = ftp://anduin.linuxfromscratch.org/BLFS/popt
+POPT_SITE   = ftp://anduin.linuxfromscratch.org/BLFS/popt
 
 $(ARCHIVE)/$(POPT_SOURCE):
-	$(DOWNLOAD) $(POPT_URL)/$(POPT_SOURCE)
+	$(DOWNLOAD) $(POPT_SITE)/$(POPT_SOURCE)
 
 popt: $(ARCHIVE)/$(POPT_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(POPT_TMP)
@@ -1344,10 +1344,10 @@ popt: $(ARCHIVE)/$(POPT_SOURCE) | $(TARGET_DIR)
 LIBICONV_VER    = 1.15
 LIBICONV_TMP    = libiconv-$(LIBICONV_VER)
 LIBICONV_SOURCE = libiconv-$(LIBICONV_VER).tar.gz
-LIBICONV_URL    = https://ftp.gnu.org/gnu/libiconv
+LIBICONV_SITE   = https://ftp.gnu.org/gnu/libiconv
 
 $(ARCHIVE)/$(LIBICONV_SOURCE):
-	$(DOWNLOAD) $(LIBICONV_URL)/$(LIBICONV_SOURCE)
+	$(DOWNLOAD) $(LIBICONV_SITE)/$(LIBICONV_SOURCE)
 
 libiconv: $(ARCHIVE)/$(LIBICONV_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LIBICONV_TMP)
@@ -1373,7 +1373,7 @@ libiconv: $(ARCHIVE)/$(LIBICONV_SOURCE) | $(TARGET_DIR)
 GRAPHLCD_BASE_VER    = git
 GRAPHLCD_BASE_TMP    = graphlcd-base.$(GRAPHLCD_BASE_VER)
 GRAPHLCD_BASE_SOURCE = graphlcd-base.$(GRAPHLCD_BASE_VER)
-GRAPHLCD_BASE_URL    = git://projects.vdr-developer.org
+GRAPHLCD_BASE_SITE   = git://projects.vdr-developer.org
 
 GRAPHLCD_BASE_PATCH  = graphlcd.patch
 GRAPHLCD_BASE_PATCH += 0003-strip-graphlcd-conf.patch
@@ -1393,7 +1393,7 @@ GRAPHLCD_BASE_MAKE_OPTS = \
 
 graphlcd-base: $(GRAPHLCD_BASE_DEPS) | $(TARGET_DIR)
 	$(REMOVE)/$(GRAPHLCD_BASE_TMP)
-	$(GET-GIT-SOURCE) $(GRAPHLCD_BASE_URL)/$(GRAPHLCD_BASE_SOURCE) $(ARCHIVE)/$(GRAPHLCD_BASE_SOURCE)
+	$(GET-GIT-SOURCE) $(GRAPHLCD_BASE_SITE)/$(GRAPHLCD_BASE_SOURCE) $(ARCHIVE)/$(GRAPHLCD_BASE_SOURCE)
 	$(CPDIR)/$(GRAPHLCD_BASE_TMP)
 	$(CHDIR)/$(GRAPHLCD_BASE_TMP); \
 		$(call apply_patches, $(addprefix $(@)/,$(GRAPHLCD_BASE_PATCH))); \

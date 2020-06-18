@@ -6,10 +6,10 @@
 FFMPEG_VER    = 4.2.2
 FFMPEG_TMP    = ffmpeg-$(FFMPEG_VER)
 FFMPEG_SOURCE = ffmpeg-$(FFMPEG_VER).tar.xz
-FFMPEG_URL    = http://www.ffmpeg.org/releases
+FFMPEG_SITE   = http://www.ffmpeg.org/releases
 
 $(ARCHIVE)/$(FFMPEG_SOURCE):
-	$(DOWNLOAD) $(FFMPEG_URL)/$(FFMPEG_SOURCE)
+	$(DOWNLOAD) $(FFMPEG_SITE)/$(FFMPEG_SOURCE)
 
 FFMPEG_PATCH  = ffmpeg-02-fix_mpegts.patch
 FFMPEG_PATCH += ffmpeg-03-allow_to_choose_rtmp_impl_at_runtime.patch

@@ -96,14 +96,14 @@ u-pr-auto-timer:
 	PKG_VERSION=`cat $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-sh/plugins/pr-auto-timer/pr-auto-timer | grep '^VERSION' | cut -d= -f2`; \
 	$(MAKE) u-update-bin \
 			UPDATE_MD5FILE=pr-auto-timer.txt \
-			UPDATE_URL=$(NI-SERVER)/plugins/pr-auto-timer \
+			UPDATE_SITE=$(NI-SERVER)/plugins/pr-auto-timer \
 			UPDATE_NAME=pr-auto-timer_$${PKG_VERSION//./} \
 			UPDATE_DESC=Auto-Timer \
 			UPDATE_VERSION=$$PKG_VERSION
 
 # -----------------------------------------------------------------------------
 
-CHANNELLISTS_URL = $(NI-SERVER)/channellists
+CHANNELLISTS_SITE = $(NI-SERVER)/channellists
 CHANNELLISTS_MD5FILE = lists.txt
 
 channellists: matze-192 matze-192-130
@@ -152,7 +152,7 @@ matze-192-130:
 	done && \
 	$(MAKE) u-update-bin \
 			UPDATE_TYPE=S \
-			UPDATE_URL=$(CHANNELLISTS_URL) \
+			UPDATE_SITE=$(CHANNELLISTS_SITE) \
 			UPDATE_MD5FILE=$(CHANNELLISTS_MD5FILE) \
 			UPDATE_NAME=$(@) \
 			UPDATE_DESC="$$desc - " \
@@ -199,7 +199,7 @@ u-clean-all: u-clean
 u-update-bin:
 	$(CD) $(BUILD_TMP); \
 		tar -czvf $(UPDATE_DIR)/$(UPDATE_NAME).bin temp_inst
-	echo $(UPDATE_URL)/$(UPDATE_NAME).bin $(UPDATE_TYPE)$(UPDATE_VER)$(UPDATE_DATE) `md5sum $(UPDATE_DIR)/$(UPDATE_NAME).bin | cut -c1-32` $(UPDATE_DESC) $(UPDATE_VERSION) >> $(UPDATE_DIR)/$(UPDATE_MD5FILE)
+	echo $(UPDATE_SITE)/$(UPDATE_NAME).bin $(UPDATE_TYPE)$(UPDATE_VER)$(UPDATE_DATE) `md5sum $(UPDATE_DIR)/$(UPDATE_NAME).bin | cut -c1-32` $(UPDATE_DESC) $(UPDATE_VERSION) >> $(UPDATE_DIR)/$(UPDATE_MD5FILE)
 	$(MAKE) u-clean
 
 # -----------------------------------------------------------------------------

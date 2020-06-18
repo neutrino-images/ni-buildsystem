@@ -7,7 +7,7 @@ ifeq ($(BOXMODEL), nevis)
   KERNEL_VER    = 2.6.34.13
   KERNEL_TMP    = linux-$(KERNEL_VER)
   KERNEL_SOURCE = git
-  KERNEL_URL    = $(EMPTY)
+  KERNEL_SITE   = $(EMPTY)
 
   KERNEL_BRANCH = ni/linux-2.6.34.15
   KERNEL_DTB    = $(EMPTY)
@@ -16,7 +16,7 @@ else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), apollo shiner kronos kronos_v2))
   KERNEL_VER    = 3.10.93
   KERNEL_TMP    = linux-$(KERNEL_VER)
   KERNEL_SOURCE = git
-  KERNEL_URL    = $(EMPTY)
+  KERNEL_SITE   = $(EMPTY)
 
   KERNEL_BRANCH = ni/linux-3.10.108
   ifeq ($(BOXMODEL), $(filter $(BOXMODEL), apollo shiner))
@@ -31,7 +31,7 @@ else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7))
   KERNEL_VER    = 4.10.12
   KERNEL_TMP    = linux-$(KERNEL_VER)
   KERNEL_SOURCE = linux-$(KERNEL_VER)-arm.tar.gz
-  KERNEL_URL    = http://downloads.mutant-digital.net
+  KERNEL_SITE   = http://downloads.mutant-digital.net
 
   KERNEL_BRANCH = $(EMPTY)
   KERNEL_DTB    = $(BUILD_TMP)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/dts/bcm7445-bcm97445svmb.dtb
@@ -41,14 +41,14 @@ else ifeq ($(BOXMODEL), vusolo4k)
   KERNEL_VER    = 3.14.28-1.8
   KERNEL_TMP    = linux
   KERNEL_SOURCE = stblinux-3.14-1.8.tar.bz2
-  KERNEL_URL    = http://archive.vuplus.com/download/kernel
+  KERNEL_SITE   = http://archive.vuplus.com/download/kernel
 
   KERNEL_BRANCH = $(EMPTY)
   KERNEL_DTB    = $(EMPTY)
 
   VMLINUZ-INITRD_VER    = 20190911
   VMLINUZ-INITRD_SOURCE = vmlinuz-initrd_$(BOXMODEL)_$(VMLINUZ-INITRD_VER).tar.gz
-  VMLINUZ-INITRD_URL    = https://bitbucket.org/max_10/vmlinuz-initrd-$(BOXMODEL)/downloads
+  VMLINUZ-INITRD_SITE   = https://bitbucket.org/max_10/vmlinuz-initrd-$(BOXMODEL)/downloads
   VMLINUZ-INITRD        = vmlinuz-initrd-7366c0
 
   BOOT_PARTITION = 1
@@ -57,14 +57,14 @@ else ifeq ($(BOXMODEL), vuduo4k)
   KERNEL_VER    = 4.1.45-1.17
   KERNEL_TMP    = linux
   KERNEL_SOURCE = stblinux-4.1-1.17.tar.bz2
-  KERNEL_URL    = http://archive.vuplus.com/download/kernel
+  KERNEL_SITE   = http://archive.vuplus.com/download/kernel
 
   KERNEL_BRANCH = $(EMPTY)
   KERNEL_DTB    = $(EMPTY)
 
   VMLINUZ-INITRD_VER    = 20190911
   VMLINUZ-INITRD_SOURCE = vmlinuz-initrd_$(BOXMODEL)_$(VMLINUZ-INITRD_VER).tar.gz
-  VMLINUZ-INITRD_URL    = https://bitbucket.org/max_10/vmlinuz-initrd-$(BOXMODEL)/downloads
+  VMLINUZ-INITRD_SITE   = https://bitbucket.org/max_10/vmlinuz-initrd-$(BOXMODEL)/downloads
   VMLINUZ-INITRD        = vmlinuz-initrd-7278b1
 
   BOOT_PARTITION = 6
@@ -73,14 +73,14 @@ else ifeq ($(BOXMODEL), vuultimo4k)
   KERNEL_VER    = 3.14.28-1.12
   KERNEL_TMP    = linux
   KERNEL_SOURCE = stblinux-3.14-1.12.tar.bz2
-  KERNEL_URL    = http://archive.vuplus.com/download/kernel
+  KERNEL_SITE   = http://archive.vuplus.com/download/kernel
 
   KERNEL_BRANCH = $(EMPTY)
   KERNEL_DTB    = $(EMPTY)
 
   VMLINUZ-INITRD_VER    = 20190911
   VMLINUZ-INITRD_SOURCE = vmlinuz-initrd_$(BOXMODEL)_$(VMLINUZ-INITRD_VER).tar.gz
-  VMLINUZ-INITRD_URL    = https://bitbucket.org/max_10/vmlinuz-initrd-$(BOXMODEL)/downloads
+  VMLINUZ-INITRD_SITE   = https://bitbucket.org/max_10/vmlinuz-initrd-$(BOXMODEL)/downloads
   VMLINUZ-INITRD        = vmlinuz-initrd-7445d0
 
   BOOT_PARTITION = 1
@@ -89,14 +89,14 @@ else ifeq ($(BOXMODEL), vuzero4k)
   KERNEL_VER    = 4.1.20-1.9
   KERNEL_TMP    = linux
   KERNEL_SOURCE = stblinux-4.1-1.9.tar.bz2
-  KERNEL_URL    = http://archive.vuplus.com/download/kernel
+  KERNEL_SITE   = http://archive.vuplus.com/download/kernel
 
   KERNEL_BRANCH = $(EMPTY)
   KERNEL_DTB    = $(EMPTY)
 
   VMLINUZ-INITRD_VER    = 20190911
   VMLINUZ-INITRD_SOURCE = vmlinuz-initrd_$(BOXMODEL)_$(VMLINUZ-INITRD_VER).tar.gz
-  VMLINUZ-INITRD_URL    = https://bitbucket.org/max_10/vmlinuz-initrd-$(BOXMODEL)/downloads
+  VMLINUZ-INITRD_SITE   = https://bitbucket.org/max_10/vmlinuz-initrd-$(BOXMODEL)/downloads
   VMLINUZ-INITRD        = vmlinuz-initrd-7260a0
 
   BOOT_PARTITION = 4
@@ -105,14 +105,14 @@ else ifeq ($(BOXMODEL), vuuno4k)
   KERNEL_VER    = 3.14.28-1.12
   KERNEL_TMP    = linux
   KERNEL_SOURCE = stblinux-3.14-1.12.tar.bz2
-  KERNEL_URL    = http://archive.vuplus.com/download/kernel
+  KERNEL_SITE   = http://archive.vuplus.com/download/kernel
 
   KERNEL_BRANCH = $(EMPTY)
   KERNEL_DTB    = $(EMPTY)
 
   VMLINUZ-INITRD_VER    = 20191010
   VMLINUZ-INITRD_SOURCE = vmlinuz-initrd_$(BOXMODEL)_$(VMLINUZ-INITRD_VER).tar.gz
-  VMLINUZ-INITRD_URL    = https://bitbucket.org/max_10/vmlinuz-initrd-$(BOXMODEL)/downloads
+  VMLINUZ-INITRD_SITE   = https://bitbucket.org/max_10/vmlinuz-initrd-$(BOXMODEL)/downloads
   VMLINUZ-INITRD        = vmlinuz-initrd-7439b0
 
   BOOT_PARTITION = 1
@@ -121,14 +121,14 @@ else ifeq ($(BOXMODEL), vuuno4kse)
   KERNEL_VER    = 4.1.20-1.9
   KERNEL_TMP    = linux
   KERNEL_SOURCE = stblinux-4.1-1.9.tar.bz2
-  KERNEL_URL    = http://archive.vuplus.com/download/kernel
+  KERNEL_SITE   = http://archive.vuplus.com/download/kernel
 
   KERNEL_BRANCH = $(EMPTY)
   KERNEL_DTB    = $(EMPTY)
 
   VMLINUZ-INITRD_VER    = 20191010
   VMLINUZ-INITRD_SOURCE = vmlinuz-initrd_$(BOXMODEL)_$(VMLINUZ-INITRD_VER).tar.gz
-  VMLINUZ-INITRD_URL    = https://bitbucket.org/max_10/vmlinuz-initrd-$(BOXMODEL)/downloads
+  VMLINUZ-INITRD_SITE   = https://bitbucket.org/max_10/vmlinuz-initrd-$(BOXMODEL)/downloads
   VMLINUZ-INITRD        = vmlinuz-initrd-7439b0
 
   BOOT_PARTITION = 1
@@ -137,7 +137,7 @@ else ifeq ($(BOXMODEL), vuduo)
   KERNEL_VER    = 3.9.6
   KERNEL_TMP    = linux
   KERNEL_SOURCE = stblinux-$(KERNEL_VER).tar.bz2
-  KERNEL_URL    = http://archive.vuplus.com/download/kernel
+  KERNEL_SITE   = http://archive.vuplus.com/download/kernel
 
   KERNEL_BRANCH = $(EMPTY)
   KERNEL_DTB    = $(EMPTY)
