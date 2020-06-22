@@ -97,6 +97,14 @@ ifeq ($(BOXTYPE), coolstream)
   N_CONFIGURE_ADDITIONS += \
 		--enable-pip
 endif
+ifeq ($(BOXTYPE), armbox)
+  N_CONFIGURE_ADDITIONS += \
+		--disable-arm-acc
+endif
+ifeq ($(BOXTYPE), mipsbox)
+  N_CONFIGURE_ADDITIONS += \
+		--disable-mips-acc
+endif
 
 # -----------------------------------------------------------------------------
 
