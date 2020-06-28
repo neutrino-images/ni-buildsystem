@@ -321,7 +321,7 @@
 +void cDriverVUPLUS4K::SetBrightness(unsigned int brightness)
 +{
 +	int value = 0;
-+	value = 255 * brightness / 100;
++	value = 255 * brightness / 10;
 +
 +	FILE *f = fopen("/proc/stb/lcd/oled_brightness", "w");
 +	if (!f)
