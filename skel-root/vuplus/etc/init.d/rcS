@@ -80,8 +80,8 @@ service networking start
 service ntpdate start
 
 # say hi to everyone
-echo "Booting... NI" > /dev/dbox/oled0
 oled -b 5
+oled -tc "Booting... NI"
 
 # trap CTRL-C only in this shell so we can interrupt subprocesses
 trap ":" INT QUIT TSTP
