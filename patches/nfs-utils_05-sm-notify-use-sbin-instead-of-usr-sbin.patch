@@ -1,0 +1,35 @@
+From 117b5e420519c376228766f0fda7dbda5beb980f Mon Sep 17 00:00:00 2001
+Message-Id: <117b5e420519c376228766f0fda7dbda5beb980f.1492181441.git.gandharva@gmx.de>
+From: gandharva <gandharva@gmx.de>
+Date: Fri, 14 Apr 2017 16:50:27 +0200
+Subject: [PATCH] - sm-notify: use /sbin instead of /usr/sbin
+
+---
+ utils/statd/statd.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/utils/statd/statd.c b/utils/statd/statd.c
+index 2b7a167..b2a251b 100644
+--- a/utils/statd/statd.c
++++ b/utils/statd/statd.c
+@@ -194,7 +194,7 @@ static void run_sm_notify(int outport)
+ 	char *av[6];
+ 	int ac = 0;
+ 
+-	av[ac++] = "/usr/sbin/sm-notify";
++	av[ac++] = "/sbin/sm-notify";
+ 	if (run_mode & MODE_NODAEMON)
+ 		av[ac++] = "-d";
+ 	if (outport) {
+@@ -359,7 +359,7 @@ int main (int argc, char **argv)
+ 	}
+ 
+ 	if (run_mode & MODE_NOTIFY_ONLY) {
+-		fprintf(stderr, "%s: -N deprecated, consider using /usr/sbin/sm-notify directly\n",
++		fprintf(stderr, "%s: -N deprecated, consider using /sbin/sm-notify directly\n",
+ 			name_p);
+ 		run_sm_notify(out_port);
+ 	}
+-- 
+2.12.2
+

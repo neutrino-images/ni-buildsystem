@@ -1360,7 +1360,7 @@ dosfstools: $(ARCHIVE)/$(DOSFSTOOLS_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-NFS-UTILS_VER    = 2.4.3
+NFS-UTILS_VER    = 2.2.1
 NFS-UTILS_TMP    = nfs-utils-$(NFS-UTILS_VER)
 NFS-UTILS_SOURCE = nfs-utils-$(NFS-UTILS_VER).tar.bz2
 NFS-UTILS_SITE   = https://sourceforge.net/projects/nfs/files/nfs-utils/$(NFS-UTILS_VER)
@@ -1368,7 +1368,11 @@ NFS-UTILS_SITE   = https://sourceforge.net/projects/nfs/files/nfs-utils/$(NFS-UT
 $(ARCHIVE)/$(NFS-UTILS_SOURCE):
 	$(DOWNLOAD) $(NFS-UTILS_SITE)/$(NFS-UTILS_SOURCE)
 
-NFS-UTILS_PATCH  = 0001-nfs-utils-print-time-in-64-bit.patch
+NFS-UTILS_PATCH  = nfs-utils_01-Patch-taken-from-Gentoo.patch
+NFS-UTILS_PATCH += nfs-utils_02-Switch-legacy-index-in-favour-of-strchr.patch
+NFS-UTILS_PATCH += nfs-utils_03-Let-the-configure-script-find-getrpcbynumber-in-libt.patch
+NFS-UTILS_PATCH += nfs-utils_04-mountd-Add-check-for-struct-file_handle.patch
+NFS-UTILS_PATCH += nfs-utils_05-sm-notify-use-sbin-instead-of-usr-sbin.patch
 
 NFS-UTILS_DEPS   = rpcbind
 
@@ -1378,7 +1382,7 @@ nfs-utils: $(NFS-UTILS_DEPS) $(ARCHIVE)/$(NFS-UTILS_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(NFS-UTILS_TMP)
 	$(UNTAR)/$(NFS-UTILS_SOURCE)
 	$(CHDIR)/$(NFS-UTILS_TMP); \
-		$(call apply_patches, $(addprefix $(@F)/,$(NFS-UTILS_PATCH))); \
+		$(call apply_patches, $(NFS-UTILS_PATCH)); \
 		export knfsd_cv_bsd_signals=no; \
 		autoreconf -fi; \
 		$(CONFIGURE) \
@@ -1387,15 +1391,15 @@ nfs-utils: $(NFS-UTILS_DEPS) $(ARCHIVE)/$(NFS-UTILS_SOURCE) | $(TARGET_DIR)
 			--docdir=$(remove-docdir) \
 			--mandir=$(remove-mandir) \
 			--enable-maintainer-mode \
-			--disable-nfsdcltrack \
 			--disable-nfsv4 \
 			--disable-nfsv41 \
 			--disable-gss \
 			--disable-uuid \
 			$(NFS-UTILS_CONF) \
 			--without-tcp-wrappers \
-			--without-systemd \
 			--with-statedir=/var/lib/nfs \
+			--with-rpcgen=internal \
+			--without-systemd \
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
