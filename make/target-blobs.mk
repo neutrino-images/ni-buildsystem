@@ -56,11 +56,19 @@ VUSOLO4K-DRIVERS_VER    = 20190424
 VUSOLO4K-DRIVERS_SOURCE = vuplus-dvb-proxy-vusolo4k-3.14.28-$(VUSOLO4K-DRIVERS_VER).r0.tar.gz
 VUSOLO4K-DRIVERS_SITE   = http://archive.vuplus.com/download/build_support/vuplus
 
+ifeq ($(VUPLUS-DRIVERS_LATEST), yes)
+VUDUO4K-DRIVERS_VER    = 20191218
+else
 VUDUO4K-DRIVERS_VER    = 20190212
+endif
 VUDUO4K-DRIVERS_SOURCE = vuplus-dvb-proxy-vuduo4k-4.1.45-$(VUDUO4K-DRIVERS_VER).r0.tar.gz
 VUDUO4K-DRIVERS_SITE   = http://archive.vuplus.com/download/build_support/vuplus
 
+ifeq ($(VUPLUS-DRIVERS_LATEST), yes)
+VUULTIMO4K-DRIVERS_VER    = 20190424
+else
 VUULTIMO4K-DRIVERS_VER    = 20190104
+endif
 VUULTIMO4K-DRIVERS_SOURCE = vuplus-dvb-proxy-vuultimo4k-3.14.28-$(VUULTIMO4K-DRIVERS_VER).r0.tar.gz
 VUULTIMO4K-DRIVERS_SITE   = http://archive.vuplus.com/download/build_support/vuplus
 
@@ -68,11 +76,19 @@ VUZERO4K-DRIVERS_VER    = 20190424
 VUZERO4K-DRIVERS_SOURCE = vuplus-dvb-proxy-vuzero4k-4.1.20-$(VUZERO4K-DRIVERS_VER).r0.tar.gz
 VUZERO4K-DRIVERS_SITE   = http://archive.vuplus.com/download/build_support/vuplus
 
+ifeq ($(VUPLUS-DRIVERS_LATEST), yes)
+VUUNO4K-DRIVERS_VER    = 20190424
+else
 VUUNO4K-DRIVERS_VER    = 20190104
+endif
 VUUNO4K-DRIVERS_SOURCE = vuplus-dvb-proxy-vuuno4k-3.14.28-$(VUUNO4K-DRIVERS_VER).r0.tar.gz
 VUUNO4K-DRIVERS_SITE   = http://archive.vuplus.com/download/build_support/vuplus
 
+ifeq ($(VUPLUS-DRIVERS_LATEST), yes)
+VUUNO4KSE-DRIVERS_VER    = 20190424
+else
 VUUNO4KSE-DRIVERS_VER    = 20190104
+endif
 VUUNO4KSE-DRIVERS_SOURCE = vuplus-dvb-proxy-vuuno4kse-4.1.20-$(VUUNO4KSE-DRIVERS_VER).r0.tar.gz
 VUUNO4KSE-DRIVERS_SITE   = http://archive.vuplus.com/download/build_support/vuplus
 

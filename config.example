@@ -43,6 +43,11 @@ MAINTAINER = $(shell whoami)
 
 # -----------------------------------------------------------------------------
 
+# use lastest VU+ drivers
+#VUPLUS-DRIVERS_LATEST = yes
+
+# -----------------------------------------------------------------------------
+
 # Neutrino API keys
 #N_OMDB_API_KEY =
 #N_SHOUTCAST_DEV_KEY =
