@@ -1792,16 +1792,13 @@ rsync: $(RSYNC_DEPS) $(ARCHIVE)/$(RSYNC_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-SYSVINIT_VER    = 2.96
+SYSVINIT_VER    = 2.97
 SYSVINIT_TMP    = sysvinit-$(SYSVINIT_VER)
 SYSVINIT_SOURCE = sysvinit-$(SYSVINIT_VER).tar.xz
 SYSVINIT_SITE   = http://download.savannah.nongnu.org/releases/sysvinit
 
 $(ARCHIVE)/$(SYSVINIT_SOURCE):
 	$(DOWNLOAD) $(SYSVINIT_SITE)/$(SYSVINIT_SOURCE)
-
-SYSVINIT_PATCH  = crypt-lib.patch
-SYSVINIT_PATCH += change-INIT_FIFO.patch
 
 define SYSVINIT_INSTALL
 	for sbin in halt init shutdown killall5; do \
@@ -1816,7 +1813,7 @@ sysvinit: $(ARCHIVE)/$(SYSVINIT_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(SYSVINIT_TMP)
 	$(UNTAR)/$(SYSVINIT_SOURCE)
 	$(CHDIR)/$(SYSVINIT_TMP); \
-		$(call apply_patches, $(addprefix $(@F)/,$(SYSVINIT_PATCH))); \
+		$(APPLY_PATCHES); \
 		$(MAKE_ENV) \
 		$(MAKE) -C src SULOGINLIBS=-lcrypt
 	$(SYSVINIT_INSTALL)
