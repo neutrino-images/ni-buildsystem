@@ -1,0 +1,16 @@
+--- a/scripts/build/mkver.in
++++ b/scripts/build/mkver.in
+@@ -15,12 +15,7 @@
+  *) ConfStr="${ConfStr}-@VER_SUFFIX@" ;;
+ esac
+ 
+-if [ -n "$SOURCE_DATE_EPOCH" ]; then
+-   ConfStr="$ConfStr `LC_TIME=C TZ=UTC date -d@$SOURCE_DATE_EPOCH 2>/dev/null`" ||
+-   ConfStr="$ConfStr `LC_TIME=C TZ=UTC date -r $SOURCE_DATE_EPOCH`"
+-else
+-   ConfStr="$ConfStr `LC_TIME=C TZ=UTC date`"
+-fi
++ConfStr="$ConfStr"
+ 
+ if [ ! -f .version ]; then
+   echo 0 > .version

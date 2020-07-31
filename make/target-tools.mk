@@ -463,7 +463,7 @@ less: $(LESS_DEPS) $(ARCHIVE)/$(LESS_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-NTP_VER    = 4.2.8
+NTP_VER    = 4.2.8p15
 NTP_TMP    = ntp-$(NTP_VER)
 NTP_SOURCE = ntp-$(NTP_VER).tar.gz
 NTP_SITE   = https://www.eecis.udel.edu/~ntp/ntp_spool/ntp4/ntp-$(basename $(NTP_VER))
@@ -471,15 +471,13 @@ NTP_SITE   = https://www.eecis.udel.edu/~ntp/ntp_spool/ntp4/ntp-$(basename $(NTP
 $(ARCHIVE)/$(NTP_SOURCE):
 	$(DOWNLOAD) $(NTP_SITE)/$(NTP_SOURCE)
 
-NTP_PATCH  = ntp.patch
-
 NTP_DEPS   = openssl
 
 ntp: $(NTP_DEPS) $(ARCHIVE)/$(NTP_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(NTP_TMP)
 	$(UNTAR)/$(NTP_SOURCE)
 	$(CHDIR)/$(NTP_TMP); \
-		$(call apply_patches, $(NTP_PATCH)); \
+		$(APPLY_PATCHES); \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
 			--prefix= \
