@@ -1567,7 +1567,7 @@ gettext: $(ARCHIVE)/$(GETTEXT_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-MC_VER    = 4.8.24
+MC_VER    = 4.8.25
 MC_TMP    = mc-$(MC_VER)
 MC_SOURCE = mc-$(MC_VER).tar.xz
 MC_SITE   = ftp.midnight-commander.org
@@ -1575,15 +1575,13 @@ MC_SITE   = ftp.midnight-commander.org
 $(ARCHIVE)/$(MC_SOURCE):
 	$(DOWNLOAD) $(MC_SITE)/$(MC_SOURCE)
 
-MC_PATCH  = 0001-Ticket-4070-misc-Makefile-am-install-mc-lib-only-once.patch
-
 MC_DEPS   = glib2 ncurses
 
 mc: $(MC_DEPS) $(ARCHIVE)/$(MC_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(MC_TMP)
 	$(UNTAR)/$(MC_SOURCE)
 	$(CHDIR)/$(MC_TMP); \
-		$(call apply_patches, $(addprefix $(@F)/,$(MC_PATCH))); \
+		$(APPLY_PATCHES); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--prefix= \
