@@ -57,7 +57,7 @@ luaexpat: $(LUAEXPAT_DEPS) $(ARCHIVE)/$(LUAEXPAT_SOURCE) | $(TARGET_DIR)
 		sed -i 's|^EXPAT_INC=.*|EXPAT_INC= $(TARGET_INCLUDE_DIR)|' makefile; \
 		sed -i 's|^CFLAGS =.*|& -L$(TARGET_LIB_DIR)|' makefile; \
 		sed -i 's|^CC =.*|CC = $(TARGET_CC)|' makefile; \
-		$(BUILD_ENV) \
+		$(MAKE_ENV) \
 		$(MAKE) \
 			PREFIX=$(TARGET_DIR) \
 			LUA_SYS_VER=$(LUA_ABIVER); \
@@ -120,7 +120,7 @@ luacurl: $(LUACURL_DEPS) | $(TARGET_DIR)
 	$(GET-GIT-SOURCE) $(LUACURL_SITE) $(ARCHIVE)/$(LUACURL_SOURCE)
 	$(CPDIR)/$(LUACURL_SOURCE)
 	$(CHDIR)/$(LUACURL_TMP); \
-		$(BUILD_ENV) \
+		$(MAKE_ENV) \
 		$(MAKE) \
 			LIBDIR=$(TARGET_LIB_DIR) \
 			LUA_INC=$(TARGET_INCLUDE_DIR); \

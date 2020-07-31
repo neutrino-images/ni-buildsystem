@@ -84,7 +84,7 @@ bzip2: $(ARCHIVE)/$(BZIP2_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(BZIP2_TMP); \
 		$(call apply_patches, $(BZIP2_PATCH)); \
 		mv Makefile-libbz2_so Makefile; \
-		$(BUILD_ENV) \
+		$(MAKE_ENV) \
 		$(MAKE) all; \
 		$(MAKE) install PREFIX=$(TARGET_DIR)
 	rm -f $(TARGET_DIR)/bin/bzip2
@@ -176,7 +176,7 @@ cairo: $(CAIRO_DEPS) $(ARCHIVE)/$(CAIRO_SOURCE) | $(TARGET_DIR)
 	$(UNTAR)/$(CAIRO_SOURCE)
 	$(CHDIR)/$(CAIRO_TMP); \
 		$(call apply_patches, $(CAIRO_PATCH)); \
-		$(BUILD_ENV) \
+		$(MAKE_ENV) \
 		ax_cv_c_float_words_bigendian="no" \
 		./configure $(CONFIGURE_OPTS) \
 			--prefix= \

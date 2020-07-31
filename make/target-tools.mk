@@ -366,7 +366,7 @@ hdparm: $(ARCHIVE)/$(HDPARM_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(HDPARM_TMP)
 	$(UNTAR)/$(HDPARM_SOURCE)
 	$(CHDIR)/$(HDPARM_TMP); \
-		$(BUILD_ENV) \
+		$(MAKE_ENV) \
 		$(MAKE); \
 		$(INSTALL_EXEC) -D hdparm $(TARGET_DIR)/sbin/hdparm
 	$(REMOVE)/$(HDPARM_TMP)
@@ -386,7 +386,7 @@ hd-idle: $(ARCHIVE)/$(HD-IDLE_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(HD-IDLE_TMP)
 	$(UNTAR)/$(HD-IDLE_SOURCE)
 	$(CHDIR)/$(HD-IDLE_TMP); \
-		$(BUILD_ENV) \
+		$(MAKE_ENV) \
 		$(MAKE); \
 		$(INSTALL_EXEC) -D hd-idle $(TARGET_DIR)/sbin/hd-idle
 	$(REMOVE)/$(HD-IDLE_TMP)
@@ -555,7 +555,7 @@ ushare: $(USHARE_DEPS) $(ARCHIVE)/$(USHARE_SOURCE)| $(TARGET_DIR)
 	$(UNTAR)/$(USHARE_SOURCE)
 	$(CHDIR)/$(USHARE_TMP); \
 		$(call apply_patches, $(USHARE_PATCH)); \
-		$(BUILD_ENV) \
+		$(MAKE_ENV) \
 		./configure \
 			--prefix= \
 			--disable-dlna \
@@ -657,7 +657,7 @@ vsftpd: $(VSFTPD_DEPS) $(ARCHIVE)/$(VSFTPD_SOURCE) | $(TARGET_DIR)
 		sed -i -e 's/.*VSF_BUILD_PAM/#undef VSF_BUILD_PAM/' builddefs.h; \
 		sed -i -e 's/.*VSF_BUILD_SSL/#define VSF_BUILD_SSL/' builddefs.h; \
 		$(MAKE) clean; \
-		$(MAKE) $(BUILD_ENV) LIBS="-lcrypt -lcrypto -lssl"; \
+		$(MAKE) $(MAKE_ENV) LIBS="-lcrypt -lcrypto -lssl"; \
 		$(INSTALL_EXEC) -D vsftpd $(TARGET_DIR)/sbin/vsftpd
 	mkdir -p $(TARGET_SHARE_DIR)/empty
 	$(INSTALL_DATA) -D $(TARGET_FILES)/configs/vsftpd.conf $(TARGET_DIR)/etc/vsftpd.conf
@@ -1277,7 +1277,7 @@ wpa_supplicant: $(WPA_SUPPLICANT_DEPS) $(ARCHIVE)/$(WPA_SUPPLICANT_SOURCE) | $(T
 	$(UNTAR)/$(WPA_SUPPLICANT_SOURCE)
 	$(CHDIR)/$(WPA_SUPPLICANT_TMP)/wpa_supplicant; \
 		$(INSTALL_DATA) $(CONFIGS)/wpa_supplicant.config .config; \
-		$(BUILD_ENV) \
+		$(MAKE_ENV) \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR) BINDIR=/sbin
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/pre-wlan0.sh $(TARGET_DIR)/etc/network/pre-wlan0.sh
@@ -1308,7 +1308,7 @@ xupnpd: $(XUPNPD_DEPS) | $(TARGET_DIR)
 		git checkout 25d6d44; \
 		$(call apply_patches, $(XUPNPD_PATCH))
 	$(CHDIR)/$(XUPNPD_TMP)/src; \
-		$(BUILD_ENV) \
+		$(MAKE_ENV) \
 		$(MAKE) embedded TARGET=$(TARGET) CC=$(TARGET_CC) STRIP=$(TARGET_STRIP) LUAFLAGS="$(TARGET_LDFLAGS) -I$(TARGET_INCLUDE_DIR)"; \
 		$(INSTALL_EXEC) -D xupnpd $(TARGET_BIN_DIR)/; \
 		mkdir -p $(TARGET_SHARE_DIR)/xupnpd/config; \
@@ -1652,7 +1652,7 @@ ofgwrite: $(SOURCE_DIR)/$(NI-OFGWRITE) | $(TARGET_DIR)
 	$(REMOVE)/$(NI-OFGWRITE)
 	tar -C $(SOURCE_DIR) -cp $(NI-OFGWRITE) --exclude-vcs | tar -C $(BUILD_TMP) -x
 	$(CHDIR)/$(NI-OFGWRITE); \
-		$(BUILD_ENV) \
+		$(MAKE_ENV) \
 		$(MAKE)
 	$(INSTALL_EXEC) $(BUILD_TMP)/$(NI-OFGWRITE)/ofgwrite_bin $(TARGET_DIR)/bin
 	$(INSTALL_EXEC) $(BUILD_TMP)/$(NI-OFGWRITE)/ofgwrite_caller $(TARGET_DIR)/bin
@@ -1756,7 +1756,7 @@ gptfdisk: $(GPTFDISK_DEPS) $(ARCHIVE)/$(GPTFDISK_SOURCE) | $(TARGET_DIR)
 		$(call apply_patches, $(GPTFDISK_PATCH)); \
 		sed -i 's|^CC=.*|CC=$(TARGET_CC)|' Makefile; \
 		sed -i 's|^CXX=.*|CXX=$(TARGET_CXX)|' Makefile; \
-		$(BUILD_ENV) \
+		$(MAKE_ENV) \
 		$(MAKE) sgdisk; \
 		$(INSTALL_EXEC) -D sgdisk $(TARGET_DIR)/sbin/sgdisk
 	$(REMOVE)/$(GPTFDISK_TMP)
@@ -1819,7 +1819,7 @@ sysvinit: $(ARCHIVE)/$(SYSVINIT_SOURCE) | $(TARGET_DIR)
 	$(UNTAR)/$(SYSVINIT_SOURCE)
 	$(CHDIR)/$(SYSVINIT_TMP); \
 		$(call apply_patches, $(addprefix $(@F)/,$(SYSVINIT_PATCH))); \
-		$(BUILD_ENV) \
+		$(MAKE_ENV) \
 		$(MAKE) -C src SULOGINLIBS=-lcrypt
 	$(SYSVINIT_INSTALL)
 	$(REMOVE)/$(SYSVINIT_TMP)

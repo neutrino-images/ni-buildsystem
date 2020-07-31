@@ -19,7 +19,7 @@ zlib: $(ARCHIVE)/$(ZLIB_SOURCE) | $(TARGET_DIR)
 	$(UNTAR)/$(ZLIB_SOURCE)
 	$(CHDIR)/$(ZLIB_TMP); \
 		$(call apply_patches, $(ZLIB_PATCH)); \
-		$(BUILD_ENV) \
+		$(MAKE_ENV) \
 		mandir=$(remove-mandir) \
 		./configure \
 			--prefix= \
@@ -134,7 +134,7 @@ giflib: $(ARCHIVE)/$(GIFLIB_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(GIFLIB_TMP)
 	$(UNTAR)/$(GIFLIB_SOURCE)
 	$(CHDIR)/$(GIFLIB_TMP); \
-		$(BUILD_ENV) \
+		$(MAKE_ENV) \
 		$(MAKE); \
 		make install-include install-lib DESTDIR=$(TARGET_DIR) PREFIX=
 	$(REMOVE)/$(GIFLIB_TMP)
@@ -1385,7 +1385,7 @@ endif
 GRAPHLCD_BASE_DEPS   = freetype libiconv libusb
 
 GRAPHLCD_BASE_MAKE_OPTS = \
-	$(BUILD_ENV) \
+	$(MAKE_ENV) \
 	CXXFLAGS+="-fPIC" \
 	TARGET=$(TARGET_CROSS) \
 	PREFIX= \
