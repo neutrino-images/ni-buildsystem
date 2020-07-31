@@ -145,15 +145,15 @@ astra-sm: $(ASTRA-SM_DEPS) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-IOZONE_VER    = 482
-IOZONE_TMP    = iozone3_$(IOZONE_VER)
-IOZONE_SOURCE = iozone3_$(IOZONE_VER).tar
+IOZONE_VER    = 3_490
+IOZONE_TMP    = iozone$(IOZONE_VER)
+IOZONE_SOURCE = iozone$(IOZONE_VER).tar
 IOZONE_SITE   = http://www.iozone.org/src/current
 
 $(ARCHIVE)/$(IOZONE_SOURCE):
 	$(DOWNLOAD) $(IOZONE_SITE)/$(IOZONE_SOURCE)
 
-iozone3: $(ARCHIVE)/$(IOZONE_SOURCE) | $(TARGET_DIR)
+iozone: $(ARCHIVE)/$(IOZONE_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(IOZONE_TMP)
 	$(UNTAR)/$(IOZONE_SOURCE)
 	$(CHDIR)/$(IOZONE_TMP)/src/current; \
