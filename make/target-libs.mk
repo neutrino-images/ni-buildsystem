@@ -1273,7 +1273,7 @@ glib2: $(GLIB2_DEPS) $(ARCHIVE)/$(GLIB2_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-ALSA-LIB_VER    = 1.2.2
+ALSA-LIB_VER    = 1.2.3
 ALSA-LIB_TMP    = alsa-lib-$(ALSA-LIB_VER)
 ALSA-LIB_SOURCE = alsa-lib-$(ALSA-LIB_VER).tar.bz2
 ALSA-LIB_SITE   = https://www.alsa-project.org/files/pub/lib
