@@ -1,6 +1,6 @@
 --- a/libavformat/avio.h
 +++ b/libavformat/avio.h
-@@ -290,13 +290,6 @@ typedef struct AVIOContext {
+@@ -290,12 +290,6 @@ typedef struct AVIOContext {
       */
      int writeout_count;
  
@@ -10,10 +10,9 @@
 -     * This field is internal to libavformat and access from outside is not allowed.
 -     */
 -    int orig_buffer_size;
--
+ 
      /**
       * Threshold to favor readahead over seek.
-      * This is current internal only, do not use from outside.
 --- a/libavformat/aviobuf.c
 +++ b/libavformat/aviobuf.c
 @@ -33,7 +33,7 @@
@@ -25,7 +24,7 @@
  
  /**
   * Do seeks within this distance ahead of the current buffer by skipping
-@@ -90,7 +90,6 @@ int ffio_init_context(AVIOContext *s,
+@@ -85,7 +85,6 @@ int ffio_init_context(AVIOContext *s,
      memset(s, 0, sizeof(AVIOContext));
  
      s->buffer      = buffer;
@@ -33,7 +32,7 @@
      s->buffer_size = buffer_size;
      s->buf_ptr     = buffer;
      s->buf_ptr_max = buffer;
-@@ -570,15 +569,16 @@ static void fill_buffer(AVIOContext *s)
+@@ -548,15 +547,15 @@
      }
  
      /* make buffer smaller in case it ended up large after probing */
@@ -48,12 +47,11 @@
              s->checksum_ptr = dst = s->buffer;
          }
 -        len = s->orig_buffer_size;
-+        av_assert0(len >= max_buffer_size);
 +        len = max_buffer_size;
      }
  
      len = read_packet_wrapper(s, dst, len);
-@@ -1086,7 +1086,6 @@ int ffio_set_buf_size(AVIOContext *s, int buf_size)
+@@ -1017,7 +1016,6 @@ int ffio_set_buf_size(AVIOContext *s, int buf_size)
  
      av_free(s->buffer);
      s->buffer = buffer;
@@ -61,9 +59,19 @@
      s->buffer_size = buf_size;
      s->buf_ptr = s->buf_ptr_max = buffer;
      url_resetbuf(s, s->write_flag ? AVIO_FLAG_WRITE : AVIO_FLAG_READ);
+@@ -1044,7 +1044,6 @@
+         memcpy(buffer, s->write_flag ? s->buffer : s->buf_ptr, data_size);
+     av_free(s->buffer);
+     s->buffer = buffer;
+-    s->orig_buffer_size = buf_size;
+     s->buffer_size = buf_size;
+     s->buf_ptr = s->write_flag ? (s->buffer + data_size) : s->buffer;
+     if (s->write_flag)
+diff --git a/libavformat/utils.c b/libavformat/utils.c
+index c25eab4..02ce5e2 100644
 --- a/libavformat/utils.c
 +++ b/libavformat/utils.c
-@@ -138,6 +138,25 @@ FF_ENABLE_DEPRECATION_WARNINGS
+@@ -133,6 +133,25 @@ FF_ENABLE_DEPRECATION_WARNINGS
  #endif
  #endif
  

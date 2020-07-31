@@ -3,22 +3,13 @@
 #
 # -----------------------------------------------------------------------------
 
-FFMPEG_VER    = 4.2.2
+FFMPEG_VER    = 4.3
 FFMPEG_TMP    = ffmpeg-$(FFMPEG_VER)
 FFMPEG_SOURCE = ffmpeg-$(FFMPEG_VER).tar.xz
 FFMPEG_SITE   = http://www.ffmpeg.org/releases
 
 $(ARCHIVE)/$(FFMPEG_SOURCE):
 	$(DOWNLOAD) $(FFMPEG_SITE)/$(FFMPEG_SOURCE)
-
-FFMPEG_PATCH  = ffmpeg-02-fix_mpegts.patch
-FFMPEG_PATCH += ffmpeg-03-allow_to_choose_rtmp_impl_at_runtime.patch
-FFMPEG_PATCH += ffmpeg-04-hls_replace_key_uri.patch
-FFMPEG_PATCH += ffmpeg-06-optimize_aac.patch
-FFMPEG_PATCH += ffmpeg-07-increase_buffer_size.patch
-FFMPEG_PATCH += ffmpeg-08-recheck_discard_flags.patch
-FFMPEG_PATCH += ffmpeg-09-fix_edit_list_parsing.patch
-FFMPEG_PATCH += ffmpeg-mips64_cpu_detection.patch
 
 FFMPEG_UNPATCHED := no
 
@@ -356,7 +347,7 @@ ffmpeg: $(FFMPEG_DEPS) $(ARCHIVE)/$(FFMPEG_SOURCE) | $(TARGET_DIR)
 	$(UNTAR)/$(FFMPEG_SOURCE)
 ifneq ($(FFMPEG_UNPATCHED), yes)
 	$(CHDIR)/$(FFMPEG_TMP); \
-		$(call apply_patches, $(addprefix $(@F)/,$(FFMPEG_PATCH)))
+		$(APPLY_PATCHES)
 endif
 	$(CHDIR)/$(FFMPEG_TMP); \
 		./configure \
