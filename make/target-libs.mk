@@ -1273,7 +1273,7 @@ glib2: $(GLIB2_DEPS) $(ARCHIVE)/$(GLIB2_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-ALSA-LIB_VER    = 1.2.3
+ALSA-LIB_VER    = 1.2.3.2
 ALSA-LIB_TMP    = alsa-lib-$(ALSA-LIB_VER)
 ALSA-LIB_SOURCE = alsa-lib-$(ALSA-LIB_VER).tar.bz2
 ALSA-LIB_SITE   = https://www.alsa-project.org/files/pub/lib
@@ -1281,14 +1281,11 @@ ALSA-LIB_SITE   = https://www.alsa-project.org/files/pub/lib
 $(ARCHIVE)/$(ALSA-LIB_SOURCE):
 	$(DOWNLOAD) $(ALSA-LIB_SITE)/$(ALSA-LIB_SOURCE)
 
-ALSA-LIB_PATCH  = alsa-lib.patch
-ALSA-LIB_PATCH += alsa-lib-link_fix.patch
-
 alsa-lib: $(ARCHIVE)/$(ALSA-LIB_SOURCE)
 	$(REMOVE)/$(ALSA-LIB_TMP)
 	$(UNTAR)/$(ALSA-LIB_SOURCE)
 	$(CHDIR)/$(ALSA-LIB_TMP); \
-		$(call apply_patches, $(ALSA-LIB_PATCH)); \
+		$(APPLY_PATCHES); \
 		$(CONFIGURE) \
 			--prefix= \
 			--datarootdir=$(remove-datarootdir) \
