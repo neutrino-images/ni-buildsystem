@@ -114,7 +114,7 @@ libdvbsi: | $(TARGET_DIR)
 			--disable-static \
 			; \
 		$(MAKE); \
-		make install DESTDIR=$(TARGET_DIR); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR); \
 	$(REWRITE_LIBTOOL_LA)
 	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(LIBDVBSI_TMP)
@@ -136,7 +136,7 @@ giflib: $(ARCHIVE)/$(GIFLIB_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(GIFLIB_TMP); \
 		$(MAKE_ENV) \
 		$(MAKE); \
-		make install-include install-lib DESTDIR=$(TARGET_DIR) PREFIX=
+		$(MAKE) install-include install-lib DESTDIR=$(TARGET_DIR) PREFIX=
 	$(REMOVE)/$(GIFLIB_TMP)
 	$(TOUCH)
 
@@ -355,9 +355,9 @@ openssl: $(ARCHIVE)/$(OPENSSL_SOURCE) | $(TARGET_DIR)
 		sed -i "s| build_tests||" Makefile; \
 		sed -i 's|^MANDIR=.*|MANDIR=$(remove-mandir)|' Makefile; \
 		sed -i 's|^HTMLDIR=.*|HTMLDIR=$(remove-htmldir)|' Makefile; \
-		make depend; \
-		make; \
-		make install_sw INSTALL_PREFIX=$(TARGET_DIR)
+		$(MAKE) depend; \
+		$(MAKE); \
+		$(MAKE) install_sw INSTALL_PREFIX=$(TARGET_DIR)
 	$(REWRITE_PKGCONF_PC)
 	rm -rf $(TARGET_LIB_DIR)/engines
 	rm -f $(TARGET_BIN_DIR)/c_rehash
@@ -433,7 +433,7 @@ openthreads: $(SOURCE_DIR)/$(NI-OPENTHREADS) | $(TARGET_DIR)
 			-D_OPENTHREADS_ATOMIC_USE_GCC_BUILTINS_EXITCODE="0" \
 			; \
 		$(MAKE); \
-		make install DESTDIR=$(TARGET_DIR)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	rm -f $(TARGET_LIB_DIR)/cmake
 	$(REMOVE)/$(NI-OPENTHREADS)
 	$(REWRITE_PKGCONF_PC)
@@ -458,7 +458,7 @@ libusb: $(ARCHIVE)/$(LIBUSB_SOURCE) | $(TARGET_DIR)
 			--disable-udev \
 			; \
 		$(MAKE); \
-		make install DESTDIR=$(TARGET_DIR); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR); \
 	$(REWRITE_LIBTOOL_LA)
 	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(LIBUSB_TMP)
@@ -487,7 +487,7 @@ libusb-compat: $(LUBUSB-COMPAT_DEPS) $(ARCHIVE)/$(LIBUSB-COMPAT_SOURCE) | $(TARG
 			--prefix= \
 			; \
 		$(MAKE); \
-		make install DESTDIR=$(TARGET_DIR); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR); \
 	mv $(TARGET_BIN_DIR)/libusb-config $(HOST_DIR)/bin
 	$(REWRITE_CONFIG) $(HOST_DIR)/bin/libusb-config
 	$(REWRITE_LIBTOOL_LA)
@@ -632,7 +632,7 @@ expat: $(ARCHIVE)/$(EXPAT_SOURCE) | $(TARGET_DIR)
 			--without-xmlwf \
 			; \
 		$(MAKE); \
-		make install DESTDIR=$(TARGET_DIR)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL_LA)
 	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(EXPAT_TMP)
@@ -963,8 +963,8 @@ rtmpdump: $(RTMPDUMP_DEPS) $(SOURCE_DIR)/$(NI-RTMPDUMP) | $(TARGET_DIR)
 	$(REMOVE)/$(NI-RTMPDUMP)
 	tar -C $(SOURCE_DIR) -cp $(NI-RTMPDUMP) --exclude-vcs | tar -C $(BUILD_TMP) -x
 	$(CHDIR)/$(NI-RTMPDUMP); \
-		make $(RTMPDUMP_MAKE_OPTS) CROSS_COMPILE=$(TARGET_CROSS) XCFLAGS="$(TARGET_CFLAGS)" XLDFLAGS="$(TARGET_LDFLAGS)"; \
-		make $(RTMPDUMP_MAKE_OPTS) install DESTDIR=$(TARGET_DIR)
+		$(MAKE) $(RTMPDUMP_MAKE_OPTS) CROSS_COMPILE=$(TARGET_CROSS) XCFLAGS="$(TARGET_CFLAGS)" XLDFLAGS="$(TARGET_LDFLAGS)"; \
+		$(MAKE) $(RTMPDUMP_MAKE_OPTS) install DESTDIR=$(TARGET_DIR)
 	rm -rf $(TARGET_DIR)/sbin/rtmpgw
 	rm -rf $(TARGET_DIR)/sbin/rtmpsrv
 	rm -rf $(TARGET_DIR)/sbin/rtmpsuck
@@ -1093,7 +1093,7 @@ libmad: $(ARCHIVE)/$(LIBMAD_SOURCE) | $(TARGET_DIR)
 			--enable-sso \
 			; \
 		$(MAKE) all; \
-		make install DESTDIR=$(TARGET_DIR)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL_LA)
 	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(LIBMAD_TMP)
@@ -1120,8 +1120,8 @@ libvorbisidec: $(LIBVORBISIDEC_DEPS) $(ARCHIVE)/$(LIBVORBISIDEC_SOURCE) | $(TARG
 		$(CONFIGURE) \
 			--prefix= \
 			; \
-		make all; \
-		make install DESTDIR=$(TARGET_DIR); \
+		$(MAKE) all; \
+		$(MAKE) install DESTDIR=$(TARGET_DIR); \
 	$(REWRITE_LIBTOOL_LA)
 	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(LIBVORBISIDEC_TMP)
@@ -1147,7 +1147,7 @@ libogg: $(ARCHIVE)/$(LIBOGG_SOURCE) | $(TARGET_DIR)
 			--enable-shared \
 			; \
 		$(MAKE); \
-		make install DESTDIR=$(TARGET_DIR)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL_LA)
 	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(LIBOGG_TMP)

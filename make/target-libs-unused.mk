@@ -58,7 +58,7 @@ libFLAC: $(ARCHIVE)/$(FLAC_SOURCE) | $(TARGET_DIR)
 			--disable-altivec \
 			; \
 		$(MAKE) all; \
-		make install DESTDIR=$(TARGET_DIR); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR); \
 	$(REWRITE_LIBTOOL_LA)
 	$(REWRITE_PKGCONF_PC)
 	rm -rf $(TARGET_DIR)/bin/flac

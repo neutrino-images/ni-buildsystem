@@ -182,7 +182,7 @@ ffmpeg: $(FFMPEG_DEPS) | $(TARGET_DIR)
 			$(FFMPEG_CONFIGURE_BRANCH) \
 			; \
 		$(MAKE); \
-		make install DESTDIR=$(TARGET_DIR)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(NI-FFMPEG)
 	$(TOUCH)

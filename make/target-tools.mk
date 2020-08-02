@@ -527,8 +527,8 @@ djmount: $(DJMOUNT_DEPS) $(ARCHIVE)/$(DJMOUNT_SOURCE) | $(TARGET_DIR)
 			--prefix= \
 			--disable-debug \
 			; \
-		make; \
-		make install DESTDIR=$(TARGET_DIR)
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/djmount.init $(TARGET_DIR)/etc/init.d/djmount
 	$(UPDATE-RC.D) djmount defaults 75 25
 	$(REMOVE)/$(DJMOUNT_TMP)
@@ -1239,7 +1239,7 @@ lcd4linux: $(LCD4LINUX_DEPS) | $(TARGET_DIR)
 		$(MAKE) all; \
 		$(MAKE) install
 	$(INSTALL_COPY) $(TARGET_FILES)/lcd4linux/* $(TARGET_DIR)/
-	#make samsunglcd4linux
+	#$(MAKE) samsunglcd4linux
 	$(REMOVE)/$(LCD4LINUX_TMP)
 	$(TOUCH)
 

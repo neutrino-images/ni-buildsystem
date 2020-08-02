@@ -364,7 +364,7 @@ endif
 			$(FFMPEG_CONFIGURE_PLATFORM) \
 			; \
 		$(MAKE); \
-		make install DESTDIR=$(TARGET_DIR)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(FFMPEG_TMP)
 	$(TOUCH)

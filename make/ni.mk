@@ -43,11 +43,11 @@ ni-image:
 	$(MAKE) ntfs-3g
 	$(MAKE) exfat-utils
 	$(MAKE) vsftpd
-	$(MAKE) djmount
+	make djmount
 	$(MAKE) ushare
 	$(MAKE) xupnpd
 	make inadyn
-	$(MAKE) samba
+	make samba
 	make dropbear
 	$(MAKE) hdparm
 	$(MAKE) busybox
