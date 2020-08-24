@@ -527,8 +527,8 @@ djmount: $(DJMOUNT_DEPS) $(ARCHIVE)/$(DJMOUNT_SOURCE) | $(TARGET_DIR)
 			--prefix= \
 			--disable-debug \
 			; \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
+		make; \
+		make install DESTDIR=$(TARGET_DIR)
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/djmount.init $(TARGET_DIR)/etc/init.d/djmount
 	$(UPDATE-RC.D) djmount defaults 75 25
 	$(REMOVE)/$(DJMOUNT_TMP)
