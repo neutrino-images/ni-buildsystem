@@ -29,6 +29,11 @@ do_reboot() {
 while true; do
 	do_cleanup
 
+	if [ -e /var/etc/.coredump ]; then
+		# unlimit core file size
+		ulimit -c unlimited
+	fi
+
 	neutrino; RET=$?
 	LOGINFO "Neutrino exited with exit code $RET"
 

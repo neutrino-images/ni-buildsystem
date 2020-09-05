@@ -6,14 +6,16 @@ case $1 in
 	start)
 		if [ -e /var/etc/.coredump ]; then
 			read dumpdir < /var/etc/.coredump
-			ulimit -c unlimited
-		fi
+			dumpdir=${dumpdir:-/tmp}
+			mkdir -p ${dumpdir}
 
-		dumpdir=${dumpdir:-/tmp}
-		mkdir -p ${dumpdir}
-		# change default core pattern
-		echo "${dumpdir}/core.%e.%p.%t" > /proc/sys/kernel/core_pattern
-		SHOWINFO "dumps stored in ${dumpdir}"
+			# unlimit core file size
+			ulimit -c unlimited
+			# change default core pattern
+			echo "${dumpdir}/core.%e.%p.%t" > /proc/sys/kernel/core_pattern
+
+			SHOWINFO "coredumps stored in" $(cat /proc/sys/kernel/core_pattern)
+		fi
 	;;
 	*)
 		echo "[${BASENAME}] Usage: $0 {start}"
