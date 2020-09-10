@@ -1286,6 +1286,7 @@ alsa-lib: $(ARCHIVE)/$(ALSA-LIB_SOURCE)
 	$(UNTAR)/$(ALSA-LIB_SOURCE)
 	$(CHDIR)/$(ALSA-LIB_TMP); \
 		$(APPLY_PATCHES); \
+		autoreconf -fi; \
 		$(CONFIGURE) \
 			--prefix= \
 			--datarootdir=$(remove-datarootdir) \
