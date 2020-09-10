@@ -40,13 +40,15 @@ usbutils: $(USBUTILS_DEPS) $(ARCHIVE)/$(USBUTILS_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-BINUTILS_VER    = 2.25
+BINUTILS_VER    = 2.35
 BINUTILS_TMP    = binutils-$(BINUTILS_VER)
 BINUTILS_SOURCE = binutils-$(BINUTILS_VER).tar.bz2
 BINUTILS_SITE   = https://ftp.gnu.org/gnu/binutils
 
 $(ARCHIVE)/$(BINUTILS_SOURCE):
 	$(DOWNLOAD) $(BINUTILS_SITE)/$(BINUTILS_SOURCE)
+
+BINUTILS_BIN    = objdump objcopy
 
 binutils: $(ARCHIVE)/$(BINUTILS_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(BINUTILS_TMP)
@@ -63,8 +65,9 @@ binutils: $(ARCHIVE)/$(BINUTILS_SOURCE) | $(TARGET_DIR)
 			--disable-gdb \
 			; \
 		$(MAKE); \
-		$(INSTALL_EXEC) binutils/objdump $(TARGET_BIN_DIR)/
-		$(INSTALL_EXEC) binutils/objcopy $(TARGET_BIN_DIR)/
+	for bin in $(BINUTILS_BIN); do \
+		$(INSTALL_EXEC) $(BUILD_TMP)/$(BINUTILS_TMP)/binutils/$$bin $(TARGET_DIR)/bin/; \
+	done
 	$(REMOVE)/$(BINUTILS_TMP)
 	$(TOUCH)
 
