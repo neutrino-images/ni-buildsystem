@@ -25,6 +25,8 @@ MAINTAINER = $(shell whoami)
 
 # AX/Mutant
 #BOXMODEL = hd51
+#BOXMODEL = hd60
+#BOXMODEL = hd61
 
 # WWIO
 #BOXMODEL = bre2ze4k
@@ -32,9 +34,14 @@ MAINTAINER = $(shell whoami)
 # Air Digital Zgemma H7S/C
 #BOXMODEL = h7
 
+# Edison
+#BOXMODEL = osmio4k
+#BOXMODEL = osmio4kse
+
 # VU+
 #BOXMODEL = vusolo4k
 #BOXMODEL = vuduo4k
+#BOXMODEL = vuduo4kse
 #BOXMODEL = vuultimo4k
 #BOXMODEL = vuzero4k
 #BOXMODEL = vuuno4k
