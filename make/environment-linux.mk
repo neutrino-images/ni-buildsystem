@@ -79,7 +79,7 @@ else ifeq ($(BOXMODEL), vuduo4kse)
   KERNEL_DTB    = $(EMPTY)
 
   VMLINUZ-INITRD_VER    = 20201010
-  VMLINUZ-INITRD_SOURCE = vmlinuz-initrd_$(BOXMODEL)_$(VMLINUZ-INITRD_VER).tar.bz2
+  VMLINUZ-INITRD_SOURCE = vmlinuz-initrd_$(BOXMODEL)_$(VMLINUZ-INITRD_VER).tar.gz
   VMLINUZ-INITRD_SITE   = https://bitbucket.org/max_10/vmlinuz-initrd-$(BOXMODEL)/downloads
   VMLINUZ-INITRD        = vmlinuz-initrd-7445d0
 
