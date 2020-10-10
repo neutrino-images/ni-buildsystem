@@ -8,10 +8,10 @@
 blobs: $(BLOBS_DEPS)
 	$(MAKE) firmware
 	$(MAKE) $(BOXMODEL)-drivers
-ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7 vusolo4k vuduo4k vuultimo4k vuzero4k vuuno4k vuuno4kse))
+ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7 vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
 	$(MAKE) $(BOXMODEL)-libgles
 endif
-ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vusolo4k vuduo4k vuultimo4k vuzero4k vuuno4k vuuno4kse))
+ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
 	$(MAKE) vuplus-platform-util
 endif
 
@@ -63,6 +63,10 @@ VUDUO4K-DRIVERS_VER    = 20190212
 endif
 VUDUO4K-DRIVERS_SOURCE = vuplus-dvb-proxy-vuduo4k-4.1.45-$(VUDUO4K-DRIVERS_VER).r0.tar.gz
 VUDUO4K-DRIVERS_SITE   = http://archive.vuplus.com/download/build_support/vuplus
+
+VUDUO4KSE-DRIVERS_VER    = 20200903
+VUDUO4KSE-DRIVERS_SOURCE = vuplus-dvb-proxy-vuduo4kse-4.1.45-$(VUDUO4KSE-DRIVERS_VER).r0.tar.gz
+VUDUO4KSE-DRIVERS_SITE   = http://archive.vuplus.com/download/build_support/vuplus
 
 ifeq ($(VUPLUS-DRIVERS_LATEST), yes)
 VUULTIMO4K-DRIVERS_VER    = 20190424
@@ -137,6 +141,7 @@ h7-drivers: $(ARCHIVE)/$(BOXMODEL-DRIVERS_SOURCE) | $(TARGET_DIR)
 
 vusolo4k-drivers \
 vuduo4k-drivers \
+vuduo4kse-drivers \
 vuultimo4k-drivers \
 vuzero4k-drivers \
 vuuno4k-drivers \
@@ -174,6 +179,11 @@ VUDUO4K-LIBGLES_VER    = $(VUDUO4K-DRIVERS_VER)
 VUDUO4K-LIBGLES_TMP    = libgles-vuduo4k
 VUDUO4K-LIBGLES_SOURCE = libgles-vuduo4k-18.1-$(VUDUO4K-LIBGLES_VER).r0.tar.gz
 VUDUO4K-LIBGLES_SITE   = http://archive.vuplus.com/download/build_support/vuplus
+
+VUDUO4KSE-LIBGLES_VER    = $(VUDUO4KSE-DRIVERS_VER)
+VUDUO4KSE-LIBGLES_TMP    = libgles-vuduo4kse
+VUDUO4KSE-LIBGLES_SOURCE = libgles-vuduo4kse-17.1-$(VUDUO4KSE-LIBGLES_VER).r0.tar.gz
+VUDUO4KSE-LIBGLES_SITE   = http://archive.vuplus.com/download/build_support/vuplus
 
 VUULTIMO4K-LIBGLES_VER    = $(VUULTIMO4K-DRIVERS_VER)
 VUULTIMO4K-LIBGLES_TMP    = libgles-vuultimo4k
@@ -217,6 +227,7 @@ h7-libgles: $(ARCHIVE)/$(BOXMODEL-LIBGLES_SOURCE) | $(TARGET_DIR)
 
 vusolo4k-libgles \
 vuduo4k-libgles \
+vuduo4kse-libgles \
 vuultimo4k-libgles \
 vuzero4k-libgles \
 vuuno4k-libgles \
@@ -242,6 +253,11 @@ VUDUO4K-PLATFORM-UTIL_VER    = $(VUDUO4K-DRIVERS_VER)
 VUDUO4K-PLATFORM-UTIL_TMP    = platform-util-vuduo4k
 VUDUO4K-PLATFORM-UTIL_SOURCE = platform-util-vuduo4k-18.1-$(VUDUO4K-PLATFORM-UTIL_VER).r0.tar.gz
 VUDUO4K-PLATFORM-UTIL_SITE   = http://archive.vuplus.com/download/build_support/vuplus
+
+VUDUO4KSE-PLATFORM-UTIL_VER    = $(VUDUO4KSE-DRIVERS_VER)
+VUDUO4KSE-PLATFORM-UTIL_TMP    = platform-util-vuduo4kse
+VUDUO4KSE-PLATFORM-UTIL_SOURCE = platform-util-vuduo4kse-17.1-$(VUDUO4KSE-PLATFORM-UTIL_VER).r0.tar.gz
+VUDUO4KSE-PLATFORM-UTIL_SITE   = http://archive.vuplus.com/download/build_support/vuplus
 
 VUULTIMO4K-PLATFORM-UTIL_VER    = $(VUULTIMO4K-DRIVERS_VER)
 VUULTIMO4K-PLATFORM-UTIL_TMP    = platform-util-vuultimo4k

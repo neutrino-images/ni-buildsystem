@@ -208,7 +208,7 @@ LIBPNG_PATCH  = libpng-Disable-pngfix-and-png-fix-itxt.patch
 
 LIBPNG_DEPS   = zlib
 
-LIBPNG_CONF   = $(if $(filter $(BOXSERIES), hd51 vusolo4k vuduo4k vuultimo4k vuzero4k vuuno4k vuuno4kse),--enable-arm-neon,--disable-arm-neon)
+LIBPNG_CONF   = $(if $(filter $(BOXSERIES), hd51 vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse),--enable-arm-neon,--disable-arm-neon)
 
 libpng: $(LIBPNG_DEPS) $(ARCHIVE)/$(LIBPNG_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LIBPNG_TMP)
@@ -1231,7 +1231,7 @@ endif
 
 GLIB2_CONF   = $(if $(filter $(BOXSERIES), hd1),--enable-static --disable-shared)
 
-ifeq ($(BOXSERIES), $(filter $(BOXSERIES), vusolo4k vuduo4k vuultimo4k vuuno4kse))
+ifeq ($(BOXSERIES), $(filter $(BOXSERIES), vusolo4k vuduo4k vuduo4kse vuultimo4k vuuno4kse))
   GLIB2_DEPS += libiconv
   GLIB2_CONF += --with-libiconv=gnu
 endif
@@ -1376,7 +1376,7 @@ GRAPHLCD_BASE_SITE   = git://projects.vdr-developer.org
 GRAPHLCD_BASE_PATCH  = graphlcd.patch
 GRAPHLCD_BASE_PATCH += 0003-strip-graphlcd-conf.patch
 GRAPHLCD_BASE_PATCH += 0004-material-colors.patch
-ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vuduo4k vusolo4k vuultimo4k vuuno4kse))
+ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vuduo4k vuduo4kse vusolo4k vuultimo4k vuuno4kse))
   GRAPHLCD_BASE_PATCH += 0005-add-vuplus-driver.patch
 endif
 

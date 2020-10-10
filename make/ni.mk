@@ -9,7 +9,7 @@ ifneq ($(DEBUG), yes)
 endif
 BOXMODEL_IMAGE += apollo kronos kronos_v2
 BOXMODEL_IMAGE += hd51 bre2ze4k h7
-BOXMODEL_IMAGE += vusolo4k vuduo4k vuultimo4k vuzero4k vuuno4k vuuno4kse
+BOXMODEL_IMAGE += vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse
 #BOXMODEL_IMAGE += vuduo
 
 images \
@@ -58,7 +58,7 @@ ni-image:
 	$(MAKE) mtd-utils
 	$(MAKE) wget
 	$(MAKE) streamripper
-ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd51 vusolo4k vuduo4k vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo))
+ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd51 vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo))
 	$(MAKE) less
 	$(MAKE) parted
 	$(MAKE) openvpn
@@ -70,7 +70,7 @@ ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd51 vusolo4k vuduo4k vuultimo4k 
 	$(MAKE) minicom
 	$(MAKE) mc
   endif
-  ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 vusolo4k vuduo4k vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo))
+  ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo))
 	$(MAKE) gptfdisk
 	$(MAKE) rsync
 	$(MAKE) ofgwrite

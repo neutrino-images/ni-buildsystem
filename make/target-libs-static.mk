@@ -4,7 +4,7 @@
 # -----------------------------------------------------------------------------
 
 LIBS-STATIC =
-ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd51 vusolo4k vuduo4k vuultimo4k vuzero4k vuuno4k vuuno4kse))
+ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd51 vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
   LIBS-STATIC += cortex-strings
 endif
 

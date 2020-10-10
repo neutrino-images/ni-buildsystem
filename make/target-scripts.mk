@@ -84,7 +84,7 @@ ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7))
 endif
 
 $(TARGET_DIR)/etc/init.d/proc:
-ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7 vusolo4k vuduo4k vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo))
+ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7 vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo))
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/proc.init $(@)
 	$(UPDATE-RC.D) $(@F) start 90 S .
 endif
@@ -95,7 +95,7 @@ ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7))
 endif
 
 $(TARGET_DIR)/etc/init.d/swap:
-ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7 vusolo4k vuduo4k vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo))
+ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7 vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo))
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/swap.init $(@)
 	$(UPDATE-RC.D) $(@F) stop 98 0 6 .
 endif

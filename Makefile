@@ -41,10 +41,11 @@ config.local: $(eval BOXMODEL=hd51)
 	@echo "  31)  Air Digital Zgemma H7S/C"
 	@echo "  41)  VU+ Solo 4k"
 	@echo "  42)  VU+ Duo 4k"
-	@echo "  43)  VU+ Ultimo 4k"
-	@echo "  44)  VU+ Zero 4k"
-	@echo "  45)  VU+ Uno 4k"
-	@echo "  46)  VU+ Uno 4k SE"
+	@echo "  43)  VU+ Duo 4k SE"
+	@echo "  44)  VU+ Ultimo 4k"
+	@echo "  45)  VU+ Zero 4k"
+	@echo "  46)  VU+ Uno 4k"
+	@echo "  47)  VU+ Uno 4k SE"
 	@echo "  51)  VU+ Duo"
 	@echo ""
 	@read -p "Select your boxmodel? [default: 11] " boxmodel; \
@@ -60,10 +61,11 @@ config.local: $(eval BOXMODEL=hd51)
 		31)	boxmodel=h7;; \
 		41)	boxmodel=vusolo4k;; \
 		42)	boxmodel=vuduo4k;; \
-		43)	boxmodel=vuultimo4k;; \
-		44)	boxmodel=vuzero4k;; \
-		45)	boxmodel=vuuno4k;; \
-		46)	boxmodel=vuuno4kse;; \
+		43)	boxmodel=vuduo4kse;; \
+		44)	boxmodel=vuultimo4k;; \
+		45)	boxmodel=vuzero4k;; \
+		46)	boxmodel=vuuno4k;; \
+		47)	boxmodel=vuuno4kse;; \
 		51)	boxmodel=vuduo;; \
 		*)	boxmodel=hd51;; \
 	esac; \

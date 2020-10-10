@@ -56,7 +56,7 @@ if [ -e /proc/stb/info/vumodel ]; then
 			KERNELDEVS="4 6 8 10"
 			ROOTFSDEVS="5 7 9 11"
 		;;
-		duo4k)
+		duo4k|duo4kse)
 			KERNELDEVS="9 11 13 15"
 			ROOTFSDEVS="10 12 14 16"
 		;;
@@ -84,7 +84,7 @@ if [ -e /proc/stb/info/vumodel ]; then
 						11) R_PARTNAME="rootfs4" ;;
 					esac
 				;;
-				duo4k)
+				duo4k|duo4kse)
 					case $r in
 						10) R_PARTNAME="rootfs1" ;;
 						12) R_PARTNAME="rootfs2" ;;

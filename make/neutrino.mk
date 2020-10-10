@@ -24,7 +24,7 @@ N_DEPS += openthreads
 N_DEPS += pugixml
 N_DEPS += zlib
 
-ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vusolo4k vuduo4k vuultimo4k vuuno4kse))
+ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vusolo4k vuduo4k vuduo4kse vuultimo4k vuuno4kse))
   N_DEPS += graphlcd-base
 endif
 

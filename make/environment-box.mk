@@ -15,13 +15,13 @@
 
 # - Armbox --------------------------------------------------------------------
 
-# BOXTYPE            armbox  + ------ + ----- + -------- + ------ + ----- +
-#                    |        \        \       \          \        \       \
-# BOXSERIES         hd51      vusolo4k vuduo4k vuultimo4k vuzero4k vuuno4k vuuno4kse
-#                    |          |        |        |         |          |   |
-# BOXFAMILY       bcm7251s    bcm7376  bcm7278  bcm7444s  bcm72604     bcm7252s
-#                /   |    \      |        |        |         |          |   |
-# BOXMODEL   hd51 bre2ze4k h7 vusolo4k vuduo4k vuultimo4k vuzero4k vuuno4k vuuno4kse
+# BOXTYPE            armbox  + ------ + ----- + ------- + -------- + ------ + ----- +
+#                    |        \        \       \         \          \        \       \
+# BOXSERIES         hd51      vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse
+#                    |           |        |          |      |          |         |      |
+# BOXFAMILY       bcm7251s    bcm7376  bcm7278       bcm7444s       bcm72604     bcm7252s
+#                /   |    \      |        |          |      |          |         |      |
+# BOXMODEL   hd51 bre2ze4k h7 vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse
 
 # - Mipsbox --------------------------------------------------------------------
 
@@ -57,6 +57,10 @@ ifneq ($(BOXSERIES),)
     BOXTYPE = armbox
     BOXFAMILY = bcm7278
     BOXMODEL = vuduo4k
+  else ifeq ($(BOXSERIES), vuduo4kse)
+    BOXTYPE = armbox
+    BOXFAMILY = bcm7444s
+    BOXMODEL = vuduo4kse
   else ifeq ($(BOXSERIES), vuultimo4k)
     BOXTYPE = armbox
     BOXFAMILY = bcm7444s
@@ -153,6 +157,10 @@ else ifneq ($(BOXMODEL),)
     BOXTYPE = armbox
     BOXSERIES = vuduo4k
     BOXFAMILY = bcm7278
+  else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vuduo4kse))
+    BOXTYPE = armbox
+    BOXSERIES = vuduo4kse
+    BOXFAMILY = bcm7444s
   else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vuultimo4k))
     BOXTYPE = armbox
     BOXSERIES = vuultimo4k
@@ -214,6 +222,8 @@ else ifeq ($(BOXMODEL), vusolo4k)
   BOXNAME="VU+ Solo 4K"
 else ifeq ($(BOXMODEL), vuduo4k)
   BOXNAME="VU+ Duo 4K"
+else ifeq ($(BOXMODEL), vuduo4kse)
+  BOXNAME="VU+ Duo 4K SE"
 else ifeq ($(BOXMODEL), vuultimo4k)
   BOXNAME="VU+ Ultimo 4K"
 else ifeq ($(BOXMODEL), vuzero4k)

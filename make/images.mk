@@ -61,7 +61,7 @@ ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7))
 	make flash-image-hd51
 	make flash-image-hd51-multi
 endif
-ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vusolo4k vuduo4k vuultimo4k vuzero4k vuuno4k vuuno4kse))
+ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
 	make flash-image-vuplus
 	make flash-image-vuplus-multi
 endif

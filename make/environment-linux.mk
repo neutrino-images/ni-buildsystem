@@ -69,6 +69,22 @@ else ifeq ($(BOXMODEL), vuduo4k)
 
   BOOT_PARTITION = 6
 
+else ifeq ($(BOXMODEL), vuduo4kse)
+  KERNEL_VER    = 4.1.45-1.17
+  KERNEL_TMP    = linux
+  KERNEL_SOURCE = stblinux-4.1-1.17.tar.bz2
+  KERNEL_SITE   = http://archive.vuplus.com/download/kernel
+
+  KERNEL_BRANCH = $(EMPTY)
+  KERNEL_DTB    = $(EMPTY)
+
+  VMLINUZ-INITRD_VER    = 20201010
+  VMLINUZ-INITRD_SOURCE = vmlinuz-initrd_$(BOXMODEL)_$(VMLINUZ-INITRD_VER).tar.bz2
+  VMLINUZ-INITRD_SITE   = https://bitbucket.org/max_10/vmlinuz-initrd-$(BOXMODEL)/downloads
+  VMLINUZ-INITRD        = vmlinuz-initrd-7445d0
+
+  BOOT_PARTITION = 6
+
 else ifeq ($(BOXMODEL), vuultimo4k)
   KERNEL_VER    = 3.14.28-1.12
   KERNEL_TMP    = linux
