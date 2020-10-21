@@ -17,3 +17,36 @@ rtl8192eu: kernel-$(BOXTYPE) | $(TARGET_DIR)
 	make depmod
 	$(REMOVE)/$(RTL8192EU_SOURCE)
 	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
+HD6x-MALI-DRIVERS_VER    = DX910-SW-99002-r7p0-00rel0
+HD6x-MALI-DRIVERS_TMP    = $(HD6x-MALI-DRIVERS_VER)
+HD6x-MALI-DRIVERS_SOURCE = $(HD6x-MALI-DRIVERS_VER).tgz
+HD6x-MALI-DRIVERS_SITE   = https://developer.arm.com/-/media/Files/downloads/mali-drivers/kernel/mali-utgard-gpu
+
+$(ARCHIVE)/$(HD6x-MALI-DRIVERS_SOURCE):
+	$(DOWNLOAD) $(HD6x-MALI-DRIVERS_SITE)/$(HD6x-MALI-DRIVERS_SOURCE)
+
+HD6x-MALI-DRIVERS_PATCH  = hi3798mv200-support.patch
+
+HD6x-MALI-DRIVERS_MAKEVARS = \
+	M=$(BUILD_TMP)/$(HD6x-MALI-DRIVERS_TMP)/driver/src/devicedrv/mali \
+	EXTRA_CFLAGS="-DCONFIG_MALI_DVFS=y -DCONFIG_GPU_AVS_ENABLE=y" \
+	CONFIG_MALI_SHARED_INTERRUPTS=y \
+	CONFIG_MALI400=m \
+	CONFIG_MALI450=y \
+	CONFIG_MALI_DVFS=y \
+	CONFIG_GPU_AVS_ENABLE=y
+
+hd6x-mali-drivers: kernel-$(BOXTYPE) hd6x-libgles-headers $(ARCHIVE)/$(HD6x-MALI-DRIVERS_SOURCE) | $(TARGET_DIR)
+	$(START_BUILD)
+	$(REMOVE)/$(HD6x-MALI-DRIVERS_TMP)
+	$(UNTAR)/$(HD6x-MALI-DRIVERS_SOURCE)
+	$(CHDIR)/$(HD6x-MALI-DRIVERS_TMP); \
+		$(call apply_patches, $(HD6x-MALI-DRIVERS_PATCH)); \
+		$(MAKE) -C $(BUILD_TMP)/$(KERNEL_OBJ) $(KERNEL_MAKEVARS) $(HD6x-MALI-DRIVERS_MAKEVARS); \
+		$(MAKE) -C $(BUILD_TMP)/$(KERNEL_OBJ) $(KERNEL_MAKEVARS) $(HD6x-MALI-DRIVERS_MAKEVARS) INSTALL_MOD_PATH=$(TARGET_DIR) modules_install
+	make depmod
+	$(REMOVE)/$(HD6x-MALI-DRIVERS_TMP)
+	$(TOUCH)

@@ -15,13 +15,13 @@
 
 # - Armbox --------------------------------------------------------------------
 
-# BOXTYPE            armbox  + ------ + ----- + ------- + -------- + ------ + ----- +
-#                    |        \        \       \         \          \        \       \
-# BOXSERIES         hd51      vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse
-#                    |           |        |          |      |          |         |      |
-# BOXFAMILY       bcm7251s    bcm7376  bcm7278       bcm7444s       bcm72604     bcm7252s
-#                /   |    \      |        |          |      |          |         |      |
-# BOXMODEL   hd51 bre2ze4k h7 vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse
+# BOXTYPE             armbox ---- + -- + ------ + ----- + ------- + -------- + ------ + ----- +
+#                    /            |     \        \       \         \          \        \       \
+# BOXSERIES         hd51        hd6x    vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse
+#                    |            |        |        |          |      |          |         |      |
+# BOXFAMILY       bcm7251s     hi3798m  bcm7376  bcm7278       bcm7444s       bcm72604     bcm7252s
+#                /   |    \     |   |      |        |          |      |          |         |      |
+# BOXMODEL   hd51 bre2ze4k h7 hd60 hd61 vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse
 
 # - Mipsbox --------------------------------------------------------------------
 
@@ -49,6 +49,10 @@ ifneq ($(BOXSERIES),)
     BOXTYPE = armbox
     BOXFAMILY = bcm7251s
     BOXMODEL = hd51
+  else ifeq ($(BOXSERIES), hd6x)
+    BOXTYPE = armbox
+    BOXFAMILY = hi3798m
+    BOXMODEL = hd61
   else ifeq ($(BOXSERIES), vusolo4k)
     BOXTYPE = armbox
     BOXFAMILY = bcm7376
@@ -103,6 +107,10 @@ else ifneq ($(BOXFAMILY),)
     BOXTYPE = armbox
     BOXSERIES = hd51
     BOXMODEL = hd51
+  else ifeq ($(BOXFAMILY), hi3798m)
+    BOXTYPE = armbox
+    BOXSERIES = hd6x
+    BOXMODEL = hd61
   else ifeq ($(BOXFAMILY), bcm7376)
     BOXTYPE = armbox
     BOXSERIES = vusolo4k
@@ -149,6 +157,10 @@ else ifneq ($(BOXMODEL),)
     BOXTYPE = armbox
     BOXSERIES = hd51
     BOXFAMILY = bcm7251s
+  else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd60 hd61))
+    BOXTYPE = armbox
+    BOXSERIES = hd6x
+    BOXFAMILY = hi3798m
   else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vusolo4k))
     BOXTYPE = armbox
     BOXSERIES = vusolo4k
@@ -218,6 +230,10 @@ else ifeq ($(BOXMODEL), bre2ze4k)
   BOXNAME="WWIO BRE2ZE4K"
 else ifeq ($(BOXMODEL), h7)
   BOXNAME="Air Digital Zgemma H7S/C"
+else ifeq ($(BOXMODEL), hd60)
+  BOXNAME="AX/Mut@nt HD60"
+else ifeq ($(BOXMODEL), hd61)
+  BOXNAME="AX/Mut@nt HD61"
 else ifeq ($(BOXMODEL), vusolo4k)
   BOXNAME="VU+ Solo 4K"
 else ifeq ($(BOXMODEL), vuduo4k)

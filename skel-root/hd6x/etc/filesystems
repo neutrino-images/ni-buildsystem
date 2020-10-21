@@ -1,0 +1,14 @@
+ext4
+ext3
+ext2
+nodev proc
+nodev devpts
+ntfs
+ntfs-3g
+fuseblk
+vfat
+exfat
+exfat_fuse
+udf
+iso9660
+*

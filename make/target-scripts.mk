@@ -25,6 +25,7 @@ init-scripts: \
 	$(TARGET_DIR)/etc/init.d/swap \
 	$(TARGET_DIR)/etc/init.d/sys_update.sh \
 	$(TARGET_DIR)/etc/init.d/syslogd \
+	$(TARGET_DIR)/etc/init.d/suspend \
 	$(TARGET_DIR)/etc/init.d/user-initscripts
 
 $(TARGET_DIR)/etc/init.d/globals:
@@ -79,23 +80,23 @@ $(TARGET_DIR)/etc/init.d/networking:
 	$(UPDATE-RC.D) $(@F) stop 98 0 6 .
 
 $(TARGET_DIR)/etc/init.d/partitions-by-name:
-ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7))
+ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7 hd60 hd61))
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/partitions-by-name.init $(@)
 endif
 
 $(TARGET_DIR)/etc/init.d/proc:
-ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7 vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo))
+ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7 hd60 hd61 vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo))
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/proc.init $(@)
 	$(UPDATE-RC.D) $(@F) start 90 S .
 endif
 
 $(TARGET_DIR)/etc/init.d/resizerootfs:
-ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7))
+ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7 hd60 hd61))
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/resizerootfs.init $(@)
 endif
 
 $(TARGET_DIR)/etc/init.d/swap:
-ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7 vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo))
+ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7 hd60 hd61 vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo))
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/swap.init $(@)
 	$(UPDATE-RC.D) $(@F) stop 98 0 6 .
 endif
@@ -106,6 +107,12 @@ $(TARGET_DIR)/etc/init.d/sys_update.sh:
 $(TARGET_DIR)/etc/init.d/syslogd:
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/syslogd.init $(@)
 	$(UPDATE-RC.D) $(@F) stop 98 0 6 .
+
+$(TARGET_DIR)/etc/init.d/suspend:
+ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd60 hd61))
+	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/suspend.init $(@)
+	$(UPDATE-RC.D) $(@F) start 89 0 .
+endif
 
 $(TARGET_DIR)/etc/init.d/user-initscripts:
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/user-initscripts.init $(@)

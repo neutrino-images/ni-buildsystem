@@ -37,6 +37,21 @@ else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7))
   KERNEL_DTB    = $(BUILD_TMP)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/dts/bcm7445-bcm97445svmb.dtb
   KERNEL_CONFIG = $(CONFIGS)/kernel-hd51.config
 
+  BOOT_PARTITION = 1
+
+else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd60 hd61))
+  KERNEL_VER    = 4.4.35
+  KERNEL_DATE   = 20181228
+  KERNEL_TMP    = linux-$(KERNEL_VER)
+  KERNEL_SOURCE = linux-$(KERNEL_VER)-$(KERNEL_DATE)-arm.tar.gz
+  KERNEL_SITE   = http://downloads.mutant-digital.net
+
+  KERNEL_BRANCH = $(EMPTY)
+  KERNEL_DTB    = $(BUILD_TMP)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/dts/hi3798mv200.dtb
+  KERNEL_CONFIG = $(CONFIGS)/kernel-hd6x.config
+
+  BOOT_PARTITION = 4
+
 else ifeq ($(BOXMODEL), vusolo4k)
   KERNEL_VER    = 3.14.28-1.8
   KERNEL_TMP    = linux
@@ -199,7 +214,7 @@ endif
 
 KERNEL_MAKEOPTS = $(KERNEL_IMAGE) modules
 
-# build also the kernel-dtb for arm-hd51
-ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7))
+# build also the kernel-dtb for arm-hd51 and arm-hd6x
+ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7 hd60 hd61))
   KERNEL_MAKEOPTS += $(notdir $(KERNEL_DTB))
 endif

@@ -8,8 +8,11 @@
 blobs: $(BLOBS_DEPS)
 	$(MAKE) firmware
 	$(MAKE) $(BOXMODEL)-drivers
-ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7 vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
+ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7 hd60 hd61 vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
 	$(MAKE) $(BOXMODEL)-libgles
+  ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd60 hd61))
+	$(MAKE) $(BOXMODEL)-libs
+  endif
 endif
 ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
 	$(MAKE) vuplus-platform-util
@@ -51,6 +54,14 @@ BRE2ZE4K-DRIVERS_SITE   = http://source.mynonpublic.com/gfutures
 H7-DRIVERS_VER    = 20191123
 H7-DRIVERS_SOURCE = h7-drivers-$(KERNEL_VER)-$(H7-DRIVERS_VER).zip
 H7-DRIVERS_SITE   = http://source.mynonpublic.com/zgemma
+
+HD60-DRIVERS_VER    = 20190319
+HD60-DRIVERS_SOURCE = hd60-drivers-$(KERNEL_VER)-$(HD60-DRIVERS_VER).zip
+HD60-DRIVERS_SITE   = http://downloads.mutant-digital.net/hd60
+
+HD61-DRIVERS_VER    = 20190711
+HD61-DRIVERS_SOURCE = hd61-drivers-$(KERNEL_VER)-$(HD61-DRIVERS_VER).zip
+HD61-DRIVERS_SITE   = http://downloads.mutant-digital.net/hd61
 
 VUSOLO4K-DRIVERS_VER    = 20190424
 VUSOLO4K-DRIVERS_SOURCE = vuplus-dvb-proxy-vusolo4k-3.14.28-$(VUSOLO4K-DRIVERS_VER).r0.tar.gz
@@ -139,6 +150,15 @@ h7-drivers: $(ARCHIVE)/$(BOXMODEL-DRIVERS_SOURCE) | $(TARGET_DIR)
 	make depmod
 	$(TOUCH)
 
+hd60-drivers \
+hd61-drivers: $(ARCHIVE)/$(BOXMODEL-DRIVERS_SOURCE) | $(TARGET_DIR)
+	mkdir -p $(TARGET_MODULES_DIR)/extra
+	unzip -o $(ARCHIVE)/$(BOXMODEL-DRIVERS_SOURCE) -d $(TARGET_MODULES_DIR)/extra
+	rm -f $(TARGET_MODULES_DIR)/extra/hi_play.ko
+	mv $(TARGET_MODULES_DIR)/extra/turnoff_power $(TARGET_DIR)/bin
+	make depmod
+	$(TOUCH)
+
 vusolo4k-drivers \
 vuduo4k-drivers \
 vuduo4kse-drivers \
@@ -169,6 +189,19 @@ H7-LIBGLES_VER    = 20191110
 H7-LIBGLES_TMP    = $(EMPTY)
 H7-LIBGLES_SOURCE = h7-v3ddriver-$(H7-LIBGLES_VER).zip
 H7-LIBGLES_SITE   = http://source.mynonpublic.com/zgemma
+
+HD60-LIBGLES_VER    = 20181201
+HD60-LIBGLES_TMP    = $(EMPTY)
+HD60-LIBGLES_SOURCE = hd60-mali-$(HD60-LIBGLES_VER).zip
+HD60-LIBGLES_SITE   = http://downloads.mutant-digital.net/hd60
+
+HD61-LIBGLES_VER    = 20181201
+HD61-LIBGLES_TMP    = $(EMPTY)
+HD61-LIBGLES_SOURCE = hd61-mali-$(HD61-LIBGLES_VER).zip
+HD61-LIBGLES_SITE   = http://downloads.mutant-digital.net/hd61
+
+HD6x-LIBGLES-HEADERS_SOURCE = libgles-mali-utgard-headers.zip
+HD6x-LIBGLES-HEADERS_SITE   = https://github.com/HD-Digital/meta-gfutures/raw/release-6.2/recipes-bsp/mali/files
 
 VUSOLO4K-LIBGLES_VER    = $(VUSOLO4K-DRIVERS_VER)
 VUSOLO4K-LIBGLES_TMP    = libgles-vusolo4k
@@ -225,6 +258,25 @@ h7-libgles: $(ARCHIVE)/$(BOXMODEL-LIBGLES_SOURCE) | $(TARGET_DIR)
 	ln -sf libv3ddriver.so $(TARGET_LIB_DIR)/libGLESv2.so
 	$(TOUCH)
 
+$(ARCHIVE)/$(HD6x-LIBGLES-HEADERS_SOURCE):
+	$(DOWNLOAD) $(HD6x-LIBGLES-HEADERS_SITE)/$(HD6x-LIBGLES-HEADERS_SOURCE)
+
+hd6x-libgles-headers: $(ARCHIVE)/$(HD6x-LIBGLES-HEADERS_SOURCE) | $(TARGET_DIR)
+	unzip -o $(ARCHIVE)/$(HD6x-LIBGLES-HEADERS_SOURCE) -d $(TARGET_INCLUDE_DIR)
+	$(TOUCH)
+
+hd60-libgles \
+hd61-libgles: $(ARCHIVE)/$(BOXMODEL-LIBGLES_SOURCE) | $(TARGET_DIR)
+	unzip -o $(ARCHIVE)/$(BOXMODEL-LIBGLES_SOURCE) -d $(TARGET_LIB_DIR)
+	$(CD) $(TARGET_LIB_DIR); \
+		ln -sf libMali.so libmali.so; \
+		ln -sf libMali.so libEGL.so.1.4; ln -sf libEGL.so.1.4 libEGL.so.1; ln -sf libEGL.so.1 libEGL.so; \
+		ln -sf libMali.so libGLESv1_CM.so.1.1; ln -sf libGLESv1_CM.so.1.1 libGLESv1_CM.so.1; ln -sf libGLESv1_CM.so.1 libGLESv1_CM.so; \
+		ln -sf libMali.so libGLESv2.so.2.0; ln -sf libGLESv2.so.2.0 libGLESv2.so.2; ln -sf libGLESv2.so.2 libGLESv2.so; \
+		ln -sf libMali.so libgbm.so
+	$(REWRITE_PKGCONF_PC)
+	$(TOUCH)
+
 vusolo4k-libgles \
 vuduo4k-libgles \
 vuduo4kse-libgles \
@@ -240,6 +292,41 @@ vuplus-libgles: $(ARCHIVE)/$(BOXMODEL-LIBGLES_SOURCE) | $(TARGET_DIR)
 	ln -sf libv3ddriver.so $(TARGET_LIB_DIR)/libGLESv2.so
 	$(INSTALL_COPY) $(BUILD_TMP)/$(BOXMODEL-LIBGLES_TMP)/include/* $(TARGET_INCLUDE_DIR)
 	$(REMOVE)/$(BOXMODEL-LIBGLES_TMP)
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
+HD60-LIBS_VER    = 20200622
+HD60-LIBS_TMP    = hiplay
+HD60-LIBS_SOURCE = hd60-libs-$(HD60-LIBS_VER).zip
+HD60-LIBS_SITE   = http://downloads.mutant-digital.net/hd60
+
+HD61-LIBS_VER    = 20200622
+HD61-LIBS_TMP    = hiplay
+HD61-LIBS_SOURCE = hd61-libs-$(HD61-LIBS_VER).zip
+HD61-LIBS_SITE   = http://downloads.mutant-digital.net/hd61
+
+# -----------------------------------------------------------------------------
+
+BOXMODEL-LIBS_VER    = $($(call UPPERCASE,$(BOXMODEL))-LIBS_VER)
+BOXMODEL-LIBS_TMP    = $($(call UPPERCASE,$(BOXMODEL))-LIBS_TMP)
+BOXMODEL-LIBS_SOURCE = $($(call UPPERCASE,$(BOXMODEL))-LIBS_SOURCE)
+BOXMODEL-LIBS_SITE   = $($(call UPPERCASE,$(BOXMODEL))-LIBS_SITE)
+
+ifneq ($(BOXMODEL-LIBS_SOURCE),$(EMPTY))
+$(ARCHIVE)/$(BOXMODEL-LIBS_SOURCE):
+	$(DOWNLOAD) $(BOXMODEL-LIBS_SITE)/$(BOXMODEL-LIBS_SOURCE)
+endif
+
+hd60-libs \
+hd61-libs: $(ARCHIVE)/$(BOXMODEL-LIBS_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(BOXMODEL-LIBS_TMP)
+	unzip -o $(ARCHIVE)/$(BOXMODEL-LIBS_SOURCE) -d $(BUILD_TMP)/$(BOXMODEL-LIBS_TMP)
+	mkdir -p $(TARGET_LIB_DIR)/hisilicon
+	$(INSTALL_EXEC) $(BUILD_TMP)/$(BOXMODEL-LIBS_TMP)/hisilicon/* $(TARGET_LIB_DIR)/hisilicon
+	$(INSTALL_EXEC) $(BUILD_TMP)/$(BOXMODEL-LIBS_TMP)/ffmpeg/* $(TARGET_LIB_DIR)/hisilicon
+	ln -sf /lib/ld-linux-armhf.so.3 $(TARGET_LIB_DIR)/hisilicon/ld-linux.so
+	$(REMOVE)/$(BOXMODEL-LIBS_TMP)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------

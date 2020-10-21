@@ -113,7 +113,7 @@ else ifeq ($(BOXSERIES), hd2)
   endif
   CXX11_ABI              = -D_GLIBCXX_USE_CXX11_ABI=0
 
-else ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
+else ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
   DRIVERS-BIN_DIR        = $(BOXTYPE)/$(BOXMODEL)
   CORTEX-STRINGS_LDFLAG  = -lcortex-strings
   TARGET                 = arm-cortex-linux-gnueabihf

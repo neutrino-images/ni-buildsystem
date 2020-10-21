@@ -61,6 +61,10 @@ ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7))
 	make flash-image-hd51
 	make flash-image-hd51-multi
 endif
+ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd60 hd61))
+	make flash-image-hd6x
+	make flash-image-hd6x-multi
+endif
 ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
 	make flash-image-vuplus
 	make flash-image-vuplus-multi
@@ -125,7 +129,7 @@ flash-image-hd51: | $(IMAGE_DIR)
 
 # -----------------------------------------------------------------------------
 
-# hd51 / bre2ze4k
+# hd51, bre2ze4k, h7
 HD51_IMAGE_NAME = disk
 HD51_BOOT_IMAGE = boot.img
 HD51_IMAGE_LINK = $(HD51_IMAGE_NAME).ext4
@@ -209,6 +213,27 @@ flash-image-hd51-multi: | $(IMAGE_DIR)
 	$(CD) $(IMAGE_BUILD_TMP); \
 		zip -r $(IMAGE_DIR)/$(IMAGE_NAME)_multi_usb.zip $(IMAGE_SUBDIR)/*
 	rm -rf $(IMAGE_BUILD_TMP)
+
+# -----------------------------------------------------------------------------
+
+# hd60, hd61
+flash-image-hd6x: IMAGE_DATE=$(shell cat $(ROOTFS)/.version | grep "^version=" | cut -d= -f2 | cut -c 5-)
+flash-image-hd6x: | $(IMAGE_DIR)
+	rm -rf $(IMAGE_BUILD_TMP)
+	mkdir -p $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)
+	cp $(KERNEL_ZIMAGE_DTB) $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/uImage
+	$(CD) $(ROOTFS); \
+		tar -cvf $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/rootfs.tar -C $(ROOTFS) . >/dev/null 2>&1; \
+		bzip2 $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/rootfs.tar
+	# Create minimal image
+	$(CD) $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR); \
+		tar -czf $(IMAGE_DIR)/$(IMAGE_NAME).tgz uImage rootfs.tar.bz2
+	echo $(IMAGE_SITE)/$(IMAGE_NAME).tgz $(IMAGE_TYPE)$(IMAGE_VER)$(IMAGE_DATE) `md5sum $(IMAGE_DIR)/$(IMAGE_NAME).tgz | cut -c1-32` $(IMAGE_DESC) $(IMAGE_VERSION) >> $(IMAGE_DIR)/$(IMAGE_MD5FILE)
+	rm -rf $(IMAGE_BUILD_TMP)
+
+# -----------------------------------------------------------------------------
+
+flash-image-hd6x-multi:
 
 # -----------------------------------------------------------------------------
 

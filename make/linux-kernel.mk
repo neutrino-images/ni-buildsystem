@@ -20,6 +20,13 @@ GFUTURES_4_10_PATCH = \
 	gfutures/4_10_reserve_dvb_adapter_0.patch \
 	gfutures/4_10_t230c2.patch
 
+# arm hd60/hd61
+GFUTURES_4_4_PATCH = \
+	gfutures/4_4_0001-remote.patch \
+	gfutures/4_4_0002-log2-give-up-on-gcc-constant-optimizations.patch \
+	gfutures/4_4_0003-dont-mark-register-as-const.patch \
+	gfutures/4_4_ieee80211-increase-scan-result-expire-time.patch
+
 # arm vuduo
 VUPLUS_3_9_PATCH = \
 	vuplus/3_9_0001-rt2800usb-add-support-for-rt55xx.patch \
@@ -141,6 +148,12 @@ BRE2ZE4K_PATCH = \
 H7_PATCH = \
 	$(GFUTURES_4_10_PATCH)
 
+HD60_PATCH = \
+	$(GFUTURES_4_4_PATCH)
+
+HD61_PATCH = \
+	$(GFUTURES_4_4_PATCH)
+
 VUSOLO4K_PATCH = \
 	$(VUPLUS_3_14_PATCH) \
 	vuplus/3_14_linux_rpmb_not_alloc.patch \
@@ -197,7 +210,7 @@ kernel.do_prepare:
 	$(MKDIR)/$(KERNEL_OBJ)
 	$(MKDIR)/$(KERNEL_MODULES)
 	$(INSTALL_DATA) $(KERNEL_CONFIG) $(BUILD_TMP)/$(KERNEL_OBJ)/.config
-ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7))
+ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7 hd60 hd61))
 	$(INSTALL_DATA) $(PATCHES)/initramfs-subdirboot.cpio.gz $(BUILD_TMP)/$(KERNEL_OBJ)
 endif
 	$(TOUCH)
@@ -255,11 +268,11 @@ endif
 	$(TOUCH)
 
 kernel-armbox: kernel.do_compile | $(IMAGE_DIR)
-ifneq ($(KERNEL_DTB), $(EMPTY))
-	$(INSTALL_DATA) $(KERNEL_ZIMAGE_DTB) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL).bin
-else
-	$(INSTALL_DATA) $(KERNEL_ZIMAGE) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL).bin
-endif
+#ifneq ($(KERNEL_DTB), $(EMPTY))
+#	$(INSTALL_DATA) $(KERNEL_ZIMAGE_DTB) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL).bin
+#else
+#	$(INSTALL_DATA) $(KERNEL_ZIMAGE) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL).bin
+#endif
 	$(TOUCH)
 
 kernel-mipsbox: kernel.do_compile | $(IMAGE_DIR)
@@ -308,8 +321,11 @@ kernel-modules-armbox: kernel-armbox
 	$(INSTALL_DATA) $(KERNEL_MODULES_DIR)/modules.builtin $(TARGET_MODULES_DIR)
 	$(INSTALL_DATA) $(KERNEL_MODULES_DIR)/modules.order $(TARGET_MODULES_DIR)
 	make depmod
-ifeq ($(BOXSERIES), hd51)
+ifeq ($(BOXSERIES), hd51 hd6x)
 	make rtl8192eu
+endif
+ifeq ($(BOXSERIES), hd6x)
+	make hd6x-mali-drivers
 endif
 	$(TOUCH)
 
