@@ -59,7 +59,7 @@ ni-image:
 	$(MAKE) mtd-utils
 	$(MAKE) wget
 	$(MAKE) streamripper
-ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd51 hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo))
+ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd5x hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo))
 	$(MAKE) less
 	$(MAKE) parted
 	$(MAKE) openvpn
@@ -71,7 +71,7 @@ ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd51 hd6x vusolo4k vuduo4k vuduo4
 	$(MAKE) minicom
 	$(MAKE) mc
   endif
-  ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo))
+  ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd5x hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo))
 	$(MAKE) gptfdisk
 	$(MAKE) rsync
 	$(MAKE) ofgwrite

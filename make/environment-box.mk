@@ -17,7 +17,7 @@
 
 # BOXTYPE             armbox ---- + -- + ------ + ----- + ------- + -------- + ------ + ----- +
 #                    /            |     \        \       \         \          \        \       \
-# BOXSERIES         hd51        hd6x    vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse
+# BOXSERIES         hd5x        hd6x    vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse
 #                    |            |        |        |          |      |          |         |      |
 # BOXFAMILY       bcm7251s     hi3798m  bcm7376  bcm7278       bcm7444s       bcm72604     bcm7252s
 #                /   |    \     |   |      |        |          |      |          |         |      |
@@ -45,7 +45,7 @@ ifneq ($(BOXSERIES),)
     BOXTYPE = coolstream
     BOXFAMILY = apollo
     BOXMODEL = apollo
-  else ifeq ($(BOXSERIES), hd51)
+  else ifeq ($(BOXSERIES), hd5x)
     BOXTYPE = armbox
     BOXFAMILY = bcm7251s
     BOXMODEL = hd51
@@ -105,7 +105,7 @@ else ifneq ($(BOXFAMILY),)
     BOXMODEL = kronos
   else ifeq ($(BOXFAMILY), bcm7251s)
     BOXTYPE = armbox
-    BOXSERIES = hd51
+    BOXSERIES = hd5x
     BOXMODEL = hd51
   else ifeq ($(BOXFAMILY), hi3798m)
     BOXTYPE = armbox
@@ -155,7 +155,7 @@ else ifneq ($(BOXMODEL),)
     BOXFAMILY = kronos
   else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7))
     BOXTYPE = armbox
-    BOXSERIES = hd51
+    BOXSERIES = hd5x
     BOXFAMILY = bcm7251s
   else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd60 hd61))
     BOXTYPE = armbox

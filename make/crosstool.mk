@@ -6,7 +6,7 @@
 crosstool: $(CROSS_DIR)
 
 crosstools:
-	for boxseries in hd1 hd2 hd51 hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo; do \
+	for boxseries in hd1 hd2 hd5x hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo; do \
 		echo "make crosstool-ng for $${boxseries}"; \
 		make BOXSERIES=$${boxseries} crosstool || exit; \
 	done;
@@ -33,7 +33,7 @@ crosstool-restore: $(CROSSTOOL_BACKUP)
 # -----------------------------------------------------------------------------
 
 crosstools-renew:
-	for boxseries in hd1 hd2 hd51 hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo; do \
+	for boxseries in hd1 hd2 hd5x hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo; do \
 		make BOXSERIES=$${boxseries} ccache-clean || exit; \
 	done;
 	make host-clean

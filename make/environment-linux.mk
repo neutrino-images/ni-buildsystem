@@ -35,7 +35,7 @@ else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7))
 
   KERNEL_BRANCH = $(EMPTY)
   KERNEL_DTB    = $(BUILD_TMP)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/dts/bcm7445-bcm97445svmb.dtb
-  KERNEL_CONFIG = $(CONFIGS)/kernel-hd51.config
+  KERNEL_CONFIG = $(CONFIGS)/kernel-hd5x.config
 
   BOOT_PARTITION = 1
 
@@ -214,7 +214,7 @@ endif
 
 KERNEL_MAKEOPTS = $(KERNEL_IMAGE) modules
 
-# build also the kernel-dtb for arm-hd51 and arm-hd6x
+# build also the kernel-dtb for arm-hd5x and arm-hd6x
 ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7 hd60 hd61))
   KERNEL_MAKEOPTS += $(notdir $(KERNEL_DTB))
 endif

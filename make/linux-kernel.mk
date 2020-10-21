@@ -321,7 +321,7 @@ kernel-modules-armbox: kernel-armbox
 	$(INSTALL_DATA) $(KERNEL_MODULES_DIR)/modules.builtin $(TARGET_MODULES_DIR)
 	$(INSTALL_DATA) $(KERNEL_MODULES_DIR)/modules.order $(TARGET_MODULES_DIR)
 	make depmod
-ifeq ($(BOXSERIES), hd51 hd6x)
+ifeq ($(BOXSERIES), hd5x hd6x)
 	make rtl8192eu
 endif
 ifeq ($(BOXSERIES), hd6x)

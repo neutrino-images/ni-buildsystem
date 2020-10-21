@@ -31,7 +31,7 @@ WHOAMI       := $(shell id -un)
 ARCHIVE       = $(BASE_DIR)/download
 BUILD_TMP     = $(BASE_DIR)/build_tmp
 ROOTFS        = $(BUILD_TMP)/rootfs
-ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51))
+ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd5x))
   ROOTFS      = $(BUILD_TMP)/rootfs/linuxrootfs1
 endif
 DEPS_DIR      = $(BASE_DIR)/deps
@@ -113,7 +113,7 @@ else ifeq ($(BOXSERIES), hd2)
   endif
   CXX11_ABI              = -D_GLIBCXX_USE_CXX11_ABI=0
 
-else ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd51 hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
+else ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd5x hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
   DRIVERS-BIN_DIR        = $(BOXTYPE)/$(BOXMODEL)
   CORTEX-STRINGS_LDFLAG  = -lcortex-strings
   TARGET                 = arm-cortex-linux-gnueabihf
