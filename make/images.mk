@@ -221,7 +221,7 @@ flash-image-hd6x: IMAGE_DATE=$(shell cat $(ROOTFS)/.version | grep "^version=" |
 flash-image-hd6x: | $(IMAGE_DIR)
 	rm -rf $(IMAGE_BUILD_TMP)
 	mkdir -p $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)
-	cp $(KERNEL_ZIMAGE_DTB) $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/uImage
+	cp $(KERNEL_UIMAGE) $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/uImage
 	$(CD) $(ROOTFS); \
 		tar -cvf $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/rootfs.tar -C $(ROOTFS) . >/dev/null 2>&1; \
 		bzip2 $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/rootfs.tar

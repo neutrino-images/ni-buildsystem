@@ -200,7 +200,11 @@ KERNEL_NAME     = NI $(shell echo $(BOXFAMILY) | sed 's/.*/\u&/') Kernel
 
 KERNEL_MODULES_DIR  = $(BUILD_TMP)/$(KERNEL_MODULES)/lib/modules/$(KERNEL_VER)
 
-KERNEL_UIMAGE       = $(BUILD_TMP)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/Image
+ifeq ($(BOXMODEL), nevis)
+  KERNEL_UIMAGE     = $(BUILD_TMP)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/Image
+else
+  KERNEL_UIMAGE     = $(BUILD_TMP)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/uImage
+endif
 KERNEL_ZIMAGE       = $(BUILD_TMP)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/zImage
 KERNEL_ZIMAGE_DTB   = $(BUILD_TMP)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/zImage_dtb
 KERNEL_VMLINUX      = $(BUILD_TMP)/$(KERNEL_OBJ)/vmlinux
@@ -221,6 +225,8 @@ KERNEL_MAKEVARS += \
 
 ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vuduo))
   KERNEL_IMAGE = vmlinux
+else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd60 hd61))
+  KERNEL_IMAGE = uImage
 else
   KERNEL_IMAGE = zImage
 endif
