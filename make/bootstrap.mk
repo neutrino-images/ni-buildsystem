@@ -90,6 +90,7 @@ $(UPDATE_DIR) \
 $(HOST_DIR):
 	mkdir -p $(@)
 
+$(HOST_DEPS_DIR) \
 $(HOST_DIR)/bin: $(HOST_DIR)
 	mkdir -p $(@)
 

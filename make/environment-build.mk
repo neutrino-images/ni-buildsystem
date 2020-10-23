@@ -36,7 +36,6 @@ ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd5x))
 endif
 DEPS_DIR      = $(BASE_DIR)/deps
 D             = $(DEPS_DIR)
-HOST_DIR      = $(BASE_DIR)/host
 TARGET_DIR   ?= $(BASE_DIR)/root
 SOURCE_DIR   ?= $(BASE_DIR)/source
 MAKE_DIR      = $(BASE_DIR)/make
@@ -58,6 +57,11 @@ endif
 TARGET_FILES  = $(BASE_DIR)/skel-root/general
 
 BUILD        ?= $(shell /usr/share/libtool/config.guess 2>/dev/null || /usr/share/libtool/config/config.guess 2>/dev/null || /usr/share/misc/config.guess)
+
+# -----------------------------------------------------------------------------
+
+HOST_DIR      = $(BASE_DIR)/host
+HOST_DEPS_DIR = $(HOST_DIR)/deps
 
 # -----------------------------------------------------------------------------
 
@@ -182,7 +186,7 @@ TERM_NORMAL	= \033[0m
 # -----------------------------------------------------------------------------
 
 # search path(s) for all prerequisites
-VPATH = $(D)
+VPATH = $(DEPS_DIR) $(HOST_DEPS_DIR)
 
 PATH := $(HOST_DIR)/bin:$(CROSS_DIR)/bin:$(PATH)
 
@@ -212,7 +216,9 @@ CD    = set -e; cd
 CHDIR = $(CD) $(BUILD_TMP)
 MKDIR = mkdir -p $(BUILD_TMP)
 CPDIR = cp -a -t $(BUILD_TMP) $(ARCHIVE)
-TOUCH = @touch $(D)/$(@)
+#TOUCH = @touch $(DEPS_DIR)/$(@)
+TOUCH = @touch $(if $(findstring host-,$(@)),$(HOST_DEPS_DIR),$(DEPS_DIR))/$(@)
+
 
 INSTALL      = install
 INSTALL_DATA = $(INSTALL) -m 0644

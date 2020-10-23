@@ -135,7 +135,7 @@ neutrino-plugins-distclean:
 
 neutrino-plugins-clean: neutrino-plugins-uninstall neutrino-plugins-distclean
 	rm -f $(NP_OBJ_DIR)/config.status
-	rm -f $(D)/neutrino-plugins
+	rm -f $(DEPS_DIR)/neutrino-plugins
 
 neutrino-plugins-clean-all: neutrino-plugins-clean
 	rm -rf $(NP_OBJ_DIR)

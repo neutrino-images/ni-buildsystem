@@ -253,7 +253,7 @@ neutrino-distclean:
 
 neutrino-clean: neutrino-uninstall neutrino-distclean
 	rm -f $(N_OBJ_DIR)/config.status
-	rm -f $(D)/neutrino
+	rm -f $(DEPS_DIR)/neutrino
 	rm -f $(TARGET_DIR)/etc/init.d/start_neutrino
 
 neutrino-clean-all: neutrino-clean
@@ -269,7 +269,7 @@ libstb-hal-distclean:
 
 libstb-hal-clean: libstb-hal-uninstall libstb-hal-distclean
 	rm -f $(LH_OBJ_DIR)/config.status
-	rm -f $(D)/libstb-hal
+	rm -f $(DEPS_DIR)/libstb-hal
 
 libstb-hal-clean-all: libstb-hal-clean
 	rm -rf $(LH_OBJ_DIR)

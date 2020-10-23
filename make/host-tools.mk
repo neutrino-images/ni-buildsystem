@@ -3,7 +3,7 @@
 #
 # -----------------------------------------------------------------------------
 
-host-preqs: $(HOST_DIR)/bin \
+host-preqs: $(HOST_DIR)/bin $(HOST_DEPS_DIR) \
 	host-pkg-config \
 	$(PKG_CONFIG) \
 	host-mkfs.jffs2 \
@@ -199,7 +199,7 @@ $(HOST_DIR)/bin/parted: $(ARCHIVE)/$(HOST_PARTED_SOURCE) | $(HOST_DIR)/bin
 
 # -----------------------------------------------------------------------------
 
-HOST_DOSFSTOOLS_VER = $(DOSFSTOOLS_VER)
+HOST_DOSFSTOOLS_VER    = $(DOSFSTOOLS_VER)
 HOST_DOSFSTOOLS_TMP    = dosfstools-$(HOST_DOSFSTOOLS_VER)
 HOST_DOSFSTOOLS_SOURCE = dosfstools-$(HOST_DOSFSTOOLS_VER).tar.xz
 HOST_DOSFSTOOLS_SITE   = https://github.com/dosfstools/dosfstools/releases/download/v$(HOST_DOSFSTOOLS_VER)
