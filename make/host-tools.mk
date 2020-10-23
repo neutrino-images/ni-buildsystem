@@ -3,17 +3,23 @@
 #
 # -----------------------------------------------------------------------------
 
-host-preqs: $(HOST_DIR)/bin $(HOST_DEPS_DIR) \
+$(HOST_DIR):
+	mkdir -p $(HOST_DIR)
+	mkdir -p $(HOST_DIR)/bin
+	mkdir -p $(HOST_DEPS_DIR)
+
+# -----------------------------------------------------------------------------
+
+host-preqs: $(HOST_DIR) \
 	host-pkg-config \
 	$(PKG_CONFIG) \
-	host-mkfs.jffs2 \
-	host-sumtool \
+	host-mtd-utils \
 	host-mkimage \
 	host-zic \
 	host-parted \
-	host-mkfs.fat \
+	host-dosfstools \
 	host-mtools \
-	host-resize2fs \
+	host-e2fsprocs \
 	host-lua \
 	host-luarocks \
 	host-ccache
@@ -36,8 +42,10 @@ HOST_PKG-CONFIG_SITE   = https://pkg-config.freedesktop.org/releases
 $(ARCHIVE)/$(HOST_PKG-CONFIG_SOURCE):
 	$(DOWNLOAD) $(HOST_PKG-CONFIG_SITE)/$(HOST_PKG-CONFIG_SOURCE)
 
-host-pkg-config: $(HOST_DIR)/bin/pkg-config
-$(HOST_DIR)/bin/pkg-config: $(ARCHIVE)/$(HOST_PKG-CONFIG_SOURCE) | $(HOST_DIR)/bin pkg-config-preqs
+HOST_PKG-CONFIG = $(HOST_DIR)/bin/pkg-config
+
+host-pkg-config: $(HOST_PKG-CONFIG)
+$(HOST_PKG-CONFIG): $(ARCHIVE)/$(HOST_PKG-CONFIG_SOURCE) | $(HOST_DIR) pkg-config-preqs
 	$(REMOVE)/$(HOST_PKG-CONFIG_TMP)
 	$(UNTAR)/$(HOST_PKG-CONFIG_SOURCE)
 	$(CHDIR)/$(HOST_PKG-CONFIG_TMP); \
@@ -45,7 +53,7 @@ $(HOST_DIR)/bin/pkg-config: $(ARCHIVE)/$(HOST_PKG-CONFIG_SOURCE) | $(HOST_DIR)/b
 			--with-pc_path=$(PKG_CONFIG_PATH) \
 			; \
 		$(MAKE); \
-		$(INSTALL_EXEC) -D pkg-config $(HOST_DIR)/bin
+		$(INSTALL_EXEC) -D pkg-config $(HOST_PKG-CONFIG)
 	$(REMOVE)/$(HOST_PKG-CONFIG_TMP)
 
 # -----------------------------------------------------------------------------
@@ -61,8 +69,7 @@ $(ARCHIVE)/$(HOST_PKGCONF_SOURCE):
 HOST_PKGCONF_PATCH  = 0001-Only-prefix-with-the-sysroot-a-subset-of-variables.patch
 HOST_PKGCONF_PATCH += 0002-Revert-main-assume-modversion-insted-of-version-if-o.patch
 
-host-pkgconf: $(HOST_DIR)/bin/pkgconf
-$(HOST_DIR)/bin/pkgconf: $(ARCHIVE)/$(HOST_PKGCONF_SOURCE) | $(HOST_DIR)/bin pkg-config-preqs
+host-pkgconf: $(ARCHIVE)/$(HOST_PKGCONF_SOURCE) | $(HOST_DIR) pkg-config-preqs
 	$(REMOVE)/$(HOST_PKGCONF_TMP)
 	$(UNTAR)/$(HOST_PKGCONF_SOURCE)
 	$(CHDIR)/$(HOST_PKGCONF_TMP); \
@@ -75,12 +82,12 @@ $(HOST_DIR)/bin/pkgconf: $(ARCHIVE)/$(HOST_PKGCONF_SOURCE) | $(HOST_DIR)/bin pkg
 			; \
 		$(MAKE); \
 		$(MAKE) install
-	$(INSTALL_EXEC) $(PATCHES)/$(@F)/pkgconf-pkg-config $(HOST_DIR)/bin/pkg-config
+	$(INSTALL_EXEC) $(PATCHES)/$(@F)/pkgconf-pkg-config $(HOST_PKG-CONFIG)
 	$(REMOVE)/$(HOST_PKGCONF_TMP)
 
 # -----------------------------------------------------------------------------
 
-$(PKG_CONFIG): | $(HOST_DIR)/bin
+$(PKG_CONFIG): $(HOST_PKG-CONFIG)
 	ln -sf pkg-config $(@)
 
 # -----------------------------------------------------------------------------
@@ -93,10 +100,7 @@ HOST_MTD-UTILS_SITE   = ftp://ftp.infradead.org/pub/mtd-utils
 #$(ARCHIVE)/$(HOST_MTD-UTILS_SOURCE):
 #	$(DOWNLOAD) $(HOST_MTD-UTILS_SITE)/$(HOST_MTD-UTILS_SOURCE)
 
-host-mkfs.jffs2: $(HOST_DIR)/bin/mkfs.jffs2
-host-sumtool: $(HOST_DIR)/bin/sumtool
-$(HOST_DIR)/bin/mkfs.jffs2 \
-$(HOST_DIR)/bin/sumtool: $(ARCHIVE)/$(HOST_MTD-UTILS_SOURCE) | $(HOST_DIR)/bin
+host-mtd-utils: $(ARCHIVE)/$(HOST_MTD-UTILS_SOURCE) | $(HOST_DIR)
 	$(REMOVE)/$(HOST_MTD-UTILS_TMP)
 	$(UNTAR)/$(HOST_MTD-UTILS_SOURCE)
 	$(CHDIR)/$(HOST_MTD-UTILS_TMP); \
@@ -105,15 +109,16 @@ $(HOST_DIR)/bin/sumtool: $(ARCHIVE)/$(HOST_MTD-UTILS_SOURCE) | $(HOST_DIR)/bin
 			ZLIB_LIBS="-lz" \
 			UUID_CFLAGS=" " \
 			UUID_LIBS="-luuid" \
+			--prefix= \
 			--enable-silent-rules \
 			--without-ubifs \
 			--without-xattr \
 			--disable-tests \
 			; \
-		$(MAKE)
-	$(INSTALL_EXEC) -D $(BUILD_TMP)/$(HOST_MTD-UTILS_TMP)/mkfs.jffs2 $(HOST_DIR)/bin/
-	$(INSTALL_EXEC) -D $(BUILD_TMP)/$(HOST_MTD-UTILS_TMP)/sumtool $(HOST_DIR)/bin/
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(HOST_DIR)
 	$(REMOVE)/$(HOST_MTD-UTILS_TMP)
+	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
@@ -126,7 +131,7 @@ $(ARCHIVE)/$(HOST_U-BOOT_SOURCE):
 	$(DOWNLOAD) $(HOST_U-BOOT_SITE)/$(HOST_U-BOOT_SOURCE)
 
 host-mkimage: $(HOST_DIR)/bin/mkimage
-$(HOST_DIR)/bin/mkimage: $(ARCHIVE)/$(HOST_U-BOOT_SOURCE) | $(HOST_DIR)/bin
+$(HOST_DIR)/bin/mkimage: $(ARCHIVE)/$(HOST_U-BOOT_SOURCE) | $(HOST_DIR)
 	$(REMOVE)/$(HOST_U-BOOT_TMP)
 	$(UNTAR)/$(HOST_U-BOOT_SOURCE)
 	$(CHDIR)/$(HOST_U-BOOT_TMP); \
@@ -138,14 +143,6 @@ $(HOST_DIR)/bin/mkimage: $(ARCHIVE)/$(HOST_U-BOOT_SOURCE) | $(HOST_DIR)/bin
 
 # -----------------------------------------------------------------------------
 
-HOST_TZDATA_VER    = $(TZDATA_VER)
-HOST_TZDATA_TMP    = tzdata$(HOST_TZDATA_VER)
-HOST_TZDATA_SOURCE = tzdata$(HOST_TZDATA_VER).tar.gz
-HOST_TZDATA_SITE   = ftp://ftp.iana.org/tz/releases
-
-#$(ARCHIVE)/$(HOST_TZDATA_SOURCE):
-#	$(DOWNLOAD) $(HOST_TZDATA_SITE)/$(HOST_TZDATA_SOURCE)
-
 HOST_TZCODE_VER    = 2019b
 HOST_TZCODE_TMP    = tzcode$(HOST_TZCODE_VER)
 HOST_TZCODE_SOURCE = tzcode$(HOST_TZCODE_VER).tar.gz
@@ -154,18 +151,26 @@ HOST_TZCODE_SITE   = ftp://ftp.iana.org/tz/releases
 $(ARCHIVE)/$(HOST_TZCODE_SOURCE):
 	$(DOWNLOAD) $(HOST_TZCODE_SITE)/$(HOST_TZCODE_SOURCE)
 
-HOST_ZIC = $(HOST_DIR)/bin/zic
+HOST_TZDATA_VER    = $(TZDATA_VER)
+HOST_TZDATA_TMP    = tzdata$(HOST_TZDATA_VER)
+HOST_TZDATA_SOURCE = tzdata$(HOST_TZDATA_VER).tar.gz
+HOST_TZDATA_SITE   = ftp://ftp.iana.org/tz/releases
 
-host-zic: $(HOST_ZIC)
-$(HOST_ZIC): $(ARCHIVE)/$(HOST_TZDATA_SOURCE) $(ARCHIVE)/$(HOST_TZCODE_SOURCE) | $(HOST_DIR)/bin
+#$(ARCHIVE)/$(HOST_TZDATA_SOURCE):
+#	$(DOWNLOAD) $(HOST_TZDATA_SITE)/$(HOST_TZDATA_SOURCE)
+
+HOST_ZIC = $(HOST_DIR)/sbin/zic
+
+host-zic: $(ARCHIVE)/$(HOST_TZDATA_SOURCE) $(ARCHIVE)/$(HOST_TZCODE_SOURCE) | $(HOST_DIR)
 	$(REMOVE)/$(HOST_TZCODE_TMP)
 	$(MKDIR)/$(HOST_TZCODE_TMP)
 	$(CHDIR)/$(HOST_TZCODE_TMP); \
 		tar -xf $(ARCHIVE)/$(HOST_TZCODE_SOURCE); \
 		tar -xf $(ARCHIVE)/$(HOST_TZDATA_SOURCE); \
 		$(MAKE) zic
-	$(INSTALL_EXEC) -D $(BUILD_TMP)/$(HOST_TZCODE_TMP)/zic $(HOST_DIR)/bin/
+	$(INSTALL_EXEC) -D $(BUILD_TMP)/$(HOST_TZCODE_TMP)/zic $(HOST_ZIC)
 	$(REMOVE)/$(HOST_TZCODE_TMP)
+	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
@@ -180,22 +185,23 @@ HOST_PARTED_SITE   = https://ftp.gnu.org/gnu/parted
 HOST_PARTED_PATCH  = parted-device-mapper.patch
 HOST_PARTED_PATCH += parted-sysmacros.patch
 
-host-parted: $(HOST_DIR)/bin/parted
-$(HOST_DIR)/bin/parted: $(ARCHIVE)/$(HOST_PARTED_SOURCE) | $(HOST_DIR)/bin
+host-parted: $(ARCHIVE)/$(HOST_PARTED_SOURCE) | $(HOST_DIR)
 	$(REMOVE)/$(HOST_PARTED_TMP)
 	$(UNTAR)/$(HOST_PARTED_SOURCE)
 	$(CHDIR)/$(HOST_PARTED_TMP); \
 		$(call apply_patches, $(HOST_PARTED_PATCH)); \
 		./configure \
+			--prefix= \
 			--enable-silent-rules \
 			--enable-static \
 			--disable-shared \
 			--disable-device-mapper \
 			--without-readline \
 			; \
-		$(MAKE)
-	$(INSTALL_EXEC) -D $(BUILD_TMP)/$(HOST_PARTED_TMP)/parted/parted $(HOST_DIR)/bin/
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(HOST_DIR)
 	$(REMOVE)/$(HOST_PARTED_TMP)
+	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
@@ -207,20 +213,21 @@ HOST_DOSFSTOOLS_SITE   = https://github.com/dosfstools/dosfstools/releases/downl
 #$(ARCHIVE)/$(HOST_DOSFSTOOLS_SOURCE):
 #	$(DOWNLOAD) $(HOST_DOSFSTOOLS_SITE)/$(HOST_DOSFSTOOLS_SOURCE)
 
-host-mkfs.fat: $(HOST_DIR)/bin/mkfs.fat
-$(HOST_DIR)/bin/mkfs.fat: $(ARCHIVE)/$(HOST_DOSFSTOOLS_SOURCE) | $(HOST_DIR)/bin
+host-dosfstools: $(ARCHIVE)/$(HOST_DOSFSTOOLS_SOURCE) | $(HOST_DIR)
 	$(REMOVE)/$(HOST_DOSFSTOOLS_TMP)
 	$(UNTAR)/$(HOST_DOSFSTOOLS_SOURCE)
 	$(CHDIR)/$(HOST_DOSFSTOOLS_TMP); \
 		./configure \
+			--prefix= \
 			--without-udev \
 			; \
-		$(MAKE)
-	$(INSTALL_EXEC) -D $(BUILD_TMP)/$(HOST_DOSFSTOOLS_TMP)/src/mkfs.fat $(HOST_DIR)/bin/
-	ln -sf mkfs.fat $(HOST_DIR)/bin/mkfs.vfat
-	ln -sf mkfs.fat $(HOST_DIR)/bin/mkfs.msdos
-	ln -sf mkfs.fat $(HOST_DIR)/bin/mkdosfs
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(HOST_DIR)
+	ln -sf mkfs.fat $(HOST_DIR)/sbin/mkfs.vfat
+	ln -sf mkfs.fat $(HOST_DIR)/sbin/mkfs.msdos
+	ln -sf mkfs.fat $(HOST_DIR)/sbin/mkdosfs
 	$(REMOVE)/$(HOST_DOSFSTOOLS_TMP)
+	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
@@ -232,16 +239,17 @@ HOST_MTOOLS_SITE   = ftp://ftp.gnu.org/gnu/mtools
 $(ARCHIVE)/$(HOST_MTOOLS_SOURCE):
 	$(DOWNLOAD) $(HOST_MTOOLS_SITE)/$(HOST_MTOOLS_SOURCE)
 
-host-mtools: $(HOST_DIR)/bin/mtools
-$(HOST_DIR)/bin/mtools: $(ARCHIVE)/$(HOST_MTOOLS_SOURCE) | $(HOST_DIR)/bin
+host-mtools: $(ARCHIVE)/$(HOST_MTOOLS_SOURCE) | $(HOST_DIR)
 	$(REMOVE)/$(HOST_MTOOLS_TMP)
 	$(UNTAR)/$(HOST_MTOOLS_SOURCE)
 	$(CHDIR)/$(HOST_MTOOLS_TMP); \
-		./configure; \
-		$(MAKE)
-	$(INSTALL_EXEC) -D $(BUILD_TMP)/$(HOST_MTOOLS_TMP)/mtools $(HOST_DIR)/bin/
-	ln -sf mtools $(HOST_DIR)/bin/mcopy
+		./configure \
+			--prefix= \
+			; \
+		$(MAKE1); \
+		$(MAKE1) install DESTDIR=$(HOST_DIR)
 	$(REMOVE)/$(HOST_MTOOLS_TMP)
+	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
@@ -253,25 +261,17 @@ HOST_E2FSPROGS_SITE   = https://sourceforge.net/projects/e2fsprogs/files/e2fspro
 #$(ARCHIVE)/$(HOST_E2FSPROGS_SOURCE):
 #	$(DOWNLOAD) $(HOST_E2FSPROGS_SITE)/$(HOST_E2FSPROGS_SOURCE)
 
-host-resize2fs: $(HOST_DIR)/bin/resize2fs
-$(HOST_DIR)/bin/resize2fs: $(ARCHIVE)/$(HOST_E2FSPROGS_SOURCE) | $(HOST_DIR)/bin
+host-e2fsprocs: $(ARCHIVE)/$(HOST_E2FSPROGS_SOURCE) | $(HOST_DIR)
 	$(REMOVE)/$(HOST_E2FSPROGS_TMP)
 	$(UNTAR)/$(HOST_E2FSPROGS_SOURCE)
 	$(CHDIR)/$(HOST_E2FSPROGS_TMP); \
-		./configure; \
-		$(MAKE)
-	$(INSTALL_EXEC) -D $(BUILD_TMP)/$(HOST_E2FSPROGS_TMP)/resize/resize2fs $(HOST_DIR)/bin/
-	$(INSTALL_EXEC) -D $(BUILD_TMP)/$(HOST_E2FSPROGS_TMP)/misc/mke2fs $(HOST_DIR)/bin/
-	ln -sf mke2fs $(HOST_DIR)/bin/mkfs.ext2
-	ln -sf mke2fs $(HOST_DIR)/bin/mkfs.ext3
-	ln -sf mke2fs $(HOST_DIR)/bin/mkfs.ext4
-	ln -sf mke2fs $(HOST_DIR)/bin/mkfs.ext4dev
-	$(INSTALL_EXEC) -D $(BUILD_TMP)/$(HOST_E2FSPROGS_TMP)/e2fsck/e2fsck $(HOST_DIR)/bin/
-	ln -sf e2fsck $(HOST_DIR)/bin/fsck.ext2
-	ln -sf e2fsck $(HOST_DIR)/bin/fsck.ext3
-	ln -sf e2fsck $(HOST_DIR)/bin/fsck.ext4
-	ln -sf e2fsck $(HOST_DIR)/bin/fsck.ext4dev
+		./configure \
+			--prefix= \
+			; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(HOST_DIR)
 	$(REMOVE)/$(HOST_E2FSPROGS_TMP)
+	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
@@ -288,8 +288,7 @@ HOST_LUA_PATCH += lua-01-remove-readline.patch
 
 HOST_LUA = $(HOST_DIR)/bin/lua
 
-host-lua: $(HOST_LUA)
-$(HOST_LUA): $(ARCHIVE)/$(HOST_LUA_SOURCE) | $(HOST_DIR)
+host-lua: $(ARCHIVE)/$(HOST_LUA_SOURCE) | $(HOST_DIR)
 	$(REMOVE)/$(HOST_LUA_TMP)
 	$(UNTAR)/$(HOST_LUA_SOURCE)
 	$(CHDIR)/$(HOST_LUA_TMP); \
@@ -297,6 +296,7 @@ $(HOST_LUA): $(ARCHIVE)/$(HOST_LUA_SOURCE) | $(HOST_DIR)
 		$(MAKE) linux; \
 		$(MAKE) install INSTALL_TOP=$(HOST_DIR)
 	$(REMOVE)/$(HOST_LUA_TMP)
+	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
@@ -345,7 +345,7 @@ $(HOST_LUAROCKS): $(HOST_LUA) $(ARCHIVE)/$(HOST_LUAROCKS_SOURCE) | $(HOST_DIR)
 # -----------------------------------------------------------------------------
 
 # helper target to create ccache links
-host-ccache: find-ccache $(CCACHE) $(HOST_DIR)/bin
+host-ccache: find-ccache $(CCACHE) | $(HOST_DIR)
 	@ln -sf $(CCACHE) $(HOST_DIR)/bin/cc
 	@ln -sf $(CCACHE) $(HOST_DIR)/bin/gcc
 	@ln -sf $(CCACHE) $(HOST_DIR)/bin/g++

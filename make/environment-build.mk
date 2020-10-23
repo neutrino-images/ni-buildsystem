@@ -20,6 +20,8 @@ EMPTY =
 PARALLEL_JOBS := $(shell echo $$((1 + `getconf _NPROCESSORS_ONLN 2>/dev/null || echo 1`)))
 override MAKE = make $(if $(findstring j,$(filter-out --%,$(MAKEFLAGS))),,-j$(PARALLEL_JOBS))
 
+MAKE1 = make -j1
+
 MAKEFLAGS += --no-print-directory
 #MAKEFLAGS += --silent
 
@@ -188,7 +190,7 @@ TERM_NORMAL	= \033[0m
 # search path(s) for all prerequisites
 VPATH = $(DEPS_DIR) $(HOST_DEPS_DIR)
 
-PATH := $(HOST_DIR)/bin:$(CROSS_DIR)/bin:$(PATH)
+PATH := $(HOST_DIR)/bin:$(HOST_DIR)/sbin:$(CROSS_DIR)/bin:$(PATH)
 
 # -----------------------------------------------------------------------------
 
@@ -218,7 +220,6 @@ MKDIR = mkdir -p $(BUILD_TMP)
 CPDIR = cp -a -t $(BUILD_TMP) $(ARCHIVE)
 #TOUCH = @touch $(DEPS_DIR)/$(@)
 TOUCH = @touch $(if $(findstring host-,$(@)),$(HOST_DEPS_DIR),$(DEPS_DIR))/$(@)
-
 
 INSTALL      = install
 INSTALL_DATA = $(INSTALL) -m 0644

@@ -86,12 +86,7 @@ $(DEPS_DIR) \
 $(BUILD_TMP) \
 $(STAGING_DIR) \
 $(IMAGE_DIR) \
-$(UPDATE_DIR) \
-$(HOST_DIR):
-	mkdir -p $(@)
-
-$(HOST_DEPS_DIR) \
-$(HOST_DIR)/bin: $(HOST_DIR)
+$(UPDATE_DIR):
 	mkdir -p $(@)
 
 # -----------------------------------------------------------------------------
