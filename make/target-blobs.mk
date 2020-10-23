@@ -55,13 +55,13 @@ H7-DRIVERS_VER    = 20191123
 H7-DRIVERS_SOURCE = h7-drivers-$(KERNEL_VER)-$(H7-DRIVERS_VER).zip
 H7-DRIVERS_SITE   = http://source.mynonpublic.com/zgemma
 
-HD60-DRIVERS_VER    = 20190319
+HD60-DRIVERS_VER    = 20200731
 HD60-DRIVERS_SOURCE = hd60-drivers-$(KERNEL_VER)-$(HD60-DRIVERS_VER).zip
-HD60-DRIVERS_SITE   = http://downloads.mutant-digital.net/hd60
+HD60-DRIVERS_SITE   = http://source.mynonpublic.com/gfutures
 
-HD61-DRIVERS_VER    = 20190711
+HD61-DRIVERS_VER    = 20200731
 HD61-DRIVERS_SOURCE = hd61-drivers-$(KERNEL_VER)-$(HD61-DRIVERS_VER).zip
-HD61-DRIVERS_SITE   = http://downloads.mutant-digital.net/hd61
+HD61-DRIVERS_SITE   = http://source.mynonpublic.com/gfutures
 
 VUSOLO4K-DRIVERS_VER    = 20190424
 VUSOLO4K-DRIVERS_SOURCE = vuplus-dvb-proxy-vusolo4k-3.14.28-$(VUSOLO4K-DRIVERS_VER).r0.tar.gz
@@ -298,13 +298,13 @@ vuplus-libgles: $(ARCHIVE)/$(BOXMODEL-LIBGLES_SOURCE) | $(TARGET_DIR)
 
 HD60-LIBS_VER    = 20200622
 HD60-LIBS_TMP    = hiplay
-HD60-LIBS_SOURCE = hd60-libs-$(HD60-LIBS_VER).zip
-HD60-LIBS_SITE   = http://downloads.mutant-digital.net/hd60
+HD60-LIBS_SOURCE = gfutures-libs-3798mv200-$(HD60-LIBS_VER).zip
+HD60-LIBS_SITE   = http://source.mynonpublic.com/gfutures
 
 HD61-LIBS_VER    = 20200622
 HD61-LIBS_TMP    = hiplay
-HD61-LIBS_SOURCE = hd61-libs-$(HD61-LIBS_VER).zip
-HD61-LIBS_SITE   = http://downloads.mutant-digital.net/hd61
+HD61-LIBS_SOURCE = gfutures-libs-3798mv200-$(HD61-LIBS_VER).zip
+HD61-LIBS_SITE   = http://source.mynonpublic.com/gfutures
 
 # -----------------------------------------------------------------------------
 

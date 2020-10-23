@@ -39,12 +39,25 @@ else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7))
 
   BOOT_PARTITION = 1
 
-else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd60 hd61))
+else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd60))
+  KERNEL_VER    = 4.4.35
+  KERNEL_DATE   = 20200219
+  KERNEL_TMP    = linux-$(KERNEL_VER)
+  KERNEL_SOURCE = linux-$(KERNEL_VER)-$(KERNEL_DATE)-arm.tar.gz
+  KERNEL_SITE   = http://source.mynonpublic.com/gfutures
+
+  KERNEL_BRANCH = $(EMPTY)
+  KERNEL_DTB    = $(BUILD_TMP)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/dts/hi3798mv200.dtb
+  KERNEL_CONFIG = $(CONFIGS)/kernel-hd6x.config
+
+  BOOT_PARTITION = 4
+
+else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd61))
   KERNEL_VER    = 4.4.35
   KERNEL_DATE   = 20181228
   KERNEL_TMP    = linux-$(KERNEL_VER)
   KERNEL_SOURCE = linux-$(KERNEL_VER)-$(KERNEL_DATE)-arm.tar.gz
-  KERNEL_SITE   = http://downloads.mutant-digital.net
+  KERNEL_SITE   = http://source.mynonpublic.com/gfutures
 
   KERNEL_BRANCH = $(EMPTY)
   KERNEL_DTB    = $(BUILD_TMP)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/dts/hi3798mv200.dtb
