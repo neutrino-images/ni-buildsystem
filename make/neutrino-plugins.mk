@@ -151,22 +151,22 @@ neutrino-plugin-%: $(NP_OBJ_DIR)/config.status
 
 # -----------------------------------------------------------------------------
 
-channellogos: $(SOURCE_DIR)/$(NI-LOGO-STUFF) $(SHAREICONS)
-	rm -rf $(SHAREICONS)/logo
-	mkdir -p $(SHAREICONS)/logo
-	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI-LOGO-STUFF)/logos/* $(SHAREICONS)/logo
-	mkdir -p $(SHAREICONS)/logo/events
-	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI-LOGO-STUFF)/logos-events/* $(SHAREICONS)/logo/events
+channellogos: $(SOURCE_DIR)/$(NI-LOGO-STUFF) $(SHARE_ICONS)
+	rm -rf $(SHARE_LOGOS)
+	mkdir -p $(SHARE_LOGOS)
+	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI-LOGO-STUFF)/logos/* $(SHARE_LOGOS)
+	mkdir -p $(SHARE_LOGOS)/events
+	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI-LOGO-STUFF)/logos-events/* $(SHARE_LOGOS)/events
 	$(CD) $(SOURCE_DIR)/$(NI-LOGO-STUFF)/logo-links; \
-		./logo-linker.sh logo-links.db $(SHAREICONS)/logo
+		./logo-linker.sh logo-links.db $(SHARE_LOGOS)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
-logo-addon: $(SOURCE_DIR)/$(NI-LOGO-STUFF) $(SHAREPLUGINS)
-	$(INSTALL_EXEC) $(SOURCE_DIR)/$(NI-LOGO-STUFF)/logo-addon/*.sh $(SHAREPLUGINS)/
-	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI-LOGO-STUFF)/logo-addon/*.cfg $(SHAREPLUGINS)/
-	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI-LOGO-STUFF)/logo-addon/*.png $(SHAREPLUGINS)/
+logo-addon: $(SOURCE_DIR)/$(NI-LOGO-STUFF) $(SHARE_PLUGINS)
+	$(INSTALL_EXEC) $(SOURCE_DIR)/$(NI-LOGO-STUFF)/logo-addon/*.sh $(SHARE_PLUGINS)/
+	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI-LOGO-STUFF)/logo-addon/*.cfg $(SHARE_PLUGINS)/
+	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI-LOGO-STUFF)/logo-addon/*.png $(SHARE_PLUGINS)/
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -183,17 +183,17 @@ NEUTRINO-MEDIATHEK_TMP    = mediathek.$(NEUTRINO-MEDIATHEK_VER)
 NEUTRINO-MEDIATHEK_SOURCE = mediathek.$(NEUTRINO-MEDIATHEK_VER)
 NEUTRINO-MEDIATHEK_SITE   = https://github.com/neutrino-mediathek
 
-neutrino-mediathek: $(SHAREPLUGINS) | $(TARGET_DIR)
+neutrino-mediathek: $(SHARE_PLUGINS) | $(TARGET_DIR)
 	$(REMOVE)/$(NEUTRINO-MEDIATHEK_TMP)
 	$(GET-GIT-SOURCE) $(NEUTRINO-MEDIATHEK_SITE)/$(NEUTRINO-MEDIATHEK_SOURCE) $(ARCHIVE)/$(NEUTRINO-MEDIATHEK_SOURCE)
 	$(CPDIR)/$(NEUTRINO-MEDIATHEK_SOURCE)
 	$(CHDIR)/$(NEUTRINO-MEDIATHEK_TMP); \
-		$(INSTALL_COPY) plugins/* $(SHAREPLUGINS)/; \
+		$(INSTALL_COPY) plugins/* $(SHARE_PLUGINS)/; \
 		$(INSTALL_COPY) share $(TARGET_DIR)
 	$(REMOVE)/$(NEUTRINO-MEDIATHEK_TMP)
 	# temporarily use beta-version from our board
-	rm -rf $(SHAREPLUGINS)/neutrino-mediathek*
-	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-lua/plugins/mediathek/* $(SHAREPLUGINS)/
+	rm -rf $(SHARE_PLUGINS)/neutrino-mediathek*
+	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-lua/plugins/mediathek/* $(SHARE_PLUGINS)/
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -220,7 +220,7 @@ else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), h7))
   LINKS_PATCH += links-input-event2.patch
 endif
 
-links: $(LINKS_DEPS) $(ARCHIVE)/$(LINKS_SOURCE) $(SHAREPLUGINS) | $(TARGET_DIR)
+links: $(LINKS_DEPS) $(ARCHIVE)/$(LINKS_SOURCE) $(SHARE_PLUGINS) | $(TARGET_DIR)
 	$(REMOVE)/$(LINKS_TMP)
 	$(UNTAR)/$(LINKS_SOURCE)
 	$(CHDIR)/$(LINKS_TMP)/intl; \
@@ -248,7 +248,7 @@ links: $(LINKS_DEPS) $(ARCHIVE)/$(LINKS_SOURCE) $(SHAREPLUGINS) | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	mv -f $(TARGET_BIN_DIR)/links $(SHAREPLUGINS)/links.so
+	mv -f $(TARGET_BIN_DIR)/links $(SHARE_PLUGINS)/links.so
 	$(INSTALL_COPY) $(TARGET_FILES)/links/* $(TARGET_DIR)/
 	$(REMOVE)/$(LINKS_TMP)
 	$(TOUCH)
