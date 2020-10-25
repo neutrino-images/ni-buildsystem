@@ -275,6 +275,33 @@ host-e2fsprocs: $(ARCHIVE)/$(HOST_E2FSPROGS_SOURCE) | $(HOST_DIR)
 
 # -----------------------------------------------------------------------------
 
+HOST_NINJA_VER    = 1.10.0
+HOST_NINJA_TMP    = ninja-$(HOST_NINJA_VER)
+HOST_NINJA_SOURCE = ninja-$(HOST_NINJA_VER).tar.gz
+HOST_NINJA_SITE   = $(call github,ninja-build,ninja,v$(HOST_NINJA_VER))
+
+HOST_NINJA_PATCH  = ninja/0001-set-minimum-cmake-version-to-3.10.patch
+HOST_NINJA_PATCH += ninja/0002-remove-fdiagnostics-color-from-make-command.patch
+HOST_NINJA_PATCH += ninja/0003-CMake-fix-object-library-usage.patch
+
+$(ARCHIVE)/$(HOST_NINJA_SOURCE):
+	$(DOWNLOAD) $(HOST_NINJA_SITE)/$(HOST_NINJA_SOURCE)
+
+host-ninja: $(ARCHIVE)/$(HOST_NINJA_SOURCE) | $(HOST_DIR)
+	$(REMOVE)/$(HOST_NINJA_TMP)
+	$(UNTAR)/$(HOST_NINJA_SOURCE)
+	$(CHDIR)/$(HOST_NINJA_TMP); \
+		$(call apply_patches, $(HOST_NINJA_PATCH)); \
+		cmake . \
+			-DCMAKE_INSTALL_PREFIX="" \
+			; \
+		$(MAKE)
+	$(INSTALL_EXEC) -D $(BUILD_TMP)/$(HOST_NINJA_TMP)/ninja $(HOST_DIR)/bin/ninja
+	$(REMOVE)/$(HOST_NINJA_TMP)
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
 HOST_LUA_VER    = $(LUA_VER)
 HOST_LUA_TMP    = lua-$(HOST_LUA_VER)
 HOST_LUA_SOURCE = lua-$(HOST_LUA_VER).tar.gz

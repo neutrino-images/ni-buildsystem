@@ -41,6 +41,11 @@ APPLY_PATCHES = $(call apply_patches, $(PKG_PATCHES_DIR))
 
 # -----------------------------------------------------------------------------
 
+# github(user,package,version): returns site of GitHub repository
+github = https://github.com/$(1)/$(2)/archive/$(3)
+
+# -----------------------------------------------------------------------------
+
 # rewrite libtool libraries
 REWRITE_LIBTOOL_RULES  = sed -i \
 				-e "s,^libdir=.*,libdir='$(TARGET_LIB_DIR)'," \
