@@ -57,12 +57,12 @@ endif
 	mkdir -p $(TARGET_DIR)/srv
 	mkdir -p $(TARGET_DIR)/sys
 	mkdir -p $(TARGET_DIR)/tmp
-	mkdir -p $(TARGET_DIR)/usr/bin
 	mkdir -p $(TARGET_DIR)/var/bin
 	mkdir -p $(TARGET_DIR)/var/etc/init.d
 	mkdir -p $(TARGET_DIR)/var/keys
 	mkdir -p $(TARGET_DIR)/var/root
 	mkdir -p $(TARGET_DIR)/var/spool/cron/crontabs
+	mkdir -p $(TARGET_USR_BIN_DIR)
 	mkdir -p $(PKG_CONFIG_PATH)
 	make skeleton
 ifeq ($(PERSISTENT_VAR_PARTITION), yes)

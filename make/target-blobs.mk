@@ -381,10 +381,10 @@ endif
 vuplus-platform-util: $(ARCHIVE)/$(BOXMODEL-PLATFORM-UTIL_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(BOXMODEL-PLATFORM-UTIL_TMP)
 	$(UNTAR)/$(BOXMODEL-PLATFORM-UTIL_SOURCE)
-	$(INSTALL_EXEC) -D $(BUILD_TMP)/$(BOXMODEL-PLATFORM-UTIL_TMP)/* $(TARGET_DIR)/usr/bin
+	$(INSTALL_EXEC) -D $(BUILD_TMP)/$(BOXMODEL-PLATFORM-UTIL_TMP)/* $(TARGET_USR_BIN_DIR)
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/vuplus-platform-util.init $(TARGET_DIR)/etc/init.d/vuplus-platform-util
 ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vuduo4k))
-	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/bp3flash.sh $(TARGET_DIR)/usr/bin/bp3flash.sh
+	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/bp3flash.sh $(TARGET_USR_BIN_DIR)/bp3flash.sh
 endif
 	$(REMOVE)/$(BOXMODEL-PLATFORM-UTIL_TMP)
 	$(TOUCH)

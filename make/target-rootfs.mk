@@ -41,8 +41,6 @@ symbolic-links: | $(TARGET_DIR)
 	$(CD) $(TARGET_DIR); \
 		ln -sf /var/root root; \
 		ln -sf /var/root home
-	$(CD) $(TARGET_DIR)/usr; \
-		ln -sf /share share
 	$(CD) $(TARGET_DIR)/var; \
 		rm -rf run; ln -sf /tmp run; \
 		rm -rf tmp; ln -sf /tmp tmp
@@ -62,13 +60,15 @@ endif
 	mkdir -p $(TARGET_DIR)/var/tuxbox/config
 	$(CD) $(TARGET_DIR)/var/tuxbox/config; \
 		ln -sf /var/keys/SoftCam.Key SoftCam.Key
+	$(CD) $(TARGET_USR_DIR); \
+		ln -sf /share share
 
 # -----------------------------------------------------------------------------
 
 e2-multiboot: | $(TARGET_DIR)
-	mkdir -p $(TARGET_DIR)/usr/bin
-	echo -e "#!/bin/sh\necho Nope!" > $(TARGET_DIR)/usr/bin/enigma2
-	chmod 0755 $(TARGET_DIR)/usr/bin/enigma2
+	mkdir -p $(TARGET_USR_BIN_DIR)
+	echo -e "#!/bin/sh\necho Nope!" > $(TARGET_USR_BIN_DIR)/enigma2
+	chmod 0755 $(TARGET_USR_BIN_DIR)/enigma2
 	#
 	echo -e "NI $(IMAGE_VERSION) \\\n \\\l\n" > $(TARGET_DIR)/etc/issue
 	#
