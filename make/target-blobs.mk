@@ -322,10 +322,10 @@ hd60-libs \
 hd61-libs: $(ARCHIVE)/$(BOXMODEL-LIBS_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(BOXMODEL-LIBS_TMP)
 	unzip -o $(ARCHIVE)/$(BOXMODEL-LIBS_SOURCE) -d $(BUILD_TMP)/$(BOXMODEL-LIBS_TMP)
-	mkdir -p $(TARGET_LIB_DIR)/hisilicon
-	$(INSTALL_EXEC) $(BUILD_TMP)/$(BOXMODEL-LIBS_TMP)/hisilicon/* $(TARGET_LIB_DIR)/hisilicon
-	$(INSTALL_EXEC) $(BUILD_TMP)/$(BOXMODEL-LIBS_TMP)/ffmpeg/* $(TARGET_LIB_DIR)/hisilicon
-	ln -sf /lib/ld-linux-armhf.so.3 $(TARGET_LIB_DIR)/hisilicon/ld-linux.so
+	mkdir -p $(TARGET_USR_LIB_DIR)/hisilicon
+	$(INSTALL_EXEC) $(BUILD_TMP)/$(BOXMODEL-LIBS_TMP)/hisilicon/* $(TARGET_USR_LIB_DIR)/hisilicon
+	$(INSTALL_EXEC) $(BUILD_TMP)/$(BOXMODEL-LIBS_TMP)/ffmpeg/* $(TARGET_USR_LIB_DIR)/hisilicon
+	ln -sf /lib/ld-linux-armhf.so.3 $(TARGET_USR_LIB_DIR)/hisilicon/ld-linux.so
 	$(REMOVE)/$(BOXMODEL-LIBS_TMP)
 	$(TOUCH)
 
