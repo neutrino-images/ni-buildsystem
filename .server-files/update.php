@@ -32,22 +32,34 @@ if ($revision == 1) // libstb-hal
 	if ($boxname == "hd51")
 	{
 		$boxtype_sc = "arm";
-		$boxseries = "hd51";
+		$boxseries = "hd5x";
 		$boxmodel = "hd51";
 	}
 	elseif ($boxname == "bre2ze4k")
 	{
 		$boxtype_sc = "arm";
-		$boxseries = "hd51";
+		$boxseries = "hd5x";
 		$boxmodel = "bre2ze4k";
 	}
 	elseif ($boxname == "zgemma h7c/s")
 	{
 		$boxtype_sc = "arm";
-		$boxseries = "hd51";
+		$boxseries = "hd5x";
 		$boxmodel = "h7";
 	}
-	elseif ($boxname == "solo4k" || $boxname == "duo4k" || $boxname == "ultimo4k" || $boxname == "zero4k" || $boxname == "uno4k" || $boxname == "uno4kse")
+	elseif ($boxname == "hd60")
+	{
+		$boxtype_sc = "arm";
+		$boxseries = "hd6x";
+		$boxmodel = "hd60";
+	}
+	elseif ($boxname == "hd61")
+	{
+		$boxtype_sc = "arm";
+		$boxseries = "hd6x";
+		$boxmodel = "hd61";
+	}
+	elseif ($boxname == "solo4k" || $boxname == "duo4k" || $boxname == "duo4kse" || $boxname == "ultimo4k" || $boxname == "zero4k" || $boxname == "uno4k" || $boxname == "uno4kse")
 	{
 		$boxtype_sc = "arm";
 		$boxseries = "vu" .  $boxname;
