@@ -218,19 +218,19 @@ endif
 kernel.do_prepare.git:
 	$(MAKE) kernel.do_checkout
 	#
-	$(REMOVE)/$(KERNEL_TMP)
+	$(REMOVE)/$(KERNEL_DIR)
 	tar -C $(SOURCE_DIR) -cp $(NI-LINUX-KERNEL) --exclude-vcs | tar -C $(BUILD_DIR) -x
 	$(CD) $(BUILD_DIR); \
-		mv $(NI-LINUX-KERNEL) $(KERNEL_TMP)
+		mv $(NI-LINUX-KERNEL) $(KERNEL_DIR)
 
 kernel.do_prepare.tar: $(DL_DIR)/$(KERNEL_SOURCE)
-	$(REMOVE)/$(KERNEL_TMP)
+	$(REMOVE)/$(KERNEL_DIR)
 	$(UNTAR)/$(KERNEL_SOURCE)
-	$(CHDIR)/$(KERNEL_TMP); \
+	$(CHDIR)/$(KERNEL_DIR); \
 		$(call apply_patches, $(addprefix kernel/,$(KERNEL_PATCH)))
 
 kernel.do_compile: kernel.do_prepare
-	$(CHDIR)/$(KERNEL_TMP); \
+	$(CHDIR)/$(KERNEL_DIR); \
 		$(MAKE) $(KERNEL_MAKEVARS) silentoldconfig; \
 		$(MAKE) $(KERNEL_MAKEVARS) $(KERNEL_MAKEOPTS); \
 		$(MAKE) $(KERNEL_MAKEVARS) modules_install

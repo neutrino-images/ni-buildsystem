@@ -50,12 +50,12 @@ kernel-tarball: $(BUILD_DIR)/linux-$(KERNEL_VER).tar
 # create kernel-tarball
 $(BUILD_DIR)/linux-$(KERNEL_VER).tar: | $(BUILD_DIR)
 	$(MAKE) kernel.do_prepare.$(if $(filter $(KERNEL_SOURCE),git),git,tar)
-	tar cf $(@) --exclude-vcs -C $(BUILD_DIR)/$(KERNEL_TMP) .
+	tar cf $(@) --exclude-vcs -C $(BUILD_DIR)/$(KERNEL_DIR) .
 
 # -----------------------------------------------------------------------------
 
 CROSSTOOL-NG_VER    = git
-CROSSTOOL-NG_TMP    = crosstool-ng.$(CROSSTOOL-NG_VER)
+CROSSTOOL-NG_DIR    = crosstool-ng.$(CROSSTOOL-NG_VER)
 CROSSTOOL-NG_SOURCE = crosstool-ng.$(CROSSTOOL-NG_VER)
 CROSSTOOL-NG_SITE   = https://github.com/neutrino-images
 
@@ -84,19 +84,19 @@ $(CROSS_BASE)/arm/hd2: $(DL_DIR)/$(GCC-LINARO_SOURCE)
 $(CROSS_DIR): | $(BUILD_DIR)
 	make $(BUILD_DIR)/linux-$(KERNEL_VER).tar
 	#
-	$(REMOVE)/$(CROSSTOOL-NG_TMP)
+	$(REMOVE)/$(CROSSTOOL-NG_DIR)
 	$(GET-GIT-SOURCE) $(CROSSTOOL-NG_SITE)/$(CROSSTOOL-NG_SOURCE) $(DL_DIR)/$(CROSSTOOL-NG_SOURCE)
 	$(CPDIR)/$(CROSSTOOL-NG_SOURCE)
 ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd1 hd2))
-	$(CHDIR)/$(CROSSTOOL-NG_TMP); \
+	$(CHDIR)/$(CROSSTOOL-NG_DIR); \
 		git checkout 1dbb06f2; \
 		$(call apply_patches, $(CROSSTOOL-NG_PATCH))
   ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2))
-	$(CHDIR)/$(CROSSTOOL-NG_TMP); \
+	$(CHDIR)/$(CROSSTOOL-NG_DIR); \
 		$(INSTALL_COPY) $(PATCHES)/crosstool-ng/gcc/* patches/gcc/linaro-6.3-2017.02
   endif
 endif
-	$(CHDIR)/$(CROSSTOOL-NG_TMP); \
+	$(CHDIR)/$(CROSSTOOL-NG_DIR); \
 		unset CONFIG_SITE LIBRARY_PATH CPATH C_INCLUDE_PATH PKG_CONFIG_PATH CPLUS_INCLUDE_PATH INCLUDE; \
 		$(INSTALL_DATA) $(CROSSTOOL-NG_CONFIG) .config; \
 		sed -i "s|^CT_PARALLEL_JOBS=.*|CT_PARALLEL_JOBS=$(PARALLEL_JOBS)|" .config; \
@@ -117,7 +117,7 @@ ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd1 hd2))
 endif
 	test -e $(CROSS_DIR)/$(TARGET)/lib || ln -sf sys-root/lib $(CROSS_DIR)/$(TARGET)/
 	rm -f $(CROSS_DIR)/$(TARGET)/sys-root/lib/libstdc++.so.6.0.*-gdb.py
-	$(REMOVE)/$(CROSSTOOL-NG_TMP)
+	$(REMOVE)/$(CROSSTOOL-NG_DIR)
 
 # -----------------------------------------------------------------------------
 

@@ -115,17 +115,17 @@ endif
 
 flash-image-hd5x: IMAGE_DATE=$(shell cat $(ROOTFS)/.version | grep "^version=" | cut -d= -f2 | cut -c 5-)
 flash-image-hd5x: | $(IMAGE_DIR)
-	rm -rf $(IMAGE_BUILD_TMP)
-	mkdir -p $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)
-	cp $(KERNEL_ZIMAGE_DTB) $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/kernel.bin
+	rm -rf $(IMAGE_BUILD_DIR)
+	mkdir -p $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)
+	cp $(KERNEL_ZIMAGE_DTB) $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/kernel.bin
 	$(CD) $(ROOTFS); \
-		tar -cvf $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/rootfs.tar -C $(ROOTFS) . >/dev/null 2>&1; \
-		bzip2 $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/rootfs.tar
+		tar -cvf $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/rootfs.tar -C $(ROOTFS) . >/dev/null 2>&1; \
+		bzip2 $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/rootfs.tar
 	# Create minimal image
-	$(CD) $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR); \
+	$(CD) $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR); \
 		tar -czf $(IMAGE_DIR)/$(IMAGE_NAME).tgz kernel.bin rootfs.tar.bz2
 	echo $(IMAGE_SITE)/$(IMAGE_NAME).tgz $(IMAGE_TYPE)$(IMAGE_VER)$(IMAGE_DATE) `md5sum $(IMAGE_DIR)/$(IMAGE_NAME).tgz | cut -c1-32` $(IMAGE_DESC) $(IMAGE_VERSION) >> $(IMAGE_DIR)/$(IMAGE_MD5FILE)
-	rm -rf $(IMAGE_BUILD_TMP)
+	rm -rf $(IMAGE_BUILD_DIR)
 
 # -----------------------------------------------------------------------------
 
@@ -136,7 +136,7 @@ HD5x_IMAGE_LINK = $(HD5x_IMAGE_NAME).ext4
 
 # emmc image
 EMMC_IMAGE_SIZE = 3817472
-EMMC_IMAGE = $(IMAGE_BUILD_TMP)/$(HD5x_IMAGE_NAME).img
+EMMC_IMAGE = $(IMAGE_BUILD_DIR)/$(HD5x_IMAGE_NAME).img
 
 BLOCK_SIZE = 512
 BLOCK_SECTOR = 2
@@ -166,13 +166,13 @@ STORAGE_PARTITION_OFFSET = "$(shell expr $(LINUX_SWAP_PARTITION_OFFSET) \+ $(LIN
 #STORAGE_PARTITION_SIZE = 204800 # remaining flash memory
 
 flash-image-hd5x-multi: | $(IMAGE_DIR)
-	rm -rf $(IMAGE_BUILD_TMP)
-	mkdir -p $(IMAGE_BUILD_TMP)
+	rm -rf $(IMAGE_BUILD_DIR)
+	mkdir -p $(IMAGE_BUILD_DIR)
 	# Create a sparse image block
-	dd if=/dev/zero of=$(IMAGE_BUILD_TMP)/$(HD5x_IMAGE_LINK) seek=$(shell expr $(ROOTFS_PARTITION_SIZE) \* $(BLOCK_SECTOR)) count=0 bs=$(BLOCK_SIZE)
-	mkfs.ext4 -v -F $(IMAGE_BUILD_TMP)/$(HD5x_IMAGE_LINK) -d $(ROOTFS)/..
+	dd if=/dev/zero of=$(IMAGE_BUILD_DIR)/$(HD5x_IMAGE_LINK) seek=$(shell expr $(ROOTFS_PARTITION_SIZE) \* $(BLOCK_SECTOR)) count=0 bs=$(BLOCK_SIZE)
+	mkfs.ext4 -v -F $(IMAGE_BUILD_DIR)/$(HD5x_IMAGE_LINK) -d $(ROOTFS)/..
 	# Error codes 0-3 indicate successfull operation of fsck (no errors or errors corrected)
-	fsck.ext4 -pvfD $(IMAGE_BUILD_TMP)/$(HD5x_IMAGE_LINK) || [ $? -le 3 ]
+	fsck.ext4 -pvfD $(IMAGE_BUILD_DIR)/$(HD5x_IMAGE_LINK) || [ $? -le 3 ]
 	dd if=/dev/zero of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) count=0 seek=$(shell expr $(EMMC_IMAGE_SIZE) \* $(BLOCK_SECTOR))
 	parted -s $(EMMC_IMAGE) mklabel gpt
 	parted -s $(EMMC_IMAGE) unit KiB mkpart boot fat16 $(IMAGE_ROOTFS_ALIGNMENT) $(shell expr $(IMAGE_ROOTFS_ALIGNMENT) \+ $(BOOT_PARTITION_SIZE))
@@ -184,52 +184,52 @@ flash-image-hd5x-multi: | $(IMAGE_DIR)
 	parted -s $(EMMC_IMAGE) unit KiB mkpart userdata ext4 $(MULTI_ROOTFS_PARTITION_OFFSET) $(shell expr $(MULTI_ROOTFS_PARTITION_OFFSET) \+ $(MULTI_ROOTFS_PARTITION_SIZE))
 	parted -s $(EMMC_IMAGE) unit KiB mkpart swap linux-swap $(LINUX_SWAP_PARTITION_OFFSET) $(shell expr $(LINUX_SWAP_PARTITION_OFFSET) \+ $(LINUX_SWAP_PARTITION_SIZE))
 	parted -s $(EMMC_IMAGE) unit KiB mkpart storage ext4 $(STORAGE_PARTITION_OFFSET) 100%
-	dd if=/dev/zero of=$(IMAGE_BUILD_TMP)/$(HD5x_BOOT_IMAGE) bs=$(BLOCK_SIZE) count=$(shell expr $(BOOT_PARTITION_SIZE) \* $(BLOCK_SECTOR))
-	mkfs.msdos -S 512 $(IMAGE_BUILD_TMP)/$(HD5x_BOOT_IMAGE)
-	echo "boot emmcflash0.linuxkernel  'root=/dev/mmcblk0p3 rootsubdir=linuxrootfs1 kernel=/dev/mmcblk0p2 rw rootwait $(BOXMODEL)_4.boxmode=1'" > $(IMAGE_BUILD_TMP)/STARTUP
-	echo "boot emmcflash0.linuxkernel  'root=/dev/mmcblk0p3 rootsubdir=linuxrootfs1 kernel=/dev/mmcblk0p2 rw rootwait $(BOXMODEL)_4.boxmode=1'" > $(IMAGE_BUILD_TMP)/STARTUP_1
-	echo "boot emmcflash0.linuxkernel2 'root=/dev/mmcblk0p7 rootsubdir=linuxrootfs2 kernel=/dev/mmcblk0p4 rw rootwait $(BOXMODEL)_4.boxmode=1'" > $(IMAGE_BUILD_TMP)/STARTUP_2
-	echo "boot emmcflash0.linuxkernel3 'root=/dev/mmcblk0p7 rootsubdir=linuxrootfs3 kernel=/dev/mmcblk0p5 rw rootwait $(BOXMODEL)_4.boxmode=1'" > $(IMAGE_BUILD_TMP)/STARTUP_3
-	echo "boot emmcflash0.linuxkernel4 'root=/dev/mmcblk0p7 rootsubdir=linuxrootfs4 kernel=/dev/mmcblk0p6 rw rootwait $(BOXMODEL)_4.boxmode=1'" > $(IMAGE_BUILD_TMP)/STARTUP_4
-	mcopy -i $(IMAGE_BUILD_TMP)/$(HD5x_BOOT_IMAGE) -v $(IMAGE_BUILD_TMP)/STARTUP ::
-	mcopy -i $(IMAGE_BUILD_TMP)/$(HD5x_BOOT_IMAGE) -v $(IMAGE_BUILD_TMP)/STARTUP_1 ::
-	mcopy -i $(IMAGE_BUILD_TMP)/$(HD5x_BOOT_IMAGE) -v $(IMAGE_BUILD_TMP)/STARTUP_2 ::
-	mcopy -i $(IMAGE_BUILD_TMP)/$(HD5x_BOOT_IMAGE) -v $(IMAGE_BUILD_TMP)/STARTUP_3 ::
-	mcopy -i $(IMAGE_BUILD_TMP)/$(HD5x_BOOT_IMAGE) -v $(IMAGE_BUILD_TMP)/STARTUP_4 ::
-	dd conv=notrunc if=$(IMAGE_BUILD_TMP)/$(HD5x_BOOT_IMAGE) of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) seek=$(shell expr $(IMAGE_ROOTFS_ALIGNMENT) \* $(BLOCK_SECTOR))
+	dd if=/dev/zero of=$(IMAGE_BUILD_DIR)/$(HD5x_BOOT_IMAGE) bs=$(BLOCK_SIZE) count=$(shell expr $(BOOT_PARTITION_SIZE) \* $(BLOCK_SECTOR))
+	mkfs.msdos -S 512 $(IMAGE_BUILD_DIR)/$(HD5x_BOOT_IMAGE)
+	echo "boot emmcflash0.linuxkernel  'root=/dev/mmcblk0p3 rootsubdir=linuxrootfs1 kernel=/dev/mmcblk0p2 rw rootwait $(BOXMODEL)_4.boxmode=1'" > $(IMAGE_BUILD_DIR)/STARTUP
+	echo "boot emmcflash0.linuxkernel  'root=/dev/mmcblk0p3 rootsubdir=linuxrootfs1 kernel=/dev/mmcblk0p2 rw rootwait $(BOXMODEL)_4.boxmode=1'" > $(IMAGE_BUILD_DIR)/STARTUP_1
+	echo "boot emmcflash0.linuxkernel2 'root=/dev/mmcblk0p7 rootsubdir=linuxrootfs2 kernel=/dev/mmcblk0p4 rw rootwait $(BOXMODEL)_4.boxmode=1'" > $(IMAGE_BUILD_DIR)/STARTUP_2
+	echo "boot emmcflash0.linuxkernel3 'root=/dev/mmcblk0p7 rootsubdir=linuxrootfs3 kernel=/dev/mmcblk0p5 rw rootwait $(BOXMODEL)_4.boxmode=1'" > $(IMAGE_BUILD_DIR)/STARTUP_3
+	echo "boot emmcflash0.linuxkernel4 'root=/dev/mmcblk0p7 rootsubdir=linuxrootfs4 kernel=/dev/mmcblk0p6 rw rootwait $(BOXMODEL)_4.boxmode=1'" > $(IMAGE_BUILD_DIR)/STARTUP_4
+	mcopy -i $(IMAGE_BUILD_DIR)/$(HD5x_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP ::
+	mcopy -i $(IMAGE_BUILD_DIR)/$(HD5x_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP_1 ::
+	mcopy -i $(IMAGE_BUILD_DIR)/$(HD5x_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP_2 ::
+	mcopy -i $(IMAGE_BUILD_DIR)/$(HD5x_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP_3 ::
+	mcopy -i $(IMAGE_BUILD_DIR)/$(HD5x_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP_4 ::
+	dd conv=notrunc if=$(IMAGE_BUILD_DIR)/$(HD5x_BOOT_IMAGE) of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) seek=$(shell expr $(IMAGE_ROOTFS_ALIGNMENT) \* $(BLOCK_SECTOR))
 	dd conv=notrunc if=$(KERNEL_ZIMAGE_DTB) of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) seek=$(shell expr $(KERNEL_PARTITION_OFFSET) \* $(BLOCK_SECTOR))
-	resize2fs $(IMAGE_BUILD_TMP)/$(HD5x_IMAGE_LINK) $(ROOTFS_PARTITION_SIZE)k
+	resize2fs $(IMAGE_BUILD_DIR)/$(HD5x_IMAGE_LINK) $(ROOTFS_PARTITION_SIZE)k
 	# Truncate on purpose
-	dd if=$(IMAGE_BUILD_TMP)/$(HD5x_IMAGE_LINK) of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) seek=$(shell expr $(ROOTFS_PARTITION_OFFSET) \* $(BLOCK_SECTOR))
+	dd if=$(IMAGE_BUILD_DIR)/$(HD5x_IMAGE_LINK) of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) seek=$(shell expr $(ROOTFS_PARTITION_OFFSET) \* $(BLOCK_SECTOR))
 	# Create final USB-image
-	mkdir -p $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)
-	cp $(EMMC_IMAGE) $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)
-	cp $(TARGET_FILES)/splash-images/ni-splash.bmp $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/splash.bin
-	cp $(KERNEL_ZIMAGE_DTB) $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/kernel.bin
+	mkdir -p $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)
+	cp $(EMMC_IMAGE) $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)
+	cp $(TARGET_FILES)/splash-images/ni-splash.bmp $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/splash.bin
+	cp $(KERNEL_ZIMAGE_DTB) $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/kernel.bin
 	$(CD) $(ROOTFS); \
-		tar -cvf $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/rootfs.tar -C $(ROOTFS) . >/dev/null 2>&1; \
-		bzip2 $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/rootfs.tar
-	echo $(IMAGE_PREFIX) > $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/imageversion
-	$(CD) $(IMAGE_BUILD_TMP); \
+		tar -cvf $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/rootfs.tar -C $(ROOTFS) . >/dev/null 2>&1; \
+		bzip2 $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/rootfs.tar
+	echo $(IMAGE_PREFIX) > $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/imageversion
+	$(CD) $(IMAGE_BUILD_DIR); \
 		zip -r $(IMAGE_DIR)/$(IMAGE_NAME)_multi_usb.zip $(IMAGE_SUBDIR)/*
-	rm -rf $(IMAGE_BUILD_TMP)
+	rm -rf $(IMAGE_BUILD_DIR)
 
 # -----------------------------------------------------------------------------
 
 # hd60, hd61
 flash-image-hd6x: IMAGE_DATE=$(shell cat $(ROOTFS)/.version | grep "^version=" | cut -d= -f2 | cut -c 5-)
 flash-image-hd6x: | $(IMAGE_DIR)
-	rm -rf $(IMAGE_BUILD_TMP)
-	mkdir -p $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)
-	cp $(KERNEL_UIMAGE) $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/uImage
+	rm -rf $(IMAGE_BUILD_DIR)
+	mkdir -p $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)
+	cp $(KERNEL_UIMAGE) $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/uImage
 	$(CD) $(ROOTFS); \
-		tar -cvf $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/rootfs.tar -C $(ROOTFS) . >/dev/null 2>&1; \
-		bzip2 $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/rootfs.tar
+		tar -cvf $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/rootfs.tar -C $(ROOTFS) . >/dev/null 2>&1; \
+		bzip2 $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/rootfs.tar
 	# Create minimal image
-	$(CD) $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR); \
+	$(CD) $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR); \
 		tar -czf $(IMAGE_DIR)/$(IMAGE_NAME).tgz uImage rootfs.tar.bz2
 	echo $(IMAGE_SITE)/$(IMAGE_NAME).tgz $(IMAGE_TYPE)$(IMAGE_VER)$(IMAGE_DATE) `md5sum $(IMAGE_DIR)/$(IMAGE_NAME).tgz | cut -c1-32` $(IMAGE_DESC) $(IMAGE_VERSION) >> $(IMAGE_DIR)/$(IMAGE_MD5FILE)
-	rm -rf $(IMAGE_BUILD_TMP)
+	rm -rf $(IMAGE_BUILD_DIR)
 
 # -----------------------------------------------------------------------------
 
@@ -240,47 +240,47 @@ flash-image-hd6x-multi:
 # armbox vu+
 flash-image-vuplus: IMAGE_DATE=$(shell cat $(ROOTFS)/.version | grep "^version=" | cut -d= -f2 | cut -c 5-)
 flash-image-vuplus: | $(IMAGE_DIR)
-	rm -rf $(IMAGE_BUILD_TMP)
-	mkdir -p $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)
-	cp $(KERNEL_ZIMAGE) $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/kernel_auto.bin
+	rm -rf $(IMAGE_BUILD_DIR)
+	mkdir -p $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)
+	cp $(KERNEL_ZIMAGE) $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/kernel_auto.bin
 	$(CD) $(ROOTFS); \
-		tar -cvf $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/rootfs.tar -C $(ROOTFS) . >/dev/null 2>&1; \
-		bzip2 $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/rootfs.tar
+		tar -cvf $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/rootfs.tar -C $(ROOTFS) . >/dev/null 2>&1; \
+		bzip2 $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/rootfs.tar
 	# Create minimal image
-	$(CD) $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR); \
+	$(CD) $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR); \
 		tar -czf $(IMAGE_DIR)/$(IMAGE_NAME).tgz kernel_auto.bin rootfs.tar.bz2
 	echo $(IMAGE_SITE)/$(IMAGE_NAME).tgz $(IMAGE_TYPE)$(IMAGE_VER)$(IMAGE_DATE) `md5sum $(IMAGE_DIR)/$(IMAGE_NAME).tgz | cut -c1-32` $(IMAGE_DESC) $(IMAGE_VERSION) >> $(IMAGE_DIR)/$(IMAGE_MD5FILE)
-	rm -rf $(IMAGE_BUILD_TMP)
+	rm -rf $(IMAGE_BUILD_DIR)
 
 flash-image-vuplus-multi: vmlinuz-initrd
 flash-image-vuplus-multi: | $(IMAGE_DIR)
-	rm -rf $(IMAGE_BUILD_TMP)
-	mkdir -p $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)
-	cp $(TARGET_FILES)/splash-images/ni-splash.bmp $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/splash_auto.bin
-	cp $(BUILD_DIR)/$(VMLINUZ-INITRD) $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/initrd_auto.bin
-	echo Dummy for update. > $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/kernel_auto.bin
-	cp $(KERNEL_ZIMAGE) $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/kernel1_auto.bin
-	cp $(KERNEL_ZIMAGE) $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/kernel2_auto.bin
-	cp $(KERNEL_ZIMAGE) $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/kernel3_auto.bin
-	cp $(KERNEL_ZIMAGE) $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/kernel4_auto.bin
-	echo Dummy for update. > $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/rootfs.tar.bz2
+	rm -rf $(IMAGE_BUILD_DIR)
+	mkdir -p $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)
+	cp $(TARGET_FILES)/splash-images/ni-splash.bmp $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/splash_auto.bin
+	cp $(BUILD_DIR)/$(VMLINUZ-INITRD) $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/initrd_auto.bin
+	echo Dummy for update. > $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/kernel_auto.bin
+	cp $(KERNEL_ZIMAGE) $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/kernel1_auto.bin
+	cp $(KERNEL_ZIMAGE) $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/kernel2_auto.bin
+	cp $(KERNEL_ZIMAGE) $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/kernel3_auto.bin
+	cp $(KERNEL_ZIMAGE) $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/kernel4_auto.bin
+	echo Dummy for update. > $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/rootfs.tar.bz2
 	$(CD) $(ROOTFS); \
-		tar -cvf $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/rootfs1.tar -C $(ROOTFS) . >/dev/null 2>&1; \
-		bzip2 $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/rootfs1.tar
-	echo Dummy for update. > $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/rootfs2.tar.bz2
-	echo Dummy for update. > $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/rootfs3.tar.bz2
-	echo Dummy for update. > $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/rootfs4.tar.bz2
+		tar -cvf $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/rootfs1.tar -C $(ROOTFS) . >/dev/null 2>&1; \
+		bzip2 $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/rootfs1.tar
+	echo Dummy for update. > $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/rootfs2.tar.bz2
+	echo Dummy for update. > $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/rootfs3.tar.bz2
+	echo Dummy for update. > $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/rootfs4.tar.bz2
 ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vuzero4k vuuno4k))
-	echo This file forces the update. > $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/force.update
+	echo This file forces the update. > $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/force.update
 else
-	echo This file forces a reboot after the update. > $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/reboot.update
+	echo This file forces a reboot after the update. > $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/reboot.update
 endif
-	echo This file forces creating partitions. > $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/mkpart.update
-	echo $(IMAGE_PREFIX) > $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/imageversion
+	echo This file forces creating partitions. > $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/mkpart.update
+	echo $(IMAGE_PREFIX) > $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/imageversion
 	# Create final USB-image
-	$(CD) $(IMAGE_BUILD_TMP); \
+	$(CD) $(IMAGE_BUILD_DIR); \
 		zip -r $(IMAGE_DIR)/$(IMAGE_NAME)_multi_usb.zip $(IMAGE_SUBDIR)/*
-	rm -rf $(IMAGE_BUILD_TMP)
+	rm -rf $(IMAGE_BUILD_DIR)
 
 # -----------------------------------------------------------------------------
 

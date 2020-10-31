@@ -5,7 +5,7 @@
 
 ifeq ($(BOXMODEL), nevis)
   KERNEL_VER    = 2.6.34.13
-  KERNEL_TMP    = linux-$(KERNEL_VER)
+  KERNEL_DIR    = linux-$(KERNEL_VER)
   KERNEL_SOURCE = git
   KERNEL_SITE   = $(EMPTY)
 
@@ -14,7 +14,7 @@ ifeq ($(BOXMODEL), nevis)
 
 else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), apollo shiner kronos kronos_v2))
   KERNEL_VER    = 3.10.93
-  KERNEL_TMP    = linux-$(KERNEL_VER)
+  KERNEL_DIR    = linux-$(KERNEL_VER)
   KERNEL_SOURCE = git
   KERNEL_SITE   = $(EMPTY)
 
@@ -29,7 +29,7 @@ else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), apollo shiner kronos kronos_v2))
 
 else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7))
   KERNEL_VER    = 4.10.12
-  KERNEL_TMP    = linux-$(KERNEL_VER)
+  KERNEL_DIR    = linux-$(KERNEL_VER)
   KERNEL_SOURCE = linux-$(KERNEL_VER)-arm.tar.gz
   KERNEL_SITE   = http://downloads.mutant-digital.net
 
@@ -42,7 +42,7 @@ else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7))
 else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd60))
   KERNEL_VER    = 4.4.35
   KERNEL_DATE   = 20200219
-  KERNEL_TMP    = linux-$(KERNEL_VER)
+  KERNEL_DIR    = linux-$(KERNEL_VER)
   KERNEL_SOURCE = linux-$(KERNEL_VER)-$(KERNEL_DATE)-arm.tar.gz
   KERNEL_SITE   = http://source.mynonpublic.com/gfutures
 
@@ -55,7 +55,7 @@ else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd60))
 else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd61))
   KERNEL_VER    = 4.4.35
   KERNEL_DATE   = 20181228
-  KERNEL_TMP    = linux-$(KERNEL_VER)
+  KERNEL_DIR    = linux-$(KERNEL_VER)
   KERNEL_SOURCE = linux-$(KERNEL_VER)-$(KERNEL_DATE)-arm.tar.gz
   KERNEL_SITE   = http://source.mynonpublic.com/gfutures
 
@@ -67,7 +67,7 @@ else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd61))
 
 else ifeq ($(BOXMODEL), vusolo4k)
   KERNEL_VER    = 3.14.28-1.8
-  KERNEL_TMP    = linux
+  KERNEL_DIR    = linux
   KERNEL_SOURCE = stblinux-3.14-1.8.tar.bz2
   KERNEL_SITE   = http://archive.vuplus.com/download/kernel
 
@@ -83,7 +83,7 @@ else ifeq ($(BOXMODEL), vusolo4k)
 
 else ifeq ($(BOXMODEL), vuduo4k)
   KERNEL_VER    = 4.1.45-1.17
-  KERNEL_TMP    = linux
+  KERNEL_DIR    = linux
   KERNEL_SOURCE = stblinux-4.1-1.17.tar.bz2
   KERNEL_SITE   = http://archive.vuplus.com/download/kernel
 
@@ -99,7 +99,7 @@ else ifeq ($(BOXMODEL), vuduo4k)
 
 else ifeq ($(BOXMODEL), vuduo4kse)
   KERNEL_VER    = 4.1.45-1.17
-  KERNEL_TMP    = linux
+  KERNEL_DIR    = linux
   KERNEL_SOURCE = stblinux-4.1-1.17.tar.bz2
   KERNEL_SITE   = http://archive.vuplus.com/download/kernel
 
@@ -115,7 +115,7 @@ else ifeq ($(BOXMODEL), vuduo4kse)
 
 else ifeq ($(BOXMODEL), vuultimo4k)
   KERNEL_VER    = 3.14.28-1.12
-  KERNEL_TMP    = linux
+  KERNEL_DIR    = linux
   KERNEL_SOURCE = stblinux-3.14-1.12.tar.bz2
   KERNEL_SITE   = http://archive.vuplus.com/download/kernel
 
@@ -131,7 +131,7 @@ else ifeq ($(BOXMODEL), vuultimo4k)
 
 else ifeq ($(BOXMODEL), vuzero4k)
   KERNEL_VER    = 4.1.20-1.9
-  KERNEL_TMP    = linux
+  KERNEL_DIR    = linux
   KERNEL_SOURCE = stblinux-4.1-1.9.tar.bz2
   KERNEL_SITE   = http://archive.vuplus.com/download/kernel
 
@@ -147,7 +147,7 @@ else ifeq ($(BOXMODEL), vuzero4k)
 
 else ifeq ($(BOXMODEL), vuuno4k)
   KERNEL_VER    = 3.14.28-1.12
-  KERNEL_TMP    = linux
+  KERNEL_DIR    = linux
   KERNEL_SOURCE = stblinux-3.14-1.12.tar.bz2
   KERNEL_SITE   = http://archive.vuplus.com/download/kernel
 
@@ -163,7 +163,7 @@ else ifeq ($(BOXMODEL), vuuno4k)
 
 else ifeq ($(BOXMODEL), vuuno4kse)
   KERNEL_VER    = 4.1.20-1.9
-  KERNEL_TMP    = linux
+  KERNEL_DIR    = linux
   KERNEL_SOURCE = stblinux-4.1-1.9.tar.bz2
   KERNEL_SITE   = http://archive.vuplus.com/download/kernel
 
@@ -179,7 +179,7 @@ else ifeq ($(BOXMODEL), vuuno4kse)
 
 else ifeq ($(BOXMODEL), vuduo)
   KERNEL_VER    = 3.9.6
-  KERNEL_TMP    = linux
+  KERNEL_DIR    = linux
   KERNEL_SOURCE = stblinux-$(KERNEL_VER).tar.bz2
   KERNEL_SITE   = http://archive.vuplus.com/download/kernel
 
@@ -221,7 +221,7 @@ KERNEL_MAKEVARS = \
 # Compatibility variables
 KERNEL_MAKEVARS += \
 	KVER=$(KERNEL_VER) \
-	KSRC=$(BUILD_DIR)/$(KERNEL_TMP)
+	KSRC=$(BUILD_DIR)/$(KERNEL_DIR)
 
 ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vuduo))
   KERNEL_IMAGE = vmlinux

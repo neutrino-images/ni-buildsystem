@@ -13,7 +13,7 @@ libs-static: $(LIBS-STATIC)
 # -----------------------------------------------------------------------------
 
 CORTEX-STRINGS_VER    = 48fd30c
-CORTEX-STRINGS_TMP    = cortex-strings-$(CORTEX-STRINGS_VER)
+CORTEX-STRINGS_DIR    = cortex-strings-$(CORTEX-STRINGS_VER)
 CORTEX-STRINGS_SOURCE = cortex-strings-$(CORTEX-STRINGS_VER).tar.bz2
 CORTEX-STRINGS_SITE   = http://git.linaro.org/git-ro/toolchain/cortex-strings.git
 
@@ -24,9 +24,9 @@ CORTEX-STRINGS_CONF   = $(if $(filter $(BOXSERIES), hd5x hd6x vusolo4k vuduo4k v
 
 cortex-strings: $(STATIC_LIB_DIR)/libcortex-strings.la
 $(STATIC_LIB_DIR)/libcortex-strings.la: $(DL_DIR)/$(CORTEX-STRINGS_SOURCE) | $(STATIC_DIR)
-	$(REMOVE)/$(CORTEX-STRINGS_TMP)
+	$(REMOVE)/$(CORTEX-STRINGS_DIR)
 	$(UNTAR)/$(CORTEX-STRINGS_SOURCE)
-	$(CHDIR)/$(CORTEX-STRINGS_TMP); \
+	$(CHDIR)/$(CORTEX-STRINGS_DIR); \
 		./autogen.sh; \
 		CFLAGS="-pipe -O2 $(TARGET_DEBUGGING) $(CXX11_ABI) -I$(TARGET_INCLUDE_DIR)" \
 		CPPFLAGS="-pipe -O2 $(TARGET_DEBUGGING) $(CXX11_ABI) -I$(TARGET_INCLUDE_DIR)" \
@@ -42,7 +42,7 @@ $(STATIC_LIB_DIR)/libcortex-strings.la: $(DL_DIR)/$(CORTEX-STRINGS_SOURCE) | $(S
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(STATIC_DIR)
 	$(REWRITE_LIBTOOL_STATIC)/libcortex-strings.la
-	$(REMOVE)/$(CORTEX-STRINGS_TMP)
+	$(REMOVE)/$(CORTEX-STRINGS_DIR)
 
 # -----------------------------------------------------------------------------
 

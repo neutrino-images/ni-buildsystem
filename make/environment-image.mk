@@ -63,7 +63,7 @@ endif
 IMAGE_SITE = $(NI-SERVER)/$(NI-SUBDIR)
 IMAGE_MD5FILE = $(IMAGE_TYPE_STRING)-$(IMAGE_SUFFIX).txt
 
-IMAGE_BUILD_TMP = $(BUILD_DIR)/image-build
+IMAGE_BUILD_DIR = $(BUILD_DIR)/image-build
 
 ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo))
   IMAGE_SUBDIR = $(subst vu,vuplus/,$(BOXMODEL))

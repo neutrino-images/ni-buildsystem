@@ -4,7 +4,7 @@
 # -----------------------------------------------------------------------------
 
 FFMPEG_VER    = 4.3
-FFMPEG_TMP    = ffmpeg-$(FFMPEG_VER)
+FFMPEG_DIR    = ffmpeg-$(FFMPEG_VER)
 FFMPEG_SOURCE = ffmpeg-$(FFMPEG_VER).tar.xz
 FFMPEG_SITE   = http://www.ffmpeg.org/releases
 
@@ -343,13 +343,13 @@ endif
 # -----------------------------------------------------------------------------
 
 ffmpeg: $(FFMPEG_DEPS) $(DL_DIR)/$(FFMPEG_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(FFMPEG_TMP)
+	$(REMOVE)/$(FFMPEG_DIR)
 	$(UNTAR)/$(FFMPEG_SOURCE)
 ifneq ($(FFMPEG_UNPATCHED), yes)
-	$(CHDIR)/$(FFMPEG_TMP); \
+	$(CHDIR)/$(FFMPEG_DIR); \
 		$(APPLY_PATCHES)
 endif
-	$(CHDIR)/$(FFMPEG_TMP); \
+	$(CHDIR)/$(FFMPEG_DIR); \
 		./configure \
 			$(FFMPEG_CONFIGURE_GENERIC) \
 			$(FFMPEG_CONFIGURE_PLATFORM) \
@@ -357,5 +357,5 @@ endif
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF_PC)
-	$(REMOVE)/$(FFMPEG_TMP)
+	$(REMOVE)/$(FFMPEG_DIR)
 	$(TOUCH)

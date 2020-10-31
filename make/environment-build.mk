@@ -71,10 +71,10 @@ PKG_NAME        = $(basename $(@F))
 PKG_UPPER       = $(call UPPERCASE,$(PKG_NAME))
 PKG_LOWER       = $(call LOWERCASE,$(PKG_NAME))
 PKG_VER         = $($(PKG_UPPER)_VER)
-PKG_TMP         = $($(PKG_UPPER)_TMP)
+PKG_DIR         = $($(PKG_UPPER)_DIR)
 PKG_SOURCE      = $($(PKG_UPPER)_SOURCE)
 PKG_SITE        = $($(PKG_UPPER)_SITE)
-PKG_BUILD_TMP   = $(BUILD_DIR)/$(PKG_TMP)
+PKG_BUILD_DIR   = $(BUILD_DIR)/$(PKG_DIR)
 PKG_PATCHES_DIR = $(PATCHES)/$(subst host-,,$(PKG_NAME))
 
 # -----------------------------------------------------------------------------

@@ -179,18 +179,18 @@ doscam-webif-skin:
 # -----------------------------------------------------------------------------
 
 NEUTRINO-MEDIATHEK_VER    = git
-NEUTRINO-MEDIATHEK_TMP    = mediathek.$(NEUTRINO-MEDIATHEK_VER)
+NEUTRINO-MEDIATHEK_DIR    = mediathek.$(NEUTRINO-MEDIATHEK_VER)
 NEUTRINO-MEDIATHEK_SOURCE = mediathek.$(NEUTRINO-MEDIATHEK_VER)
 NEUTRINO-MEDIATHEK_SITE   = https://github.com/neutrino-mediathek
 
 neutrino-mediathek: $(SHARE_PLUGINS) | $(TARGET_DIR)
-	$(REMOVE)/$(NEUTRINO-MEDIATHEK_TMP)
+	$(REMOVE)/$(NEUTRINO-MEDIATHEK_DIR)
 	$(GET-GIT-SOURCE) $(NEUTRINO-MEDIATHEK_SITE)/$(NEUTRINO-MEDIATHEK_SOURCE) $(DL_DIR)/$(NEUTRINO-MEDIATHEK_SOURCE)
 	$(CPDIR)/$(NEUTRINO-MEDIATHEK_SOURCE)
-	$(CHDIR)/$(NEUTRINO-MEDIATHEK_TMP); \
+	$(CHDIR)/$(NEUTRINO-MEDIATHEK_DIR); \
 		$(INSTALL_COPY) plugins/* $(SHARE_PLUGINS)/; \
 		$(INSTALL_COPY) share $(TARGET_DIR)
-	$(REMOVE)/$(NEUTRINO-MEDIATHEK_TMP)
+	$(REMOVE)/$(NEUTRINO-MEDIATHEK_DIR)
 	# temporarily use beta-version from our board
 	rm -rf $(SHARE_PLUGINS)/neutrino-mediathek*
 	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-lua/plugins/mediathek/* $(SHARE_PLUGINS)/
@@ -199,7 +199,7 @@ neutrino-mediathek: $(SHARE_PLUGINS) | $(TARGET_DIR)
 # -----------------------------------------------------------------------------
 
 LINKS_VER    = 2.20.2
-LINKS_TMP    = links-$(LINKS_VER)
+LINKS_DIR    = links-$(LINKS_VER)
 LINKS_SOURCE = links-$(LINKS_VER).tar.bz2
 LINKS_SITE   = http://links.twibright.com/download
 
@@ -221,14 +221,14 @@ else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), h7))
 endif
 
 links: $(LINKS_DEPS) $(DL_DIR)/$(LINKS_SOURCE) $(SHARE_PLUGINS) | $(TARGET_DIR)
-	$(REMOVE)/$(LINKS_TMP)
+	$(REMOVE)/$(LINKS_DIR)
 	$(UNTAR)/$(LINKS_SOURCE)
-	$(CHDIR)/$(LINKS_TMP)/intl; \
+	$(CHDIR)/$(LINKS_DIR)/intl; \
 		sed -i -e 's|^T_SAVE_HTML_OPTIONS,.*|T_SAVE_HTML_OPTIONS, "HTML-Optionen speichern",|' german.lng; \
 		echo "english" > index.txt; \
 		echo "german" >> index.txt; \
 		./gen-intl
-	$(CHDIR)/$(LINKS_TMP); \
+	$(CHDIR)/$(LINKS_DIR); \
 		$(call apply_patches, $(LINKS_PATCH)); \
 		autoreconf -vfi; \
 		$(CONFIGURE) \
@@ -250,7 +250,7 @@ links: $(LINKS_DEPS) $(DL_DIR)/$(LINKS_SOURCE) $(SHARE_PLUGINS) | $(TARGET_DIR)
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	mv -f $(TARGET_BIN_DIR)/links $(SHARE_PLUGINS)/links.so
 	$(INSTALL_COPY) $(TARGET_FILES)/links/* $(TARGET_DIR)/
-	$(REMOVE)/$(LINKS_TMP)
+	$(REMOVE)/$(LINKS_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------

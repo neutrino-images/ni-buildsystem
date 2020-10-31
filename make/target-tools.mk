@@ -4,7 +4,7 @@
 # -----------------------------------------------------------------------------
 
 BUSYBOX_VER    = 1.31.1
-BUSYBOX_TMP    = busybox-$(BUSYBOX_VER)
+BUSYBOX_DIR    = busybox-$(BUSYBOX_VER)
 BUSYBOX_SOURCE = busybox-$(BUSYBOX_VER).tar.bz2
 BUSYBOX_SITE   = https://busybox.net/downloads
 
@@ -38,7 +38,7 @@ BUSYBOX_MAKE_OPTS = \
 	EXTRA_LDFLAGS="$(TARGET_LDFLAGS)" \
 	CONFIG_PREFIX="$(TARGET_DIR)"
 
-BUSYBOX_BUILD_CONFIG = $(BUILD_DIR)/$(BUSYBOX_TMP)/.config
+BUSYBOX_BUILD_CONFIG = $(BUILD_DIR)/$(BUSYBOX_DIR)/.config
 
 define BUSYBOX_INSTALL_CONFIG
 	$(INSTALL_DATA) $(CONFIGS)/busybox-minimal.config $(BUSYBOX_BUILD_CONFIG)
@@ -110,23 +110,23 @@ define BUSYBOX_ADD_TO_SHELLS
 endef
 
 busybox: $(BUSYBOX_DEPS) $(DL_DIR)/$(BUSYBOX_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(BUSYBOX_TMP)
+	$(REMOVE)/$(BUSYBOX_DIR)
 	$(UNTAR)/$(BUSYBOX_SOURCE)
-	$(CHDIR)/$(BUSYBOX_TMP); \
+	$(CHDIR)/$(BUSYBOX_DIR); \
 		$(call apply_patches, $(BUSYBOX_PATCH))
 	$(BUSYBOX_INSTALL_CONFIG)
 	$(BUSYBOX_MODIFY_CONFIG)
-	$(CHDIR)/$(BUSYBOX_TMP); \
+	$(CHDIR)/$(BUSYBOX_DIR); \
 		$(BUSYBOX_MAKE_ENV) $(MAKE) $(BUSYBOX_MAKE_OPTS) busybox; \
 		$(BUSYBOX_MAKE_ENV) $(MAKE) $(BUSYBOX_MAKE_OPTS) install-noclobber
 	$(BUSYBOX_ADD_TO_SHELLS)
-	$(REMOVE)/$(BUSYBOX_TMP)
+	$(REMOVE)/$(BUSYBOX_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 OPENVPN_VER    = 2.4.9
-OPENVPN_TMP    = openvpn-$(OPENVPN_VER)
+OPENVPN_DIR    = openvpn-$(OPENVPN_VER)
 OPENVPN_SOURCE = openvpn-$(OPENVPN_VER).tar.xz
 OPENVPN_SITE   = http://build.openvpn.net/downloads/releases
 
@@ -136,9 +136,9 @@ $(DL_DIR)/$(OPENVPN_SOURCE):
 OPENVPN_DEPS   = lzo openssl
 
 openvpn: $(OPENVPN_DEPS) $(DL_DIR)/$(OPENVPN_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(OPENVPN_TMP)
+	$(REMOVE)/$(OPENVPN_DIR)
 	$(UNTAR)/$(OPENVPN_SOURCE)
-	$(CHDIR)/$(OPENVPN_TMP); \
+	$(CHDIR)/$(OPENVPN_DIR); \
 		$(CONFIGURE) \
 			IFCONFIG="/sbin/ifconfig" \
 			NETSTAT="/bin/netstat" \
@@ -159,13 +159,13 @@ openvpn: $(OPENVPN_DEPS) $(DL_DIR)/$(OPENVPN_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/$(OPENVPN_TMP)
+	$(REMOVE)/$(OPENVPN_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 OPENSSH_VER    = 8.3p1
-OPENSSH_TMP    = openssh-$(OPENSSH_VER)
+OPENSSH_DIR    = openssh-$(OPENSSH_VER)
 OPENSSH_SOURCE = openssh-$(OPENSSH_VER).tar.gz
 OPENSSH_SITE   = https://artfiles.org/openbsd/OpenSSH/portable
 
@@ -175,9 +175,9 @@ $(DL_DIR)/$(OPENSSH_SOURCE):
 OPENSSH_DEPS   = openssl zlib
 
 openssh: $(OPENSSH_DEPS) $(DL_DIR)/$(OPENSSH_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(OPENSSH_TMP)
+	$(REMOVE)/$(OPENSSH_DIR)
 	$(UNTAR)/$(OPENSSH_SOURCE)
-	$(CHDIR)/$(OPENSSH_TMP); \
+	$(CHDIR)/$(OPENSSH_DIR); \
 		export ac_cv_search_dlopen=no; \
 		./configure \
 			$(CONFIGURE_OPTS) \
@@ -201,13 +201,13 @@ openssh: $(OPENSSH_DEPS) $(DL_DIR)/$(OPENSSH_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/$(OPENSSH_TMP)
+	$(REMOVE)/$(OPENSSH_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 TZDATA_VER    = 2019b
-TZDATA_TMP    = tzdata$(TZDATA_VER)
+TZDATA_DIR    = tzdata$(TZDATA_VER)
 TZDATA_SOURCE = tzdata$(TZDATA_VER).tar.gz
 TZDATA_SITE   = ftp://ftp.iana.org/tz/releases
 
@@ -223,9 +223,9 @@ TZDATA_ZONELIST = \
 ETC_LOCALTIME = $(if $(filter $(PERSISTENT_VAR_PARTITION), yes),/var/etc/localtime,/etc/localtime)
 
 tzdata: $(TZDATA_DEPS) $(DL_DIR)/$(TZDATA_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(TZDATA_TMP)
-	$(MKDIR)/$(TZDATA_TMP)
-	$(CHDIR)/$(TZDATA_TMP); \
+	$(REMOVE)/$(TZDATA_DIR)
+	$(MKDIR)/$(TZDATA_DIR)
+	$(CHDIR)/$(TZDATA_DIR); \
 		tar -xf $(DL_DIR)/$(TZDATA_SOURCE); \
 		unset ${!LC_*}; LANG=POSIX; LC_ALL=POSIX; export LANG LC_ALL; \
 		$(HOST_ZIC) -d zoneinfo.tmp $(TZDATA_ZONELIST); \
@@ -243,13 +243,13 @@ tzdata: $(TZDATA_DEPS) $(DL_DIR)/$(TZDATA_SOURCE) | $(TARGET_DIR)
 		mv zoneinfo/ $(TARGET_SHARE_DIR)/
 	$(INSTALL_DATA) -D $(TARGET_FILES)/tzdata/timezone.xml $(TARGET_DIR)/etc/timezone.xml
 	$(INSTALL_DATA) $(TARGET_SHARE_DIR)/zoneinfo/CET $(TARGET_DIR)$(ETC_LOCALTIME)
-	$(REMOVE)/$(TZDATA_TMP)
+	$(REMOVE)/$(TZDATA_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 MTD-UTILS_VER    = 2.0.2
-MTD-UTILS_TMP    = mtd-utils-$(MTD-UTILS_VER)
+MTD-UTILS_DIR    = mtd-utils-$(MTD-UTILS_VER)
 MTD-UTILS_SOURCE = mtd-utils-$(MTD-UTILS_VER).tar.bz2
 MTD-UTILS_SITE   = ftp://ftp.infradead.org/pub/mtd-utils
 
@@ -259,9 +259,9 @@ $(DL_DIR)/$(MTD-UTILS_SOURCE):
 MTD-UTILS_DEPS   = zlib lzo e2fsprogs
 
 mtd-utils: $(MTD-UTILS_DEPS) $(DL_DIR)/$(MTD-UTILS_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(MTD-UTILS_TMP)
+	$(REMOVE)/$(MTD-UTILS_DIR)
 	$(UNTAR)/$(MTD-UTILS_SOURCE)
-	$(CHDIR)/$(MTD-UTILS_TMP); \
+	$(CHDIR)/$(MTD-UTILS_DIR); \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
 			--prefix= \
@@ -272,20 +272,20 @@ mtd-utils: $(MTD-UTILS_DEPS) $(DL_DIR)/$(MTD-UTILS_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE)
 ifeq ($(BOXSERIES), hd2)
-	$(INSTALL_EXEC) -D $(BUILD_DIR)/$(MTD-UTILS_TMP)/nanddump $(TARGET_DIR)/sbin
-	$(INSTALL_EXEC) -D $(BUILD_DIR)/$(MTD-UTILS_TMP)/nandtest $(TARGET_DIR)/sbin
-	$(INSTALL_EXEC) -D $(BUILD_DIR)/$(MTD-UTILS_TMP)/nandwrite $(TARGET_DIR)/sbin
-	$(INSTALL_EXEC) -D $(BUILD_DIR)/$(MTD-UTILS_TMP)/mtd_debug $(TARGET_DIR)/sbin
-	$(INSTALL_EXEC) -D $(BUILD_DIR)/$(MTD-UTILS_TMP)/mkfs.jffs2 $(TARGET_DIR)/sbin
+	$(INSTALL_EXEC) -D $(BUILD_DIR)/$(MTD-UTILS_DIR)/nanddump $(TARGET_DIR)/sbin
+	$(INSTALL_EXEC) -D $(BUILD_DIR)/$(MTD-UTILS_DIR)/nandtest $(TARGET_DIR)/sbin
+	$(INSTALL_EXEC) -D $(BUILD_DIR)/$(MTD-UTILS_DIR)/nandwrite $(TARGET_DIR)/sbin
+	$(INSTALL_EXEC) -D $(BUILD_DIR)/$(MTD-UTILS_DIR)/mtd_debug $(TARGET_DIR)/sbin
+	$(INSTALL_EXEC) -D $(BUILD_DIR)/$(MTD-UTILS_DIR)/mkfs.jffs2 $(TARGET_DIR)/sbin
 endif
-	$(INSTALL_EXEC) -D $(BUILD_DIR)/$(MTD-UTILS_TMP)/flash_erase $(TARGET_DIR)/sbin
-	$(REMOVE)/$(MTD-UTILS_TMP)
+	$(INSTALL_EXEC) -D $(BUILD_DIR)/$(MTD-UTILS_DIR)/flash_erase $(TARGET_DIR)/sbin
+	$(REMOVE)/$(MTD-UTILS_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 IPERF_VER    = 3.1.3
-IPERF_TMP    = iperf-$(IPERF_VER)
+IPERF_DIR    = iperf-$(IPERF_VER)
 IPERF_SOURCE = iperf-$(IPERF_VER)-source.tar.gz
 IPERF_SITE   = https://iperf.fr/download/source
 
@@ -295,9 +295,9 @@ $(DL_DIR)/$(IPERF_SOURCE):
 IPERF_PATCH  = iperf-disable-profiling.patch
 
 iperf: $(DL_DIR)/$(IPERF_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(IPERF_TMP)
+	$(REMOVE)/$(IPERF_DIR)
 	$(UNTAR)/$(IPERF_SOURCE)
-	$(CHDIR)/$(IPERF_TMP); \
+	$(CHDIR)/$(IPERF_DIR); \
 		$(call apply_patches, $(IPERF_PATCH)); \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
@@ -306,13 +306,13 @@ iperf: $(DL_DIR)/$(IPERF_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/$(IPERF_TMP)
+	$(REMOVE)/$(IPERF_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 PARTED_VER    = 3.2
-PARTED_TMP    = parted-$(PARTED_VER)
+PARTED_DIR    = parted-$(PARTED_VER)
 PARTED_SOURCE = parted-$(PARTED_VER).tar.xz
 PARTED_SITE   = https://ftp.gnu.org/gnu/parted
 
@@ -326,9 +326,9 @@ PARTED_PATCH += parted-iconv.patch
 PARTED_DEPS   = e2fsprogs
 
 parted: $(PARTED_DEPS) $(DL_DIR)/$(PARTED_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PARTED_TMP)
+	$(REMOVE)/$(PARTED_DIR)
 	$(UNTAR)/$(PARTED_SOURCE)
-	$(CHDIR)/$(PARTED_TMP); \
+	$(CHDIR)/$(PARTED_DIR); \
 		$(call apply_patches, $(PARTED_PATCH)); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
@@ -349,13 +349,13 @@ parted: $(PARTED_DEPS) $(DL_DIR)/$(PARTED_SOURCE) | $(TARGET_DIR)
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL_LA)
 	$(REWRITE_PKGCONF_PC)
-	$(REMOVE)/$(PARTED_TMP)
+	$(REMOVE)/$(PARTED_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 HDPARM_VER    = 9.58
-HDPARM_TMP    = hdparm-$(HDPARM_VER)
+HDPARM_DIR    = hdparm-$(HDPARM_VER)
 HDPARM_SOURCE = hdparm-$(HDPARM_VER).tar.gz
 HDPARM_SITE   = https://sourceforge.net/projects/hdparm/files/hdparm
 
@@ -363,19 +363,19 @@ $(DL_DIR)/$(HDPARM_SOURCE):
 	$(DOWNLOAD) $(HDPARM_SITE)/$(HDPARM_SOURCE)
 
 hdparm: $(DL_DIR)/$(HDPARM_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(HDPARM_TMP)
+	$(REMOVE)/$(HDPARM_DIR)
 	$(UNTAR)/$(HDPARM_SOURCE)
-	$(CHDIR)/$(HDPARM_TMP); \
+	$(CHDIR)/$(HDPARM_DIR); \
 		$(MAKE_ENV) \
 		$(MAKE); \
 		$(INSTALL_EXEC) -D hdparm $(TARGET_DIR)/sbin/hdparm
-	$(REMOVE)/$(HDPARM_TMP)
+	$(REMOVE)/$(HDPARM_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 HD-IDLE_VER    = 1.05
-HD-IDLE_TMP    = hd-idle
+HD-IDLE_DIR    = hd-idle
 HD-IDLE_SOURCE = hd-idle-$(HD-IDLE_VER).tgz
 HD-IDLE_SITE   = https://sourceforge.net/projects/hd-idle/files
 
@@ -383,19 +383,19 @@ $(DL_DIR)/$(HD-IDLE_SOURCE):
 	$(DOWNLOAD) $(HD-IDLE_SITE)/$(HD-IDLE_SOURCE)
 
 hd-idle: $(DL_DIR)/$(HD-IDLE_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(HD-IDLE_TMP)
+	$(REMOVE)/$(HD-IDLE_DIR)
 	$(UNTAR)/$(HD-IDLE_SOURCE)
-	$(CHDIR)/$(HD-IDLE_TMP); \
+	$(CHDIR)/$(HD-IDLE_DIR); \
 		$(MAKE_ENV) \
 		$(MAKE); \
 		$(INSTALL_EXEC) -D hd-idle $(TARGET_DIR)/sbin/hd-idle
-	$(REMOVE)/$(HD-IDLE_TMP)
+	$(REMOVE)/$(HD-IDLE_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 COREUTILS_VER    = 8.30
-COREUTILS_TMP    = coreutils-$(COREUTILS_VER)
+COREUTILS_DIR    = coreutils-$(COREUTILS_VER)
 COREUTILS_SOURCE = coreutils-$(COREUTILS_VER).tar.xz
 COREUTILS_SITE   = https://ftp.gnu.org/gnu/coreutils
 
@@ -407,9 +407,9 @@ COREUTILS_PATCH  = coreutils-fix-build.patch
 COREUTILS_BIN    = touch
 
 coreutils: $(DL_DIR)/$(COREUTILS_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(COREUTILS_TMP)
+	$(REMOVE)/$(COREUTILS_DIR)
 	$(UNTAR)/$(COREUTILS_SOURCE)
-	$(CHDIR)/$(COREUTILS_TMP); \
+	$(CHDIR)/$(COREUTILS_DIR); \
 		$(call apply_patches, $(COREUTILS_PATCH)); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
@@ -431,14 +431,14 @@ coreutils: $(DL_DIR)/$(COREUTILS_SOURCE) | $(TARGET_DIR)
 		rm -f $(TARGET_DIR)/bin/$$bin; \
 		$(INSTALL_EXEC) $(TARGET_DIR)/bin.$(@F)/$$bin $(TARGET_DIR)/bin/$$bin; \
 	done
-	$(REMOVE)/$(COREUTILS_TMP) \
+	$(REMOVE)/$(COREUTILS_DIR) \
 		$(TARGET_DIR)/bin.$(@F)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 LESS_VER    = 530
-LESS_TMP    = less-$(LESS_VER)
+LESS_DIR    = less-$(LESS_VER)
 LESS_SOURCE = less-$(LESS_VER).tar.gz
 LESS_SITE   = http://www.greenwoodsoftware.com/less
 
@@ -448,9 +448,9 @@ $(DL_DIR)/$(LESS_SOURCE):
 LESS_DEPS   = ncurses
 
 less: $(LESS_DEPS) $(DL_DIR)/$(LESS_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(LESS_TMP)
+	$(REMOVE)/$(LESS_DIR)
 	$(UNTAR)/$(LESS_SOURCE)
-	$(CHDIR)/$(LESS_TMP); \
+	$(CHDIR)/$(LESS_DIR); \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
 			--prefix= \
@@ -458,13 +458,13 @@ less: $(LESS_DEPS) $(DL_DIR)/$(LESS_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/$(LESS_TMP)
+	$(REMOVE)/$(LESS_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 NTP_VER    = 4.2.8p15
-NTP_TMP    = ntp-$(NTP_VER)
+NTP_DIR    = ntp-$(NTP_VER)
 NTP_SOURCE = ntp-$(NTP_VER).tar.gz
 NTP_SITE   = https://www.eecis.udel.edu/~ntp/ntp_spool/ntp4/ntp-$(basename $(NTP_VER))
 
@@ -474,9 +474,9 @@ $(DL_DIR)/$(NTP_SOURCE):
 NTP_DEPS   = openssl
 
 ntp: $(NTP_DEPS) $(DL_DIR)/$(NTP_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(NTP_TMP)
+	$(REMOVE)/$(NTP_DIR)
 	$(UNTAR)/$(NTP_SOURCE)
-	$(CHDIR)/$(NTP_TMP); \
+	$(CHDIR)/$(NTP_DIR); \
 		$(APPLY_PATCHES); \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
@@ -490,13 +490,13 @@ ntp: $(NTP_DEPS) $(DL_DIR)/$(NTP_SOURCE) | $(TARGET_DIR)
 		$(MAKE); \
 		$(INSTALL_EXEC) -D ntpdate/ntpdate $(TARGET_DIR)/sbin/ntpdate
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/ntpdate.init $(TARGET_DIR)/etc/init.d/ntpdate
-	$(REMOVE)/$(NTP_TMP)
+	$(REMOVE)/$(NTP_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 DJMOUNT_VER    = 0.71
-DJMOUNT_TMP    = djmount-$(DJMOUNT_VER)
+DJMOUNT_DIR    = djmount-$(DJMOUNT_VER)
 DJMOUNT_SOURCE = djmount-$(DJMOUNT_VER).tar.gz
 DJMOUNT_SITE   = https://sourceforge.net/projects/djmount/files/djmount/$(DJMOUNT_VER)
 
@@ -515,9 +515,9 @@ DJMOUNT_PATCH += djmount-support-seeking-in-large-2gb-files.patch
 DJMOUNT_DEPS   = libfuse
 
 djmount: $(DJMOUNT_DEPS) $(DL_DIR)/$(DJMOUNT_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(DJMOUNT_TMP)
+	$(REMOVE)/$(DJMOUNT_DIR)
 	$(UNTAR)/$(DJMOUNT_SOURCE)
-	$(CHDIR)/$(DJMOUNT_TMP); \
+	$(CHDIR)/$(DJMOUNT_DIR); \
 		$(call apply_patches, $(DJMOUNT_PATCH)); \
 		touch libupnp/config.aux/config.rpath; \
 		autoreconf -fi; \
@@ -529,13 +529,13 @@ djmount: $(DJMOUNT_DEPS) $(DL_DIR)/$(DJMOUNT_SOURCE) | $(TARGET_DIR)
 		make install DESTDIR=$(TARGET_DIR)
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/djmount.init $(TARGET_DIR)/etc/init.d/djmount
 	$(UPDATE-RC.D) djmount defaults 75 25
-	$(REMOVE)/$(DJMOUNT_TMP)
+	$(REMOVE)/$(DJMOUNT_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 USHARE_VER    = 1.1a
-USHARE_TMP    = ushare-uShare_v$(USHARE_VER)
+USHARE_DIR    = ushare-uShare_v$(USHARE_VER)
 USHARE_SOURCE = uShare_v$(USHARE_VER).tar.gz
 USHARE_SITE   = https://github.com/GeeXboX/ushare/archive
 
@@ -549,9 +549,9 @@ USHARE_PATCH += ushare-disable-iconv-check.patch
 USHARE_DEPS   = libupnp
 
 ushare: $(USHARE_DEPS) $(DL_DIR)/$(USHARE_SOURCE)| $(TARGET_DIR)
-	$(REMOVE)/$(USHARE_TMP)
+	$(REMOVE)/$(USHARE_DIR)
 	$(UNTAR)/$(USHARE_SOURCE)
-	$(CHDIR)/$(USHARE_TMP); \
+	$(CHDIR)/$(USHARE_DIR); \
 		$(call apply_patches, $(USHARE_PATCH)); \
 		$(MAKE_ENV) \
 		./configure \
@@ -570,13 +570,13 @@ ushare: $(USHARE_DEPS) $(DL_DIR)/$(USHARE_SOURCE)| $(TARGET_DIR)
 	sed -i 's|%(BOXTYPE)|$(BOXTYPE)|; s|%(BOXMODEL)|$(BOXMODEL)|' $(TARGET_DIR)/etc/ushare.conf
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/ushare.init $(TARGET_DIR)/etc/init.d/ushare
 	$(UPDATE-RC.D) ushare defaults 75 25
-	$(REMOVE)/$(USHARE_TMP)
+	$(REMOVE)/$(USHARE_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 SMARTMONTOOLS_VER    = 7.1
-SMARTMONTOOLS_TMP    = smartmontools-$(SMARTMONTOOLS_VER)
+SMARTMONTOOLS_DIR    = smartmontools-$(SMARTMONTOOLS_VER)
 SMARTMONTOOLS_SOURCE = smartmontools-$(SMARTMONTOOLS_VER).tar.gz
 SMARTMONTOOLS_SITE   = https://sourceforge.net/projects/smartmontools/files/smartmontools/$(SMARTMONTOOLS_VER)
 
@@ -584,22 +584,22 @@ $(DL_DIR)/$(SMARTMONTOOLS_SOURCE):
 	$(DOWNLOAD) $(SMARTMONTOOLS_SITE)/$(SMARTMONTOOLS_SOURCE)
 
 smartmontools: $(DL_DIR)/$(SMARTMONTOOLS_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(SMARTMONTOOLS_TMP)
+	$(REMOVE)/$(SMARTMONTOOLS_DIR)
 	$(UNTAR)/$(SMARTMONTOOLS_SOURCE)
-	$(CHDIR)/$(SMARTMONTOOLS_TMP); \
+	$(CHDIR)/$(SMARTMONTOOLS_DIR); \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
 			--prefix= \
 			; \
 		$(MAKE); \
 		$(INSTALL_EXEC) -D smartctl $(TARGET_DIR)/sbin/smartctl
-	$(REMOVE)/$(SMARTMONTOOLS_TMP)
+	$(REMOVE)/$(SMARTMONTOOLS_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 INADYN_VER    = 2.6
-INADYN_TMP    = inadyn-$(INADYN_VER)
+INADYN_DIR    = inadyn-$(INADYN_VER)
 INADYN_SOURCE = inadyn-$(INADYN_VER).tar.xz
 INADYN_SITE   = https://github.com/troglobit/inadyn/releases/download/v$(INADYN_VER)
 
@@ -609,9 +609,9 @@ $(DL_DIR)/$(INADYN_SOURCE):
 INADYN_DEPS   = openssl confuse libite
 
 inadyn: $(INADYN_DEPS) $(DL_DIR)/$(INADYN_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(INADYN_TMP)
+	$(REMOVE)/$(INADYN_DIR)
 	$(UNTAR)/$(INADYN_SOURCE)
-	$(CHDIR)/$(INADYN_TMP); \
+	$(CHDIR)/$(INADYN_DIR); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--prefix= \
@@ -627,13 +627,13 @@ inadyn: $(INADYN_DEPS) $(DL_DIR)/$(INADYN_SOURCE) | $(TARGET_DIR)
 	ln -sf /var/etc/inadyn.conf $(TARGET_DIR)/etc/inadyn.conf
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/inadyn.init $(TARGET_DIR)/etc/init.d/inadyn
 	$(UPDATE-RC.D) inadyn defaults 75 25
-	$(REMOVE)/$(INADYN_TMP)
+	$(REMOVE)/$(INADYN_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 VSFTPD_VER    = 3.0.3
-VSFTPD_TMP    = vsftpd-$(VSFTPD_VER)
+VSFTPD_DIR    = vsftpd-$(VSFTPD_VER)
 VSFTPD_SOURCE = vsftpd-$(VSFTPD_VER).tar.gz
 VSFTPD_SITE   = https://security.appspot.com/downloads
 
@@ -648,9 +648,9 @@ VSFTPD_PATCH += vsftpd-login-blank-password.patch
 VSFTPD_DEPS   = openssl
 
 vsftpd: $(VSFTPD_DEPS) $(DL_DIR)/$(VSFTPD_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(VSFTPD_TMP)
+	$(REMOVE)/$(VSFTPD_DIR)
 	$(UNTAR)/$(VSFTPD_SOURCE)
-	$(CHDIR)/$(VSFTPD_TMP); \
+	$(CHDIR)/$(VSFTPD_DIR); \
 		$(call apply_patches, $(VSFTPD_PATCH)); \
 		sed -i -e 's/.*VSF_BUILD_PAM/#undef VSF_BUILD_PAM/' builddefs.h; \
 		sed -i -e 's/.*VSF_BUILD_SSL/#define VSF_BUILD_SSL/' builddefs.h; \
@@ -662,13 +662,13 @@ vsftpd: $(VSFTPD_DEPS) $(DL_DIR)/$(VSFTPD_SOURCE) | $(TARGET_DIR)
 	$(INSTALL_DATA) -D $(TARGET_FILES)/configs/vsftpd.chroot_list $(TARGET_DIR)/etc/vsftpd.chroot_list
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/vsftpd.init $(TARGET_DIR)/etc/init.d/vsftpd
 	$(UPDATE-RC.D) vsftpd defaults 75 25
-	$(REMOVE)/$(VSFTPD_TMP)
+	$(REMOVE)/$(VSFTPD_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 PROCPS-NG_VER    = 3.3.16
-PROCPS-NG_TMP    = procps-ng-$(PROCPS-NG_VER)
+PROCPS-NG_DIR    = procps-ng-$(PROCPS-NG_VER)
 PROCPS-NG_SOURCE = procps-ng-$(PROCPS-NG_VER).tar.xz
 PROCPS-NG_SITE   = http://sourceforge.net/projects/procps-ng/files/Production
 
@@ -682,9 +682,9 @@ PROCPS-NG_DEPS   = ncurses
 PROCPS-NG_BIN    = ps top
 
 procps-ng: $(PROCPS-NG_DEPS) $(DL_DIR)/$(PROCPS-NG_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PROCPS-NG_TMP)
+	$(REMOVE)/$(PROCPS-NG_DIR)
 	$(UNTAR)/$(PROCPS-NG_SOURCE)
-	$(CHDIR)/$(PROCPS-NG_TMP); \
+	$(CHDIR)/$(PROCPS-NG_DIR); \
 		$(call apply_patches, $(PROCPS-NG_PATCH)); \
 		export ac_cv_func_malloc_0_nonnull=yes; \
 		export ac_cv_func_realloc_0_nonnull=yes; \
@@ -705,7 +705,7 @@ procps-ng: $(PROCPS-NG_DEPS) $(DL_DIR)/$(PROCPS-NG_SOURCE) | $(TARGET_DIR)
 	done
 	$(REWRITE_LIBTOOL_LA)
 	$(REWRITE_PKGCONF_PC)
-	$(REMOVE)/$(PROCPS-NG_TMP) \
+	$(REMOVE)/$(PROCPS-NG_DIR) \
 		$(TARGET_DIR)/bin.$(@F) \
 		$(TARGET_DIR)/sbin.$(@F)
 	$(TOUCH)
@@ -713,7 +713,7 @@ procps-ng: $(PROCPS-NG_DEPS) $(DL_DIR)/$(PROCPS-NG_SOURCE) | $(TARGET_DIR)
 # -----------------------------------------------------------------------------
 
 NANO_VER    = 4.7
-NANO_TMP    = nano-$(NANO_VER)
+NANO_DIR    = nano-$(NANO_VER)
 NANO_SOURCE = nano-$(NANO_VER).tar.gz
 NANO_SITE   = https://www.nano-editor.org/dist/v$(basename $(NANO_VER))
 
@@ -723,9 +723,9 @@ $(DL_DIR)/$(NANO_SOURCE):
 NANO_DEPS   = ncurses
 
 nano: $(NANO_DEPS) $(DL_DIR)/$(NANO_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(NANO_TMP)
+	$(REMOVE)/$(NANO_DIR)
 	$(UNTAR)/$(NANO_SOURCE)
-	$(CHDIR)/$(NANO_TMP); \
+	$(CHDIR)/$(NANO_DIR); \
 		export ac_cv_prog_NCURSESW_CONFIG=false; \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
@@ -736,13 +736,13 @@ nano: $(NANO_DEPS) $(DL_DIR)/$(NANO_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE) CURSES_LIB="-lncurses"; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/$(NANO_TMP)
+	$(REMOVE)/$(NANO_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 MINICOM_VER    = 2.7.1
-MINICOM_TMP    = minicom-$(MINICOM_VER)
+MINICOM_DIR    = minicom-$(MINICOM_VER)
 MINICOM_SOURCE = minicom-$(MINICOM_VER).tar.gz
 MINICOM_SITE   = http://fossies.org/linux/misc
 
@@ -754,9 +754,9 @@ MINICOM_PATCH  = minicom-fix-h-v-return-value-is-not-0.patch
 MINICOM_DEPS   = ncurses
 
 minicom: $(MINICOM_DEPS) $(DL_DIR)/$(MINICOM_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(MINICOM_TMP)
+	$(REMOVE)/$(MINICOM_DIR)
 	$(UNTAR)/$(MINICOM_SOURCE)
-	$(CHDIR)/$(MINICOM_TMP); \
+	$(CHDIR)/$(MINICOM_DIR); \
 		$(call apply_patches, $(MINICOM_PATCH)); \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
@@ -765,13 +765,13 @@ minicom: $(MINICOM_DEPS) $(DL_DIR)/$(MINICOM_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		$(INSTALL_EXEC) src/minicom $(TARGET_DIR)/bin
-	$(REMOVE)/$(MINICOM_TMP)
+	$(REMOVE)/$(MINICOM_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 BASH_VER    = 5.0
-BASH_TMP    = bash-$(BASH_VER)
+BASH_DIR    = bash-$(BASH_VER)
 BASH_SOURCE = bash-$(BASH_VER).tar.gz
 BASH_SITE   = http://ftp.gnu.org/gnu/bash
 
@@ -786,9 +786,9 @@ define BASH_ADD_TO_SHELLS
 endef
 
 bash: $(DL_DIR)/$(BASH_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(BASH_TMP)
+	$(REMOVE)/$(BASH_DIR)
 	$(UNTAR)/$(BASH_SOURCE)
-	$(CHDIR)/$(BASH_TMP); \
+	$(CHDIR)/$(BASH_DIR); \
 		$(call apply_patches, $(BASH_PATCH), 0); \
 		$(CONFIGURE) \
 			--prefix= \
@@ -799,7 +799,7 @@ bash: $(DL_DIR)/$(BASH_SOURCE) | $(TARGET_DIR)
 	$(REWRITE_PKGCONF_PC)
 	-rm $(addprefix $(TARGET_LIB_DIR)/bash/, loadables.h Makefile.inc)
 	$(BASH_ADD_TO_SHELLS)
-	$(REMOVE)/$(BASH_TMP)
+	$(REMOVE)/$(BASH_DIR)
 	$(TOUCH)
 
 
@@ -807,7 +807,7 @@ bash: $(DL_DIR)/$(BASH_SOURCE) | $(TARGET_DIR)
 
 # for coolstream: formatting ext4 failes with newer versions then 1.43.8
 E2FSPROGS_VER    = $(if $(filter $(BOXTYPE), coolstream),1.43.8,1.45.6)
-E2FSPROGS_TMP    = e2fsprogs-$(E2FSPROGS_VER)
+E2FSPROGS_DIR    = e2fsprogs-$(E2FSPROGS_VER)
 E2FSPROGS_SOURCE = e2fsprogs-$(E2FSPROGS_VER).tar.gz
 E2FSPROGS_SITE   = https://sourceforge.net/projects/e2fsprogs/files/e2fsprogs/v$(E2FSPROGS_VER)
 
@@ -815,9 +815,9 @@ $(DL_DIR)/$(E2FSPROGS_SOURCE):
 	$(DOWNLOAD) $(E2FSPROGS_SITE)/$(E2FSPROGS_SOURCE)
 
 e2fsprogs: $(DL_DIR)/$(E2FSPROGS_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(E2FSPROGS_TMP)
+	$(REMOVE)/$(E2FSPROGS_DIR)
 	$(UNTAR)/$(E2FSPROGS_SOURCE)
-	$(CHDIR)/$(E2FSPROGS_TMP); \
+	$(CHDIR)/$(E2FSPROGS_DIR); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
@@ -853,13 +853,13 @@ e2fsprogs: $(DL_DIR)/$(E2FSPROGS_SOURCE) | $(TARGET_DIR)
 	-rm $(addprefix $(TARGET_DIR)/bin/, chattr compile_et lsattr mk_cmds uuidgen)
 	-rm $(addprefix $(TARGET_DIR)/sbin/, dumpe2fs e2freefrag e2mmpstatus e2undo e4crypt filefrag logsave)
 	$(REWRITE_PKGCONF_PC)
-	$(REMOVE)/$(E2FSPROGS_TMP)
+	$(REMOVE)/$(E2FSPROGS_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 NTFS-3G_VER    = 2017.3.23
-NTFS-3G_TMP    = ntfs-3g_ntfsprogs-$(NTFS-3G_VER)
+NTFS-3G_DIR    = ntfs-3g_ntfsprogs-$(NTFS-3G_VER)
 NTFS-3G_SOURCE = ntfs-3g_ntfsprogs-$(NTFS-3G_VER).tgz
 NTFS-3G_SITE   = https://tuxera.com/opensource
 
@@ -867,9 +867,9 @@ $(DL_DIR)/$(NTFS-3G_SOURCE):
 	$(DOWNLOAD) $(NTFS-3G_SITE)/$(NTFS-3G_SOURCE)
 
 ntfs-3g: $(DL_DIR)/$(NTFS-3G_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(NTFS-3G_TMP)
+	$(REMOVE)/$(NTFS-3G_DIR)
 	$(UNTAR)/$(NTFS-3G_SOURCE)
-	$(CHDIR)/$(NTFS-3G_TMP); \
+	$(CHDIR)/$(NTFS-3G_DIR); \
 		$(CONFIGURE) \
 			--prefix= \
 			--mandir=$(remove-mandir) \
@@ -883,13 +883,13 @@ ntfs-3g: $(DL_DIR)/$(NTFS-3G_SOURCE) | $(TARGET_DIR)
 	-rm $(addprefix $(TARGET_DIR)/bin/,lowntfs-3g ntfs-3g.probe)
 	-rm $(addprefix $(TARGET_DIR)/sbin/,mount.lowntfs-3g)
 	ln -sf /bin/ntfs-3g $(TARGET_DIR)/sbin/mount.ntfs
-	$(REMOVE)/$(NTFS-3G_TMP)
+	$(REMOVE)/$(NTFS-3G_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 AUTOFS_VER    = 5.1.6
-AUTOFS_TMP    = autofs-$(AUTOFS_VER)
+AUTOFS_DIR    = autofs-$(AUTOFS_VER)
 AUTOFS_SOURCE = autofs-$(AUTOFS_VER).tar.xz
 AUTOFS_SITE   = https://www.kernel.org/pub/linux/daemons/autofs/v5
 
@@ -906,9 +906,9 @@ AUTOFS_PATCH  = force-STRIP-to-emtpy.patch
 AUTOFS_DEPS   = libtirpc
 
 autofs: $(AUTOFS_DEPS) $(DL_DIR)/$(AUTOFS_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(AUTOFS_TMP)
+	$(REMOVE)/$(AUTOFS_DIR)
 	$(UNTAR)/$(AUTOFS_SOURCE)
-	$(CHDIR)/$(AUTOFS_TMP); \
+	$(CHDIR)/$(AUTOFS_DIR); \
 		$(call apply_patches, $(addprefix $(@F)/,$(AUTOFS_PATCH))); \
 		sed -i "s|nfs/nfs.h|linux/nfs.h|" include/rpc_subs.h; \
 		export ac_cv_linux_procfs=yes; \
@@ -935,7 +935,7 @@ autofs: $(AUTOFS_DEPS) $(DL_DIR)/$(AUTOFS_SOURCE) | $(TARGET_DIR)
 		$(MAKE) SUBDIRS="lib daemon modules" install DESTDIR=$(TARGET_DIR)
 	$(INSTALL_COPY) $(TARGET_FILES)/autofs/* $(TARGET_DIR)/
 	$(UPDATE-RC.D) autofs defaults 75 25
-	$(REMOVE)/$(AUTOFS_TMP)
+	$(REMOVE)/$(AUTOFS_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -948,7 +948,7 @@ samba: $(SAMBA_TARGET)
 # -----------------------------------------------------------------------------
 
 SAMBA33_VER    = 3.3.16
-SAMBA33_TMP    = samba-$(SAMBA33_VER)
+SAMBA33_DIR    = samba-$(SAMBA33_VER)
 SAMBA33_SOURCE = samba-$(SAMBA33_VER).tar.gz
 SAMBA33_SITE   = https://download.samba.org/pub/samba
 
@@ -961,11 +961,11 @@ SAMBA33_PATCH += samba33-configure.in-make-getgrouplist_ok-test-cross-compile.pa
 SAMBA33_DEPS   = zlib
 
 samba33: $(SAMBA33_DEPS) $(DL_DIR)/$(SAMBA33_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(SAMBA33_TMP)
+	$(REMOVE)/$(SAMBA33_DIR)
 	$(UNTAR)/$(SAMBA33_SOURCE)
-	$(CHDIR)/$(SAMBA33_TMP); \
+	$(CHDIR)/$(SAMBA33_DIR); \
 		$(call apply_patches, $(SAMBA33_PATCH)); \
-	$(CHDIR)/$(SAMBA33_TMP)/source; \
+	$(CHDIR)/$(SAMBA33_DIR)/source; \
 		./autogen.sh; \
 		export CONFIG_SITE=$(CONFIGS)/samba33-config.site; \
 		$(CONFIGURE) \
@@ -1015,13 +1015,13 @@ samba33: $(SAMBA33_DEPS) $(DL_DIR)/$(SAMBA33_SOURCE) | $(TARGET_DIR)
 	rm -rf $(TARGET_DIR)/bin/smbtar
 	rm -rf $(TARGET_DIR)/bin/smbclient
 	rm -rf $(TARGET_DIR)/bin/smbpasswd
-	$(REMOVE)/$(SAMBA33_TMP)
+	$(REMOVE)/$(SAMBA33_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 SAMBA36_VER    = 3.6.25
-SAMBA36_TMP    = samba-$(SAMBA36_VER)
+SAMBA36_DIR    = samba-$(SAMBA36_VER)
 SAMBA36_SOURCE = samba-$(SAMBA36_VER).tar.gz
 SAMBA36_SITE   = https://download.samba.org/pub/samba/stable
 
@@ -1043,12 +1043,12 @@ SAMBA36_PATCH0 += samba36-CVE-2017-7494-v3-6.patch
 SAMBA36_DEPS   = zlib
 
 samba36: $(SAMBA36_DEPS) $(DL_DIR)/$(SAMBA36_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(SAMBA36_TMP)
+	$(REMOVE)/$(SAMBA36_DIR)
 	$(UNTAR)/$(SAMBA36_SOURCE)
-	$(CHDIR)/$(SAMBA36_TMP); \
+	$(CHDIR)/$(SAMBA36_DIR); \
 		$(call apply_patches, $(SAMBA36_PATCH1), 1); \
 		$(call apply_patches, $(SAMBA36_PATCH0), 0); \
-	$(CHDIR)/$(SAMBA36_TMP)/source3; \
+	$(CHDIR)/$(SAMBA36_DIR)/source3; \
 		./autogen.sh; \
 		export CONFIG_SITE=$(CONFIGS)/samba36-config.site; \
 		$(CONFIGURE) \
@@ -1096,13 +1096,13 @@ samba36: $(SAMBA36_DEPS) $(DL_DIR)/$(SAMBA36_SOURCE) | $(TARGET_DIR)
 	rm -rf $(TARGET_DIR)/bin/smbtar
 	rm -rf $(TARGET_DIR)/bin/smbclient
 	rm -rf $(TARGET_DIR)/bin/smbpasswd
-	$(REMOVE)/$(SAMBA36_TMP)
+	$(REMOVE)/$(SAMBA36_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 DROPBEAR_VER    = 2019.78
-DROPBEAR_TMP    = dropbear-$(DROPBEAR_VER)
+DROPBEAR_DIR    = dropbear-$(DROPBEAR_VER)
 DROPBEAR_SOURCE = dropbear-$(DROPBEAR_VER).tar.bz2
 DROPBEAR_SITE   = http://matt.ucc.asn.au/dropbear/releases
 
@@ -1112,9 +1112,9 @@ $(DL_DIR)/$(DROPBEAR_SOURCE):
 DROPBEAR_DEPS   = zlib
 
 dropbear: $(DROPBEAR_DEPS) $(DL_DIR)/$(DROPBEAR_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(DROPBEAR_TMP)
+	$(REMOVE)/$(DROPBEAR_DIR)
 	$(UNTAR)/$(DROPBEAR_SOURCE)
-	$(CHDIR)/$(DROPBEAR_TMP); \
+	$(CHDIR)/$(DROPBEAR_DIR); \
 		$(CONFIGURE) \
 			--prefix= \
 			--mandir=$(remove-mandir) \
@@ -1142,13 +1142,13 @@ dropbear: $(DROPBEAR_DEPS) $(DL_DIR)/$(DROPBEAR_SOURCE) | $(TARGET_DIR)
 	mkdir -p $(TARGET_DIR)/etc/dropbear
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/dropbear.init $(TARGET_DIR)/etc/init.d/dropbear
 	$(UPDATE-RC.D) dropbear defaults 75 25
-	$(REMOVE)/$(DROPBEAR_TMP)
+	$(REMOVE)/$(DROPBEAR_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 SG3_UTILS_VER    = 1.45
-SG3_UTILS_TMP    = sg3_utils-$(SG3_UTILS_VER)
+SG3_UTILS_DIR    = sg3_utils-$(SG3_UTILS_VER)
 SG3_UTILS_SOURCE = sg3_utils-$(SG3_UTILS_VER).tar.xz
 SG3_UTILS_SITE   = http://sg.danny.cz/sg/p
 
@@ -1158,9 +1158,9 @@ $(DL_DIR)/$(SG3_UTILS_SOURCE):
 SG3_UTILS_BIN    = sg_start
 
 sg3_utils: $(DL_DIR)/$(SG3_UTILS_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(SG3_UTILS_TMP)
+	$(REMOVE)/$(SG3_UTILS_DIR)
 	$(UNTAR)/$(SG3_UTILS_SOURCE)
-	$(CHDIR)/$(SG3_UTILS_TMP); \
+	$(CHDIR)/$(SG3_UTILS_DIR); \
 		$(CONFIGURE) \
 			--prefix= \
 			--bindir=/bin.$(@F) \
@@ -1175,14 +1175,14 @@ sg3_utils: $(DL_DIR)/$(SG3_UTILS_SOURCE) | $(TARGET_DIR)
 	$(REWRITE_LIBTOOL_LA)
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/sdX.init $(TARGET_DIR)/etc/init.d/sdX
 	$(UPDATE-RC.D) sdX stop 97 0 6 .
-	$(REMOVE)/$(SG3_UTILS_TMP) \
+	$(REMOVE)/$(SG3_UTILS_DIR) \
 		$(TARGET_DIR)/bin.$(@F)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 FBSHOT_VER    = 0.3
-FBSHOT_TMP    = fbshot-$(FBSHOT_VER)
+FBSHOT_DIR    = fbshot-$(FBSHOT_VER)
 FBSHOT_SOURCE = fbshot-$(FBSHOT_VER).tar.gz
 FBSHOT_SITE   = http://distro.ibiblio.org/amigolinux/download/Utils/fbshot
 
@@ -1195,31 +1195,31 @@ FBSHOT_PATCH += fbshot_cs_hd2.diff
 FBSHOT_DEPS   = libpng
 
 fbshot: $(FBSHOT_DEPS) $(DL_DIR)/$(FBSHOT_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(FBSHOT_TMP)
+	$(REMOVE)/$(FBSHOT_DIR)
 	$(UNTAR)/$(FBSHOT_SOURCE)
-	$(CHDIR)/$(FBSHOT_TMP); \
+	$(CHDIR)/$(FBSHOT_DIR); \
 		$(call apply_patches, $(FBSHOT_PATCH)); \
 		sed -i 's|	gcc |	$(TARGET_CC) $(TARGET_CFLAGS) $(TARGET_LDFLAGS) |' Makefile; \
 		sed -i '/strip fbshot/d' Makefile; \
 		$(MAKE) all; \
 		$(INSTALL_EXEC) -D fbshot $(TARGET_DIR)/bin/fbshot
-	$(REMOVE)/$(FBSHOT_TMP)
+	$(REMOVE)/$(FBSHOT_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 LCD4LINUX_VER    = git
-LCD4LINUX_TMP    = lcd4linux.$(LCD4LINUX_VER)
+LCD4LINUX_DIR    = lcd4linux.$(LCD4LINUX_VER)
 LCD4LINUX_SOURCE = lcd4linux.$(LCD4LINUX_VER)
 LCD4LINUX_SITE   = https://github.com/TangoCash
 
 LCD4LINUX_DEPS   = ncurses libgd libdpf
 
 lcd4linux: $(LCD4LINUX_DEPS) | $(TARGET_DIR)
-	$(REMOVE)/$(LCD4LINUX_TMP)
+	$(REMOVE)/$(LCD4LINUX_DIR)
 	$(GET-GIT-SOURCE) $(LCD4LINUX_SITE)/$(LCD4LINUX_SOURCE) $(DL_DIR)/$(LCD4LINUX_SOURCE)
 	$(CPDIR)/$(LCD4LINUX_SOURCE)
-	$(CHDIR)/$(LCD4LINUX_TMP); \
+	$(CHDIR)/$(LCD4LINUX_DIR); \
 		./bootstrap; \
 		$(CONFIGURE) \
 			--libdir=$(TARGET_LIB_DIR) \
@@ -1238,30 +1238,30 @@ lcd4linux: $(LCD4LINUX_DEPS) | $(TARGET_DIR)
 		$(MAKE) install
 	$(INSTALL_COPY) $(TARGET_FILES)/lcd4linux/* $(TARGET_DIR)/
 	#$(MAKE) samsunglcd4linux
-	$(REMOVE)/$(LCD4LINUX_TMP)
+	$(REMOVE)/$(LCD4LINUX_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 SAMSUNGLCD4LINUX_VER    = git
-SAMSUNGLCD4LINUX_TMP    = samsunglcd4linux.$(LCD4LINUX_VER)
+SAMSUNGLCD4LINUX_DIR    = samsunglcd4linux.$(LCD4LINUX_VER)
 SAMSUNGLCD4LINUX_SOURCE = samsunglcd4linux.$(LCD4LINUX_VER)
 SAMSUNGLCD4LINUX_SITE   = https://github.com/horsti58
 
 samsunglcd4linux: | $(TARGET_DIR)
-	$(REMOVE)/$(SAMSUNGLCD4LINUX_TMP)
+	$(REMOVE)/$(SAMSUNGLCD4LINUX_DIR)
 	$(GET-GIT-SOURCE) $(SAMSUNGLCD4LINUX_SITE)/$(SAMSUNGLCD4LINUX_SOURCE) $(DL_DIR)/$(SAMSUNGLCD4LINUX_SOURCE)
 	$(CPDIR)/$(SAMSUNGLCD4LINUX_SOURCE)
-	$(CHDIR)/$(SAMSUNGLCD4LINUX_TMP)/ni; \
+	$(CHDIR)/$(SAMSUNGLCD4LINUX_DIR)/ni; \
 		$(INSTALL) -m 0600 etc/lcd4linux.conf $(TARGET_DIR)/etc; \
 		$(INSTALL_COPY) share/* $(TARGET_SHARE_DIR)
-	$(REMOVE)/$(SAMSUNGLCD4LINUX_TMP)
+	$(REMOVE)/$(SAMSUNGLCD4LINUX_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 WPA_SUPPLICANT_VER    = 0.7.3
-WPA_SUPPLICANT_TMP    = wpa_supplicant-$(WPA_SUPPLICANT_VER)
+WPA_SUPPLICANT_DIR    = wpa_supplicant-$(WPA_SUPPLICANT_VER)
 WPA_SUPPLICANT_SOURCE = wpa_supplicant-$(WPA_SUPPLICANT_VER).tar.gz
 WPA_SUPPLICANT_SITE   = https://w1.fi/releases
 
@@ -1271,22 +1271,22 @@ $(DL_DIR)/$(WPA_SUPPLICANT_SOURCE):
 WPA_SUPPLICANT_DEPS   = openssl
 
 wpa_supplicant: $(WPA_SUPPLICANT_DEPS) $(DL_DIR)/$(WPA_SUPPLICANT_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(WPA_SUPPLICANT_TMP)
+	$(REMOVE)/$(WPA_SUPPLICANT_DIR)
 	$(UNTAR)/$(WPA_SUPPLICANT_SOURCE)
-	$(CHDIR)/$(WPA_SUPPLICANT_TMP)/wpa_supplicant; \
+	$(CHDIR)/$(WPA_SUPPLICANT_DIR)/wpa_supplicant; \
 		$(INSTALL_DATA) $(CONFIGS)/wpa_supplicant.config .config; \
 		$(MAKE_ENV) \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR) BINDIR=/sbin
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/pre-wlan0.sh $(TARGET_DIR)/etc/network/pre-wlan0.sh
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/post-wlan0.sh $(TARGET_DIR)/etc/network/post-wlan0.sh
-	$(REMOVE)/$(WPA_SUPPLICANT_TMP)
+	$(REMOVE)/$(WPA_SUPPLICANT_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 XUPNPD_VER    = git
-XUPNPD_TMP    = xupnpd.$(XUPNPD_VER)
+XUPNPD_DIR    = xupnpd.$(XUPNPD_VER)
 XUPNPD_SOURCE = xupnpd.$(XUPNPD_VER)
 XUPNPD_SITE   = https://github.com/clark15b
 
@@ -1299,13 +1299,13 @@ XUPNPD_PATCH += xupnpd-add-configuration-files.diff
 XUPNPD_DEPS   = lua openssl
 
 xupnpd: $(XUPNPD_DEPS) | $(TARGET_DIR)
-	$(REMOVE)/$(XUPNPD_TMP)
+	$(REMOVE)/$(XUPNPD_DIR)
 	$(GET-GIT-SOURCE) $(XUPNPD_SITE)/$(XUPNPD_SOURCE) $(DL_DIR)/$(XUPNPD_SOURCE)
 	$(CPDIR)/$(XUPNPD_SOURCE)
-	$(CHDIR)/$(XUPNPD_TMP); \
+	$(CHDIR)/$(XUPNPD_DIR); \
 		git checkout 25d6d44; \
 		$(call apply_patches, $(XUPNPD_PATCH))
-	$(CHDIR)/$(XUPNPD_TMP)/src; \
+	$(CHDIR)/$(XUPNPD_DIR)/src; \
 		$(MAKE_ENV) \
 		$(MAKE) embedded TARGET=$(TARGET) CC=$(TARGET_CC) STRIP=$(TARGET_STRIP) LUAFLAGS="$(TARGET_LDFLAGS) -I$(TARGET_INCLUDE_DIR)"; \
 		$(INSTALL_EXEC) -D xupnpd $(TARGET_BIN_DIR)/; \
@@ -1320,13 +1320,13 @@ xupnpd: $(XUPNPD_DEPS) | $(TARGET_DIR)
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/xupnpd.init $(TARGET_DIR)/etc/init.d/xupnpd
 	$(UPDATE-RC.D) xupnpd defaults 75 25
 	$(INSTALL_COPY) $(TARGET_FILES)/xupnpd/* $(TARGET_DIR)/
-	$(REMOVE)/$(XUPNPD_TMP)
+	$(REMOVE)/$(XUPNPD_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 DOSFSTOOLS_VER    = 4.1
-DOSFSTOOLS_TMP    = dosfstools-$(DOSFSTOOLS_VER)
+DOSFSTOOLS_DIR    = dosfstools-$(DOSFSTOOLS_VER)
 DOSFSTOOLS_SOURCE = dosfstools-$(DOSFSTOOLS_VER).tar.xz
 DOSFSTOOLS_SITE   = https://github.com/dosfstools/dosfstools/releases/download/v$(DOSFSTOOLS_VER)
 
@@ -1338,9 +1338,9 @@ DOSFSTOOLS_PATCH  = switch-to-AC_CHECK_LIB-for-iconv-library-linking.patch
 DOSFSTOOLS_CFLAGS = $(TARGET_CFLAGS) -D_GNU_SOURCE -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -fomit-frame-pointer
 
 dosfstools: $(DL_DIR)/$(DOSFSTOOLS_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(DOSFSTOOLS_TMP)
+	$(REMOVE)/$(DOSFSTOOLS_DIR)
 	$(UNTAR)/$(DOSFSTOOLS_SOURCE)
-	$(CHDIR)/$(DOSFSTOOLS_TMP); \
+	$(CHDIR)/$(DOSFSTOOLS_DIR); \
 		$(call apply_patches, $(addprefix $(@F)/,$(DOSFSTOOLS_PATCH))); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
@@ -1353,13 +1353,13 @@ dosfstools: $(DL_DIR)/$(DOSFSTOOLS_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/$(DOSFSTOOLS_TMP)
+	$(REMOVE)/$(DOSFSTOOLS_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 NFS-UTILS_VER    = 2.2.1
-NFS-UTILS_TMP    = nfs-utils-$(NFS-UTILS_VER)
+NFS-UTILS_DIR    = nfs-utils-$(NFS-UTILS_VER)
 NFS-UTILS_SOURCE = nfs-utils-$(NFS-UTILS_VER).tar.bz2
 NFS-UTILS_SITE   = https://sourceforge.net/projects/nfs/files/nfs-utils/$(NFS-UTILS_VER)
 
@@ -1377,9 +1377,9 @@ NFS-UTILS_DEPS   = rpcbind
 NFS-UTILS_CONF   = $(if $(filter $(BOXSERIES), hd1),--disable-ipv6,--enable-ipv6)
 
 nfs-utils: $(NFS-UTILS_DEPS) $(DL_DIR)/$(NFS-UTILS_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(NFS-UTILS_TMP)
+	$(REMOVE)/$(NFS-UTILS_DIR)
 	$(UNTAR)/$(NFS-UTILS_SOURCE)
-	$(CHDIR)/$(NFS-UTILS_TMP); \
+	$(CHDIR)/$(NFS-UTILS_DIR); \
 		$(call apply_patches, $(NFS-UTILS_PATCH)); \
 		export knfsd_cv_bsd_signals=no; \
 		autoreconf -fi; \
@@ -1412,13 +1412,13 @@ nfs-utils: $(NFS-UTILS_DEPS) $(DL_DIR)/$(NFS-UTILS_SOURCE) | $(TARGET_DIR)
 	rm -rf $(TARGET_DIR)/sbin/rpcdebug
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/nfsd.init $(TARGET_DIR)/etc/init.d/nfsd
 	$(UPDATE-RC.D) nfsd defaults 75 25
-	$(REMOVE)/$(NFS-UTILS_TMP)
+	$(REMOVE)/$(NFS-UTILS_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 RPCBIND_VER    = 1.2.5
-RPCBIND_TMP    = rpcbind-$(RPCBIND_VER)
+RPCBIND_DIR    = rpcbind-$(RPCBIND_VER)
 RPCBIND_SOURCE = rpcbind-$(RPCBIND_VER).tar.bz2
 RPCBIND_SITE   = https://sourceforge.net/projects/rpcbind/files/rpcbind/$(RPCBIND_VER)
 
@@ -1431,9 +1431,9 @@ RPCBIND_PATCH += rpcbind-0002-add_option_to_fix_port_number.patch
 RPCBIND_DEPS   = libtirpc
 
 rpcbind: $(RPCBIND_DEPS) $(DL_DIR)/$(RPCBIND_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(RPCBIND_TMP)
+	$(REMOVE)/$(RPCBIND_DIR)
 	$(UNTAR)/$(RPCBIND_SOURCE)
-	$(CHDIR)/$(RPCBIND_TMP); \
+	$(CHDIR)/$(RPCBIND_DIR); \
 		$(call apply_patches, $(RPCBIND_PATCH)); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
@@ -1450,13 +1450,13 @@ ifeq ($(BOXSERIES), hd1)
 	sed -i -e '/^\(udp\|tcp\)6/ d' $(TARGET_DIR)/etc/netconfig
 endif
 	rm -rf $(TARGET_DIR)/bin/rpcgen
-	$(REMOVE)/$(RPCBIND_TMP)
+	$(REMOVE)/$(RPCBIND_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 FUSE-EXFAT_VER    = 1.3.0
-FUSE-EXFAT_TMP    = fuse-exfat-$(FUSE-EXFAT_VER)
+FUSE-EXFAT_DIR    = fuse-exfat-$(FUSE-EXFAT_VER)
 FUSE-EXFAT_SOURCE = fuse-exfat-$(FUSE-EXFAT_VER).tar.gz
 FUSE-EXFAT_SITE   = https://github.com/relan/exfat/releases/download/v$(FUSE-EXFAT_VER)
 
@@ -1466,9 +1466,9 @@ $(DL_DIR)/$(FUSE-EXFAT_SOURCE):
 FUSE-EXFAT_DEPS   = libfuse
 
 fuse-exfat: $(FUSE-EXFAT_DEPS) $(DL_DIR)/$(FUSE-EXFAT_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(FUSE-EXFAT_TMP)
+	$(REMOVE)/$(FUSE-EXFAT_DIR)
 	$(UNTAR)/$(FUSE-EXFAT_SOURCE)
-	$(CHDIR)/$(FUSE-EXFAT_TMP); \
+	$(CHDIR)/$(FUSE-EXFAT_DIR); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--prefix= \
@@ -1477,13 +1477,13 @@ fuse-exfat: $(FUSE-EXFAT_DEPS) $(DL_DIR)/$(FUSE-EXFAT_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/$(FUSE-EXFAT_TMP)
+	$(REMOVE)/$(FUSE-EXFAT_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 EXFAT-UTILS_VER    = 1.3.0
-EXFAT-UTILS_TMP    = exfat-utils-$(EXFAT-UTILS_VER)
+EXFAT-UTILS_DIR    = exfat-utils-$(EXFAT-UTILS_VER)
 EXFAT-UTILS_SOURCE = exfat-utils-$(EXFAT-UTILS_VER).tar.gz
 EXFAT-UTILS_SITE   = https://github.com/relan/exfat/releases/download/v$(EXFAT-UTILS_VER)
 
@@ -1493,9 +1493,9 @@ $(DL_DIR)/$(EXFAT-UTILS_SOURCE):
 EXFAT-UTILS_DEPS   = fuse-exfat
 
 exfat-utils: $(EXFAT-UTILS_DEPS) $(DL_DIR)/$(EXFAT-UTILS_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(EXFAT-UTILS_TMP)
+	$(REMOVE)/$(EXFAT-UTILS_DIR)
 	$(UNTAR)/$(EXFAT-UTILS_SOURCE)
-	$(CHDIR)/$(EXFAT-UTILS_TMP); \
+	$(CHDIR)/$(EXFAT-UTILS_DIR); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--prefix= \
@@ -1504,7 +1504,7 @@ exfat-utils: $(EXFAT-UTILS_DEPS) $(DL_DIR)/$(EXFAT-UTILS_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/$(EXFAT-UTILS_TMP)
+	$(REMOVE)/$(EXFAT-UTILS_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -1532,7 +1532,7 @@ streamripper: $(STREAMRIPPER_DEPS) | $(TARGET_DIR)
 # -----------------------------------------------------------------------------
 
 GETTEXT_VER    = 0.19.8.1
-GETTEXT_TMP    = gettext-$(GETTEXT_VER)
+GETTEXT_DIR    = gettext-$(GETTEXT_VER)
 GETTEXT_SOURCE = gettext-$(GETTEXT_VER).tar.xz
 GETTEXT_SITE   = ftp://ftp.gnu.org/gnu/gettext
 
@@ -1540,9 +1540,9 @@ $(DL_DIR)/$(GETTEXT_SOURCE):
 	$(DOWNLOAD) $(GETTEXT_SITE)/$(GETTEXT_SOURCE)
 
 gettext: $(DL_DIR)/$(GETTEXT_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(GETTEXT_TMP)
+	$(REMOVE)/$(GETTEXT_DIR)
 	$(UNTAR)/$(GETTEXT_SOURCE)
-	$(CHDIR)/$(GETTEXT_TMP)/gettext-runtime; \
+	$(CHDIR)/$(GETTEXT_DIR)/gettext-runtime; \
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--prefix= \
@@ -1560,13 +1560,13 @@ gettext: $(DL_DIR)/$(GETTEXT_SOURCE) | $(TARGET_DIR)
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL_LA)
-	$(REMOVE)/$(GETTEXT_TMP)
+	$(REMOVE)/$(GETTEXT_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 MC_VER    = 4.8.25
-MC_TMP    = mc-$(MC_VER)
+MC_DIR    = mc-$(MC_VER)
 MC_SOURCE = mc-$(MC_VER).tar.xz
 MC_SITE   = ftp.midnight-commander.org
 
@@ -1576,9 +1576,9 @@ $(DL_DIR)/$(MC_SOURCE):
 MC_DEPS   = glib2 ncurses
 
 mc: $(MC_DEPS) $(DL_DIR)/$(MC_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(MC_TMP)
+	$(REMOVE)/$(MC_DIR)
 	$(UNTAR)/$(MC_SOURCE)
-	$(CHDIR)/$(MC_TMP); \
+	$(CHDIR)/$(MC_DIR); \
 		$(APPLY_PATCHES); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
@@ -1602,13 +1602,13 @@ mc: $(MC_DEPS) $(DL_DIR)/$(MC_SOURCE) | $(TARGET_DIR)
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	rm -rf $(TARGET_SHARE_DIR)/mc/examples
 	find $(TARGET_SHARE_DIR)/mc/skins -type f ! -name default.ini | xargs --no-run-if-empty rm
-	$(REMOVE)/$(MC_TMP)
+	$(REMOVE)/$(MC_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 WGET_VER    = 1.20.3
-WGET_TMP    = wget-$(WGET_VER)
+WGET_DIR    = wget-$(WGET_VER)
 WGET_SOURCE = wget-$(WGET_VER).tar.gz
 WGET_SITE   = https://ftp.gnu.org/gnu/wget
 
@@ -1623,9 +1623,9 @@ WGET_DEPS   = openssl
 WGET_CFLAGS = $(TARGET_CFLAGS) -DOPENSSL_NO_ENGINE
 
 wget: $(WGET_DEPS) $(DL_DIR)/$(WGET_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(WGET_TMP)
+	$(REMOVE)/$(WGET_DIR)
 	$(UNTAR)/$(WGET_SOURCE)
-	$(CHDIR)/$(WGET_TMP); \
+	$(CHDIR)/$(WGET_DIR); \
 		$(call apply_patches, $(addprefix $(@F)/,$(WGET_PATCH))); \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
@@ -1639,7 +1639,7 @@ wget: $(WGET_DEPS) $(DL_DIR)/$(WGET_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/$(WGET_TMP)
+	$(REMOVE)/$(WGET_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -1659,17 +1659,17 @@ ofgwrite: $(SOURCE_DIR)/$(NI-OFGWRITE) | $(TARGET_DIR)
 # -----------------------------------------------------------------------------
 
 AIO-GRAB_VER    = git
-AIO-GRAB_TMP    = aio-grab.$(AIO-GRAB_VER)
+AIO-GRAB_DIR    = aio-grab.$(AIO-GRAB_VER)
 AIO-GRAB_SOURCE = aio-grab.$(AIO-GRAB_VER)
 AIO-GRAB_SITE   = https://github.com/oe-alliance
 
 AIO-GRAB_DEPS   = zlib libpng libjpeg-turbo
 
 aio-grab: $(AIO-GRAB_DEPS) | $(TARGET_DIR)
-	$(REMOVE)/$(AIO-GRAB_TMP)
+	$(REMOVE)/$(AIO-GRAB_DIR)
 	$(GET-GIT-SOURCE) $(AIO-GRAB_SITE)/$(AIO-GRAB_SOURCE) $(DL_DIR)/$(AIO-GRAB_SOURCE)
 	$(CPDIR)/$(AIO-GRAB_SOURCE)
-	$(CHDIR)/$(AIO-GRAB_TMP); \
+	$(CHDIR)/$(AIO-GRAB_DIR); \
 		aclocal --force -I m4; \
 		libtoolize --copy --ltdl --force; \
 		autoconf --force; \
@@ -1681,21 +1681,21 @@ aio-grab: $(AIO-GRAB_DEPS) | $(TARGET_DIR)
 			; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/$(AIO-GRAB_TMP)
+	$(REMOVE)/$(AIO-GRAB_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 DVBSNOOP_VER    = git
-DVBSNOOP_TMP    = dvbsnoop.$(DVBSNOOP_VER)
+DVBSNOOP_DIR    = dvbsnoop.$(DVBSNOOP_VER)
 DVBSNOOP_SOURCE = dvbsnoop.$(DVBSNOOP_VER)
 DVBSNOOP_SITE   = https://github.com/Duckbox-Developers
 
 dvbsnoop: | $(TARGET_DIR)
-	$(REMOVE)/$(DVBSNOOP_TMP)
+	$(REMOVE)/$(DVBSNOOP_DIR)
 	$(GET-GIT-SOURCE) $(DVBSNOOP_SITE)/$(DVBSNOOP_SOURCE) $(DL_DIR)/$(DVBSNOOP_SOURCE)
 	$(CPDIR)/$(DVBSNOOP_SOURCE)
-	$(CHDIR)/$(DVBSNOOP_TMP); \
+	$(CHDIR)/$(DVBSNOOP_DIR); \
 		$(CONFIGURE) \
 			--enable-silent-rules \
 			--prefix= \
@@ -1703,13 +1703,13 @@ dvbsnoop: | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/$(DVBSNOOP_TMP)
+	$(REMOVE)/$(DVBSNOOP_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 ETHTOOL_VER    = 5.4
-ETHTOOL_TMP    = ethtool-$(ETHTOOL_VER)
+ETHTOOL_DIR    = ethtool-$(ETHTOOL_VER)
 ETHTOOL_SOURCE = ethtool-$(ETHTOOL_VER).tar.xz
 ETHTOOL_SITE   = https://www.kernel.org/pub/software/network/ethtool
 
@@ -1717,9 +1717,9 @@ $(DL_DIR)/$(ETHTOOL_SOURCE):
 	$(DOWNLOAD) $(ETHTOOL_SITE)/$(ETHTOOL_SOURCE)
 
 ethtool: $(DL_DIR)/$(ETHTOOL_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(ETHTOOL_TMP)
+	$(REMOVE)/$(ETHTOOL_DIR)
 	$(UNTAR)/$(ETHTOOL_SOURCE)
-	$(CHDIR)/$(ETHTOOL_TMP); \
+	$(CHDIR)/$(ETHTOOL_DIR); \
 		$(CONFIGURE) \
 			--prefix= \
 			--mandir=$(remove-mandir) \
@@ -1728,13 +1728,13 @@ ethtool: $(DL_DIR)/$(ETHTOOL_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/$(ETHTOOL_TMP)
+	$(REMOVE)/$(ETHTOOL_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 GPTFDISK_VER    = 1.0.4
-GPTFDISK_TMP    = gptfdisk-$(GPTFDISK_VER)
+GPTFDISK_DIR    = gptfdisk-$(GPTFDISK_VER)
 GPTFDISK_SOURCE = gptfdisk-$(GPTFDISK_VER).tar.gz
 GPTFDISK_SITE   = https://sourceforge.net/projects/gptfdisk/files/gptfdisk/$(GPTFDISK_VER)
 
@@ -1746,22 +1746,22 @@ GPTFDISK_PATCH  = gptfdisk-ldlibs.patch
 GPTFDISK_DEPS   = popt e2fsprogs
 
 gptfdisk: $(GPTFDISK_DEPS) $(DL_DIR)/$(GPTFDISK_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(GPTFDISK_TMP)
+	$(REMOVE)/$(GPTFDISK_DIR)
 	$(UNTAR)/$(GPTFDISK_SOURCE)
-	$(CHDIR)/$(GPTFDISK_TMP); \
+	$(CHDIR)/$(GPTFDISK_DIR); \
 		$(call apply_patches, $(GPTFDISK_PATCH)); \
 		sed -i 's|^CC=.*|CC=$(TARGET_CC)|' Makefile; \
 		sed -i 's|^CXX=.*|CXX=$(TARGET_CXX)|' Makefile; \
 		$(MAKE_ENV) \
 		$(MAKE) sgdisk; \
 		$(INSTALL_EXEC) -D sgdisk $(TARGET_DIR)/sbin/sgdisk
-	$(REMOVE)/$(GPTFDISK_TMP)
+	$(REMOVE)/$(GPTFDISK_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 RSYNC_VER    = 3.1.3
-RSYNC_TMP    = rsync-$(RSYNC_VER)
+RSYNC_DIR    = rsync-$(RSYNC_VER)
 RSYNC_SOURCE = rsync-$(RSYNC_VER).tar.gz
 RSYNC_SITE   = https://ftp.samba.org/pub/rsync
 
@@ -1771,9 +1771,9 @@ $(DL_DIR)/$(RSYNC_SOURCE):
 RSYNC_DEPS   = zlib popt
 
 rsync: $(RSYNC_DEPS) $(DL_DIR)/$(RSYNC_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(RSYNC_TMP)
+	$(REMOVE)/$(RSYNC_DIR)
 	$(UNTAR)/$(RSYNC_SOURCE)
-	$(CHDIR)/$(RSYNC_TMP); \
+	$(CHDIR)/$(RSYNC_DIR); \
 		$(CONFIGURE) \
 			--prefix= \
 			--mandir=$(remove-mandir) \
@@ -1785,13 +1785,13 @@ rsync: $(RSYNC_DEPS) $(DL_DIR)/$(RSYNC_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/$(RSYNC_TMP)
+	$(REMOVE)/$(RSYNC_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 SYSVINIT_VER    = 2.97
-SYSVINIT_TMP    = sysvinit-$(SYSVINIT_VER)
+SYSVINIT_DIR    = sysvinit-$(SYSVINIT_VER)
 SYSVINIT_SOURCE = sysvinit-$(SYSVINIT_VER).tar.xz
 SYSVINIT_SITE   = http://download.savannah.nongnu.org/releases/sysvinit
 
@@ -1800,7 +1800,7 @@ $(DL_DIR)/$(SYSVINIT_SOURCE):
 
 define SYSVINIT_INSTALL
 	for sbin in halt init shutdown killall5; do \
-		$(INSTALL_EXEC) -D $(BUILD_DIR)/$(SYSVINIT_TMP)/src/$$sbin $(TARGET_DIR)/sbin/$$sbin || exit 1; \
+		$(INSTALL_EXEC) -D $(BUILD_DIR)/$(SYSVINIT_DIR)/src/$$sbin $(TARGET_DIR)/sbin/$$sbin || exit 1; \
 	done
 	ln -sf /sbin/halt $(TARGET_DIR)/sbin/reboot
 	ln -sf /sbin/halt $(TARGET_DIR)/sbin/poweroff
@@ -1808,14 +1808,14 @@ define SYSVINIT_INSTALL
 endef
 
 sysvinit: $(DL_DIR)/$(SYSVINIT_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(SYSVINIT_TMP)
+	$(REMOVE)/$(SYSVINIT_DIR)
 	$(UNTAR)/$(SYSVINIT_SOURCE)
-	$(CHDIR)/$(SYSVINIT_TMP); \
+	$(CHDIR)/$(SYSVINIT_DIR); \
 		$(APPLY_PATCHES); \
 		$(MAKE_ENV) \
 		$(MAKE) -C src SULOGINLIBS=-lcrypt
 	$(SYSVINIT_INSTALL)
-	$(REMOVE)/$(SYSVINIT_TMP)
+	$(REMOVE)/$(SYSVINIT_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
