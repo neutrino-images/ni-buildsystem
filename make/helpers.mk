@@ -65,7 +65,6 @@ define rewrite_libtool
 			$(REWRITE_LIBTOOL)/$${la}; \
 			echo -e "\n# Adapted to buildsystem\n$(REWRITE_LIBTOOL_TAG)" >> $${la}; \
 		fi; \
-	done
 endef
 
 # rewrite libtool libraries automatically
@@ -180,13 +179,13 @@ endef
 
 archives-list:
 	@rm -f $(BUILD_TMP)/$(@)
-	@make -qp | grep --only-matching '^\$(ARCHIVE).*:' | sed "s|:||g" > $(BUILD_TMP)/$(@)
+	@make -qp | grep --only-matching '^\$(DL_DIR).*:' | sed "s|:||g" > $(BUILD_TMP)/$(@)
 
 DOCLEANUP ?= no
 GETMISSING ?= no
 archives-info: archives-list
 	@echo "[ ** ] Unused targets in make/archives.mk"
-	@grep --only-matching '^\$$(ARCHIVE).*:' make/archives.mk | sed "s|:||g" | \
+	@grep --only-matching '^\$$(DL_DIR).*:' make/archives.mk | sed "s|:||g" | \
 	while read target; do \
 		found=false; \
 		for makefile in make/*.mk; do \
@@ -208,7 +207,7 @@ archives-info: archives-list
 		fi; \
 	done;
 	@echo "[ ** ] Unused archives"
-	@find $(ARCHIVE)/ -maxdepth 1 -type f | \
+	@find $(DL_DIR)/ -maxdepth 1 -type f | \
 	while read archive; do \
 		if ! grep -q $$archive $(BUILD_TMP)/archives-list; then \
 			echo -e "[$(TERM_YELLOW) rm $(TERM_NORMAL)] $$archive"; \

@@ -8,14 +8,14 @@ LIBID3TAG_TMP    = libid3tag-$(LIBID3TAG_VER)
 LIBID3TAG_SOURCE = libid3tag-$(LIBID3TAG_VER).tar.gz
 LIBID3TAG_SITE   = https://sourceforge.net/projects/mad/files/libid3tag/$(LIBID3TAG_VER)
 
-$(ARCHIVE)/$(LIBID3TAG_SOURCE):
+$(DL_DIR)/$(LIBID3TAG_SOURCE):
 	$(DOWNLOAD) $(LIBID3TAG_SITE)/$(LIBID3TAG_SOURCE)
 
 LIBID3TAG_PATCH  = libid3tag-pc.patch
 
 LIBID3TAG_DEPS   = zlib
 
-libid3tag: $(LIBID3TAG_DEPS) $(ARCHIVE)/$(LIBID3TAG_SOURCE) | $(TARGET_DIR)
+libid3tag: $(LIBID3TAG_DEPS) $(DL_DIR)/$(LIBID3TAG_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LIBID3TAG_TMP)
 	$(UNTAR)/$(LIBID3TAG_SOURCE)
 	$(CHDIR)/$(LIBID3TAG_TMP); \
@@ -39,10 +39,10 @@ FLAC_TMP    = flac-$(FLAC_VER)
 FLAC_SOURCE = flac-$(FLAC_VER).tar.xz
 FLAC_SITE   = https://ftp.osuosl.org/pub/xiph/releases/flac
 
-$(ARCHIVE)/$(FLAC_SOURCE):
+$(DL_DIR)/$(FLAC_SOURCE):
 	$(DOWNLOAD) $(FLAC_SITE)/$(FLAC_SOURCE)
 
-libFLAC: $(ARCHIVE)/$(FLAC_SOURCE) | $(TARGET_DIR)
+libFLAC: $(DL_DIR)/$(FLAC_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LIBFLAC_TMP)
 	$(UNTAR)/$(LIBFLAC_SOURCE)
 	$(CHDIR)/$(LIBFLAC_TMP); \
@@ -73,12 +73,12 @@ BZIP2_TMP    = bzip2-$(BZIP2_VER)
 BZIP2_SOURCE = bzip2-$(BZIP2_VER).tar.gz
 BZIP2_SITE   = https://sourceware.org/pub/bzip2
 
-$(ARCHIVE)/$(BZIP2_SOURCE):
+$(DL_DIR)/$(BZIP2_SOURCE):
 	$(DOWNLOAD) $(BZIP2_SITE)/$(BZIP2_SOURCE)
 
 BZIP2_PATCH  = bzip2.patch
 
-bzip2: $(ARCHIVE)/$(BZIP2_SOURCE) | $(TARGET_DIR)
+bzip2: $(DL_DIR)/$(BZIP2_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(BZIP2_TMP)
 	$(UNTAR)/$(BZIP2_SOURCE)
 	$(CHDIR)/$(BZIP2_TMP); \
@@ -98,12 +98,12 @@ FONTCONFIG_TMP    = fontconfig-$(FONTCONFIG_VER)
 FONTCONFIG_SOURCE = fontconfig-$(FONTCONFIG_VER).tar.bz2
 FONTCONFIG_SITE   = https://www.freedesktop.org/software/fontconfig/release
 
-$(ARCHIVE)/$(FONTCONFIG_SOURCE):
+$(DL_DIR)/$(FONTCONFIG_SOURCE):
 	$(DOWNLOAD) $(FONTCONFIG_SITE)/$(FONTCONFIG_SOURCE)
 
 FONTCONFIG_DEPS   = freetype expat
 
-fontconfig: $(FONTCONFIG_DEPS) $(ARCHIVE)/$(FONTCONFIG_SOURCE) | $(TARGET_DIR)
+fontconfig: $(FONTCONFIG_DEPS) $(DL_DIR)/$(FONTCONFIG_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(FONTCONFIG_TMP)
 	$(UNTAR)/$(FONTCONFIG_SOURCE)
 	$(CHDIR)/$(FONTCONFIG_TMP); \
@@ -129,7 +129,7 @@ PIXMAN_TMP    = pixman-$(PIXMAN_VER)
 PIXMAN_SOURCE = pixman-$(PIXMAN_VER).tar.gz
 PIXMAN_SITE   = https://www.cairographics.org/releases
 
-$(ARCHIVE)/$(PIXMAN_SOURCE):
+$(DL_DIR)/$(PIXMAN_SOURCE):
 	$(DOWNLOAD) $(PIXMAN_SITE)/$(PIXMAN_SOURCE)
 
 PIXMAN_PATCH  = pixman-0001-ARM-qemu-related-workarounds-in-cpu-features-detecti.patch
@@ -138,7 +138,7 @@ PIXMAN_PATCH += pixman-0001-test-utils-Check-for-FE_INVALID-definition-before-us
 
 PIXMAN_DEPS   = zlib libpng
 
-pixman: $(PIXMAN_DEPS) $(ARCHIVE)/$(PIXMAN_SOURCE) | $(TARGET_DIR)
+pixman: $(PIXMAN_DEPS) $(DL_DIR)/$(PIXMAN_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PIXMAN_TMP)
 	$(UNTAR)/$(PIXMAN_SOURCE)
 	$(CHDIR)/$(PIXMAN_TMP); \
@@ -164,14 +164,14 @@ CAIRO_TMP    = cairo-$(CAIRO_VER)
 CAIRO_SOURCE = cairo-$(CAIRO_VER).tar.xz
 CAIRO_SITE   = https://www.cairographics.org/releases
 
-$(ARCHIVE)/$(CAIRO_SOURCE):
+$(DL_DIR)/$(CAIRO_SOURCE):
 	$(DOWNLOAD) $(CAIRO_SITE)/$(CAIRO_SOURCE)
 
 CAIRO_PATCH  = cairo-get_bitmap_surface.diff
 
 CAIRO_DEPS   = fontconfig glib2 libpng pixman zlib
 
-cairo: $(CAIRO_DEPS) $(ARCHIVE)/$(CAIRO_SOURCE) | $(TARGET_DIR)
+cairo: $(CAIRO_DEPS) $(DL_DIR)/$(CAIRO_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(CAIRO_TMP)
 	$(UNTAR)/$(CAIRO_SOURCE)
 	$(CHDIR)/$(CAIRO_TMP); \
@@ -207,14 +207,14 @@ HARFBUZZ_TMP    = harfbuzz-$(HARFBUZZ_VER)
 HARFBUZZ_SOURCE = harfbuzz-$(HARFBUZZ_VER).tar.bz2
 HARFBUZZ_SITE   = https://www.freedesktop.org/software/harfbuzz/release
 
-$(ARCHIVE)/$(HARFBUZZ_SOURCE):
+$(DL_DIR)/$(HARFBUZZ_SOURCE):
 	$(DOWNLOAD) $(HARFBUZZ_SITE)/$(HARFBUZZ_SOURCE)
 
 HARFBUZZ_PATCH  = harfbuzz-disable-docs.patch
 
 HARFBUZZ_DEPS   = fontconfig glib2 cairo freetype
 
-harfbuzz: $(HARFBUZZ_DEPS) $(ARCHIVE)/$(HARFBUZZ_SOURCE) | $(TARGET_DIR)
+harfbuzz: $(HARFBUZZ_DEPS) $(DL_DIR)/$(HARFBUZZ_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(HARFBUZZ_TMP)
 	$(UNTAR)/$(HARFBUZZ_SOURCE)
 	$(CHDIR)/$(HARFBUZZ_TMP); \

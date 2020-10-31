@@ -9,7 +9,7 @@ LUA_TMP    = lua-$(LUA_VER)
 LUA_SOURCE = lua-$(LUA_VER).tar.gz
 LUA_SITE   = https://www.lua.org
 
-$(ARCHIVE)/$(LUA_SOURCE):
+$(DL_DIR)/$(LUA_SOURCE):
 	$(DOWNLOAD) $(LUA_SITE)/ftp/$(LUA_SOURCE)
 
 LUA_PATCH  = lua-01-fix-LUA_ROOT.patch
@@ -20,7 +20,7 @@ LUA_PATCH += lua-04-crashfix.diff
 
 LUA_DEPS   = ncurses
 
-lua: $(LUA_DEPS) $(ARCHIVE)/$(LUA_SOURCE) | $(TARGET_DIR)
+lua: $(LUA_DEPS) $(DL_DIR)/$(LUA_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LUA_TMP)
 	$(UNTAR)/$(LUA_SOURCE)
 	$(CHDIR)/$(LUA_TMP); \
@@ -45,12 +45,12 @@ LUAEXPAT_TMP    = luaexpat-$(LUAEXPAT_VER)
 LUAEXPAT_SOURCE = luaexpat-$(LUAEXPAT_VER).tar.gz
 LUAEXPAT_SITE   = https://github.com/tomasguisasola/luaexpat/archive
 
-$(ARCHIVE)/$(LUAEXPAT_SOURCE):
+$(DL_DIR)/$(LUAEXPAT_SOURCE):
 	$(DOWNLOAD) $(LUAEXPAT_SITE)/v$(LUAEXPAT_VER).tar.gz -O $(@)
 
 LUAEXPAT_DEPS   = expat lua
 
-luaexpat: $(LUAEXPAT_DEPS) $(ARCHIVE)/$(LUAEXPAT_SOURCE) | $(TARGET_DIR)
+luaexpat: $(LUAEXPAT_DEPS) $(DL_DIR)/$(LUAEXPAT_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LUAEXPAT_TMP)
 	$(UNTAR)/$(LUAEXPAT_SOURCE)
 	$(CHDIR)/$(LUAEXPAT_TMP); \
@@ -74,14 +74,14 @@ LUA-FEEDPARSER_TMP    = lua-feedparser-$(LUA-FEEDPARSER_VER)
 LUA-FEEDPARSER_SOURCE = lua-feedparser-$(LUA-FEEDPARSER_VER).tar.gz
 LUA-FEEDPARSER_SITE   = https://github.com/slact/lua-feedparser/archive
 
-$(ARCHIVE)/$(LUA-FEEDPARSER_SOURCE):
+$(DL_DIR)/$(LUA-FEEDPARSER_SOURCE):
 	$(DOWNLOAD) $(LUA-FEEDPARSER_SITE)/$(LUA-FEEDPARSER_VER).tar.gz -O $(@)
 
 LUA-FEEDPARSER_PATCH  = lua-feedparser.patch
 
 LUA-DEEDPARSER_DEPS   = luaexpat
 
-lua-feedparser: $(LUA-DEEDPARSER_DEPS) $(ARCHIVE)/$(LUA-FEEDPARSER_SOURCE) | $(TARGET_DIR)
+lua-feedparser: $(LUA-DEEDPARSER_DEPS) $(DL_DIR)/$(LUA-FEEDPARSER_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LUA-FEEDPARSER_TMP)
 	$(UNTAR)/$(LUA-FEEDPARSER_SOURCE)
 	$(CHDIR)/$(LUA-FEEDPARSER_TMP); \
@@ -96,13 +96,13 @@ lua-feedparser: $(LUA-DEEDPARSER_DEPS) $(ARCHIVE)/$(LUA-FEEDPARSER_SOURCE) | $(T
 LUAJSON_SOURCE = JSON.lua
 LUAJSON_SITE   = http://regex.info/code
 
-$(ARCHIVE)/$(LUAJSON_SOURCE):
+$(DL_DIR)/$(LUAJSON_SOURCE):
 	$(DOWNLOAD) $(LUAJSON_SITE)/$(LUAJSON_SOURCE)
 
-luajson: $(ARCHIVE)/$(LUAJSON_SOURCE) | $(TARGET_DIR)
-	$(CD) $(ARCHIVE); \
+luajson: $(DL_DIR)/$(LUAJSON_SOURCE) | $(TARGET_DIR)
+	$(CD) $(DL_DIR); \
 		curl --remote-name --time-cond $(LUAJSON_SOURCE) $(LUAJSON_SITE)/$(LUAJSON_SOURCE) || true
-	$(INSTALL_DATA) -D $(ARCHIVE)/$(LUAJSON_SOURCE) $(TARGET_SHARE_DIR)/lua/$(LUA_ABIVER)
+	$(INSTALL_DATA) -D $(DL_DIR)/$(LUAJSON_SOURCE) $(TARGET_SHARE_DIR)/lua/$(LUA_ABIVER)
 	ln -sf $(LUAJSON_SOURCE) $(TARGET_SHARE_DIR)/lua/$(LUA_ABIVER)/json.lua
 	$(TOUCH)
 
@@ -117,7 +117,7 @@ LUACURL_DEPS   = libcurl lua
 
 luacurl: $(LUACURL_DEPS) | $(TARGET_DIR)
 	$(REMOVE)/$(LUACURL_TMP)
-	$(GET-GIT-SOURCE) $(LUACURL_SITE) $(ARCHIVE)/$(LUACURL_SOURCE)
+	$(GET-GIT-SOURCE) $(LUACURL_SITE) $(DL_DIR)/$(LUACURL_SOURCE)
 	$(CPDIR)/$(LUACURL_SOURCE)
 	$(CHDIR)/$(LUACURL_TMP); \
 		$(MAKE_ENV) \
@@ -137,7 +137,7 @@ LUAPOSIX_TMP    = luaposix-$(LUAPOSIX_VER)
 LUAPOSIX_SOURCE = luaposix-$(LUAPOSIX_VER).tar.gz
 LUAPOSIX_SITE   = https://github.com/luaposix/luaposix/archive
 
-$(ARCHIVE)/$(LUAPOSIX_SOURCE):
+$(DL_DIR)/$(LUAPOSIX_SOURCE):
 	$(DOWNLOAD) $(LUAPOSIX_SITE)/v$(LUAPOSIX_VER).tar.gz -O $(@)
 
 LUAPOSIX_PATCH  = luaposix-fix-build.patch
@@ -149,22 +149,22 @@ GNULIB_VER    = 20140202
 GNULIB_SOURCE = gnulib-$(GNULIB_VER)-stable.tar.gz
 GNULIB_SITE   = http://erislabs.net/ianb/projects/gnulib
 
-$(ARCHIVE)/$(GNULIB_SOURCE):
+$(DL_DIR)/$(GNULIB_SOURCE):
 	$(DOWNLOAD) $(GNULIB_SITE)/$(GNULIB_SOURCE)
 
 SLINGSHOT_VER    = 6
 SLINGSHOT_SOURCE = slingshot-$(SLINGSHOT_VER).tar.gz
 SLINGSHOT_SITE   = https://github.com/gvvaughan/slingshot/archive
 
-$(ARCHIVE)/$(SLINGSHOT_SOURCE):
+$(DL_DIR)/$(SLINGSHOT_SOURCE):
 	$(DOWNLOAD) $(SLINGSHOT_SITE)/v$(SLINGSHOT_VER).tar.gz -O $(@)
 
-luaposix: $(LUAPOSIX_DEPS) $(ARCHIVE)/$(SLINGSHOT_SOURCE) $(ARCHIVE)/$(GNULIB_SOURCE) $(ARCHIVE)/$(LUAPOSIX_SOURCE) | $(TARGET_DIR)
+luaposix: $(LUAPOSIX_DEPS) $(DL_DIR)/$(SLINGSHOT_SOURCE) $(DL_DIR)/$(GNULIB_SOURCE) $(DL_DIR)/$(LUAPOSIX_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LUAPOSIX_TMP)
 	$(UNTAR)/$(LUAPOSIX_SOURCE)
 	$(CHDIR)/$(LUAPOSIX_TMP); \
-		tar -C gnulib --strip=1 -xf $(ARCHIVE)/$(GNULIB_SOURCE); \
-		tar -C slingshot --strip=1 -xf $(ARCHIVE)/$(SLINGSHOT_SOURCE); \
+		tar -C gnulib --strip=1 -xf $(DL_DIR)/$(GNULIB_SOURCE); \
+		tar -C slingshot --strip=1 -xf $(DL_DIR)/$(SLINGSHOT_SOURCE); \
 		$(call apply_patches, $(LUAPOSIX_PATCH)); \
 		export LUA=$(HOST_LUA); \
 		./bootstrap; \

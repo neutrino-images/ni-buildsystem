@@ -30,7 +30,7 @@ MAKEFLAGS += --no-print-directory
 BASE_DIR     := $(shell pwd)
 MAINTAINER   ?= unknown
 WHOAMI       := $(shell id -un)
-ARCHIVE       = $(BASE_DIR)/download
+DL_DIR        = $(BASE_DIR)/download
 BUILD_TMP     = $(BASE_DIR)/build_tmp
 ROOTFS        = $(BUILD_TMP)/rootfs
 ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd5x))
@@ -208,12 +208,12 @@ PKG_CONFIG_PATH = $(PKG_CONFIG_LIBDIR)/pkgconfig
 
 # -----------------------------------------------------------------------------
 
-# download archives into archives directory
-DOWNLOAD = wget --no-check-certificate -t3 -T60 -c -P $(ARCHIVE)
+# download archives into download directory
+DOWNLOAD = wget --no-check-certificate -t3 -T60 -c -P $(DL_DIR)
 
 # unpack archives into build directory
-UNTAR = tar -C $(BUILD_TMP) -xf $(ARCHIVE)
-UNZIP = unzip -d $(BUILD_TMP) -o $(ARCHIVE)
+UNTAR = tar -C $(BUILD_TMP) -xf $(DL_DIR)
+UNZIP = unzip -d $(BUILD_TMP) -o $(DL_DIR)
 
 # clean up
 REMOVE = rm -rf $(BUILD_TMP)
@@ -225,7 +225,7 @@ PATCH = patch -p1 -i $(PATCHES)
 CD    = set -e; cd
 CHDIR = $(CD) $(BUILD_TMP)
 MKDIR = mkdir -p $(BUILD_TMP)
-CPDIR = cp -a -t $(BUILD_TMP) $(ARCHIVE)
+CPDIR = cp -a -t $(BUILD_TMP) $(DL_DIR)
 #TOUCH = @touch $(DEPS_DIR)/$(@)
 TOUCH = @touch $(if $(findstring host-,$(@)),$(HOST_DEPS_DIR),$(DEPS_DIR))/$(@)
 

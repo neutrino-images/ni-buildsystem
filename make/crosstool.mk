@@ -13,7 +13,7 @@ crosstools:
 
 # -----------------------------------------------------------------------------
 
-CROSSTOOL_BACKUP = $(ARCHIVE)/crosstool-ng-$(BOXARCH)-linux-$(KERNEL_VER)-backup.tar.gz
+CROSSTOOL_BACKUP = $(DL_DIR)/crosstool-ng-$(BOXARCH)-linux-$(KERNEL_VER)-backup.tar.gz
 
 $(CROSSTOOL_BACKUP):
 	$(call draw_line);
@@ -71,7 +71,7 @@ GCC-LINARO_VER    = 4.9-2017.01
 GCC-LINARO_SOURCE = gcc-linaro-$(GCC-LINARO_VER).tar.xz
 GCC-LINARO_SITE   = https://releases.linaro.org/components/toolchain/gcc-linaro/$(GCC-LINARO_VER)
 
-$(ARCHIVE)/$(GCC-LINARO_SOURCE):
+$(DL_DIR)/$(GCC-LINARO_SOURCE):
 	$(DOWNLOAD) $(GCC-LINARO_SITE)/$(GCC-LINARO_SOURCE)
 
 UCLIBC_VER = 1.0.24
@@ -79,13 +79,13 @@ UCLIBC_VER = 1.0.24
 # -----------------------------------------------------------------------------
 
 # crosstool for arm-hd2 depends on gcc-linaro
-$(CROSS_BASE)/arm/hd2: $(ARCHIVE)/$(GCC-LINARO_SOURCE)
+$(CROSS_BASE)/arm/hd2: $(DL_DIR)/$(GCC-LINARO_SOURCE)
 
 $(CROSS_DIR): | $(BUILD_TMP)
 	make $(BUILD_TMP)/linux-$(KERNEL_VER).tar
 	#
 	$(REMOVE)/$(CROSSTOOL-NG_TMP)
-	$(GET-GIT-SOURCE) $(CROSSTOOL-NG_SITE)/$(CROSSTOOL-NG_SOURCE) $(ARCHIVE)/$(CROSSTOOL-NG_SOURCE)
+	$(GET-GIT-SOURCE) $(CROSSTOOL-NG_SITE)/$(CROSSTOOL-NG_SOURCE) $(DL_DIR)/$(CROSSTOOL-NG_SOURCE)
 	$(CPDIR)/$(CROSSTOOL-NG_SOURCE)
 ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd1 hd2))
 	$(CHDIR)/$(CROSSTOOL-NG_TMP); \
@@ -100,7 +100,7 @@ endif
 		unset CONFIG_SITE LIBRARY_PATH CPATH C_INCLUDE_PATH PKG_CONFIG_PATH CPLUS_INCLUDE_PATH INCLUDE; \
 		$(INSTALL_DATA) $(CROSSTOOL-NG_CONFIG) .config; \
 		sed -i "s|^CT_PARALLEL_JOBS=.*|CT_PARALLEL_JOBS=$(PARALLEL_JOBS)|" .config; \
-		export NI_LOCAL_TARBALLS_DIR=$(ARCHIVE); \
+		export NI_LOCAL_TARBALLS_DIR=$(DL_DIR); \
 		export NI_PREFIX_DIR=$(@); \
 		export NI_KERNEL_VERSION=$(KERNEL_VER); \
 		export NI_KERNEL_LOCATION=$(BUILD_TMP)/linux-$(KERNEL_VER).tar; \

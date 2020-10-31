@@ -190,10 +190,10 @@ VUDUO_PATCH = \
 
 # -----------------------------------------------------------------------------
 
-$(ARCHIVE)/$(KERNEL_SOURCE):
+$(DL_DIR)/$(KERNEL_SOURCE):
 	$(DOWNLOAD) $(KERNEL_SITE)/$(KERNEL_SOURCE)
 
-$(ARCHIVE)/$(VMLINUZ-INITRD_SOURCE):
+$(DL_DIR)/$(VMLINUZ-INITRD_SOURCE):
 	$(DOWNLOAD) $(VMLINUZ-INITRD_SITE)/$(VMLINUZ-INITRD_SOURCE)
 
 # -----------------------------------------------------------------------------
@@ -223,7 +223,7 @@ kernel.do_prepare.git:
 	$(CD) $(BUILD_TMP); \
 		mv $(NI-LINUX-KERNEL) $(KERNEL_TMP)
 
-kernel.do_prepare.tar: $(ARCHIVE)/$(KERNEL_SOURCE)
+kernel.do_prepare.tar: $(DL_DIR)/$(KERNEL_SOURCE)
 	$(REMOVE)/$(KERNEL_TMP)
 	$(UNTAR)/$(KERNEL_SOURCE)
 	$(CHDIR)/$(KERNEL_TMP); \
@@ -339,7 +339,7 @@ kernel-modules-mipsbox: kernel-mipsbox
 
 # -----------------------------------------------------------------------------
 
-vmlinuz-initrd: $(ARCHIVE)/$(VMLINUZ-INITRD_SOURCE)
+vmlinuz-initrd: $(DL_DIR)/$(VMLINUZ-INITRD_SOURCE)
 	$(UNTAR)/$(VMLINUZ-INITRD_SOURCE)
 	$(TOUCH)
 

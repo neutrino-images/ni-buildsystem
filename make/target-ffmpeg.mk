@@ -8,7 +8,7 @@ FFMPEG_TMP    = ffmpeg-$(FFMPEG_VER)
 FFMPEG_SOURCE = ffmpeg-$(FFMPEG_VER).tar.xz
 FFMPEG_SITE   = http://www.ffmpeg.org/releases
 
-$(ARCHIVE)/$(FFMPEG_SOURCE):
+$(DL_DIR)/$(FFMPEG_SOURCE):
 	$(DOWNLOAD) $(FFMPEG_SITE)/$(FFMPEG_SOURCE)
 
 FFMPEG_UNPATCHED := no
@@ -342,7 +342,7 @@ endif
 
 # -----------------------------------------------------------------------------
 
-ffmpeg: $(FFMPEG_DEPS) $(ARCHIVE)/$(FFMPEG_SOURCE) | $(TARGET_DIR)
+ffmpeg: $(FFMPEG_DEPS) $(DL_DIR)/$(FFMPEG_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(FFMPEG_TMP)
 	$(UNTAR)/$(FFMPEG_SOURCE)
 ifneq ($(FFMPEG_UNPATCHED), yes)

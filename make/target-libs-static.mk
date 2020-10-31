@@ -17,13 +17,13 @@ CORTEX-STRINGS_TMP    = cortex-strings-$(CORTEX-STRINGS_VER)
 CORTEX-STRINGS_SOURCE = cortex-strings-$(CORTEX-STRINGS_VER).tar.bz2
 CORTEX-STRINGS_SITE   = http://git.linaro.org/git-ro/toolchain/cortex-strings.git
 
-$(ARCHIVE)/$(CORTEX-STRINGS_SOURCE):
-	$(GET-GIT-ARCHIVE) $(CORTEX-STRINGS_SITE) $(CORTEX-STRINGS_VER) $(@F) $(ARCHIVE)
+$(DL_DIR)/$(CORTEX-STRINGS_SOURCE):
+	$(GET-GIT-ARCHIVE) $(CORTEX-STRINGS_SITE) $(CORTEX-STRINGS_VER) $(@F) $(DL_DIR)
 
 CORTEX-STRINGS_CONF   = $(if $(filter $(BOXSERIES), hd5x hd6x vusolo4k vuduo4k vuultimo4k vuzero4k vuuno4k vuuno4kse),--with-neon,--without-neon)
 
 cortex-strings: $(STATIC_LIB_DIR)/libcortex-strings.la
-$(STATIC_LIB_DIR)/libcortex-strings.la: $(ARCHIVE)/$(CORTEX-STRINGS_SOURCE) | $(STATIC_DIR)
+$(STATIC_LIB_DIR)/libcortex-strings.la: $(DL_DIR)/$(CORTEX-STRINGS_SOURCE) | $(STATIC_DIR)
 	$(REMOVE)/$(CORTEX-STRINGS_TMP)
 	$(UNTAR)/$(CORTEX-STRINGS_SOURCE)
 	$(CHDIR)/$(CORTEX-STRINGS_TMP); \
