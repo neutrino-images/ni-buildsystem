@@ -38,7 +38,7 @@ BUSYBOX_MAKE_OPTS = \
 	EXTRA_LDFLAGS="$(TARGET_LDFLAGS)" \
 	CONFIG_PREFIX="$(TARGET_DIR)"
 
-BUSYBOX_BUILD_CONFIG = $(BUILD_TMP)/$(BUSYBOX_TMP)/.config
+BUSYBOX_BUILD_CONFIG = $(BUILD_DIR)/$(BUSYBOX_TMP)/.config
 
 define BUSYBOX_INSTALL_CONFIG
 	$(INSTALL_DATA) $(CONFIGS)/busybox-minimal.config $(BUSYBOX_BUILD_CONFIG)
@@ -272,13 +272,13 @@ mtd-utils: $(MTD-UTILS_DEPS) $(DL_DIR)/$(MTD-UTILS_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE)
 ifeq ($(BOXSERIES), hd2)
-	$(INSTALL_EXEC) -D $(BUILD_TMP)/$(MTD-UTILS_TMP)/nanddump $(TARGET_DIR)/sbin
-	$(INSTALL_EXEC) -D $(BUILD_TMP)/$(MTD-UTILS_TMP)/nandtest $(TARGET_DIR)/sbin
-	$(INSTALL_EXEC) -D $(BUILD_TMP)/$(MTD-UTILS_TMP)/nandwrite $(TARGET_DIR)/sbin
-	$(INSTALL_EXEC) -D $(BUILD_TMP)/$(MTD-UTILS_TMP)/mtd_debug $(TARGET_DIR)/sbin
-	$(INSTALL_EXEC) -D $(BUILD_TMP)/$(MTD-UTILS_TMP)/mkfs.jffs2 $(TARGET_DIR)/sbin
+	$(INSTALL_EXEC) -D $(BUILD_DIR)/$(MTD-UTILS_TMP)/nanddump $(TARGET_DIR)/sbin
+	$(INSTALL_EXEC) -D $(BUILD_DIR)/$(MTD-UTILS_TMP)/nandtest $(TARGET_DIR)/sbin
+	$(INSTALL_EXEC) -D $(BUILD_DIR)/$(MTD-UTILS_TMP)/nandwrite $(TARGET_DIR)/sbin
+	$(INSTALL_EXEC) -D $(BUILD_DIR)/$(MTD-UTILS_TMP)/mtd_debug $(TARGET_DIR)/sbin
+	$(INSTALL_EXEC) -D $(BUILD_DIR)/$(MTD-UTILS_TMP)/mkfs.jffs2 $(TARGET_DIR)/sbin
 endif
-	$(INSTALL_EXEC) -D $(BUILD_TMP)/$(MTD-UTILS_TMP)/flash_erase $(TARGET_DIR)/sbin
+	$(INSTALL_EXEC) -D $(BUILD_DIR)/$(MTD-UTILS_TMP)/flash_erase $(TARGET_DIR)/sbin
 	$(REMOVE)/$(MTD-UTILS_TMP)
 	$(TOUCH)
 
@@ -1513,7 +1513,7 @@ STREAMRIPPER_DEPS   = libvorbisidec libmad glib2
 
 streamripper: $(STREAMRIPPER_DEPS) | $(TARGET_DIR)
 	$(REMOVE)/$(NI-STREAMRIPPER)
-	tar -C $(SOURCE_DIR) -cp $(NI-STREAMRIPPER) --exclude-vcs | tar -C $(BUILD_TMP) -x
+	tar -C $(SOURCE_DIR) -cp $(NI-STREAMRIPPER) --exclude-vcs | tar -C $(BUILD_DIR) -x
 	$(CHDIR)/$(NI-STREAMRIPPER); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
@@ -1646,13 +1646,13 @@ wget: $(WGET_DEPS) $(DL_DIR)/$(WGET_SOURCE) | $(TARGET_DIR)
 
 ofgwrite: $(SOURCE_DIR)/$(NI-OFGWRITE) | $(TARGET_DIR)
 	$(REMOVE)/$(NI-OFGWRITE)
-	tar -C $(SOURCE_DIR) -cp $(NI-OFGWRITE) --exclude-vcs | tar -C $(BUILD_TMP) -x
+	tar -C $(SOURCE_DIR) -cp $(NI-OFGWRITE) --exclude-vcs | tar -C $(BUILD_DIR) -x
 	$(CHDIR)/$(NI-OFGWRITE); \
 		$(MAKE_ENV) \
 		$(MAKE)
-	$(INSTALL_EXEC) $(BUILD_TMP)/$(NI-OFGWRITE)/ofgwrite_bin $(TARGET_DIR)/bin
-	$(INSTALL_EXEC) $(BUILD_TMP)/$(NI-OFGWRITE)/ofgwrite_caller $(TARGET_DIR)/bin
-	$(INSTALL_EXEC) $(BUILD_TMP)/$(NI-OFGWRITE)/ofgwrite $(TARGET_DIR)/bin
+	$(INSTALL_EXEC) $(BUILD_DIR)/$(NI-OFGWRITE)/ofgwrite_bin $(TARGET_DIR)/bin
+	$(INSTALL_EXEC) $(BUILD_DIR)/$(NI-OFGWRITE)/ofgwrite_caller $(TARGET_DIR)/bin
+	$(INSTALL_EXEC) $(BUILD_DIR)/$(NI-OFGWRITE)/ofgwrite $(TARGET_DIR)/bin
 	$(REMOVE)/$(NI-OFGWRITE)
 	$(TOUCH)
 
@@ -1800,7 +1800,7 @@ $(DL_DIR)/$(SYSVINIT_SOURCE):
 
 define SYSVINIT_INSTALL
 	for sbin in halt init shutdown killall5; do \
-		$(INSTALL_EXEC) -D $(BUILD_TMP)/$(SYSVINIT_TMP)/src/$$sbin $(TARGET_DIR)/sbin/$$sbin || exit 1; \
+		$(INSTALL_EXEC) -D $(BUILD_DIR)/$(SYSVINIT_TMP)/src/$$sbin $(TARGET_DIR)/sbin/$$sbin || exit 1; \
 	done
 	ln -sf /sbin/halt $(TARGET_DIR)/sbin/reboot
 	ln -sf /sbin/halt $(TARGET_DIR)/sbin/poweroff

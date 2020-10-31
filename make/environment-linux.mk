@@ -34,7 +34,7 @@ else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7))
   KERNEL_SITE   = http://downloads.mutant-digital.net
 
   KERNEL_BRANCH = $(EMPTY)
-  KERNEL_DTB    = $(BUILD_TMP)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/dts/bcm7445-bcm97445svmb.dtb
+  KERNEL_DTB    = $(BUILD_DIR)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/dts/bcm7445-bcm97445svmb.dtb
   KERNEL_CONFIG = $(CONFIGS)/kernel-hd5x.config
 
   BOOT_PARTITION = 1
@@ -47,7 +47,7 @@ else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd60))
   KERNEL_SITE   = http://source.mynonpublic.com/gfutures
 
   KERNEL_BRANCH = $(EMPTY)
-  KERNEL_DTB    = $(BUILD_TMP)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/dts/hi3798mv200.dtb
+  KERNEL_DTB    = $(BUILD_DIR)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/dts/hi3798mv200.dtb
   KERNEL_CONFIG = $(CONFIGS)/kernel-hd6x.config
 
   BOOT_PARTITION = 4
@@ -60,7 +60,7 @@ else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd61))
   KERNEL_SITE   = http://source.mynonpublic.com/gfutures
 
   KERNEL_BRANCH = $(EMPTY)
-  KERNEL_DTB    = $(BUILD_TMP)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/dts/hi3798mv200.dtb
+  KERNEL_DTB    = $(BUILD_DIR)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/dts/hi3798mv200.dtb
   KERNEL_CONFIG = $(CONFIGS)/kernel-hd6x.config
 
   BOOT_PARTITION = 4
@@ -198,30 +198,30 @@ KERNEL_NAME     = NI $(shell echo $(BOXFAMILY) | sed 's/.*/\u&/') Kernel
 
 # -----------------------------------------------------------------------------
 
-KERNEL_MODULES_DIR  = $(BUILD_TMP)/$(KERNEL_MODULES)/lib/modules/$(KERNEL_VER)
+KERNEL_MODULES_DIR  = $(BUILD_DIR)/$(KERNEL_MODULES)/lib/modules/$(KERNEL_VER)
 
 ifeq ($(BOXMODEL), nevis)
-  KERNEL_UIMAGE     = $(BUILD_TMP)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/Image
+  KERNEL_UIMAGE     = $(BUILD_DIR)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/Image
 else
-  KERNEL_UIMAGE     = $(BUILD_TMP)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/uImage
+  KERNEL_UIMAGE     = $(BUILD_DIR)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/uImage
 endif
-KERNEL_ZIMAGE       = $(BUILD_TMP)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/zImage
-KERNEL_ZIMAGE_DTB   = $(BUILD_TMP)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/zImage_dtb
-KERNEL_VMLINUX      = $(BUILD_TMP)/$(KERNEL_OBJ)/vmlinux
+KERNEL_ZIMAGE       = $(BUILD_DIR)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/zImage
+KERNEL_ZIMAGE_DTB   = $(BUILD_DIR)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/zImage_dtb
+KERNEL_VMLINUX      = $(BUILD_DIR)/$(KERNEL_OBJ)/vmlinux
 
 # -----------------------------------------------------------------------------
 
 KERNEL_MAKEVARS = \
 	ARCH=$(BOXARCH) \
 	CROSS_COMPILE=$(TARGET_CROSS) \
-	INSTALL_MOD_PATH=$(BUILD_TMP)/$(KERNEL_MODULES) \
+	INSTALL_MOD_PATH=$(BUILD_DIR)/$(KERNEL_MODULES) \
 	LOCALVERSION= \
-	O=$(BUILD_TMP)/$(KERNEL_OBJ)
+	O=$(BUILD_DIR)/$(KERNEL_OBJ)
 
 # Compatibility variables
 KERNEL_MAKEVARS += \
 	KVER=$(KERNEL_VER) \
-	KSRC=$(BUILD_TMP)/$(KERNEL_TMP)
+	KSRC=$(BUILD_DIR)/$(KERNEL_TMP)
 
 ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vuduo))
   KERNEL_IMAGE = vmlinux

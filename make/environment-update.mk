@@ -3,7 +3,7 @@
 #
 # -----------------------------------------------------------------------------
 
-UPDATE_TEMP_DIR = $(BUILD_TMP)/temp_inst
+UPDATE_TEMP_DIR = $(BUILD_DIR)/temp_inst
 
 UPDATE_INST_DIR	= $(UPDATE_TEMP_DIR)/inst
 UPDATE_CTRL_DIR	= $(UPDATE_TEMP_DIR)/ctrl

@@ -66,7 +66,7 @@ binutils: $(DL_DIR)/$(BINUTILS_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 	for bin in $(BINUTILS_BIN); do \
-		$(INSTALL_EXEC) $(BUILD_TMP)/$(BINUTILS_TMP)/binutils/$$bin $(TARGET_DIR)/bin/; \
+		$(INSTALL_EXEC) $(BUILD_DIR)/$(BINUTILS_TMP)/binutils/$$bin $(TARGET_DIR)/bin/; \
 	done
 	$(REMOVE)/$(BINUTILS_TMP)
 	$(TOUCH)

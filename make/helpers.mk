@@ -6,7 +6,7 @@
 # execute local scripts
 define local-script
 	@if [ -x $(LOCAL_DIR)/scripts/$(1) ]; then \
-		$(LOCAL_DIR)/scripts/$(1) $(2) $(TARGET_DIR) $(BUILD_TMP); \
+		$(LOCAL_DIR)/scripts/$(1) $(2) $(TARGET_DIR) $(BUILD_DIR); \
 	fi
 endef
 
@@ -65,6 +65,7 @@ define rewrite_libtool
 			$(REWRITE_LIBTOOL)/$${la}; \
 			echo -e "\n# Adapted to buildsystem\n$(REWRITE_LIBTOOL_TAG)" >> $${la}; \
 		fi; \
+	done
 endef
 
 # rewrite libtool libraries automatically
@@ -178,8 +179,8 @@ endef
 # -----------------------------------------------------------------------------
 
 archives-list:
-	@rm -f $(BUILD_TMP)/$(@)
-	@make -qp | grep --only-matching '^\$(DL_DIR).*:' | sed "s|:||g" > $(BUILD_TMP)/$(@)
+	@rm -f $(BUILD_DIR)/$(@)
+	@make -qp | grep --only-matching '^\$(DL_DIR).*:' | sed "s|:||g" > $(BUILD_DIR)/$(@)
 
 DOCLEANUP ?= no
 GETMISSING ?= no
@@ -209,7 +210,7 @@ archives-info: archives-list
 	@echo "[ ** ] Unused archives"
 	@find $(DL_DIR)/ -maxdepth 1 -type f | \
 	while read archive; do \
-		if ! grep -q $$archive $(BUILD_TMP)/archives-list; then \
+		if ! grep -q $$archive $(BUILD_DIR)/archives-list; then \
 			echo -e "[$(TERM_YELLOW) rm $(TERM_NORMAL)] $$archive"; \
 			if [ "$(DOCLEANUP)" = "yes" ]; then \
 				rm $$archive; \
@@ -217,7 +218,7 @@ archives-info: archives-list
 		fi; \
 	done;
 	@echo "[ ** ] Missing archives"
-	@cat $(BUILD_TMP)/archives-list | \
+	@cat $(BUILD_DIR)/archives-list | \
 	while read archive; do \
 		if [ -e $$archive ]; then \
 			#echo -e "[$(TERM_GREEN) ok $(TERM_NORMAL)] $$archive"; \

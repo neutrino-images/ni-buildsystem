@@ -48,7 +48,7 @@ VALGRIND12305_PATCH += valgrind12305-automake-1.11.2.patch
 
 valgrind12305: | $(TARGET_DIR)
 	$(REMOVE)/valgrind
-	svn co -r 12305 svn://svn.valgrind.org/valgrind/trunk $(BUILD_TMP)/valgrind; \
+	svn co -r 12305 svn://svn.valgrind.org/valgrind/trunk $(BUILD_DIR)/valgrind; \
 	$(CHDIR)/valgrind; \
 		svn up --force -r {2011-12-13} VEX; \
 		$(call apply_patches, $(VALGRIND12305_PATCH)); \

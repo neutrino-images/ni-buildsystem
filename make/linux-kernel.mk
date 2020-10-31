@@ -209,9 +209,9 @@ kernel.do_prepare:
 	$(REMOVE)/$(KERNEL_MODULES)
 	$(MKDIR)/$(KERNEL_OBJ)
 	$(MKDIR)/$(KERNEL_MODULES)
-	$(INSTALL_DATA) $(KERNEL_CONFIG) $(BUILD_TMP)/$(KERNEL_OBJ)/.config
+	$(INSTALL_DATA) $(KERNEL_CONFIG) $(BUILD_DIR)/$(KERNEL_OBJ)/.config
 ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7 hd60 hd61))
-	$(INSTALL_DATA) $(PATCHES)/initramfs-subdirboot.cpio.gz $(BUILD_TMP)/$(KERNEL_OBJ)
+	$(INSTALL_DATA) $(PATCHES)/initramfs-subdirboot.cpio.gz $(BUILD_DIR)/$(KERNEL_OBJ)
 endif
 	$(TOUCH)
 
@@ -219,8 +219,8 @@ kernel.do_prepare.git:
 	$(MAKE) kernel.do_checkout
 	#
 	$(REMOVE)/$(KERNEL_TMP)
-	tar -C $(SOURCE_DIR) -cp $(NI-LINUX-KERNEL) --exclude-vcs | tar -C $(BUILD_TMP) -x
-	$(CD) $(BUILD_TMP); \
+	tar -C $(SOURCE_DIR) -cp $(NI-LINUX-KERNEL) --exclude-vcs | tar -C $(BUILD_DIR) -x
+	$(CD) $(BUILD_DIR); \
 		mv $(NI-LINUX-KERNEL) $(KERNEL_TMP)
 
 kernel.do_prepare.tar: $(DL_DIR)/$(KERNEL_SOURCE)

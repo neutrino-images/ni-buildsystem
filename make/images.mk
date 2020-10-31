@@ -3,7 +3,7 @@
 #
 # -----------------------------------------------------------------------------
 
-MKFSFLAGS	= -U -D $(BUILD_TMP)/devtable-$(BOXSERIES).txt -r $(ROOTFS)
+MKFSFLAGS	= -U -D $(BUILD_DIR)/devtable-$(BOXSERIES).txt -r $(ROOTFS)
 ifeq ($(BOXSERIES), hd1)
   MKFSFLAGS	+= -p
 endif
@@ -20,9 +20,9 @@ endif
 
 # -----------------------------------------------------------------------------
 
-devtable: $(BUILD_TMP)/devtable-$(BOXSERIES).txt
+devtable: $(BUILD_DIR)/devtable-$(BOXSERIES).txt
 
-$(BUILD_TMP)/devtable-hd1.txt:
+$(BUILD_DIR)/devtable-hd1.txt:
 	#	<name>		<type>	<mode>	<uid>	<gid>	<major>	<minor>	<start>	<inc>	<count>
 	echo	"/dev/pts	d	755	0	0	-	-	-	-	-"	 > $(@)
 	echo	"/dev/shm	d	755	0	0	-	-	-	-	-"	>> $(@)
@@ -33,7 +33,7 @@ $(BUILD_TMP)/devtable-hd1.txt:
 	echo	"/dev/mtd	c	640	0	0	90	0	0	2	6"	>> $(@)
 	echo	"/dev/mtdblock	b	640	0	0	31	0	0	1	6"	>> $(@)
 
-$(BUILD_TMP)/devtable-hd2.txt:
+$(BUILD_DIR)/devtable-hd2.txt:
 	#	<name>		<type>	<mode>	<uid>	<gid>	<major>	<minor>	<start>	<inc>	<count>
 	echo	"/dev/pts	d	755	0	0	-	-	-	-	-"	 > $(@)
 	echo	"/dev/shm	d	755	0	0	-	-	-	-	-"	>> $(@)
@@ -257,7 +257,7 @@ flash-image-vuplus-multi: | $(IMAGE_DIR)
 	rm -rf $(IMAGE_BUILD_TMP)
 	mkdir -p $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)
 	cp $(TARGET_FILES)/splash-images/ni-splash.bmp $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/splash_auto.bin
-	cp $(BUILD_TMP)/$(VMLINUZ-INITRD) $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/initrd_auto.bin
+	cp $(BUILD_DIR)/$(VMLINUZ-INITRD) $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/initrd_auto.bin
 	echo Dummy for update. > $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/kernel_auto.bin
 	cp $(KERNEL_ZIMAGE) $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/kernel1_auto.bin
 	cp $(KERNEL_ZIMAGE) $(IMAGE_BUILD_TMP)/$(IMAGE_SUBDIR)/kernel2_auto.bin

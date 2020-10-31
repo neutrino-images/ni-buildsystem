@@ -174,7 +174,7 @@ ffmpeg: $(FFMPEG_DEPS) | $(TARGET_DIR)
 	$(REMOVE)/$(NI-FFMPEG)
 	$(CD) $(SOURCE_DIR)/$(NI-FFMPEG); \
 		git checkout $(NI-FFMPEG_BRANCH)
-	tar -C $(SOURCE_DIR) -cp $(NI-FFMPEG) --exclude-vcs | tar -C $(BUILD_TMP) -x
+	tar -C $(SOURCE_DIR) -cp $(NI-FFMPEG) --exclude-vcs | tar -C $(BUILD_DIR) -x
 	$(CHDIR)/$(NI-FFMPEG); \
 		./configure \
 			$(FFMPEG_CONFIGURE_GENERIC) \

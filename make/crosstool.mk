@@ -45,12 +45,12 @@ crosstools-renew:
 # -----------------------------------------------------------------------------
 
 # wrapper for manually call
-kernel-tarball: $(BUILD_TMP)/linux-$(KERNEL_VER).tar
+kernel-tarball: $(BUILD_DIR)/linux-$(KERNEL_VER).tar
 
 # create kernel-tarball
-$(BUILD_TMP)/linux-$(KERNEL_VER).tar: | $(BUILD_TMP)
+$(BUILD_DIR)/linux-$(KERNEL_VER).tar: | $(BUILD_DIR)
 	$(MAKE) kernel.do_prepare.$(if $(filter $(KERNEL_SOURCE),git),git,tar)
-	tar cf $(@) --exclude-vcs -C $(BUILD_TMP)/$(KERNEL_TMP) .
+	tar cf $(@) --exclude-vcs -C $(BUILD_DIR)/$(KERNEL_TMP) .
 
 # -----------------------------------------------------------------------------
 
@@ -81,8 +81,8 @@ UCLIBC_VER = 1.0.24
 # crosstool for arm-hd2 depends on gcc-linaro
 $(CROSS_BASE)/arm/hd2: $(DL_DIR)/$(GCC-LINARO_SOURCE)
 
-$(CROSS_DIR): | $(BUILD_TMP)
-	make $(BUILD_TMP)/linux-$(KERNEL_VER).tar
+$(CROSS_DIR): | $(BUILD_DIR)
+	make $(BUILD_DIR)/linux-$(KERNEL_VER).tar
 	#
 	$(REMOVE)/$(CROSSTOOL-NG_TMP)
 	$(GET-GIT-SOURCE) $(CROSSTOOL-NG_SITE)/$(CROSSTOOL-NG_SOURCE) $(DL_DIR)/$(CROSSTOOL-NG_SOURCE)
@@ -103,7 +103,7 @@ endif
 		export NI_LOCAL_TARBALLS_DIR=$(DL_DIR); \
 		export NI_PREFIX_DIR=$(@); \
 		export NI_KERNEL_VERSION=$(KERNEL_VER); \
-		export NI_KERNEL_LOCATION=$(BUILD_TMP)/linux-$(KERNEL_VER).tar; \
+		export NI_KERNEL_LOCATION=$(BUILD_DIR)/linux-$(KERNEL_VER).tar; \
 		export NI_LIBC_UCLIBC_CONFIG_FILE=$(CONFIGS)/ct-ng-uClibc-$(UCLIBC_VER).config; \
 		export LD_LIBRARY_PATH=; \
 		test -f ./configure || ./bootstrap; \

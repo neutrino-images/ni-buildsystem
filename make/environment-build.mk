@@ -31,10 +31,10 @@ BASE_DIR     := $(shell pwd)
 MAINTAINER   ?= unknown
 WHOAMI       := $(shell id -un)
 DL_DIR        = $(BASE_DIR)/download
-BUILD_TMP     = $(BASE_DIR)/build_tmp
-ROOTFS        = $(BUILD_TMP)/rootfs
+BUILD_DIR     = $(BASE_DIR)/build_tmp
+ROOTFS        = $(BUILD_DIR)/rootfs
 ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd5x))
-  ROOTFS      = $(BUILD_TMP)/rootfs/linuxrootfs1
+  ROOTFS      = $(BUILD_DIR)/rootfs/linuxrootfs1
 endif
 DEPS_DIR      = $(BASE_DIR)/deps
 D             = $(DEPS_DIR)
@@ -74,7 +74,7 @@ PKG_VER         = $($(PKG_UPPER)_VER)
 PKG_TMP         = $($(PKG_UPPER)_TMP)
 PKG_SOURCE      = $($(PKG_UPPER)_SOURCE)
 PKG_SITE        = $($(PKG_UPPER)_SITE)
-PKG_BUILD_TMP   = $(BUILD_TMP)/$(PKG_TMP)
+PKG_BUILD_TMP   = $(BUILD_DIR)/$(PKG_TMP)
 PKG_PATCHES_DIR = $(PATCHES)/$(subst host-,,$(PKG_NAME))
 
 # -----------------------------------------------------------------------------
@@ -212,20 +212,20 @@ PKG_CONFIG_PATH = $(PKG_CONFIG_LIBDIR)/pkgconfig
 DOWNLOAD = wget --no-check-certificate -t3 -T60 -c -P $(DL_DIR)
 
 # unpack archives into build directory
-UNTAR = tar -C $(BUILD_TMP) -xf $(DL_DIR)
-UNZIP = unzip -d $(BUILD_TMP) -o $(DL_DIR)
+UNTAR = tar -C $(BUILD_DIR) -xf $(DL_DIR)
+UNZIP = unzip -d $(BUILD_DIR) -o $(DL_DIR)
 
 # clean up
-REMOVE = rm -rf $(BUILD_TMP)
+REMOVE = rm -rf $(BUILD_DIR)
 
 # apply patches
 PATCH = patch -p1 -i $(PATCHES)
 
 # build helper variables
 CD    = set -e; cd
-CHDIR = $(CD) $(BUILD_TMP)
-MKDIR = mkdir -p $(BUILD_TMP)
-CPDIR = cp -a -t $(BUILD_TMP) $(DL_DIR)
+CHDIR = $(CD) $(BUILD_DIR)
+MKDIR = mkdir -p $(BUILD_DIR)
+CPDIR = cp -a -t $(BUILD_DIR) $(DL_DIR)
 #TOUCH = @touch $(DEPS_DIR)/$(@)
 TOUCH = @touch $(if $(findstring host-,$(@)),$(HOST_DEPS_DIR),$(DEPS_DIR))/$(@)
 

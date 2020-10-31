@@ -7,7 +7,7 @@
 BOOTSTRAP  = $(CROSS_DIR)
 BOOTSTRAP += $(STATIC_DIR)
 BOOTSTRAP += $(DEPS_DIR)
-BOOTSTRAP += $(BUILD_TMP)
+BOOTSTRAP += $(BUILD_DIR)
 BOOTSTRAP += $(STAGING_DIR)
 BOOTSTRAP += $(IMAGE_DIR)
 BOOTSTRAP += $(UPDATE_DIR)
@@ -25,7 +25,7 @@ endif
 # -----------------------------------------------------------------------------
 
 bootstrap: $(BOOTSTRAP)
-	@touch $(BUILD_TMP)/.$(BOXTYPE)-$(BOXMODEL)
+	@touch $(BUILD_DIR)/.$(BOXTYPE)-$(BOXMODEL)
 	$(call draw_line);
 	@echo -e "$(TERM_YELLOW)Bootstrapped for $(shell echo $(BOXTYPE) | sed 's/.*/\u&/') $(BOXNAME) ($(BOXMODEL))$(TERM_NORMAL)"
 	$(call draw_line);
@@ -83,7 +83,7 @@ $(TARGET_DIR):
 
 $(STATIC_DIR) \
 $(DEPS_DIR) \
-$(BUILD_TMP) \
+$(BUILD_DIR) \
 $(STAGING_DIR) \
 $(IMAGE_DIR) \
 $(UPDATE_DIR):

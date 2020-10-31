@@ -17,7 +17,7 @@ endif
 
 # -----------------------------------------------------------------------------
 
-NP_OBJ_DIR = $(BUILD_TMP)/$(NI-NEUTRINO-PLUGINS)
+NP_OBJ_DIR = $(BUILD_DIR)/$(NI-NEUTRINO-PLUGINS)
 
 NP_DEPS  = ffmpeg
 NP_DEPS += libcurl

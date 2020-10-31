@@ -138,7 +138,7 @@ $(HOST_DIR)/bin/mkimage: $(DL_DIR)/$(HOST_U-BOOT_SOURCE) | $(HOST_DIR)
 		$(MAKE) defconfig; \
 		$(MAKE) silentoldconfig; \
 		$(MAKE) tools-only
-	$(INSTALL_EXEC) -D $(BUILD_TMP)/$(HOST_U-BOOT_TMP)/tools/mkimage $(HOST_DIR)/bin/
+	$(INSTALL_EXEC) -D $(BUILD_DIR)/$(HOST_U-BOOT_TMP)/tools/mkimage $(HOST_DIR)/bin/
 	$(REMOVE)/$(HOST_U-BOOT_TMP)
 
 # -----------------------------------------------------------------------------
@@ -168,7 +168,7 @@ host-zic: $(DL_DIR)/$(HOST_TZDATA_SOURCE) $(DL_DIR)/$(HOST_TZCODE_SOURCE) | $(HO
 		tar -xf $(DL_DIR)/$(HOST_TZCODE_SOURCE); \
 		tar -xf $(DL_DIR)/$(HOST_TZDATA_SOURCE); \
 		$(MAKE) zic
-	$(INSTALL_EXEC) -D $(BUILD_TMP)/$(HOST_TZCODE_TMP)/zic $(HOST_ZIC)
+	$(INSTALL_EXEC) -D $(BUILD_DIR)/$(HOST_TZCODE_TMP)/zic $(HOST_ZIC)
 	$(REMOVE)/$(HOST_TZCODE_TMP)
 	$(TOUCH)
 
@@ -296,7 +296,7 @@ host-ninja: $(DL_DIR)/$(HOST_NINJA_SOURCE) | $(HOST_DIR)
 			-DCMAKE_INSTALL_PREFIX="" \
 			; \
 		$(MAKE)
-	$(INSTALL_EXEC) -D $(BUILD_TMP)/$(HOST_NINJA_TMP)/ninja $(HOST_DIR)/bin/ninja
+	$(INSTALL_EXEC) -D $(BUILD_DIR)/$(HOST_NINJA_TMP)/ninja $(HOST_DIR)/bin/ninja
 	$(REMOVE)/$(HOST_NINJA_TMP)
 	$(TOUCH)
 

@@ -4,7 +4,7 @@
 # -----------------------------------------------------------------------------
 
 build-clean:
-	-rm -rf $(BUILD_TMP)
+	-rm -rf $(BUILD_DIR)
 
 cross-base-clean:
 	-rm -rf $(CROSS_BASE)
