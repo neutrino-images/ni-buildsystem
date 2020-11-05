@@ -1763,7 +1763,7 @@ gptfdisk: $(GPTFDISK_DEPS) $(DL_DIR)/$(GPTFDISK_SOURCE) | $(TARGET_DIR)
 RSYNC_VER    = 3.1.3
 RSYNC_DIR    = rsync-$(RSYNC_VER)
 RSYNC_SOURCE = rsync-$(RSYNC_VER).tar.gz
-RSYNC_SITE   = https://ftp.samba.org/pub/rsync
+RSYNC_SITE   = https://download.samba.org/pub/rsync/src/
 
 $(DL_DIR)/$(RSYNC_SOURCE):
 	$(DOWNLOAD) $(RSYNC_SITE)/$(RSYNC_SOURCE)
