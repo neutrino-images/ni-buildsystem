@@ -1799,7 +1799,7 @@ $(DL_DIR)/$(SYSVINIT_SOURCE):
 	$(DOWNLOAD) $(SYSVINIT_SITE)/$(SYSVINIT_SOURCE)
 
 define SYSVINIT_INSTALL
-	for sbin in halt init shutdown killall5; do \
+	for sbin in halt init shutdown killall5 runlevel; do \
 		$(INSTALL_EXEC) -D $(BUILD_DIR)/$(SYSVINIT_DIR)/src/$$sbin $(TARGET_DIR)/sbin/$$sbin || exit 1; \
 	done
 	ln -sf /sbin/halt $(TARGET_DIR)/sbin/reboot
