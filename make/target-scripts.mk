@@ -15,6 +15,7 @@ init-scripts: \
 	$(TARGET_DIR)/etc/init.d/crond \
 	$(TARGET_DIR)/etc/init.d/custom-poweroff \
 	$(TARGET_DIR)/etc/init.d/fstab \
+	$(TARGET_DIR)/etc/init.d/halt \
 	$(TARGET_DIR)/etc/init.d/hostname \
 	$(TARGET_DIR)/etc/init.d/inetd \
 	$(TARGET_DIR)/etc/init.d/mdev \
@@ -64,6 +65,12 @@ endif
 $(TARGET_DIR)/etc/init.d/fstab:
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/fstab.init $(@)
 	$(UPDATE-RC.D) $(@F) defaults 01 98
+
+$(TARGET_DIR)/etc/init.d/halt:
+ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd60 hd61))
+	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/halt.init $(@)
+	$(UPDATE-RC.D) $(@F) start 90 0 .
+endif
 
 $(TARGET_DIR)/etc/init.d/hostname:
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/hostname.init $(@)
