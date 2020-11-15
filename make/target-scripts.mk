@@ -15,7 +15,6 @@ init-scripts: \
 	$(TARGET_DIR)/etc/init.d/crond \
 	$(TARGET_DIR)/etc/init.d/custom-poweroff \
 	$(TARGET_DIR)/etc/init.d/fstab \
-	$(TARGET_DIR)/etc/init.d/halt \
 	$(TARGET_DIR)/etc/init.d/hostname \
 	$(TARGET_DIR)/etc/init.d/inetd \
 	$(TARGET_DIR)/etc/init.d/mdev \
@@ -26,6 +25,8 @@ init-scripts: \
 	$(TARGET_DIR)/etc/init.d/swap \
 	$(TARGET_DIR)/etc/init.d/sys_update.sh \
 	$(TARGET_DIR)/etc/init.d/syslogd \
+	$(TARGET_DIR)/etc/init.d/sendsigs \
+	$(TARGET_DIR)/etc/init.d/umountfs \
 	$(TARGET_DIR)/etc/init.d/suspend \
 	$(TARGET_DIR)/etc/init.d/user-initscripts
 
@@ -65,12 +66,6 @@ endif
 $(TARGET_DIR)/etc/init.d/fstab:
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/fstab.init $(@)
 	$(UPDATE-RC.D) $(@F) defaults 01 98
-
-$(TARGET_DIR)/etc/init.d/halt:
-ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd60 hd61))
-	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/halt.init $(@)
-	$(UPDATE-RC.D) $(@F) start 90 0 .
-endif
 
 $(TARGET_DIR)/etc/init.d/hostname:
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/hostname.init $(@)
@@ -114,6 +109,18 @@ $(TARGET_DIR)/etc/init.d/sys_update.sh:
 $(TARGET_DIR)/etc/init.d/syslogd:
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/syslogd.init $(@)
 	$(UPDATE-RC.D) $(@F) stop 98 0 6 .
+
+$(TARGET_DIR)/etc/init.d/sendsigs:
+ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd60 hd61))
+	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/sendsigs.init $(@)
+	$(UPDATE-RC.D) $(@F) start 85 0 .
+endif
+
+$(TARGET_DIR)/etc/init.d/umountfs:
+ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd60 hd61))
+	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/umountfs.init $(@)
+	$(UPDATE-RC.D) $(@F) start 86 0 .
+endif
 
 $(TARGET_DIR)/etc/init.d/suspend:
 ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd60 hd61))
