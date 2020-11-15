@@ -2,10 +2,25 @@
 
 . /etc/init.d/globals
 
+if [ -e /proc/stb/info/model ]; then
+	model=$(cat /proc/stb/info/model)
+elif [ -e /proc/stb/info/vumodel ]; then
+	model=$(cat /proc/stb/info/vumodel)
+fi
+
 case $1 in
 	start)
-		test -e /proc/cpu/alignment && \
+		if [ -e /proc/cpu/alignment ]; then
 			echo -n "3" > /proc/cpu/alignment
+		fi
+
+		case $model in
+			hd60|hd61)
+				if [ -e /proc/stb/power/powerled2 ]; then
+					echo off > /proc/stb/power/powerled2
+				fi
+			;;
+		esac
 	;;
 	*)
 		echo "[$BASENAME] Usage: $0 {start}"
