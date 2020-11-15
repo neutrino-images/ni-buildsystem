@@ -26,7 +26,44 @@ $(VAR_PLUGINS) : | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
+# Path prefixes
+base_prefix		=
+prefix			= /usr
+exec_prefix		= $(prefix)
+
+# Base paths
+base_bindir		= $(base_prefix)/bin
+base_sbindir		= $(base_prefix)/sbin
+base_libdir		= $(base_prefix)/lib
+
+# -----------------------------------------------------------------------------
+
 # https://www.gnu.org/prep/standards/html_node/Directory-Variables.html
+
+bindir			= $(exec_prefix)/bin
+sbindir			= $(exec_prefix)/sbin
+libexecdir		= $(exec_prefix)/libexec
+datarootdir		= $(prefix)/share
+datadir			= $(datarootdir)
+sysconfdir		= $(base_prefix)/etc
+sharedstatedir		= $(base_prefix)/com
+localstatedir		= $(base_prefix)/var
+runstatedir		= $(localstatedir)/run
+includedir		= $(exec_prefix)/include
+oldincludedir		= $(exec_prefix)/include
+docdir			= $(datadir)/doc
+infodir			= $(datadir)/info
+htmldir			= $(docdir)
+dvidir			= $(docdir)
+pdfdir			= $(docdir)
+psdir			= $(docdir)
+libdir			= $(exec_prefix)/lib
+lispdir			= $(datarootdir)/emacs/site-lisp
+localedir		= $(datarootdir)/locale
+mandir			= $(datadir)/man
+mandir1			= $(mandir)/man1
+mandir2			= $(mandir)/man2
+
 remove-dir		= /.remove
 remove-bindir		= $(remove-dir)/bin
 remove-sbindir		= $(remove-dir)/sbin
@@ -36,7 +73,7 @@ remove-datadir		= $(remove-datarootdir)
 remove-sysconfdir	= $(remove-dir)/etc
 remove-sharedstatedir	= $(remove-dir)/com
 remove-localstatedir	= $(remove-dir)/var
-remove-runstatedir	= $(remove-dir)/run
+remove-runstatedir	= $(remove-localstatedir)/run
 remove-includedir	= $(remove-dir)/include
 remove-oldincludedir	= $(remove-includedir)
 remove-docdir		= $(remove-datarootdir)/doc
