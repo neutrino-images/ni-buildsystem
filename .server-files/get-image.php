@@ -1,7 +1,7 @@
 <?php
 /*
 	Example:
-	http://www.neutrino-images.de/neutrino-images/get-image.php?boxtype=coolstream&boxmodel=kronos(&debug)(&multi)
+	http://www.neutrino-images.de/neutrino-images/get-image.php?boxtype=coolstream&boxmodel=kronos(&debug)(&mmc)
 */
 
 $boxtype = trim($_GET["boxtype"]);
@@ -30,13 +30,13 @@ if (isset($_GET["debug"]))
 		$debug = true;
 }
 
-$multi = false;
-if (isset($_GET["multi"]))
+$mmc = false;
+if (isset($_GET["mmc"]))
 {
-	$_multi = trim($_GET["multi"]);
-	$_multi = strtolower($_multi);
-	if ($_multi != "false" && $_multi != "no")
-		$multi = true;
+	$_mmc = trim($_GET["mmc"]);
+	$_mmc = strtolower($_mmc);
+	if ($_mmc != "false" && $_mmc != "no")
+		$mmc = true;
 }
 
 if ($boxtype == "coolstream" || $boxtype == "cst")
@@ -48,9 +48,12 @@ elseif ($boxtype == "armbox" || $boxtype == "arm")
 {
 	# AX Tech
 	$boxtype_sc = "arm";
-	if ($multi)
+	if ($mmc)
 	{
-		$multi_str = "_multi_usb";
+		if ($boxmodel == "hd60" || $boxmodel == "hd61")
+			$mmc_str = "_single_usb";
+		else
+			$mmc_str = "_multi_usb";
 		$image_ext = "zip";
 	}
 	else
@@ -61,7 +64,7 @@ elseif ($boxtype == "armbox" || $boxtype == "arm")
 $directory = $image_type;
 if ($debug)
 	$directory .= "/debug";
-$pattern = $directory . "/ni" . $image_version . "-" . $image_date . "-" . $boxtype_sc . "-" . $boxmodel . $multi_str . "." . $image_ext;
+$pattern = $directory . "/ni" . $image_version . "-" . $image_date . "-" . $boxtype_sc . "-" . $boxmodel . $mmc_str . "." . $image_ext;
 
 # find last (newest) image
 $last_mod = 0;
