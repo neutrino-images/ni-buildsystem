@@ -308,6 +308,7 @@ flash-image-hd6x-multi-recovery: | $(IMAGE_DIR)
 	rm -rf $(IMAGE_BUILD_DIR)/*.txt
 	rm -rf $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/*.txt
 	rm -rf $(IMAGE_BUILD_DIR)/$(HD6x_IMAGE_LINK)
+	cp $(TARGET_FILES)/splash-images/ni-splash-$(BOXSERIES).img $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/logo.img
 	echo $(IMAGE_NAME)_recovery > $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/recoveryversion
 	echo "***** ACHTUNG *****" >$(IMAGE_BUILD_DIR)/recovery_$(BOXMODEL)_lies.mich
 	echo "Das RECOVERY wird nur benötigt wenn es Probleme beim Zugriff auf das MULTIBOOT MENÜ gibt." >> $(IMAGE_BUILD_DIR)/recovery_$(BOXMODEL)_lies.mich
