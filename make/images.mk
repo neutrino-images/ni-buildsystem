@@ -49,7 +49,7 @@ devtable-remove:
 
 # -----------------------------------------------------------------------------
 
-flash-image:
+flash-image: rootfs
 ifeq ($(BOXMODEL), $(filter $(BOXMODEL), nevis kronos kronos_v2))
 	make flash-image-coolstream ERASE_SIZE=0x20000
 endif
@@ -63,7 +63,7 @@ ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7))
 endif
 ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd60 hd61))
 	make flash-image-hd6x
-	make flash-image-hd6x-multi
+	make flash-image-hd6x-single
 endif
 ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
 	make flash-image-vuplus
@@ -211,12 +211,11 @@ flash-image-hd5x-multi: | $(IMAGE_DIR)
 		bzip2 $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/rootfs.tar
 	echo $(IMAGE_PREFIX) > $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/imageversion
 	$(CD) $(IMAGE_BUILD_DIR); \
-		zip -r $(IMAGE_DIR)/$(IMAGE_NAME)_multi_usb.zip $(IMAGE_SUBDIR)/*
+		zip -r $(IMAGE_DIR)/$(IMAGE_NAME)_multi_usb.zip *
 	rm -rf $(IMAGE_BUILD_DIR)
 
 # -----------------------------------------------------------------------------
 
-# hd60, hd61
 flash-image-hd6x: IMAGE_DATE=$(shell cat $(ROOTFS)/.version | grep "^version=" | cut -d= -f2 | cut -c 5-)
 flash-image-hd6x: | $(IMAGE_DIR)
 	rm -rf $(IMAGE_BUILD_DIR)
@@ -233,7 +232,112 @@ flash-image-hd6x: | $(IMAGE_DIR)
 
 # -----------------------------------------------------------------------------
 
-flash-image-hd6x-multi:
+# hd60, hd61
+HD6x_IMAGE_NAME = disk
+HD6x_BOOT_IMAGE = bootoptions.img
+HD6x_IMAGE_LINK = $(HD6x_IMAGE_NAME).ext4
+
+# partition offsets/sizes
+HD6x_BOOTOPTIONS_PARTITION_SIZE = 32768
+HD6x_IMAGE_ROOTFS_SIZE          = 1024M
+
+HD6x_BOOTARGS_DATE    = 20200504
+HD6x_BOOTARGS_SOURCE  = $(BOXMODEL)-bootargs-$(HD6x_BOOTARGS_DATE).zip
+HD6x_PARTITONS_DATE   = 20200319
+HD6x_PARTITONS_SOURCE = $(BOXMODEL)-partitions-$(HD6x_PARTITONS_DATE).zip
+HD6x_RECOVERY_DATE    = 20200424
+HD6x_RECOVERY_SOURCE  = $(BOXMODEL)-recovery-$(HD6x_RECOVERY_DATE).zip
+
+HD6x_MULTI_DISK_VER  = 1.0
+HD6x_MULTI_DISK_SITE = http://downloads.mutant-digital.net/$(BOXMODEL)
+
+$(DL_DIR)/$(HD6x_BOOTARGS_SOURCE):
+	$(DOWNLOAD) $(HD6x_MULTI_DISK_SITE)/$(HD6x_BOOTARGS_SOURCE)
+
+$(DL_DIR)/$(HD6x_PARTITONS_SOURCE):
+	$(DOWNLOAD) $(HD6x_MULTI_DISK_SITE)/$(HD6x_PARTITONS_SOURCE)
+
+$(DL_DIR)/$(HD6x_RECOVERY_SOURCE):
+	$(DOWNLOAD) $(HD6x_MULTI_DISK_SITE)/$(HD6x_RECOVERY_SOURCE)
+
+flash-image-hd6x-multi-recovery: $(DL_DIR)/$(HD6x_BOOTARGS_SOURCE)
+flash-image-hd6x-multi-recovery: $(DL_DIR)/$(HD6x_PARTITONS_SOURCE)
+flash-image-hd6x-multi-recovery: $(DL_DIR)/$(HD6x_RECOVERY_SOURCE)
+flash-image-hd6x-multi-recovery: | $(IMAGE_DIR)
+	rm -rf $(IMAGE_BUILD_DIR)
+	mkdir -p $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)
+	unzip -o $(DL_DIR)/$(HD6x_BOOTARGS_SOURCE) -d $(IMAGE_BUILD_DIR)
+	unzip -o $(DL_DIR)/$(HD6x_PARTITONS_SOURCE) -d $(IMAGE_BUILD_DIR)
+	unzip -o $(DL_DIR)/$(HD6x_RECOVERY_SOURCE) -d $(IMAGE_BUILD_DIR)
+	$(INSTALL_EXEC) $(IMAGE_BUILD_DIR)/bootargs-8gb.bin $(ROOTFS)/share/bootargs.bin
+	$(INSTALL_EXEC) $(IMAGE_BUILD_DIR)/fastboot.bin $(ROOTFS)/share/fastboot.bin
+	dd if=/dev/zero of=$(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(HD6x_BOOT_IMAGE) bs=1024 count=$(HD6x_BOOTOPTIONS_PARTITION_SIZE)
+	mkfs.msdos -S 512 $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(HD6x_BOOT_IMAGE)
+	echo "bootcmd=setenv bootargs \$$(bootargs) \$$(bootargs_common); mmc read 0 0x1000000 0x3BD000 0x8000; bootm 0x1000000; run bootcmd_fallback" > $(IMAGE_BUILD_DIR)/STARTUP
+	echo "bootargs=root=/dev/mmcblk0p23 rootsubdir=linuxrootfs1 rootfstype=ext4 kernel=/dev/mmcblk0p19" >> $(IMAGE_BUILD_DIR)/STARTUP
+	echo "bootcmd=setenv vfd_msg andr;setenv bootargs \$$(bootargs) \$$(bootargs_common); run bootcmd_android; run bootcmd_fallback" > $(IMAGE_BUILD_DIR)/STARTUP_ANDROID
+	echo "bootargs=androidboot.selinux=disable androidboot.serialno=0123456789" >> $(IMAGE_BUILD_DIR)/STARTUP_ANDROID
+	echo "bootcmd=setenv vfd_msg andr;setenv bootargs \$$(bootargs) \$$(bootargs_common); run bootcmd_android; run bootcmd_fallback" > $(IMAGE_BUILD_DIR)/STARTUP_ANDROID_DISABLE_LINUXSE
+	echo "bootargs=androidboot.selinux=disable androidboot.serialno=0123456789" >> $(IMAGE_BUILD_DIR)/STARTUP_ANDROID_DISABLE_LINUXSE
+	echo "bootcmd=setenv bootargs \$$(bootargs) \$$(bootargs_common); mmc read 0 0x1000000 0x3BD000 0x8000; bootm 0x1000000; run bootcmd_fallback" > $(IMAGE_BUILD_DIR)/STARTUP_LINUX_1
+	echo "bootargs=root=/dev/mmcblk0p23 rootsubdir=linuxrootfs1 rootfstype=ext4 kernel=/dev/mmcblk0p19" >> $(IMAGE_BUILD_DIR)/STARTUP_LINUX_1
+	echo "bootcmd=setenv bootargs \$$(bootargs) \$$(bootargs_common); mmc read 0 0x1000000 0x3C5000 0x8000; bootm 0x1000000; run bootcmd_fallback" > $(IMAGE_BUILD_DIR)/STARTUP_LINUX_2
+	echo "bootargs=root=/dev/mmcblk0p23 rootsubdir=linuxrootfs2 rootfstype=ext4 kernel=/dev/mmcblk0p20" >> $(IMAGE_BUILD_DIR)/STARTUP_LINUX_2
+	echo "bootcmd=setenv bootargs \$$(bootargs) \$$(bootargs_common); mmc read 0 0x1000000 0x3CD000 0x8000; bootm 0x1000000; run bootcmd_fallback" > $(IMAGE_BUILD_DIR)/STARTUP_LINUX_3
+	echo "bootargs=root=/dev/mmcblk0p23 rootsubdir=linuxrootfs3 rootfstype=ext4 kernel=/dev/mmcblk0p21" >> $(IMAGE_BUILD_DIR)/STARTUP_LINUX_3
+	echo "bootcmd=setenv bootargs \$$(bootargs) \$$(bootargs_common); mmc read 0 0x1000000 0x3D5000 0x8000; bootm 0x1000000; run bootcmd_fallback" > $(IMAGE_BUILD_DIR)/STARTUP_LINUX_4
+	echo "bootargs=root=/dev/mmcblk0p23 rootsubdir=linuxrootfs4 rootfstype=ext4 kernel=/dev/mmcblk0p22" >> $(IMAGE_BUILD_DIR)/STARTUP_LINUX_4
+	echo "bootcmd=setenv bootargs \$$(bootargs_common); mmc read 0 0x1000000 0x1000 0x9000; bootm 0x1000000" > $(IMAGE_BUILD_DIR)/STARTUP_RECOVERY
+	echo "bootcmd=setenv bootargs \$$(bootargs_common); mmc read 0 0x1000000 0x1000 0x9000; bootm 0x1000000" > $(IMAGE_BUILD_DIR)/STARTUP_ONCE
+	$(INSTALL_DATA) -D $(BOOTMENU_DIR)/$(BOXMODEL)/bootmenu.conf $(IMAGE_BUILD_DIR)/bootmenu.conf
+	mcopy -i $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(HD6x_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP ::
+	mcopy -i $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(HD6x_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP_ANDROID ::
+	mcopy -i $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(HD6x_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP_ANDROID_DISABLE_LINUXSE ::
+	mcopy -i $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(HD6x_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP_LINUX_1 ::
+	mcopy -i $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(HD6x_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP_LINUX_2 ::
+	mcopy -i $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(HD6x_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP_LINUX_3 ::
+	mcopy -i $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(HD6x_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP_LINUX_4 ::
+	mcopy -i $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(HD6x_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP_RECOVERY ::
+	mcopy -i $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(HD6x_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/bootmenu.conf ::
+	mv $(IMAGE_BUILD_DIR)/bootargs-8gb.bin $(IMAGE_BUILD_DIR)/bootargs.bin
+	mv $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/bootargs-8gb.bin $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/bootargs.bin
+	mv $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/pq_param.bin $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/pqparam.bin
+	echo boot-recovery > $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/misc-boot.img
+	rm -rf $(IMAGE_BUILD_DIR)/STARTUP*
+	rm -rf $(IMAGE_BUILD_DIR)/*.conf
+	rm -rf $(IMAGE_BUILD_DIR)/*.txt
+	rm -rf $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/*.txt
+	rm -rf $(IMAGE_BUILD_DIR)/$(HD6x_IMAGE_LINK)
+	echo $(IMAGE_NAME)_recovery > $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/recoveryversion
+	echo "***** ACHTUNG *****" >$(IMAGE_BUILD_DIR)/recovery_$(BOXMODEL)_lies.mich
+	echo "Das RECOVERY wird nur benötigt wenn es Probleme beim Zugriff auf das MULTIBOOT MENÜ gibt." >> $(IMAGE_BUILD_DIR)/recovery_$(BOXMODEL)_lies.mich
+	echo "Das $(IMAGE_NAME)_multi_recovery.zip sollte normalerweise nur einmal installiert werden (oder wenn es ein Update gibt)." >> $(IMAGE_BUILD_DIR)/recovery_$(BOXMODEL)_lies.mich
+	echo "Dies ist erforderlich, um Probleme mit dem Images zuvermeiden, wenn sich der Aufbau der Partition (bootargs) ändert." >> $(IMAGE_BUILD_DIR)/recovery_$(BOXMODEL)_lies.mich
+	echo "Die Änderungen können alle Daten im Flash löschen. Nur installieren, wenn es notwendig ist." >> $(IMAGE_BUILD_DIR)/recovery_$(BOXMODEL)_lies.mich
+	echo "***** ATTENTION *****" > $(IMAGE_BUILD_DIR)/recovery_$(BOXMODEL)_read.me
+	echo "This RECOVERY is only needed when you have issues access the MULTIBOOT MENU." >> $(IMAGE_BUILD_DIR)/recovery_$(BOXMODEL)_read.me
+	echo "The $(IMAGE_NAME)_multi_recovery.zip should been installed just once (or if there is an update)." >> $(IMAGE_BUILD_DIR)/recovery_$(BOXMODEL)_read.me
+	echo "This is necessary to avoid problems with the image if the partition structure (bootargs) changes." >> $(IMAGE_BUILD_DIR)/recovery_$(BOXMODEL)_read.me
+	echo "A small change can destroy all your installed images. So you better leave it and don't install it if it's not needed." >> $(IMAGE_BUILD_DIR)/recovery_$(BOXMODEL)_read.me
+	$(CD) $(IMAGE_BUILD_DIR); \
+		zip -r $(IMAGE_DIR)/$(IMAGE_NAME)_multi_recovery.zip *
+	rm -rf $(IMAGE_BUILD_DIR)
+
+flash-image-hd6x-single: flash-image-hd6x-multi-recovery
+flash-image-hd6x-single: | $(IMAGE_DIR)
+	rm -rf $(IMAGE_BUILD_DIR)
+	mkdir -p $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)
+	cp $(KERNEL_UIMAGE) $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/uImage
+	$(CD) $(ROOTFS); \
+		tar -cvf $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/rootfs.tar -C $(ROOTFS) . >/dev/null 2>&1; \
+		bzip2 $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/rootfs.tar
+	echo $(IMAGE_NAME) > $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/imageversion
+	echo "$(IMAGE_NAME)_single_mmc.zip" > $(IMAGE_BUILD_DIR)/unforce_$(BOXMODEL).txt
+	echo "Rename the unforce_$(BOXMODEL).txt to force_$(BOXMODEL).txt and move it to the root of your usb-stick" > $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/force_$(BOXMODEL)_read.me
+	echo "When you enter the recovery menu then it will force to install the image $(IMAGE_NAME)_single_mmc.zip into image-slot1" >> $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/force_$(BOXMODEL)_read.me
+	$(CD) $(IMAGE_BUILD_DIR); \
+		zip -r $(IMAGE_DIR)/$(IMAGE_NAME)_single_mmc.zip *
+	rm -rf $(IMAGE_BUILD_DIR)
 
 # -----------------------------------------------------------------------------
 
@@ -279,7 +383,7 @@ endif
 	echo $(IMAGE_PREFIX) > $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/imageversion
 	# Create final USB-image
 	$(CD) $(IMAGE_BUILD_DIR); \
-		zip -r $(IMAGE_DIR)/$(IMAGE_NAME)_multi_usb.zip $(IMAGE_SUBDIR)/*
+		zip -r $(IMAGE_DIR)/$(IMAGE_NAME)_multi_usb.zip *
 	rm -rf $(IMAGE_BUILD_DIR)
 
 # -----------------------------------------------------------------------------
@@ -295,6 +399,7 @@ PHONY += check-image-size
 PHONY += flash-image-hd5x
 PHONY += flash-image-hd5x-multi
 PHONY += flash-image-hd6x
-PHONY += flash-image-hd6x-multi
+PHONY += flash-image-hd6x-multi-recovery
+PHONY += flash-image-hd6x-single
 PHONY += flash-image-vuplus
 PHONY += flash-image-vuplus-multi
