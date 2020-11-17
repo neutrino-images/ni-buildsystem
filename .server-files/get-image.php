@@ -9,6 +9,22 @@ $boxtype_sc = ""; # autofilled
 $boxseries = trim($_GET["boxseries"]);
 $boxmodel = trim($_GET["boxmodel"]);
 
+$debug = false;
+$mmc = false;
+
+if ($boxmodel == "hd60-mmc" || $boxmodel == "hd61-mmc")
+{
+	$boxtype = "armbox";
+
+	if ($boxmodel == "hd60-mmc")
+		$boxmodel = "hd60";
+	elseif ($boxmodel == "hd61-mmc")
+		$boxmodel = "hd61";
+
+	$mmc = true;
+}
+
+
 $image_version = "???"; # wildcard for version (e.g. 320)
 $image_date = "????????????"; # wildcard for date (e.g. 201601012359)
 $image_type = "nightly";
@@ -21,7 +37,6 @@ $boxseries = strtolower($boxseries);
 $boxmodel = strtolower($boxmodel);
 $image_type = strtolower($image_type);
 
-$debug = false;
 if (isset($_GET["debug"]))
 {
 	$_debug = trim($_GET["debug"]);
@@ -30,7 +45,6 @@ if (isset($_GET["debug"]))
 		$debug = true;
 }
 
-$mmc = false;
 if (isset($_GET["mmc"]))
 {
 	$_mmc = trim($_GET["mmc"]);
@@ -51,7 +65,7 @@ elseif ($boxtype == "armbox" || $boxtype == "arm")
 	if ($mmc)
 	{
 		if ($boxmodel == "hd60" || $boxmodel == "hd61")
-			$mmc_str = "_single_usb";
+			$mmc_str = "_single_mmc";
 		else
 			$mmc_str = "_multi_usb";
 		$image_ext = "zip";
