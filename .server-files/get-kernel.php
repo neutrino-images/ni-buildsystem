@@ -52,8 +52,13 @@ if (!file_exists($kernel))
 else
 {
 	# send kernel
-	header("Content-Type: application/octet-stream");
-	header("Content-Disposition: attachment; filename=\"$kernel\"");
+	header('Content-Description: File Transfer');
+	header('Content-Type: application/octet-stream');
+	header('Content-Disposition: attachment; filename="' . basename($kernel) . '"');
+	header('Expires: 0');
+	header('Cache-Control: must-revalidate');
+	header('Pragma: public');
+	header('Content-Length: ' . filesize($kernel));
 	readfile($kernel);
 }
 ?>
