@@ -23,8 +23,8 @@ PARTNAME=""
 for i in $BLOCKS; do
 	if [ "$i" != "$BLOCKS" ]; then
 		DEVNAME=$(cat $i | grep DEVNAME | cut -d '=' -f 2)
+		PARTNAME=$(cat $i | grep PARTNAME | cut -d '=' -f 2)
 		if [ "$DEVNAME" == "$MDEV" ]; then
-			PARTNAME=$(cat $i | grep PARTNAME | cut -d '=' -f 2)
 			if [ -n "$(echo $PARTNAME | grep 'kernel')" ]; then
 				KERNELDEV=$DEVNAME
 				K_PARTNAME=$PARTNAME
