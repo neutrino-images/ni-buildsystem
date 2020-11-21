@@ -1,7 +1,7 @@
 <?php
 /*
 	Example:
-	http://www.neutrino-images.de/neutrino-images/get-kernel.php?boxtype=coolstream&boxmodel=kronos
+	http://www.neutrino-images.de/neutrino-images/get-kernel.php?boxtype=armbox&boxmodel=hd51
 */
 
 $boxtype = trim($_GET["boxtype"]);

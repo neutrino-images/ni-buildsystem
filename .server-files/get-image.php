@@ -1,7 +1,7 @@
 <?php
 /*
 	Example:
-	http://www.neutrino-images.de/neutrino-images/get-image.php?boxtype=coolstream&boxmodel=kronos(&debug)(&mmc)
+	http://www.neutrino-images.de/neutrino-images/get-image.php?boxtype=armbox&boxmodel=hd51(&debug)(&mmc)(&recovery)
 */
 
 $boxtype = trim($_GET["boxtype"]);
@@ -11,6 +11,7 @@ $boxmodel = trim($_GET["boxmodel"]);
 
 $debug = false;
 $mmc = false;
+$recovery = false;
 
 if ($boxmodel == "hd60-mmc" || $boxmodel == "hd61-mmc")
 {
@@ -24,11 +25,11 @@ if ($boxmodel == "hd60-mmc" || $boxmodel == "hd61-mmc")
 	$mmc = true;
 }
 
-
 $image_version = "???"; # wildcard for version (e.g. 320)
 $image_date = "????????????"; # wildcard for date (e.g. 201601012359)
 $image_type = "nightly";
-$image_ext = "img";
+
+$add_str = "";
 
 # convert strings to lower case
 $boxtype = strtolower($boxtype);
@@ -53,21 +54,35 @@ if (isset($_GET["mmc"]))
 		$mmc = true;
 }
 
+if (isset($_GET["recovery"]))
+{
+	$_recovery = trim($_GET["recovery"]);
+	$_recovery = strtolower($_recovery);
+	if ($_recovery != "false" && $_recovery != "no")
+		$recovery = true;
+}
+
 if ($boxtype == "coolstream" || $boxtype == "cst")
 {
-	# CST
 	$boxtype_sc = "cst";
+	$image_ext = "img";
 }
 elseif ($boxtype == "armbox" || $boxtype == "arm")
 {
-	# AX Tech
 	$boxtype_sc = "arm";
-	if ($mmc)
+	if ($mmc || $recovery)
 	{
 		if ($boxmodel == "hd60" || $boxmodel == "hd61")
-			$mmc_str = "_single_mmc";
+		{
+			if ($mmc)
+				$add_str = "_single_mmc";
+			else
+				$add_str = "_multi_recovery";
+		}
 		else
-			$mmc_str = "_multi_usb";
+		{
+			$add_str = "_multi_usb";
+		}
 		$image_ext = "zip";
 	}
 	else
@@ -78,7 +93,7 @@ elseif ($boxtype == "armbox" || $boxtype == "arm")
 $directory = $image_type;
 if ($debug)
 	$directory .= "/debug";
-$pattern = $directory . "/ni" . $image_version . "-" . $image_date . "-" . $boxtype_sc . "-" . $boxmodel . $mmc_str . "." . $image_ext;
+$pattern = $directory . "/ni" . $image_version . "-" . $image_date . "-" . $boxtype_sc . "-" . $boxmodel . $add_str . "." . $image_ext;
 
 # find last (newest) image
 $last_mod = 0;
