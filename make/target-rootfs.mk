@@ -4,7 +4,7 @@
 # -----------------------------------------------------------------------------
 
 target-finish: .version update.urls symbolic-links
-	sed -i 's|%(YEAR)|$(shell date +%Y)|' $(TARGET_DIR)/etc/init.d/rcS
+	sed -i 's|%(YEAR)|$(shell date +%Y)|' $(TARGET_sysconfdir)/init.d/rcS
 ifeq ($(BOXTYPE), armbox)
 	make e2-multiboot
 endif
@@ -29,8 +29,8 @@ endif
 
 # -----------------------------------------------------------------------------
 
-update.urls: $(TARGET_DIR)/var/etc/update.urls
-$(TARGET_DIR)/var/etc/update.urls: | $(TARGET_DIR)
+update.urls: $(TARGET_localstatedir)/etc/update.urls
+$(TARGET_localstatedir)/etc/update.urls: | $(TARGET_DIR)
 	echo "$(NI-SERVER)/update.php"				 > $(@)
 	echo "$(CHANNELLISTS_SITE)/$(CHANNELLISTS_MD5FILE)"	>> $(@)
 
@@ -39,46 +39,45 @@ $(TARGET_DIR)/var/etc/update.urls: | $(TARGET_DIR)
 # create symbolic links in TARGET_DIR
 symbolic-links: | $(TARGET_DIR)
 	$(CD) $(TARGET_DIR); \
-		ln -sf /var/root root; \
-		ln -sf /var/root home
-	$(CD) $(TARGET_DIR)/var; \
+		ln -sf /var/root ./root; \
+		ln -sf /var/root ./home; \
+		ln -sf /usr/share ./share
+	$(CD) $(TARGET_localstatedir); \
 		rm -rf run; ln -sf /tmp run; \
 		rm -rf tmp; ln -sf /tmp tmp
-	$(CD) $(TARGET_DIR)/etc; \
+	$(CD) $(TARGET_sysconfdir); \
 		ln -sf /proc/mounts mtab
 ifeq ($(PERSISTENT_VAR_PARTITION), yes)
-	$(CD) $(TARGET_DIR)/etc; \
+	$(CD) $(TARGET_sysconfdir); \
 		ln -sf /var/etc/exports exports; \
 		ln -sf /var/etc/hostname hostname; \
 		ln -sf /var/etc/localtime localtime; \
 		ln -sf /var/etc/passwd passwd; \
 		ln -sf /var/etc/resolv.conf resolv.conf; \
 		ln -sf /var/etc/wpa_supplicant.conf wpa_supplicant.conf
-	$(CD) $(TARGET_DIR)/etc/network; \
+	$(CD) $(TARGET_sysconfdir)/network; \
 		ln -sf /var/etc/network/interfaces interfaces
 endif
-	mkdir -p $(TARGET_DIR)/var/tuxbox/config
-	$(CD) $(TARGET_DIR)/var/tuxbox/config; \
+	mkdir -p $(TARGET_localstatedir)/tuxbox/config
+	$(CD) $(TARGET_localstatedir)/tuxbox/config; \
 		ln -sf /var/keys/SoftCam.Key SoftCam.Key
-	$(CD) $(TARGET_USR_DIR); \
-		ln -sf /share share
 
 # -----------------------------------------------------------------------------
 
 e2-multiboot: | $(TARGET_DIR)
-	mkdir -p $(TARGET_USR_BIN_DIR)
-	echo -e "#!/bin/sh\necho Nope!" > $(TARGET_USR_BIN_DIR)/enigma2
-	chmod 0755 $(TARGET_USR_BIN_DIR)/enigma2
+	mkdir -p $(TARGET_bindir)
+	echo -e "#!/bin/sh\necho Nope!" > $(TARGET_bindir)/enigma2
+	chmod 0755 $(TARGET_bindir)/enigma2
 	#
-	echo -e "NI $(IMAGE_VERSION) \\\n \\\l\n" > $(TARGET_DIR)/etc/issue
+	echo -e "NI $(IMAGE_VERSION) \\\n \\\l\n" > $(TARGET_sysconfdir)/issue
 	#
-	mkdir -p $(TARGET_SHARE_DIR)
-	touch $(TARGET_SHARE_DIR)/bootlogo.mvi
+	mkdir -p $(TARGET_datadir)
+	touch $(TARGET_datadir)/bootlogo.mvi
 	#
-	mkdir -p $(TARGET_DIR)/var/lib/opkg
-	touch $(TARGET_DIR)/var/lib/opkg/status
+	mkdir -p $(TARGET_localstatedir)/lib/opkg
+	touch $(TARGET_localstatedir)/lib/opkg/status
 	#
-	$(INSTALL_DATA) $(TARGET_DIR)/.version $(TARGET_DIR)/etc/image-version
+	$(INSTALL_DATA) $(TARGET_DIR)/.version $(TARGET_sysconfdir)/image-version
 
 # -----------------------------------------------------------------------------
 
@@ -106,24 +105,32 @@ $(ROOTFS): | $(TARGET_DIR)
 
 # cleanup root filesystem from useless stuff
 rootfs-cleanup: $(ROOTFS)
-	rm -rf $(ROOTFS)$(remove-dir)
-	rm -rf $(ROOTFS)/include
-	rm -rf $(ROOTFS)/lib/pkgconfig
-	rm -rf $(ROOTFS)/lib/sigc++*
-	rm -rf $(ROOTFS)/lib/glib-2.0
-	rm -f  $(ROOTFS)/lib/libvorbisenc*
+	rm -rf $(ROOTFS)$(REMOVE_dir)
+	rm -rf $(ROOTFS)$(base_includedir)
+	rm -rf $(ROOTFS)$(includedir)
+	rm -rf $(ROOTFS)$(libdir)/pkgconfig
+	rm -rf $(ROOTFS)$(libdir)/sigc++*
+	rm -rf $(ROOTFS)$(libdir)/glib-2.0
+	rm -f  $(ROOTFS)$(libdir)/libvorbisenc*
 	find $(ROOTFS) \( -name .gitignore -o -name .gitkeep \) -type f -print0 | xargs --no-run-if-empty -0 rm -f
 	find $(ROOTFS) \( -name Makefile.am \) -type f -print0 | xargs --no-run-if-empty -0 rm -f
-	find $(ROOTFS)/lib \( -name '*.a' -o -name '*.la' \) -print0 | xargs --no-run-if-empty -0 rm -f
+	find $(ROOTFS)$(base_libdir) \( -name '*.a' -o -name '*.la' \) -print0 | xargs --no-run-if-empty -0 rm -f
+	find $(ROOTFS)$(libdir) \( -name '*.a' -o -name '*.la' \) -print0 | xargs --no-run-if-empty -0 rm -f
 	@echo -e "$(TERM_YELLOW)"
+	@echo -n "After cleanup: "
 	@du -sh $(ROOTFS)
 	@echo -e "$(TERM_NORMAL)"
 
 # -----------------------------------------------------------------------------
 
-ROOTFS-STRIP_DIRS  = /bin
-ROOTFS-STRIP_DIRS += /sbin
-ROOTFS-STRIP_DIRS += /share/tuxbox/neutrino/plugins
+ROOTFS-STRIP_BINS  = $(base_bindir)
+ROOTFS-STRIP_BINS += $(base_sbindir)
+ROOTFS-STRIP_BINS += $(bindir)
+ROOTFS-STRIP_BINS += $(sbindir)
+ROOTFS-STRIP_BINS += /usr/share/tuxbox/neutrino/plugins
+
+ROOTFS-STRIP_LIBS  = $(base_libdir)
+ROOTFS-STRIP_LIBS += $(libdir)
 
 # strip bins and libs in root filesystem
 rootfs-strip: $(ROOTFS)
@@ -131,20 +138,23 @@ ifneq ($(DEBUG), yes)
 	$(call draw_line);
 	@echo "The following warnings from strip are harmless!"
 	$(call draw_line);
-	for dir in $(ROOTFS-STRIP_DIRS); do \
+	for dir in $(ROOTFS-STRIP_BINS); do \
 		find $(ROOTFS)$${dir} -type f -print0 | xargs -0 $(TARGET_STRIP) || true; \
 	done
-	find $(ROOTFS)/lib \( \
-			-path $(ROOTFS)/lib/libnexus.so -o \
-			-path $(ROOTFS)/lib/libnxpl.so -o \
-			-path $(ROOTFS)/lib/libv3ddriver.so -o \
-			\
-			-path $(ROOTFS)/lib/modules \) -prune -o \
-	-type f -print0 | xargs -0 $(TARGET_STRIP) || true
+	for dir in $(ROOTFS-STRIP_LIBS); do \
+		find $(ROOTFS)$${dir} \( \
+				-path $(ROOTFS)/lib/libnexus.so -o \
+				-path $(ROOTFS)/lib/libnxpl.so -o \
+				-path $(ROOTFS)/lib/libv3ddriver.so -o \
+				\
+				-path $(ROOTFS)/lib/modules \) -prune -o \
+		-type f -print0 | xargs -0 $(TARGET_STRIP) || true; \
+	done
   ifeq ($(BOXSERIES), hd2)
 	find $(ROOTFS)/lib/modules/$(KERNEL_VER)/kernel -type f -name '*.ko' | xargs -n 1 $(TARGET_OBJCOPY) --strip-unneeded
   endif
 	@echo -e "$(TERM_YELLOW)"
+	@echo -n "After strip: "
 	@du -sh $(ROOTFS)
 	@echo -e "$(TERM_NORMAL)"
 endif
@@ -189,7 +199,7 @@ endif
 
 PHONY += target-finish
 PHONY += .version $(TARGET_DIR)/.version
-PHONY += update.urls $(TARGET_DIR)/var/etc/update.urls
+PHONY += update.urls $(TARGET_localstatedir)/etc/update.urls
 PHONY += symbolic-links
 PHONY += e2-multiboot
 PHONY += personalize

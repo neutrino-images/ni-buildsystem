@@ -70,7 +70,8 @@ $(NP_OBJ_DIR)/config.status: $(NP_DEPS)
 		$(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/configure \
 			--host=$(TARGET) \
 			--build=$(BUILD) \
-			--prefix= \
+			--prefix=$(prefix) \
+			--sysconfdir=$(sysconfdir) \
 			--enable-maintainer-mode \
 			--enable-silent-rules \
 			\
@@ -80,7 +81,7 @@ $(NP_OBJ_DIR)/config.status: $(NP_DEPS)
 			$(NP_CONFIGURE_ADDITIONS) \
 			\
 			--with-target=cdk \
-			--with-targetprefix= \
+			--with-targetprefix=$(prefix) \
 			--with-boxtype=$(BOXTYPE) \
 			--with-boxmodel=$(NP_BOXMODEL)
 
@@ -99,18 +100,18 @@ NP_INIT-SCRIPTS += turnoff_power
 
 define NP_RUNLEVEL-LINKS_INSTALL
 	for script in $(NP_INIT-SCRIPTS-DEFAULTS); do \
-		if [ -x $(TARGET_DIR)/etc/init.d/$$script ]; then \
+		if [ -x $(TARGET_sysconfdir)/init.d/$$script ]; then \
 			$(UPDATE-RC.D) $$script defaults 80 20; \
 		fi; \
 	done
-	if [ -x $(TARGET_DIR)/etc/init.d/turnoff_power ]; then \
+	if [ -x $(TARGET_sysconfdir)/init.d/turnoff_power ]; then \
 		$(UPDATE-RC.D) turnoff_power start 99 0 .; \
 	fi
 endef
 
 define NP_RUNLEVEL-LINKS_UNINSTALL
 	for link in $(NP_INIT-SCRIPTS); do \
-		find $(TARGET_DIR)/etc -type l -name [SK]??$$link -print0 | \
+		find $(TARGET_sysconfdir) -type l -name [SK]??$$link -print0 | \
 			xargs --no-run-if-empty -0 rm -f; \
 	done
 endef
@@ -172,8 +173,8 @@ logo-addon: $(SOURCE_DIR)/$(NI-LOGO-STUFF) $(SHARE_PLUGINS)
 # -----------------------------------------------------------------------------
 
 doscam-webif-skin:
-	$(INSTALL_DATA) -D $(TARGET_FILES)/doscam-webif-skin/doscam_ni-dark.css $(TARGET_SHARE_DIR)/doscam/skin/doscam_ni-dark.css
-	$(INSTALL_DATA) -D $(TARGET_FILES)/doscam-webif-skin/IC_doscam_ni.tpl $(TARGET_SHARE_DIR)/doscam/tpl/IC_doscam_ni.tpl
+	$(INSTALL_DATA) -D $(TARGET_FILES)/doscam-webif-skin/doscam_ni-dark.css $(TARGET_datadir)/doscam/skin/doscam_ni-dark.css
+	$(INSTALL_DATA) -D $(TARGET_FILES)/doscam-webif-skin/IC_doscam_ni.tpl $(TARGET_datadir)/doscam/tpl/IC_doscam_ni.tpl
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -189,7 +190,7 @@ neutrino-mediathek: $(SHARE_PLUGINS) | $(TARGET_DIR)
 	$(CPDIR)/$(NEUTRINO-MEDIATHEK_SOURCE)
 	$(CHDIR)/$(NEUTRINO-MEDIATHEK_DIR); \
 		$(INSTALL_COPY) plugins/* $(SHARE_PLUGINS)/; \
-		$(INSTALL_COPY) share $(TARGET_DIR)
+		$(INSTALL_COPY) share/* $(TARGET_datadir)
 	$(REMOVE)/$(NEUTRINO-MEDIATHEK_DIR)
 	# temporarily use beta-version from our board
 	rm -rf $(SHARE_PLUGINS)/neutrino-mediathek*
@@ -232,8 +233,8 @@ links: $(LINKS_DEPS) $(DL_DIR)/$(LINKS_SOURCE) $(SHARE_PLUGINS) | $(TARGET_DIR)
 		$(call apply_patches, $(LINKS_PATCH)); \
 		autoreconf -vfi; \
 		$(CONFIGURE) \
-			--prefix= \
-			--mandir=$(remove-mandir) \
+			--prefix=$(prefix) \
+			--mandir=$(REMOVE_mandir) \
 			--enable-graphics \
 			--with-fb \
 			--with-libjpeg \
@@ -248,7 +249,7 @@ links: $(LINKS_DEPS) $(DL_DIR)/$(LINKS_SOURCE) $(SHARE_PLUGINS) | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	mv -f $(TARGET_BIN_DIR)/links $(SHARE_PLUGINS)/links.so
+	mv -f $(TARGET_bindir)/links $(SHARE_PLUGINS)/links.so
 	$(INSTALL_COPY) $(TARGET_FILES)/links/* $(TARGET_DIR)/
 	$(REMOVE)/$(LINKS_DIR)
 	$(TOUCH)

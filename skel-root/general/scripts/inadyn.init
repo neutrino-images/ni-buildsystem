@@ -5,7 +5,7 @@
 case $1 in
 	start)
 		if [ -e /var/etc/.inadyn ]; then
-			/sbin/inadyn --cache-dir=/tmp/.inadyn
+			/usr/sbin/inadyn --cache-dir=/tmp/.inadyn
 		fi
 	;;
 	stop)

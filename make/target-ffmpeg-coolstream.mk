@@ -20,9 +20,9 @@ endif
 # -----------------------------------------------------------------------------
 
 FFMPEG_CONFIGURE_GENERIC = \
-			--prefix=/ \
+			--prefix=$(prefix) \
 			--cross-prefix=$(TARGET_CROSS) \
-			--datadir=$(remove-datadir) \
+			--datadir=$(REMOVE_datadir) \
 			\
 			--disable-doc \
 			--disable-htmlpages \
@@ -156,7 +156,7 @@ ifeq ($(BOXSERIES), hd1)
   FFMPEG_CONFIGURE_PLATFORM = \
 			--enable-small \
 			--cpu=armv6 \
-			--extra-cflags="-Wno-deprecated-declarations -I$(TARGET_INCLUDE_DIR)"
+			--extra-cflags="-Wno-deprecated-declarations -I$(TARGET_includedir)"
 endif
 
 ifeq ($(BOXSERIES), hd2)
@@ -165,7 +165,7 @@ ifeq ($(BOXSERIES), hd2)
 			--enable-decoder=vc1 \
 			--enable-hardcoded-tables \
 			--cpu=cortex-a9 \
-			--extra-cflags="-Wno-deprecated-declarations -I$(TARGET_INCLUDE_DIR) -mfpu=vfpv3-d16 -mfloat-abi=hard"
+			--extra-cflags="-Wno-deprecated-declarations -I$(TARGET_includedir) -mfpu=vfpv3-d16 -mfloat-abi=hard"
 endif
 
 # -----------------------------------------------------------------------------

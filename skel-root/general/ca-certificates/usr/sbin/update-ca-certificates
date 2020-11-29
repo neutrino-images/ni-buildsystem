@@ -25,7 +25,7 @@ verbose=0
 fresh=0
 default=0
 CERTSCONF=/etc/ca-certificates.conf
-CERTSDIR=/share/ca-certificates
+CERTSDIR=/usr/share/ca-certificates
 LOCALCERTSDIR=/var/share/ca-certificates
 CERTBUNDLE=ca-certificates.crt
 ETCCERTSDIR=/etc/ssl/certs
@@ -180,7 +180,7 @@ fi
 chmod 0644 "$TEMPBUNDLE"
 mv -f "$TEMPBUNDLE" "$CERTBUNDLE"
 # Restore proper SELinux label after moving the file
-[ -x /sbin/restorecon ] && /sbin/restorecon "$CERTBUNDLE" >/dev/null 2>&1
+[ -x /usr/sbin/restorecon ] && /usr/sbin/restorecon "$CERTBUNDLE" >/dev/null 2>&1
 
 echo "$ADDED_CNT added, $REMOVED_CNT removed; done."
 

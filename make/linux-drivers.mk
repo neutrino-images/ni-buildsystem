@@ -13,7 +13,7 @@ rtl8192eu: kernel-$(BOXTYPE) | $(TARGET_DIR)
 	$(CPDIR)/$(RTL8192EU_SOURCE)
 	$(CHDIR)/$(RTL8192EU_SOURCE); \
 		$(MAKE) $(KERNEL_MAKEVARS); \
-		$(INSTALL_DATA) 8192eu.ko $(TARGET_MODULES_DIR)/kernel/drivers/net/wireless/
+		$(INSTALL_DATA) 8192eu.ko $(TARGET_modulesdir)/kernel/drivers/net/wireless/
 	make depmod
 	$(REMOVE)/$(RTL8192EU_SOURCE)
 	$(TOUCH)

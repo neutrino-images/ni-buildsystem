@@ -96,16 +96,16 @@ endef
 
 define BUSYBOX_ADD_TO_SHELLS
 	if grep -q 'CONFIG_ASH=y' $(BUSYBOX_BUILD_CONFIG); then \
-		grep -qsE '^/bin/ash$$' $(TARGET_DIR)/etc/shells \
-			|| echo "/bin/ash" >> $(TARGET_DIR)/etc/shells; \
+		grep -qsE '^/bin/ash$$' $(TARGET_sysconfdir)/shells \
+			|| echo "/bin/ash" >> $(TARGET_sysconfdir)/shells; \
 	fi
 	if grep -q 'CONFIG_HUSH=y' $(BUSYBOX_BUILD_CONFIG); then \
-		grep -qsE '^/bin/hush$$' $(TARGET_DIR)/etc/shells \
-			|| echo "/bin/hush" >> $(TARGET_DIR)/etc/shells; \
+		grep -qsE '^/bin/hush$$' $(TARGET_sysconfdir)/shells \
+			|| echo "/bin/hush" >> $(TARGET_sysconfdir)/shells; \
 	fi
 	if grep -q 'CONFIG_SH_IS_ASH=y\|CONFIG_SH_IS_HUSH=y' $(BUSYBOX_BUILD_CONFIG); then \
-		grep -qsE '^/bin/sh$$' $(TARGET_DIR)/etc/shells \
-			|| echo "/bin/sh" >> $(TARGET_DIR)/etc/shells; \
+		grep -qsE '^/bin/sh$$' $(TARGET_sysconfdir)/shells \
+			|| echo "/bin/sh" >> $(TARGET_sysconfdir)/shells; \
 	fi
 endef
 
@@ -144,10 +144,10 @@ openvpn: $(OPENVPN_DEPS) $(DL_DIR)/$(OPENVPN_SOURCE) | $(TARGET_DIR)
 			NETSTAT="/bin/netstat" \
 			ROUTE="/sbin/route" \
 			IPROUTE="/sbin/ip" \
-			--prefix= \
-			--mandir=$(remove-mandir) \
-			--docdir=$(remove-docdir) \
-			--infodir=$(remove-infodir) \
+			--prefix=$(prefix) \
+			--mandir=$(REMOVE_mandir) \
+			--docdir=$(REMOVE_docdir) \
+			--infodir=$(REMOVE_infodir) \
 			--enable-shared \
 			--disable-static \
 			--enable-small \
@@ -181,15 +181,16 @@ openssh: $(OPENSSH_DEPS) $(DL_DIR)/$(OPENSSH_SOURCE) | $(TARGET_DIR)
 		export ac_cv_search_dlopen=no; \
 		./configure \
 			$(CONFIGURE_OPTS) \
-			--prefix= \
-			--mandir=$(remove-mandir) \
-			--docdir=$(remove-docdir) \
-			--infodir=$(remove-infodir) \
+			--prefix=$(prefix) \
+			--mandir=$(REMOVE_mandir) \
+			--docdir=$(REMOVE_docdir) \
+			--infodir=$(REMOVE_infodir) \
+			--sysconfdir=$(sysconfdir)/ssh \
+			--libexecdir=$(sbindir) \
 			--with-pid-dir=/tmp \
 			--with-privsep-path=/var/empty \
-			--with-cppflags="-pipe $(TARGET_OPTIMIZATION) $(TARGET_DEBUGGING) $(TARGET_ABI) -I$(TARGET_INCLUDE_DIR)" \
-			--with-ldflags="-L$(TARGET_LIB_DIR)" \
-			--libexecdir=/bin \
+			--with-cppflags="-pipe $(TARGET_OPTIMIZATION) $(TARGET_DEBUGGING) $(TARGET_ABI) -I$(TARGET_includedir)" \
+			--with-ldflags="-L$(TARGET_libdir)" \
 			--disable-strip \
 			--disable-lastlog \
 			--disable-utmp \
@@ -238,11 +239,11 @@ tzdata: $(TZDATA_DEPS) $(DL_DIR)/$(TZDATA_SOURCE) | $(TARGET_DIR)
 			done; \
 			test -e zoneinfo/$$x || echo "WARNING: timezone $$x not found."; \
 		done; \
-		mkdir -p $(TARGET_SHARE_DIR); \
-		rm -rf $(TARGET_SHARE_DIR)/zoneinfo; \
-		mv zoneinfo/ $(TARGET_SHARE_DIR)/
-	$(INSTALL_DATA) -D $(TARGET_FILES)/tzdata/timezone.xml $(TARGET_DIR)/etc/timezone.xml
-	$(INSTALL_DATA) $(TARGET_SHARE_DIR)/zoneinfo/CET $(TARGET_DIR)$(ETC_LOCALTIME)
+		mkdir -p $(TARGET_datadir); \
+		rm -rf $(TARGET_datadir)/zoneinfo; \
+		mv zoneinfo/ $(TARGET_datadir)/
+	$(INSTALL_DATA) -D $(TARGET_FILES)/tzdata/timezone.xml $(TARGET_sysconfdir)/timezone.xml
+	$(INSTALL_DATA) $(TARGET_datadir)/zoneinfo/CET $(TARGET_DIR)$(ETC_LOCALTIME)
 	$(REMOVE)/$(TZDATA_DIR)
 	$(TOUCH)
 
@@ -264,21 +265,21 @@ mtd-utils: $(MTD-UTILS_DEPS) $(DL_DIR)/$(MTD-UTILS_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(MTD-UTILS_DIR); \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
-			--prefix= \
-			--mandir=$(remove-mandir) \
+			--prefix=$(prefix) \
+			--mandir=$(REMOVE_mandir) \
 			--enable-silent-rules \
 			--disable-tests \
 			--without-xattr \
 			; \
 		$(MAKE)
 ifeq ($(BOXSERIES), hd2)
-	$(INSTALL_EXEC) -D $(BUILD_DIR)/$(MTD-UTILS_DIR)/nanddump $(TARGET_DIR)/sbin
-	$(INSTALL_EXEC) -D $(BUILD_DIR)/$(MTD-UTILS_DIR)/nandtest $(TARGET_DIR)/sbin
-	$(INSTALL_EXEC) -D $(BUILD_DIR)/$(MTD-UTILS_DIR)/nandwrite $(TARGET_DIR)/sbin
-	$(INSTALL_EXEC) -D $(BUILD_DIR)/$(MTD-UTILS_DIR)/mtd_debug $(TARGET_DIR)/sbin
-	$(INSTALL_EXEC) -D $(BUILD_DIR)/$(MTD-UTILS_DIR)/mkfs.jffs2 $(TARGET_DIR)/sbin
+	$(INSTALL_EXEC) -D $(BUILD_DIR)/$(MTD-UTILS_DIR)/nanddump $(TARGET_sbindir)
+	$(INSTALL_EXEC) -D $(BUILD_DIR)/$(MTD-UTILS_DIR)/nandtest $(TARGET_sbindir)
+	$(INSTALL_EXEC) -D $(BUILD_DIR)/$(MTD-UTILS_DIR)/nandwrite $(TARGET_sbindir)
+	$(INSTALL_EXEC) -D $(BUILD_DIR)/$(MTD-UTILS_DIR)/mtd_debug $(TARGET_sbindir)
+	$(INSTALL_EXEC) -D $(BUILD_DIR)/$(MTD-UTILS_DIR)/mkfs.jffs2 $(TARGET_sbindir)
 endif
-	$(INSTALL_EXEC) -D $(BUILD_DIR)/$(MTD-UTILS_DIR)/flash_erase $(TARGET_DIR)/sbin
+	$(INSTALL_EXEC) -D $(BUILD_DIR)/$(MTD-UTILS_DIR)/flash_erase $(TARGET_sbindir)
 	$(REMOVE)/$(MTD-UTILS_DIR)
 	$(TOUCH)
 
@@ -301,8 +302,8 @@ iperf: $(DL_DIR)/$(IPERF_SOURCE) | $(TARGET_DIR)
 		$(call apply_patches, $(IPERF_PATCH)); \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
-			--prefix= \
-			--mandir=$(remove-mandir) \
+			--prefix=$(prefix) \
+			--mandir=$(REMOVE_mandir) \
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
@@ -333,9 +334,9 @@ parted: $(PARTED_DEPS) $(DL_DIR)/$(PARTED_SOURCE) | $(TARGET_DIR)
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
-			--prefix= \
-			--mandir=$(remove-mandir) \
-			--infodir=$(remove-infodir) \
+			--prefix=$(prefix) \
+			--mandir=$(REMOVE_mandir) \
+			--infodir=$(REMOVE_infodir) \
 			--enable-silent-rules \
 			--enable-shared \
 			--disable-static \
@@ -368,7 +369,7 @@ hdparm: $(DL_DIR)/$(HDPARM_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(HDPARM_DIR); \
 		$(MAKE_ENV) \
 		$(MAKE); \
-		$(INSTALL_EXEC) -D hdparm $(TARGET_DIR)/sbin/hdparm
+		$(INSTALL_EXEC) -D hdparm $(TARGET_sbindir)/hdparm
 	$(REMOVE)/$(HDPARM_DIR)
 	$(TOUCH)
 
@@ -388,7 +389,7 @@ hd-idle: $(DL_DIR)/$(HD-IDLE_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(HD-IDLE_DIR); \
 		$(MAKE_ENV) \
 		$(MAKE); \
-		$(INSTALL_EXEC) -D hd-idle $(TARGET_DIR)/sbin/hd-idle
+		$(INSTALL_EXEC) -D hd-idle $(TARGET_sbindir)/hd-idle
 	$(REMOVE)/$(HD-IDLE_DIR)
 	$(TOUCH)
 
@@ -414,10 +415,10 @@ coreutils: $(DL_DIR)/$(COREUTILS_SOURCE) | $(TARGET_DIR)
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
-			--prefix= \
+			--prefix=$(base_prefix) \
 			--bindir=/bin.$(@F) \
-			--libexecdir=$(remove-libexecdir) \
-			--datarootdir=$(remove-datarootdir) \
+			--libexecdir=$(REMOVE_libexecdir) \
+			--datarootdir=$(REMOVE_datarootdir) \
 			--enable-silent-rules \
 			--disable-xattr \
 			--disable-libcap \
@@ -428,8 +429,8 @@ coreutils: $(DL_DIR)/$(COREUTILS_SOURCE) | $(TARGET_DIR)
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	for bin in $(COREUTILS_BIN); do \
-		rm -f $(TARGET_DIR)/bin/$$bin; \
-		$(INSTALL_EXEC) $(TARGET_DIR)/bin.$(@F)/$$bin $(TARGET_DIR)/bin/$$bin; \
+		rm -f $(TARGET_bindir)/$$bin; \
+		$(INSTALL_EXEC) -D $(TARGET_DIR)/bin.$(@F)/$$bin $(TARGET_bindir)/$$bin; \
 	done
 	$(REMOVE)/$(COREUTILS_DIR) \
 		$(TARGET_DIR)/bin.$(@F)
@@ -453,8 +454,8 @@ less: $(LESS_DEPS) $(DL_DIR)/$(LESS_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(LESS_DIR); \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
-			--prefix= \
-			--mandir=$(remove-mandir) \
+			--prefix=$(prefix) \
+			--mandir=$(REMOVE_mandir) \
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
@@ -480,7 +481,7 @@ ntp: $(NTP_DEPS) $(DL_DIR)/$(NTP_SOURCE) | $(TARGET_DIR)
 		$(APPLY_PATCHES); \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
-			--prefix= \
+			--prefix=$(prefix) \
 			--disable-debugging \
 			--with-shared \
 			--with-crypto \
@@ -488,8 +489,8 @@ ntp: $(NTP_DEPS) $(DL_DIR)/$(NTP_SOURCE) | $(TARGET_DIR)
 			--without-ntpsnmpd \
 			; \
 		$(MAKE); \
-		$(INSTALL_EXEC) -D ntpdate/ntpdate $(TARGET_DIR)/sbin/ntpdate
-	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/ntpdate.init $(TARGET_DIR)/etc/init.d/ntpdate
+		$(INSTALL_EXEC) -D ntpdate/ntpdate $(TARGET_sbindir)/ntpdate
+	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/ntpdate.init $(TARGET_sysconfdir)/init.d/ntpdate
 	$(REMOVE)/$(NTP_DIR)
 	$(TOUCH)
 
@@ -522,12 +523,12 @@ djmount: $(DJMOUNT_DEPS) $(DL_DIR)/$(DJMOUNT_SOURCE) | $(TARGET_DIR)
 		touch libupnp/config.aux/config.rpath; \
 		autoreconf -fi; \
 		$(CONFIGURE) -C \
-			--prefix= \
+			--prefix=$(prefix) \
 			--disable-debug \
 			; \
 		make; \
 		make install DESTDIR=$(TARGET_DIR)
-	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/djmount.init $(TARGET_DIR)/etc/init.d/djmount
+	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/djmount.init $(TARGET_sysconfdir)/init.d/djmount
 	$(UPDATE-RC.D) djmount defaults 75 25
 	$(REMOVE)/$(DJMOUNT_DIR)
 	$(TOUCH)
@@ -555,20 +556,19 @@ ushare: $(USHARE_DEPS) $(DL_DIR)/$(USHARE_SOURCE)| $(TARGET_DIR)
 		$(call apply_patches, $(USHARE_PATCH)); \
 		$(MAKE_ENV) \
 		./configure \
-			--prefix= \
+			--prefix=$(prefix) \
+			--sysconfdir=$(sysconfdir) \
 			--disable-dlna \
 			--disable-nls \
 			--cross-compile \
 			--cross-prefix=$(TARGET_CROSS) \
 			; \
-		sed -i config.h -e 's@SYSCONFDIR.*@SYSCONFDIR "/etc"@'; \
-		sed -i config.h -e 's@LOCALEDIR.*@LOCALEDIR "/share"@'; \
 		ln -sf ../config.h src/; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(INSTALL_DATA) -D $(TARGET_FILES)/configs/ushare.conf $(TARGET_DIR)/etc/ushare.conf
-	sed -i 's|%(BOXTYPE)|$(BOXTYPE)|; s|%(BOXMODEL)|$(BOXMODEL)|' $(TARGET_DIR)/etc/ushare.conf
-	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/ushare.init $(TARGET_DIR)/etc/init.d/ushare
+	$(INSTALL_DATA) -D $(TARGET_FILES)/configs/ushare.conf $(TARGET_sysconfdir)/ushare.conf
+	sed -i 's|%(BOXTYPE)|$(BOXTYPE)|; s|%(BOXMODEL)|$(BOXMODEL)|' $(TARGET_sysconfdir)/ushare.conf
+	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/ushare.init $(TARGET_sysconfdir)/init.d/ushare
 	$(UPDATE-RC.D) ushare defaults 75 25
 	$(REMOVE)/$(USHARE_DIR)
 	$(TOUCH)
@@ -589,10 +589,10 @@ smartmontools: $(DL_DIR)/$(SMARTMONTOOLS_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(SMARTMONTOOLS_DIR); \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
-			--prefix= \
+			--prefix=$(prefix) \
 			; \
 		$(MAKE); \
-		$(INSTALL_EXEC) -D smartctl $(TARGET_DIR)/sbin/smartctl
+		$(INSTALL_EXEC) -D smartctl $(TARGET_sbindir)/smartctl
 	$(REMOVE)/$(SMARTMONTOOLS_DIR)
 	$(TOUCH)
 
@@ -614,18 +614,18 @@ inadyn: $(INADYN_DEPS) $(DL_DIR)/$(INADYN_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(INADYN_DIR); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
-			--prefix= \
-			--libdir=$(TARGET_LIB_DIR) \
-			--includedir=$(TARGET_INCLUDE_DIR) \
-			--mandir=$(remove-mandir) \
-			--docdir=$(remove-docdir) \
+			--prefix=$(prefix) \
+			--libdir=$(TARGET_libdir) \
+			--includedir=$(TARGET_includedir) \
+			--mandir=$(REMOVE_mandir) \
+			--docdir=$(REMOVE_docdir) \
 			--enable-openssl \
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(INSTALL_DATA) -D $(TARGET_FILES)/configs/inadyn.conf $(TARGET_DIR)/var/etc/inadyn.conf
-	ln -sf /var/etc/inadyn.conf $(TARGET_DIR)/etc/inadyn.conf
-	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/inadyn.init $(TARGET_DIR)/etc/init.d/inadyn
+	$(INSTALL_DATA) -D $(TARGET_FILES)/configs/inadyn.conf $(TARGET_localstatedir)/etc/inadyn.conf
+	ln -sf /var/etc/inadyn.conf $(TARGET_sysconfdir)/inadyn.conf
+	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/inadyn.init $(TARGET_sysconfdir)/init.d/inadyn
 	$(UPDATE-RC.D) inadyn defaults 75 25
 	$(REMOVE)/$(INADYN_DIR)
 	$(TOUCH)
@@ -656,11 +656,11 @@ vsftpd: $(VSFTPD_DEPS) $(DL_DIR)/$(VSFTPD_SOURCE) | $(TARGET_DIR)
 		sed -i -e 's/.*VSF_BUILD_SSL/#define VSF_BUILD_SSL/' builddefs.h; \
 		$(MAKE) clean; \
 		$(MAKE) $(MAKE_ENV) LIBS="-lcrypt -lcrypto -lssl"; \
-		$(INSTALL_EXEC) -D vsftpd $(TARGET_DIR)/sbin/vsftpd
-	mkdir -p $(TARGET_SHARE_DIR)/empty
-	$(INSTALL_DATA) -D $(TARGET_FILES)/configs/vsftpd.conf $(TARGET_DIR)/etc/vsftpd.conf
-	$(INSTALL_DATA) -D $(TARGET_FILES)/configs/vsftpd.chroot_list $(TARGET_DIR)/etc/vsftpd.chroot_list
-	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/vsftpd.init $(TARGET_DIR)/etc/init.d/vsftpd
+		$(INSTALL_EXEC) -D vsftpd $(TARGET_sbindir)/vsftpd
+	mkdir -p $(TARGET_datadir)/empty
+	$(INSTALL_DATA) -D $(TARGET_FILES)/configs/vsftpd.conf $(TARGET_sysconfdir)/vsftpd.conf
+	$(INSTALL_DATA) -D $(TARGET_FILES)/configs/vsftpd.chroot_list $(TARGET_sysconfdir)/vsftpd.chroot_list
+	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/vsftpd.init $(TARGET_sysconfdir)/init.d/vsftpd
 	$(UPDATE-RC.D) vsftpd defaults 75 25
 	$(REMOVE)/$(VSFTPD_DIR)
 	$(TOUCH)
@@ -691,17 +691,18 @@ procps-ng: $(PROCPS-NG_DEPS) $(DL_DIR)/$(PROCPS-NG_SOURCE) | $(TARGET_DIR)
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
-			--prefix= \
+			--prefix=$(base_prefix) \
 			--bindir=/bin.$(@F) \
 			--sbindir=/sbin.$(@F) \
-			--datarootdir=$(remove-datarootdir) \
+			--includedir=$(includedir) \
+			--datarootdir=$(REMOVE_datarootdir) \
 			--without-systemd \
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	for bin in $(PROCPS-NG_BIN); do \
-		rm -f $(TARGET_DIR)/bin/$$bin; \
-		$(INSTALL_EXEC) $(TARGET_DIR)/bin.$(@F)/$$bin $(TARGET_DIR)/bin/$$bin; \
+		rm -f $(TARGET_bindir)/$$bin; \
+		$(INSTALL_EXEC) -D $(TARGET_DIR)/bin.$(@F)/$$bin $(TARGET_bindir)/$$bin; \
 	done
 	$(REWRITE_LIBTOOL_LA)
 	$(REWRITE_PKGCONF_PC)
@@ -729,8 +730,8 @@ nano: $(NANO_DEPS) $(DL_DIR)/$(NANO_SOURCE) | $(TARGET_DIR)
 		export ac_cv_prog_NCURSESW_CONFIG=false; \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
-			--prefix= \
-			--datarootdir=$(remove-datarootdir) \
+			--prefix=$(prefix) \
+			--datarootdir=$(REMOVE_datarootdir) \
 			--disable-nls \
 			--enable-tiny \
 			; \
@@ -760,11 +761,11 @@ minicom: $(MINICOM_DEPS) $(DL_DIR)/$(MINICOM_SOURCE) | $(TARGET_DIR)
 		$(call apply_patches, $(MINICOM_PATCH)); \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
-			--prefix= \
+			--prefix=$(prefix) \
 			--disable-nls \
 			; \
 		$(MAKE); \
-		$(INSTALL_EXEC) src/minicom $(TARGET_DIR)/bin
+		$(INSTALL_EXEC) src/minicom $(TARGET_bindir)
 	$(REMOVE)/$(MINICOM_DIR)
 	$(TOUCH)
 
@@ -781,8 +782,8 @@ $(DL_DIR)/$(BASH_SOURCE):
 BASH_PATCH  = $(PATCHES)/bash
 
 define BASH_ADD_TO_SHELLS
-	grep -qsE '^/bin/bash$$' $(TARGET_DIR)/etc/shells \
-		|| echo "/bin/bash" >> $(TARGET_DIR)/etc/shells
+	grep -qsE '^/bin/bash$$' $(TARGET_sysconfdir)/shells \
+		|| echo "/bin/bash" >> $(TARGET_sysconfdir)/shells
 endef
 
 bash: $(DL_DIR)/$(BASH_SOURCE) | $(TARGET_DIR)
@@ -791,13 +792,13 @@ bash: $(DL_DIR)/$(BASH_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(BASH_DIR); \
 		$(call apply_patches, $(BASH_PATCH), 0); \
 		$(CONFIGURE) \
-			--prefix= \
-			--datarootdir=$(remove-datarootdir) \
+			--prefix=$(prefix) \
+			--datarootdir=$(REMOVE_datarootdir) \
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF_PC)
-	-rm $(addprefix $(TARGET_LIB_DIR)/bash/, loadables.h Makefile.inc)
+	-rm $(addprefix $(TARGET_libdir)/bash/, loadables.h Makefile.inc)
 	$(BASH_ADD_TO_SHELLS)
 	$(REMOVE)/$(BASH_DIR)
 	$(TOUCH)
@@ -821,8 +822,9 @@ e2fsprogs: $(DL_DIR)/$(E2FSPROGS_SOURCE) | $(TARGET_DIR)
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
-			--prefix=/ \
-			--datarootdir=$(remove-datarootdir) \
+			--prefix=$(prefix) \
+			--sysconfdir=$(sysconfdir) \
+			--datarootdir=$(REMOVE_datarootdir) \
 			--disable-nls \
 			--disable-profile \
 			--disable-e2initrd-helper \
@@ -850,8 +852,8 @@ e2fsprogs: $(DL_DIR)/$(E2FSPROGS_SOURCE) | $(TARGET_DIR)
 		$(MAKE) install DESTDIR=$(TARGET_DIR); \
 		cd lib/uuid/; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	-rm $(addprefix $(TARGET_DIR)/bin/, chattr compile_et lsattr mk_cmds uuidgen)
-	-rm $(addprefix $(TARGET_DIR)/sbin/, dumpe2fs e2freefrag e2mmpstatus e2undo e4crypt filefrag logsave)
+	-rm $(addprefix $(TARGET_bin)/, chattr compile_et lsattr mk_cmds uuidgen)
+	-rm $(addprefix $(TARGET_sbindir)/, dumpe2fs e2freefrag e2mmpstatus e2undo e4crypt filefrag logsave)
 	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(E2FSPROGS_DIR)
 	$(TOUCH)
@@ -871,18 +873,18 @@ ntfs-3g: $(DL_DIR)/$(NTFS-3G_SOURCE) | $(TARGET_DIR)
 	$(UNTAR)/$(NTFS-3G_SOURCE)
 	$(CHDIR)/$(NTFS-3G_DIR); \
 		$(CONFIGURE) \
-			--prefix= \
-			--mandir=$(remove-mandir) \
-			--docdir=$(remove-docdir) \
+			--prefix=$(prefix) \
+			--mandir=$(REMOVE_mandir) \
+			--docdir=$(REMOVE_docdir) \
 			--disable-ntfsprogs \
 			--disable-ldconfig \
 			--disable-library \
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	-rm $(addprefix $(TARGET_DIR)/bin/,lowntfs-3g ntfs-3g.probe)
-	-rm $(addprefix $(TARGET_DIR)/sbin/,mount.lowntfs-3g)
-	ln -sf /bin/ntfs-3g $(TARGET_DIR)/sbin/mount.ntfs
+	-rm $(addprefix $(TARGET_bindir)/,lowntfs-3g ntfs-3g.probe)
+	-rm $(addprefix $(TARGET_sbindir)/,mount.lowntfs-3g)
+	ln -sf ntfs-3g $(TARGET_sbindir)/mount.ntfs
 	$(REMOVE)/$(NTFS-3G_DIR)
 	$(TOUCH)
 
@@ -917,8 +919,8 @@ autofs: $(AUTOFS_DEPS) $(DL_DIR)/$(AUTOFS_SOURCE) | $(TARGET_DIR)
 		export ac_cv_path_RANLIB=$(TARGET_RANLIB); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
-			--prefix= \
-			--datarootdir=$(remove-datarootdir) \
+			--prefix=$(prefix) \
+			--datarootdir=$(REMOVE_datarootdir) \
 			--enable-ignore-busy \
 			--disable-mount-locking \
 			--without-openldap \
@@ -969,14 +971,14 @@ samba33: $(SAMBA33_DEPS) $(DL_DIR)/$(SAMBA33_SOURCE) | $(TARGET_DIR)
 		./autogen.sh; \
 		export CONFIG_SITE=$(CONFIGS)/samba33-config.site; \
 		$(CONFIGURE) \
-			--prefix=/ \
+			--prefix=$(prefix)/ \
 			--datadir=/var/samba \
-			--datarootdir=$(remove-datarootdir) \
+			--datarootdir=$(REMOVE_datarootdir) \
 			--localstatedir=/var/samba \
 			--sysconfdir=/etc/samba \
 			--with-configdir=/etc/samba \
 			--with-privatedir=/etc/samba \
-			--with-modulesdir=$(remove-libdir)/samba \
+			--with-modulesdir=$(REMOVE_libdir)/samba \
 			--with-sys-quotas=no \
 			--with-piddir=/var/run \
 			--enable-static \
@@ -1004,17 +1006,17 @@ samba33: $(SAMBA33_DEPS) $(DL_DIR)/$(SAMBA33_SOURCE) | $(TARGET_DIR)
 			--disable-relro \
 			--disable-swat \
 			; \
-		$(MAKE) all; \
+		$(MAKE1) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	mkdir -p $(TARGET_DIR)/var/samba/locks
-	$(INSTALL_DATA) $(TARGET_FILES)/configs/smb3.conf $(TARGET_DIR)/etc/samba/smb.conf
-	$(INSTALL_EXEC) $(TARGET_FILES)/scripts/samba3.init $(TARGET_DIR)/etc/init.d/samba
+	mkdir -p $(TARGET_localstatedir)/samba/locks
+	$(INSTALL_DATA) $(TARGET_FILES)/configs/smb3.conf $(TARGET_sysconfdir)/samba/smb.conf
+	$(INSTALL_EXEC) $(TARGET_FILES)/scripts/samba3.init $(TARGET_sysconfdir)/init.d/samba
 	$(UPDATE-RC.D) samba defaults 75 25
-	rm -rf $(TARGET_DIR)/bin/testparm
-	rm -rf $(TARGET_DIR)/bin/findsmb
-	rm -rf $(TARGET_DIR)/bin/smbtar
-	rm -rf $(TARGET_DIR)/bin/smbclient
-	rm -rf $(TARGET_DIR)/bin/smbpasswd
+	rm -rf $(TARGET_bindir)/testparm
+	rm -rf $(TARGET_bindir)/findsmb
+	rm -rf $(TARGET_bindir)/smbtar
+	rm -rf $(TARGET_bindir)/smbclient
+	rm -rf $(TARGET_bindir)/smbpasswd
 	$(REMOVE)/$(SAMBA33_DIR)
 	$(TOUCH)
 
@@ -1052,14 +1054,14 @@ samba36: $(SAMBA36_DEPS) $(DL_DIR)/$(SAMBA36_SOURCE) | $(TARGET_DIR)
 		./autogen.sh; \
 		export CONFIG_SITE=$(CONFIGS)/samba36-config.site; \
 		$(CONFIGURE) \
-			--prefix=/ \
+			--prefix=$(prefix)/ \
 			--datadir=/var/samba \
-			--datarootdir=$(remove-datarootdir) \
+			--datarootdir=$(REMOVE_datarootdir) \
 			--localstatedir=/var/samba \
 			--sysconfdir=/etc/samba \
 			--with-configdir=/etc/samba \
 			--with-privatedir=/etc/samba \
-			--with-modulesdir=$(remove-libdir)/samba \
+			--with-modulesdir=$(REMOVE_libdir)/samba \
 			--with-piddir=/var/run \
 			--with-sys-quotas=no \
 			--enable-static \
@@ -1087,15 +1089,15 @@ samba36: $(SAMBA36_DEPS) $(DL_DIR)/$(SAMBA36_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	mkdir -p $(TARGET_DIR)/var/samba/locks
-	$(INSTALL_DATA) $(TARGET_FILES)/configs/smb3.conf $(TARGET_DIR)/etc/samba/smb.conf
-	$(INSTALL_EXEC) $(TARGET_FILES)/scripts/samba3.init $(TARGET_DIR)/etc/init.d/samba
+	mkdir -p $(TARGET_localstatedir)/samba/locks
+	$(INSTALL_DATA) $(TARGET_FILES)/configs/smb3.conf $(TARGET_sysconfdir)/samba/smb.conf
+	$(INSTALL_EXEC) $(TARGET_FILES)/scripts/samba3.init $(TARGET_sysconfdir)/init.d/samba
 	$(UPDATE-RC.D) samba defaults 75 25
-	rm -rf $(TARGET_DIR)/bin/testparm
-	rm -rf $(TARGET_DIR)/bin/findsmb
-	rm -rf $(TARGET_DIR)/bin/smbtar
-	rm -rf $(TARGET_DIR)/bin/smbclient
-	rm -rf $(TARGET_DIR)/bin/smbpasswd
+	rm -rf $(TARGET_bindir)/testparm
+	rm -rf $(TARGET_bindir)/findsmb
+	rm -rf $(TARGET_bindir)/smbtar
+	rm -rf $(TARGET_bindir)/smbclient
+	rm -rf $(TARGET_bindir)/smbpasswd
 	$(REMOVE)/$(SAMBA36_DIR)
 	$(TOUCH)
 
@@ -1116,8 +1118,8 @@ dropbear: $(DROPBEAR_DEPS) $(DL_DIR)/$(DROPBEAR_SOURCE) | $(TARGET_DIR)
 	$(UNTAR)/$(DROPBEAR_SOURCE)
 	$(CHDIR)/$(DROPBEAR_DIR); \
 		$(CONFIGURE) \
-			--prefix= \
-			--mandir=$(remove-mandir) \
+			--prefix=$(prefix) \
+			--mandir=$(REMOVE_mandir) \
 			--disable-lastlog \
 			--disable-pututxline \
 			--disable-wtmp \
@@ -1134,13 +1136,11 @@ dropbear: $(DROPBEAR_DEPS) $(DL_DIR)/$(DROPBEAR_SOURCE) | $(TARGET_DIR)
 		# disable SMALL_CODE define; \
 		echo '#define DROPBEAR_SMALL_CODE 0'		>> localoptions.h; \
 		# fix PATH define; \
-		echo '#define DEFAULT_PATH "/sbin:/bin:/var/bin"' >> localoptions.h; \
-		# remove /usr prefix; \
-		sed -i 's|/usr/|/|g' default_options.h; \
+		echo '#define DEFAULT_PATH "/usr/sbin:/usr/bin:/var/bin"' >> localoptions.h; \
 		$(MAKE) PROGRAMS="dropbear dbclient dropbearkey scp" SCPPROGRESS=1; \
 		$(MAKE) PROGRAMS="dropbear dbclient dropbearkey scp" install DESTDIR=$(TARGET_DIR)
-	mkdir -p $(TARGET_DIR)/etc/dropbear
-	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/dropbear.init $(TARGET_DIR)/etc/init.d/dropbear
+	mkdir -p $(TARGET_sysconfdir)/dropbear
+	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/dropbear.init $(TARGET_sysconfdir)/init.d/dropbear
 	$(UPDATE-RC.D) dropbear defaults 75 25
 	$(REMOVE)/$(DROPBEAR_DIR)
 	$(TOUCH)
@@ -1162,18 +1162,18 @@ sg3_utils: $(DL_DIR)/$(SG3_UTILS_SOURCE) | $(TARGET_DIR)
 	$(UNTAR)/$(SG3_UTILS_SOURCE)
 	$(CHDIR)/$(SG3_UTILS_DIR); \
 		$(CONFIGURE) \
-			--prefix= \
+			--prefix=$(prefix) \
 			--bindir=/bin.$(@F) \
-			--mandir=$(remove-mandir) \
+			--mandir=$(REMOVE_mandir) \
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	for bin in $(SG3_UTILS_BIN); do \
-		rm -f $(TARGET_DIR)/bin/$$bin; \
-		$(INSTALL_EXEC) $(TARGET_DIR)/bin.$(@F)/$$bin $(TARGET_DIR)/bin/$$bin; \
+		rm -f $(TARGET_bindir)/$$bin; \
+		$(INSTALL_EXEC) -D $(TARGET_DIR)/bin.$(@F)/$$bin $(TARGET_bindir)/$$bin; \
 	done
 	$(REWRITE_LIBTOOL_LA)
-	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/sdX.init $(TARGET_DIR)/etc/init.d/sdX
+	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/sdX.init $(TARGET_sysconfdir)/init.d/sdX
 	$(UPDATE-RC.D) sdX stop 97 0 6 .
 	$(REMOVE)/$(SG3_UTILS_DIR) \
 		$(TARGET_DIR)/bin.$(@F)
@@ -1202,7 +1202,7 @@ fbshot: $(FBSHOT_DEPS) $(DL_DIR)/$(FBSHOT_SOURCE) | $(TARGET_DIR)
 		sed -i 's|	gcc |	$(TARGET_CC) $(TARGET_CFLAGS) $(TARGET_LDFLAGS) |' Makefile; \
 		sed -i '/strip fbshot/d' Makefile; \
 		$(MAKE) all; \
-		$(INSTALL_EXEC) -D fbshot $(TARGET_DIR)/bin/fbshot
+		$(INSTALL_EXEC) -D fbshot $(TARGET_bindir)/fbshot
 	$(REMOVE)/$(FBSHOT_DIR)
 	$(TOUCH)
 
@@ -1222,14 +1222,14 @@ lcd4linux: $(LCD4LINUX_DEPS) | $(TARGET_DIR)
 	$(CHDIR)/$(LCD4LINUX_DIR); \
 		./bootstrap; \
 		$(CONFIGURE) \
-			--libdir=$(TARGET_LIB_DIR) \
-			--includedir=$(TARGET_INCLUDE_DIR) \
-			--bindir=$(TARGET_DIR)/bin \
-			--prefix= \
-			--mandir=$(remove-mandir) \
-			--docdir=$(remove-docdir) \
-			--infodir=$(remove-infodir) \
-			--with-ncurses=$(TARGET_LIB_DIR) \
+			--libdir=$(TARGET_libdir) \
+			--includedir=$(TARGET_includedir) \
+			--bindir=$(TARGET_bindir) \
+			--prefix=$(prefix) \
+			--mandir=$(REMOVE_mandir) \
+			--docdir=$(REMOVE_docdir) \
+			--infodir=$(REMOVE_infodir) \
+			--with-ncurses=$(TARGET_libdir) \
 			--with-drivers='DPF, SamsungSPF, PNG' \
 			--with-plugins='all,!dbus,!mpris_dbus,!asterisk,!isdn,!pop3,!ppp,!seti,!huawei,!imon,!kvv,!sample,!w1retap,!wireless,!xmms,!gps,!mpd,!mysql,!qnaplog,!iconv' \
 			; \
@@ -1253,8 +1253,8 @@ samsunglcd4linux: | $(TARGET_DIR)
 	$(GET-GIT-SOURCE) $(SAMSUNGLCD4LINUX_SITE)/$(SAMSUNGLCD4LINUX_SOURCE) $(DL_DIR)/$(SAMSUNGLCD4LINUX_SOURCE)
 	$(CPDIR)/$(SAMSUNGLCD4LINUX_SOURCE)
 	$(CHDIR)/$(SAMSUNGLCD4LINUX_DIR)/ni; \
-		$(INSTALL) -m 0600 etc/lcd4linux.conf $(TARGET_DIR)/etc; \
-		$(INSTALL_COPY) share/* $(TARGET_SHARE_DIR)
+		$(INSTALL) -m 0600 etc/lcd4linux.conf $(TARGET_sysconfdir); \
+		$(INSTALL_COPY) share/* $(TARGET_datadir)
 	$(REMOVE)/$(SAMSUNGLCD4LINUX_DIR)
 	$(TOUCH)
 
@@ -1277,9 +1277,9 @@ wpa_supplicant: $(WPA_SUPPLICANT_DEPS) $(DL_DIR)/$(WPA_SUPPLICANT_SOURCE) | $(TA
 		$(INSTALL_DATA) $(CONFIGS)/wpa_supplicant.config .config; \
 		$(MAKE_ENV) \
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR) BINDIR=/sbin
-	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/pre-wlan0.sh $(TARGET_DIR)/etc/network/pre-wlan0.sh
-	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/post-wlan0.sh $(TARGET_DIR)/etc/network/post-wlan0.sh
+		$(MAKE) install DESTDIR=$(TARGET_DIR) BINDIR=$(sbindir)
+	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/pre-wlan0.sh $(TARGET_sysconfdir)/network/pre-wlan0.sh
+	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/post-wlan0.sh $(TARGET_sysconfdir)/network/post-wlan0.sh
 	$(REMOVE)/$(WPA_SUPPLICANT_DIR)
 	$(TOUCH)
 
@@ -1293,7 +1293,6 @@ XUPNPD_SITE   = https://github.com/clark15b
 XUPNPD_PATCH  = xupnpd-dynamic-lua.patch
 XUPNPD_PATCH += xupnpd-fix-memleak.patch
 XUPNPD_PATCH += xupnpd-fix-webif-backlinks.diff
-XUPNPD_PATCH += xupnpd-change-XUPNPDROOTDIR.diff
 XUPNPD_PATCH += xupnpd-add-configuration-files.diff
 
 XUPNPD_DEPS   = lua openssl
@@ -1307,17 +1306,17 @@ xupnpd: $(XUPNPD_DEPS) | $(TARGET_DIR)
 		$(call apply_patches, $(XUPNPD_PATCH))
 	$(CHDIR)/$(XUPNPD_DIR)/src; \
 		$(MAKE_ENV) \
-		$(MAKE) embedded TARGET=$(TARGET) CC=$(TARGET_CC) STRIP=$(TARGET_STRIP) LUAFLAGS="$(TARGET_LDFLAGS) -I$(TARGET_INCLUDE_DIR)"; \
-		$(INSTALL_EXEC) -D xupnpd $(TARGET_BIN_DIR)/; \
-		mkdir -p $(TARGET_SHARE_DIR)/xupnpd/config; \
-		$(INSTALL_COPY) plugins profiles ui www *.lua $(TARGET_SHARE_DIR)/xupnpd/
-	rm $(TARGET_SHARE_DIR)/xupnpd/plugins/staff/xupnpd_18plus.lua
-	$(INSTALL_DATA) -D $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-lua/xupnpd/xupnpd_18plus.lua $(TARGET_SHARE_DIR)/xupnpd/plugins/
-	$(INSTALL_DATA) -D $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-lua/xupnpd/xupnpd_cczwei.lua $(TARGET_SHARE_DIR)/xupnpd/plugins/
-	$(INSTALL_DATA) -D $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-lua/xupnpd/xupnpd_neutrino.lua $(TARGET_SHARE_DIR)/xupnpd/plugins/
-	$(INSTALL_DATA) -D $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-lua/xupnpd/xupnpd_vimeo.lua $(TARGET_SHARE_DIR)/xupnpd/plugins/
-	$(INSTALL_DATA) -D $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-lua/xupnpd/xupnpd_youtube.lua $(TARGET_SHARE_DIR)/xupnpd/plugins/
-	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/xupnpd.init $(TARGET_DIR)/etc/init.d/xupnpd
+		$(MAKE) embedded TARGET=$(TARGET) CC=$(TARGET_CC) STRIP=$(TARGET_STRIP) LUAFLAGS="$(TARGET_LDFLAGS) -I$(TARGET_includedir)"; \
+		$(INSTALL_EXEC) -D xupnpd $(TARGET_bindir)/; \
+		mkdir -p $(TARGET_datadir)/xupnpd/config; \
+		$(INSTALL_COPY) plugins profiles ui www *.lua $(TARGET_datadir)/xupnpd/
+	rm $(TARGET_datadir)/xupnpd/plugins/staff/xupnpd_18plus.lua
+	$(INSTALL_DATA) -D $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-lua/xupnpd/xupnpd_18plus.lua $(TARGET_datadir)/xupnpd/plugins/
+	$(INSTALL_DATA) -D $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-lua/xupnpd/xupnpd_cczwei.lua $(TARGET_datadir)/xupnpd/plugins/
+	$(INSTALL_DATA) -D $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-lua/xupnpd/xupnpd_neutrino.lua $(TARGET_datadir)/xupnpd/plugins/
+	$(INSTALL_DATA) -D $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-lua/xupnpd/xupnpd_vimeo.lua $(TARGET_datadir)/xupnpd/plugins/
+	$(INSTALL_DATA) -D $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/scripts-lua/xupnpd/xupnpd_youtube.lua $(TARGET_datadir)/xupnpd/plugins/
+	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/xupnpd.init $(TARGET_sysconfdir)/init.d/xupnpd
 	$(UPDATE-RC.D) xupnpd defaults 75 25
 	$(INSTALL_COPY) $(TARGET_FILES)/xupnpd/* $(TARGET_DIR)/
 	$(REMOVE)/$(XUPNPD_DIR)
@@ -1344,9 +1343,9 @@ dosfstools: $(DL_DIR)/$(DOSFSTOOLS_SOURCE) | $(TARGET_DIR)
 		$(call apply_patches, $(addprefix $(@F)/,$(DOSFSTOOLS_PATCH))); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
-			--prefix= \
-			--mandir=$(remove-mandir) \
-			--docdir=$(remove-docdir) \
+			--prefix=$(prefix) \
+			--mandir=$(REMOVE_mandir) \
+			--docdir=$(REMOVE_docdir) \
 			--without-udev \
 			--enable-compat-symlinks \
 			CFLAGS="$(DOSFSTOOLS_CFLAGS)" \
@@ -1370,7 +1369,6 @@ NFS-UTILS_PATCH  = nfs-utils_01-Patch-taken-from-Gentoo.patch
 NFS-UTILS_PATCH += nfs-utils_02-Switch-legacy-index-in-favour-of-strchr.patch
 NFS-UTILS_PATCH += nfs-utils_03-Let-the-configure-script-find-getrpcbynumber-in-libt.patch
 NFS-UTILS_PATCH += nfs-utils_04-mountd-Add-check-for-struct-file_handle.patch
-NFS-UTILS_PATCH += nfs-utils_05-sm-notify-use-sbin-instead-of-usr-sbin.patch
 
 NFS-UTILS_DEPS   = rpcbind
 
@@ -1385,9 +1383,9 @@ nfs-utils: $(NFS-UTILS_DEPS) $(DL_DIR)/$(NFS-UTILS_SOURCE) | $(TARGET_DIR)
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
-			--prefix= \
-			--docdir=$(remove-docdir) \
-			--mandir=$(remove-mandir) \
+			--prefix=$(prefix) \
+			--docdir=$(REMOVE_docdir) \
+			--mandir=$(REMOVE_mandir) \
 			--enable-maintainer-mode \
 			--disable-nfsv4 \
 			--disable-nfsv41 \
@@ -1401,16 +1399,10 @@ nfs-utils: $(NFS-UTILS_DEPS) $(DL_DIR)/$(NFS-UTILS_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	chmod 0755 $(TARGET_DIR)/sbin/mount.nfs
-	rm -rf $(TARGET_DIR)/sbin/mountstats
-	rm -rf $(TARGET_DIR)/sbin/nfsiostat
-	rm -rf $(TARGET_DIR)/sbin/osd_login
-	rm -rf $(TARGET_DIR)/sbin/start-statd
-	rm -rf $(TARGET_DIR)/sbin/mount.nfs*
-	rm -rf $(TARGET_DIR)/sbin/umount.nfs*
-	rm -rf $(TARGET_DIR)/sbin/showmount
-	rm -rf $(TARGET_DIR)/sbin/rpcdebug
-	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/nfsd.init $(TARGET_DIR)/etc/init.d/nfsd
+	chmod 0755 $(TARGET_base_sbindir)/mount.nfs
+	rm -f $(addprefix $(TARGET_base_sbindir)/,mount.nfs4 osd_login umount.nfs umount.nfs4)
+	rm -f $(addprefix $(TARGET_sbindir)/,mountstats nfsiostat)
+	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/nfsd.init $(TARGET_sysconfdir)/init.d/nfsd
 	$(UPDATE-RC.D) nfsd defaults 75 25
 	$(REMOVE)/$(NFS-UTILS_DIR)
 	$(TOUCH)
@@ -1438,18 +1430,15 @@ rpcbind: $(RPCBIND_DEPS) $(DL_DIR)/$(RPCBIND_SOURCE) | $(TARGET_DIR)
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
-			--prefix= \
+			--prefix=$(prefix) \
 			--enable-silent-rules \
 			--with-rpcuser=root \
 			--with-systemdsystemunitdir=no \
-			--mandir=$(remove-mandir) \
+			--mandir=$(REMOVE_mandir) \
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-ifeq ($(BOXSERIES), hd1)
-	sed -i -e '/^\(udp\|tcp\)6/ d' $(TARGET_DIR)/etc/netconfig
-endif
-	rm -rf $(TARGET_DIR)/bin/rpcgen
+	rm -rf $(TARGET_bindir)/rpcgen
 	$(REMOVE)/$(RPCBIND_DIR)
 	$(TOUCH)
 
@@ -1471,9 +1460,9 @@ fuse-exfat: $(FUSE-EXFAT_DEPS) $(DL_DIR)/$(FUSE-EXFAT_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(FUSE-EXFAT_DIR); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
-			--prefix= \
-			--docdir=$(remove-docdir) \
-			--mandir=$(remove-mandir) \
+			--prefix=$(prefix) \
+			--docdir=$(REMOVE_docdir) \
+			--mandir=$(REMOVE_mandir) \
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
@@ -1498,9 +1487,9 @@ exfat-utils: $(EXFAT-UTILS_DEPS) $(DL_DIR)/$(EXFAT-UTILS_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(EXFAT-UTILS_DIR); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
-			--prefix= \
-			--docdir=$(remove-docdir) \
-			--mandir=$(remove-mandir) \
+			--prefix=$(prefix) \
+			--docdir=$(REMOVE_docdir) \
+			--mandir=$(REMOVE_mandir) \
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
@@ -1518,15 +1507,14 @@ streamripper: $(STREAMRIPPER_DEPS) | $(TARGET_DIR)
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--prefix= \
-			--includedir=$(TARGET_INCLUDE_DIR) \
-			--datarootdir=$(remove-datarootdir) \
+			--includedir=$(TARGET_includedir) \
+			--datarootdir=$(REMOVE_datarootdir) \
 			--with-included-argv=yes \
 			--with-included-libmad=no \
 			; \
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(INSTALL_EXEC) $(TARGET_FILES)/scripts/streamripper.sh $(TARGET_DIR)/bin/
-	$(REMOVE)/$(NI-STREAMRIPPER)
+		$(INSTALL_EXEC) -D streamripper $(TARGET_bindir)/streamripper
+	$(INSTALL_EXEC) $(TARGET_FILES)/scripts/streamripper.sh $(TARGET_bindir)/
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -1545,9 +1533,9 @@ gettext: $(DL_DIR)/$(GETTEXT_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(GETTEXT_DIR)/gettext-runtime; \
 		autoreconf -fi; \
 		$(CONFIGURE) \
-			--prefix= \
-			--bindir=$(remove-bindir) \
-			--datarootdir=$(remove-datarootdir) \
+			--prefix=$(prefix) \
+			--bindir=$(REMOVE_bindir) \
+			--datarootdir=$(REMOVE_datarootdir) \
 			--disable-libasprintf \
 			--disable-acl \
 			--disable-openmp \
@@ -1582,8 +1570,9 @@ mc: $(MC_DEPS) $(DL_DIR)/$(MC_SOURCE) | $(TARGET_DIR)
 		$(APPLY_PATCHES); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
-			--prefix= \
-			--mandir=$(remove-mandir) \
+			--prefix=$(prefix) \
+			--sysconfdir=$(sysconfdir) \
+			--mandir=$(REMOVE_mandir) \
 			--enable-maintainer-mode \
 			--enable-silent-rules \
 			\
@@ -1600,8 +1589,8 @@ mc: $(MC_DEPS) $(DL_DIR)/$(MC_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	rm -rf $(TARGET_SHARE_DIR)/mc/examples
-	find $(TARGET_SHARE_DIR)/mc/skins -type f ! -name default.ini | xargs --no-run-if-empty rm
+	rm -rf $(TARGET_datadir)/mc/examples
+	find $(TARGET_datadir)/mc/skins -type f ! -name default.ini | xargs --no-run-if-empty rm
 	$(REMOVE)/$(MC_DIR)
 	$(TOUCH)
 
@@ -1629,9 +1618,9 @@ wget: $(WGET_DEPS) $(DL_DIR)/$(WGET_SOURCE) | $(TARGET_DIR)
 		$(call apply_patches, $(addprefix $(@F)/,$(WGET_PATCH))); \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
-			--prefix= \
-			--datarootdir=$(remove-datarootdir) \
-			--sysconfdir=$(remove-sysconfdir) \
+			--prefix=$(prefix) \
+			--datarootdir=$(REMOVE_datarootdir) \
+			--sysconfdir=$(REMOVE_sysconfdir) \
 			--with-gnu-ld \
 			--with-ssl=openssl \
 			--disable-debug \
@@ -1650,9 +1639,10 @@ ofgwrite: $(SOURCE_DIR)/$(NI-OFGWRITE) | $(TARGET_DIR)
 	$(CHDIR)/$(NI-OFGWRITE); \
 		$(MAKE_ENV) \
 		$(MAKE)
-	$(INSTALL_EXEC) $(BUILD_DIR)/$(NI-OFGWRITE)/ofgwrite_bin $(TARGET_DIR)/bin
-	$(INSTALL_EXEC) $(BUILD_DIR)/$(NI-OFGWRITE)/ofgwrite_caller $(TARGET_DIR)/bin
-	$(INSTALL_EXEC) $(BUILD_DIR)/$(NI-OFGWRITE)/ofgwrite $(TARGET_DIR)/bin
+	$(INSTALL_EXEC) $(BUILD_DIR)/$(NI-OFGWRITE)/ofgwrite_bin $(TARGET_bindir)
+	$(INSTALL_EXEC) $(BUILD_DIR)/$(NI-OFGWRITE)/ofgwrite_caller $(TARGET_bindir)
+	$(INSTALL_EXEC) $(BUILD_DIR)/$(NI-OFGWRITE)/ofgwrite $(TARGET_bindir)
+	sed -i 's|prefix=.*|prefix=$(prefix)|' $(TARGET_bindir)/ofgwrite
 	$(REMOVE)/$(NI-OFGWRITE)
 	$(TOUCH)
 
@@ -1676,7 +1666,7 @@ aio-grab: $(AIO-GRAB_DEPS) | $(TARGET_DIR)
 		automake --add-missing --copy --force-missing --foreign; \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
-			--prefix= \
+			--prefix=$(prefix) \
 			--enable-silent-rules \
 			; \
 		$(MAKE) all; \
@@ -1698,8 +1688,8 @@ dvbsnoop: | $(TARGET_DIR)
 	$(CHDIR)/$(DVBSNOOP_DIR); \
 		$(CONFIGURE) \
 			--enable-silent-rules \
-			--prefix= \
-			--mandir=$(remove-mandir) \
+			--prefix=$(prefix) \
+			--mandir=$(REMOVE_mandir) \
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
@@ -1721,9 +1711,9 @@ ethtool: $(DL_DIR)/$(ETHTOOL_SOURCE) | $(TARGET_DIR)
 	$(UNTAR)/$(ETHTOOL_SOURCE)
 	$(CHDIR)/$(ETHTOOL_DIR); \
 		$(CONFIGURE) \
-			--prefix= \
-			--mandir=$(remove-mandir) \
-			--libdir=$(TARGET_LIB_DIR) \
+			--prefix=$(prefix) \
+			--mandir=$(REMOVE_mandir) \
+			--libdir=$(TARGET_libdir) \
 			--disable-pretty-dump \
 			; \
 		$(MAKE); \
@@ -1754,7 +1744,7 @@ gptfdisk: $(GPTFDISK_DEPS) $(DL_DIR)/$(GPTFDISK_SOURCE) | $(TARGET_DIR)
 		sed -i 's|^CXX=.*|CXX=$(TARGET_CXX)|' Makefile; \
 		$(MAKE_ENV) \
 		$(MAKE) sgdisk; \
-		$(INSTALL_EXEC) -D sgdisk $(TARGET_DIR)/sbin/sgdisk
+		$(INSTALL_EXEC) -D sgdisk $(TARGET_sbindir)/sgdisk
 	$(REMOVE)/$(GPTFDISK_DIR)
 	$(TOUCH)
 
@@ -1775,8 +1765,8 @@ rsync: $(RSYNC_DEPS) $(DL_DIR)/$(RSYNC_SOURCE) | $(TARGET_DIR)
 	$(UNTAR)/$(RSYNC_SOURCE)
 	$(CHDIR)/$(RSYNC_DIR); \
 		$(CONFIGURE) \
-			--prefix= \
-			--mandir=$(remove-mandir) \
+			--prefix=$(prefix) \
+			--mandir=$(REMOVE_mandir) \
 			--disable-debug \
 			--disable-locale \
 			--disable-acl-support \
@@ -1800,11 +1790,11 @@ $(DL_DIR)/$(SYSVINIT_SOURCE):
 
 define SYSVINIT_INSTALL
 	for sbin in halt init shutdown killall5 runlevel; do \
-		$(INSTALL_EXEC) -D $(BUILD_DIR)/$(SYSVINIT_DIR)/src/$$sbin $(TARGET_DIR)/sbin/$$sbin || exit 1; \
+		$(INSTALL_EXEC) -D $(BUILD_DIR)/$(SYSVINIT_DIR)/src/$$sbin $(TARGET_base_sbindir)/$$sbin || exit 1; \
 	done
-	ln -sf /sbin/halt $(TARGET_DIR)/sbin/reboot
-	ln -sf /sbin/halt $(TARGET_DIR)/sbin/poweroff
-	ln -sf /sbin/killall5 $(TARGET_DIR)/sbin/pidof
+	ln -sf /sbin/halt $(TARGET_base_sbindir)/reboot
+	ln -sf /sbin/halt $(TARGET_base_sbindir)/poweroff
+	ln -sf /sbin/killall5 $(TARGET_base_sbindir)/pidof
 endef
 
 sysvinit: $(DL_DIR)/$(SYSVINIT_SOURCE) | $(TARGET_DIR)
@@ -1825,6 +1815,9 @@ CA-BUNDLE_SITE   = https://curl.haxx.se/ca
 
 $(DL_DIR)/$(CA-BUNDLE_SOURCE):
 	$(DOWNLOAD) $(CA-BUNDLE_SITE)/$(CA-BUNDLE_SOURCE)
+
+CA-BUNDLE        = ca-certificates.crt
+CA-BUNDLE_DIR    = /etc/ssl/certs
 
 ca-bundle: $(DL_DIR)/$(CA-BUNDLE_SOURCE) | $(TARGET_DIR)
 	$(CD) $(DL_DIR); \

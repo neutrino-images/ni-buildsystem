@@ -297,29 +297,29 @@ STRIP-MODULES-COOLSTREAM-HD1 += kernel/fs/cifs/cifs.ko
 STRIP-MODULES-COOLSTREAM-HD1 += kernel/fs/fuse/fuse.ko
 
 kernel-modules-coolstream-hd1: kernel-coolstream
-	mkdir -p $(TARGET_MODULES_DIR)
+	mkdir -p $(TARGET_modulesdir)
 	for module in $(STRIP-MODULES-COOLSTREAM-HD1); do \
-		mkdir -p $(TARGET_MODULES_DIR)/$$(dirname $$module); \
-		$(TARGET_OBJCOPY) --strip-unneeded $(KERNEL_MODULES_DIR)/$$module $(TARGET_MODULES_DIR)/$$module; \
+		mkdir -p $(TARGET_modulesdir)/$$(dirname $$module); \
+		$(TARGET_OBJCOPY) --strip-unneeded $(KERNEL_MODULES_DIR)/$$module $(TARGET_modulesdir)/$$module; \
 	done;
-	rm -f $(TARGET_MODULES_DIR)/usb-storage.ko # already builtin
+	rm -f $(TARGET_modulesdir)/usb-storage.ko # already builtin
 	make depmod
 	$(TOUCH)
 
 kernel-modules-coolstream-hd2: kernel-coolstream
-	mkdir -p $(TARGET_MODULES_DIR)
-	$(INSTALL_COPY) $(KERNEL_MODULES_DIR)/kernel $(TARGET_MODULES_DIR)
-	$(INSTALL_DATA) $(KERNEL_MODULES_DIR)/modules.builtin $(TARGET_MODULES_DIR)
-	$(INSTALL_DATA) $(KERNEL_MODULES_DIR)/modules.order $(TARGET_MODULES_DIR)
+	mkdir -p $(TARGET_modulesdir)
+	$(INSTALL_COPY) $(KERNEL_MODULES_DIR)/kernel $(TARGET_modulesdir)
+	$(INSTALL_DATA) $(KERNEL_MODULES_DIR)/modules.builtin $(TARGET_modulesdir)
+	$(INSTALL_DATA) $(KERNEL_MODULES_DIR)/modules.order $(TARGET_modulesdir)
 	make depmod
 	make rtl8192eu
 	$(TOUCH)
 
 kernel-modules-armbox: kernel-armbox
-	mkdir -p $(TARGET_MODULES_DIR)
-	$(INSTALL_COPY) $(KERNEL_MODULES_DIR)/kernel $(TARGET_MODULES_DIR)
-	$(INSTALL_DATA) $(KERNEL_MODULES_DIR)/modules.builtin $(TARGET_MODULES_DIR)
-	$(INSTALL_DATA) $(KERNEL_MODULES_DIR)/modules.order $(TARGET_MODULES_DIR)
+	mkdir -p $(TARGET_modulesdir)
+	$(INSTALL_COPY) $(KERNEL_MODULES_DIR)/kernel $(TARGET_modulesdir)
+	$(INSTALL_DATA) $(KERNEL_MODULES_DIR)/modules.builtin $(TARGET_modulesdir)
+	$(INSTALL_DATA) $(KERNEL_MODULES_DIR)/modules.order $(TARGET_modulesdir)
 	make depmod
 ifeq ($(BOXSERIES), hd5x hd6x)
 	make rtl8192eu
@@ -330,10 +330,10 @@ endif
 	$(TOUCH)
 
 kernel-modules-mipsbox: kernel-mipsbox
-	mkdir -p $(TARGET_MODULES_DIR)
-	$(INSTALL_COPY) $(KERNEL_MODULES_DIR)/kernel $(TARGET_MODULES_DIR)
-	$(INSTALL_DATA) $(KERNEL_MODULES_DIR)/modules.builtin $(TARGET_MODULES_DIR)
-	$(INSTALL_DATA) $(KERNEL_MODULES_DIR)/modules.order $(TARGET_MODULES_DIR)
+	mkdir -p $(TARGET_modulesdir)
+	$(INSTALL_COPY) $(KERNEL_MODULES_DIR)/kernel $(TARGET_modulesdir)
+	$(INSTALL_DATA) $(KERNEL_MODULES_DIR)/modules.builtin $(TARGET_modulesdir)
+	$(INSTALL_DATA) $(KERNEL_MODULES_DIR)/modules.order $(TARGET_modulesdir)
 	make depmod
 	$(TOUCH)
 
@@ -348,9 +348,9 @@ vmlinuz-initrd: $(DL_DIR)/$(VMLINUZ-INITRD_SOURCE)
 depmod:
 	PATH=$(PATH):/sbin:/usr/sbin depmod -b $(TARGET_DIR) $(KERNEL_VER)
 ifeq ($(BOXSERIES), hd1)
-	mv $(TARGET_MODULES_DIR)/modules.dep $(TARGET_MODULES_DIR)/.modules.dep
-	rm $(TARGET_MODULES_DIR)/modules.*
-	mv $(TARGET_MODULES_DIR)/.modules.dep $(TARGET_MODULES_DIR)/modules.dep
+	mv $(TARGET_modulesdir)/modules.dep $(TARGET_modulesdir)/.modules.dep
+	rm $(TARGET_modulesdir)/modules.*
+	mv $(TARGET_modulesdir)/.modules.dep $(TARGET_modulesdir)/modules.dep
 endif
 
 # -----------------------------------------------------------------------------

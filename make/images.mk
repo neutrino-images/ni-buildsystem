@@ -49,7 +49,7 @@ devtable-remove:
 
 # -----------------------------------------------------------------------------
 
-flash-image: rootfs
+flash-image:
 ifeq ($(BOXMODEL), $(filter $(BOXMODEL), nevis kronos kronos_v2))
 	make flash-image-coolstream ERASE_SIZE=0x20000
 endif
@@ -269,8 +269,8 @@ flash-image-hd6x-multi-recovery: | $(IMAGE_DIR)
 	unzip -o $(DL_DIR)/$(HD6x_BOOTARGS_SOURCE) -d $(IMAGE_BUILD_DIR)
 	unzip -o $(DL_DIR)/$(HD6x_PARTITONS_SOURCE) -d $(IMAGE_BUILD_DIR)
 	unzip -o $(DL_DIR)/$(HD6x_RECOVERY_SOURCE) -d $(IMAGE_BUILD_DIR)
-	$(INSTALL_EXEC) $(IMAGE_BUILD_DIR)/bootargs-8gb.bin $(ROOTFS)/share/bootargs.bin
-	$(INSTALL_EXEC) $(IMAGE_BUILD_DIR)/fastboot.bin $(ROOTFS)/share/fastboot.bin
+	$(INSTALL_EXEC) $(IMAGE_BUILD_DIR)/bootargs-8gb.bin $(ROOTFS)$(datadir)/bootargs.bin
+	$(INSTALL_EXEC) $(IMAGE_BUILD_DIR)/fastboot.bin $(ROOTFS)$(datadir)/fastboot.bin
 	dd if=/dev/zero of=$(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(HD6x_BOOT_IMAGE) bs=1024 count=$(HD6x_BOOTOPTIONS_PARTITION_SIZE)
 	mkfs.msdos -S 512 $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(HD6x_BOOT_IMAGE)
 	echo "bootcmd=setenv bootargs \$$(bootargs) \$$(bootargs_common); mmc read 0 0x1000000 0x3BD000 0x8000; bootm 0x1000000; run bootcmd_fallback" > $(IMAGE_BUILD_DIR)/STARTUP

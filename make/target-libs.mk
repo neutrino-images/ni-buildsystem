@@ -20,9 +20,9 @@ zlib: $(DL_DIR)/$(ZLIB_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(ZLIB_DIR); \
 		$(call apply_patches, $(ZLIB_PATCH)); \
 		$(MAKE_ENV) \
-		mandir=$(remove-mandir) \
+		mandir=$(REMOVE_mandir) \
 		./configure \
-			--prefix= \
+			--prefix=$(prefix) \
 			--shared \
 			--uname=Linux \
 			; \
@@ -47,8 +47,8 @@ libfuse: $(DL_DIR)/$(LIBFUSE_SOURCE) | $(TARGET_DIR)
 	$(UNTAR)/$(LIBFUSE_SOURCE)
 	$(CHDIR)/$(LIBFUSE_DIR); \
 		$(CONFIGURE) \
-			--prefix= \
-			--datarootdir=$(remove-datarootdir) \
+			--prefix=$(prefix) \
+			--datarootdir=$(REMOVE_datarootdir) \
 			--disable-static \
 			--disable-example \
 			--disable-mtab \
@@ -61,8 +61,8 @@ libfuse: $(DL_DIR)/$(LIBFUSE_SOURCE) | $(TARGET_DIR)
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL_LA)
 	$(REWRITE_PKGCONF_PC)
-	rm -rf $(TARGET_DIR)/etc/udev
-	rm -rf $(TARGET_DIR)/etc/init.d/fuse
+	rm -rf $(TARGET_sysconfdir)/udev
+	rm -rf $(TARGET_sysconfdir)/init.d/fuse
 	$(REMOVE)/$(LIBFUSE_DIR)
 	$(TOUCH)
 
@@ -81,7 +81,7 @@ libupnp: $(DL_DIR)/$(LIBUPNP_SOURCE) | $(TARGET_DIR)
 	$(UNTAR)/$(LIBUPNP_SOURCE)
 	$(CHDIR)/$(LIBUPNP_DIR); \
 		$(CONFIGURE) \
-			--prefix= \
+			--prefix=$(prefix) \
 			--enable-shared \
 			--disable-static \
 			; \
@@ -108,7 +108,7 @@ libdvbsi: | $(TARGET_DIR)
 	$(CHDIR)/$(LIBDVBSI_DIR); \
 		$(call apply_patches, $(LIBDVBSI_PATCH)); \
 		$(CONFIGURE) \
-			--prefix= \
+			--prefix=$(prefix) \
 			--enable-shared \
 			--enable-silent-rules \
 			--disable-static \
@@ -136,7 +136,7 @@ giflib: $(DL_DIR)/$(GIFLIB_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(GIFLIB_DIR); \
 		$(MAKE_ENV) \
 		$(MAKE); \
-		$(MAKE) install-include install-lib DESTDIR=$(TARGET_DIR) PREFIX=
+		$(MAKE) install-include install-lib DESTDIR=$(TARGET_DIR) PREFIX=$(prefix)
 	$(REMOVE)/$(GIFLIB_DIR)
 	$(TOUCH)
 
@@ -159,8 +159,8 @@ libcurl: $(LIBCURL_DEPS) $(DL_DIR)/$(LIBCURL_SOURCE) | $(TARGET_DIR)
 	$(UNTAR)/$(LIBCURL_SOURCE)
 	$(CHDIR)/$(LIBCURL_DIR); \
 		$(CONFIGURE) \
-			--prefix= \
-			--datarootdir=$(remove-datarootdir) \
+			--prefix=$(prefix) \
+			--datarootdir=$(REMOVE_datarootdir) \
 			--disable-manual \
 			--disable-file \
 			--disable-rtsp \
@@ -179,16 +179,16 @@ libcurl: $(LIBCURL_DEPS) $(DL_DIR)/$(LIBCURL_SOURCE) | $(TARGET_DIR)
 			--without-libidn \
 			--with-ca-bundle=$(CA-BUNDLE_DIR)/$(CA-BUNDLE) \
 			--with-random=/dev/urandom \
-			--with-ssl=$(TARGET_DIR) \
-			--with-librtmp=$(TARGET_LIB_DIR) \
+			--with-ssl=$(TARGET_prefix) \
+			--with-librtmp=$(TARGET_libdir) \
 			--enable-optimize \
 			$(LIBCURL_CONF) \
 			; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	mv $(TARGET_BIN_DIR)/curl-config $(HOST_DIR)/bin/
+	mv $(TARGET_bindir)/curl-config $(HOST_DIR)/bin/
 	$(REWRITE_CONFIG) $(HOST_DIR)/bin/curl-config
-	rm -f $(TARGET_SHARE_DIR)/zsh
+	rm -f $(TARGET_datadir)/zsh
 	$(REWRITE_LIBTOOL_LA)
 	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(LIBCURL_DIR)
@@ -216,15 +216,15 @@ libpng: $(LIBPNG_DEPS) $(DL_DIR)/$(LIBPNG_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(LIBPNG_DIR); \
 		$(call apply_patches, $(LIBPNG_PATCH)); \
 		$(CONFIGURE) \
-			--prefix= \
-			--mandir=$(remove-mandir) \
+			--prefix=$(prefix) \
+			--mandir=$(REMOVE_mandir) \
 			--enable-silent-rules \
 			--disable-static \
 			$(LIBPNG_CONF) \
 			; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	mv $(TARGET_BIN_DIR)/libpng*-config $(HOST_DIR)/bin/
+	mv $(TARGET_bindir)/libpng*-config $(HOST_DIR)/bin/
 	$(REWRITE_CONFIG) $(HOST_DIR)/bin/libpng16-config
 	$(REWRITE_LIBTOOL_LA)
 	$(REWRITE_PKGCONF_PC)
@@ -259,8 +259,8 @@ freetype: $(FREETYPE_DEPS) $(DL_DIR)/$(FREETYPE_SOURCE) | $(TARGET_DIR)
 		autoconf
 	$(CHDIR)/$(FREETYPE_DIR); \
 		$(CONFIGURE) \
-			--prefix= \
-			--mandir=$(remove-mandir) \
+			--prefix=$(prefix) \
+			--mandir=$(REMOVE_mandir) \
 			--enable-shared \
 			--disable-static \
 			--enable-freetype-config \
@@ -271,13 +271,13 @@ freetype: $(FREETYPE_DEPS) $(DL_DIR)/$(FREETYPE_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	ln -sf freetype2 $(TARGET_INCLUDE_DIR)/freetype
-	mv $(TARGET_BIN_DIR)/freetype-config $(HOST_DIR)/bin
+	ln -sf freetype2 $(TARGET_includedir)/freetype
+	mv $(TARGET_bindir)/freetype-config $(HOST_DIR)/bin
 	$(REWRITE_CONFIG) $(HOST_DIR)/bin/freetype-config
 	$(REWRITE_LIBTOOL_LA)
 	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(FREETYPE_DIR) \
-		$(TARGET_SHARE_DIR)/aclocal
+		$(TARGET_datadir)/aclocal
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -304,7 +304,7 @@ libjpeg-turbo: $(DL_DIR)/$(LIBJPEG-TURBO_SOURCE) | $(TARGET_DIR)
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF_PC)
-	rm -f $(addprefix $(TARGET_BIN_DIR)/,cjpeg djpeg jpegtran rdjpgcom tjbench wrjpgcom)
+	rm -f $(addprefix $(TARGET_bindir)/,cjpeg djpeg jpegtran rdjpgcom tjbench wrjpgcom)
 	$(REMOVE)/$(LIBJPEG-TURBO_DIR)
 	$(TOUCH)
 
@@ -349,27 +349,27 @@ openssl: $(DL_DIR)/$(OPENSSL_SOURCE) | $(TARGET_DIR)
 			$(TARGET_LDFLAGS) \
 			\
 			--cross-compile-prefix=$(TARGET_CROSS) \
-			--prefix=/ \
+			--prefix=$(prefix)/ \
 			--openssldir=/etc/ssl \
 			; \
 		sed -i "s| build_tests||" Makefile; \
-		sed -i 's|^MANDIR=.*|MANDIR=$(remove-mandir)|' Makefile; \
-		sed -i 's|^HTMLDIR=.*|HTMLDIR=$(remove-htmldir)|' Makefile; \
+		sed -i 's|^MANDIR=.*|MANDIR=$(REMOVE_mandir)|' Makefile; \
+		sed -i 's|^HTMLDIR=.*|HTMLDIR=$(REMOVE_htmldir)|' Makefile; \
 		$(MAKE) depend; \
 		$(MAKE); \
 		$(MAKE) install_sw INSTALL_PREFIX=$(TARGET_DIR)
 	$(REWRITE_PKGCONF_PC)
-	rm -rf $(TARGET_LIB_DIR)/engines
-	rm -f $(TARGET_BIN_DIR)/c_rehash
-	rm -f $(TARGET_DIR)/etc/ssl/misc/{CA.pl,tsget}
+	rm -rf $(TARGET_libdir)/engines
+	rm -f $(TARGET_bindir)/c_rehash
+	rm -f $(TARGET_sysconfdir)/ssl/misc/{CA.pl,tsget}
 ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd1 hd2))
-	rm -f $(TARGET_BIN_DIR)/openssl
-	rm -f $(TARGET_DIR)/etc/ssl/misc/{CA.*,c_*}
+	rm -f $(TARGET_bindir)/openssl
+	rm -f $(TARGET_sysconfdir)/ssl/misc/{CA.*,c_*}
 endif
-	chmod 0755 $(TARGET_LIB_DIR)/lib{crypto,ssl}.so.*
+	chmod 0755 $(TARGET_libdir)/lib{crypto,ssl}.so.*
 	for version in 0.9.7 0.9.8 1.0.2; do \
-		ln -sf libcrypto.so.1.0.0 $(TARGET_LIB_DIR)/libcrypto.so.$$version; \
-		ln -sf libssl.so.1.0.0 $(TARGET_LIB_DIR)/libssl.so.$$version; \
+		ln -sf libcrypto.so.1.0.0 $(TARGET_libdir)/libcrypto.so.$$version; \
+		ln -sf libssl.so.1.0.0 $(TARGET_libdir)/libssl.so.$$version; \
 	done
 	$(REMOVE)/$(OPENSSL_DIR)
 	$(TOUCH)
@@ -393,10 +393,10 @@ ncurses: $(DL_DIR)/$(NCURSES_SOURCE) | $(TARGET_DIR)
 		$(call apply_patches, $(NCURSES_PATCH)); \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
-			--prefix= \
+			--prefix=$(prefix) \
 			--enable-pc-files \
 			--with-pkg-config \
-			--with-pkg-config-libdir=/lib/pkgconfig \
+			--with-pkg-config-libdir=$(libdir)/pkgconfig \
 			--with-shared \
 			--with-fallbacks='linux vt100 xterm' \
 			--disable-big-core \
@@ -410,15 +410,12 @@ ncurses: $(DL_DIR)/$(NCURSES_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE) libs; \
 		$(MAKE) install.libs DESTDIR=$(TARGET_DIR)
-	rm -f $(addprefix $(TARGET_LIB_DIR)/,libform* libmenu* libpanel*)
+	rm -f $(addprefix $(TARGET_libdir)/,libform* libmenu* libpanel*)
 	rm -f $(addprefix $(PKG_CONFIG_PATH)/,form.pc menu.pc panel.pc)
 	rm -f $(HOST_DIR)/bin/ncurses*
-	mv $(TARGET_BIN_DIR)/ncurses6-config $(HOST_DIR)/bin
+	mv $(TARGET_bindir)/ncurses6-config $(HOST_DIR)/bin
 	$(REWRITE_CONFIG) $(HOST_DIR)/bin/ncurses6-config
 	$(REWRITE_PKGCONF_PC)
-	ln -sf ./ncurses/curses.h $(TARGET_INCLUDE_DIR)/curses.h
-	ln -sf ./ncurses/curses.h $(TARGET_INCLUDE_DIR)/ncurses.h
-	ln -sf ./ncurses/term.h $(TARGET_INCLUDE_DIR)/term.h
 	$(REMOVE)/$(NCURSES_DIR)
 	$(TOUCH)
 
@@ -434,7 +431,7 @@ openthreads: $(SOURCE_DIR)/$(NI-OPENTHREADS) | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	rm -f $(TARGET_LIB_DIR)/cmake
+	rm -f $(TARGET_libdir)/cmake
 	$(REMOVE)/$(NI-OPENTHREADS)
 	$(REWRITE_PKGCONF_PC)
 	$(TOUCH)
@@ -454,7 +451,7 @@ libusb: $(DL_DIR)/$(LIBUSB_SOURCE) | $(TARGET_DIR)
 	$(UNTAR)/$(LIBUSB_SOURCE)
 	$(CHDIR)/$(LIBUSB_DIR); \
 		$(CONFIGURE) \
-			--prefix= \
+			--prefix=$(prefix) \
 			--disable-udev \
 			; \
 		$(MAKE); \
@@ -484,11 +481,11 @@ libusb-compat: $(LUBUSB-COMPAT_DEPS) $(DL_DIR)/$(LIBUSB-COMPAT_SOURCE) | $(TARGE
 	$(CHDIR)/$(LIBUSB-COMPAT_DIR); \
 		$(call apply_patches, $(addprefix $(@F)/,$(LIBUSB-COMPAT_PATCH))); \
 		$(CONFIGURE) \
-			--prefix= \
+			--prefix=$(prefix) \
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR); \
-	mv $(TARGET_BIN_DIR)/libusb-config $(HOST_DIR)/bin
+	mv $(TARGET_bindir)/libusb-config $(HOST_DIR)/bin
 	$(REWRITE_CONFIG) $(HOST_DIR)/bin/libusb-config
 	$(REWRITE_LIBTOOL_LA)
 	$(REWRITE_PKGCONF_PC)
@@ -513,8 +510,8 @@ libgd: $(LIBGD_DEPS) $(DL_DIR)/$(LIBGD_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(LIBGD_DIR); \
 		./bootstrap.sh; \
 		$(CONFIGURE) \
-			--prefix= \
-			--bindir=$(remove-bindir) \
+			--prefix=$(prefix) \
+			--bindir=$(REMOVE_bindir) \
 			--without-fontconfig \
 			--without-xpm \
 			--without-x \
@@ -543,12 +540,12 @@ libdpf: $(LIBDPF_DEPS) | $(TARGET_DIR)
 	$(CPDIR)/$(LIBDPF_SOURCE)
 	$(CHDIR)/$(LIBDPF_DIR)/dpflib; \
 		$(call apply_patches, $(LIBDPF_PATCH)); \
-		make libdpf.a CC=$(TARGET_CC) PREFIX=$(TARGET_DIR); \
-		mkdir -p $(TARGET_INCLUDE_DIR)/libdpf; \
-		cp dpf.h $(TARGET_INCLUDE_DIR)/libdpf/libdpf.h; \
-		cp ../include/spiflash.h $(TARGET_INCLUDE_DIR)/libdpf/; \
-		cp ../include/usbuser.h $(TARGET_INCLUDE_DIR)/libdpf/; \
-		cp libdpf.a $(TARGET_LIB_DIR)/
+		make libdpf.a CC=$(TARGET_CC) PREFIX=$(TARGET_prefix); \
+		mkdir -p $(TARGET_includedir)/libdpf; \
+		cp dpf.h $(TARGET_includedir)/libdpf/libdpf.h; \
+		cp ../include/spiflash.h $(TARGET_includedir)/libdpf/; \
+		cp ../include/usbuser.h $(TARGET_includedir)/libdpf/; \
+		cp libdpf.a $(TARGET_libdir)/
 	$(REMOVE)/$(LIBDPF_DIR)
 	$(TOUCH)
 
@@ -567,9 +564,9 @@ lzo: $(DL_DIR)/$(LZO_SOURCE) | $(TARGET_DIR)
 	$(UNTAR)/$(LZO_SOURCE)
 	$(CHDIR)/$(LZO_DIR); \
 		$(CONFIGURE) \
-			--mandir=$(remove-mandir) \
-			--docdir=$(remove-docdir) \
-			--prefix= \
+			--mandir=$(REMOVE_mandir) \
+			--docdir=$(REMOVE_docdir) \
+			--prefix=$(prefix) \
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
@@ -592,14 +589,14 @@ libsigc: $(DL_DIR)/$(LIBSIGC_SOURCE) | $(TARGET_DIR)
 	$(UNTAR)/$(LIBSIGC_SOURCE)
 	$(CHDIR)/$(LIBSIGC_DIR); \
 		$(CONFIGURE) \
-			--prefix= \
+			--prefix=$(prefix) \
 			--disable-documentation \
 			--enable-silent-rules \
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR); \
-		cp sigc++config.h $(TARGET_INCLUDE_DIR)
-	ln -sf ./sigc++-2.0/sigc++ $(TARGET_INCLUDE_DIR)/sigc++
+		cp sigc++config.h $(TARGET_includedir)
+	ln -sf ./sigc++-2.0/sigc++ $(TARGET_includedir)/sigc++
 	$(REWRITE_LIBTOOL_LA)
 	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(LIBSIGC_DIR)
@@ -624,9 +621,9 @@ expat: $(DL_DIR)/$(EXPAT_SOURCE) | $(TARGET_DIR)
 		$(call apply_patches, $(EXPAT_PATCH)); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
-			--prefix= \
-			--docdir=$(remove-docdir) \
-			--mandir=$(remove-mandir) \
+			--prefix=$(prefix) \
+			--docdir=$(REMOVE_docdir) \
+			--mandir=$(REMOVE_mandir) \
 			--enable-shared \
 			--disable-static \
 			--without-xmlwf \
@@ -662,7 +659,7 @@ libbluray: $(LIBBLURAY_DEPS) $(DL_DIR)/$(LIBBLURAY_SOURCE) | $(TARGET_DIR)
 		$(call apply_patches, $(LIBBLURAY_PATCH)); \
 		./bootstrap; \
 		$(CONFIGURE) \
-			--prefix= \
+			--prefix=$(prefix) \
 			--enable-shared \
 			--disable-static \
 			--disable-extra-warnings \
@@ -705,7 +702,7 @@ libass: $(LIBASS_DEPS) $(DL_DIR)/$(LIBASS_SOURCE) | $(TARGET_DIR)
 		$(call apply_patches, $(LIBASS_PATCH)); \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
-			--prefix= \
+			--prefix=$(prefix) \
 			--disable-static \
 			--disable-test \
 			--disable-fontconfig \
@@ -738,8 +735,8 @@ libgpg-error: $(DL_DIR)/$(LIBGPG-ERROR_SOURCE) | $(TARGET_DIR)
 			ln -s lock-obj-pub.arm-unknown-linux-gnueabi.h lock-obj-pub.linux-uclibcgnueabi.h; \
 		popd; \
 		$(CONFIGURE) \
-			--prefix= \
-			--datarootdir=$(remove-datarootdir) \
+			--prefix=$(prefix) \
+			--datarootdir=$(REMOVE_datarootdir) \
 			--enable-maintainer-mode \
 			--enable-shared \
 			--disable-doc \
@@ -749,11 +746,11 @@ libgpg-error: $(DL_DIR)/$(LIBGPG-ERROR_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	mv $(TARGET_BIN_DIR)/gpg-error-config $(HOST_DIR)/bin
+	mv $(TARGET_bindir)/gpg-error-config $(HOST_DIR)/bin
 	$(REWRITE_CONFIG) $(HOST_DIR)/bin/gpg-error-config
 	$(REWRITE_LIBTOOL_LA)
 	$(REWRITE_PKGCONF_PC)
-	rm -f $(addprefix $(TARGET_BIN_DIR)/,gpg-error gpgrt-config)
+	rm -f $(addprefix $(TARGET_bindir)/,gpg-error gpgrt-config)
 	$(REMOVE)/$(LIBGPG-ERROR_DIR)
 	$(TOUCH)
 
@@ -774,8 +771,8 @@ libgcrypt: $(LIBGCRYPT_DEPS) $(DL_DIR)/$(LIBGCRYPT_SOURCE) | $(TARGET_DIR)
 	$(UNTAR)/$(LIBGCRYPT_SOURCE)
 	$(CHDIR)/$(LIBGCRYPT_DIR); \
 		$(CONFIGURE) \
-			--prefix= \
-			--datarootdir=$(remove-datarootdir) \
+			--prefix=$(prefix) \
+			--datarootdir=$(REMOVE_datarootdir) \
 			--enable-maintainer-mode \
 			--enable-silent-rules \
 			--enable-shared \
@@ -784,12 +781,12 @@ libgcrypt: $(LIBGCRYPT_DEPS) $(DL_DIR)/$(LIBGCRYPT_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	mv $(TARGET_BIN_DIR)/libgcrypt-config $(HOST_DIR)/bin
+	mv $(TARGET_bindir)/libgcrypt-config $(HOST_DIR)/bin
 	$(REWRITE_CONFIG) $(HOST_DIR)/bin/libgcrypt-config
 	$(REWRITE_LIBTOOL_LA)
-	rm -rf $(TARGET_BIN_DIR)/dumpsexp
-	rm -rf $(TARGET_BIN_DIR)/hmac256
-	rm -rf $(TARGET_BIN_DIR)/mpicalc
+	rm -rf $(TARGET_bindir)/dumpsexp
+	rm -rf $(TARGET_bindir)/hmac256
+	rm -rf $(TARGET_bindir)/mpicalc
 	$(REMOVE)/$(LIBGCRYPT_DIR)
 	$(TOUCH)
 
@@ -811,7 +808,7 @@ libaacs: $(LIBAACS_DEPS) $(DL_DIR)/$(LIBAACS_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(LIBAACS_DIR); \
 		./bootstrap; \
 		$(CONFIGURE) \
-			--prefix= \
+			--prefix=$(prefix) \
 			--enable-maintainer-mode \
 			--enable-silent-rules \
 			--enable-shared \
@@ -845,7 +842,7 @@ libbdplus: $(LIBBDPLUS_DEPS) $(DL_DIR)/$(LIBBDPLUS_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(LIBBDPLUS_DIR); \
 		./bootstrap; \
 		$(CONFIGURE) \
-			--prefix= \
+			--prefix=$(prefix) \
 			--enable-maintainer-mode \
 			--enable-silent-rules \
 			--enable-shared \
@@ -877,10 +874,10 @@ libxml2: $(DL_DIR)/$(LIBXML2_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(LIBXML2_DIR); \
 		$(APPLY_PATCHES); \
 		$(CONFIGURE) \
-			--prefix= \
+			--prefix=$(prefix) \
 			--enable-shared \
 			--disable-static \
-			--datarootdir=$(remove-datarootdir) \
+			--datarootdir=$(REMOVE_datarootdir) \
 			--without-python \
 			--without-debug \
 			--without-c14n \
@@ -893,12 +890,12 @@ libxml2: $(DL_DIR)/$(LIBXML2_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	mv $(TARGET_BIN_DIR)/xml2-config $(HOST_DIR)/bin
+	mv $(TARGET_bindir)/xml2-config $(HOST_DIR)/bin
 	$(REWRITE_CONFIG) $(HOST_DIR)/bin/xml2-config
 	$(REWRITE_LIBTOOL_LA)
 	$(REWRITE_PKGCONF_PC)
-	rm -rf $(TARGET_LIB_DIR)/xml2Conf.sh
-	rm -rf $(TARGET_LIB_DIR)/cmake
+	rm -rf $(TARGET_libdir)/xml2Conf.sh
+	rm -rf $(TARGET_libdir)/cmake
 	$(REMOVE)/$(LIBXML2_DIR)
 	$(TOUCH)
 
@@ -922,7 +919,7 @@ pugixml: $(DL_DIR)/$(PUGIXML_SOURCE) | $(TARGET_DIR)
 		$(CMAKE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	rm -rf $(TARGET_LIB_DIR)/cmake
+	rm -rf $(TARGET_libdir)/cmake
 	$(REMOVE)/$(PUGIXML_DIR)
 	$(TOUCH)
 
@@ -941,7 +938,7 @@ libroxml: $(DL_DIR)/$(LIBROXML_SOURCE) | $(TARGET_DIR)
 	$(UNTAR)/$(LIBROXML_SOURCE)
 	$(CHDIR)/$(LIBROXML_DIR); \
 		$(CONFIGURE) \
-			--prefix= \
+			--prefix=$(prefix) \
 			--disable-roxml \
 			; \
 		$(MAKE); \
@@ -957,14 +954,14 @@ RTMPDUMP_DEPS   = zlib openssl
 
 RTMPDUMP_MAKE_OPTS = \
 	prefix= \
-	mandir=$(remove-mandir)
+	mandir=$(REMOVE_mandir)
 
 rtmpdump: $(RTMPDUMP_DEPS) $(SOURCE_DIR)/$(NI-RTMPDUMP) | $(TARGET_DIR)
 	$(REMOVE)/$(NI-RTMPDUMP)
 	tar -C $(SOURCE_DIR) -cp $(NI-RTMPDUMP) --exclude-vcs | tar -C $(BUILD_DIR) -x
 	$(CHDIR)/$(NI-RTMPDUMP); \
 		$(MAKE) $(RTMPDUMP_MAKE_OPTS) CROSS_COMPILE=$(TARGET_CROSS) XCFLAGS="$(TARGET_CFLAGS)" XLDFLAGS="$(TARGET_LDFLAGS)"; \
-		$(MAKE) $(RTMPDUMP_MAKE_OPTS) install DESTDIR=$(TARGET_DIR)
+		$(MAKE) $(RTMPDUMP_MAKE_OPTS) install prefix=$(prefix) DESTDIR=$(TARGET_DIR)
 	rm -rf $(TARGET_DIR)/sbin/rtmpgw
 	rm -rf $(TARGET_DIR)/sbin/rtmpsrv
 	rm -rf $(TARGET_DIR)/sbin/rtmpsuck
@@ -994,15 +991,19 @@ libtirpc: $(DL_DIR)/$(LIBTIRPC_SOURCE) | $(TARGET_DIR)
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
-			--prefix= \
+			--prefix=$(prefix) \
+			--sysconfdir=$(sysconfdir) \
 			--disable-gssapi \
 			--enable-silent-rules \
-			--mandir=$(remove-mandir) \
+			--mandir=$(REMOVE_mandir) \
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL_LA)
 	$(REWRITE_PKGCONF_PC)
+ifeq ($(BOXSERIES), hd1)
+	sed -i -e '/^\(udp\|tcp\)6/ d' $(TARGET_sysconfdir)/netconfig
+endif
 	$(REMOVE)/$(LIBTIRPC_DIR)
 	$(TOUCH)
 
@@ -1021,9 +1022,9 @@ confuse: $(DL_DIR)/$(CONFUSE_SOURCE) | $(TARGET_DIR)
 	$(UNTAR)/$(CONFUSE_SOURCE)
 	$(CHDIR)/$(CONFUSE_DIR); \
 		$(CONFIGURE) \
-			--prefix= \
-			--docdir=$(remove-docdir) \
-			--mandir=$(remove-mandir) \
+			--prefix=$(prefix) \
+			--docdir=$(REMOVE_docdir) \
+			--mandir=$(REMOVE_mandir) \
 			--enable-silent-rules \
 			--enable-static \
 			--disable-shared \
@@ -1049,9 +1050,9 @@ libite: $(DL_DIR)/$(LIBITE_SOURCE) | $(TARGET_DIR)
 	$(UNTAR)/$(LIBITE_SOURCE)
 	$(CHDIR)/$(LIBITE_DIR); \
 		$(CONFIGURE) \
-			--prefix= \
-			--docdir=$(remove-docdir) \
-			--mandir=$(remove-docdir) \
+			--prefix=$(prefix) \
+			--docdir=$(REMOVE_docdir) \
+			--mandir=$(REMOVE_docdir) \
 			--enable-silent-rules \
 			--enable-static \
 			--disable-shared \
@@ -1086,7 +1087,7 @@ libmad: $(DL_DIR)/$(LIBMAD_SOURCE) | $(TARGET_DIR)
 		$(call apply_patches, $(LIBMAD_PATCH)); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
-			--prefix= \
+			--prefix=$(prefix) \
 			--enable-shared=yes \
 			--enable-accuracy \
 			--enable-fpm=arm \
@@ -1118,7 +1119,7 @@ libvorbisidec: $(LIBVORBISIDEC_DEPS) $(DL_DIR)/$(LIBVORBISIDEC_SOURCE) | $(TARGE
 		sed -i '122 s/^/#/' configure.in; \
 		autoreconf -fi; \
 		$(CONFIGURE) \
-			--prefix= \
+			--prefix=$(prefix) \
 			; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR); \
@@ -1142,8 +1143,8 @@ libogg: $(DL_DIR)/$(LIBOGG_SOURCE) | $(TARGET_DIR)
 	$(UNTAR)/$(LIBOGG_SOURCE)
 	$(CHDIR)/$(LIBOGG_DIR); \
 		$(CONFIGURE) \
-			--prefix= \
-			--datarootdir=$(remove-datarootdir) \
+			--prefix=$(prefix) \
+			--datarootdir=$(REMOVE_datarootdir) \
 			--enable-shared \
 			; \
 		$(MAKE); \
@@ -1168,8 +1169,8 @@ fribidi: $(DL_DIR)/$(FRIBIDI_SOURCE) | $(TARGET_DIR)
 	$(UNTAR)/$(FRIBIDI_SOURCE)
 	$(CHDIR)/$(FRIBIDI_DIR); \
 		$(CONFIGURE) \
-			--prefix= \
-			--mandir=$(remove-mandir) \
+			--prefix=$(prefix) \
+			--mandir=$(REMOVE_mandir) \
 			--disable-debug \
 			--disable-deprecated \
 			; \
@@ -1200,8 +1201,8 @@ libffi: $(DL_DIR)/$(LIBFFI_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(LIBFFI_DIR); \
 		$(call apply_patches, $(LIBFFI_PATCH)); \
 		$(CONFIGURE) \
-			--prefix= \
-			--datarootdir=$(remove-datarootdir) \
+			--prefix=$(prefix) \
+			--datarootdir=$(REMOVE_datarootdir) \
 			$(LIBFFI_CONF) \
 			; \
 		$(MAKE) all; \
@@ -1250,8 +1251,8 @@ glib2: $(GLIB2_DEPS) $(DL_DIR)/$(GLIB2_SOURCE) | $(TARGET_DIR)
 		echo "ac_cv_func_posix_getgrgid_r=yes"	>> arm-linux.cache; \
 		autoreconf -fi; \
 		$(CONFIGURE) \
-			--prefix= \
-			--datarootdir=$(remove-datarootdir) \
+			--prefix=$(prefix) \
+			--datarootdir=$(REMOVE_datarootdir) \
 			--cache-file=arm-linux.cache \
 			--disable-debug \
 			--disable-selinux \
@@ -1265,7 +1266,7 @@ glib2: $(GLIB2_DEPS) $(DL_DIR)/$(GLIB2_SOURCE) | $(TARGET_DIR)
 			$(GLIB2_CONF) \
 			; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	rm -f $(addprefix $(TARGET_BIN_DIR)/,gapplication gdbus* gio* glib* gobject-query gresource gsettings gtester*)
+	rm -f $(addprefix $(TARGET_bindir)/,gapplication gdbus* gio* glib* gobject-query gresource gsettings gtester*)
 	$(REWRITE_LIBTOOL_LA)
 	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(GLIB2_DIR)
@@ -1288,8 +1289,8 @@ alsa-lib: $(DL_DIR)/$(ALSA-LIB_SOURCE)
 		$(APPLY_PATCHES); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
-			--prefix= \
-			--datarootdir=$(remove-datarootdir) \
+			--prefix=$(prefix) \
+			--datarootdir=$(REMOVE_datarootdir) \
 			--with-alsa-devdir=/dev/snd/ \
 			--with-plugindir=/lib/alsa \
 			--without-debug \
@@ -1327,8 +1328,8 @@ popt: $(DL_DIR)/$(POPT_SOURCE) | $(TARGET_DIR)
 	$(UNTAR)/$(POPT_SOURCE)
 	$(CHDIR)/$(POPT_DIR); \
 		$(CONFIGURE) \
-			--prefix= \
-			--datarootdir=$(remove-datarootdir) \
+			--prefix=$(prefix) \
+			--datarootdir=$(REMOVE_datarootdir) \
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
@@ -1354,8 +1355,8 @@ libiconv: $(DL_DIR)/$(LIBICONV_SOURCE) | $(TARGET_DIR)
 		sed -i -e '/preload/d' Makefile.in; \
 		$(CONFIGURE) CPPFLAGS="$(TARGET_CPPFLAGS) -fPIC" \
 			--target=$(TARGET) \
-			--prefix= \
-			--datarootdir=$(remove-datarootdir) \
+			--prefix=$(prefix) \
+			--datarootdir=$(REMOVE_datarootdir) \
 			--enable-static \
 			--disable-shared \
 			--enable-relocatable \
@@ -1386,7 +1387,7 @@ GRAPHLCD_BASE_MAKE_OPTS = \
 	$(MAKE_ENV) \
 	CXXFLAGS+="-fPIC" \
 	TARGET=$(TARGET_CROSS) \
-	PREFIX= \
+	PREFIX=$(prefix) \
 	DESTDIR=$(TARGET_DIR)
 
 graphlcd-base: $(GRAPHLCD_BASE_DEPS) | $(TARGET_DIR)
@@ -1399,6 +1400,6 @@ graphlcd-base: $(GRAPHLCD_BASE_DEPS) | $(TARGET_DIR)
 		$(MAKE) $(GRAPHLCD_BASE_MAKE_OPTS) -C glcddrivers all; \
 		$(MAKE) $(GRAPHLCD_BASE_MAKE_OPTS) -C glcdgraphics install; \
 		$(MAKE) $(GRAPHLCD_BASE_MAKE_OPTS) -C glcddrivers install; \
-		$(INSTALL_DATA) -D graphlcd.conf $(TARGET_DIR)/etc/graphlcd.conf
+		$(INSTALL_DATA) -D graphlcd.conf $(TARGET_sysconfdir)/graphlcd.conf
 	$(REMOVE)/$(GRAPHLCD_BASE_DIR)
 	$(TOUCH)

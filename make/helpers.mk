@@ -48,16 +48,16 @@ github = https://github.com/$(1)/$(2)/archive/$(3)
 
 # rewrite libtool libraries
 REWRITE_LIBTOOL_RULES  = sed -i \
-				-e "s,^libdir=.*,libdir='$(TARGET_LIB_DIR)'," \
-				-e "s,\(^dependency_libs='\| \|-L\|^dependency_libs='\)/lib,\ $(TARGET_LIB_DIR),g"
+				-e "s,^libdir=.*,libdir='$(TARGET_libdir)'," \
+				-e "s,\(^dependency_libs='\| \|-L\|^dependency_libs='\)/lib,\ $(TARGET_libdir),g"
 
-REWRITE_LIBTOOL        = $(REWRITE_LIBTOOL_RULES) $(TARGET_LIB_DIR)
-REWRITE_LIBTOOL_STATIC = $(REWRITE_LIBTOOL_RULES) $(STATIC_LIB_DIR)
+REWRITE_LIBTOOL        = $(REWRITE_LIBTOOL_RULES) $(TARGET_libdir)
+REWRITE_LIBTOOL_STATIC = $(REWRITE_LIBTOOL_RULES) $(STATIC_libdir)
 
 REWRITE_LIBTOOL_TAG    = rewritten=1
 
 define rewrite_libtool
-	cd $(TARGET_LIB_DIR); \
+	cd $(TARGET_libdir); \
 	LA=$$(find . -name "*.la" -type f); \
 	for la in $${LA}; do \
 		if ! grep -q "$(REWRITE_LIBTOOL_TAG)" $${la}; then \
@@ -75,10 +75,10 @@ REWRITE_LIBTOOL_LA = $(call rewrite_libtool)
 
 # rewrite pkg-config files
 REWRITE_CONFIG_RULES   = sed -i \
-				-e "s,^prefix=.*,prefix='$(TARGET_DIR)'," \
-				-e "s,^exec_prefix=.*,exec_prefix='$(TARGET_DIR)'," \
-				-e "s,^libdir=.*,libdir='$(TARGET_LIB_DIR)'," \
-				-e "s,^includedir=.*,includedir='$(TARGET_INCLUDE_DIR)',"
+				-e "s,^prefix=.*,prefix='$(TARGET_prefix)'," \
+				-e "s,^exec_prefix=.*,exec_prefix='$(TARGET_exec_prefix)'," \
+				-e "s,^libdir=.*,libdir='$(TARGET_libdir)'," \
+				-e "s,^includedir=.*,includedir='$(TARGET_includedir)',"
 
 REWRITE_CONFIG         = $(REWRITE_CONFIG_RULES)
 REWRITE_PKGCONF        = $(REWRITE_CONFIG_RULES) $(PKG_CONFIG_PATH)

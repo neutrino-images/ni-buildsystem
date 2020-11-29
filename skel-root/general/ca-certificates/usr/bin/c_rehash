@@ -167,7 +167,7 @@ if [ -n "${OPENSSL}" ]
 then
     SSL_CMD=$(which ${OPENSSL} 2>/dev/null)
 else
-    SSL_CMD=/bin/openssl
+    SSL_CMD=/usr/bin/openssl
     OPENSSL=${SSL_CMD}
     export OPENSSL
 fi

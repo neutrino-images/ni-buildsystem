@@ -3,8 +3,8 @@ local function getenv(name) return os_getenv(name) or '' end
 
 -- cross-compilation
 
-variables.LUA_INCDIR = getenv('TARGET_INCLUDE_DIR')
-variables.LUA_LIBDIR = getenv('TARGET_LIB_DIR')
+variables.LUA_INCDIR = getenv('TARGET_includedir')
+variables.LUA_LIBDIR = getenv('TARGET_libdir')
 variables.CC = getenv('TARGET_CC')
 variables.LD = getenv('TARGET_LD')
 variables.CFLAGS = getenv('TARGET_CFLAGS')

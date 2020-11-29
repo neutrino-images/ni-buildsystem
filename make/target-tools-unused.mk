@@ -24,17 +24,17 @@ usbutils: $(USBUTILS_DEPS) $(DL_DIR)/$(USBUTILS_SOURCE) | $(TARGET_DIR)
 		$(call apply_patches, $(USBUTILS_PATCH)); \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
-			--prefix= \
-			--mandir=$(remove-mandir) \
-			--infodir=$(remove-infodir) \
+			--prefix=$(prefix) \
+			--mandir=$(REMOVE_mandir) \
+			--infodir=$(REMOVE_infodir) \
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	rm -rf $(TARGET_BIN_DIR)/lsusb.py
-	rm -rf $(TARGET_BIN_DIR)/usbhid-dump
+	rm -rf $(TARGET_bindir)/lsusb.py
+	rm -rf $(TARGET_bindir)/usbhid-dump
 	rm -rf $(TARGET_DIR)/sbin/update-usbids.sh
-	rm -rf $(TARGET_SHARE_DIR)/pkgconfig
-	rm -rf $(TARGET_SHARE_DIR)/usb.ids.gz
+	rm -rf $(TARGET_datadir)/pkgconfig
+	rm -rf $(TARGET_datadir)/usb.ids.gz
 	$(REMOVE)/$(USBUTILS_DIR)
 	$(TOUCH)
 
@@ -56,7 +56,7 @@ binutils: $(DL_DIR)/$(BINUTILS_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(BINUTILS_DIR); \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
-			--prefix= \
+			--prefix=$(prefix) \
 			--disable-multilib \
 			--disable-werror \
 			--disable-plugins \
@@ -66,7 +66,7 @@ binutils: $(DL_DIR)/$(BINUTILS_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 	for bin in $(BINUTILS_BIN); do \
-		$(INSTALL_EXEC) $(BUILD_DIR)/$(BINUTILS_DIR)/binutils/$$bin $(TARGET_DIR)/bin/; \
+		$(INSTALL_EXEC) $(BUILD_DIR)/$(BINUTILS_DIR)/binutils/$$bin $(TARGET_bindir)/; \
 	done
 	$(REMOVE)/$(BINUTILS_DIR)
 	$(TOUCH)
@@ -89,8 +89,8 @@ util-linux: $(UTUL-LINUX_DEPS) $(DL_DIR)/$(UTIL-LINUX_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(UTIL-LINUX_DIR); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
-			--prefix= \
-			--datarootdir=$(remove-datarootdir) \
+			--prefix=$(base_prefix) \
+			--datarootdir=$(REMOVE_datarootdir) \
 			--enable-static \
 			--disable-shared \
 			--disable-hardlink \
@@ -138,7 +138,7 @@ astra-sm: $(ASTRA-SM_DEPS) | $(TARGET_DIR)
 	$(CHDIR)/$(ASTRA-SM_DIR); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
-			--prefix= \
+			--prefix=$(prefix) \
 			--without-lua \
 			; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
@@ -163,7 +163,7 @@ iozone: $(DL_DIR)/$(IOZONE_SOURCE) | $(TARGET_DIR)
 		sed -i -e "s/= cc/= $(TARGET_CC)/" makefile; \
 		$(MAKE_ENV) \
 		$(MAKE) linux-arm; \
-		$(INSTALL_EXEC) iozone $(TARGET_BIN_DIR)/
+		$(INSTALL_EXEC) iozone $(TARGET_bindir)/
 	$(REMOVE)/$(IOZONE_DIR)
 	$(TOUCH)
 
@@ -182,8 +182,8 @@ readline: $(DL_DIR)/$(READLINE_SOURCE) | $(TARGET_DIR)
 	$(UNTAR)/$(READLINE_SOURCE)
 	$(CHDIR)/$(READLINE_DIR); \
 		$(CONFIGURE) \
-			--prefix= \
-			--datarootdir=$(remove-datarootdir) \
+			--prefix=$(prefix) \
+			--datarootdir=$(REMOVE_datarootdir) \
 			; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)

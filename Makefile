@@ -37,6 +37,8 @@ config.local: $(eval BOXMODEL=hd51)
 	@echo "   4)  Coolstream Kronos (Zee², Trinity V2)"
 	@echo "   5)  Coolstream Kronos V2 (Link, Trinity Duo)"
 	@echo "  11)  AX/Mutant HD51"
+	@echo "  12)  AX/Mutant HD60"
+	@echo "  13)  AX/Mutant HD61"
 	@echo "  21)  WWIO BRE2ZE4K"
 	@echo "  31)  Air Digital Zgemma H7S/C"
 	@echo "  41)  VU+ Solo 4k"
@@ -57,6 +59,8 @@ config.local: $(eval BOXMODEL=hd51)
 		 4)	boxmodel=kronos;; \
 		 5)	boxmodel=kronos_v2;; \
 		11)	boxmodel=hd51;; \
+		12)	boxmodel=hd60;; \
+		13)	boxmodel=hd61;; \
 		21)	boxmodel=bre2ze4k;; \
 		31)	boxmodel=h7;; \
 		41)	boxmodel=vusolo4k;; \

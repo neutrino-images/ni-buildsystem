@@ -28,16 +28,16 @@ valgrind3: $(DL_DIR)/$(VALGRIND_SOURCE) | $(TARGET_DIR)
 		export AR=$(TARGET_AR); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
-			--prefix= \
+			--prefix=$(prefix) \
 			--enable-only32bit \
-			--mandir=$(remove-mandir) \
-			--datadir=$(remove-datadir) \
+			--mandir=$(REMOVE_mandir) \
+			--datadir=$(REMOVE_datadir) \
 			; \
 		$(MAKE) all; \
 		make install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF_PC)
-	rm -f $(addprefix $(TARGET_LIB_DIR)/valgrind/,*.a *.xml)
-	rm -f $(addprefix $(TARGET_BIN_DIR)/,cg_* callgrind_* ms_print)
+	rm -f $(addprefix $(TARGET_libdir)/valgrind/,*.a *.xml)
+	rm -f $(addprefix $(TARGET_bindir)/,cg_* callgrind_* ms_print)
 	$(REMOVE)/$(VALGRIND_DIR)
 	$(TOUCH)
 
@@ -54,10 +54,10 @@ valgrind12305: | $(TARGET_DIR)
 		$(call apply_patches, $(VALGRIND12305_PATCH)); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
-			--prefix= \
+			--prefix=$(prefix) \
 			--enable-only32bit \
-			--mandir=$(remove-mandir) \
-			--datadir=$(remove-datadir) \
+			--mandir=$(REMOVE_mandir) \
+			--datadir=$(REMOVE_datadir) \
 			; \
 		$(MAKE) all; \
 		make install DESTDIR=$(TARGET_DIR)
@@ -80,13 +80,13 @@ strace: $(DL_DIR)/$(STRACE_SOURCE) | $(TARGET_DIR)
 	$(UNTAR)/$(STRACE_SOURCE)
 	$(CHDIR)/$(STRACE_DIR); \
 		$(CONFIGURE) \
-			--prefix= \
-			--mandir=$(remove-mandir) \
+			--prefix=$(prefix) \
+			--mandir=$(REMOVE_mandir) \
 			--enable-silent-rules \
 			; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	rm -f $(addprefix $(TARGET_BIN_DIR)/,strace-graph strace-log-merge)
+	rm -f $(addprefix $(TARGET_bindir)/,strace-graph strace-log-merge)
 	$(REMOVE)/$(STRACE_DIR)
 	$(TOUCH)
 
@@ -107,9 +107,9 @@ gdb: $(GDB_DEPS) $(DL_DIR)/$(GDB_SOURCE) | $(TARGET_DIR)
 	$(UNTAR)/$(GDB_SOURCE)
 	$(CHDIR)/$(GDB_DIR); \
 		$(CONFIGURE) \
-			--prefix= \
-			--mandir=$(remove-mandir) \
-			--infodir=$(remove-infodir) \
+			--prefix=$(prefix) \
+			--mandir=$(REMOVE_mandir) \
+			--infodir=$(REMOVE_infodir) \
 			--disable-binutils \
 			--disable-gdbserver \
 			--disable-gdbtk \
@@ -125,7 +125,7 @@ gdb: $(GDB_DEPS) $(DL_DIR)/$(GDB_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE) all-gdb; \
 		$(MAKE) install-gdb DESTDIR=$(TARGET_DIR)
-	rm -rf $(addprefix $(TARGET_SHARE_DIR)/,system-gdbinit)
-	find $(TARGET_SHARE_DIR)/gdb/syscalls -type f -not -name 'arm-linux.xml' -not -name 'gdb-syscalls.dtd' -print0 | xargs -0 rm --
+	rm -rf $(addprefix $(TARGET_datadir)/,system-gdbinit)
+	find $(TARGET_datadir)/gdb/syscalls -type f -not -name 'arm-linux.xml' -not -name 'gdb-syscalls.dtd' -print0 | xargs -0 rm --
 	$(REMOVE)/$(GDB_DIR)
 	$(TOUCH)

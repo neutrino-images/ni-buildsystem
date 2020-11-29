@@ -54,7 +54,7 @@ ifeq ($(BOXSERIES), hd2)
 endif
 
 ifeq ($(DEBUG), yes)
-  N_CFLAGS += -ggdb3 -rdynamic -I$(TARGET_INCLUDE_DIR)
+  N_CFLAGS += -ggdb3 -rdynamic -I$(TARGET_includedir)
 else
   N_CFLAGS += $(TARGET_CFLAGS)
 endif
@@ -63,11 +63,11 @@ N_CFLAGS += -Wno-psabi
 
 # -----------------------------------------------------------------------------
 
-N_LDFLAGS = -lcrypto -ldl -lz $(CORTEX-STRINGS_LDFLAG) -L$(TARGET_LIB_DIR)
+N_LDFLAGS = -lcrypto -ldl -lz $(CORTEX-STRINGS_LDFLAG) -L$(TARGET_libdir)
 ifeq ($(DEBUG), yes)
-  N_LDFLAGS += -Wl,-rpath-link,$(TARGET_LIB_DIR)
+  N_LDFLAGS += -Wl,-rpath-link,$(TARGET_libdir)
 else
-  N_LDFLAGS += -Wl,-O1 -Wl,-rpath-link,$(TARGET_LIB_DIR) $(TARGET_EXTRA_LDFLAGS)
+  N_LDFLAGS += -Wl,-O1 -Wl,-rpath-link,$(TARGET_libdir) $(TARGET_EXTRA_LDFLAGS)
 endif
 
 # -----------------------------------------------------------------------------
@@ -77,7 +77,7 @@ ifeq ($(BOXTYPE)-$(HAS_LIBCS), coolstream-yes)
   ifeq ($(DEBUG), yes)
     N_CONFIGURE_DEBUG += \
 		--enable-libcoolstream-static \
-		--with-libcoolstream-static-dir=$(TARGET_LIB_DIR)
+		--with-libcoolstream-static-dir=$(TARGET_libdir)
   endif
 endif
 
@@ -148,7 +148,7 @@ $(N_OBJ_DIR)/config.status: $(N_DEPS)
 		$(SOURCE_DIR)/$(NI-NEUTRINO)/configure \
 			--host=$(TARGET) \
 			--build=$(BUILD) \
-			--prefix= \
+			--prefix=$(prefix) \
 			$(N_CONFIGURE_DEBUG) \
 			--enable-maintainer-mode \
 			--enable-silent-rules \
@@ -172,7 +172,7 @@ $(N_OBJ_DIR)/config.status: $(N_DEPS)
 			$(N_CONFIGURE_LIBSTB-HAL) \
 			--with-tremor \
 			--with-target=cdk \
-			--with-targetprefix= \
+			--with-targetprefix=$(prefix) \
 			--with-boxtype=$(BOXTYPE) \
 			--with-boxmodel=$(N_BOXMODEL)
 
@@ -182,12 +182,12 @@ neutrino: $(N_OBJ_DIR)/config.status
 	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
 	$(MAKE) -C $(N_OBJ_DIR) all     DESTDIR=$(TARGET_DIR)
 	$(MAKE) -C $(N_OBJ_DIR) install DESTDIR=$(N_INST_DIR)
-	$(MAKE) $(TARGET_DIR)/etc/init.d/start_neutrino
+	$(MAKE) $(TARGET_sysconfdir)/init.d/start_neutrino
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
-$(TARGET_DIR)/etc/init.d/start_neutrino:
+$(TARGET_sysconfdir)/init.d/start_neutrino:
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/start_neutrino.$(BOXTYPE) $(@)
 
 # -----------------------------------------------------------------------------
@@ -210,12 +210,13 @@ $(LH_OBJ_DIR)/config.status: $(LH_DEPS)
 		$(SOURCE_DIR)/$(NI-LIBSTB-HAL)/configure \
 			--host=$(TARGET) \
 			--build=$(BUILD) \
-			--prefix= \
+			--prefix=$(prefix) \
 			--enable-maintainer-mode \
 			--enable-silent-rules \
 			--enable-shared=no \
 			\
 			--with-target=cdk \
+			--with-targetprefix=$(prefix) \
 			--with-boxtype=$(BOXTYPE) \
 			--with-boxmodel=$(N_BOXMODEL)
 
@@ -237,9 +238,9 @@ endif
 	$(MAKE) $(N_OBJ_DIR)/config.status
 	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
 	$(MAKE) -C $(N_OBJ_DIR) all DESTDIR=$(TARGET_DIR)
-	$(INSTALL_EXEC) -D $(N_OBJ_DIR)/src/neutrino $(TARGET_DIR)/bin/neutrino
+	$(INSTALL_EXEC) -D $(N_OBJ_DIR)/src/neutrino $(TARGET_bindir)/neutrino
 ifneq ($(DEBUG), yes)
-	$(TARGET_STRIP) $(TARGET_DIR)/bin/neutrino
+	$(TARGET_STRIP) $(TARGET_bindir)/neutrino
 endif
 	make done
 
@@ -254,7 +255,7 @@ neutrino-distclean:
 neutrino-clean: neutrino-uninstall neutrino-distclean
 	rm -f $(N_OBJ_DIR)/config.status
 	rm -f $(DEPS_DIR)/neutrino
-	rm -f $(TARGET_DIR)/etc/init.d/start_neutrino
+	rm -f $(TARGET_sysconfdir)/init.d/start_neutrino
 
 neutrino-clean-all: neutrino-clean
 	rm -rf $(N_OBJ_DIR)

@@ -58,7 +58,7 @@ ni-image:
 	$(MAKE) wpa_supplicant
 	$(MAKE) mtd-utils
 	$(MAKE) wget
-	$(MAKE) streamripper
+	#$(MAKE) streamripper
 ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd5x hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo))
 	$(MAKE) less
 	$(MAKE) parted

@@ -8,4 +8,4 @@ fi
 
 mount -t sysfs sys /sys
 
-/bin/turnoff_power
+/usr/bin/turnoff_power

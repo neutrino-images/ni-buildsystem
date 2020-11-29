@@ -23,8 +23,8 @@ endif
 firmware: firmware-boxmodel firmware-wireless
 
 firmware-boxmodel: $(SOURCE_DIR)/$(NI-DRIVERS-BIN) | $(TARGET_DIR)
-	$(call INSTALL_EXIST,$(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/lib-firmware/.,$(TARGET_LIB_DIR)/firmware)
-	$(call INSTALL_EXIST,$(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/lib-firmware-dvb/.,$(TARGET_LIB_DIR)/firmware)
+	$(call INSTALL_EXIST,$(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/lib-firmware/.,$(TARGET_base_libdir)/firmware)
+	$(call INSTALL_EXIST,$(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/lib-firmware-dvb/.,$(TARGET_base_libdir)/firmware)
 
 ifeq ($(BOXMODEL), nevis)
   FIRMWARE-WIRELESS  = rt2870.bin
@@ -38,7 +38,7 @@ endif
 
 firmware-wireless: $(SOURCE_DIR)/$(NI-DRIVERS-BIN) | $(TARGET_DIR)
 	for firmware in $(FIRMWARE-WIRELESS); do \
-		$(INSTALL_DATA) -D $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/general/firmware-wireless/$$firmware $(TARGET_LIB_DIR)/firmware/$$firmware; \
+		$(INSTALL_DATA) -D $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/general/firmware-wireless/$$firmware $(TARGET_base_libdir)/firmware/$$firmware; \
 	done
 
 # -----------------------------------------------------------------------------
@@ -128,16 +128,16 @@ shiner-drivers \
 kronos-drivers \
 kronos_v2-drivers \
 coolstream-drivers: $(SOURCE_DIR)/$(NI-DRIVERS-BIN) | $(TARGET_DIR)
-	mkdir -p $(TARGET_LIB_DIR)
-	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/lib/. $(TARGET_LIB_DIR)
-	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/libcoolstream/$(shell echo -n $(NI-FFMPEG_BRANCH) | sed 's,/,-,g')/. $(TARGET_LIB_DIR)
+	mkdir -p $(TARGET_libdir)
+	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/lib/. $(TARGET_libdir)
+	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/libcoolstream/$(shell echo -n $(NI-FFMPEG_BRANCH) | sed 's,/,-,g')/. $(TARGET_libdir)
 ifeq ($(BOXMODEL), nevis)
-	ln -sf libnxp.so $(TARGET_LIB_DIR)/libconexant.so
+	ln -sf libnxp.so $(TARGET_libdir)/libconexant.so
 endif
-	mkdir -p $(TARGET_MODULES_DIR)
-	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/lib-modules/$(KERNEL_VER)/. $(TARGET_MODULES_DIR)
+	mkdir -p $(TARGET_modulesdir)
+	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/lib-modules/$(KERNEL_VER)/. $(TARGET_modulesdir)
 ifeq ($(BOXMODEL), nevis)
-	ln -sf $(KERNEL_VER) $(TARGET_MODULES_DIR)-$(BOXMODEL)
+	ln -sf $(KERNEL_VER) $(TARGET_modulesdir)-$(BOXMODEL)
 endif
 	make depmod
 	$(TOUCH)
@@ -145,17 +145,17 @@ endif
 hd51-drivers \
 bre2ze4k-drivers \
 h7-drivers: $(DL_DIR)/$(BOXMODEL-DRIVERS_SOURCE) | $(TARGET_DIR)
-	mkdir -p $(TARGET_MODULES_DIR)/extra
-	unzip -o $(DL_DIR)/$(BOXMODEL-DRIVERS_SOURCE) -d $(TARGET_MODULES_DIR)/extra
+	mkdir -p $(TARGET_modulesdir)/extra
+	unzip -o $(DL_DIR)/$(BOXMODEL-DRIVERS_SOURCE) -d $(TARGET_modulesdir)/extra
 	make depmod
 	$(TOUCH)
 
 hd60-drivers \
 hd61-drivers: $(DL_DIR)/$(BOXMODEL-DRIVERS_SOURCE) | $(TARGET_DIR)
-	mkdir -p $(TARGET_MODULES_DIR)/extra
-	unzip -o $(DL_DIR)/$(BOXMODEL-DRIVERS_SOURCE) -d $(TARGET_MODULES_DIR)/extra
-	rm -f $(TARGET_MODULES_DIR)/extra/hi_play.ko
-	mv $(TARGET_MODULES_DIR)/extra/turnoff_power $(TARGET_DIR)/bin
+	mkdir -p $(TARGET_modulesdir)/extra
+	unzip -o $(DL_DIR)/$(BOXMODEL-DRIVERS_SOURCE) -d $(TARGET_modulesdir)/extra
+	rm -f $(TARGET_modulesdir)/extra/hi_play.ko
+	mv $(TARGET_modulesdir)/extra/turnoff_power $(TARGET_bindir)
 	make depmod
 	$(TOUCH)
 
@@ -168,8 +168,8 @@ vuuno4k-drivers \
 vuuno4kse-drivers \
 vuduo-drivers \
 vuplus-drivers: $(DL_DIR)/$(BOXMODEL-DRIVERS_SOURCE) | $(TARGET_DIR)
-	mkdir -p $(TARGET_MODULES_DIR)/extra
-	tar -xf $(DL_DIR)/$(BOXMODEL-DRIVERS_SOURCE) -C $(TARGET_MODULES_DIR)/extra
+	mkdir -p $(TARGET_modulesdir)/extra
+	tar -xf $(DL_DIR)/$(BOXMODEL-DRIVERS_SOURCE) -C $(TARGET_modulesdir)/extra
 	make depmod
 	$(TOUCH)
 
@@ -253,22 +253,22 @@ endif
 hd51-libgles \
 bre2ze4k-libgles \
 h7-libgles: $(DL_DIR)/$(BOXMODEL-LIBGLES_SOURCE) | $(TARGET_DIR)
-	unzip -o $(DL_DIR)/$(BOXMODEL-LIBGLES_SOURCE) -d $(TARGET_LIB_DIR)
-	ln -sf libv3ddriver.so $(TARGET_LIB_DIR)/libEGL.so
-	ln -sf libv3ddriver.so $(TARGET_LIB_DIR)/libGLESv2.so
+	unzip -o $(DL_DIR)/$(BOXMODEL-LIBGLES_SOURCE) -d $(TARGET_libdir)
+	ln -sf libv3ddriver.so $(TARGET_libdir)/libEGL.so
+	ln -sf libv3ddriver.so $(TARGET_libdir)/libGLESv2.so
 	$(TOUCH)
 
 $(DL_DIR)/$(HD6x-LIBGLES-HEADERS_SOURCE):
 	$(DOWNLOAD) $(HD6x-LIBGLES-HEADERS_SITE)/$(HD6x-LIBGLES-HEADERS_SOURCE)
 
 hd6x-libgles-headers: $(DL_DIR)/$(HD6x-LIBGLES-HEADERS_SOURCE) | $(TARGET_DIR)
-	unzip -o $(DL_DIR)/$(HD6x-LIBGLES-HEADERS_SOURCE) -d $(TARGET_INCLUDE_DIR)
+	unzip -o $(DL_DIR)/$(HD6x-LIBGLES-HEADERS_SOURCE) -d $(TARGET_includedir)
 	$(TOUCH)
 
 hd60-libgles \
 hd61-libgles: $(DL_DIR)/$(BOXMODEL-LIBGLES_SOURCE) | $(TARGET_DIR)
-	unzip -o $(DL_DIR)/$(BOXMODEL-LIBGLES_SOURCE) -d $(TARGET_LIB_DIR)
-	$(CD) $(TARGET_LIB_DIR); \
+	unzip -o $(DL_DIR)/$(BOXMODEL-LIBGLES_SOURCE) -d $(TARGET_libdir)
+	$(CD) $(TARGET_libdir); \
 		ln -sf libMali.so libmali.so; \
 		ln -sf libMali.so libEGL.so.1.4; ln -sf libEGL.so.1.4 libEGL.so.1; ln -sf libEGL.so.1 libEGL.so; \
 		ln -sf libMali.so libGLESv1_CM.so.1.1; ln -sf libGLESv1_CM.so.1.1 libGLESv1_CM.so.1; ln -sf libGLESv1_CM.so.1 libGLESv1_CM.so; \
@@ -287,10 +287,10 @@ vuuno4kse-libgles \
 vuplus-libgles: $(DL_DIR)/$(BOXMODEL-LIBGLES_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(BOXMODEL-LIBGLES_DIR)
 	$(UNTAR)/$(BOXMODEL-LIBGLES_SOURCE)
-	$(INSTALL_EXEC) $(BUILD_DIR)/$(BOXMODEL-LIBGLES_DIR)/lib/* $(TARGET_LIB_DIR)
-	ln -sf libv3ddriver.so $(TARGET_LIB_DIR)/libEGL.so
-	ln -sf libv3ddriver.so $(TARGET_LIB_DIR)/libGLESv2.so
-	$(INSTALL_COPY) $(BUILD_DIR)/$(BOXMODEL-LIBGLES_DIR)/include/* $(TARGET_INCLUDE_DIR)
+	$(INSTALL_EXEC) $(BUILD_DIR)/$(BOXMODEL-LIBGLES_DIR)/lib/* $(TARGET_libdir)
+	ln -sf libv3ddriver.so $(TARGET_libdir)/libEGL.so
+	ln -sf libv3ddriver.so $(TARGET_libdir)/libGLESv2.so
+	$(INSTALL_COPY) $(BUILD_DIR)/$(BOXMODEL-LIBGLES_DIR)/include/* $(TARGET_includedir)
 	$(REMOVE)/$(BOXMODEL-LIBGLES_DIR)
 	$(TOUCH)
 
@@ -322,10 +322,10 @@ hd60-libs \
 hd61-libs: $(DL_DIR)/$(BOXMODEL-LIBS_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(BOXMODEL-LIBS_DIR)
 	unzip -o $(DL_DIR)/$(BOXMODEL-LIBS_SOURCE) -d $(BUILD_DIR)/$(BOXMODEL-LIBS_DIR)
-	mkdir -p $(TARGET_USR_LIB_DIR)/hisilicon
-	$(INSTALL_EXEC) $(BUILD_DIR)/$(BOXMODEL-LIBS_DIR)/hisilicon/* $(TARGET_USR_LIB_DIR)/hisilicon
-	$(INSTALL_EXEC) $(BUILD_DIR)/$(BOXMODEL-LIBS_DIR)/ffmpeg/* $(TARGET_USR_LIB_DIR)/hisilicon
-	ln -sf /lib/ld-linux-armhf.so.3 $(TARGET_USR_LIB_DIR)/hisilicon/ld-linux.so
+	mkdir -p $(TARGET_libdir)/hisilicon
+	$(INSTALL_EXEC) $(BUILD_DIR)/$(BOXMODEL-LIBS_DIR)/hisilicon/* $(TARGET_libdir)/hisilicon
+	$(INSTALL_EXEC) $(BUILD_DIR)/$(BOXMODEL-LIBS_DIR)/ffmpeg/* $(TARGET_libdir)/hisilicon
+	ln -sf /lib/ld-linux-armhf.so.3 $(TARGET_libdir)/hisilicon/ld-linux.so
 	$(REMOVE)/$(BOXMODEL-LIBS_DIR)
 	$(TOUCH)
 
@@ -381,10 +381,10 @@ endif
 vuplus-platform-util: $(DL_DIR)/$(BOXMODEL-PLATFORM-UTIL_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(BOXMODEL-PLATFORM-UTIL_DIR)
 	$(UNTAR)/$(BOXMODEL-PLATFORM-UTIL_SOURCE)
-	$(INSTALL_EXEC) -D $(BUILD_DIR)/$(BOXMODEL-PLATFORM-UTIL_DIR)/* $(TARGET_USR_BIN_DIR)
-	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/vuplus-platform-util.init $(TARGET_DIR)/etc/init.d/vuplus-platform-util
+	$(INSTALL_EXEC) -D $(BUILD_DIR)/$(BOXMODEL-PLATFORM-UTIL_DIR)/* $(TARGET_bindir)
+	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/vuplus-platform-util.init $(TARGET_sysconfdir)/init.d/vuplus-platform-util
 ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vuduo4k))
-	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/bp3flash.sh $(TARGET_USR_BIN_DIR)/bp3flash.sh
+	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/bp3flash.sh $(TARGET_bindir)/bp3flash.sh
 endif
 	$(REMOVE)/$(BOXMODEL-PLATFORM-UTIL_DIR)
 	$(TOUCH)

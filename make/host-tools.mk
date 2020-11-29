@@ -77,8 +77,8 @@ host-pkgconf: $(DL_DIR)/$(HOST_PKGCONF_SOURCE) | $(HOST_DIR) pkg-config-preqs
 		./configure \
 			--prefix=$(HOST_DIR) \
 			--with-sysroot=$(TARGET_DIR) \
-			--with-system-libdir=$(TARGET_LIB_DIR) \
-			--with-system-includedir=$(TARGET_INCLUDE_DIR) \
+			--with-system-libdir=$(TARGET_libdir) \
+			--with-system-includedir=$(TARGET_includedir) \
 			; \
 		$(MAKE); \
 		$(MAKE) install
@@ -344,10 +344,10 @@ HOST_LUAROCKS_MAKE_ENV = \
 	TARGET_CC="$(TARGET_CC)" \
 	TARGET_LD="$(TARGET_LD)" \
 	TARGET_CFLAGS="$(TARGET_CFLAGS) -fPIC" \
-	TARGET_LDFLAGS="-L$(TARGET_LIB_DIR)" \
+	TARGET_LDFLAGS="-L$(TARGET_libdir)" \
 	TARGET_DIR="$(TARGET_DIR)" \
-	TARGET_INCLUDE_DIR="$(TARGET_INCLUDE_DIR)" \
-	TARGET_LIB_DIR="$(TARGET_LIB_DIR)"
+	TARGET_includedir="$(TARGET_includedir)" \
+	TARGET_libdir="$(TARGET_libdir)"
 
 HOST_LUAROCKS = $(HOST_DIR)/bin/luarocks
 

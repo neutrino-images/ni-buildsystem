@@ -22,7 +22,7 @@ libid3tag: $(LIBID3TAG_DEPS) $(DL_DIR)/$(LIBID3TAG_SOURCE) | $(TARGET_DIR)
 		$(call apply_patches, $(LIBID3TAG_PATCH)); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
-			--prefix= \
+			--prefix=$(prefix) \
 			--enable-shared=yes \
 			; \
 		$(MAKE) all; \
@@ -48,8 +48,8 @@ libFLAC: $(DL_DIR)/$(FLAC_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(LIBFLAC_DIR); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
-			--prefix= \
-			--datarootdir=$(remove-datarootdir) \
+			--prefix=$(prefix) \
+			--datarootdir=$(REMOVE_datarootdir) \
 			--enable-shared \
 			--disable-static \
 			--disable-cpplibs \
@@ -61,8 +61,8 @@ libFLAC: $(DL_DIR)/$(FLAC_SOURCE) | $(TARGET_DIR)
 		$(MAKE) install DESTDIR=$(TARGET_DIR); \
 	$(REWRITE_LIBTOOL_LA)
 	$(REWRITE_PKGCONF_PC)
-	rm -rf $(TARGET_DIR)/bin/flac
-	rm -rf $(TARGET_DIR)/bin/metaflac
+	rm -rf $(TARGET_bindir)/flac
+	rm -rf $(TARGET_bindir)/metaflac
 	$(REMOVE)/$(LIBFLAC_DIR)
 	$(TOUCH)
 
@@ -87,7 +87,7 @@ bzip2: $(DL_DIR)/$(BZIP2_SOURCE) | $(TARGET_DIR)
 		$(MAKE_ENV) \
 		$(MAKE) all; \
 		$(MAKE) install PREFIX=$(TARGET_DIR)
-	rm -f $(TARGET_DIR)/bin/bzip2
+	rm -f $(TARGET_bindir)/bzip2
 	$(REMOVE)/$(BZIP2_DIR)
 	$(TOUCH)
 
@@ -108,10 +108,10 @@ fontconfig: $(FONTCONFIG_DEPS) $(DL_DIR)/$(FONTCONFIG_SOURCE) | $(TARGET_DIR)
 	$(UNTAR)/$(FONTCONFIG_SOURCE)
 	$(CHDIR)/$(FONTCONFIG_DIR); \
 		$(CONFIGURE) \
-			--prefix= \
+			--prefix=$(prefix) \
 			--with-freetype-config=$(HOST_DIR)/bin/freetype-config \
-			--with-expat-includes=$(TARGET_INCLUDE_DIR) \
-			--with-expat-lib=$(TARGET_LIB_DIR) \
+			--with-expat-includes=$(TARGET_includedir) \
+			--with-expat-lib=$(TARGET_libdir) \
 			--sysconfdir=/etc \
 			--disable-docs \
 			; \
@@ -144,7 +144,7 @@ pixman: $(PIXMAN_DEPS) $(DL_DIR)/$(PIXMAN_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(PIXMAN_DIR); \
 		$(call apply_patches, $(PIXMAN_PATCH)); \
 		$(CONFIGURE) \
-			--prefix= \
+			--prefix=$(prefix) \
 			--disable-gtk \
 			--disable-arm-simd \
 			--disable-loongson-mmi \
@@ -179,7 +179,7 @@ cairo: $(CAIRO_DEPS) $(DL_DIR)/$(CAIRO_SOURCE) | $(TARGET_DIR)
 		$(MAKE_ENV) \
 		ax_cv_c_float_words_bigendian="no" \
 		./configure $(CONFIGURE_OPTS) \
-			--prefix= \
+			--prefix=$(prefix) \
 			--with-x=no \
 			--disable-xlib \
 			--disable-xcb \
@@ -190,11 +190,11 @@ cairo: $(CAIRO_DEPS) $(DL_DIR)/$(CAIRO_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	rm -rf $(TARGET_BIN_DIR)/cairo-sphinx
-	rm -rf $(TARGET_LIB_DIR)/cairo/cairo-fdr*
-	rm -rf $(TARGET_LIB_DIR)/cairo/cairo-sphinx*
-	rm -rf $(TARGET_LIB_DIR)/cairo/.debug/cairo-fdr*
-	rm -rf $(TARGET_LIB_DIR)/cairo/.debug/cairo-sphinx*
+	rm -rf $(TARGET_bindir)/cairo-sphinx
+	rm -rf $(TARGET_libdir)/cairo/cairo-fdr*
+	rm -rf $(TARGET_libdir)/cairo/cairo-sphinx*
+	rm -rf $(TARGET_libdir)/cairo/.debug/cairo-fdr*
+	rm -rf $(TARGET_libdir)/cairo/.debug/cairo-sphinx*
 	$(REWRITE_LIBTOOL_LA)
 	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(CAIRO_DIR)
@@ -221,7 +221,7 @@ harfbuzz: $(HARFBUZZ_DEPS) $(DL_DIR)/$(HARFBUZZ_SOURCE) | $(TARGET_DIR)
 		$(call apply_patches, $(HARFBUZZ_PATCH)); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
-			--prefix= \
+			--prefix=$(prefix) \
 			--with-cairo \
 			--with-fontconfig \
 			--with-freetype \

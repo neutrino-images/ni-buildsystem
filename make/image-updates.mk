@@ -37,10 +37,10 @@ u-neutrino: neutrino-clean
 	echo "killall start_neutrino neutrino; sleep 5"	>> $(PREINSTALL_SH)
 	echo "sync; /bin/busybox reboot"		>> $(POSTINSTALL_SH)
 	$(MAKE) neutrino
-	$(INSTALL_EXEC) -D $(TARGET_DIR)/etc/init.d/start_neutrino $(UPDATE_INST_DIR)/etc/init.d/start_neutrino
-	$(INSTALL_EXEC) -D $(TARGET_DIR)/bin/neutrino $(UPDATE_INST_DIR)/bin/neutrino
-	$(INSTALL_DATA) -D $(TARGET_SHARE_DIR)/tuxbox/neutrino/locale/deutsch.locale $(UPDATE_INST_DIR)/share/tuxbox/neutrino/locale/deutsch.locale
-	$(INSTALL_DATA) -D $(TARGET_SHARE_DIR)/tuxbox/neutrino/locale/english.locale $(UPDATE_INST_DIR)/share/tuxbox/neutrino/locale/english.locale
+	$(INSTALL_EXEC) -D $(TARGET_sysconfdir)/init.d/start_neutrino $(UPDATE_INST_DIR)/etc/init.d/start_neutrino
+	$(INSTALL_EXEC) -D $(TARGET_bindir)/neutrino $(UPDATE_INST_DIR)/bin/neutrino
+	$(INSTALL_DATA) -D $(TARGET_datadir)/tuxbox/neutrino/locale/deutsch.locale $(UPDATE_INST_DIR)/share/tuxbox/neutrino/locale/deutsch.locale
+	$(INSTALL_DATA) -D $(TARGET_datadir)/tuxbox/neutrino/locale/english.locale $(UPDATE_INST_DIR)/share/tuxbox/neutrino/locale/english.locale
 ifneq ($(DEBUG), yes)
 	find $(UPDATE_INST_DIR)/bin -type f ! -name *.sh -print0 | xargs -0 $(TARGET_STRIP) || true
 endif
@@ -54,7 +54,7 @@ u-neutrino-full: neutrino-clean
 	echo "killall start_neutrino neutrino; sleep 5"	>> $(PREINSTALL_SH)
 	echo "sync; /bin/busybox reboot"		>> $(POSTINSTALL_SH)
 	$(MAKE) neutrino N_INST_DIR=$(UPDATE_INST_DIR)
-	$(INSTALL_EXEC) -D $(TARGET_DIR)/etc/init.d/start_neutrino $(UPDATE_INST_DIR)/etc/init.d/start_neutrino
+	$(INSTALL_EXEC) -D $(TARGET_sysconfdir)/init.d/start_neutrino $(UPDATE_INST_DIR)/etc/init.d/start_neutrino
 ifneq ($(DEBUG), yes)
 	find $(UPDATE_INST_DIR)/bin -type f ! -name *.sh -print0 | xargs -0 $(TARGET_STRIP) || true
 endif
@@ -71,7 +71,7 @@ u-update.urls: update.urls
 	$(MAKE) u-init
 	echo "wget -q "http://localhost/control/message?popup=update.urls%20installed." -O /dev/null"	>> $(POSTINSTALL_SH)
 	mkdir -pv $(UPDATE_INST_DIR)/var/etc
-	cp -f $(TARGET_DIR)/var/etc/update.urls $(UPDATE_INST_DIR)/var/etc/
+	cp -f $(TARGET_localstatedir)/etc/update.urls $(UPDATE_INST_DIR)/var/etc/
 	$(MAKE) u-update-bin \
 			UPDATE_NAME=update.urls \
 			UPDATE_DESC=update.urls

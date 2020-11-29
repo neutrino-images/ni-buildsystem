@@ -36,38 +36,40 @@ skeleton: | $(TARGET_DIR)
 	$(INSTALL_COPY) --remove-destination $(SKEL-ROOT)/. $(TARGET_DIR)/
 	find $(TARGET_DIR) -type f -print0 | xargs --no-run-if-empty -0 \
 		sed -i 's|%(BOXMODEL)|$(BOXMODEL)|'
-	sed -i 's|%(BOOT_PARTITION)|$(BOOT_PARTITION)|' $(TARGET_DIR)/etc/mdev.conf
+	sed -i 's|%(BOOT_PARTITION)|$(BOOT_PARTITION)|' $(TARGET_sysconfdir)/mdev.conf
 	$(INSTALL_COPY) $(STATIC_DIR)/. $(TARGET_DIR)/
 
 # -----------------------------------------------------------------------------
 
 target-dir:
 	mkdir -p $(TARGET_DIR)
-	mkdir -p $(TARGET_BIN_DIR)
-	mkdir -p $(TARGET_INCLUDE_DIR)
-	mkdir -p $(TARGET_LIB_DIR)
+	mkdir -p $(TARGET_bindir)
+	mkdir -p $(TARGET_includedir)
+	mkdir -p $(TARGET_libdir)
+	mkdir -p $(TARGET_sbindir)
+	mkdir -p $(TARGET_datadir)
+	#mkdir -p $(TARGET_prefix)/local/{bin,include,lib,sbin,share}
+	mkdir -p $(TARGET_sysconfdir)/network/if-{up,pre-up,post-up,down,pre-down,post-down}.d
+	mkdir -p $(TARGET_localstatedir)/bin
+	mkdir -p $(TARGET_localstatedir)/etc/init.d
+	mkdir -p $(TARGET_localstatedir)/keys
+	mkdir -p $(TARGET_localstatedir)/root
+	mkdir -p $(TARGET_localstatedir)/spool/cron/crontabs
 ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd5x hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
 	mkdir -p $(TARGET_DIR)/boot
 endif
 	mkdir -p $(TARGET_DIR)/dev
-	mkdir -p $(TARGET_DIR)/etc/network/if-{up,pre-up,post-up,down,pre-down,post-down}.d
 	mkdir -p $(TARGET_DIR)/media
 	mkdir -p $(TARGET_DIR)/mnt
 	mkdir -p $(TARGET_DIR)/proc
 	mkdir -p $(TARGET_DIR)/srv
 	mkdir -p $(TARGET_DIR)/sys
 	mkdir -p $(TARGET_DIR)/tmp
-	mkdir -p $(TARGET_DIR)/var/bin
-	mkdir -p $(TARGET_DIR)/var/etc/init.d
-	mkdir -p $(TARGET_DIR)/var/keys
-	mkdir -p $(TARGET_DIR)/var/root
-	mkdir -p $(TARGET_DIR)/var/spool/cron/crontabs
-	mkdir -p $(TARGET_USR_BIN_DIR)
 	mkdir -p $(PKG_CONFIG_PATH)
 	make skeleton
 ifeq ($(PERSISTENT_VAR_PARTITION), yes)
   ifeq ($(IMAGE_NEW), yes)
-	touch -f $(TARGET_DIR)/var/etc/.newimage
+	touch -f $(TARGET_localstatedir)/etc/.newimage
   endif
 endif
 
@@ -93,14 +95,14 @@ $(UPDATE_DIR):
 
 libs-cross: | $(TARGET_DIR)
 	if [ -d $(CROSS_DIR)/$(TARGET)/sys-root/lib/ ]; then \
-		$(INSTALL_COPY) $(CROSS_DIR)/$(TARGET)/sys-root/lib/*so* $(TARGET_LIB_DIR); \
+		$(INSTALL_COPY) $(CROSS_DIR)/$(TARGET)/sys-root/lib/*so* $(TARGET_base_libdir); \
 	elif [ -d $(CROSS_DIR)/$(TARGET)/lib/ ]; then \
-		$(INSTALL_COPY) $(CROSS_DIR)/$(TARGET)/lib/*so* $(TARGET_LIB_DIR); \
+		$(INSTALL_COPY) $(CROSS_DIR)/$(TARGET)/lib/*so* $(TARGET_base_libdir); \
 	else \
 		false; \
 	fi
 ifeq ($(BOXSERIES), hd2)
-	$(CD) $(TARGET_LIB_DIR); \
+	$(CD) $(TARGET_base_libdir); \
 		ln -sf libuClibc-$(UCLIBC_VER).so libcrypt.so.0; \
 		ln -sf libuClibc-$(UCLIBC_VER).so libdl.so.0; \
 		ln -sf libuClibc-$(UCLIBC_VER).so libm.so.0; \
@@ -108,7 +110,7 @@ ifeq ($(BOXSERIES), hd2)
 		ln -sf libuClibc-$(UCLIBC_VER).so librt.so.0
 endif
 ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd5x hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
-	$(CD) $(TARGET_LIB_DIR); \
+	$(CD) $(TARGET_base_libdir); \
 		ln -sf ld-2.23.so ld-linux.so.3
 endif
 
@@ -116,9 +118,9 @@ endif
 
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), coolstream))
 
-var-update: $(TARGET_DIR)/var/update
+var-update: $(TARGET_localstatedir)/update
 
-$(TARGET_DIR)/var/update: | $(TARGET_DIR)
+$(TARGET_localstatedir)/update: | $(TARGET_DIR)
 	mkdir -p $(@)
 ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd1))
 	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/zImage $(@)
@@ -138,7 +140,7 @@ endif
 # -----------------------------------------------------------------------------
 
 # hack to make sure they are always copied
-PHONY += $(TARGET_DIR)/var/update
+PHONY += $(TARGET_localstatedir)/update
 
 # -----------------------------------------------------------------------------
 

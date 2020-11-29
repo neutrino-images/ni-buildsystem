@@ -20,9 +20,9 @@ FFMPEG_DEPS = openssl freetype rtmpdump libbluray libass libxml2 alsa-lib
 # -----------------------------------------------------------------------------
 
 FFMPEG_CONFIGURE_GENERIC = \
-			--prefix=/ \
+			--prefix=$(prefix) \
 			--cross-prefix=$(TARGET_CROSS) \
-			--datadir=$(remove-datadir) \
+			--datadir=$(REMOVE_datadir) \
 			\
 			--disable-doc \
 			--disable-htmlpages \
@@ -332,12 +332,12 @@ FFMPEG_CONFIGURE_GENERIC = \
 ifeq ($(BOXARCH), arm)
   FFMPEG_CONFIGURE_PLATFORM = \
 			--cpu=cortex-a15 \
-			--extra-cflags="-Wno-deprecated-declarations -I$(TARGET_INCLUDE_DIR) -mfpu=neon-vfpv4 -mfloat-abi=hard"
+			--extra-cflags="-Wno-deprecated-declarations -I$(TARGET_includedir) -mfpu=neon-vfpv4 -mfloat-abi=hard"
 
 else ifeq ($(BOXARCH), mips)
   FFMPEG_CONFIGURE_PLATFORM = \
 			--cpu=generic \
-			--extra-cflags="-Wno-deprecated-declarations -I$(TARGET_INCLUDE_DIR)"
+			--extra-cflags="-Wno-deprecated-declarations -I$(TARGET_includedir)"
 endif
 
 # -----------------------------------------------------------------------------

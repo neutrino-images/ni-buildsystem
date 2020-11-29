@@ -22,19 +22,19 @@ $(DL_DIR)/$(CORTEX-STRINGS_SOURCE):
 
 CORTEX-STRINGS_CONF   = $(if $(filter $(BOXSERIES), hd5x hd6x vusolo4k vuduo4k vuultimo4k vuzero4k vuuno4k vuuno4kse),--with-neon,--without-neon)
 
-cortex-strings: $(STATIC_LIB_DIR)/libcortex-strings.la
-$(STATIC_LIB_DIR)/libcortex-strings.la: $(DL_DIR)/$(CORTEX-STRINGS_SOURCE) | $(STATIC_DIR)
+cortex-strings: $(STATIC_libdir)/libcortex-strings.la
+$(STATIC_libdir)/libcortex-strings.la: $(DL_DIR)/$(CORTEX-STRINGS_SOURCE) | $(STATIC_DIR)
 	$(REMOVE)/$(CORTEX-STRINGS_DIR)
 	$(UNTAR)/$(CORTEX-STRINGS_SOURCE)
 	$(CHDIR)/$(CORTEX-STRINGS_DIR); \
 		./autogen.sh; \
-		CFLAGS="-pipe -O2 $(TARGET_DEBUGGING) $(CXX11_ABI) -I$(TARGET_INCLUDE_DIR)" \
-		CPPFLAGS="-pipe -O2 $(TARGET_DEBUGGING) $(CXX11_ABI) -I$(TARGET_INCLUDE_DIR)" \
-		CXXFLAGS="-pipe -O2 $(TARGET_DEBUGGING) $(CXX11_ABI) -I$(TARGET_INCLUDE_DIR)" \
-		LDFLAGS="-Wl,-O1 -L$(TARGET_LIB_DIR)" \
+		CFLAGS="-pipe -O2 $(TARGET_DEBUGGING) $(CXX11_ABI) -I$(TARGET_includedir)" \
+		CPPFLAGS="-pipe -O2 $(TARGET_DEBUGGING) $(CXX11_ABI) -I$(TARGET_includedir)" \
+		CXXFLAGS="-pipe -O2 $(TARGET_DEBUGGING) $(CXX11_ABI) -I$(TARGET_includedir)" \
+		LDFLAGS="-Wl,-O1 -L$(TARGET_libdir)" \
 		PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
 		./configure $(CONFIGURE_OPTS) \
-			--prefix= \
+			--prefix=$(prefix) \
 			--disable-shared \
 			--enable-static \
 			$(CORTEX-STRINGS_CONF) \

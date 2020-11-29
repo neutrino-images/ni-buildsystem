@@ -8,7 +8,7 @@ case $1 in
 			rm -rf /tmp/xupnpd-*
 			rm -f /tmp/xupnpd.pid
 			sleep 10 # FIXME; This is to workaround slow DHCP
-			/bin/xupnpd &
+			xupnpd &
 		fi
 	;;
 	stop)

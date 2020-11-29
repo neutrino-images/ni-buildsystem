@@ -3,29 +3,6 @@
 #
 # -----------------------------------------------------------------------------
 
-SHARE_FLEX	= $(TARGET_SHARE_DIR)/tuxbox/neutrino/flex
-SHARE_ICONS	= $(TARGET_SHARE_DIR)/tuxbox/neutrino/icons
-SHARE_LOGOS	= $(TARGET_SHARE_DIR)/tuxbox/neutrino/icons/logo
-SHARE_PLUGINS	= $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins
-SHARE_THEMES	= $(TARGET_SHARE_DIR)/tuxbox/neutrino/themes
-SHARE_WEBRADIO	= $(TARGET_SHARE_DIR)/tuxbox/neutrino/webradio
-SHARE_WEBTV	= $(TARGET_SHARE_DIR)/tuxbox/neutrino/webtv
-VAR_CONFIG	= $(TARGET_DIR)/var/tuxbox/config
-VAR_PLUGINS	= $(TARGET_DIR)/var/tuxbox/plugins
-
-$(SHARE_FLEX) \
-$(SHARE_ICONS) \
-$(SHARE_LOGOS) \
-$(SHARE_PLUGINS) \
-$(SHARE_THEMES) \
-$(SHARE_WEBRADIO) \
-$(SHARE_WEBTV) \
-$(VAR_CONFIG) \
-$(VAR_PLUGINS) : | $(TARGET_DIR)
-	mkdir -p $(@)
-
-# -----------------------------------------------------------------------------
-
 # Path prefixes
 base_prefix		=
 prefix			= /usr
@@ -34,7 +11,12 @@ exec_prefix		= $(prefix)
 # Base paths
 base_bindir		= $(base_prefix)/bin
 base_sbindir		= $(base_prefix)/sbin
+base_datarootdir	= $(base_prefix)/share
+base_datadir		= $(base_datarootdir)
+base_includedir		= $(base_prefix)/include
 base_libdir		= $(base_prefix)/lib
+
+modulesdir		= $(base_libdir)/modules
 
 # -----------------------------------------------------------------------------
 
@@ -64,36 +46,75 @@ mandir			= $(datadir)/man
 mandir1			= $(mandir)/man1
 mandir2			= $(mandir)/man2
 
-remove-dir		= /.remove
-remove-bindir		= $(remove-dir)/bin
-remove-sbindir		= $(remove-dir)/sbin
-remove-libexecdir	= $(remove-dir)/libexec
-remove-datarootdir	= $(remove-dir)/share
-remove-datadir		= $(remove-datarootdir)
-remove-sysconfdir	= $(remove-dir)/etc
-remove-sharedstatedir	= $(remove-dir)/com
-remove-localstatedir	= $(remove-dir)/var
-remove-runstatedir	= $(remove-localstatedir)/run
-remove-includedir	= $(remove-dir)/include
-remove-oldincludedir	= $(remove-includedir)
-remove-docdir		= $(remove-datarootdir)/doc
-remove-infodir		= $(remove-datarootdir)/info
-remove-htmldir		= $(remove-docdir)
-remove-dvidir		= $(remove-docdir)
-remove-pdfdir		= $(remove-docdir)
-remove-psdir		= $(remove-docdir)
-remove-libdir		= $(remove-dir)/lib
-remove-lispdir		= $(remove-datarootdir)/emacs/site-lisp
-remove-localedir	= $(remove-datarootdir)/locale
-remove-mandir		= $(remove-datarootdir)/man
-remove-man1dir		= $(remove-mandir)/man1
-remove-man2dir		= $(remove-mandir)/man2
+# -----------------------------------------------------------------------------
+
+REMOVE_dir		= /.remove
+REMOVE_bindir		= $(REMOVE_dir)/bin
+REMOVE_sbindir		= $(REMOVE_dir)/sbin
+REMOVE_libexecdir	= $(REMOVE_dir)/libexec
+REMOVE_datarootdir	= $(REMOVE_dir)/share
+REMOVE_datadir		= $(REMOVE_datarootdir)
+REMOVE_sysconfdir	= $(REMOVE_dir)/etc
+REMOVE_sharedstatedir	= $(REMOVE_dir)/com
+REMOVE_localstatedir	= $(REMOVE_dir)/var
+REMOVE_runstatedir	= $(REMOVE_localstatedir)/run
+REMOVE_includedir	= $(REMOVE_dir)/include
+REMOVE_oldincludedir	= $(REMOVE_includedir)
+REMOVE_docdir		= $(REMOVE_datarootdir)/doc
+REMOVE_infodir		= $(REMOVE_datarootdir)/info
+REMOVE_htmldir		= $(REMOVE_docdir)
+REMOVE_dvidir		= $(REMOVE_docdir)
+REMOVE_pdfdir		= $(REMOVE_docdir)
+REMOVE_psdir		= $(REMOVE_docdir)
+REMOVE_libdir		= $(REMOVE_dir)/lib
+REMOVE_lispdir		= $(REMOVE_datarootdir)/emacs/site-lisp
+REMOVE_localedir	= $(REMOVE_datarootdir)/locale
+REMOVE_mandir		= $(REMOVE_datarootdir)/man
+REMOVE_man1dir		= $(REMOVE_mandir)/man1
+REMOVE_man2dir		= $(REMOVE_mandir)/man2
 
 # -----------------------------------------------------------------------------
 
-# ca-certificates
-CA-BUNDLE	= ca-certificates.crt
-CA-BUNDLE_DIR	= /etc/ssl/certs
+TARGET_prefix		= $(TARGET_DIR)$(prefix)
+TARGET_exec_prefix	= $(TARGET_DIR)$(exec_prefix)
+
+TARGET_base_bindir	= $(TARGET_DIR)$(base_bindir)
+TARGET_base_sbindir	= $(TARGET_DIR)$(base_sbindir)
+TARGET_base_includedir	= $(TARGET_DIR)$(base_includedir)
+TARGET_base_libdir	= $(TARGET_DIR)$(base_libdir)
+
+TARGET_modulesdir	= $(TARGET_base_libdir)/modules/$(KERNEL_VER)
+
+TARGET_bindir		= $(TARGET_DIR)$(bindir)
+TARGET_sbindir		= $(TARGET_DIR)$(sbindir)
+TARGET_libdir		= $(TARGET_DIR)$(libdir)
+TARGET_datadir		= $(TARGET_DIR)$(datadir)
+TARGET_sysconfdir	= $(TARGET_DIR)$(sysconfdir)
+TARGET_includedir	= $(TARGET_DIR)$(includedir)
+TARGET_localstatedir	= $(TARGET_DIR)$(localstatedir)
+
+# -----------------------------------------------------------------------------
+
+SHARE_FLEX	= $(TARGET_datadir)/tuxbox/neutrino/flex
+SHARE_ICONS	= $(TARGET_datadir)/tuxbox/neutrino/icons
+SHARE_LOGOS	= $(TARGET_datadir)/tuxbox/neutrino/icons/logo
+SHARE_PLUGINS	= $(TARGET_datadir)/tuxbox/neutrino/plugins
+SHARE_THEMES	= $(TARGET_datadir)/tuxbox/neutrino/themes
+SHARE_WEBRADIO	= $(TARGET_datadir)/tuxbox/neutrino/webradio
+SHARE_WEBTV	= $(TARGET_datadir)/tuxbox/neutrino/webtv
+VAR_CONFIG	= $(TARGET_localstatedir)/tuxbox/config
+VAR_PLUGINS	= $(TARGET_localstatedir)/tuxbox/plugins
+
+$(SHARE_FLEX) \
+$(SHARE_ICONS) \
+$(SHARE_LOGOS) \
+$(SHARE_PLUGINS) \
+$(SHARE_THEMES) \
+$(SHARE_WEBRADIO) \
+$(SHARE_WEBTV) \
+$(VAR_CONFIG) \
+$(VAR_PLUGINS) : | $(TARGET_DIR)
+	mkdir -p $(@)
 
 # -----------------------------------------------------------------------------
 

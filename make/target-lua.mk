@@ -31,10 +31,10 @@ lua: $(LUA_DEPS) $(DL_DIR)/$(LUA_SOURCE) | $(TARGET_DIR)
 			AR="$(TARGET_AR) rcu" \
 			LDFLAGS="$(TARGET_LDFLAGS)" \
 			; \
-		$(MAKE) install INSTALL_TOP=$(TARGET_DIR) INSTALL_MAN=$(TARGET_DIR)$(remove-man1dir); \
-		$(MAKE) pc INSTALL_TOP=$(TARGET_DIR) > $(PKG_CONFIG_PATH)/lua.pc
+		$(MAKE) install INSTALL_TOP=$(TARGET_prefix) INSTALL_MAN=$(TARGET_DIR)$(REMOVE_man1dir); \
+		$(MAKE) pc INSTALL_TOP=$(TARGET_prefix) > $(PKG_CONFIG_PATH)/lua.pc
 	$(REWRITE_PKGCONF_PC)
-	rm -rf $(TARGET_DIR)/bin/luac
+	rm -rf $(TARGET_bindir)/luac
 	$(REMOVE)/$(LUA_DIR)
 	$(TOUCH)
 
@@ -54,15 +54,15 @@ luaexpat: $(LUAEXPAT_DEPS) $(DL_DIR)/$(LUAEXPAT_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LUAEXPAT_DIR)
 	$(UNTAR)/$(LUAEXPAT_SOURCE)
 	$(CHDIR)/$(LUAEXPAT_DIR); \
-		sed -i 's|^EXPAT_INC=.*|EXPAT_INC= $(TARGET_INCLUDE_DIR)|' makefile; \
-		sed -i 's|^CFLAGS =.*|& -L$(TARGET_LIB_DIR)|' makefile; \
+		sed -i 's|^EXPAT_INC=.*|EXPAT_INC= $(TARGET_includedir)|' makefile; \
+		sed -i 's|^CFLAGS =.*|& -L$(TARGET_libdir)|' makefile; \
 		sed -i 's|^CC =.*|CC = $(TARGET_CC)|' makefile; \
 		$(MAKE_ENV) \
 		$(MAKE) \
-			PREFIX=$(TARGET_DIR) \
+			PREFIX=$(TARGET_prefix) \
 			LUA_SYS_VER=$(LUA_ABIVER); \
 		$(MAKE) install \
-			PREFIX=$(TARGET_DIR) \
+			PREFIX=$(TARGET_prefix) \
 			LUA_SYS_VER=$(LUA_ABIVER)
 	$(REMOVE)/$(LUAEXPAT_DIR)
 	$(TOUCH)
@@ -87,7 +87,7 @@ lua-feedparser: $(LUA-DEEDPARSER_DEPS) $(DL_DIR)/$(LUA-FEEDPARSER_SOURCE) | $(TA
 	$(CHDIR)/$(LUA-FEEDPARSER_DIR); \
 		sed -i 's|^PREFIX =|PREFIX ?=|' Makefile; \
 		$(call apply_patches, $(LUA-FEEDPARSER_PATCH)); \
-		$(MAKE) install PREFIX=$(TARGET_DIR)
+		$(MAKE) install PREFIX=$(TARGET_prefix)
 	$(REMOVE)/$(LUA-FEEDPARSER_DIR)
 	$(TOUCH)
 
@@ -102,8 +102,8 @@ $(DL_DIR)/$(LUAJSON_SOURCE):
 luajson: $(DL_DIR)/$(LUAJSON_SOURCE) | $(TARGET_DIR)
 	$(CD) $(DL_DIR); \
 		curl --remote-name --time-cond $(LUAJSON_SOURCE) $(LUAJSON_SITE)/$(LUAJSON_SOURCE) || true
-	$(INSTALL_DATA) -D $(DL_DIR)/$(LUAJSON_SOURCE) $(TARGET_SHARE_DIR)/lua/$(LUA_ABIVER)
-	ln -sf $(LUAJSON_SOURCE) $(TARGET_SHARE_DIR)/lua/$(LUA_ABIVER)/json.lua
+	$(INSTALL_DATA) -D $(DL_DIR)/$(LUAJSON_SOURCE) $(TARGET_datadir)/lua/$(LUA_ABIVER)
+	ln -sf $(LUAJSON_SOURCE) $(TARGET_datadir)/lua/$(LUA_ABIVER)/json.lua
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -116,17 +116,20 @@ LUACURL_SITE   = https://github.com/lua-curl/$(LUACURL_SOURCE)
 LUACURL_DEPS   = libcurl lua
 
 luacurl: $(LUACURL_DEPS) | $(TARGET_DIR)
+	echo $(TARGET_libdir)
+	echo $(TARGET_includedir)
+	echo $(TARGET_datadir)
 	$(REMOVE)/$(LUACURL_DIR)
 	$(GET-GIT-SOURCE) $(LUACURL_SITE) $(DL_DIR)/$(LUACURL_SOURCE)
 	$(CPDIR)/$(LUACURL_SOURCE)
 	$(CHDIR)/$(LUACURL_DIR); \
 		$(MAKE_ENV) \
 		$(MAKE) \
-			LIBDIR=$(TARGET_LIB_DIR) \
-			LUA_INC=$(TARGET_INCLUDE_DIR); \
+			LIBDIR=$(TARGET_libdir) \
+			LUA_INC=$(TARGET_includedir); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR) \
-			LUA_CMOD=/lib/lua/$(LUA_ABIVER) \
-			LUA_LMOD=/share/lua/$(LUA_ABIVER)
+			LUA_CMOD=$(libdir)/lua/$(LUA_ABIVER) \
+			LUA_LMOD=$(datadir)/lua/$(LUA_ABIVER)
 	$(REMOVE)/$(LUACURL_DIR)
 	$(TOUCH)
 
@@ -140,8 +143,7 @@ LUAPOSIX_SITE   = https://github.com/luaposix/luaposix/archive
 $(DL_DIR)/$(LUAPOSIX_SOURCE):
 	$(DOWNLOAD) $(LUAPOSIX_SITE)/v$(LUAPOSIX_VER).tar.gz -O $(@)
 
-LUAPOSIX_PATCH  = luaposix-fix-build.patch
-LUAPOSIX_PATCH += luaposix-fix-docdir-build.patch
+LUAPOSIX_PATCH  = luaposix-fix-docdir-build.patch
 
 LUAPOSIX_DEPS   = $(HOST_LUA) lua luaexpat
 
@@ -170,12 +172,12 @@ luaposix: $(LUAPOSIX_DEPS) $(DL_DIR)/$(SLINGSHOT_SOURCE) $(DL_DIR)/$(GNULIB_SOUR
 		./bootstrap; \
 		autoreconf -fi; \
 		$(CONFIGURE) \
-			--prefix= \
-			--exec-prefix= \
-			--libdir=$(TARGET_LIB_DIR)/lua/$(LUA_ABIVER) \
-			--datarootdir=$(TARGET_SHARE_DIR)/lua/$(LUA_ABIVER) \
-			--mandir=$(TARGET_DIR)$(remove-mandir) \
-			--docdir=$(TARGET_DIR)$(remove-docdir) \
+			--prefix=$(prefix) \
+			--exec-prefix=$(exec_prefix) \
+			--libdir=$(TARGET_libdir)/lua/$(LUA_ABIVER) \
+			--datarootdir=$(TARGET_datadir)/lua/$(LUA_ABIVER) \
+			--mandir=$(TARGET_DIR)$(REMOVE_mandir) \
+			--docdir=$(TARGET_DIR)$(REMOVE_docdir) \
 			--enable-silent-rules \
 			; \
 		$(MAKE); \
