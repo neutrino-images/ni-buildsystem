@@ -8,7 +8,7 @@ GITTAG=$(shell git tag -l "NI-*" | tail -n1)
 GITREV=$(shell git rev-list $(GITTAG)..HEAD --count)
 
 IMAGE_VER_MAJOR = 3
-IMAGE_VER_MINOR = 60
+IMAGE_VER_MINOR = 99
 IMAGE_VER_MICRO = $(GITREV)
 IMAGE_VER = $(IMAGE_VER_MAJOR)$(IMAGE_VER_MINOR)
 
