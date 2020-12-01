@@ -28,7 +28,12 @@ init-scripts: \
 	$(TARGET_sysconfdir)/init.d/sendsigs \
 	$(TARGET_sysconfdir)/init.d/umountfs \
 	$(TARGET_sysconfdir)/init.d/suspend \
-	$(TARGET_sysconfdir)/init.d/user-initscripts
+	$(TARGET_sysconfdir)/init.d/user-initscripts \
+	\
+	$(TARGET_sysconfdir)/init.d/stb_update.sh \
+	\
+	$(TARGET_sysconfdir)/init.d/var_mount.sh \
+	$(TARGET_sysconfdir)/init.d/var_update.sh
 
 $(TARGET_sysconfdir)/init.d/globals:
 	$(INSTALL_DATA) -D $(TARGET_FILES)/scripts/init.globals $(@)
@@ -131,6 +136,21 @@ endif
 $(TARGET_sysconfdir)/init.d/user-initscripts:
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/user-initscripts.init $(@)
 	$(UPDATE-RC.D) $(@F) defaults 98 01
+
+$(TARGET_sysconfdir)/init.d/stb_update.sh:
+ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd1 hd2))
+	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/stb_update_$(BOXSERIES).sh $(@)
+endif
+
+$(TARGET_sysconfdir)/init.d/var_mount.sh:
+ifeq ($(PERSISTENT_VAR_PARTITION), yes)
+	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/var_mount.sh $(@)
+endif
+
+$(TARGET_sysconfdir)/init.d/var_update.sh:
+ifeq ($(PERSISTENT_VAR_PARTITION), yes)
+	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/var_update.sh $(@)
+endif
 
 # -----------------------------------------------------------------------------
 

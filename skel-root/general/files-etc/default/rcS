@@ -1,5 +1,5 @@
 #
-#	Defaults for the boot scripts in /etc/rcS.d
+# Defaults for the boot scripts in /etc/rcS.d
 #
 
 # Time files in /tmp are kept in days.
