@@ -7,6 +7,7 @@ init-scripts: \
 	$(TARGET_sysconfdir)/init.d/globals \
 	$(TARGET_sysconfdir)/init.d/functions \
 	$(TARGET_sysconfdir)/init.d/rc \
+	$(TARGET_sysconfdir)/init.d/rcS \
 	$(TARGET_sysconfdir)/init.d/rcK \
 	\
 	$(TARGET_sysconfdir)/init.d/camd \
@@ -43,6 +44,13 @@ $(TARGET_sysconfdir)/init.d/functions:
 
 $(TARGET_sysconfdir)/init.d/rc:
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/files-etc/init.d/rc $(@)
+
+$(TARGET_sysconfdir)/init.d/rcS:
+ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
+	$(INSTALL_EXEC) -D $(TARGET_FILES)/files-etc/init.d/rcS-vuplus $(@)
+else
+	$(INSTALL_EXEC) -D $(TARGET_FILES)/files-etc/init.d/rcS-$(BOXSERIES) $(@)
+endif
 
 $(TARGET_sysconfdir)/init.d/rcK:
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/files-etc/init.d/rcK $(@)
