@@ -56,7 +56,7 @@ date -s "%(YEAR)-01-01 00:00"
 
 # automatic restore
 if [ -e /var/backup_flash.tar.gz ]; then
-	/bin/restore_flash.sh
+	/usr/bin/restore_flash.sh
 fi
 
 # update system
