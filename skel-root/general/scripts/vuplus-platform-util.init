@@ -31,8 +31,8 @@ case "$1" in
 			usleep 100000
 		done
 
-		if [ -e /bin/initfb ]; then
-			/bin/initfb $(sed -n 's/osd_resolution=//p' /var/tuxbox/config/neutrino.conf)
+		if [ -e /usr/bin/initfb ]; then
+			/usr/bin/initfb $(sed -n 's/osd_resolution=//p' /var/tuxbox/config/neutrino.conf)
 		fi
 
 		echo "."
