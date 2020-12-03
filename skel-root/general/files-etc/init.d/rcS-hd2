@@ -97,11 +97,8 @@ load_module extra/lnxtmvssDrv.ko
 load_module extra/lnxpvrDrv.ko
 load_module extra/lnxdvbciDrv.ko
 load_module extra/lnxIPfeDrv.ko
-if [ -e /var/etc/.allow_fullhd ]; then
-	load_module extra/framebuffer.ko cnxtfb_standalone=1 cnxtfb_hdwidth=1920 cnxtfb_hdheight=1080 cnxtfb_hdmaxwidth=1920 cnxtfb_hdmaxheight=1080 cnxtfb_autoscale_sd=2
-else
-	load_module extra/framebuffer.ko cnxtfb_standalone=1 cnxtfb_hdwidth=1280 cnxtfb_hdheight=720  cnxtfb_hdmaxwidth=1280 cnxtfb_hdmaxheight=720  cnxtfb_autoscale_sd=2
-fi
+#load_module extra/framebuffer.ko cnxtfb_standalone=1 cnxtfb_hdwidth=1280 cnxtfb_hdheight=720 cnxtfb_hdmaxwidth=1280 cnxtfb_hdmaxheight=720 cnxtfb_autoscale_sd=2
+load_module extra/framebuffer.ko cnxtfb_standalone=1 cnxtfb_hdwidth=1920 cnxtfb_hdheight=1080 cnxtfb_hdmaxwidth=1920 cnxtfb_hdmaxheight=1080 cnxtfb_autoscale_sd=2
 
 load_module extra/control.ko
 load_module extra/frontpanel.ko
