@@ -131,7 +131,7 @@ URL_NEW = $(if $(filter $(USE_SSH),y),$(GITHUB_SSH):neutrino-images,$(GITHUB)/ne
 
 switch-url:
 	for repo in $(REPOSITORIES); do \
-		sed -i -e 's|url = $(URL_OLD)|url = $(URL_NEW)|' $$repo/.git/config; \
+		$(SED) 's|url = $(URL_OLD)|url = $(URL_NEW)|' $$repo/.git/config; \
 	done
 
 # -----------------------------------------------------------------------------

@@ -567,7 +567,7 @@ ushare: $(USHARE_DEPS) $(DL_DIR)/$(USHARE_SOURCE)| $(TARGET_DIR)
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(INSTALL_DATA) -D $(TARGET_FILES)/configs/ushare.conf $(TARGET_sysconfdir)/ushare.conf
-	sed -i 's|%(BOXTYPE)|$(BOXTYPE)|; s|%(BOXMODEL)|$(BOXMODEL)|' $(TARGET_sysconfdir)/ushare.conf
+	$(SED) 's|%(BOXTYPE)|$(BOXTYPE)|; s|%(BOXMODEL)|$(BOXMODEL)|' $(TARGET_sysconfdir)/ushare.conf
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/ushare.init $(TARGET_sysconfdir)/init.d/ushare
 	$(UPDATE-RC.D) ushare defaults 75 25
 	$(REMOVE)/$(USHARE_DIR)
@@ -652,8 +652,8 @@ vsftpd: $(VSFTPD_DEPS) $(DL_DIR)/$(VSFTPD_SOURCE) | $(TARGET_DIR)
 	$(UNTAR)/$(VSFTPD_SOURCE)
 	$(CHDIR)/$(VSFTPD_DIR); \
 		$(call apply_patches, $(VSFTPD_PATCH)); \
-		sed -i -e 's/.*VSF_BUILD_PAM/#undef VSF_BUILD_PAM/' builddefs.h; \
-		sed -i -e 's/.*VSF_BUILD_SSL/#define VSF_BUILD_SSL/' builddefs.h; \
+		$(SED) 's/.*VSF_BUILD_PAM/#undef VSF_BUILD_PAM/' builddefs.h; \
+		$(SED) 's/.*VSF_BUILD_SSL/#define VSF_BUILD_SSL/' builddefs.h; \
 		$(MAKE) clean; \
 		$(MAKE) $(MAKE_ENV) LIBS="-lcrypt -lcrypto -lssl"; \
 		$(INSTALL_EXEC) -D vsftpd $(TARGET_sbindir)/vsftpd
@@ -912,7 +912,7 @@ autofs: $(AUTOFS_DEPS) $(DL_DIR)/$(AUTOFS_SOURCE) | $(TARGET_DIR)
 	$(UNTAR)/$(AUTOFS_SOURCE)
 	$(CHDIR)/$(AUTOFS_DIR); \
 		$(call apply_patches, $(addprefix $(@F)/,$(AUTOFS_PATCH))); \
-		sed -i "s|nfs/nfs.h|linux/nfs.h|" include/rpc_subs.h; \
+		$(SED) "s|nfs/nfs.h|linux/nfs.h|" include/rpc_subs.h; \
 		export ac_cv_linux_procfs=yes; \
 		export ac_cv_path_KRB5_CONFIG=no; \
 		export ac_cv_path_MODPROBE=/sbin/modprobe; \
@@ -1199,8 +1199,8 @@ fbshot: $(FBSHOT_DEPS) $(DL_DIR)/$(FBSHOT_SOURCE) | $(TARGET_DIR)
 	$(UNTAR)/$(FBSHOT_SOURCE)
 	$(CHDIR)/$(FBSHOT_DIR); \
 		$(call apply_patches, $(FBSHOT_PATCH)); \
-		sed -i 's|	gcc |	$(TARGET_CC) $(TARGET_CFLAGS) $(TARGET_LDFLAGS) |' Makefile; \
-		sed -i '/strip fbshot/d' Makefile; \
+		$(SED) 's|	gcc |	$(TARGET_CC) $(TARGET_CFLAGS) $(TARGET_LDFLAGS) |' Makefile; \
+		$(SED) '/strip fbshot/d' Makefile; \
 		$(MAKE) all; \
 		$(INSTALL_EXEC) -D fbshot $(TARGET_bindir)/fbshot
 	$(REMOVE)/$(FBSHOT_DIR)
@@ -1642,7 +1642,7 @@ ofgwrite: $(SOURCE_DIR)/$(NI-OFGWRITE) | $(TARGET_DIR)
 	$(INSTALL_EXEC) $(BUILD_DIR)/$(NI-OFGWRITE)/ofgwrite_bin $(TARGET_bindir)
 	$(INSTALL_EXEC) $(BUILD_DIR)/$(NI-OFGWRITE)/ofgwrite_caller $(TARGET_bindir)
 	$(INSTALL_EXEC) $(BUILD_DIR)/$(NI-OFGWRITE)/ofgwrite $(TARGET_bindir)
-	sed -i 's|prefix=.*|prefix=$(prefix)|' $(TARGET_bindir)/ofgwrite
+	$(SED) 's|prefix=.*|prefix=$(prefix)|' $(TARGET_bindir)/ofgwrite
 	$(REMOVE)/$(NI-OFGWRITE)
 	$(TOUCH)
 
@@ -1740,8 +1740,8 @@ gptfdisk: $(GPTFDISK_DEPS) $(DL_DIR)/$(GPTFDISK_SOURCE) | $(TARGET_DIR)
 	$(UNTAR)/$(GPTFDISK_SOURCE)
 	$(CHDIR)/$(GPTFDISK_DIR); \
 		$(call apply_patches, $(GPTFDISK_PATCH)); \
-		sed -i 's|^CC=.*|CC=$(TARGET_CC)|' Makefile; \
-		sed -i 's|^CXX=.*|CXX=$(TARGET_CXX)|' Makefile; \
+		$(SED) 's|^CC=.*|CC=$(TARGET_CC)|' Makefile; \
+		$(SED) 's|^CXX=.*|CXX=$(TARGET_CXX)|' Makefile; \
 		$(MAKE_ENV) \
 		$(MAKE) sgdisk; \
 		$(INSTALL_EXEC) -D sgdisk $(TARGET_sbindir)/sgdisk

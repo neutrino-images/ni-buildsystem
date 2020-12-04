@@ -225,7 +225,7 @@ links: $(LINKS_DEPS) $(DL_DIR)/$(LINKS_SOURCE) $(SHARE_PLUGINS) | $(TARGET_DIR)
 	$(REMOVE)/$(LINKS_DIR)
 	$(UNTAR)/$(LINKS_SOURCE)
 	$(CHDIR)/$(LINKS_DIR)/intl; \
-		sed -i -e 's|^T_SAVE_HTML_OPTIONS,.*|T_SAVE_HTML_OPTIONS, "HTML-Optionen speichern",|' german.lng; \
+		$(SED) 's|^T_SAVE_HTML_OPTIONS,.*|T_SAVE_HTML_OPTIONS, "HTML-Optionen speichern",|' german.lng; \
 		echo "english" > index.txt; \
 		echo "german" >> index.txt; \
 		./gen-intl

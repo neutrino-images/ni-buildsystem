@@ -118,7 +118,7 @@ matze-192-130:
 	# remove non-printable chars and re-format xml-files
 	$(CD) $(UPDATE_INST_DIR)/var/tuxbox/config/zapit/; \
 	for file in *.xml; do \
-		sed -i 's/[^[:print:]]//g' $$file; \
+		$(SED) 's/[^[:print:]]//g' $$file; \
 		XMLLINT_INDENT="	" \
 		xmllint --format $$file > _$$file; \
 		mv _$$file $$file; \
@@ -127,11 +127,11 @@ matze-192-130:
 	# Astra 19.2
 	P192=`grep -m 1 'position=\"192\"' $(SOURCE_DIR)/$(NI-NEUTRINO)/data/config/satellites.xml`; \
 	P192=`echo $$P192`; \
-	sed -i "/position=\"192\"/c\	$$P192" $(UPDATE_INST_DIR)/var/tuxbox/config/zapit/services.xml
+	$(SED) "/position=\"192\"/c\	$$P192" $(UPDATE_INST_DIR)/var/tuxbox/config/zapit/services.xml
 	# Hotbird 13.0
 	P130=`grep -m 1 'position=\"130\"' $(SOURCE_DIR)/$(NI-NEUTRINO)/data/config/satellites.xml`; \
 	P130=`echo $$P130`; \
-	sed -i "/position=\"130\"/c\	$$P130" $(UPDATE_INST_DIR)/var/tuxbox/config/zapit/services.xml
+	$(SED) "/position=\"130\"/c\	$$P130" $(UPDATE_INST_DIR)/var/tuxbox/config/zapit/services.xml
 	#
 	# we should try to keep this array table up-to-date ;-)
 	#
@@ -168,7 +168,7 @@ initial-settings: matze-192
 		cp temp_inst/inst/var/tuxbox/config/zapit/* $(SOURCE_DIR)/$(NI-NEUTRINO)/data/initial/
 	P192=`grep -m 1 'position=\"192\"' $(SOURCE_DIR)/$(NI-NEUTRINO)/data/config/satellites.xml`; \
 	P192=`echo $$P192`; \
-	sed -i "/position=\"192\"/c\	$$P192" $(SOURCE_DIR)/$(NI-NEUTRINO)/data/initial/services.xml
+	$(SED) "/position=\"192\"/c\	$$P192" $(SOURCE_DIR)/$(NI-NEUTRINO)/data/initial/services.xml
 	@echo -e "$(TERM_YELLOW)Commit your changes in $(SOURCE_DIR)/$(NI-NEUTRINO)/data/initial$(TERM_NORMAL)"
 
 # -----------------------------------------------------------------------------

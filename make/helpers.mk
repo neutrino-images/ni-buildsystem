@@ -47,9 +47,8 @@ github = https://github.com/$(1)/$(2)/archive/$(3)
 # -----------------------------------------------------------------------------
 
 # rewrite libtool libraries
-REWRITE_LIBTOOL_RULES  = sed -i \
-				-e "s,^libdir=.*,libdir='$(TARGET_libdir)'," \
-				-e "s,\(^dependency_libs='\| \|-L\|^dependency_libs='\)/lib,\ $(TARGET_libdir),g"
+REWRITE_LIBTOOL_RULES  = $(SED) "s,^libdir=.*,libdir='$(TARGET_libdir)',; \
+				 s,\(^dependency_libs='\| \|-L\|^dependency_libs='\)/lib,\ $(TARGET_libdir),g"
 
 REWRITE_LIBTOOL        = $(REWRITE_LIBTOOL_RULES) $(TARGET_libdir)
 REWRITE_LIBTOOL_STATIC = $(REWRITE_LIBTOOL_RULES) $(STATIC_libdir)
@@ -74,11 +73,10 @@ REWRITE_LIBTOOL_LA = $(call rewrite_libtool)
 # -----------------------------------------------------------------------------
 
 # rewrite pkg-config files
-REWRITE_CONFIG_RULES   = sed -i \
-				-e "s,^prefix=.*,prefix='$(TARGET_prefix)'," \
-				-e "s,^exec_prefix=.*,exec_prefix='$(TARGET_exec_prefix)'," \
-				-e "s,^libdir=.*,libdir='$(TARGET_libdir)'," \
-				-e "s,^includedir=.*,includedir='$(TARGET_includedir)',"
+REWRITE_CONFIG_RULES   = $(SED) "s,^prefix=.*,prefix='$(TARGET_prefix)',; \
+				 s,^exec_prefix=.*,exec_prefix='$(TARGET_exec_prefix)',; \
+				 s,^libdir=.*,libdir='$(TARGET_libdir)',; \
+				 s,^includedir=.*,includedir='$(TARGET_includedir)',"
 
 REWRITE_CONFIG         = $(REWRITE_CONFIG_RULES)
 REWRITE_PKGCONF        = $(REWRITE_CONFIG_RULES) $(PKG_CONFIG_PATH)
@@ -108,17 +106,17 @@ REWRITE_PKGCONF_PC = $(call rewrite_pkgconf)
 #
 
 define KCONFIG_ENABLE_OPT # (option, file)
-	sed -i -e "/\\<$(1)\\>/d" $(2)
+	$(SED) "/\\<$(1)\\>/d" $(2)
 	echo '$(1)=y' >> $(2)
 endef
 
 define KCONFIG_SET_OPT # (option, value, file)
-	sed -i -e "/\\<$(1)\\>/d" $(3)
+	$(SED) "/\\<$(1)\\>/d" $(3)
 	echo '$(1)=$(2)' >> $(3)
 endef
 
 define KCONFIG_DISABLE_OPT # (option, file)
-	sed -i -e "/\\<$(1)\\>/d" $(2)
+	$(SED) "/\\<$(1)\\>/d" $(2)
 	echo '# $(1) is not set' >> $(2)
 endef
 

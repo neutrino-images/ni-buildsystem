@@ -159,8 +159,8 @@ iozone: $(DL_DIR)/$(IOZONE_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(IOZONE_DIR)
 	$(UNTAR)/$(IOZONE_SOURCE)
 	$(CHDIR)/$(IOZONE_DIR)/src/current; \
-		sed -i -e "s/= gcc/= $(TARGET_CC)/" makefile; \
-		sed -i -e "s/= cc/= $(TARGET_CC)/" makefile; \
+		$(SED) "s/= gcc/= $(TARGET_CC)/" makefile; \
+		$(SED) "s/= cc/= $(TARGET_CC)/" makefile; \
 		$(MAKE_ENV) \
 		$(MAKE) linux-arm; \
 		$(INSTALL_EXEC) iozone $(TARGET_bindir)/

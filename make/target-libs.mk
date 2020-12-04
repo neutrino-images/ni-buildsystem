@@ -252,7 +252,7 @@ freetype: $(FREETYPE_DEPS) $(DL_DIR)/$(FREETYPE_SOURCE) | $(TARGET_DIR)
 	$(UNTAR)/$(FREETYPE_SOURCE)
 	$(CHDIR)/$(FREETYPE_DIR); \
 		$(call apply_patches, $(FREETYPE_PATCH)); \
-		sed -i '/^FONT_MODULES += \(type1\|cid\|pfr\|type42\|pcf\|bdf\|winfonts\|cff\)/d' modules.cfg
+		$(SED) '|^FONT_MODULES += \(type1\|cid\|pfr\|type42\|pcf\|bdf\|winfonts\|cff\)|d' modules.cfg
 	$(CHDIR)/$(FREETYPE_DIR)/builds/unix; \
 		libtoolize --force --copy; \
 		aclocal -I .; \
@@ -352,9 +352,9 @@ openssl: $(DL_DIR)/$(OPENSSL_SOURCE) | $(TARGET_DIR)
 			--prefix=$(prefix)/ \
 			--openssldir=/etc/ssl \
 			; \
-		sed -i "s| build_tests||" Makefile; \
-		sed -i 's|^MANDIR=.*|MANDIR=$(REMOVE_mandir)|' Makefile; \
-		sed -i 's|^HTMLDIR=.*|HTMLDIR=$(REMOVE_htmldir)|' Makefile; \
+		$(SED) 's| build_tests||' Makefile; \
+		$(SED) 's|^MANDIR=.*|MANDIR=$(REMOVE_mandir)|' Makefile; \
+		$(SED) 's|^HTMLDIR=.*|HTMLDIR=$(REMOVE_htmldir)|' Makefile; \
 		$(MAKE) depend; \
 		$(MAKE); \
 		$(MAKE) install_sw INSTALL_PREFIX=$(TARGET_DIR)
@@ -1002,7 +1002,7 @@ libtirpc: $(DL_DIR)/$(LIBTIRPC_SOURCE) | $(TARGET_DIR)
 	$(REWRITE_LIBTOOL_LA)
 	$(REWRITE_PKGCONF_PC)
 ifeq ($(BOXSERIES), hd1)
-	sed -i -e '/^\(udp\|tcp\)6/ d' $(TARGET_sysconfdir)/netconfig
+	$(SED) '/^\(udp\|tcp\)6/ d' $(TARGET_sysconfdir)/netconfig
 endif
 	$(REMOVE)/$(LIBTIRPC_DIR)
 	$(TOUCH)
@@ -1116,7 +1116,7 @@ libvorbisidec: $(LIBVORBISIDEC_DEPS) $(DL_DIR)/$(LIBVORBISIDEC_SOURCE) | $(TARGE
 	$(REMOVE)/$(LIBVORBISIDEC_DIR)
 	$(UNTAR)/$(LIBVORBISIDEC_SOURCE)
 	$(CHDIR)/$(LIBVORBISIDEC_DIR); \
-		sed -i '122 s/^/#/' configure.in; \
+		$(SED) '122 s/^/#/' configure.in; \
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--prefix=$(prefix) \
@@ -1352,7 +1352,7 @@ libiconv: $(DL_DIR)/$(LIBICONV_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LIBICONV_DIR)
 	$(UNTAR)/$(LIBICONV_SOURCE)
 	$(CHDIR)/$(LIBICONV_DIR); \
-		sed -i -e '/preload/d' Makefile.in; \
+		$(SED) '/preload/d' Makefile.in; \
 		$(CONFIGURE) CPPFLAGS="$(TARGET_CPPFLAGS) -fPIC" \
 			--target=$(TARGET) \
 			--prefix=$(prefix) \

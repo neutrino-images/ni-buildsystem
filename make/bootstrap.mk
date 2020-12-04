@@ -34,7 +34,7 @@ bootstrap: $(BOOTSTRAP)
 
 skeleton: | $(TARGET_DIR)
 	$(INSTALL_COPY) --remove-destination $(SKEL-ROOT)/. $(TARGET_DIR)/
-	sed -i 's|%(BOOT_PARTITION)|$(BOOT_PARTITION)|' $(TARGET_sysconfdir)/mdev.conf
+	$(SED) 's|%(BOOT_PARTITION)|$(BOOT_PARTITION)|' $(TARGET_sysconfdir)/mdev.conf
 	$(INSTALL_COPY) $(STATIC_DIR)/. $(TARGET_DIR)/
 
 # -----------------------------------------------------------------------------

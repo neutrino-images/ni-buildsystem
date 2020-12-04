@@ -54,9 +54,9 @@ luaexpat: $(LUAEXPAT_DEPS) $(DL_DIR)/$(LUAEXPAT_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LUAEXPAT_DIR)
 	$(UNTAR)/$(LUAEXPAT_SOURCE)
 	$(CHDIR)/$(LUAEXPAT_DIR); \
-		sed -i 's|^EXPAT_INC=.*|EXPAT_INC= $(TARGET_includedir)|' makefile; \
-		sed -i 's|^CFLAGS =.*|& -L$(TARGET_libdir)|' makefile; \
-		sed -i 's|^CC =.*|CC = $(TARGET_CC)|' makefile; \
+		$(SED) 's|^EXPAT_INC=.*|EXPAT_INC= $(TARGET_includedir)|' makefile; \
+		$(SED) 's|^CFLAGS =.*|& -L$(TARGET_libdir)|' makefile; \
+		$(SED) 's|^CC =.*|CC = $(TARGET_CC)|' makefile; \
 		$(MAKE_ENV) \
 		$(MAKE) \
 			PREFIX=$(TARGET_prefix) \
@@ -85,7 +85,7 @@ lua-feedparser: $(LUA-DEEDPARSER_DEPS) $(DL_DIR)/$(LUA-FEEDPARSER_SOURCE) | $(TA
 	$(REMOVE)/$(LUA-FEEDPARSER_DIR)
 	$(UNTAR)/$(LUA-FEEDPARSER_SOURCE)
 	$(CHDIR)/$(LUA-FEEDPARSER_DIR); \
-		sed -i 's|^PREFIX =|PREFIX ?=|' Makefile; \
+		$(SED) 's|^PREFIX =|PREFIX ?=|' Makefile; \
 		$(call apply_patches, $(LUA-FEEDPARSER_PATCH)); \
 		$(MAKE) install PREFIX=$(TARGET_prefix)
 	$(REMOVE)/$(LUA-FEEDPARSER_DIR)
