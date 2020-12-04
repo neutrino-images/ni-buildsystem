@@ -51,6 +51,7 @@ ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vusolo4k vuduo4k vuduo4kse vuultimo4k v
 else
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/files-etc/init.d/rcS-$(BOXSERIES) $(@)
 endif
+	$(SED) "s|%(BOXMODEL)|$(BOXMODEL)|g; s|%(YEAR)|$(shell date +%Y)|g" $(@)
 
 $(TARGET_sysconfdir)/init.d/rcK:
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/files-etc/init.d/rcK $(@)

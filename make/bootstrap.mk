@@ -34,8 +34,6 @@ bootstrap: $(BOOTSTRAP)
 
 skeleton: | $(TARGET_DIR)
 	$(INSTALL_COPY) --remove-destination $(SKEL-ROOT)/. $(TARGET_DIR)/
-	find $(TARGET_DIR) -type f -print0 | xargs --no-run-if-empty -0 \
-		sed -i 's|%(BOXMODEL)|$(BOXMODEL)|'
 	sed -i 's|%(BOOT_PARTITION)|$(BOOT_PARTITION)|' $(TARGET_sysconfdir)/mdev.conf
 	$(INSTALL_COPY) $(STATIC_DIR)/. $(TARGET_DIR)/
 
