@@ -214,6 +214,7 @@ MKDIR = mkdir -p $(BUILD_DIR)
 CPDIR = cp -a -t $(BUILD_DIR) $(DL_DIR)
 #TOUCH = @touch $(DEPS_DIR)/$(@)
 TOUCH = @touch $(if $(findstring host-,$(@)),$(HOST_DEPS_DIR),$(DEPS_DIR))/$(@)
+SED   = $(shell which sed || type -p sed) -i -e
 
 INSTALL      = install
 INSTALL_DATA = $(INSTALL) -m 0644
