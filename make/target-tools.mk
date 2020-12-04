@@ -695,6 +695,7 @@ procps-ng: $(PROCPS-NG_DEPS) $(DL_DIR)/$(PROCPS-NG_SOURCE) | $(TARGET_DIR)
 			--bindir=/bin.$(@F) \
 			--sbindir=/sbin.$(@F) \
 			--includedir=$(includedir) \
+			--libdir=$(libdir) \
 			--datarootdir=$(REMOVE_datarootdir) \
 			--without-systemd \
 			; \
