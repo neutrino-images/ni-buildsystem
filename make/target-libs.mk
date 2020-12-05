@@ -252,7 +252,7 @@ freetype: $(FREETYPE_DEPS) $(DL_DIR)/$(FREETYPE_SOURCE) | $(TARGET_DIR)
 	$(UNTAR)/$(FREETYPE_SOURCE)
 	$(CHDIR)/$(FREETYPE_DIR); \
 		$(call apply_patches, $(FREETYPE_PATCH)); \
-		$(SED) '|^FONT_MODULES += \(type1\|cid\|pfr\|type42\|pcf\|bdf\|winfonts\|cff\)|d' modules.cfg
+		$(SED) '/^FONT_MODULES += \(type1\|cid\|pfr\|type42\|pcf\|bdf\|winfonts\|cff\)/d' modules.cfg
 	$(CHDIR)/$(FREETYPE_DIR)/builds/unix; \
 		libtoolize --force --copy; \
 		aclocal -I .; \
