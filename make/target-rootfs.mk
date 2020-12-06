@@ -25,7 +25,6 @@ $(TARGET_DIR)/.version: | $(TARGET_DIR)
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), armbox mipsbox))
 	echo "imagedir=$(IMAGE_SUBDIR)"						>> $(@)
 endif
-	ln -sf /.version  $(TARGET_prefix)/.version
 
 # -----------------------------------------------------------------------------
 
