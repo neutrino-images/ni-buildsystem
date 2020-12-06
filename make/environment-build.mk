@@ -38,7 +38,6 @@ ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd5x))
 endif
 DEPS_DIR      = $(BASE_DIR)/deps
 D             = $(DEPS_DIR)
-TARGET_DIR   ?= $(BASE_DIR)/root
 SOURCE_DIR   ?= $(BASE_DIR)/source
 MAKE_DIR      = $(BASE_DIR)/make
 LOCAL_DIR     = $(BASE_DIR)/local
@@ -145,6 +144,8 @@ else ifeq ($(BOXSERIES), $(filter $(BOXSERIES), vuduo))
   CXX11_ABI              =
 
 endif
+
+include make/environment-target.mk
 
 STATIC_libdir = $(STATIC_DIR)/$(prefix)/lib
 

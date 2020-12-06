@@ -16,7 +16,7 @@ base_datadir		= $(base_datarootdir)
 base_includedir		= $(base_prefix)/include
 base_libdir		= $(base_prefix)/lib
 
-modulesdir		= $(base_libdir)/modules
+modulesdir		= $(base_libdir)/modules/$(KERNEL_VER)
 
 # -----------------------------------------------------------------------------
 
@@ -43,55 +43,57 @@ libdir			= $(exec_prefix)/lib
 lispdir			= $(datarootdir)/emacs/site-lisp
 localedir		= $(datarootdir)/locale
 mandir			= $(datadir)/man
-mandir1			= $(mandir)/man1
-mandir2			= $(mandir)/man2
+man1dir			= $(mandir)/man1
+man2dir			= $(mandir)/man2
 
 # -----------------------------------------------------------------------------
 
-REMOVE_dir		= /.remove
-REMOVE_bindir		= $(REMOVE_dir)/bin
-REMOVE_sbindir		= $(REMOVE_dir)/sbin
-REMOVE_libexecdir	= $(REMOVE_dir)/libexec
-REMOVE_datarootdir	= $(REMOVE_dir)/share
-REMOVE_datadir		= $(REMOVE_datarootdir)
-REMOVE_sysconfdir	= $(REMOVE_dir)/etc
-REMOVE_sharedstatedir	= $(REMOVE_dir)/com
-REMOVE_localstatedir	= $(REMOVE_dir)/var
-REMOVE_runstatedir	= $(REMOVE_localstatedir)/run
-REMOVE_includedir	= $(REMOVE_dir)/include
-REMOVE_oldincludedir	= $(REMOVE_includedir)
-REMOVE_docdir		= $(REMOVE_datarootdir)/doc
-REMOVE_infodir		= $(REMOVE_datarootdir)/info
-REMOVE_htmldir		= $(REMOVE_docdir)
-REMOVE_dvidir		= $(REMOVE_docdir)
-REMOVE_pdfdir		= $(REMOVE_docdir)
-REMOVE_psdir		= $(REMOVE_docdir)
-REMOVE_libdir		= $(REMOVE_dir)/lib
-REMOVE_lispdir		= $(REMOVE_datarootdir)/emacs/site-lisp
-REMOVE_localedir	= $(REMOVE_datarootdir)/locale
-REMOVE_mandir		= $(REMOVE_datarootdir)/man
-REMOVE_man1dir		= $(REMOVE_mandir)/man1
-REMOVE_man2dir		= $(REMOVE_mandir)/man2
+dir_VARIABLES = prefix \
+		exec_prefix \
+		base_bindir \
+		base_sbindir \
+		base_datarootdir \
+		base_datadir \
+		base_includedir \
+		base_libdir \
+		modulesdir \
+		bindir \
+		sbindir \
+		libexecdir \
+		datarootdir \
+		datadir \
+		sysconfdir \
+		sharedstatedir \
+		localstatedir \
+		runstatedir \
+		includedir \
+		oldincludedir \
+		docdir \
+		infodir \
+		htmldir \
+		dvidir \
+		pdfdir \
+		psdir \
+		libdir \
+		lispdir \
+		localedir \
+		mandir \
+		man1dir \
+		man2dir
 
 # -----------------------------------------------------------------------------
 
-TARGET_prefix		= $(TARGET_DIR)$(prefix)
-TARGET_exec_prefix	= $(TARGET_DIR)$(exec_prefix)
+TARGET_DIR ?= $(BASE_DIR)/root
 
-TARGET_base_bindir	= $(TARGET_DIR)$(base_bindir)
-TARGET_base_sbindir	= $(TARGET_DIR)$(base_sbindir)
-TARGET_base_includedir	= $(TARGET_DIR)$(base_includedir)
-TARGET_base_libdir	= $(TARGET_DIR)$(base_libdir)
+# auto-set TARGET_ directories
+$(foreach dir,$(dir_VARIABLES),$(eval TARGET_$(dir) = $(TARGET_DIR)$($(dir))))
 
-TARGET_modulesdir	= $(TARGET_base_libdir)/modules/$(KERNEL_VER)
+# -----------------------------------------------------------------------------
 
-TARGET_bindir		= $(TARGET_DIR)$(bindir)
-TARGET_sbindir		= $(TARGET_DIR)$(sbindir)
-TARGET_libdir		= $(TARGET_DIR)$(libdir)
-TARGET_datadir		= $(TARGET_DIR)$(datadir)
-TARGET_sysconfdir	= $(TARGET_DIR)$(sysconfdir)
-TARGET_includedir	= $(TARGET_DIR)$(includedir)
-TARGET_localstatedir	= $(TARGET_DIR)$(localstatedir)
+REMOVE_DIR = /.remove
+
+# auto-set REMOVE_ directories
+$(foreach dir,$(dir_VARIABLES),$(eval REMOVE_$(dir) = $(REMOVE_DIR)$($(dir))))
 
 # -----------------------------------------------------------------------------
 

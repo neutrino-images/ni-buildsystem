@@ -105,7 +105,7 @@ $(ROOTFS): | $(TARGET_DIR)
 
 # cleanup root filesystem from useless stuff
 rootfs-cleanup: $(ROOTFS)
-	rm -rf $(ROOTFS)$(REMOVE_dir)
+	rm -rf $(ROOTFS)$(REMOVE_DIR)
 	rm -rf $(ROOTFS)$(base_includedir)
 	rm -rf $(ROOTFS)$(includedir)
 	rm -rf $(ROOTFS)$(libdir)/pkgconfig
