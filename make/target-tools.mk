@@ -315,7 +315,7 @@ iperf: $(DL_DIR)/$(IPERF_SOURCE) | $(TARGET_DIR)
 PARTED_VER    = 3.2
 PARTED_DIR    = parted-$(PARTED_VER)
 PARTED_SOURCE = parted-$(PARTED_VER).tar.xz
-PARTED_SITE   = https://ftp.gnu.org/gnu/parted
+PARTED_SITE   = $(GNU_MIRROR)/parted
 
 $(DL_DIR)/$(PARTED_SOURCE):
 	$(DOWNLOAD) $(PARTED_SITE)/$(PARTED_SOURCE)
@@ -398,7 +398,7 @@ hd-idle: $(DL_DIR)/$(HD-IDLE_SOURCE) | $(TARGET_DIR)
 COREUTILS_VER    = 8.30
 COREUTILS_DIR    = coreutils-$(COREUTILS_VER)
 COREUTILS_SOURCE = coreutils-$(COREUTILS_VER).tar.xz
-COREUTILS_SITE   = https://ftp.gnu.org/gnu/coreutils
+COREUTILS_SITE   = $(GNU_MIRROR)/coreutils
 
 $(DL_DIR)/$(COREUTILS_SOURCE):
 	$(DOWNLOAD) $(COREUTILS_SITE)/$(COREUTILS_SOURCE)
@@ -775,7 +775,7 @@ minicom: $(MINICOM_DEPS) $(DL_DIR)/$(MINICOM_SOURCE) | $(TARGET_DIR)
 BASH_VER    = 5.0
 BASH_DIR    = bash-$(BASH_VER)
 BASH_SOURCE = bash-$(BASH_VER).tar.gz
-BASH_SITE   = http://ftp.gnu.org/gnu/bash
+BASH_SITE   = $(GNU_MIRROR)/bash
 
 $(DL_DIR)/$(BASH_SOURCE):
 	$(DOWNLOAD) $(BASH_SITE)/$(BASH_SOURCE)
@@ -1523,7 +1523,7 @@ streamripper: $(STREAMRIPPER_DEPS) | $(TARGET_DIR)
 GETTEXT_VER    = 0.19.8.1
 GETTEXT_DIR    = gettext-$(GETTEXT_VER)
 GETTEXT_SOURCE = gettext-$(GETTEXT_VER).tar.xz
-GETTEXT_SITE   = ftp://ftp.gnu.org/gnu/gettext
+GETTEXT_SITE   = $(GNU_MIRROR)/gettext
 
 $(DL_DIR)/$(GETTEXT_SOURCE):
 	$(DOWNLOAD) $(GETTEXT_SITE)/$(GETTEXT_SOURCE)
@@ -1600,7 +1600,7 @@ mc: $(MC_DEPS) $(DL_DIR)/$(MC_SOURCE) | $(TARGET_DIR)
 WGET_VER    = 1.20.3
 WGET_DIR    = wget-$(WGET_VER)
 WGET_SOURCE = wget-$(WGET_VER).tar.gz
-WGET_SITE   = https://ftp.gnu.org/gnu/wget
+WGET_SITE   = $(GNU_MIRROR)/wget
 
 $(DL_DIR)/$(WGET_SOURCE):
 	$(DOWNLOAD) $(WGET_SITE)/$(WGET_SOURCE)

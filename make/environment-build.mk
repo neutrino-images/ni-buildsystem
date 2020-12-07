@@ -314,6 +314,8 @@ GITHUB_SSH		= git@github.com
 BITBUCKET		= https://bitbucket.org
 BITBUCKET_SSH		= git@bitbucket.org
 
+GNU_MIRROR		= http://ftp.gnu.org/pub/gnu
+
 NI-PUBLIC		= $(GITHUB)/neutrino-images
 NI-PRIVATE		= $(BITBUCKET_SSH):neutrino-images
 

@@ -379,7 +379,7 @@ endif
 NCURSES_VER    = 6.1
 NCURSES_DIR    = ncurses-$(NCURSES_VER)
 NCURSES_SOURCE = ncurses-$(NCURSES_VER).tar.gz
-NCURSES_SITE   = https://ftp.gnu.org/pub/gnu/ncurses
+NCURSES_SITE   = $(GNU_MIRROR)/ncurses
 
 $(DL_DIR)/$(NCURSES_SOURCE):
 	$(DOWNLOAD) $(NCURSES_SITE)/$(NCURSES_SOURCE)
@@ -1343,7 +1343,7 @@ popt: $(DL_DIR)/$(POPT_SOURCE) | $(TARGET_DIR)
 LIBICONV_VER    = 1.15
 LIBICONV_DIR    = libiconv-$(LIBICONV_VER)
 LIBICONV_SOURCE = libiconv-$(LIBICONV_VER).tar.gz
-LIBICONV_SITE   = https://ftp.gnu.org/gnu/libiconv
+LIBICONV_SITE   = $(GNU_MIRROR)/libiconv
 
 $(DL_DIR)/$(LIBICONV_SOURCE):
 	$(DOWNLOAD) $(LIBICONV_SITE)/$(LIBICONV_SOURCE)

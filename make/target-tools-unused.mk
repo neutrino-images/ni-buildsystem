@@ -43,7 +43,7 @@ usbutils: $(USBUTILS_DEPS) $(DL_DIR)/$(USBUTILS_SOURCE) | $(TARGET_DIR)
 BINUTILS_VER    = 2.35
 BINUTILS_DIR    = binutils-$(BINUTILS_VER)
 BINUTILS_SOURCE = binutils-$(BINUTILS_VER).tar.bz2
-BINUTILS_SITE   = https://ftp.gnu.org/gnu/binutils
+BINUTILS_SITE   = $(GNU_MIRROR)/binutils
 
 $(DL_DIR)/$(BINUTILS_SOURCE):
 	$(DOWNLOAD) $(BINUTILS_SITE)/$(BINUTILS_SOURCE)
@@ -172,7 +172,7 @@ iozone: $(DL_DIR)/$(IOZONE_SOURCE) | $(TARGET_DIR)
 READLINE_VER    = 8.0
 READLINE_DIR    = readline-$(READLINE_VER)
 READLINE_SOURCE = readline-$(READLINE_VER).tar.gz
-READLINE_SITE   = https://ftp.gnu.org/gnu/readline
+READLINE_SITE   = $(GNU_MIRROR)/readline
 
 $(DL_DIR)/$(READLINE_SOURCE):
 	$(DOWNLOAD) $(READLINE_SITE)/$(READLINE_SOURCE)
