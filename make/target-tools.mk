@@ -1781,7 +1781,7 @@ rsync: $(RSYNC_DEPS) $(DL_DIR)/$(RSYNC_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-SYSVINIT_VER    = 2.97
+SYSVINIT_VER    = 2.98
 SYSVINIT_DIR    = sysvinit-$(SYSVINIT_VER)
 SYSVINIT_SOURCE = sysvinit-$(SYSVINIT_VER).tar.xz
 SYSVINIT_SITE   = http://download.savannah.nongnu.org/releases/sysvinit
