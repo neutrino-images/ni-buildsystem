@@ -190,3 +190,82 @@ readline: $(DL_DIR)/$(READLINE_SOURCE) | $(TARGET_DIR)
 	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(READLINE_DIR)
 	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
+LIBZEN_VER    = 0.4.38
+LIBZEN_TMP    = ZenLib
+LIBZEN_SOURCE = libzen_$(LIBZEN_VER).tar.bz2
+LIBZEN_SITE   = https://mediaarea.net/download/source/libzen/$(LIBZEN_VER)
+
+$(ARCHIVE)/$(LIBZEN_SOURCE):
+	$(DOWNLOAD) $(LIBZEN_SITE)/$(LIBZEN_SOURCE)
+
+LIBZEN_DEPS   = zlib
+
+libzen: $(LIBZEN_DEPS) $(ARCHIVE)/$(LIBZEN_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(LIBZEN_TMP)
+	$(UNTAR)/$(LIBZEN_SOURCE)
+	$(CHDIR)/$(LIBZEN_TMP)/Project/GNU/Library; \
+		autoreconf -fi; \
+		$(CONFIGURE) \
+			--prefix=$(prefix) \
+			; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(REWRITE_LIBTOOL_LA)
+	$(REWRITE_PKGCONF_PC)
+	$(REMOVE)/$(LIBZEN_TMP)
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
+LIBMEDIAINFO_VER    = 20.08
+LIBMEDIAINFO_TMP    = MediaInfoLib
+LIBMEDIAINFO_SOURCE = libmediainfo_$(LIBMEDIAINFO_VER).tar.bz2
+LIBMEDIAINFO_SITE   = https://mediaarea.net/download/source/libmediainfo/$(LIBMEDIAINFO_VER)
+
+$(ARCHIVE)/$(LIBMEDIAINFO_SOURCE):
+	$(DOWNLOAD) $(LIBMEDIAINFO_SITE)/$(LIBMEDIAINFO_SOURCE)
+
+LIBMEDIAINFO_DEPS   = libzen
+
+libmediainfo: $(LIBMEDIAINFO_DEPS) $(ARCHIVE)/$(LIBMEDIAINFO_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(LIBMEDIAINFO_TMP)
+	$(UNTAR)/$(LIBMEDIAINFO_SOURCE)
+	$(CHDIR)/$(LIBMEDIAINFO_TMP)/Project/GNU/Library; \
+		autoreconf -fi; \
+		$(CONFIGURE) \
+			--prefix=$(prefix) \
+			; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(REWRITE_LIBTOOL_LA)
+	$(REWRITE_PKGCONF_PC)
+	$(REMOVE)/$(LIBMEDIAINFO_TMP)
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
+MEDIAINFO_VER    = 20.08
+MEDIAINFO_TMP    = MediaInfo
+MEDIAINFO_SOURCE = mediainfo_$(MEDIAINFO_VER).tar.bz2
+MEDIAINFO_SITE   = https://mediaarea.net/download/source/mediainfo/$(MEDIAINFO_VER)
+
+$(ARCHIVE)/$(MEDIAINFO_SOURCE):
+	$(DOWNLOAD) $(MEDIAINFO_SITE)/$(MEDIAINFO_SOURCE)
+
+MEDIAINFO_DEPS   = libmediainfo
+
+mediainfo: $(MEDIAINFO_DEPS) $(ARCHIVE)/$(MEDIAINFO_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(MEDIAINFO_TMP)
+	$(UNTAR)/$(MEDIAINFO_SOURCE)
+	$(CHDIR)/$(MEDIAINFO_TMP)/Project/GNU/CLI; \
+		autoreconf -fi; \
+		$(CONFIGURE) \
+			--prefix=$(prefix) \
+			; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(REMOVE)/$(MEDIAINFO_TMP)
+	$(TOUCH)
