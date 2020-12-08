@@ -919,7 +919,8 @@ pugixml: $(DL_DIR)/$(PUGIXML_SOURCE) | $(TARGET_DIR)
 		$(CMAKE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	rm -rf $(TARGET_libdir)/cmake
+	-rm -r $(TARGET_libdir)/cmake
+	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(PUGIXML_DIR)
 	$(TOUCH)
 
