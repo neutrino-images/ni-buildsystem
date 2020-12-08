@@ -323,6 +323,8 @@ kernel-modules-armbox: kernel-armbox
 	make depmod
 ifeq ($(BOXSERIES), hd5x hd6x)
 	make rtl8192eu
+	make rtl8812au
+	make rtl8822bu
 endif
 ifeq ($(BOXSERIES), hd6x)
 	make hd6x-mali-drivers
