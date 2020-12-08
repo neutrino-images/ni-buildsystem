@@ -198,16 +198,16 @@ KERNEL_NAME     = NI $(shell echo $(BOXFAMILY) | sed 's/.*/\u&/') Kernel
 
 # -----------------------------------------------------------------------------
 
-KERNEL_MODULES_DIR  = $(BUILD_DIR)/$(KERNEL_MODULES)/lib/modules/$(KERNEL_VER)
+KERNEL_modulesdir = $(BUILD_DIR)/$(KERNEL_MODULES)/lib/modules/$(KERNEL_VER)
 
 ifeq ($(BOXMODEL), nevis)
-  KERNEL_UIMAGE     = $(BUILD_DIR)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/Image
+  KERNEL_UIMAGE   = $(BUILD_DIR)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/Image
 else
-  KERNEL_UIMAGE     = $(BUILD_DIR)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/uImage
+  KERNEL_UIMAGE   = $(BUILD_DIR)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/uImage
 endif
-KERNEL_ZIMAGE       = $(BUILD_DIR)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/zImage
-KERNEL_ZIMAGE_DTB   = $(BUILD_DIR)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/zImage_dtb
-KERNEL_VMLINUX      = $(BUILD_DIR)/$(KERNEL_OBJ)/vmlinux
+KERNEL_ZIMAGE     = $(BUILD_DIR)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/zImage
+KERNEL_ZIMAGE_DTB = $(BUILD_DIR)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/zImage_dtb
+KERNEL_VMLINUX    = $(BUILD_DIR)/$(KERNEL_OBJ)/vmlinux
 
 # -----------------------------------------------------------------------------
 

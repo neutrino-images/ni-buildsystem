@@ -300,7 +300,7 @@ kernel-modules-coolstream-hd1: kernel-coolstream
 	mkdir -p $(TARGET_modulesdir)
 	for module in $(STRIP-MODULES-COOLSTREAM-HD1); do \
 		mkdir -p $(TARGET_modulesdir)/$$(dirname $$module); \
-		$(TARGET_OBJCOPY) --strip-unneeded $(KERNEL_MODULES_DIR)/$$module $(TARGET_modulesdir)/$$module; \
+		$(TARGET_OBJCOPY) --strip-unneeded $(KERNEL_modulesdir)/$$module $(TARGET_modulesdir)/$$module; \
 	done;
 	rm -f $(TARGET_modulesdir)/usb-storage.ko # already builtin
 	make depmod
@@ -308,18 +308,18 @@ kernel-modules-coolstream-hd1: kernel-coolstream
 
 kernel-modules-coolstream-hd2: kernel-coolstream
 	mkdir -p $(TARGET_modulesdir)
-	$(INSTALL_COPY) $(KERNEL_MODULES_DIR)/kernel $(TARGET_modulesdir)
-	$(INSTALL_DATA) $(KERNEL_MODULES_DIR)/modules.builtin $(TARGET_modulesdir)
-	$(INSTALL_DATA) $(KERNEL_MODULES_DIR)/modules.order $(TARGET_modulesdir)
+	$(INSTALL_COPY) $(KERNEL_modulesdir)/kernel $(TARGET_modulesdir)
+	$(INSTALL_DATA) $(KERNEL_modulesdir)/modules.builtin $(TARGET_modulesdir)
+	$(INSTALL_DATA) $(KERNEL_modulesdir)/modules.order $(TARGET_modulesdir)
 	make depmod
 	make rtl8192eu
 	$(TOUCH)
 
 kernel-modules-armbox: kernel-armbox
 	mkdir -p $(TARGET_modulesdir)
-	$(INSTALL_COPY) $(KERNEL_MODULES_DIR)/kernel $(TARGET_modulesdir)
-	$(INSTALL_DATA) $(KERNEL_MODULES_DIR)/modules.builtin $(TARGET_modulesdir)
-	$(INSTALL_DATA) $(KERNEL_MODULES_DIR)/modules.order $(TARGET_modulesdir)
+	$(INSTALL_COPY) $(KERNEL_modulesdir)/kernel $(TARGET_modulesdir)
+	$(INSTALL_DATA) $(KERNEL_modulesdir)/modules.builtin $(TARGET_modulesdir)
+	$(INSTALL_DATA) $(KERNEL_modulesdir)/modules.order $(TARGET_modulesdir)
 	make depmod
 ifeq ($(BOXSERIES), hd5x hd6x)
 	make rtl8192eu
@@ -333,9 +333,9 @@ endif
 
 kernel-modules-mipsbox: kernel-mipsbox
 	mkdir -p $(TARGET_modulesdir)
-	$(INSTALL_COPY) $(KERNEL_MODULES_DIR)/kernel $(TARGET_modulesdir)
-	$(INSTALL_DATA) $(KERNEL_MODULES_DIR)/modules.builtin $(TARGET_modulesdir)
-	$(INSTALL_DATA) $(KERNEL_MODULES_DIR)/modules.order $(TARGET_modulesdir)
+	$(INSTALL_COPY) $(KERNEL_modulesdir)/kernel $(TARGET_modulesdir)
+	$(INSTALL_DATA) $(KERNEL_modulesdir)/modules.builtin $(TARGET_modulesdir)
+	$(INSTALL_DATA) $(KERNEL_modulesdir)/modules.order $(TARGET_modulesdir)
 	make depmod
 	$(TOUCH)
 
