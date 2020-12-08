@@ -282,7 +282,7 @@ freetype: $(FREETYPE_DEPS) $(DL_DIR)/$(FREETYPE_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-LIBJPEG-TURBO_VER    = 2.0.5
+LIBJPEG-TURBO_VER    = 2.0.6
 LIBJPEG-TURBO_DIR    = libjpeg-turbo-$(LIBJPEG-TURBO_VER)
 LIBJPEG-TURBO_SOURCE = libjpeg-turbo-$(LIBJPEG-TURBO_VER).tar.gz
 LIBJPEG-TURBO_SITE   = https://sourceforge.net/projects/libjpeg-turbo/files/$(LIBJPEG-TURBO_VER)
