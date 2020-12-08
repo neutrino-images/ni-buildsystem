@@ -73,10 +73,10 @@ binutils: $(DL_DIR)/$(BINUTILS_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-UTIL-LINUX_VER    = 2.36
+UTIL-LINUX_VER    = 2.36.1
 UTIL-LINUX_DIR    = util-linux-$(UTIL-LINUX_VER)
 UTIL-LINUX_SOURCE = util-linux-$(UTIL-LINUX_VER).tar.xz
-UTIL-LINUX_SITE   = https://www.kernel.org/pub/linux/utils/util-linux/v$(UTIL-LINUX_VER)
+UTIL-LINUX_SITE   = https://www.kernel.org/pub/linux/utils/util-linux/v$(basename $(UTIL-LINUX_VER))
 
 $(DL_DIR)/$(UTIL-LINUX_SOURCE):
 	$(DOWNLOAD) $(UTIL-LINUX_SITE)/$(UTIL-LINUX_SOURCE)
