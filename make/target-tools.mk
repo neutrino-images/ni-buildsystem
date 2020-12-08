@@ -125,7 +125,7 @@ busybox: $(BUSYBOX_DEPS) $(DL_DIR)/$(BUSYBOX_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-OPENVPN_VER    = 2.4.9
+OPENVPN_VER    = 2.5.0
 OPENVPN_DIR    = openvpn-$(OPENVPN_VER)
 OPENVPN_SOURCE = openvpn-$(OPENVPN_VER).tar.xz
 OPENVPN_SITE   = http://build.openvpn.net/downloads/releases
