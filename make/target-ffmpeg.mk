@@ -3,7 +3,7 @@
 #
 # -----------------------------------------------------------------------------
 
-FFMPEG_VER    = 4.3
+FFMPEG_VER    = 4.3.1
 FFMPEG_DIR    = ffmpeg-$(FFMPEG_VER)
 FFMPEG_SOURCE = ffmpeg-$(FFMPEG_VER).tar.xz
 FFMPEG_SITE   = http://www.ffmpeg.org/releases
