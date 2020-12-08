@@ -1699,7 +1699,7 @@ dvbsnoop: | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-ETHTOOL_VER    = 5.4
+ETHTOOL_VER    = 5.9
 ETHTOOL_DIR    = ethtool-$(ETHTOOL_VER)
 ETHTOOL_SOURCE = ethtool-$(ETHTOOL_VER).tar.xz
 ETHTOOL_SITE   = https://www.kernel.org/pub/software/network/ethtool
@@ -1716,6 +1716,7 @@ ethtool: $(DL_DIR)/$(ETHTOOL_SOURCE) | $(TARGET_DIR)
 			--mandir=$(REMOVE_mandir) \
 			--libdir=$(TARGET_libdir) \
 			--disable-pretty-dump \
+			--disable-netlink \
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
