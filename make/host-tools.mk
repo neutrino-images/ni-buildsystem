@@ -143,7 +143,7 @@ $(HOST_DIR)/bin/mkimage: $(DL_DIR)/$(HOST_U-BOOT_SOURCE) | $(HOST_DIR)
 
 # -----------------------------------------------------------------------------
 
-HOST_TZCODE_VER    = 2019b
+HOST_TZCODE_VER    = 2020d
 HOST_TZCODE_DIR    = tzcode$(HOST_TZCODE_VER)
 HOST_TZCODE_SOURCE = tzcode$(HOST_TZCODE_VER).tar.gz
 HOST_TZCODE_SITE   = ftp://ftp.iana.org/tz/releases

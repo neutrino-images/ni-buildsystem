@@ -207,7 +207,7 @@ openssh: $(OPENSSH_DEPS) $(DL_DIR)/$(OPENSSH_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-TZDATA_VER    = 2019b
+TZDATA_VER    = 2020d
 TZDATA_DIR    = tzdata$(TZDATA_VER)
 TZDATA_SOURCE = tzdata$(TZDATA_VER).tar.gz
 TZDATA_SITE   = ftp://ftp.iana.org/tz/releases
@@ -215,11 +215,11 @@ TZDATA_SITE   = ftp://ftp.iana.org/tz/releases
 $(DL_DIR)/$(TZDATA_SOURCE):
 	$(DOWNLOAD) $(TZDATA_SITE)/$(TZDATA_SOURCE)
 
-TZDATA_DEPS   = $(HOST_ZIC)
+TZDATA_DEPS   = host-zic
 
 TZDATA_ZONELIST = \
 	africa antarctica asia australasia europe northamerica \
-	southamerica pacificnew etcetera backward
+	southamerica etcetera backward
 
 ETC_LOCALTIME = $(if $(filter $(PERSISTENT_VAR_PARTITION), yes),/var/etc/localtime,/etc/localtime)
 
