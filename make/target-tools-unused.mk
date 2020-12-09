@@ -129,16 +129,16 @@ ASTRA-SM_SITE   = https://gitlab.com/crazycat69
 
 ASTRA-SM_DEPS   = openssl
 
-# workaround unrecognized command line options
-astra-sm: TARGET_ABI=""
 astra-sm: $(ASTRA-SM_DEPS) | $(TARGET_DIR)
 	$(REMOVE)/$(ASTRA-SM_DIR)
 	$(GET-GIT-SOURCE) $(ASTRA-SM_SITE)/$(ASTRA-SM_SOURCE) $(DL_DIR)/$(ASTRA-SM_SOURCE)
 	$(CPDIR)/$(ASTRA-SM_SOURCE)
 	$(CHDIR)/$(ASTRA-SM_DIR); \
 		autoreconf -fi; \
+		sed -i 's:(CFLAGS):(CFLAGS_FOR_BUILD):' tools/Makefile.am; \
 		$(CONFIGURE) \
 			--prefix=$(prefix) \
+			--sysconfdir=$(sysconfdir) \
 			--without-lua \
 			; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
