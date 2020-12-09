@@ -7,7 +7,7 @@
 USBUTILS_VER    = 007
 USBUTILS_DIR    = usbutils-$(USBUTILS_VER)
 USBUTILS_SOURCE = usbutils-$(USBUTILS_VER).tar.xz
-USBUTILS_SITE   = https://www.kernel.org/pub/linux/utils/usb/usbutils
+USBUTILS_SITE   = $(KERNEL_MIRROR)/linux/utils/usb/usbutils
 
 $(DL_DIR)/$(USBUTILS_SOURCE):
 	$(DOWNLOAD) $(USBUTILS_SITE)/$(USBUTILS_SOURCE)
@@ -76,7 +76,7 @@ binutils: $(DL_DIR)/$(BINUTILS_SOURCE) | $(TARGET_DIR)
 UTIL-LINUX_VER    = 2.36.1
 UTIL-LINUX_DIR    = util-linux-$(UTIL-LINUX_VER)
 UTIL-LINUX_SOURCE = util-linux-$(UTIL-LINUX_VER).tar.xz
-UTIL-LINUX_SITE   = https://www.kernel.org/pub/linux/utils/util-linux/v$(basename $(UTIL-LINUX_VER))
+UTIL-LINUX_SITE   = $(KERNEL_MIRROR)/linux/utils/util-linux/v$(basename $(UTIL-LINUX_VER))
 
 $(DL_DIR)/$(UTIL-LINUX_SOURCE):
 	$(DOWNLOAD) $(UTIL-LINUX_SITE)/$(UTIL-LINUX_SOURCE)
@@ -90,7 +90,8 @@ util-linux: $(UTUL-LINUX_DEPS) $(DL_DIR)/$(UTIL-LINUX_SOURCE) | $(TARGET_DIR)
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--prefix=$(base_prefix) \
-			--datarootdir=$(REMOVE_datarootdir) \
+			--localedir=$(REMOVE_localedir) \
+			--mandir=$(REMOVE_mandir) \
 			--enable-static \
 			--disable-shared \
 			--disable-hardlink \
@@ -101,7 +102,6 @@ util-linux: $(UTUL-LINUX_DEPS) $(DL_DIR)/$(UTIL-LINUX_SOURCE) | $(TARGET_DIR)
 				--enable-libfdisk \
 				--enable-libsmartcols \
 				--enable-libuuid \
-			--disable-bash-completion \
 			\
 			--disable-makeinstall-chown \
 			--disable-makeinstall-setuid \
@@ -110,8 +110,10 @@ util-linux: $(UTUL-LINUX_DEPS) $(DL_DIR)/$(UTIL-LINUX_SOURCE) | $(TARGET_DIR)
 			--without-ncursesw \
 			--without-python \
 			--without-slang \
+			--without-systemd \
 			--without-systemdsystemunitdir \
 			--without-tinfo \
+			--without-udev \
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)

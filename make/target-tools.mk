@@ -897,7 +897,7 @@ ntfs-3g: $(DL_DIR)/$(NTFS-3G_SOURCE) | $(TARGET_DIR)
 AUTOFS_VER    = 5.1.6
 AUTOFS_DIR    = autofs-$(AUTOFS_VER)
 AUTOFS_SOURCE = autofs-$(AUTOFS_VER).tar.xz
-AUTOFS_SITE   = https://www.kernel.org/pub/linux/daemons/autofs/v5
+AUTOFS_SITE   = $(KERNEL_MIRROR)/linux/daemons/autofs/v5
 
 $(DL_DIR)/$(AUTOFS_SOURCE):
 	$(DOWNLOAD) $(AUTOFS_SITE)/$(AUTOFS_SOURCE)
@@ -1705,7 +1705,7 @@ dvbsnoop: | $(TARGET_DIR)
 ETHTOOL_VER    = 5.9
 ETHTOOL_DIR    = ethtool-$(ETHTOOL_VER)
 ETHTOOL_SOURCE = ethtool-$(ETHTOOL_VER).tar.xz
-ETHTOOL_SITE   = https://www.kernel.org/pub/software/network/ethtool
+ETHTOOL_SITE   = $(KERNEL_MIRROR)/software/network/ethtool
 
 $(DL_DIR)/$(ETHTOOL_SOURCE):
 	$(DOWNLOAD) $(ETHTOOL_SITE)/$(ETHTOOL_SOURCE)
