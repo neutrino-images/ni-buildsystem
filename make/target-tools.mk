@@ -714,10 +714,10 @@ procps-ng: $(PROCPS-NG_DEPS) $(DL_DIR)/$(PROCPS-NG_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-NANO_VER    = 4.7
+NANO_VER    = 5.4
 NANO_DIR    = nano-$(NANO_VER)
 NANO_SOURCE = nano-$(NANO_VER).tar.gz
-NANO_SITE   = https://www.nano-editor.org/dist/v$(basename $(NANO_VER))
+NANO_SITE   = $(GNU_MIRROR)/nano
 
 $(DL_DIR)/$(NANO_SOURCE):
 	$(DOWNLOAD) $(NANO_SITE)/$(NANO_SOURCE)
@@ -734,7 +734,10 @@ nano: $(NANO_DEPS) $(DL_DIR)/$(NANO_SOURCE) | $(TARGET_DIR)
 			--prefix=$(prefix) \
 			--datarootdir=$(REMOVE_datarootdir) \
 			--disable-nls \
+			--disable-libmagic \
 			--enable-tiny \
+			--without-slang \
+			--with-wordbounds \
 			; \
 		$(MAKE) CURSES_LIB="-lncurses"; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
