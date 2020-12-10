@@ -211,7 +211,7 @@ flash-image-hd5x-multi: | $(IMAGE_DIR)
 		bzip2 $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/rootfs.tar
 	echo $(IMAGE_PREFIX) > $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/imageversion
 	$(CD) $(IMAGE_BUILD_DIR); \
-		zip -r $(IMAGE_DIR)/$(IMAGE_NAME)_multi_usb.zip *
+		zip -r $(IMAGE_DIR)/$(IMAGE_NAME)_multi_usb.zip $(IMAGE_SUBDIR)/*
 	rm -rf $(IMAGE_BUILD_DIR)
 
 # -----------------------------------------------------------------------------
@@ -384,7 +384,7 @@ endif
 	echo $(IMAGE_PREFIX) > $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/imageversion
 	# Create final USB-image
 	$(CD) $(IMAGE_BUILD_DIR); \
-		zip -r $(IMAGE_DIR)/$(IMAGE_NAME)_multi_usb.zip *
+		zip -r $(IMAGE_DIR)/$(IMAGE_NAME)_multi_usb.zip $(IMAGE_SUBDIR)/*
 	rm -rf $(IMAGE_BUILD_DIR)
 
 # -----------------------------------------------------------------------------
