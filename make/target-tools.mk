@@ -438,10 +438,10 @@ coreutils: $(DL_DIR)/$(COREUTILS_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-LESS_VER    = 530
+LESS_VER    = 563
 LESS_DIR    = less-$(LESS_VER)
 LESS_SOURCE = less-$(LESS_VER).tar.gz
-LESS_SITE   = http://www.greenwoodsoftware.com/less
+LESS_SITE   = $(GNU_MIRROR)/less
 
 $(DL_DIR)/$(LESS_SOURCE):
 	$(DOWNLOAD) $(LESS_SITE)/$(LESS_SOURCE)
