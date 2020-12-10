@@ -1363,8 +1363,8 @@ dosfstools: $(DL_DIR)/$(DOSFSTOOLS_SOURCE) | $(TARGET_DIR)
 
 NFS-UTILS_VER    = 2.2.1
 NFS-UTILS_DIR    = nfs-utils-$(NFS-UTILS_VER)
-NFS-UTILS_SOURCE = nfs-utils-$(NFS-UTILS_VER).tar.bz2
-NFS-UTILS_SITE   = https://sourceforge.net/projects/nfs/files/nfs-utils/$(NFS-UTILS_VER)
+NFS-UTILS_SOURCE = nfs-utils-$(NFS-UTILS_VER).tar.xz
+NFS-UTILS_SITE   = $(KERNEL_MIRROR)/linux/utils/nfs-utils/$(NFS-UTILS_VER)
 
 $(DL_DIR)/$(NFS-UTILS_SOURCE):
 	$(DOWNLOAD) $(NFS-UTILS_SITE)/$(NFS-UTILS_SOURCE)
