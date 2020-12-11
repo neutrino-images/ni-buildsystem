@@ -10,7 +10,7 @@ $(HOST_DIR):
 
 # -----------------------------------------------------------------------------
 
-host-preqs: $(HOST_DIR) \
+host-tools: $(HOST_DIR) \
 	host-pkg-config \
 	$(PKG_CONFIG) \
 	host-mtd-utils \
@@ -381,6 +381,6 @@ host-ccache: find-ccache $(CCACHE) | $(HOST_DIR)
 
 # -----------------------------------------------------------------------------
 
-PHONY += host-preqs
+PHONY += host-tools
 PHONY += pkg-config-preqs
 PHONY += host-ccache

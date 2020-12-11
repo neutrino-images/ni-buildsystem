@@ -11,7 +11,7 @@ BOOTSTRAP += $(BUILD_DIR)
 BOOTSTRAP += $(STAGING_DIR)
 BOOTSTRAP += $(IMAGE_DIR)
 BOOTSTRAP += $(UPDATE_DIR)
-BOOTSTRAP += host-preqs
+BOOTSTRAP += host-tools
 
 # target related
 BOOTSTRAP += libs-static
