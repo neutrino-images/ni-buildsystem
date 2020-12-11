@@ -161,7 +161,8 @@ HOST_TZDATA_SITE   = ftp://ftp.iana.org/tz/releases
 
 HOST_ZIC = $(HOST_DIR)/sbin/zic
 
-host-zic: $(DL_DIR)/$(HOST_TZDATA_SOURCE) $(DL_DIR)/$(HOST_TZCODE_SOURCE) | $(HOST_DIR)
+host-zic: $(HOST_DIR)/sbin/zic
+$(HOST_DIR)/sbin/zic: $(DL_DIR)/$(HOST_TZDATA_SOURCE) $(DL_DIR)/$(HOST_TZCODE_SOURCE) | $(HOST_DIR)
 	$(REMOVE)/$(HOST_TZCODE_DIR)
 	$(MKDIR)/$(HOST_TZCODE_DIR)
 	$(CHDIR)/$(HOST_TZCODE_DIR); \
@@ -170,7 +171,6 @@ host-zic: $(DL_DIR)/$(HOST_TZDATA_SOURCE) $(DL_DIR)/$(HOST_TZCODE_SOURCE) | $(HO
 		$(MAKE) zic
 	$(INSTALL_EXEC) -D $(BUILD_DIR)/$(HOST_TZCODE_DIR)/zic $(HOST_ZIC)
 	$(REMOVE)/$(HOST_TZCODE_DIR)
-	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 

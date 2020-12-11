@@ -215,11 +215,13 @@ TZDATA_SITE   = ftp://ftp.iana.org/tz/releases
 $(DL_DIR)/$(TZDATA_SOURCE):
 	$(DOWNLOAD) $(TZDATA_SITE)/$(TZDATA_SOURCE)
 
-TZDATA_DEPS   = host-zic
+TZDATA_DEPS   = $(HOST_ZIC)
 
 TZDATA_ZONELIST = \
 	africa antarctica asia australasia europe northamerica \
-	southamerica etcetera backward
+	southamerica etcetera backward factory
+
+TZDATA_LOCALTIME = CET
 
 ETC_LOCALTIME = $(if $(filter $(PERSISTENT_VAR_PARTITION), yes),/var/etc/localtime,/etc/localtime)
 
@@ -229,22 +231,18 @@ tzdata: $(TZDATA_DEPS) $(DL_DIR)/$(TZDATA_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(TZDATA_DIR); \
 		tar -xf $(DL_DIR)/$(TZDATA_SOURCE); \
 		unset ${!LC_*}; LANG=POSIX; LC_ALL=POSIX; export LANG LC_ALL; \
-		$(HOST_ZIC) -d zoneinfo.tmp $(TZDATA_ZONELIST); \
-		mkdir zoneinfo; \
+		$(HOST_ZIC) -b fat -d zoneinfo.tmp $(TZDATA_ZONELIST); \
 		sed -n '/zone=/{s/.*zone="\(.*\)".*$$/\1/; p}' $(TARGET_FILES)/tzdata/timezone.xml | sort -u | \
 		while read x; do \
 			find zoneinfo.tmp -type f -name $$x | sort | \
 			while read y; do \
-				$(INSTALL_DATA) $$y zoneinfo/$$x; \
+				test -e $$y && $(INSTALL_DATA) -D $$y $(TARGET_datadir)/zoneinfo/$$x; \
 			done; \
-			test -e zoneinfo/$$x || echo "WARNING: timezone $$x not found."; \
 		done; \
-		mkdir -p $(TARGET_datadir); \
-		rm -rf $(TARGET_datadir)/zoneinfo; \
-		mv zoneinfo/ $(TARGET_datadir)/
 	$(INSTALL_DATA) -D $(TARGET_FILES)/tzdata/timezone.xml $(TARGET_sysconfdir)/timezone.xml
-	$(INSTALL_DATA) $(TARGET_datadir)/zoneinfo/CET $(TARGET_DIR)$(ETC_LOCALTIME)
-	$(REMOVE)/$(TZDATA_DIR)
+	ln -sf $(datadir)/zoneinfo/$(TZDATA_LOCALTIME) $(TARGET_DIR)$(ETC_LOCALTIME)
+	echo "$(TZDATA_LOCALTIME)" > $(TARGET_sysconfdir)/timezone
+	#$(REMOVE)/$(TZDATA_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
