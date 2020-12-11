@@ -14,8 +14,8 @@ BOOTSTRAP += $(UPDATE_DIR)
 BOOTSTRAP += host-tools
 
 # target related
-BOOTSTRAP += libs-static
 BOOTSTRAP += target-dir
+BOOTSTRAP += libs-static
 BOOTSTRAP += libs-cross
 
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), coolstream))
@@ -35,7 +35,6 @@ bootstrap: $(BOOTSTRAP)
 skeleton: | $(TARGET_DIR)
 	$(INSTALL_COPY) --remove-destination $(SKEL-ROOT)/. $(TARGET_DIR)/
 	$(SED) 's|%(BOOT_PARTITION)|$(BOOT_PARTITION)|' $(TARGET_sysconfdir)/mdev.conf
-	$(INSTALL_COPY) $(STATIC_DIR)/. $(TARGET_DIR)/
 
 # -----------------------------------------------------------------------------
 

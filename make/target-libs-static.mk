@@ -8,7 +8,10 @@ ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd5x hd6x vusolo4k vuduo4k vuduo4
   LIBS-STATIC += cortex-strings
 endif
 
-libs-static: $(LIBS-STATIC)
+libs-static: $(LIBS-STATIC) | $(TARGET_DIR)
+	$(INSTALL_COPY) $(STATIC_DIR)/. $(TARGET_DIR)/
+	$(REWRITE_LIBTOOL_LA)
+	$(REWRITE_PKGCONF_PC)
 
 # -----------------------------------------------------------------------------
 
@@ -41,7 +44,6 @@ $(STATIC_libdir)/libcortex-strings.la: $(DL_DIR)/$(CORTEX-STRINGS_SOURCE) | $(ST
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(STATIC_DIR)
-	$(REWRITE_LIBTOOL_STATIC)/libcortex-strings.la
 	$(REMOVE)/$(CORTEX-STRINGS_DIR)
 
 # -----------------------------------------------------------------------------

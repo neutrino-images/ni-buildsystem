@@ -51,12 +51,11 @@ REWRITE_LIBTOOL_RULES  = $(SED) "s,^libdir=.*,libdir='$(TARGET_libdir)',; \
 				 s,\(^dependency_libs='\| \|-L\|^dependency_libs='\)/lib,\ $(TARGET_libdir),g"
 
 REWRITE_LIBTOOL        = $(REWRITE_LIBTOOL_RULES) $(TARGET_libdir)
-REWRITE_LIBTOOL_STATIC = $(REWRITE_LIBTOOL_RULES) $(STATIC_libdir)
 
 REWRITE_LIBTOOL_TAG    = rewritten=1
 
 define rewrite_libtool
-	cd $(TARGET_libdir); \
+	@cd $(TARGET_libdir); \
 	LA=$$(find . -name "*.la" -type f); \
 	for la in $${LA}; do \
 		if ! grep -q "$(REWRITE_LIBTOOL_TAG)" $${la}; then \
@@ -84,7 +83,7 @@ REWRITE_PKGCONF        = $(REWRITE_CONFIG_RULES) $(PKG_CONFIG_PATH)
 REWRITE_CONFIG_TAG     = rewritten=1
 
 define rewrite_pkgconf
-	cd $(PKG_CONFIG_PATH); \
+	@cd $(PKG_CONFIG_PATH); \
 	PC=$$(find . -name "*.pc" -type f); \
 	for pc in $${PC}; do \
 		if ! grep -q "$(REWRITE_CONFIG_TAG)" $${pc}; then \
