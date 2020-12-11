@@ -171,7 +171,7 @@ iozone: $(DL_DIR)/$(IOZONE_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-READLINE_VER    = 8.0
+READLINE_VER    = 8.1
 READLINE_DIR    = readline-$(READLINE_VER)
 READLINE_SOURCE = readline-$(READLINE_VER).tar.gz
 READLINE_SITE   = $(GNU_MIRROR)/readline
