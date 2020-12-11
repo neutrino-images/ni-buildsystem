@@ -1184,15 +1184,13 @@ fribidi: $(DL_DIR)/$(FRIBIDI_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-LIBFFI_VER    = 3.2.1
+LIBFFI_VER    = 3.3
 LIBFFI_DIR    = libffi-$(LIBFFI_VER)
 LIBFFI_SOURCE = libffi-$(LIBFFI_VER).tar.gz
-LIBFFI_SITE   = ftp://sourceware.org/pub/libffi
+LIBFFI_SITE   = $(call github,libffi,libffi,v$(LIBFFI_VERSION))
 
 $(DL_DIR)/$(LIBFFI_SOURCE):
 	$(DOWNLOAD) $(LIBFFI_SITE)/$(LIBFFI_SOURCE)
-
-LIBFFI_PATCH  = libffi-install_headers.patch
 
 LIBFFI_CONF   = $(if $(filter $(BOXSERIES), hd1),--enable-static --disable-shared)
 
@@ -1200,7 +1198,8 @@ libffi: $(DL_DIR)/$(LIBFFI_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LIBFFI_DIR)
 	$(UNTAR)/$(LIBFFI_SOURCE)
 	$(CHDIR)/$(LIBFFI_DIR); \
-		$(call apply_patches, $(LIBFFI_PATCH)); \
+		$(APPLY_PATCHES); \
+		autoreconf -fi; \
 		$(CONFIGURE) \
 			--prefix=$(prefix) \
 			--datarootdir=$(REMOVE_datarootdir) \
