@@ -242,7 +242,7 @@ tzdata: $(TZDATA_DEPS) $(DL_DIR)/$(TZDATA_SOURCE) | $(TARGET_DIR)
 	$(INSTALL_DATA) -D $(TARGET_FILES)/tzdata/timezone.xml $(TARGET_sysconfdir)/timezone.xml
 	ln -sf $(datadir)/zoneinfo/$(TZDATA_LOCALTIME) $(TARGET_DIR)$(ETC_LOCALTIME)
 	echo "$(TZDATA_LOCALTIME)" > $(TARGET_sysconfdir)/timezone
-	#$(REMOVE)/$(TZDATA_DIR)
+	$(REMOVE)/$(TZDATA_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
