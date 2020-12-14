@@ -3,6 +3,11 @@
 #
 # -----------------------------------------------------------------------------
 
+#
+# $(base_prefix) tools
+#
+# -----------------------------------------------------------------------------
+
 BUSYBOX_VER    = 1.31.1
 BUSYBOX_DIR    = busybox-$(BUSYBOX_VER)
 BUSYBOX_SOURCE = busybox-$(BUSYBOX_VER).tar.bz2
@@ -123,6 +128,385 @@ busybox: $(BUSYBOX_DEPS) $(DL_DIR)/$(BUSYBOX_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(BUSYBOX_DIR)
 	$(TOUCH)
 
+# -----------------------------------------------------------------------------
+
+BASH_VER    = 5.0
+BASH_DIR    = bash-$(BASH_VER)
+BASH_SOURCE = bash-$(BASH_VER).tar.gz
+BASH_SITE   = $(GNU_MIRROR)/bash
+
+$(DL_DIR)/$(BASH_SOURCE):
+	$(DOWNLOAD) $(BASH_SITE)/$(BASH_SOURCE)
+
+BASH_PATCH  = $(PATCHES)/bash
+
+define BASH_ADD_TO_SHELLS
+	grep -qsE '^/bin/bash$$' $(TARGET_sysconfdir)/shells \
+		|| echo "/bin/bash" >> $(TARGET_sysconfdir)/shells
+endef
+
+bash: $(DL_DIR)/$(BASH_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(BASH_DIR)
+	$(UNTAR)/$(BASH_SOURCE)
+	$(CHDIR)/$(BASH_DIR); \
+		$(call apply_patches, $(BASH_PATCH), 0); \
+		$(CONFIGURE) \
+			--prefix=$(base_prefix) \
+			--includedir=$(includedir) \
+			--libdir=$(libdir) \
+			--datarootdir=$(REMOVE_datarootdir) \
+			; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(REWRITE_PKGCONF_PC)
+	-rm $(addprefix $(TARGET_libdir)/bash/, loadables.h Makefile.inc)
+	$(BASH_ADD_TO_SHELLS)
+	$(REMOVE)/$(BASH_DIR)
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
+SYSVINIT_VER    = 2.98
+SYSVINIT_DIR    = sysvinit-$(SYSVINIT_VER)
+SYSVINIT_SOURCE = sysvinit-$(SYSVINIT_VER).tar.xz
+SYSVINIT_SITE   = http://download.savannah.nongnu.org/releases/sysvinit
+
+$(DL_DIR)/$(SYSVINIT_SOURCE):
+	$(DOWNLOAD) $(SYSVINIT_SITE)/$(SYSVINIT_SOURCE)
+
+define SYSVINIT_INSTALL
+	for sbin in halt init shutdown killall5 runlevel; do \
+		$(INSTALL_EXEC) -D $(BUILD_DIR)/$(SYSVINIT_DIR)/src/$$sbin $(TARGET_base_sbindir)/$$sbin || exit 1; \
+	done
+	ln -sf /sbin/halt $(TARGET_base_sbindir)/reboot
+	ln -sf /sbin/halt $(TARGET_base_sbindir)/poweroff
+	ln -sf /sbin/killall5 $(TARGET_base_sbindir)/pidof
+endef
+
+sysvinit: $(DL_DIR)/$(SYSVINIT_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(SYSVINIT_DIR)
+	$(UNTAR)/$(SYSVINIT_SOURCE)
+	$(CHDIR)/$(SYSVINIT_DIR); \
+		$(APPLY_PATCHES); \
+		$(MAKE_ENV) \
+		$(MAKE) -C src SULOGINLIBS=-lcrypt
+	$(SYSVINIT_INSTALL)
+	$(REMOVE)/$(SYSVINIT_DIR)
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
+COREUTILS_VER    = 8.30
+COREUTILS_DIR    = coreutils-$(COREUTILS_VER)
+COREUTILS_SOURCE = coreutils-$(COREUTILS_VER).tar.xz
+COREUTILS_SITE   = $(GNU_MIRROR)/coreutils
+
+$(DL_DIR)/$(COREUTILS_SOURCE):
+	$(DOWNLOAD) $(COREUTILS_SITE)/$(COREUTILS_SOURCE)
+
+COREUTILS_PATCH  = coreutils-fix-build.patch
+
+COREUTILS_BIN    = touch
+
+coreutils: $(DL_DIR)/$(COREUTILS_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(COREUTILS_DIR)
+	$(UNTAR)/$(COREUTILS_SOURCE)
+	$(CHDIR)/$(COREUTILS_DIR); \
+		$(call apply_patches, $(COREUTILS_PATCH)); \
+		autoreconf -fi; \
+		$(CONFIGURE) \
+			--target=$(TARGET) \
+			--prefix=$(base_prefix) \
+			--bindir=/bin.$(@F) \
+			--libexecdir=$(REMOVE_libexecdir) \
+			--datarootdir=$(REMOVE_datarootdir) \
+			--enable-silent-rules \
+			--disable-xattr \
+			--disable-libcap \
+			--disable-acl \
+			--without-gmp \
+			--without-selinux \
+			; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	for bin in $(COREUTILS_BIN); do \
+		rm -f $(TARGET_bindir)/$$bin; \
+		$(INSTALL_EXEC) -D $(TARGET_DIR)/bin.$(@F)/$$bin $(TARGET_bindir)/$$bin; \
+	done
+	$(REMOVE)/$(COREUTILS_DIR) \
+		$(TARGET_DIR)/bin.$(@F)
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
+PROCPS-NG_VER    = 3.3.16
+PROCPS-NG_DIR    = procps-ng-$(PROCPS-NG_VER)
+PROCPS-NG_SOURCE = procps-ng-$(PROCPS-NG_VER).tar.xz
+PROCPS-NG_SITE   = http://sourceforge.net/projects/procps-ng/files/Production
+
+$(DL_DIR)/$(PROCPS-NG_SOURCE):
+	$(DOWNLOAD) $(PROCPS-NG_SITE)/$(PROCPS-NG_SOURCE)
+
+PROCPS-NG_PATCH  = procps-ng-no-tests-docs.patch
+
+PROCPS-NG_DEPS   = ncurses
+
+PROCPS-NG_BIN    = ps top
+
+procps-ng: $(PROCPS-NG_DEPS) $(DL_DIR)/$(PROCPS-NG_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(PROCPS-NG_DIR)
+	$(UNTAR)/$(PROCPS-NG_SOURCE)
+	$(CHDIR)/$(PROCPS-NG_DIR); \
+		$(call apply_patches, $(PROCPS-NG_PATCH)); \
+		export ac_cv_func_malloc_0_nonnull=yes; \
+		export ac_cv_func_realloc_0_nonnull=yes; \
+		autoreconf -fi; \
+		$(CONFIGURE) \
+			--target=$(TARGET) \
+			--prefix=$(base_prefix) \
+			--bindir=/bin.$(@F) \
+			--sbindir=/sbin.$(@F) \
+			--includedir=$(includedir) \
+			--libdir=$(libdir) \
+			--datarootdir=$(REMOVE_datarootdir) \
+			--without-systemd \
+			; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	for bin in $(PROCPS-NG_BIN); do \
+		rm -f $(TARGET_bindir)/$$bin; \
+		$(INSTALL_EXEC) -D $(TARGET_DIR)/bin.$(@F)/$$bin $(TARGET_bindir)/$$bin; \
+	done
+	$(REWRITE_LIBTOOL_LA)
+	$(REWRITE_PKGCONF_PC)
+	$(REMOVE)/$(PROCPS-NG_DIR) \
+		$(TARGET_DIR)/bin.$(@F) \
+		$(TARGET_DIR)/sbin.$(@F)
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
+MTD-UTILS_VER    = 2.0.2
+MTD-UTILS_DIR    = mtd-utils-$(MTD-UTILS_VER)
+MTD-UTILS_SOURCE = mtd-utils-$(MTD-UTILS_VER).tar.bz2
+MTD-UTILS_SITE   = ftp://ftp.infradead.org/pub/mtd-utils
+
+$(DL_DIR)/$(MTD-UTILS_SOURCE):
+	$(DOWNLOAD) $(MTD-UTILS_SITE)/$(MTD-UTILS_SOURCE)
+
+MTD-UTILS_DEPS   = zlib lzo e2fsprogs
+
+MTD-UTILS_SBIN   = flash_erase flash_eraseall
+ifeq ($(BOXSERIES), hd2)
+  MTD-UTILS_SBIN+= nanddump nandtest nandwrite mkfs.jffs2
+endif
+
+mtd-utils: $(MTD-UTILS_DEPS) $(DL_DIR)/$(MTD-UTILS_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(MTD-UTILS_DIR)
+	$(UNTAR)/$(MTD-UTILS_SOURCE)
+	$(CHDIR)/$(MTD-UTILS_DIR); \
+		$(CONFIGURE) \
+			--target=$(TARGET) \
+			--prefix=$(base_prefix) \
+			--sbindir=/sbin.$(@F) \
+			--mandir=$(REMOVE_mandir) \
+			--enable-silent-rules \
+			--disable-tests \
+			--without-xattr \
+			; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	for sbin in $(MTD-UTILS_SBIN); do \
+		rm -f $(TARGET_base_sbindir)/$$sbin; \
+		$(INSTALL_EXEC) -D $(TARGET_DIR)/sbin.$(@F)/$$sbin $(TARGET_base_sbindir); \
+	done
+	$(REMOVE)/$(MTD-UTILS_DIR) \
+		$(TARGET_DIR)/sbin.$(@F)
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
+DOSFSTOOLS_VER    = 4.1
+DOSFSTOOLS_DIR    = dosfstools-$(DOSFSTOOLS_VER)
+DOSFSTOOLS_SOURCE = dosfstools-$(DOSFSTOOLS_VER).tar.xz
+DOSFSTOOLS_SITE   = https://github.com/dosfstools/dosfstools/releases/download/v$(DOSFSTOOLS_VER)
+
+$(DL_DIR)/$(DOSFSTOOLS_SOURCE):
+	$(DOWNLOAD) $(DOSFSTOOLS_SITE)/$(DOSFSTOOLS_SOURCE)
+
+DOSFSTOOLS_PATCH  = switch-to-AC_CHECK_LIB-for-iconv-library-linking.patch
+
+DOSFSTOOLS_CFLAGS = $(TARGET_CFLAGS) -D_GNU_SOURCE -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -fomit-frame-pointer
+
+dosfstools: $(DL_DIR)/$(DOSFSTOOLS_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(DOSFSTOOLS_DIR)
+	$(UNTAR)/$(DOSFSTOOLS_SOURCE)
+	$(CHDIR)/$(DOSFSTOOLS_DIR); \
+		$(call apply_patches, $(addprefix $(@F)/,$(DOSFSTOOLS_PATCH))); \
+		autoreconf -fi; \
+		$(CONFIGURE) \
+			--prefix=$(base_prefix) \
+			--mandir=$(REMOVE_mandir) \
+			--docdir=$(REMOVE_docdir) \
+			--without-udev \
+			--enable-compat-symlinks \
+			CFLAGS="$(DOSFSTOOLS_CFLAGS)" \
+			; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(REMOVE)/$(DOSFSTOOLS_DIR)
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
+NTFS-3G_VER    = 2017.3.23
+NTFS-3G_DIR    = ntfs-3g_ntfsprogs-$(NTFS-3G_VER)
+NTFS-3G_SOURCE = ntfs-3g_ntfsprogs-$(NTFS-3G_VER).tgz
+NTFS-3G_SITE   = https://tuxera.com/opensource
+
+$(DL_DIR)/$(NTFS-3G_SOURCE):
+	$(DOWNLOAD) $(NTFS-3G_SITE)/$(NTFS-3G_SOURCE)
+
+NTFS-3G_DEPS   = libfuse
+
+ntfs-3g: $(NTFS-3G_DEPS) $(DL_DIR)/$(NTFS-3G_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(NTFS-3G_DIR)
+	$(UNTAR)/$(NTFS-3G_SOURCE)
+	$(CHDIR)/$(NTFS-3G_DIR); \
+		$(CONFIGURE) \
+			--prefix=$(prefix) \
+			--bindir=$(base_bindir) \
+			--sbindir=$(base_sbindir) \
+			--mandir=$(REMOVE_mandir) \
+			--docdir=$(REMOVE_docdir) \
+			--disable-ntfsprogs \
+			--disable-ldconfig \
+			--disable-library \
+			--with-fuse=external \
+			; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	-rm $(addprefix $(TARGET_base_bindir)/,lowntfs-3g ntfs-3g.probe)
+	-rm $(addprefix $(TARGET_base_sbindir)/,mount.lowntfs-3g)
+	ln -sf ntfs-3g $(TARGET_base_sbindir)/mount.ntfs
+	$(REMOVE)/$(NTFS-3G_DIR)
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
+FUSE-EXFAT_VER    = 1.3.0
+FUSE-EXFAT_DIR    = fuse-exfat-$(FUSE-EXFAT_VER)
+FUSE-EXFAT_SOURCE = fuse-exfat-$(FUSE-EXFAT_VER).tar.gz
+FUSE-EXFAT_SITE   = https://github.com/relan/exfat/releases/download/v$(FUSE-EXFAT_VER)
+
+$(DL_DIR)/$(FUSE-EXFAT_SOURCE):
+	$(DOWNLOAD) $(FUSE-EXFAT_SITE)/$(FUSE-EXFAT_SOURCE)
+
+FUSE-EXFAT_DEPS   = libfuse
+
+fuse-exfat: $(FUSE-EXFAT_DEPS) $(DL_DIR)/$(FUSE-EXFAT_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(FUSE-EXFAT_DIR)
+	$(UNTAR)/$(FUSE-EXFAT_SOURCE)
+	$(CHDIR)/$(FUSE-EXFAT_DIR); \
+		autoreconf -fi; \
+		$(CONFIGURE) \
+			--prefix=$(base_prefix) \
+			--docdir=$(REMOVE_docdir) \
+			--mandir=$(REMOVE_mandir) \
+			; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(REMOVE)/$(FUSE-EXFAT_DIR)
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
+EXFAT-UTILS_VER    = 1.3.0
+EXFAT-UTILS_DIR    = exfat-utils-$(EXFAT-UTILS_VER)
+EXFAT-UTILS_SOURCE = exfat-utils-$(EXFAT-UTILS_VER).tar.gz
+EXFAT-UTILS_SITE   = https://github.com/relan/exfat/releases/download/v$(EXFAT-UTILS_VER)
+
+$(DL_DIR)/$(EXFAT-UTILS_SOURCE):
+	$(DOWNLOAD) $(EXFAT-UTILS_SITE)/$(EXFAT-UTILS_SOURCE)
+
+EXFAT-UTILS_DEPS   = fuse-exfat
+
+exfat-utils: $(EXFAT-UTILS_DEPS) $(DL_DIR)/$(EXFAT-UTILS_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(EXFAT-UTILS_DIR)
+	$(UNTAR)/$(EXFAT-UTILS_SOURCE)
+	$(CHDIR)/$(EXFAT-UTILS_DIR); \
+		autoreconf -fi; \
+		$(CONFIGURE) \
+			--prefix=$(base_prefix) \
+			--docdir=$(REMOVE_docdir) \
+			--mandir=$(REMOVE_mandir) \
+			; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(REMOVE)/$(EXFAT-UTILS_DIR)
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
+# for coolstream: formatting ext4 failes with newer versions then 1.43.8
+E2FSPROGS_VER    = $(if $(filter $(BOXTYPE), coolstream),1.43.8,1.45.6)
+E2FSPROGS_DIR    = e2fsprogs-$(E2FSPROGS_VER)
+E2FSPROGS_SOURCE = e2fsprogs-$(E2FSPROGS_VER).tar.gz
+E2FSPROGS_SITE   = https://sourceforge.net/projects/e2fsprogs/files/e2fsprogs/v$(E2FSPROGS_VER)
+
+$(DL_DIR)/$(E2FSPROGS_SOURCE):
+	$(DOWNLOAD) $(E2FSPROGS_SITE)/$(E2FSPROGS_SOURCE)
+
+e2fsprogs: $(DL_DIR)/$(E2FSPROGS_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(E2FSPROGS_DIR)
+	$(UNTAR)/$(E2FSPROGS_SOURCE)
+	$(CHDIR)/$(E2FSPROGS_DIR); \
+		autoreconf -fi; \
+		$(CONFIGURE) \
+			--target=$(TARGET) \
+			--prefix=$(prefix) \
+			--with-root-prefix=$(base_prefix)\ \
+			--libdir=$(libdir) \
+			--sysconfdir=$(sysconfdir) \
+			--datarootdir=$(REMOVE_datarootdir) \
+			--disable-nls \
+			--disable-profile \
+			--disable-e2initrd-helper \
+			--disable-backtrace \
+			--disable-bmap-stats \
+			--disable-debugfs \
+			--disable-fuse2fs \
+			--disable-imager \
+			--disable-mmp \
+			--disable-rpath \
+			--disable-tdb \
+			--disable-uuidd \
+			--disable-blkid-debug \
+			--disable-jbd-debug \
+			--disable-testio-debug \
+			--disable-defrag \
+			--enable-elf-shlibs \
+			--enable-fsck \
+			--enable-symlink-install \
+			--enable-verbose-makecmds \
+			--enable-symlink-build \
+			--with-gnu-ld \
+			--with-crond-dir=no \
+			; \
+		$(MAKE); \
+		$(MAKE) install install-libs DESTDIR=$(TARGET_DIR)
+	-rm $(addprefix $(TARGET_base_sbindir)/, dumpe2fs e2mmpstatus e2undo logsave)
+	-rm $(addprefix $(TARGET_bindir)/, chattr compile_et lsattr mk_cmds uuidgen)
+	-rm $(addprefix $(TARGET_sbindir)/, e2freefrag e4crypt filefrag)
+	$(REWRITE_PKGCONF_PC)
+	$(REMOVE)/$(E2FSPROGS_DIR)
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
+#
+# $(prefix) tools
+#
 # -----------------------------------------------------------------------------
 
 OPENVPN_VER    = 2.5.0
@@ -247,46 +631,6 @@ tzdata: $(TZDATA_DEPS) $(DL_DIR)/$(TZDATA_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-MTD-UTILS_VER    = 2.0.2
-MTD-UTILS_DIR    = mtd-utils-$(MTD-UTILS_VER)
-MTD-UTILS_SOURCE = mtd-utils-$(MTD-UTILS_VER).tar.bz2
-MTD-UTILS_SITE   = ftp://ftp.infradead.org/pub/mtd-utils
-
-$(DL_DIR)/$(MTD-UTILS_SOURCE):
-	$(DOWNLOAD) $(MTD-UTILS_SITE)/$(MTD-UTILS_SOURCE)
-
-MTD-UTILS_DEPS   = zlib lzo e2fsprogs
-
-MTD-UTILS_SBIN   = flash_erase flash_eraseall
-ifeq ($(BOXSERIES), hd2)
-  MTD-UTILS_SBIN+= nanddump nandtest nandwrite mkfs.jffs2
-endif
-
-mtd-utils: $(MTD-UTILS_DEPS) $(DL_DIR)/$(MTD-UTILS_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(MTD-UTILS_DIR)
-	$(UNTAR)/$(MTD-UTILS_SOURCE)
-	$(CHDIR)/$(MTD-UTILS_DIR); \
-		$(CONFIGURE) \
-			--target=$(TARGET) \
-			--prefix=$(base_prefix) \
-			--sbindir=/sbin.$(@F) \
-			--mandir=$(REMOVE_mandir) \
-			--enable-silent-rules \
-			--disable-tests \
-			--without-xattr \
-			; \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	for sbin in $(MTD-UTILS_SBIN); do \
-		rm -f $(TARGET_base_sbindir)/$$sbin; \
-		$(INSTALL_EXEC) -D $(TARGET_DIR)/sbin.$(@F)/$$sbin $(TARGET_base_sbindir); \
-	done
-	$(REMOVE)/$(MTD-UTILS_DIR) \
-		$(TARGET_DIR)/sbin.$(@F)
-	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
 IPERF_VER    = 3.1.3
 IPERF_DIR    = iperf-$(IPERF_VER)
 IPERF_SOURCE = iperf-$(IPERF_VER)-source.tar.gz
@@ -393,49 +737,6 @@ hd-idle: $(DL_DIR)/$(HD-IDLE_SOURCE) | $(TARGET_DIR)
 		$(MAKE); \
 		$(INSTALL_EXEC) -D hd-idle $(TARGET_sbindir)/hd-idle
 	$(REMOVE)/$(HD-IDLE_DIR)
-	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
-COREUTILS_VER    = 8.30
-COREUTILS_DIR    = coreutils-$(COREUTILS_VER)
-COREUTILS_SOURCE = coreutils-$(COREUTILS_VER).tar.xz
-COREUTILS_SITE   = $(GNU_MIRROR)/coreutils
-
-$(DL_DIR)/$(COREUTILS_SOURCE):
-	$(DOWNLOAD) $(COREUTILS_SITE)/$(COREUTILS_SOURCE)
-
-COREUTILS_PATCH  = coreutils-fix-build.patch
-
-COREUTILS_BIN    = touch
-
-coreutils: $(DL_DIR)/$(COREUTILS_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(COREUTILS_DIR)
-	$(UNTAR)/$(COREUTILS_SOURCE)
-	$(CHDIR)/$(COREUTILS_DIR); \
-		$(call apply_patches, $(COREUTILS_PATCH)); \
-		autoreconf -fi; \
-		$(CONFIGURE) \
-			--target=$(TARGET) \
-			--prefix=$(base_prefix) \
-			--bindir=/bin.$(@F) \
-			--libexecdir=$(REMOVE_libexecdir) \
-			--datarootdir=$(REMOVE_datarootdir) \
-			--enable-silent-rules \
-			--disable-xattr \
-			--disable-libcap \
-			--disable-acl \
-			--without-gmp \
-			--without-selinux \
-			; \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	for bin in $(COREUTILS_BIN); do \
-		rm -f $(TARGET_bindir)/$$bin; \
-		$(INSTALL_EXEC) -D $(TARGET_DIR)/bin.$(@F)/$$bin $(TARGET_bindir)/$$bin; \
-	done
-	$(REMOVE)/$(COREUTILS_DIR) \
-		$(TARGET_DIR)/bin.$(@F)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -669,53 +970,6 @@ vsftpd: $(VSFTPD_DEPS) $(DL_DIR)/$(VSFTPD_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-PROCPS-NG_VER    = 3.3.16
-PROCPS-NG_DIR    = procps-ng-$(PROCPS-NG_VER)
-PROCPS-NG_SOURCE = procps-ng-$(PROCPS-NG_VER).tar.xz
-PROCPS-NG_SITE   = http://sourceforge.net/projects/procps-ng/files/Production
-
-$(DL_DIR)/$(PROCPS-NG_SOURCE):
-	$(DOWNLOAD) $(PROCPS-NG_SITE)/$(PROCPS-NG_SOURCE)
-
-PROCPS-NG_PATCH  = procps-ng-no-tests-docs.patch
-
-PROCPS-NG_DEPS   = ncurses
-
-PROCPS-NG_BIN    = ps top
-
-procps-ng: $(PROCPS-NG_DEPS) $(DL_DIR)/$(PROCPS-NG_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PROCPS-NG_DIR)
-	$(UNTAR)/$(PROCPS-NG_SOURCE)
-	$(CHDIR)/$(PROCPS-NG_DIR); \
-		$(call apply_patches, $(PROCPS-NG_PATCH)); \
-		export ac_cv_func_malloc_0_nonnull=yes; \
-		export ac_cv_func_realloc_0_nonnull=yes; \
-		autoreconf -fi; \
-		$(CONFIGURE) \
-			--target=$(TARGET) \
-			--prefix=$(base_prefix) \
-			--bindir=/bin.$(@F) \
-			--sbindir=/sbin.$(@F) \
-			--includedir=$(includedir) \
-			--libdir=$(libdir) \
-			--datarootdir=$(REMOVE_datarootdir) \
-			--without-systemd \
-			; \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	for bin in $(PROCPS-NG_BIN); do \
-		rm -f $(TARGET_bindir)/$$bin; \
-		$(INSTALL_EXEC) -D $(TARGET_DIR)/bin.$(@F)/$$bin $(TARGET_bindir)/$$bin; \
-	done
-	$(REWRITE_LIBTOOL_LA)
-	$(REWRITE_PKGCONF_PC)
-	$(REMOVE)/$(PROCPS-NG_DIR) \
-		$(TARGET_DIR)/bin.$(@F) \
-		$(TARGET_DIR)/sbin.$(@F)
-	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
 NANO_VER    = 5.4
 NANO_DIR    = nano-$(NANO_VER)
 NANO_SOURCE = nano-$(NANO_VER).tar.gz
@@ -773,134 +1027,6 @@ minicom: $(MINICOM_DEPS) $(DL_DIR)/$(MINICOM_SOURCE) | $(TARGET_DIR)
 		$(MAKE); \
 		$(INSTALL_EXEC) src/minicom $(TARGET_bindir)
 	$(REMOVE)/$(MINICOM_DIR)
-	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
-BASH_VER    = 5.0
-BASH_DIR    = bash-$(BASH_VER)
-BASH_SOURCE = bash-$(BASH_VER).tar.gz
-BASH_SITE   = $(GNU_MIRROR)/bash
-
-$(DL_DIR)/$(BASH_SOURCE):
-	$(DOWNLOAD) $(BASH_SITE)/$(BASH_SOURCE)
-
-BASH_PATCH  = $(PATCHES)/bash
-
-define BASH_ADD_TO_SHELLS
-	grep -qsE '^/bin/bash$$' $(TARGET_sysconfdir)/shells \
-		|| echo "/bin/bash" >> $(TARGET_sysconfdir)/shells
-endef
-
-bash: $(DL_DIR)/$(BASH_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(BASH_DIR)
-	$(UNTAR)/$(BASH_SOURCE)
-	$(CHDIR)/$(BASH_DIR); \
-		$(call apply_patches, $(BASH_PATCH), 0); \
-		$(CONFIGURE) \
-			--prefix=$(base_prefix) \
-			--includedir=$(includedir) \
-			--libdir=$(libdir) \
-			--datarootdir=$(REMOVE_datarootdir) \
-			; \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF_PC)
-	-rm $(addprefix $(TARGET_libdir)/bash/, loadables.h Makefile.inc)
-	$(BASH_ADD_TO_SHELLS)
-	$(REMOVE)/$(BASH_DIR)
-	$(TOUCH)
-
-
-# -----------------------------------------------------------------------------
-
-# for coolstream: formatting ext4 failes with newer versions then 1.43.8
-E2FSPROGS_VER    = $(if $(filter $(BOXTYPE), coolstream),1.43.8,1.45.6)
-E2FSPROGS_DIR    = e2fsprogs-$(E2FSPROGS_VER)
-E2FSPROGS_SOURCE = e2fsprogs-$(E2FSPROGS_VER).tar.gz
-E2FSPROGS_SITE   = https://sourceforge.net/projects/e2fsprogs/files/e2fsprogs/v$(E2FSPROGS_VER)
-
-$(DL_DIR)/$(E2FSPROGS_SOURCE):
-	$(DOWNLOAD) $(E2FSPROGS_SITE)/$(E2FSPROGS_SOURCE)
-
-e2fsprogs: $(DL_DIR)/$(E2FSPROGS_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(E2FSPROGS_DIR)
-	$(UNTAR)/$(E2FSPROGS_SOURCE)
-	$(CHDIR)/$(E2FSPROGS_DIR); \
-		autoreconf -fi; \
-		$(CONFIGURE) \
-			--target=$(TARGET) \
-			--prefix=$(prefix) \
-			--with-root-prefix=$(base_prefix)\ \
-			--libdir=$(libdir) \
-			--sysconfdir=$(sysconfdir) \
-			--datarootdir=$(REMOVE_datarootdir) \
-			--disable-nls \
-			--disable-profile \
-			--disable-e2initrd-helper \
-			--disable-backtrace \
-			--disable-bmap-stats \
-			--disable-debugfs \
-			--disable-fuse2fs \
-			--disable-imager \
-			--disable-mmp \
-			--disable-rpath \
-			--disable-tdb \
-			--disable-uuidd \
-			--disable-blkid-debug \
-			--disable-jbd-debug \
-			--disable-testio-debug \
-			--disable-defrag \
-			--enable-elf-shlibs \
-			--enable-fsck \
-			--enable-symlink-install \
-			--enable-verbose-makecmds \
-			--enable-symlink-build \
-			--with-gnu-ld \
-			--with-crond-dir=no \
-			; \
-		$(MAKE); \
-		$(MAKE) install install-libs DESTDIR=$(TARGET_DIR)
-	-rm $(addprefix $(TARGET_base_sbindir)/, dumpe2fs e2mmpstatus e2undo logsave)
-	-rm $(addprefix $(TARGET_bindir)/, chattr compile_et lsattr mk_cmds uuidgen)
-	-rm $(addprefix $(TARGET_sbindir)/, e2freefrag e4crypt filefrag)
-	$(REWRITE_PKGCONF_PC)
-	$(REMOVE)/$(E2FSPROGS_DIR)
-	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
-NTFS-3G_VER    = 2017.3.23
-NTFS-3G_DIR    = ntfs-3g_ntfsprogs-$(NTFS-3G_VER)
-NTFS-3G_SOURCE = ntfs-3g_ntfsprogs-$(NTFS-3G_VER).tgz
-NTFS-3G_SITE   = https://tuxera.com/opensource
-
-$(DL_DIR)/$(NTFS-3G_SOURCE):
-	$(DOWNLOAD) $(NTFS-3G_SITE)/$(NTFS-3G_SOURCE)
-
-NTFS-3G_DEPS   = libfuse
-
-ntfs-3g: $(NTFS-3G_DEPS) $(DL_DIR)/$(NTFS-3G_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(NTFS-3G_DIR)
-	$(UNTAR)/$(NTFS-3G_SOURCE)
-	$(CHDIR)/$(NTFS-3G_DIR); \
-		$(CONFIGURE) \
-			--prefix=$(prefix) \
-			--bindir=$(base_bindir) \
-			--sbindir=$(base_sbindir) \
-			--mandir=$(REMOVE_mandir) \
-			--docdir=$(REMOVE_docdir) \
-			--disable-ntfsprogs \
-			--disable-ldconfig \
-			--disable-library \
-			--with-fuse=external \
-			; \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	-rm $(addprefix $(TARGET_base_bindir)/,lowntfs-3g ntfs-3g.probe)
-	-rm $(addprefix $(TARGET_base_sbindir)/,mount.lowntfs-3g)
-	ln -sf ntfs-3g $(TARGET_base_sbindir)/mount.ntfs
-	$(REMOVE)/$(NTFS-3G_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -1339,39 +1465,6 @@ xupnpd: $(XUPNPD_DEPS) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-DOSFSTOOLS_VER    = 4.1
-DOSFSTOOLS_DIR    = dosfstools-$(DOSFSTOOLS_VER)
-DOSFSTOOLS_SOURCE = dosfstools-$(DOSFSTOOLS_VER).tar.xz
-DOSFSTOOLS_SITE   = https://github.com/dosfstools/dosfstools/releases/download/v$(DOSFSTOOLS_VER)
-
-$(DL_DIR)/$(DOSFSTOOLS_SOURCE):
-	$(DOWNLOAD) $(DOSFSTOOLS_SITE)/$(DOSFSTOOLS_SOURCE)
-
-DOSFSTOOLS_PATCH  = switch-to-AC_CHECK_LIB-for-iconv-library-linking.patch
-
-DOSFSTOOLS_CFLAGS = $(TARGET_CFLAGS) -D_GNU_SOURCE -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -fomit-frame-pointer
-
-dosfstools: $(DL_DIR)/$(DOSFSTOOLS_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(DOSFSTOOLS_DIR)
-	$(UNTAR)/$(DOSFSTOOLS_SOURCE)
-	$(CHDIR)/$(DOSFSTOOLS_DIR); \
-		$(call apply_patches, $(addprefix $(@F)/,$(DOSFSTOOLS_PATCH))); \
-		autoreconf -fi; \
-		$(CONFIGURE) \
-			--prefix=$(base_prefix) \
-			--mandir=$(REMOVE_mandir) \
-			--docdir=$(REMOVE_docdir) \
-			--without-udev \
-			--enable-compat-symlinks \
-			CFLAGS="$(DOSFSTOOLS_CFLAGS)" \
-			; \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/$(DOSFSTOOLS_DIR)
-	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
 NFS-UTILS_VER    = 2.2.1
 NFS-UTILS_DIR    = nfs-utils-$(NFS-UTILS_VER)
 NFS-UTILS_SOURCE = nfs-utils-$(NFS-UTILS_VER).tar.xz
@@ -1455,60 +1548,6 @@ rpcbind: $(RPCBIND_DEPS) $(DL_DIR)/$(RPCBIND_SOURCE) | $(TARGET_DIR)
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	rm -rf $(TARGET_bindir)/rpcgen
 	$(REMOVE)/$(RPCBIND_DIR)
-	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
-FUSE-EXFAT_VER    = 1.3.0
-FUSE-EXFAT_DIR    = fuse-exfat-$(FUSE-EXFAT_VER)
-FUSE-EXFAT_SOURCE = fuse-exfat-$(FUSE-EXFAT_VER).tar.gz
-FUSE-EXFAT_SITE   = https://github.com/relan/exfat/releases/download/v$(FUSE-EXFAT_VER)
-
-$(DL_DIR)/$(FUSE-EXFAT_SOURCE):
-	$(DOWNLOAD) $(FUSE-EXFAT_SITE)/$(FUSE-EXFAT_SOURCE)
-
-FUSE-EXFAT_DEPS   = libfuse
-
-fuse-exfat: $(FUSE-EXFAT_DEPS) $(DL_DIR)/$(FUSE-EXFAT_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(FUSE-EXFAT_DIR)
-	$(UNTAR)/$(FUSE-EXFAT_SOURCE)
-	$(CHDIR)/$(FUSE-EXFAT_DIR); \
-		autoreconf -fi; \
-		$(CONFIGURE) \
-			--prefix=$(base_prefix) \
-			--docdir=$(REMOVE_docdir) \
-			--mandir=$(REMOVE_mandir) \
-			; \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/$(FUSE-EXFAT_DIR)
-	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
-EXFAT-UTILS_VER    = 1.3.0
-EXFAT-UTILS_DIR    = exfat-utils-$(EXFAT-UTILS_VER)
-EXFAT-UTILS_SOURCE = exfat-utils-$(EXFAT-UTILS_VER).tar.gz
-EXFAT-UTILS_SITE   = https://github.com/relan/exfat/releases/download/v$(EXFAT-UTILS_VER)
-
-$(DL_DIR)/$(EXFAT-UTILS_SOURCE):
-	$(DOWNLOAD) $(EXFAT-UTILS_SITE)/$(EXFAT-UTILS_SOURCE)
-
-EXFAT-UTILS_DEPS   = fuse-exfat
-
-exfat-utils: $(EXFAT-UTILS_DEPS) $(DL_DIR)/$(EXFAT-UTILS_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(EXFAT-UTILS_DIR)
-	$(UNTAR)/$(EXFAT-UTILS_SOURCE)
-	$(CHDIR)/$(EXFAT-UTILS_DIR); \
-		autoreconf -fi; \
-		$(CONFIGURE) \
-			--prefix=$(base_prefix) \
-			--docdir=$(REMOVE_docdir) \
-			--mandir=$(REMOVE_mandir) \
-			; \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/$(EXFAT-UTILS_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -1792,36 +1831,6 @@ rsync: $(RSYNC_DEPS) $(DL_DIR)/$(RSYNC_SOURCE) | $(TARGET_DIR)
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REMOVE)/$(RSYNC_DIR)
-	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
-SYSVINIT_VER    = 2.98
-SYSVINIT_DIR    = sysvinit-$(SYSVINIT_VER)
-SYSVINIT_SOURCE = sysvinit-$(SYSVINIT_VER).tar.xz
-SYSVINIT_SITE   = http://download.savannah.nongnu.org/releases/sysvinit
-
-$(DL_DIR)/$(SYSVINIT_SOURCE):
-	$(DOWNLOAD) $(SYSVINIT_SITE)/$(SYSVINIT_SOURCE)
-
-define SYSVINIT_INSTALL
-	for sbin in halt init shutdown killall5 runlevel; do \
-		$(INSTALL_EXEC) -D $(BUILD_DIR)/$(SYSVINIT_DIR)/src/$$sbin $(TARGET_base_sbindir)/$$sbin || exit 1; \
-	done
-	ln -sf /sbin/halt $(TARGET_base_sbindir)/reboot
-	ln -sf /sbin/halt $(TARGET_base_sbindir)/poweroff
-	ln -sf /sbin/killall5 $(TARGET_base_sbindir)/pidof
-endef
-
-sysvinit: $(DL_DIR)/$(SYSVINIT_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(SYSVINIT_DIR)
-	$(UNTAR)/$(SYSVINIT_SOURCE)
-	$(CHDIR)/$(SYSVINIT_DIR); \
-		$(APPLY_PATCHES); \
-		$(MAKE_ENV) \
-		$(MAKE) -C src SULOGINLIBS=-lcrypt
-	$(SYSVINIT_INSTALL)
-	$(REMOVE)/$(SYSVINIT_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
