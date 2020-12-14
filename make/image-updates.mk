@@ -35,7 +35,7 @@ ni-neutrino-full-updates:
 u-neutrino: neutrino-clean
 	$(MAKE) u-init
 	echo "killall start_neutrino neutrino; sleep 5"	>> $(PREINSTALL_SH)
-	echo "sync; /bin/busybox reboot"		>> $(POSTINSTALL_SH)
+	echo "sync; reboot"				>> $(POSTINSTALL_SH)
 	$(MAKE) neutrino
 	$(INSTALL_EXEC) -D $(TARGET_sysconfdir)/init.d/start_neutrino $(UPDATE_INST_DIR)/etc/init.d/start_neutrino
 	$(INSTALL_EXEC) -D $(TARGET_bindir)/neutrino $(UPDATE_INST_DIR)/bin/neutrino
@@ -52,7 +52,7 @@ endif
 u-neutrino-full: neutrino-clean
 	$(MAKE) u-init
 	echo "killall start_neutrino neutrino; sleep 5"	>> $(PREINSTALL_SH)
-	echo "sync; /bin/busybox reboot"		>> $(POSTINSTALL_SH)
+	echo "sync; reboot"				>> $(POSTINSTALL_SH)
 	$(MAKE) neutrino N_INST_DIR=$(UPDATE_INST_DIR)
 	$(INSTALL_EXEC) -D $(TARGET_sysconfdir)/init.d/start_neutrino $(UPDATE_INST_DIR)/etc/init.d/start_neutrino
 ifneq ($(DEBUG), yes)
