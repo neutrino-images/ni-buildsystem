@@ -2,10 +2,10 @@
 
 bp3_find() {
 	if ls /dev/mmc* 1> /dev/null 2>&1 && for f in /dev/mmcblk?; do sgdisk -p $f | grep $1; done 1> /dev/null 2>&1 ; then
-		export bp3=($(for f in /dev/mmcblk?; do sgdisk -p $f | grep $1; done))
+		export bp3=$(for f in /dev/mmcblk?; do sgdisk -p $f | grep $1 | awk '{print $1}'; done)
 		export part=$(ls /dev/mmcblk*p$bp3)
 	elif grep $1 /sys/class/mtd/mtd*/name 1> /dev/null 2>&1 ; then
-		export bp3=$(dirname `grep $1 /sys/class/mtd/mtd*/name`)
+		export bp3=$(dirname $(grep $1 /sys/class/mtd/mtd*/name))
 		export part=/dev/$(ls $bp3 | grep mtd)
 	else
 		unset bp3
@@ -41,8 +41,8 @@ bp3_israw() {
 	export ver=$(dd if=$part bs=1 count=4)
 	if [ "$ver" = "BP30" ]; then
 		export md5=$(dd if=$part bs=1 skip=4 count=32)
-		export bp3_size=$(echo `dd if=$part bs=1 skip=36 count=8`)
-		export cal=($(dd if=$part bs=1 skip=44 count=$bp3_size | md5sum))
+		export bp3_size=$(echo $(dd if=$part bs=1 skip=36 count=8))
+		export cal=$(dd if=$part bs=1 skip=44 count=$bp3_size | md5sum)
 		if [ "$md5" = "$cal" ]; then
 			dd if=$part of=bp3.bin bs=1 skip=44 count=$bp3_size
 			return 0
@@ -58,7 +58,7 @@ bp3_israw() {
 			mount -r $part /mnt/$1
 			if [ "$?" != "0" ]; then
 				# old format, no version, 9 bytes size
-				export bp3_size=$(echo `dd if=$part bs=9 count=1`)
+				export bp3_size=$(echo $(dd if=$part bs=9 count=1))
 				dd if=$part of=bp3.bin bs=1 skip=9 count=$bp3_size
 			else
 				umount $part
