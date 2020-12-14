@@ -165,17 +165,11 @@ endif
 
 scripts: \
 	$(TARGET_sbindir)/service \
-	$(TARGET_sbindir)/flash_eraseall \
 	$(TARGET_sbindir)/update-rc.d \
 	$(TARGET_datadir)/udhcpc/default.script
 
 $(TARGET_sbindir)/service:
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/service $(@)
-
-$(TARGET_sbindir)/flash_eraseall:
-ifeq ($(BOXTYPE), coolstream)
-	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/flash_eraseall $(@)
-endif
 
 $(TARGET_sbindir)/update-rc.d:
 	$(INSTALL_EXEC) -D $(HELPERS_DIR)/update-rc.d $(@)
