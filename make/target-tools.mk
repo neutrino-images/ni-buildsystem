@@ -174,23 +174,16 @@ SYSVINIT_SITE   = http://download.savannah.nongnu.org/releases/sysvinit
 $(DL_DIR)/$(SYSVINIT_SOURCE):
 	$(DOWNLOAD) $(SYSVINIT_SITE)/$(SYSVINIT_SOURCE)
 
-define SYSVINIT_INSTALL
-	for sbin in halt init shutdown killall5 runlevel; do \
-		$(INSTALL_EXEC) -D $(BUILD_DIR)/$(SYSVINIT_DIR)/src/$$sbin $(TARGET_base_sbindir)/$$sbin || exit 1; \
-	done
-	ln -sf /sbin/halt $(TARGET_base_sbindir)/reboot
-	ln -sf /sbin/halt $(TARGET_base_sbindir)/poweroff
-	ln -sf /sbin/killall5 $(TARGET_base_sbindir)/pidof
-endef
-
 sysvinit: $(DL_DIR)/$(SYSVINIT_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(SYSVINIT_DIR)
 	$(UNTAR)/$(SYSVINIT_SOURCE)
 	$(CHDIR)/$(SYSVINIT_DIR); \
 		$(APPLY_PATCHES); \
 		$(MAKE_ENV) \
-		$(MAKE) -C src SULOGINLIBS=-lcrypt
-	$(SYSVINIT_INSTALL)
+		$(MAKE) -C src SULOGINLIBS=-lcrypt; \
+		$(MAKE) install ROOT=$(TARGET_DIR) MANDIR=$(REMOVE_mandir)
+	-rm $(addprefix $(TARGET_base_sbindir)/,bootlogd fstab-decode logsave telinit)
+	-rm $(addprefix $(TARGET_bindir)/,last lastb mesg readbootlog utmpdump wall)
 	$(REMOVE)/$(SYSVINIT_DIR)
 	$(TOUCH)
 
