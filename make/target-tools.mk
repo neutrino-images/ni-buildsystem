@@ -257,28 +257,32 @@ $(DL_DIR)/$(MTD-UTILS_SOURCE):
 
 MTD-UTILS_DEPS   = zlib lzo e2fsprogs
 
+MTD-UTILS_SBIN   = flash_erase flash_eraseall
+ifeq ($(BOXSERIES), hd2)
+  MTD-UTILS_SBIN+= nanddump nandtest nandwrite mkfs.jffs2
+endif
+
 mtd-utils: $(MTD-UTILS_DEPS) $(DL_DIR)/$(MTD-UTILS_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(MTD-UTILS_DIR)
 	$(UNTAR)/$(MTD-UTILS_SOURCE)
 	$(CHDIR)/$(MTD-UTILS_DIR); \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
-			--prefix=$(prefix) \
+			--prefix=$(base_prefix) \
+			--sbindir=/sbin.$(@F) \
 			--mandir=$(REMOVE_mandir) \
 			--enable-silent-rules \
 			--disable-tests \
 			--without-xattr \
 			; \
-		$(MAKE)
-ifeq ($(BOXSERIES), hd2)
-	$(INSTALL_EXEC) -D $(BUILD_DIR)/$(MTD-UTILS_DIR)/nanddump $(TARGET_sbindir)
-	$(INSTALL_EXEC) -D $(BUILD_DIR)/$(MTD-UTILS_DIR)/nandtest $(TARGET_sbindir)
-	$(INSTALL_EXEC) -D $(BUILD_DIR)/$(MTD-UTILS_DIR)/nandwrite $(TARGET_sbindir)
-	$(INSTALL_EXEC) -D $(BUILD_DIR)/$(MTD-UTILS_DIR)/mtd_debug $(TARGET_sbindir)
-	$(INSTALL_EXEC) -D $(BUILD_DIR)/$(MTD-UTILS_DIR)/mkfs.jffs2 $(TARGET_sbindir)
-endif
-	$(INSTALL_EXEC) -D $(BUILD_DIR)/$(MTD-UTILS_DIR)/flash_erase $(TARGET_sbindir)
-	$(REMOVE)/$(MTD-UTILS_DIR)
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	for sbin in $(MTD-UTILS_SBIN); do \
+		rm -f $(TARGET_base_sbindir)/$$sbin; \
+		$(INSTALL_EXEC) -D $(TARGET_DIR)/sbin.$(@F)/$$sbin $(TARGET_base_sbindir); \
+	done
+	$(REMOVE)/$(MTD-UTILS_DIR) \
+		$(TARGET_DIR)/sbin.$(@F)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -794,7 +798,9 @@ bash: $(DL_DIR)/$(BASH_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(BASH_DIR); \
 		$(call apply_patches, $(BASH_PATCH), 0); \
 		$(CONFIGURE) \
-			--prefix=$(prefix) \
+			--prefix=$(base_prefix) \
+			--includedir=$(includedir) \
+			--libdir=$(libdir) \
 			--datarootdir=$(REMOVE_datarootdir) \
 			; \
 		$(MAKE); \
@@ -825,6 +831,8 @@ e2fsprogs: $(DL_DIR)/$(E2FSPROGS_SOURCE) | $(TARGET_DIR)
 		$(CONFIGURE) \
 			--target=$(TARGET) \
 			--prefix=$(prefix) \
+			--with-root-prefix=$(base_prefix)\ \
+			--libdir=$(libdir) \
 			--sysconfdir=$(sysconfdir) \
 			--datarootdir=$(REMOVE_datarootdir) \
 			--disable-nls \
@@ -849,13 +857,13 @@ e2fsprogs: $(DL_DIR)/$(E2FSPROGS_SOURCE) | $(TARGET_DIR)
 			--enable-verbose-makecmds \
 			--enable-symlink-build \
 			--with-gnu-ld \
+			--with-crond-dir=no \
 			; \
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR); \
-		cd lib/uuid/; \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	-rm $(addprefix $(TARGET_bin)/, chattr compile_et lsattr mk_cmds uuidgen)
-	-rm $(addprefix $(TARGET_sbindir)/, dumpe2fs e2freefrag e2mmpstatus e2undo e4crypt filefrag logsave)
+		$(MAKE) install install-libs DESTDIR=$(TARGET_DIR)
+	-rm $(addprefix $(TARGET_base_sbindir)/, dumpe2fs e2mmpstatus e2undo logsave)
+	-rm $(addprefix $(TARGET_bindir)/, chattr compile_et lsattr mk_cmds uuidgen)
+	-rm $(addprefix $(TARGET_sbindir)/, e2freefrag e4crypt filefrag)
 	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(E2FSPROGS_DIR)
 	$(TOUCH)
@@ -870,23 +878,28 @@ NTFS-3G_SITE   = https://tuxera.com/opensource
 $(DL_DIR)/$(NTFS-3G_SOURCE):
 	$(DOWNLOAD) $(NTFS-3G_SITE)/$(NTFS-3G_SOURCE)
 
-ntfs-3g: $(DL_DIR)/$(NTFS-3G_SOURCE) | $(TARGET_DIR)
+NTFS-3G_DEPS   = libfuse
+
+ntfs-3g: $(NTFS-3G_DEPS) $(DL_DIR)/$(NTFS-3G_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(NTFS-3G_DIR)
 	$(UNTAR)/$(NTFS-3G_SOURCE)
 	$(CHDIR)/$(NTFS-3G_DIR); \
 		$(CONFIGURE) \
 			--prefix=$(prefix) \
+			--bindir=$(base_bindir) \
+			--sbindir=$(base_sbindir) \
 			--mandir=$(REMOVE_mandir) \
 			--docdir=$(REMOVE_docdir) \
 			--disable-ntfsprogs \
 			--disable-ldconfig \
 			--disable-library \
+			--with-fuse=external \
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	-rm $(addprefix $(TARGET_bindir)/,lowntfs-3g ntfs-3g.probe)
-	-rm $(addprefix $(TARGET_sbindir)/,mount.lowntfs-3g)
-	ln -sf ntfs-3g $(TARGET_sbindir)/mount.ntfs
+	-rm $(addprefix $(TARGET_base_bindir)/,lowntfs-3g ntfs-3g.probe)
+	-rm $(addprefix $(TARGET_base_sbindir)/,mount.lowntfs-3g)
+	ln -sf ntfs-3g $(TARGET_base_sbindir)/mount.ntfs
 	$(REMOVE)/$(NTFS-3G_DIR)
 	$(TOUCH)
 
@@ -1345,7 +1358,7 @@ dosfstools: $(DL_DIR)/$(DOSFSTOOLS_SOURCE) | $(TARGET_DIR)
 		$(call apply_patches, $(addprefix $(@F)/,$(DOSFSTOOLS_PATCH))); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
-			--prefix=$(prefix) \
+			--prefix=$(base_prefix) \
 			--mandir=$(REMOVE_mandir) \
 			--docdir=$(REMOVE_docdir) \
 			--without-udev \
@@ -1462,7 +1475,7 @@ fuse-exfat: $(FUSE-EXFAT_DEPS) $(DL_DIR)/$(FUSE-EXFAT_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(FUSE-EXFAT_DIR); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
-			--prefix=$(prefix) \
+			--prefix=$(base_prefix) \
 			--docdir=$(REMOVE_docdir) \
 			--mandir=$(REMOVE_mandir) \
 			; \
@@ -1489,7 +1502,7 @@ exfat-utils: $(EXFAT-UTILS_DEPS) $(DL_DIR)/$(EXFAT-UTILS_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(EXFAT-UTILS_DIR); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
-			--prefix=$(prefix) \
+			--prefix=$(base_prefix) \
 			--docdir=$(REMOVE_docdir) \
 			--mandir=$(REMOVE_mandir) \
 			; \
