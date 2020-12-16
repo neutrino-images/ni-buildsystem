@@ -497,6 +497,27 @@ e2fsprogs: $(DL_DIR)/$(E2FSPROGS_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
+HDPARM_VER    = 9.60
+HDPARM_DIR    = hdparm-$(HDPARM_VER)
+HDPARM_SOURCE = hdparm-$(HDPARM_VER).tar.gz
+HDPARM_SITE   = https://sourceforge.net/projects/hdparm/files/hdparm
+
+$(DL_DIR)/$(HDPARM_SOURCE):
+	$(DOWNLOAD) $(HDPARM_SITE)/$(HDPARM_SOURCE)
+
+hdparm: $(DL_DIR)/$(HDPARM_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(HDPARM_DIR)
+	$(UNTAR)/$(HDPARM_SOURCE)
+	$(CHDIR)/$(HDPARM_DIR); \
+		$(APPLY_PATCHES); \
+		$(MAKE_ENV) \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR) mandir=$(REMOVE_mandir)
+	$(REMOVE)/$(HDPARM_DIR)
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
 #
 # $(prefix) tools
 #
@@ -690,26 +711,6 @@ parted: $(PARTED_DEPS) $(DL_DIR)/$(PARTED_SOURCE) | $(TARGET_DIR)
 	$(REWRITE_LIBTOOL_LA)
 	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(PARTED_DIR)
-	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
-HDPARM_VER    = 9.58
-HDPARM_DIR    = hdparm-$(HDPARM_VER)
-HDPARM_SOURCE = hdparm-$(HDPARM_VER).tar.gz
-HDPARM_SITE   = https://sourceforge.net/projects/hdparm/files/hdparm
-
-$(DL_DIR)/$(HDPARM_SOURCE):
-	$(DOWNLOAD) $(HDPARM_SITE)/$(HDPARM_SOURCE)
-
-hdparm: $(DL_DIR)/$(HDPARM_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(HDPARM_DIR)
-	$(UNTAR)/$(HDPARM_SOURCE)
-	$(CHDIR)/$(HDPARM_DIR); \
-		$(MAKE_ENV) \
-		$(MAKE); \
-		$(INSTALL_EXEC) -D hdparm $(TARGET_sbindir)/hdparm
-	$(REMOVE)/$(HDPARM_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
