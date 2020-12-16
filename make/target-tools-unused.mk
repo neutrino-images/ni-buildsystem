@@ -73,6 +73,56 @@ binutils: $(DL_DIR)/$(BINUTILS_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
+BASE-PASSWD_VER    = 3.5.29
+BASE-PASSWD_DIR    = base-passwd-$(BASE-PASSWD_VER)
+BASE-PASSWD_SOURCE = base-passwd_$(BASE-PASSWD_VER).tar.gz
+BASE-PASSWD_SITE   = https://launchpad.net/debian/+archive/primary/+files
+
+$(DL_DIR)/$(BASE-PASSWD_SOURCE):
+	$(DOWNLOAD) $(BASE-PASSWD_SITE)/$(BASE-PASSWD_SOURCE)
+
+base-passwd: $(DL_DIR)/$(BASE-PASSWD_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(BASE-PASSWD_DIR)
+	$(UNTAR)/$(BASE-PASSWD_SOURCE)
+	$(CHDIR)/$(BASE-PASSWD_DIR); \
+		$(APPLY_PATCHES); \
+		$(CONFIGURE) \
+			--prefix=$(prefix) \
+			; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(INSTALL_DATA) -D $(PKG_BUILD_DIR)/group.master $(TARGET_datadir)/base-passwd/group.master
+	$(INSTALL_DATA) -D $(PKG_BUILD_DIR)/passwd.master $(TARGET_datadir)/base-passwd/passwd.master
+	$(REMOVE)/$(BASE-PASSWD_DIR)
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
+SHADOW_VER    = 4.8.1
+SHADOW_DIR    = shadow-$(SHADOW_VER)
+SHADOW_SOURCE = shadow-$(SHADOW_VER).tar.xz
+SHADOW_SITE   = https://github.com/shadow-maint/shadow/releases/download/$(SHADOW_VER)
+
+$(DL_DIR)/$(SHADOW_SOURCE):
+	$(DOWNLOAD) $(SHADOW_SITE)/$(SHADOW_SOURCE)
+
+shadow: $(DL_DIR)/$(SHADOW_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(SHADOW_DIR)
+	$(UNTAR)/$(SHADOW_SOURCE)
+	$(CHDIR)/$(SHADOW_DIR); \
+		$(CONFIGURE) \
+			--prefix=$(base_prefix) \
+			--datarootdir=$(REMOVE_base_datarootdir) \
+			; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(SED) 's|SHELL=.*|SHELL=/bin/sh|' $(TARGET_sysconfdir)/default/useradd
+	mkdir -p $(TARGET_sysconfdir)/skel
+	$(REMOVE)/$(SHADOW_DIR)
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
 UTIL-LINUX_VER    = 2.36.1
 UTIL-LINUX_DIR    = util-linux-$(UTIL-LINUX_VER)
 UTIL-LINUX_SOURCE = util-linux-$(UTIL-LINUX_VER).tar.xz
