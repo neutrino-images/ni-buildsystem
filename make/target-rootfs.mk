@@ -38,9 +38,8 @@ $(TARGET_localstatedir)/etc/update.urls: | $(TARGET_DIR)
 # create symbolic links in TARGET_DIR
 symbolic-links: | $(TARGET_DIR)
 	$(CD) $(TARGET_DIR); \
-		ln -sf /var/root ./root; \
-		ln -sf /var/root ./home; \
-		ln -sf /usr/share ./share
+		rm -rf root; ln -sf /var/root root; \
+		rm -rf share; ln -sf /usr/share share
 	$(CD) $(TARGET_localstatedir); \
 		rm -rf run; ln -sf /tmp run; \
 		rm -rf tmp; ln -sf /tmp tmp

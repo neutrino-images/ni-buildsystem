@@ -56,6 +56,7 @@ ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd5x hd6x vusolo4k vuduo4k vuduo4kse 
 	mkdir -p $(TARGET_DIR)/boot
 endif
 	mkdir -p $(TARGET_DIR)/dev
+	mkdir -p $(TARGET_DIR)/home
 	mkdir -p $(TARGET_DIR)/media
 	mkdir -p $(TARGET_DIR)/mnt
 	mkdir -p $(TARGET_DIR)/proc
