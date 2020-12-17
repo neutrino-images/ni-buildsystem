@@ -16,7 +16,7 @@ endef
 define apply_patches
 	l=$(strip $(2)); test -z $$l && l=1; \
 	for i in $(1); do \
-		if [ -e $$i ]; then \
+		if [ -e $$i -o -e $(PATCHES)/$$i ]; then \
 			if [ -d $$i ]; then \
 				for p in $$i/*; do \
 					echo -e "$(TERM_YELLOW)Applying $${p#$(PATCHES)/}$(TERM_NORMAL)"; \
