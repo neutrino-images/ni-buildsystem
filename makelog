@@ -6,14 +6,17 @@ usage() {
 	echo "Usage: makelog <target>..."
 }
 
-test "$1" == "--help"	&& { usage; exit 0; }
-test -z "$1"		&& { usage; exit 1; }
+if [ -z "$1" -o "$1" == "--help" ]; then
+	usage
+	exit 0
+fi
 
 logfile=$(mktemp makelog.XXXXXX)
 trap "rm -f $logfile" EXIT
 
-time make $* 2>&1 | tee $logfile
+params="$*"
+time make $params 2>&1 | tee $logfile
 
 mkdir -p build_tmp
-echo -e "\nmake $*:\n" >> build_tmp/make.log
-cat $logfile >> build_tmp/make.log
+echo -e "\nmake $*:\n" >> build_tmp/make_${params// /_}.log
+cat $logfile >> build_tmp/make_${params// /_}.log
