@@ -16,21 +16,23 @@ endef
 define apply_patches
 	l=$(strip $(2)); test -z $$l && l=1; \
 	for i in $(1); do \
-		if [ -d $$i ]; then \
-			for p in $$i/*; do \
-				echo -e "$(TERM_YELLOW)Applying $${p#$(PATCHES)/}$(TERM_NORMAL)"; \
-				if [ $${p:0:1} == "/" ]; then \
-					patch -p$$l -i $$p; \
-				else \
-					patch -p$$l -i $(PATCHES)/$$p; \
-				fi; \
-			done; \
-		else \
-			echo -e "$(TERM_YELLOW)Applying $${i#$(PATCHES)/}$(TERM_NORMAL)"; \
-			if [ $${i:0:1} == "/" ]; then \
-				patch -p$$l -i $$i; \
+		if [ -e $$i ]; then \
+			if [ -d $$i ]; then \
+				for p in $$i/*; do \
+					echo -e "$(TERM_YELLOW)Applying $${p#$(PATCHES)/}$(TERM_NORMAL)"; \
+					if [ $${p:0:1} == "/" ]; then \
+						patch -p$$l -i $$p; \
+					else \
+						patch -p$$l -i $(PATCHES)/$$p; \
+					fi; \
+				done; \
 			else \
-				patch -p$$l -i $(PATCHES)/$$i; \
+				echo -e "$(TERM_YELLOW)Applying $${i#$(PATCHES)/}$(TERM_NORMAL)"; \
+				if [ $${i:0:1} == "/" ]; then \
+					patch -p$$l -i $$i; \
+				else \
+					patch -p$$l -i $(PATCHES)/$$i; \
+				fi; \
 			fi; \
 		fi; \
 	done
