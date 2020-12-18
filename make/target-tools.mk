@@ -487,7 +487,7 @@ e2fsprogs: $(DL_DIR)/$(E2FSPROGS_SOURCE) | $(TARGET_DIR)
 			--with-crond-dir=no \
 			; \
 		$(MAKE); \
-		$(MAKE) install install-libs DESTDIR=$(TARGET_DIR)
+		$(MAKE1) install install-libs DESTDIR=$(TARGET_DIR)
 	-rm $(addprefix $(TARGET_base_sbindir)/, dumpe2fs e2mmpstatus e2undo logsave)
 	-rm $(addprefix $(TARGET_bindir)/, chattr compile_et lsattr mk_cmds uuidgen)
 	-rm $(addprefix $(TARGET_sbindir)/, e2freefrag e4crypt filefrag)
