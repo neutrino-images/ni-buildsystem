@@ -10,9 +10,14 @@ FLAGFILE="/var/etc/.$2"
 
 case "$1" in
 	"start")
+		if [ ! -e /etc/date-dummy ]; then
+			SHOWINFO "can't work. /etc/date-dummy is missing"
+			exit 1
+		fi
+		DATE_DUMMY=$(cat /etc/date-dummy)
 		DATE_TODAY=$(date +%Y%m%d%H%M)
 		# keep line below in sync with dummy time in rcS
-		if [ "${DATE_TODAY:0:8}" = "20170101" ]; then
+		if [ "${DATE_TODAY:0:8}" = "${DATE_DUMMY:0:8}" ]; then
 			# try to read date from flagfile
 			test -e $FLAGFILE && \
 			DATE_FLAG=$(date -r $FLAGFILE +%Y%m%d%H%M)

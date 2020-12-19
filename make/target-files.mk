@@ -6,6 +6,7 @@
 files-etc: \
 	$(TARGET_sysconfdir)/default/rcS \
 	$(TARGET_sysconfdir)/network/interfaces \
+	$(TARGET_sysconfdir)/date-dummy \
 	$(TARGET_sysconfdir)/exports \
 	$(TARGET_sysconfdir)/filesystems \
 	$(TARGET_sysconfdir)/fstab \
@@ -30,6 +31,9 @@ ifeq ($(PERSISTENT_VAR_PARTITION), yes)
 else
 	$(INSTALL_DATA) -D $(TARGET_FILES)/files-etc/network/interfaces $(@)
 endif
+
+$(TARGET_sysconfdir)/date-dummy:
+	echo "$(shell date +%Y)01010000" > $(@)
 
 $(TARGET_sysconfdir)/exports:
 ifeq ($(PERSISTENT_VAR_PARTITION), yes)
