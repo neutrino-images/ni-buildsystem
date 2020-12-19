@@ -1383,23 +1383,15 @@ endif
 
 GRAPHLCD_BASE_DEPS   = freetype libiconv libusb
 
-GRAPHLCD_BASE_MAKE_OPTS = \
-	$(MAKE_ENV) \
-	CXXFLAGS+="-fPIC" \
-	TARGET=$(TARGET_CROSS) \
-	PREFIX=$(prefix) \
-	DESTDIR=$(TARGET_DIR)
-
 graphlcd-base: $(GRAPHLCD_BASE_DEPS) | $(TARGET_DIR)
 	$(REMOVE)/$(GRAPHLCD_BASE_DIR)
 	$(GET-GIT-SOURCE) $(GRAPHLCD_BASE_SITE)/$(GRAPHLCD_BASE_SOURCE) $(DL_DIR)/$(GRAPHLCD_BASE_SOURCE)
 	$(CPDIR)/$(GRAPHLCD_BASE_DIR)
 	$(CHDIR)/$(GRAPHLCD_BASE_DIR); \
 		$(call apply_patches, $(addprefix $(@)/,$(GRAPHLCD_BASE_PATCH))); \
-		$(MAKE) $(GRAPHLCD_BASE_MAKE_OPTS) -C glcdgraphics all; \
-		$(MAKE) $(GRAPHLCD_BASE_MAKE_OPTS) -C glcddrivers all; \
-		$(MAKE) $(GRAPHLCD_BASE_MAKE_OPTS) -C glcdgraphics install; \
-		$(MAKE) $(GRAPHLCD_BASE_MAKE_OPTS) -C glcddrivers install; \
-		$(INSTALL_DATA) -D graphlcd.conf $(TARGET_sysconfdir)/graphlcd.conf
+		$(MAKE_ENV) \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR) PREFIX=$(prefix)
+	-rm -r $(TARGET_sysconfdir)/udev
 	$(REMOVE)/$(GRAPHLCD_BASE_DIR)
 	$(TOUCH)
