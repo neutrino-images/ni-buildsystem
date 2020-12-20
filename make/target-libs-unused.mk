@@ -19,7 +19,7 @@ libid3tag: $(LIBID3TAG_DEPS) $(DL_DIR)/$(LIBID3TAG_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LIBID3TAG_DIR)
 	$(UNTAR)/$(LIBID3TAG_SOURCE)
 	$(CHDIR)/$(LIBID3TAG_DIR); \
-		$(call apply_patches, $(LIBID3TAG_PATCH)); \
+		$(call apply_patches,$(LIBID3TAG_PATCH)); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--prefix=$(prefix) \
@@ -48,7 +48,7 @@ bzip2: $(DL_DIR)/$(BZIP2_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(BZIP2_DIR)
 	$(UNTAR)/$(BZIP2_SOURCE)
 	$(CHDIR)/$(BZIP2_DIR); \
-		$(call apply_patches, $(BZIP2_PATCH)); \
+		$(call apply_patches,$(BZIP2_PATCH)); \
 		mv Makefile-libbz2_so Makefile; \
 		$(MAKE_ENV) \
 		$(MAKE) all; \
@@ -108,7 +108,7 @@ pixman: $(PIXMAN_DEPS) $(DL_DIR)/$(PIXMAN_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PIXMAN_DIR)
 	$(UNTAR)/$(PIXMAN_SOURCE)
 	$(CHDIR)/$(PIXMAN_DIR); \
-		$(call apply_patches, $(PIXMAN_PATCH)); \
+		$(call apply_patches,$(PIXMAN_PATCH)); \
 		$(CONFIGURE) \
 			--prefix=$(prefix) \
 			--disable-gtk \
@@ -141,7 +141,7 @@ cairo: $(CAIRO_DEPS) $(DL_DIR)/$(CAIRO_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(CAIRO_DIR)
 	$(UNTAR)/$(CAIRO_SOURCE)
 	$(CHDIR)/$(CAIRO_DIR); \
-		$(call apply_patches, $(CAIRO_PATCH)); \
+		$(call apply_patches,$(CAIRO_PATCH)); \
 		$(MAKE_ENV) \
 		ax_cv_c_float_words_bigendian="no" \
 		./configure $(CONFIGURE_OPTS) \
@@ -184,7 +184,7 @@ harfbuzz: $(HARFBUZZ_DEPS) $(DL_DIR)/$(HARFBUZZ_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(HARFBUZZ_DIR)
 	$(UNTAR)/$(HARFBUZZ_SOURCE)
 	$(CHDIR)/$(HARFBUZZ_DIR); \
-		$(call apply_patches, $(HARFBUZZ_PATCH)); \
+		$(call apply_patches,$(HARFBUZZ_PATCH)); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--prefix=$(prefix) \

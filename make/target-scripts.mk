@@ -46,7 +46,7 @@ $(TARGET_sysconfdir)/init.d/rc:
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/files-etc/init.d/rc $(@)
 
 $(TARGET_sysconfdir)/init.d/rcS:
-ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/files-etc/init.d/rcS-vuplus $(@)
 else
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/files-etc/init.d/rcS-$(BOXSERIES) $(@)
@@ -72,7 +72,7 @@ $(TARGET_sysconfdir)/init.d/crond:
 	$(UPDATE-RC.D) $(@F) defaults 50
 
 $(TARGET_sysconfdir)/init.d/custom-poweroff:
-ifeq ($(BOXTYPE), coolstream)
+ifeq ($(BOXTYPE),coolstream)
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/custom-poweroff.init $(@)
 	$(UPDATE-RC.D) $(@F) start 99 0 6 .
 endif
@@ -96,23 +96,23 @@ $(TARGET_sysconfdir)/init.d/networking:
 	$(UPDATE-RC.D) $(@F) stop 98 0 6 .
 
 $(TARGET_sysconfdir)/init.d/partitions-by-name:
-ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7 hd60 hd61))
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 hd60 hd61))
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/partitions-by-name.init $(@)
 endif
 
 $(TARGET_sysconfdir)/init.d/proc:
-ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7 hd60 hd61 vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo))
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 hd60 hd61 vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo))
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/proc.init $(@)
 	$(UPDATE-RC.D) $(@F) start 90 S .
 endif
 
 $(TARGET_sysconfdir)/init.d/resizerootfs:
-ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7 hd60 hd61))
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 hd60 hd61))
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/resizerootfs.init $(@)
 endif
 
 $(TARGET_sysconfdir)/init.d/swap:
-ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7 hd60 hd61 vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo))
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 hd60 hd61 vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo))
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/swap.init $(@)
 	$(UPDATE-RC.D) $(@F) stop 98 0 6 .
 endif
@@ -125,19 +125,19 @@ $(TARGET_sysconfdir)/init.d/syslogd:
 	$(UPDATE-RC.D) $(@F) stop 98 0 6 .
 
 $(TARGET_sysconfdir)/init.d/sendsigs:
-ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd60 hd61))
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd60 hd61))
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/sendsigs.init $(@)
 	$(UPDATE-RC.D) $(@F) start 85 0 .
 endif
 
 $(TARGET_sysconfdir)/init.d/umountfs:
-ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd60 hd61))
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd60 hd61))
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/umountfs.init $(@)
 	$(UPDATE-RC.D) $(@F) start 86 0 .
 endif
 
 $(TARGET_sysconfdir)/init.d/suspend:
-ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd60 hd61))
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd60 hd61))
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/suspend.init $(@)
 	$(UPDATE-RC.D) $(@F) start 89 0 .
 endif
@@ -147,17 +147,17 @@ $(TARGET_sysconfdir)/init.d/user-initscripts:
 	$(UPDATE-RC.D) $(@F) defaults 98 01
 
 $(TARGET_sysconfdir)/init.d/stb_update.sh:
-ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd1 hd2))
+ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd1 hd2))
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/stb_update_$(BOXSERIES).sh $(@)
 endif
 
 $(TARGET_sysconfdir)/init.d/var_mount.sh:
-ifeq ($(PERSISTENT_VAR_PARTITION), yes)
+ifeq ($(PERSISTENT_VAR_PARTITION),yes)
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/var_mount.sh $(@)
 endif
 
 $(TARGET_sysconfdir)/init.d/var_update.sh:
-ifeq ($(PERSISTENT_VAR_PARTITION), yes)
+ifeq ($(PERSISTENT_VAR_PARTITION),yes)
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/var_update.sh $(@)
 endif
 

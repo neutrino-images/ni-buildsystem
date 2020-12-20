@@ -39,7 +39,7 @@ define apply_patches
 endef
 
 # apply patch sets automatically
-APPLY_PATCHES = $(call apply_patches, $(PKG_PATCHES_DIR))
+APPLY_PATCHES = $(call apply_patches,$(PKG_PATCHES_DIR))
 
 # -----------------------------------------------------------------------------
 

@@ -21,7 +21,7 @@ usbutils: $(USBUTILS_DEPS) $(DL_DIR)/$(USBUTILS_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(USBUTILS_DIR)
 	$(UNTAR)/$(USBUTILS_SOURCE)
 	$(CHDIR)/$(USBUTILS_DIR); \
-		$(call apply_patches, $(USBUTILS_PATCH)); \
+		$(call apply_patches,$(USBUTILS_PATCH)); \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
 			--prefix=$(prefix) \

@@ -4,7 +4,7 @@
 # -----------------------------------------------------------------------------
 
 target-finish: .version update.urls symbolic-links
-ifeq ($(BOXTYPE), armbox)
+ifeq ($(BOXTYPE),armbox)
 	make e2-multiboot
 endif
 
@@ -22,7 +22,7 @@ $(TARGET_DIR)/.version: | $(TARGET_DIR)
 	echo "box_model=$(BOXMODEL)"						>> $(@)
 	echo "creator=$(MAINTAINER)"						>> $(@)
 	echo "homepage=www.neutrino-images.de"					>> $(@)
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), armbox mipsbox))
+ifeq ($(BOXTYPE),$(filter $(BOXTYPE),armbox mipsbox))
 	echo "imagedir=$(IMAGE_SUBDIR)"						>> $(@)
 endif
 
@@ -45,7 +45,7 @@ symbolic-links: | $(TARGET_DIR)
 		rm -rf tmp; ln -sf /tmp tmp
 	$(CD) $(TARGET_sysconfdir); \
 		ln -sf /proc/mounts mtab
-ifeq ($(PERSISTENT_VAR_PARTITION), yes)
+ifeq ($(PERSISTENT_VAR_PARTITION),yes)
 	$(CD) $(TARGET_sysconfdir); \
 		ln -sf /var/etc/exports exports; \
 		ln -sf /var/etc/hostname hostname; \
@@ -132,7 +132,7 @@ ROOTFS-STRIP_LIBS += $(libdir)
 
 # strip bins and libs in root filesystem
 rootfs-strip: $(ROOTFS)
-ifneq ($(DEBUG), yes)
+ifneq ($(DEBUG),yes)
 	$(call draw_line);
 	@echo "The following warnings from strip are harmless!"
 	$(call draw_line);
@@ -148,7 +148,7 @@ ifneq ($(DEBUG), yes)
 				-path $(ROOTFS)/lib/modules \) -prune -o \
 		-type f -print0 | xargs -0 $(TARGET_STRIP) || true; \
 	done
-  ifeq ($(BOXSERIES), hd2)
+  ifeq ($(BOXSERIES),hd2)
 	find $(ROOTFS)/lib/modules/$(KERNEL_VER)/kernel -type f -name '*.ko' | xargs -n 1 $(TARGET_OBJCOPY) --strip-unneeded
   endif
 	@echo -e "$(TERM_YELLOW)"
@@ -159,7 +159,7 @@ endif
 
 # -----------------------------------------------------------------------------
 
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), coolstream))
+ifeq ($(BOXTYPE),$(filter $(BOXTYPE),coolstream))
 
 get-update-info: get-update-info-$(BOXSERIES)
 

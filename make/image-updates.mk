@@ -4,7 +4,7 @@
 # -----------------------------------------------------------------------------
 
 BOXSERIES_UPDATE = hd2 hd5x hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo
-ifneq ($(DEBUG), yes)
+ifneq ($(DEBUG),yes)
 	BOXSERIES_UPDATE += hd1
 endif
 
@@ -41,7 +41,7 @@ u-neutrino: neutrino-clean
 	$(INSTALL_EXEC) -D $(TARGET_bindir)/neutrino $(UPDATE_INST_DIR)/bin/neutrino
 	$(INSTALL_DATA) -D $(TARGET_datadir)/tuxbox/neutrino/locale/deutsch.locale $(UPDATE_INST_DIR)/share/tuxbox/neutrino/locale/deutsch.locale
 	$(INSTALL_DATA) -D $(TARGET_datadir)/tuxbox/neutrino/locale/english.locale $(UPDATE_INST_DIR)/share/tuxbox/neutrino/locale/english.locale
-ifneq ($(DEBUG), yes)
+ifneq ($(DEBUG),yes)
 	find $(UPDATE_INST_DIR)/bin -type f ! -name *.sh -print0 | xargs -0 $(TARGET_STRIP) || true
 endif
 	$(MAKE) u-update-bin \
@@ -55,10 +55,10 @@ u-neutrino-full: neutrino-clean
 	echo "sync; reboot"				>> $(POSTINSTALL_SH)
 	$(MAKE) neutrino NEUTRINO_INST_DIR=$(UPDATE_INST_DIR)
 	$(INSTALL_EXEC) -D $(TARGET_sysconfdir)/init.d/start_neutrino $(UPDATE_INST_DIR)/etc/init.d/start_neutrino
-ifneq ($(DEBUG), yes)
+ifneq ($(DEBUG),yes)
 	find $(UPDATE_INST_DIR)/bin -type f ! -name *.sh -print0 | xargs -0 $(TARGET_STRIP) || true
 endif
-ifeq ($(PERSISTENT_VAR_PARTITION), yes)
+ifeq ($(PERSISTENT_VAR_PARTITION),yes)
 	# avoid overrides in user's var-partition
 	mv $(UPDATE_INST_DIR)/var $(UPDATE_INST_DIR)/var_init
 endif

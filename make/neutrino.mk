@@ -29,14 +29,14 @@ NEUTRINO_DEPS += zlib
 # -----------------------------------------------------------------------------
 
 NEUTRINO_CFLAGS = -Wall -W -Wshadow -D__STDC_CONSTANT_MACROS
-ifeq ($(BOXSERIES), hd1)
+ifeq ($(BOXSERIES),hd1)
   NEUTRINO_CFLAGS += -DCPU_FREQ
 endif
-ifeq ($(BOXSERIES), hd2)
+ifeq ($(BOXSERIES),hd2)
   NEUTRINO_CFLAGS += -DFB_HW_ACCELERATION
 endif
 
-ifeq ($(DEBUG), yes)
+ifeq ($(DEBUG),yes)
   NEUTRINO_CFLAGS += -ggdb3 -rdynamic -I$(TARGET_includedir)
 else
   NEUTRINO_CFLAGS += $(TARGET_CFLAGS)
@@ -47,7 +47,7 @@ NEUTRINO_CFLAGS += -Wno-psabi
 # -----------------------------------------------------------------------------
 
 NEUTRINO_LDFLAGS = -lcrypto -ldl -lz $(CORTEX-STRINGS_LDFLAG) -L$(TARGET_libdir)
-ifeq ($(DEBUG), yes)
+ifeq ($(DEBUG),yes)
   NEUTRINO_LDFLAGS += -Wl,-rpath-link,$(TARGET_libdir)
 else
   NEUTRINO_LDFLAGS += -Wl,-O1 -Wl,-rpath-link,$(TARGET_libdir) $(TARGET_EXTRA_LDFLAGS)
@@ -101,7 +101,7 @@ NEUTRINO_CONF_OPTS = \
 	--with-targetprefix=$(prefix) \
 	--with-boxtype=$(BOXTYPE)
 
-ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd1 hd2))
+ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd1 hd2))
   NEUTRINO_CONF_OPTS += --with-boxmodel=$(BOXSERIES)
 else
   NEUTRINO_CONF_OPTS += --with-boxmodel=$(BOXMODEL)
@@ -109,11 +109,11 @@ endif
 
 # -----------------------------------------------------------------------------
 
-ifeq ($(BOXTYPE), coolstream)
+ifeq ($(BOXTYPE),coolstream)
   NEUTRINO_DEPS += coolstream-drivers
-  ifeq ($(HAS_LIBCS), yes)
+  ifeq ($(HAS_LIBCS),yes)
     NEUTRINO_DEPS += libcoolstream
-    ifeq ($(DEBUG), yes)
+    ifeq ($(DEBUG),yes)
       NEUTRINO_CONF_OPTS += \
 	--enable-libcoolstream-static \
 	--with-libcoolstream-static-dir=$(TARGET_libdir)
@@ -130,10 +130,10 @@ else
   NEUTRINO_DEPS += graphlcd-base
   NEUTRINO_CONF_OPTS += --enable-graphlcd
 
-  ifeq ($(BOXTYPE), armbox)
+  ifeq ($(BOXTYPE),armbox)
     NEUTRINO_CONF_OPTS += --disable-arm-acc
   endif
-  ifeq ($(BOXTYPE), mipsbox)
+  ifeq ($(BOXTYPE),mipsbox)
     NEUTRINO_CONF_OPTS += --disable-mips-acc
   endif
 endif
@@ -141,7 +141,7 @@ endif
 # enable ffmpeg audio decoder in neutrino
 NEUTRINO_AUDIODEC = ffmpeg
 
-ifeq ($(NEUTRINO_AUDIODEC), ffmpeg)
+ifeq ($(NEUTRINO_AUDIODEC),ffmpeg)
   NEUTRINO_CONF_OPTS += --enable-ffmpegdec
 else
   NEUTRINO_DEPS += libid3tag
@@ -205,7 +205,7 @@ LIBSTB-HAL_CONF_OPTS = \
 	--with-targetprefix=$(prefix) \
 	--with-boxtype=$(BOXTYPE)
 
-ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd1 hd2))
+ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd1 hd2))
   LIBSTB-HAL_CONF_OPTS += --with-boxmodel=$(BOXSERIES)
 else
   LIBSTB-HAL_CONF_OPTS += --with-boxmodel=$(BOXMODEL)
@@ -233,14 +233,14 @@ libstb-hal: $(LIBSTB-HAL_BUILD_DIR)/config.status
 # -----------------------------------------------------------------------------
 
 neutrino-bin:
-ifeq ($(CLEAN), yes)
+ifeq ($(CLEAN),yes)
 	$(MAKE) neutrino-clean
 endif
 	$(MAKE) $(NEUTRINO_BUILD_DIR)/config.status
 	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
 	$(MAKE) -C $(NEUTRINO_BUILD_DIR) all DESTDIR=$(TARGET_DIR)
 	$(INSTALL_EXEC) -D $(NEUTRINO_BUILD_DIR)/src/neutrino $(TARGET_bindir)/neutrino
-ifneq ($(DEBUG), yes)
+ifneq ($(DEBUG),yes)
 	$(TARGET_STRIP) $(TARGET_bindir)/neutrino
 endif
 	make done

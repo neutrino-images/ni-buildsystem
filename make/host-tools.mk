@@ -73,7 +73,7 @@ host-pkgconf: $(DL_DIR)/$(HOST_PKGCONF_SOURCE) | $(HOST_DIR) pkg-config-preqs
 	$(REMOVE)/$(HOST_PKGCONF_DIR)
 	$(UNTAR)/$(HOST_PKGCONF_SOURCE)
 	$(CHDIR)/$(HOST_PKGCONF_DIR); \
-		$(call apply_patches, $(addprefix $(@F)/,$(HOST_PKGCONF_PATCH))); \
+		$(call apply_patches,$(addprefix $(@F)/,$(HOST_PKGCONF_PATCH))); \
 		./configure \
 			--prefix=$(HOST_DIR) \
 			--with-sysroot=$(TARGET_DIR) \
@@ -189,7 +189,7 @@ host-parted: $(DL_DIR)/$(HOST_PARTED_SOURCE) | $(HOST_DIR)
 	$(REMOVE)/$(HOST_PARTED_DIR)
 	$(UNTAR)/$(HOST_PARTED_SOURCE)
 	$(CHDIR)/$(HOST_PARTED_DIR); \
-		$(call apply_patches, $(HOST_PARTED_PATCH)); \
+		$(call apply_patches,$(HOST_PARTED_PATCH)); \
 		./configure \
 			--prefix= \
 			--enable-silent-rules \
@@ -291,7 +291,7 @@ host-ninja: $(DL_DIR)/$(HOST_NINJA_SOURCE) | $(HOST_DIR)
 	$(REMOVE)/$(HOST_NINJA_DIR)
 	$(UNTAR)/$(HOST_NINJA_SOURCE)
 	$(CHDIR)/$(HOST_NINJA_DIR); \
-		$(call apply_patches, $(HOST_NINJA_PATCH)); \
+		$(call apply_patches,$(HOST_NINJA_PATCH)); \
 		cmake . \
 			-DCMAKE_INSTALL_PREFIX="" \
 			; \
@@ -319,7 +319,7 @@ host-lua: $(DL_DIR)/$(HOST_LUA_SOURCE) | $(HOST_DIR)
 	$(REMOVE)/$(HOST_LUA_DIR)
 	$(UNTAR)/$(HOST_LUA_SOURCE)
 	$(CHDIR)/$(HOST_LUA_DIR); \
-		$(call apply_patches, $(HOST_LUA_PATCH)); \
+		$(call apply_patches,$(HOST_LUA_PATCH)); \
 		$(MAKE) linux; \
 		$(MAKE) install INSTALL_TOP=$(HOST_DIR)
 	$(REMOVE)/$(HOST_LUA_DIR)
@@ -356,7 +356,7 @@ $(HOST_LUAROCKS): $(HOST_LUA) $(DL_DIR)/$(HOST_LUAROCKS_SOURCE) | $(HOST_DIR)
 	$(REMOVE)/$(HOST_LUAROCKS_DIR)
 	$(UNTAR)/$(HOST_LUAROCKS_SOURCE)
 	$(CHDIR)/$(HOST_LUAROCKS_DIR); \
-		$(call apply_patches, $(HOST_LUAROCKS_PATCH)); \
+		$(call apply_patches,$(HOST_LUAROCKS_PATCH)); \
 		./configure $(SILENT_OPT) \
 			--prefix=$(HOST_DIR) \
 			--sysconfdir=$(HOST_DIR)/etc \

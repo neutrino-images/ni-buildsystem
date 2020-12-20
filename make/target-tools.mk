@@ -50,7 +50,7 @@ define BUSYBOX_INSTALL_CONFIG
 	$(call KCONFIG_SET_OPT,CONFIG_PREFIX,"$(TARGET_DIR)",$(BUSYBOX_BUILD_CONFIG))
 endef
 
-ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd5x hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo))
+ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd2 hd5x hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo))
 
   define BUSYBOX_SET_BLKDISCARD
 	$(call KCONFIG_ENABLE_OPT,CONFIG_BLKDISCARD,$(BUSYBOX_BUILD_CONFIG))
@@ -61,7 +61,7 @@ ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd5x hd6x vusolo4k vuduo4k vuduo4
 	$(call KCONFIG_ENABLE_OPT,CONFIG_FEATURE_IFUPDOWN_IPV6,$(BUSYBOX_BUILD_CONFIG))
   endef
 
-  ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd5x hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo))
+  ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd5x hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo))
 
     define BUSYBOX_SET_SWAP
 	$(call KCONFIG_ENABLE_OPT,CONFIG_SWAPON,$(BUSYBOX_BUILD_CONFIG))
@@ -76,7 +76,7 @@ ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd5x hd6x vusolo4k vuduo4k vuduo4
 	$(call KCONFIG_ENABLE_OPT,CONFIG_PKILL,$(BUSYBOX_BUILD_CONFIG))
     endef
 
-    ifeq ($(BOXSERIES), $(filter $(BOXSERIES), vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo))
+    ifeq ($(BOXSERIES),$(filter $(BOXSERIES),vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo))
 
       define BUSYBOX_SET_START_STOP_DAEMON
 	$(call KCONFIG_ENABLE_OPT,CONFIG_START_STOP_DAEMON,$(BUSYBOX_BUILD_CONFIG))
@@ -118,7 +118,7 @@ busybox: $(BUSYBOX_DEPS) $(DL_DIR)/$(BUSYBOX_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(BUSYBOX_DIR)
 	$(UNTAR)/$(BUSYBOX_SOURCE)
 	$(CHDIR)/$(BUSYBOX_DIR); \
-		$(call apply_patches, $(BUSYBOX_PATCH))
+		$(call apply_patches,$(BUSYBOX_PATCH))
 	$(BUSYBOX_INSTALL_CONFIG)
 	$(BUSYBOX_MODIFY_CONFIG)
 	$(CHDIR)/$(BUSYBOX_DIR); \
@@ -149,7 +149,7 @@ bash: $(DL_DIR)/$(BASH_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(BASH_DIR)
 	$(UNTAR)/$(BASH_SOURCE)
 	$(CHDIR)/$(BASH_DIR); \
-		$(call apply_patches, $(BASH_PATCH), 0); \
+		$(call apply_patches,$(BASH_PATCH),0); \
 		$(CONFIGURE) \
 			--prefix=$(base_prefix) \
 			--includedir=$(includedir) \
@@ -205,7 +205,7 @@ coreutils: $(DL_DIR)/$(COREUTILS_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(COREUTILS_DIR)
 	$(UNTAR)/$(COREUTILS_SOURCE)
 	$(CHDIR)/$(COREUTILS_DIR); \
-		$(call apply_patches, $(COREUTILS_PATCH)); \
+		$(call apply_patches,$(COREUTILS_PATCH)); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
@@ -250,7 +250,7 @@ procps-ng: $(PROCPS-NG_DEPS) $(DL_DIR)/$(PROCPS-NG_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PROCPS-NG_DIR)
 	$(UNTAR)/$(PROCPS-NG_SOURCE)
 	$(CHDIR)/$(PROCPS-NG_DIR); \
-		$(call apply_patches, $(PROCPS-NG_PATCH)); \
+		$(call apply_patches,$(PROCPS-NG_PATCH)); \
 		export ac_cv_func_malloc_0_nonnull=yes; \
 		export ac_cv_func_realloc_0_nonnull=yes; \
 		autoreconf -fi; \
@@ -290,7 +290,7 @@ $(DL_DIR)/$(MTD-UTILS_SOURCE):
 MTD-UTILS_DEPS   = zlib lzo e2fsprogs
 
 MTD-UTILS_SBIN   = flash_erase flash_eraseall
-ifeq ($(BOXSERIES), hd2)
+ifeq ($(BOXSERIES),hd2)
   MTD-UTILS_SBIN+= nanddump nandtest nandwrite mkfs.jffs2
 endif
 
@@ -335,7 +335,7 @@ dosfstools: $(DL_DIR)/$(DOSFSTOOLS_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(DOSFSTOOLS_DIR)
 	$(UNTAR)/$(DOSFSTOOLS_SOURCE)
 	$(CHDIR)/$(DOSFSTOOLS_DIR); \
-		$(call apply_patches, $(addprefix $(@F)/,$(DOSFSTOOLS_PATCH))); \
+		$(call apply_patches,$(addprefix $(@F)/,$(DOSFSTOOLS_PATCH))); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--prefix=$(base_prefix) \
@@ -442,7 +442,7 @@ exfat-utils: $(EXFAT-UTILS_DEPS) $(DL_DIR)/$(EXFAT-UTILS_SOURCE) | $(TARGET_DIR)
 # -----------------------------------------------------------------------------
 
 # for coolstream: formatting ext4 failes with newer versions then 1.43.8
-E2FSPROGS_VER    = $(if $(filter $(BOXTYPE), coolstream),1.43.8,1.45.6)
+E2FSPROGS_VER    = $(if $(filter $(BOXTYPE),coolstream),1.43.8,1.45.6)
 E2FSPROGS_DIR    = e2fsprogs-$(E2FSPROGS_VER)
 E2FSPROGS_SOURCE = e2fsprogs-$(E2FSPROGS_VER).tar.gz
 E2FSPROGS_SITE   = https://sourceforge.net/projects/e2fsprogs/files/e2fsprogs/v$(E2FSPROGS_VER)
@@ -621,7 +621,7 @@ TZDATA_ZONELIST = \
 
 TZDATA_LOCALTIME = CET
 
-ETC_LOCALTIME = $(if $(filter $(PERSISTENT_VAR_PARTITION), yes),/var/etc/localtime,/etc/localtime)
+ETC_LOCALTIME = $(if $(filter $(PERSISTENT_VAR_PARTITION),yes),/var/etc/localtime,/etc/localtime)
 
 tzdata: $(TZDATA_DEPS) $(DL_DIR)/$(TZDATA_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(TZDATA_DIR)
@@ -659,7 +659,7 @@ iperf: $(DL_DIR)/$(IPERF_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(IPERF_DIR)
 	$(UNTAR)/$(IPERF_SOURCE)
 	$(CHDIR)/$(IPERF_DIR); \
-		$(call apply_patches, $(IPERF_PATCH)); \
+		$(call apply_patches,$(IPERF_PATCH)); \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
 			--prefix=$(prefix) \
@@ -690,7 +690,7 @@ parted: $(PARTED_DEPS) $(DL_DIR)/$(PARTED_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PARTED_DIR)
 	$(UNTAR)/$(PARTED_SOURCE)
 	$(CHDIR)/$(PARTED_DIR); \
-		$(call apply_patches, $(PARTED_PATCH)); \
+		$(call apply_patches,$(PARTED_PATCH)); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
@@ -816,7 +816,7 @@ djmount: $(DJMOUNT_DEPS) $(DL_DIR)/$(DJMOUNT_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(DJMOUNT_DIR)
 	$(UNTAR)/$(DJMOUNT_SOURCE)
 	$(CHDIR)/$(DJMOUNT_DIR); \
-		$(call apply_patches, $(DJMOUNT_PATCH)); \
+		$(call apply_patches,$(DJMOUNT_PATCH)); \
 		touch libupnp/config.aux/config.rpath; \
 		autoreconf -fi; \
 		$(CONFIGURE) -C \
@@ -850,7 +850,7 @@ ushare: $(USHARE_DEPS) $(DL_DIR)/$(USHARE_SOURCE)| $(TARGET_DIR)
 	$(REMOVE)/$(USHARE_DIR)
 	$(UNTAR)/$(USHARE_SOURCE)
 	$(CHDIR)/$(USHARE_DIR); \
-		$(call apply_patches, $(USHARE_PATCH)); \
+		$(call apply_patches,$(USHARE_PATCH)); \
 		$(MAKE_ENV) \
 		./configure \
 			--prefix=$(prefix) \
@@ -948,7 +948,7 @@ vsftpd: $(VSFTPD_DEPS) $(DL_DIR)/$(VSFTPD_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(VSFTPD_DIR)
 	$(UNTAR)/$(VSFTPD_SOURCE)
 	$(CHDIR)/$(VSFTPD_DIR); \
-		$(call apply_patches, $(VSFTPD_PATCH)); \
+		$(call apply_patches,$(VSFTPD_PATCH)); \
 		$(SED) 's/.*VSF_BUILD_PAM/#undef VSF_BUILD_PAM/' builddefs.h; \
 		$(SED) 's/.*VSF_BUILD_SSL/#define VSF_BUILD_SSL/' builddefs.h; \
 		$(MAKE) clean; \
@@ -1012,7 +1012,7 @@ minicom: $(MINICOM_DEPS) $(DL_DIR)/$(MINICOM_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(MINICOM_DIR)
 	$(UNTAR)/$(MINICOM_SOURCE)
 	$(CHDIR)/$(MINICOM_DIR); \
-		$(call apply_patches, $(MINICOM_PATCH)); \
+		$(call apply_patches,$(MINICOM_PATCH)); \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
 			--prefix=$(prefix) \
@@ -1046,7 +1046,7 @@ autofs: $(AUTOFS_DEPS) $(DL_DIR)/$(AUTOFS_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(AUTOFS_DIR)
 	$(UNTAR)/$(AUTOFS_SOURCE)
 	$(CHDIR)/$(AUTOFS_DIR); \
-		$(call apply_patches, $(addprefix $(@F)/,$(AUTOFS_PATCH))); \
+		$(call apply_patches,$(addprefix $(@F)/,$(AUTOFS_PATCH))); \
 		$(SED) "s|nfs/nfs.h|linux/nfs.h|" include/rpc_subs.h; \
 		export ac_cv_linux_procfs=yes; \
 		export ac_cv_path_KRB5_CONFIG=no; \
@@ -1077,7 +1077,7 @@ autofs: $(AUTOFS_DEPS) $(DL_DIR)/$(AUTOFS_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-SAMBA_TARGET = $(if $(filter $(BOXSERIES), hd1), samba33, samba36)
+SAMBA_TARGET = $(if $(filter $(BOXSERIES),hd1),samba33, samba36)
 
 samba: $(SAMBA_TARGET)
 	$(TOUCH)
@@ -1101,7 +1101,7 @@ samba33: $(SAMBA33_DEPS) $(DL_DIR)/$(SAMBA33_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(SAMBA33_DIR)
 	$(UNTAR)/$(SAMBA33_SOURCE)
 	$(CHDIR)/$(SAMBA33_DIR); \
-		$(call apply_patches, $(SAMBA33_PATCH)); \
+		$(call apply_patches,$(SAMBA33_PATCH)); \
 	$(CHDIR)/$(SAMBA33_DIR)/source; \
 		./autogen.sh; \
 		export CONFIG_SITE=$(CONFIGS)/samba33-config.site; \
@@ -1183,8 +1183,8 @@ samba36: $(SAMBA36_DEPS) $(DL_DIR)/$(SAMBA36_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(SAMBA36_DIR)
 	$(UNTAR)/$(SAMBA36_SOURCE)
 	$(CHDIR)/$(SAMBA36_DIR); \
-		$(call apply_patches, $(SAMBA36_PATCH1), 1); \
-		$(call apply_patches, $(SAMBA36_PATCH0), 0); \
+		$(call apply_patches,$(SAMBA36_PATCH1),1); \
+		$(call apply_patches,$(SAMBA36_PATCH0),0); \
 	$(CHDIR)/$(SAMBA36_DIR)/source3; \
 		./autogen.sh; \
 		export CONFIG_SITE=$(CONFIGS)/samba36-config.site; \
@@ -1333,7 +1333,7 @@ fbshot: $(FBSHOT_DEPS) $(DL_DIR)/$(FBSHOT_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(FBSHOT_DIR)
 	$(UNTAR)/$(FBSHOT_SOURCE)
 	$(CHDIR)/$(FBSHOT_DIR); \
-		$(call apply_patches, $(FBSHOT_PATCH)); \
+		$(call apply_patches,$(FBSHOT_PATCH)); \
 		$(SED) 's|	gcc |	$(TARGET_CC) $(TARGET_CFLAGS) $(TARGET_LDFLAGS) |' Makefile; \
 		$(SED) '/strip fbshot/d' Makefile; \
 		$(MAKE) all; \
@@ -1438,7 +1438,7 @@ xupnpd: $(XUPNPD_DEPS) | $(TARGET_DIR)
 	$(CPDIR)/$(XUPNPD_SOURCE)
 	$(CHDIR)/$(XUPNPD_DIR); \
 		git checkout 25d6d44; \
-		$(call apply_patches, $(XUPNPD_PATCH))
+		$(call apply_patches,$(XUPNPD_PATCH))
 	$(CHDIR)/$(XUPNPD_DIR)/src; \
 		$(MAKE_ENV) \
 		$(MAKE) embedded TARGET=$(TARGET) CC=$(TARGET_CC) STRIP=$(TARGET_STRIP) LUAFLAGS="$(TARGET_LDFLAGS) -I$(TARGET_includedir)"; \
@@ -1474,13 +1474,13 @@ NFS-UTILS_PATCH += nfs-utils_04-mountd-Add-check-for-struct-file_handle.patch
 
 NFS-UTILS_DEPS   = rpcbind
 
-NFS-UTILS_CONF   = $(if $(filter $(BOXSERIES), hd1),--disable-ipv6,--enable-ipv6)
+NFS-UTILS_CONF   = $(if $(filter $(BOXSERIES),hd1),--disable-ipv6,--enable-ipv6)
 
 nfs-utils: $(NFS-UTILS_DEPS) $(DL_DIR)/$(NFS-UTILS_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(NFS-UTILS_DIR)
 	$(UNTAR)/$(NFS-UTILS_SOURCE)
 	$(CHDIR)/$(NFS-UTILS_DIR); \
-		$(call apply_patches, $(NFS-UTILS_PATCH)); \
+		$(call apply_patches,$(NFS-UTILS_PATCH)); \
 		export knfsd_cv_bsd_signals=no; \
 		autoreconf -fi; \
 		$(CONFIGURE) \
@@ -1528,7 +1528,7 @@ rpcbind: $(RPCBIND_DEPS) $(DL_DIR)/$(RPCBIND_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(RPCBIND_DIR)
 	$(UNTAR)/$(RPCBIND_SOURCE)
 	$(CHDIR)/$(RPCBIND_DIR); \
-		$(call apply_patches, $(RPCBIND_PATCH)); \
+		$(call apply_patches,$(RPCBIND_PATCH)); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
@@ -1663,7 +1663,7 @@ wget: $(WGET_DEPS) $(DL_DIR)/$(WGET_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(WGET_DIR)
 	$(UNTAR)/$(WGET_SOURCE)
 	$(CHDIR)/$(WGET_DIR); \
-		$(call apply_patches, $(addprefix $(@F)/,$(WGET_PATCH))); \
+		$(call apply_patches,$(addprefix $(@F)/,$(WGET_PATCH))); \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
 			--prefix=$(prefix) \
@@ -1788,7 +1788,7 @@ gptfdisk: $(GPTFDISK_DEPS) $(DL_DIR)/$(GPTFDISK_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(GPTFDISK_DIR)
 	$(UNTAR)/$(GPTFDISK_SOURCE)
 	$(CHDIR)/$(GPTFDISK_DIR); \
-		$(call apply_patches, $(GPTFDISK_PATCH)); \
+		$(call apply_patches,$(GPTFDISK_PATCH)); \
 		$(SED) 's|^CC=.*|CC=$(TARGET_CC)|' Makefile; \
 		$(SED) 's|^CXX=.*|CXX=$(TARGET_CXX)|' Makefile; \
 		$(MAKE_ENV) \

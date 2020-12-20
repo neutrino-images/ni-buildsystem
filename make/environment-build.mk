@@ -33,7 +33,7 @@ WHOAMI       := $(shell id -un)
 DL_DIR        = $(BASE_DIR)/download
 BUILD_DIR     = $(BASE_DIR)/build_tmp
 ROOTFS        = $(BUILD_DIR)/rootfs
-ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd5x))
+ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd5x))
   ROOTFS      = $(BUILD_DIR)/rootfs/linuxrootfs1
 endif
 DEPS_DIR      = $(BASE_DIR)/deps
@@ -52,7 +52,7 @@ STATIC_DIR    = $(STATIC_BASE)/$(BOXARCH)-linux-$(KERNEL_VER)
 CONFIGS       = $(BASE_DIR)/configs
 PATCHES       = $(BASE_DIR)/patches
 SKEL-ROOT     = $(BASE_DIR)/skel-root/$(BOXSERIES)
-ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
   SKEL-ROOT   = $(BASE_DIR)/skel-root/vuplus
 endif
 TARGET_FILES  = $(BASE_DIR)/skel-root/general
@@ -90,7 +90,7 @@ DEBUG ?= no
 
 # -----------------------------------------------------------------------------
 
-ifeq ($(BOXSERIES), hd1)
+ifeq ($(BOXSERIES),hd1)
   DRIVERS-BIN_DIR        = $(BOXTYPE)/$(BOXFAMILY)
   CORTEX-STRINGS_LDFLAG  =
   TARGET                 = arm-cx2450x-linux-gnueabi
@@ -102,7 +102,7 @@ ifeq ($(BOXSERIES), hd1)
   TARGET_EXTRA_LDFLAGS   = -Wl,--gc-sections
   CXX11_ABI              =
 
-else ifeq ($(BOXSERIES), hd2)
+else ifeq ($(BOXSERIES),hd2)
   DRIVERS-BIN_DIR        = $(BOXTYPE)/$(BOXFAMILY)
   CORTEX-STRINGS_LDFLAG  = -lcortex-strings
   TARGET                 = arm-cortex-linux-uclibcgnueabi
@@ -112,14 +112,14 @@ else ifeq ($(BOXSERIES), hd2)
   TARGET_ABI             = -march=$(TARGET_ARCH) -mtune=cortex-a9 -mfpu=vfpv3-d16 -mfloat-abi=hard -mlittle-endian
   TARGET_EXTRA_CFLAGS    =
   TARGET_EXTRA_LDFLAGS   =
-  ifeq ($(BOXMODEL), kronos_v2)
+  ifeq ($(BOXMODEL),kronos_v2)
     TARGET_OPTIMIZATION  = -Os
     TARGET_EXTRA_CFLAGS  = -fdata-sections -ffunction-sections
     TARGET_EXTRA_LDFLAGS = -Wl,--gc-sections
   endif
   CXX11_ABI              = -D_GLIBCXX_USE_CXX11_ABI=0
 
-else ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd5x hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
+else ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd5x hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
   DRIVERS-BIN_DIR        = $(BOXTYPE)/$(BOXMODEL)
   CORTEX-STRINGS_LDFLAG  = -lcortex-strings
   TARGET                 = arm-cortex-linux-gnueabihf
@@ -131,7 +131,7 @@ else ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd5x hd6x vusolo4k vuduo4k vuduo
   TARGET_EXTRA_LDFLAGS   =
   CXX11_ABI              =
 
-else ifeq ($(BOXSERIES), $(filter $(BOXSERIES), vuduo))
+else ifeq ($(BOXSERIES),$(filter $(BOXSERIES),vuduo))
   DRIVERS-BIN_DIR        = $(BOXTYPE)/$(BOXMODEL)
   CORTEX-STRINGS_LDFLAG  =
   TARGET                 = mipsel-unknown-linux-gnu

@@ -26,7 +26,7 @@ $(TARGET_sysconfdir)/default/rcS:
 	$(INSTALL_DATA) -D $(TARGET_FILES)/files-etc/default/rcS $(@)
 
 $(TARGET_sysconfdir)/network/interfaces:
-ifeq ($(PERSISTENT_VAR_PARTITION), yes)
+ifeq ($(PERSISTENT_VAR_PARTITION),yes)
 	$(INSTALL_DATA) -D $(TARGET_FILES)/files-etc/network/interfaces $(TARGET_localstatedir)/etc/network/interfaces
 else
 	$(INSTALL_DATA) -D $(TARGET_FILES)/files-etc/network/interfaces $(@)
@@ -36,7 +36,7 @@ $(TARGET_sysconfdir)/date-dummy:
 	echo "$(shell date +%Y)01010000" > $(@)
 
 $(TARGET_sysconfdir)/exports:
-ifeq ($(PERSISTENT_VAR_PARTITION), yes)
+ifeq ($(PERSISTENT_VAR_PARTITION),yes)
 	$(INSTALL_DATA) -D $(TARGET_FILES)/files-etc/exports-var $(TARGET_localstatedir)/etc/exports
 else
 	$(INSTALL_DATA) -D $(TARGET_FILES)/files-etc/exports $(@)
@@ -70,14 +70,14 @@ $(TARGET_sysconfdir)/profile:
 	$(INSTALL_DATA) -D $(TARGET_FILES)/files-etc/profile $(@)
 
 $(TARGET_sysconfdir)/passwd:
-ifeq ($(PERSISTENT_VAR_PARTITION), yes)
+ifeq ($(PERSISTENT_VAR_PARTITION),yes)
 	$(INSTALL_DATA) -D $(TARGET_FILES)/files-etc/passwd $(TARGET_localstatedir)/etc/passwd
 else
 	$(INSTALL_DATA) -D $(TARGET_FILES)/files-etc/passwd $(@)
 endif
 
 $(TARGET_sysconfdir)/profile.local:
-ifeq ($(PERSISTENT_VAR_PARTITION), yes)
+ifeq ($(PERSISTENT_VAR_PARTITION),yes)
 	$(INSTALL_DATA) -D $(TARGET_FILES)/files-etc/profile.local-var $(TARGET_localstatedir)/etc/profile.local
 else
 	$(INSTALL_DATA) -D $(TARGET_FILES)/files-etc/profile.local $(@)

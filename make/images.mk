@@ -4,17 +4,17 @@
 # -----------------------------------------------------------------------------
 
 MKFSFLAGS	= -U -D $(BUILD_DIR)/devtable-$(BOXSERIES).txt -r $(ROOTFS)
-ifeq ($(BOXSERIES), hd1)
+ifeq ($(BOXSERIES),hd1)
   MKFSFLAGS	+= -p
 endif
-ifeq ($(BOXSERIES), hd2)
+ifeq ($(BOXSERIES),hd2)
   MKFSFLAGS	+= -n -l
 endif
 
-ifeq ($(BOXSERIES), hd1)
+ifeq ($(BOXSERIES),hd1)
   SUMFLAGS	= -p
 endif
-ifeq ($(BOXSERIES), hd2)
+ifeq ($(BOXSERIES),hd2)
   SUMFLAGS	= -n -l
 endif
 
@@ -50,26 +50,26 @@ devtable-remove:
 # -----------------------------------------------------------------------------
 
 flash-image:
-ifeq ($(BOXMODEL), $(filter $(BOXMODEL), nevis kronos kronos_v2))
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),nevis kronos kronos_v2))
 	make flash-image-coolstream ERASE_SIZE=0x20000
 endif
-ifeq ($(BOXMODEL), $(filter $(BOXMODEL), apollo shiner))
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),apollo shiner))
 	make flash-image-coolstream ERASE_SIZE=0x40000 IMAGE_SUFFIX=$(BOXTYPE_SC)-apollo
 	make flash-image-coolstream ERASE_SIZE=0x20000 IMAGE_SUFFIX=$(BOXTYPE_SC)-shiner
 endif
-ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7))
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7))
 	make flash-image-hd5x
 	make flash-image-hd5x-multi
 endif
-ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd60 hd61))
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd60 hd61))
 	make flash-image-hd6x
 	make flash-image-hd6x-single
 endif
-ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
 	make flash-image-vuplus
 	make flash-image-vuplus-multi
 endif
-ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vuduo))
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),vuduo))
 	make flash-image-vuduo
 endif
 
@@ -80,7 +80,7 @@ flash-image-coolstream: | $(IMAGE_DIR)
 	make devtable
 	mkfs.jffs2 -e $(ERASE_SIZE) $(MKFSFLAGS) -o $(IMAGE_DIR)/$(IMAGE_NAME).img
 	make devtable-remove
-ifeq ($(IMAGE_SUMMARIZE), yes)
+ifeq ($(IMAGE_SUMMARIZE),yes)
 	sumtool -e $(ERASE_SIZE) $(SUMFLAGS) -i $(IMAGE_DIR)/$(IMAGE_NAME).img -o $(IMAGE_DIR)/$(IMAGE_NAME)-sum.img
 	rm -f $(IMAGE_DIR)/$(IMAGE_NAME).img
 	mv $(IMAGE_DIR)/$(IMAGE_NAME)-sum.img $(IMAGE_DIR)/$(IMAGE_NAME).img
@@ -91,11 +91,11 @@ endif
 # -----------------------------------------------------------------------------
 
 # ROOTFS_SIZE detected with 'df -k'
-ifeq ($(BOXMODEL), nevis)
+ifeq ($(BOXMODEL),nevis)
   ROOTFS_SIZE = 28160
-else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), apollo shiner kronos))
+else ifeq ($(BOXMODEL),$(filter $(BOXMODEL),apollo shiner kronos))
   ROOTFS_SIZE = 262144
-else ifeq ($(BOXMODEL), kronos_v2)
+else ifeq ($(BOXMODEL),kronos_v2)
   ROOTFS_SIZE = 57344
 endif
 ifdef ROOTFS_SIZE
@@ -375,7 +375,7 @@ flash-image-vuplus-multi: | $(IMAGE_DIR)
 	echo Dummy for update. > $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/rootfs2.tar.bz2
 	echo Dummy for update. > $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/rootfs3.tar.bz2
 	echo Dummy for update. > $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/rootfs4.tar.bz2
-ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vuzero4k vuuno4k))
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),vuzero4k vuuno4k))
 	echo This file forces the update. > $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/force.update
 else
 	echo This file forces a reboot after the update. > $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/reboot.update

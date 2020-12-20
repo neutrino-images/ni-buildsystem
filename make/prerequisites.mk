@@ -76,7 +76,7 @@ $(BUILD-GENERIC-PC):
 $(SOURCE_DIR)/$(NI-NEUTRINO):
 	$(CD) $(SOURCE_DIR); \
 		git clone $(NI-PUBLIC)/$(@F).git
-ifeq ($(NI_ADMIN), true)
+ifeq ($(NI_ADMIN),true)
 	$(CD) $(@); \
 		git remote add tuxbox $(GITHUB)/tuxbox-neutrino/gui-neutrino.git; \
 		git remote add seife  $(GITHUB)/neutrino-mp/neutrino-mp.git; \
@@ -88,7 +88,7 @@ endif
 $(SOURCE_DIR)/$(NI-LIBSTB-HAL):
 	$(CD) $(SOURCE_DIR); \
 		git clone $(NI-PUBLIC)/$(@F).git
-ifeq ($(NI_ADMIN), true)
+ifeq ($(NI_ADMIN),true)
 	$(CD) $(@); \
 		git remote add tuxbox $(GITHUB)/tuxbox-neutrino/library-stb-hal.git; \
 		git remote add seife  $(GITHUB)/neutrino-mp/libstb-hal.git; \
@@ -98,7 +98,7 @@ ifeq ($(NI_ADMIN), true)
 endif
 
 $(SOURCE_DIR)/$(NI-LIBCOOLSTREAM):
-ifeq ($(HAS_LIBCS), yes)
+ifeq ($(HAS_LIBCS),yes)
 	$(CD) $(SOURCE_DIR); \
 		git clone $(NI-PRIVATE)/$(@F).git
 	$(CD) $(@); \
@@ -109,7 +109,7 @@ endif
 $(SOURCE_DIR)/$(NI-FFMPEG):
 	$(CD) $(SOURCE_DIR); \
 		git clone $(NI-PUBLIC)/$(@F).git
-ifeq ($(NI_ADMIN), true)
+ifeq ($(NI_ADMIN),true)
 	$(CD) $(@); \
 		git remote add upstream https://git.ffmpeg.org/ffmpeg.git; \
 		git fetch --all
@@ -120,7 +120,7 @@ endif
 $(SOURCE_DIR)/$(NI-LINUX-KERNEL):
 	$(CD) $(SOURCE_DIR); \
 		git clone $(NI-PUBLIC)/$(@F).git
-ifeq ($(NI_ADMIN), true)
+ifeq ($(NI_ADMIN),true)
 	$(CD) $(@); \
 		git remote add upstream https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git; \
 		git remote add torvalds https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git; \
@@ -131,7 +131,7 @@ endif
 $(SOURCE_DIR)/$(NI-OFGWRITE):
 	$(CD) $(SOURCE_DIR); \
 		git clone $(NI-PUBLIC)/$(@F).git
-ifeq ($(NI_ADMIN), true)
+ifeq ($(NI_ADMIN),true)
 	$(CD) $(@); \
 		git remote add upstream $(GITHUB)/oe-alliance/ofgwrite.git; \
 		git fetch --all
@@ -141,7 +141,7 @@ endif
 $(SOURCE_DIR)/$(NI-RTMPDUMP):
 	$(CD) $(SOURCE_DIR); \
 		git clone $(NI-PUBLIC)/$(@F).git
-ifeq ($(NI_ADMIN), true)
+ifeq ($(NI_ADMIN),true)
 	$(CD) $(@); \
 		git remote add upstream git://git.ffmpeg.org/rtmpdump; \
 		git fetch --all

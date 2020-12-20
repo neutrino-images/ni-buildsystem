@@ -87,7 +87,7 @@ hd6x-mali-drivers: kernel-$(BOXTYPE) hd6x-libgles-headers $(DL_DIR)/$(HD6x-MALI-
 	$(REMOVE)/$(HD6x-MALI-DRIVERS_DIR)
 	$(UNTAR)/$(HD6x-MALI-DRIVERS_SOURCE)
 	$(CHDIR)/$(HD6x-MALI-DRIVERS_DIR); \
-		$(call apply_patches, $(HD6x-MALI-DRIVERS_PATCH)); \
+		$(call apply_patches,$(HD6x-MALI-DRIVERS_PATCH)); \
 		$(MAKE) -C $(BUILD_DIR)/$(KERNEL_OBJ) $(KERNEL_MAKEVARS) $(HD6x-MALI-DRIVERS_MAKEVARS); \
 		$(MAKE) -C $(BUILD_DIR)/$(KERNEL_OBJ) $(KERNEL_MAKEVARS) $(HD6x-MALI-DRIVERS_MAKEVARS) INSTALL_MOD_PATH=$(TARGET_DIR) modules_install
 	make depmod

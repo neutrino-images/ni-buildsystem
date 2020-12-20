@@ -210,7 +210,7 @@ kernel.do_prepare:
 	$(MKDIR)/$(KERNEL_OBJ)
 	$(MKDIR)/$(KERNEL_MODULES)
 	$(INSTALL_DATA) $(KERNEL_CONFIG) $(BUILD_DIR)/$(KERNEL_OBJ)/.config
-ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7 hd60 hd61))
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 hd60 hd61))
 	$(INSTALL_DATA) $(PATCHES)/initramfs-subdirboot.cpio.gz $(BUILD_DIR)/$(KERNEL_OBJ)
 endif
 	$(TOUCH)
@@ -227,14 +227,14 @@ kernel.do_prepare.tar: $(DL_DIR)/$(KERNEL_SOURCE)
 	$(REMOVE)/$(KERNEL_DIR)
 	$(UNTAR)/$(KERNEL_SOURCE)
 	$(CHDIR)/$(KERNEL_DIR); \
-		$(call apply_patches, $(addprefix kernel/,$(KERNEL_PATCH)))
+		$(call apply_patches,$(addprefix kernel/,$(KERNEL_PATCH)))
 
 kernel.do_compile: kernel.do_prepare
 	$(CHDIR)/$(KERNEL_DIR); \
 		$(MAKE) $(KERNEL_MAKEVARS) silentoldconfig; \
 		$(MAKE) $(KERNEL_MAKEVARS) $(KERNEL_MAKEOPTS); \
 		$(MAKE) $(KERNEL_MAKEVARS) modules_install
-ifneq ($(KERNEL_DTB), $(EMPTY))
+ifneq ($(KERNEL_DTB),$(EMPTY))
 	cat $(KERNEL_ZIMAGE) $(KERNEL_DTB) > $(KERNEL_ZIMAGE_DTB)
 endif
 	$(TOUCH)
@@ -256,11 +256,11 @@ kernel-coolstream-hd1: kernel.do_compile | $(IMAGE_DIR)
 
 kernel-coolstream-hd2: kernel.do_compile | $(IMAGE_DIR)
 	mkimage -A $(BOXARCH) -O linux -T kernel -C none -a 0x8000 -e 0x8000 -n "$(KERNEL_NAME)" -d $(KERNEL_ZIMAGE_DTB) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-vmlinux.ub.gz
-ifeq ($(BOXMODEL), $(filter $(BOXMODEL), apollo shiner))
-  ifeq ($(BOXMODEL), apollo)
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),apollo shiner))
+  ifeq ($(BOXMODEL),apollo)
 	# create also shiner-kernel when building apollo
 	$(INSTALL_DATA) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-vmlinux.ub.gz $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-shiner-vmlinux.ub.gz
-  else ifeq ($(BOXMODEL), shiner)
+  else ifeq ($(BOXMODEL),shiner)
 	# create also apollo-kernel when building shiner
 	$(INSTALL_DATA) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-vmlinux.ub.gz $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-apollo-vmlinux.ub.gz
   endif
@@ -268,7 +268,7 @@ endif
 	$(TOUCH)
 
 kernel-armbox: kernel.do_compile | $(IMAGE_DIR)
-#ifneq ($(KERNEL_DTB), $(EMPTY))
+#ifneq ($(KERNEL_DTB),$(EMPTY))
 #	$(INSTALL_DATA) $(KERNEL_ZIMAGE_DTB) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL).bin
 #else
 #	$(INSTALL_DATA) $(KERNEL_ZIMAGE) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL).bin
@@ -321,12 +321,12 @@ kernel-modules-armbox: kernel-armbox
 	$(INSTALL_DATA) $(KERNEL_modulesdir)/modules.builtin $(TARGET_modulesdir)
 	$(INSTALL_DATA) $(KERNEL_modulesdir)/modules.order $(TARGET_modulesdir)
 	make depmod
-ifeq ($(BOXSERIES), hd5x hd6x)
+ifeq ($(BOXSERIES),hd5x hd6x)
 	make rtl8192eu
 	make rtl8812au
 	make rtl8822bu
 endif
-ifeq ($(BOXSERIES), hd6x)
+ifeq ($(BOXSERIES),hd6x)
 	make hd6x-mali-drivers
 endif
 	$(TOUCH)
@@ -349,7 +349,7 @@ vmlinuz-initrd: $(DL_DIR)/$(VMLINUZ-INITRD_SOURCE)
 
 depmod:
 	PATH=$(PATH):/sbin:/usr/sbin depmod -b $(TARGET_DIR) $(KERNEL_VER)
-ifeq ($(BOXSERIES), hd1)
+ifeq ($(BOXSERIES),hd1)
 	mv $(TARGET_modulesdir)/modules.dep $(TARGET_modulesdir)/.modules.dep
 	rm $(TARGET_modulesdir)/modules.*
 	mv $(TARGET_modulesdir)/.modules.dep $(TARGET_modulesdir)/modules.dep

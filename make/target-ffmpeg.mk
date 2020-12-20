@@ -329,12 +329,12 @@ FFMPEG_CONFIGURE_GENERIC = \
 
 # -----------------------------------------------------------------------------
 
-ifeq ($(BOXARCH), arm)
+ifeq ($(BOXARCH),arm)
   FFMPEG_CONFIGURE_PLATFORM = \
 			--cpu=cortex-a15 \
 			--extra-cflags="-Wno-deprecated-declarations -I$(TARGET_includedir) -mfpu=neon-vfpv4 -mfloat-abi=hard"
 
-else ifeq ($(BOXARCH), mips)
+else ifeq ($(BOXARCH),mips)
   FFMPEG_CONFIGURE_PLATFORM = \
 			--cpu=generic \
 			--extra-cflags="-Wno-deprecated-declarations -I$(TARGET_includedir)"
@@ -345,7 +345,7 @@ endif
 ffmpeg: $(FFMPEG_DEPS) $(DL_DIR)/$(FFMPEG_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(FFMPEG_DIR)
 	$(UNTAR)/$(FFMPEG_SOURCE)
-ifneq ($(FFMPEG_UNPATCHED), yes)
+ifneq ($(FFMPEG_UNPATCHED),yes)
 	$(CHDIR)/$(FFMPEG_DIR); \
 		$(APPLY_PATCHES)
 endif

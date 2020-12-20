@@ -8,13 +8,13 @@
 blobs: $(BLOBS_DEPS)
 	$(MAKE) firmware
 	$(MAKE) $(BOXMODEL)-drivers
-ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7 hd60 hd61 vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 hd60 hd61 vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
 	$(MAKE) $(BOXMODEL)-libgles
-  ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd60 hd61))
+  ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd60 hd61))
 	$(MAKE) $(BOXMODEL)-libs
   endif
 endif
-ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
 	$(MAKE) vuplus-platform-util
 endif
 
@@ -26,7 +26,7 @@ firmware-boxmodel: $(SOURCE_DIR)/$(NI-DRIVERS-BIN) | $(TARGET_DIR)
 	$(call INSTALL_EXIST,$(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/lib-firmware/.,$(TARGET_base_libdir)/firmware)
 	$(call INSTALL_EXIST,$(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/lib-firmware-dvb/.,$(TARGET_base_libdir)/firmware)
 
-ifeq ($(BOXMODEL), nevis)
+ifeq ($(BOXMODEL),nevis)
   FIRMWARE-WIRELESS  = rt2870.bin
   FIRMWARE-WIRELESS += rt3070.bin
   FIRMWARE-WIRELESS += rt3071.bin
@@ -67,7 +67,7 @@ VUSOLO4K-DRIVERS_VER    = 20190424
 VUSOLO4K-DRIVERS_SOURCE = vuplus-dvb-proxy-vusolo4k-3.14.28-$(VUSOLO4K-DRIVERS_VER).r0.tar.gz
 VUSOLO4K-DRIVERS_SITE   = http://archive.vuplus.com/download/build_support/vuplus
 
-ifeq ($(VUPLUS-DRIVERS_LATEST), yes)
+ifeq ($(VUPLUS-DRIVERS_LATEST),yes)
 VUDUO4K-DRIVERS_VER    = 20191218
 else
 VUDUO4K-DRIVERS_VER    = 20190212
@@ -79,7 +79,7 @@ VUDUO4KSE-DRIVERS_VER    = 20200903
 VUDUO4KSE-DRIVERS_SOURCE = vuplus-dvb-proxy-vuduo4kse-4.1.45-$(VUDUO4KSE-DRIVERS_VER).r0.tar.gz
 VUDUO4KSE-DRIVERS_SITE   = http://archive.vuplus.com/download/build_support/vuplus
 
-ifeq ($(VUPLUS-DRIVERS_LATEST), yes)
+ifeq ($(VUPLUS-DRIVERS_LATEST),yes)
 VUULTIMO4K-DRIVERS_VER    = 20190424
 else
 VUULTIMO4K-DRIVERS_VER    = 20190104
@@ -91,7 +91,7 @@ VUZERO4K-DRIVERS_VER    = 20190424
 VUZERO4K-DRIVERS_SOURCE = vuplus-dvb-proxy-vuzero4k-4.1.20-$(VUZERO4K-DRIVERS_VER).r0.tar.gz
 VUZERO4K-DRIVERS_SITE   = http://archive.vuplus.com/download/build_support/vuplus
 
-ifeq ($(VUPLUS-DRIVERS_LATEST), yes)
+ifeq ($(VUPLUS-DRIVERS_LATEST),yes)
 VUUNO4K-DRIVERS_VER    = 20190424
 else
 VUUNO4K-DRIVERS_VER    = 20190104
@@ -99,7 +99,7 @@ endif
 VUUNO4K-DRIVERS_SOURCE = vuplus-dvb-proxy-vuuno4k-3.14.28-$(VUUNO4K-DRIVERS_VER).r0.tar.gz
 VUUNO4K-DRIVERS_SITE   = http://archive.vuplus.com/download/build_support/vuplus
 
-ifeq ($(VUPLUS-DRIVERS_LATEST), yes)
+ifeq ($(VUPLUS-DRIVERS_LATEST),yes)
 VUUNO4KSE-DRIVERS_VER    = 20190424
 else
 VUUNO4KSE-DRIVERS_VER    = 20190104
@@ -131,12 +131,12 @@ coolstream-drivers: $(SOURCE_DIR)/$(NI-DRIVERS-BIN) | $(TARGET_DIR)
 	mkdir -p $(TARGET_libdir)
 	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/lib/. $(TARGET_libdir)
 	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/libcoolstream/$(shell echo -n $(NI-FFMPEG_BRANCH) | sed 's,/,-,g')/. $(TARGET_libdir)
-ifeq ($(BOXMODEL), nevis)
+ifeq ($(BOXMODEL),nevis)
 	ln -sf libnxp.so $(TARGET_libdir)/libconexant.so
 endif
 	mkdir -p $(TARGET_modulesdir)
 	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/lib-modules/$(KERNEL_VER)/. $(TARGET_modulesdir)
-ifeq ($(BOXMODEL), nevis)
+ifeq ($(BOXMODEL),nevis)
 	ln -sf $(KERNEL_VER) $(TARGET_modulesdir)-$(BOXMODEL)
 endif
 	make depmod
@@ -383,7 +383,7 @@ vuplus-platform-util: $(DL_DIR)/$(BOXMODEL-PLATFORM-UTIL_SOURCE) | $(TARGET_DIR)
 	$(UNTAR)/$(BOXMODEL-PLATFORM-UTIL_SOURCE)
 	$(INSTALL_EXEC) -D $(BUILD_DIR)/$(BOXMODEL-PLATFORM-UTIL_DIR)/* $(TARGET_bindir)
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/vuplus-platform-util.init $(TARGET_sysconfdir)/init.d/vuplus-platform-util
-ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vuduo4k))
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),vuduo4k))
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/bp3flash.sh $(TARGET_bindir)/bp3flash.sh
 endif
 	$(REMOVE)/$(BOXMODEL-PLATFORM-UTIL_DIR)

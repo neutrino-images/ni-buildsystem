@@ -3,7 +3,7 @@
 #
 # -----------------------------------------------------------------------------
 
-ifeq ($(BOXMODEL), nevis)
+ifeq ($(BOXMODEL),nevis)
   KERNEL_VER    = 2.6.34.13
   KERNEL_DIR    = linux-$(KERNEL_VER)
   KERNEL_SOURCE = git
@@ -12,14 +12,14 @@ ifeq ($(BOXMODEL), nevis)
   KERNEL_BRANCH = ni/linux-2.6.34.15
   KERNEL_DTB    = $(EMPTY)
 
-else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), apollo shiner kronos kronos_v2))
+else ifeq ($(BOXMODEL),$(filter $(BOXMODEL),apollo shiner kronos kronos_v2))
   KERNEL_VER    = 3.10.93
   KERNEL_DIR    = linux-$(KERNEL_VER)
   KERNEL_SOURCE = git
   KERNEL_SITE   = $(EMPTY)
 
   KERNEL_BRANCH = ni/linux-3.10.108
-  ifeq ($(BOXMODEL), $(filter $(BOXMODEL), apollo shiner))
+  ifeq ($(BOXMODEL),$(filter $(BOXMODEL),apollo shiner))
     KERNEL_DTB    = $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/kernel-dtb/hd849x.dtb
     KERNEL_CONFIG = $(CONFIGS)/kernel-apollo.config
   else
@@ -27,7 +27,7 @@ else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), apollo shiner kronos kronos_v2))
     KERNEL_CONFIG = $(CONFIGS)/kernel-kronos.config
   endif
 
-else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7))
+else ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7))
   KERNEL_VER    = 4.10.12
   KERNEL_DIR    = linux-$(KERNEL_VER)
   KERNEL_SOURCE = linux-$(KERNEL_VER)-arm.tar.gz
@@ -39,7 +39,7 @@ else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7))
 
   BOOT_PARTITION = 1
 
-else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd60))
+else ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd60))
   KERNEL_VER    = 4.4.35
   KERNEL_DATE   = 20200219
   KERNEL_DIR    = linux-$(KERNEL_VER)
@@ -52,7 +52,7 @@ else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd60))
 
   BOOT_PARTITION = 4
 
-else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd61))
+else ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd61))
   KERNEL_VER    = 4.4.35
   KERNEL_DATE   = 20181228
   KERNEL_DIR    = linux-$(KERNEL_VER)
@@ -65,7 +65,7 @@ else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd61))
 
   BOOT_PARTITION = 4
 
-else ifeq ($(BOXMODEL), vusolo4k)
+else ifeq ($(BOXMODEL),vusolo4k)
   KERNEL_VER    = 3.14.28-1.8
   KERNEL_DIR    = linux
   KERNEL_SOURCE = stblinux-3.14-1.8.tar.bz2
@@ -81,7 +81,7 @@ else ifeq ($(BOXMODEL), vusolo4k)
 
   BOOT_PARTITION = 1
 
-else ifeq ($(BOXMODEL), vuduo4k)
+else ifeq ($(BOXMODEL),vuduo4k)
   KERNEL_VER    = 4.1.45-1.17
   KERNEL_DIR    = linux
   KERNEL_SOURCE = stblinux-4.1-1.17.tar.bz2
@@ -97,7 +97,7 @@ else ifeq ($(BOXMODEL), vuduo4k)
 
   BOOT_PARTITION = 6
 
-else ifeq ($(BOXMODEL), vuduo4kse)
+else ifeq ($(BOXMODEL),vuduo4kse)
   KERNEL_VER    = 4.1.45-1.17
   KERNEL_DIR    = linux
   KERNEL_SOURCE = stblinux-4.1-1.17.tar.bz2
@@ -113,7 +113,7 @@ else ifeq ($(BOXMODEL), vuduo4kse)
 
   BOOT_PARTITION = 6
 
-else ifeq ($(BOXMODEL), vuultimo4k)
+else ifeq ($(BOXMODEL),vuultimo4k)
   KERNEL_VER    = 3.14.28-1.12
   KERNEL_DIR    = linux
   KERNEL_SOURCE = stblinux-3.14-1.12.tar.bz2
@@ -129,7 +129,7 @@ else ifeq ($(BOXMODEL), vuultimo4k)
 
   BOOT_PARTITION = 1
 
-else ifeq ($(BOXMODEL), vuzero4k)
+else ifeq ($(BOXMODEL),vuzero4k)
   KERNEL_VER    = 4.1.20-1.9
   KERNEL_DIR    = linux
   KERNEL_SOURCE = stblinux-4.1-1.9.tar.bz2
@@ -145,7 +145,7 @@ else ifeq ($(BOXMODEL), vuzero4k)
 
   BOOT_PARTITION = 4
 
-else ifeq ($(BOXMODEL), vuuno4k)
+else ifeq ($(BOXMODEL),vuuno4k)
   KERNEL_VER    = 3.14.28-1.12
   KERNEL_DIR    = linux
   KERNEL_SOURCE = stblinux-3.14-1.12.tar.bz2
@@ -161,7 +161,7 @@ else ifeq ($(BOXMODEL), vuuno4k)
 
   BOOT_PARTITION = 1
 
-else ifeq ($(BOXMODEL), vuuno4kse)
+else ifeq ($(BOXMODEL),vuuno4kse)
   KERNEL_VER    = 4.1.20-1.9
   KERNEL_DIR    = linux
   KERNEL_SOURCE = stblinux-4.1-1.9.tar.bz2
@@ -177,7 +177,7 @@ else ifeq ($(BOXMODEL), vuuno4kse)
 
   BOOT_PARTITION = 1
 
-else ifeq ($(BOXMODEL), vuduo)
+else ifeq ($(BOXMODEL),vuduo)
   KERNEL_VER    = 3.9.6
   KERNEL_DIR    = linux
   KERNEL_SOURCE = stblinux-$(KERNEL_VER).tar.bz2
@@ -200,7 +200,7 @@ KERNEL_NAME     = NI $(shell echo $(BOXFAMILY) | sed 's/.*/\u&/') Kernel
 
 KERNEL_modulesdir = $(BUILD_DIR)/$(KERNEL_MODULES)/lib/modules/$(KERNEL_VER)
 
-ifeq ($(BOXMODEL), nevis)
+ifeq ($(BOXMODEL),nevis)
   KERNEL_UIMAGE   = $(BUILD_DIR)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/Image
 else
   KERNEL_UIMAGE   = $(BUILD_DIR)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/uImage
@@ -223,9 +223,9 @@ KERNEL_MAKEVARS += \
 	KVER=$(KERNEL_VER) \
 	KSRC=$(BUILD_DIR)/$(KERNEL_DIR)
 
-ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vuduo))
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),vuduo))
   KERNEL_IMAGE = vmlinux
-else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd60 hd61))
+else ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd60 hd61))
   KERNEL_IMAGE = uImage
 else
   KERNEL_IMAGE = zImage
@@ -234,6 +234,6 @@ endif
 KERNEL_MAKEOPTS = $(KERNEL_IMAGE) modules
 
 # build also the kernel-dtb for arm-hd5x and arm-hd6x
-ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k h7 hd60 hd61))
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 hd60 hd61))
   KERNEL_MAKEOPTS += $(notdir $(KERNEL_DTB))
 endif

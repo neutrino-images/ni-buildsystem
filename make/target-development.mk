@@ -3,7 +3,7 @@
 #
 # -----------------------------------------------------------------------------
 
-VALGRIND_TARGET = $(if $(filter $(BOXMODEL), nevis), valgrind12305, valgrind3)
+VALGRIND_TARGET = $(if $(filter $(BOXMODEL),nevis),valgrind12305, valgrind3)
 
 valgrind: $(VALGRIND_TARGET)
 	$(TOUCH)
@@ -24,7 +24,7 @@ valgrind3: $(DL_DIR)/$(VALGRIND_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(VALGRIND_DIR)
 	$(UNTAR)/$(VALGRIND_SOURCE)
 	$(CHDIR)/$(VALGRIND_DIR); \
-		$(call apply_patches, $(VALGRIND_PATCH)); \
+		$(call apply_patches,$(VALGRIND_PATCH)); \
 		export AR=$(TARGET_AR); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
@@ -51,7 +51,7 @@ valgrind12305: | $(TARGET_DIR)
 	svn co -r 12305 svn://svn.valgrind.org/valgrind/trunk $(BUILD_DIR)/valgrind; \
 	$(CHDIR)/valgrind; \
 		svn up --force -r {2011-12-13} VEX; \
-		$(call apply_patches, $(VALGRIND12305_PATCH)); \
+		$(call apply_patches,$(VALGRIND12305_PATCH)); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--prefix=$(prefix) \

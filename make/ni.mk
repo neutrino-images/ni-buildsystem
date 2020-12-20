@@ -4,7 +4,7 @@
 # -----------------------------------------------------------------------------
 
 BOXMODEL_IMAGE  = $(EMPTY)
-ifneq ($(DEBUG), yes)
+ifneq ($(DEBUG),yes)
   BOXMODEL_IMAGE += nevis
 endif
 BOXMODEL_IMAGE += apollo kronos kronos_v2
@@ -59,26 +59,26 @@ ni-image:
 	$(MAKE) mtd-utils
 	$(MAKE) wget
 	#$(MAKE) streamripper
-ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2 hd5x hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo))
+ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd2 hd5x hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo))
 	$(MAKE) less
 	$(MAKE) parted
 	$(MAKE) openvpn
 	$(MAKE) openssh
 	$(MAKE) ethtool
-  ifneq ($(BOXMODEL), kronos_v2)
+  ifneq ($(BOXMODEL),kronos_v2)
 	$(MAKE) bash
 	$(MAKE) iperf
 	$(MAKE) minicom
 	$(MAKE) mc
   endif
-  ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd5x hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo))
+  ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd5x hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo))
 	$(MAKE) gptfdisk
 	$(MAKE) rsync
 	$(MAKE) ofgwrite
 	$(MAKE) aio-grab
 	$(MAKE) dvbsnoop
   endif
-  ifeq ($(DEBUG), yes)
+  ifeq ($(DEBUG),yes)
 	$(MAKE) strace
 	$(MAKE) valgrind
 	$(MAKE) gdb
@@ -89,7 +89,7 @@ endif
 	make files-var-etc
 	make scripts
 	make init-scripts
-ifeq ($(PERSONALIZE), yes)
+ifeq ($(PERSONALIZE),yes)
 	make personalize
 endif
 	make rootfs

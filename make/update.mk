@@ -6,7 +6,7 @@
 update-self:
 	export GIT_MERGE_AUTOEDIT=no; \
 	git pull
-ifeq ($(HAS_INTERNALS), yes)
+ifeq ($(HAS_INTERNALS),yes)
 	$(CD) $(BASE_DIR)/$(NI-INTERNALS); git pull
 endif
 
@@ -17,7 +17,7 @@ update-neutrino:
 		git pull origin $(NI-NEUTRINO_BRANCH)
 
 update-remotes:
-ifeq ($(NI_ADMIN), true)
+ifeq ($(NI_ADMIN),true)
 	export GIT_MERGE_AUTOEDIT=no; \
 	$(CD) $(SOURCE_DIR)/$(NI-NEUTRINO); \
 		git checkout $(NI-NEUTRINO_BRANCH); \
@@ -47,7 +47,7 @@ update-ni-sources: ni-sources
 	$(CD) $(BUILD-GENERIC-PC); git pull
 	$(CD) $(SOURCE_DIR)/$(NI-DRIVERS-BIN); git pull
 	$(CD) $(SOURCE_DIR)/$(NI-FFMPEG); git pull --all; git checkout $(NI-FFMPEG_BRANCH)
-ifeq ($(HAS_LIBCS), yes)
+ifeq ($(HAS_LIBCS),yes)
 	$(CD) $(SOURCE_DIR)/$(NI-LIBCOOLSTREAM); git pull --all; git checkout $(NI-LIBCOOLSTREAM_BRANCH)
 endif
 	$(CD) $(SOURCE_DIR)/$(NI-LIBSTB-HAL); git pull
@@ -69,13 +69,13 @@ update-all: update-ni update-remotes
 
 push:
 	git push
-ifeq ($(HAS_INTERNALS), yes)
+ifeq ($(HAS_INTERNALS),yes)
 	$(CD) $(BASE_DIR)/$(NI-INTERNALS); git push
 endif
 	$(CD) $(BUILD-GENERIC-PC); git push
 	$(CD) $(SOURCE_DIR)/$(NI-DRIVERS-BIN); git push
 	$(CD) $(SOURCE_DIR)/$(NI-FFMPEG); git push --all
-ifeq ($(HAS_LIBCS), yes)
+ifeq ($(HAS_LIBCS),yes)
 	$(CD) $(SOURCE_DIR)/$(NI-LIBCOOLSTREAM); git push --all
 endif
 	$(CD) $(SOURCE_DIR)/$(NI-LIBSTB-HAL); git push
@@ -90,13 +90,13 @@ endif
 
 status:
 	git status -s -b
-ifeq ($(HAS_INTERNALS), yes)
+ifeq ($(HAS_INTERNALS),yes)
 	$(CD) $(BASE_DIR)/$(NI-INTERNALS); git status -s -b
 endif
 	$(CD) $(BUILD-GENERIC-PC); git status -s -b
 	$(CD) $(SOURCE_DIR)/$(NI-DRIVERS-BIN); git status -s -b
 	$(CD) $(SOURCE_DIR)/$(NI-FFMPEG); git status -s -b
-ifeq ($(HAS_LIBCS), yes)
+ifeq ($(HAS_LIBCS),yes)
 	$(CD) $(SOURCE_DIR)/$(NI-LIBCOOLSTREAM); git status -s -b
 endif
 	$(CD) $(SOURCE_DIR)/$(NI-LIBSTB-HAL); git status -s -b

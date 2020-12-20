@@ -18,7 +18,7 @@ zlib: $(DL_DIR)/$(ZLIB_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(ZLIB_DIR)
 	$(UNTAR)/$(ZLIB_SOURCE)
 	$(CHDIR)/$(ZLIB_DIR); \
-		$(call apply_patches, $(ZLIB_PATCH)); \
+		$(call apply_patches,$(ZLIB_PATCH)); \
 		$(MAKE_ENV) \
 		mandir=$(REMOVE_mandir) \
 		./configure \
@@ -106,7 +106,7 @@ libdvbsi: | $(TARGET_DIR)
 	$(GET-GIT-SOURCE) $(LIBDVBSI_SITE)/$(LIBDVBSI_SOURCE) $(DL_DIR)/$(LIBDVBSI_SOURCE)
 	$(CPDIR)/$(LIBDVBSI_SOURCE)
 	$(CHDIR)/$(LIBDVBSI_DIR); \
-		$(call apply_patches, $(LIBDVBSI_PATCH)); \
+		$(call apply_patches,$(LIBDVBSI_PATCH)); \
 		$(CONFIGURE) \
 			--prefix=$(prefix) \
 			--enable-shared \
@@ -152,7 +152,7 @@ $(DL_DIR)/$(LIBCURL_SOURCE):
 
 LIBCURL_DEPS   = zlib openssl rtmpdump ca-bundle
 
-LIBCURL_CONF   = $(if $(filter $(BOXSERIES), hd1),--disable-ipv6,--enable-ipv6)
+LIBCURL_CONF   = $(if $(filter $(BOXSERIES),hd1),--disable-ipv6,--enable-ipv6)
 
 libcurl: $(LIBCURL_DEPS) $(DL_DIR)/$(LIBCURL_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LIBCURL_DIR)
@@ -208,13 +208,13 @@ LIBPNG_PATCH  = libpng-Disable-pngfix-and-png-fix-itxt.patch
 
 LIBPNG_DEPS   = zlib
 
-LIBPNG_CONF   = $(if $(filter $(BOXSERIES), hd5x hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse),--enable-arm-neon,--disable-arm-neon)
+LIBPNG_CONF   = $(if $(filter $(BOXSERIES),hd5x hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse),--enable-arm-neon,--disable-arm-neon)
 
 libpng: $(LIBPNG_DEPS) $(DL_DIR)/$(LIBPNG_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LIBPNG_DIR)
 	$(UNTAR)/$(LIBPNG_SOURCE)
 	$(CHDIR)/$(LIBPNG_DIR); \
-		$(call apply_patches, $(LIBPNG_PATCH)); \
+		$(call apply_patches,$(LIBPNG_PATCH)); \
 		$(CONFIGURE) \
 			--prefix=$(prefix) \
 			--mandir=$(REMOVE_mandir) \
@@ -251,7 +251,7 @@ freetype: $(FREETYPE_DEPS) $(DL_DIR)/$(FREETYPE_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(FREETYPE_DIR)
 	$(UNTAR)/$(FREETYPE_SOURCE)
 	$(CHDIR)/$(FREETYPE_DIR); \
-		$(call apply_patches, $(FREETYPE_PATCH)); \
+		$(call apply_patches,$(FREETYPE_PATCH)); \
 		$(SED) '/^FONT_MODULES += \(type1\|cid\|pfr\|type42\|pcf\|bdf\|winfonts\|cff\)/d' modules.cfg
 	$(CHDIR)/$(FREETYPE_DIR)/builds/unix; \
 		libtoolize --force --copy; \
@@ -296,7 +296,7 @@ libjpeg-turbo: $(DL_DIR)/$(LIBJPEG-TURBO_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LIBJPEG-TURBO_DIR)
 	$(UNTAR)/$(LIBJPEG-TURBO_SOURCE)
 	$(CHDIR)/$(LIBJPEG-TURBO_DIR); \
-		$(call apply_patches, $(LIBJPEG-TURBO_PATCH)); \
+		$(call apply_patches,$(LIBJPEG-TURBO_PATCH)); \
 		$(CMAKE) \
 			-DWITH_SIMD=False \
 			-DWITH_JPEG8=80 \
@@ -320,9 +320,9 @@ $(DL_DIR)/$(OPENSSL_SOURCE):
 
 OPENSSL_PATCH  = 0000-Configure-align-O-flag.patch
 
-ifeq ($(BOXARCH), arm)
+ifeq ($(BOXARCH),arm)
   OPENSSL_ARCH = linux-armv4
-else ifeq ($(BOXARCH), mips)
+else ifeq ($(BOXARCH),mips)
   OPENSSL_ARCH = linux-generic32
 endif
 
@@ -330,7 +330,7 @@ openssl: $(DL_DIR)/$(OPENSSL_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(OPENSSL_DIR)
 	$(UNTAR)/$(OPENSSL_SOURCE)
 	$(CHDIR)/$(OPENSSL_DIR); \
-		$(call apply_patches, $(addprefix $(@F)/,$(OPENSSL_PATCH))); \
+		$(call apply_patches,$(addprefix $(@F)/,$(OPENSSL_PATCH))); \
 		./Configure \
 			$(OPENSSL_ARCH) \
 			shared \
@@ -362,7 +362,7 @@ openssl: $(DL_DIR)/$(OPENSSL_SOURCE) | $(TARGET_DIR)
 	rm -rf $(TARGET_libdir)/engines
 	rm -f $(TARGET_bindir)/c_rehash
 	rm -f $(TARGET_sysconfdir)/ssl/misc/{CA.pl,tsget}
-ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd1 hd2))
+ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd1 hd2))
 	rm -f $(TARGET_bindir)/openssl
 	rm -f $(TARGET_sysconfdir)/ssl/misc/{CA.*,c_*}
 endif
@@ -390,7 +390,7 @@ ncurses: $(DL_DIR)/$(NCURSES_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(NCURSES_DIR)
 	$(UNTAR)/$(NCURSES_SOURCE)
 	$(CHDIR)/$(NCURSES_DIR); \
-		$(call apply_patches, $(NCURSES_PATCH)); \
+		$(call apply_patches,$(NCURSES_PATCH)); \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
 			--prefix=$(prefix) \
@@ -479,7 +479,7 @@ libusb-compat: $(LUBUSB-COMPAT_DEPS) $(DL_DIR)/$(LIBUSB-COMPAT_SOURCE) | $(TARGE
 	$(REMOVE)/$(LIBUSB-COMPAT_DIR)
 	$(UNTAR)/$(LIBUSB-COMPAT_SOURCE)
 	$(CHDIR)/$(LIBUSB-COMPAT_DIR); \
-		$(call apply_patches, $(addprefix $(@F)/,$(LIBUSB-COMPAT_PATCH))); \
+		$(call apply_patches,$(addprefix $(@F)/,$(LIBUSB-COMPAT_PATCH))); \
 		$(CONFIGURE) \
 			--prefix=$(prefix) \
 			; \
@@ -539,7 +539,7 @@ libdpf: $(LIBDPF_DEPS) | $(TARGET_DIR)
 	$(GET-GIT-SOURCE) $(LIBDPF_SITE)/$(LIBDPF_SOURCE) $(DL_DIR)/$(LIBDPF_SOURCE)
 	$(CPDIR)/$(LIBDPF_SOURCE)
 	$(CHDIR)/$(LIBDPF_DIR)/dpflib; \
-		$(call apply_patches, $(LIBDPF_PATCH)); \
+		$(call apply_patches,$(LIBDPF_PATCH)); \
 		make libdpf.a CC=$(TARGET_CC) PREFIX=$(TARGET_prefix); \
 		mkdir -p $(TARGET_includedir)/libdpf; \
 		cp dpf.h $(TARGET_includedir)/libdpf/libdpf.h; \
@@ -618,7 +618,7 @@ expat: $(DL_DIR)/$(EXPAT_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(EXPAT_DIR)
 	$(UNTAR)/$(EXPAT_SOURCE)
 	$(CHDIR)/$(EXPAT_DIR); \
-		$(call apply_patches, $(EXPAT_PATCH)); \
+		$(call apply_patches,$(EXPAT_PATCH)); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--prefix=$(prefix) \
@@ -648,7 +648,7 @@ $(DL_DIR)/$(LIBBLURAY_SOURCE):
 LIBBLURAY_PATCH  = libbluray.patch
 
 LIBBLURAY_DEPS   = freetype
-ifeq ($(BOXSERIES), hd2)
+ifeq ($(BOXSERIES),hd2)
   LIBBLURAY_DEPS += libaacs libbdplus
 endif
 
@@ -656,7 +656,7 @@ libbluray: $(LIBBLURAY_DEPS) $(DL_DIR)/$(LIBBLURAY_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LIBBLURAY_DIR)
 	$(UNTAR)/$(LIBBLURAY_SOURCE)
 	$(CHDIR)/$(LIBBLURAY_DIR); \
-		$(call apply_patches, $(LIBBLURAY_PATCH)); \
+		$(call apply_patches,$(LIBBLURAY_PATCH)); \
 		./bootstrap; \
 		$(CONFIGURE) \
 			--prefix=$(prefix) \
@@ -699,7 +699,7 @@ libass: $(LIBASS_DEPS) $(DL_DIR)/$(LIBASS_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LIBASS_DIR)
 	$(UNTAR)/$(LIBASS_SOURCE)
 	$(CHDIR)/$(LIBASS_DIR); \
-		$(call apply_patches, $(LIBASS_PATCH)); \
+		$(call apply_patches,$(LIBASS_PATCH)); \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
 			--prefix=$(prefix) \
@@ -915,7 +915,7 @@ pugixml: $(DL_DIR)/$(PUGIXML_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PUGIXML_DIR)
 	$(UNTAR)/$(PUGIXML_SOURCE)
 	$(CHDIR)/$(PUGIXML_DIR); \
-		$(call apply_patches, $(PUGIXML_PATCH)); \
+		$(call apply_patches,$(PUGIXML_PATCH)); \
 		$(CMAKE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
@@ -988,7 +988,7 @@ libtirpc: $(DL_DIR)/$(LIBTIRPC_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LIBTIRPC_DIR)
 	$(UNTAR)/$(LIBTIRPC_SOURCE)
 	$(CHDIR)/$(LIBTIRPC_DIR); \
-		$(call apply_patches, $(addprefix $(@F)/,$(LIBTIRP_PATCH))); \
+		$(call apply_patches,$(addprefix $(@F)/,$(LIBTIRP_PATCH))); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
@@ -1002,7 +1002,7 @@ libtirpc: $(DL_DIR)/$(LIBTIRPC_SOURCE) | $(TARGET_DIR)
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL_LA)
 	$(REWRITE_PKGCONF_PC)
-ifeq ($(BOXSERIES), hd1)
+ifeq ($(BOXSERIES),hd1)
 	$(SED) '/^\(udp\|tcp\)6/ d' $(TARGET_sysconfdir)/netconfig
 endif
 	$(REMOVE)/$(LIBTIRPC_DIR)
@@ -1085,7 +1085,7 @@ libmad: $(DL_DIR)/$(LIBMAD_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LIBMAD_DIR)
 	$(UNTAR)/$(LIBMAD_SOURCE)
 	$(CHDIR)/$(LIBMAD_DIR); \
-		$(call apply_patches, $(LIBMAD_PATCH)); \
+		$(call apply_patches,$(LIBMAD_PATCH)); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--prefix=$(prefix) \
@@ -1192,7 +1192,7 @@ LIBFFI_SITE   = $(call github,libffi,libffi,v$(LIBFFI_VER))
 $(DL_DIR)/$(LIBFFI_SOURCE):
 	$(DOWNLOAD) $(LIBFFI_SITE)/$(LIBFFI_SOURCE)
 
-LIBFFI_CONF   = $(if $(filter $(BOXSERIES), hd1),--enable-static --disable-shared)
+LIBFFI_CONF   = $(if $(filter $(BOXSERIES),hd1),--enable-static --disable-shared)
 
 libffi: $(DL_DIR)/$(LIBFFI_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LIBFFI_DIR)
@@ -1226,13 +1226,13 @@ GLIB2_PATCH  = glib2-disable-tests.patch
 GLIB2_PATCH += glib2-automake.patch
 
 GLIB2_DEPS   = zlib libffi
-ifeq ($(BOXSERIES), hd2)
+ifeq ($(BOXSERIES),hd2)
   GLIB2_DEPS += gettext
 endif
 
-GLIB2_CONF   = $(if $(filter $(BOXSERIES), hd1),--enable-static --disable-shared)
+GLIB2_CONF   = $(if $(filter $(BOXSERIES),hd1),--enable-static --disable-shared)
 
-ifeq ($(BOXSERIES), $(filter $(BOXSERIES), vusolo4k vuduo4k vuduo4kse vuultimo4k vuuno4kse))
+ifeq ($(BOXSERIES),$(filter $(BOXSERIES),vusolo4k vuduo4k vuduo4kse vuultimo4k vuuno4kse))
   GLIB2_DEPS += libiconv
   GLIB2_CONF += --with-libiconv=gnu
 endif
@@ -1241,7 +1241,7 @@ glib2: $(GLIB2_DEPS) $(DL_DIR)/$(GLIB2_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(GLIB2_DIR)
 	$(UNTAR)/$(GLIB2_SOURCE)
 	$(CHDIR)/$(GLIB2_DIR); \
-		$(call apply_patches, $(GLIB2_PATCH)); \
+		$(call apply_patches,$(GLIB2_PATCH)); \
 		echo "ac_cv_type_long_long=yes"		 > arm-linux.cache; \
 		echo "glib_cv_stack_grows=no"		>> arm-linux.cache; \
 		echo "glib_cv_uscore=no"		>> arm-linux.cache; \
@@ -1377,7 +1377,7 @@ GRAPHLCD_BASE_SITE   = git://projects.vdr-developer.org
 GRAPHLCD_BASE_PATCH  = graphlcd.patch
 GRAPHLCD_BASE_PATCH += 0003-strip-graphlcd-conf.patch
 GRAPHLCD_BASE_PATCH += 0004-material-colors.patch
-ifeq ($(BOXMODEL), $(filter $(BOXMODEL), vuduo4k vuduo4kse vusolo4k vuultimo4k vuuno4kse))
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),vuduo4k vuduo4kse vusolo4k vuultimo4k vuuno4kse))
   GRAPHLCD_BASE_PATCH += 0005-add-vuplus-driver.patch
 endif
 
@@ -1388,7 +1388,7 @@ graphlcd-base: $(GRAPHLCD_BASE_DEPS) | $(TARGET_DIR)
 	$(GET-GIT-SOURCE) $(GRAPHLCD_BASE_SITE)/$(GRAPHLCD_BASE_SOURCE) $(DL_DIR)/$(GRAPHLCD_BASE_SOURCE)
 	$(CPDIR)/$(GRAPHLCD_BASE_DIR)
 	$(CHDIR)/$(GRAPHLCD_BASE_DIR); \
-		$(call apply_patches, $(addprefix $(@)/,$(GRAPHLCD_BASE_PATCH))); \
+		$(call apply_patches,$(addprefix $(@)/,$(GRAPHLCD_BASE_PATCH))); \
 		$(MAKE_ENV) \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR) PREFIX=$(prefix)

@@ -4,7 +4,7 @@
 # -----------------------------------------------------------------------------
 
 UID := $(shell id -u)
-ifeq ($(UID), 0)
+ifeq ($(UID),0)
 warn:
 	@echo "You are running as root. Don't do this, it's dangerous."
 	@echo "Refusing to build. Good bye."

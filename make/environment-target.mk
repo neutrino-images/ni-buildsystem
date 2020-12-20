@@ -120,4 +120,4 @@ $(VAR_PLUGINS) : | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-PERSISTENT_VAR_PARTITION = $(if $(filter $(BOXMODEL), apollo shiner kronos kronos_v2),yes,no)
+PERSISTENT_VAR_PARTITION = $(if $(filter $(BOXMODEL),apollo shiner kronos kronos_v2),yes,no)

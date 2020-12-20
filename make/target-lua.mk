@@ -24,7 +24,7 @@ lua: $(LUA_DEPS) $(DL_DIR)/$(LUA_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(LUA_DIR)
 	$(UNTAR)/$(LUA_SOURCE)
 	$(CHDIR)/$(LUA_DIR); \
-		$(call apply_patches, $(LUA_PATCH)); \
+		$(call apply_patches,$(LUA_PATCH)); \
 		$(MAKE) linux \
 			PKG_VERSION=$(LUA_VER) \
 			$(MAKE_OPTS) \
@@ -86,7 +86,7 @@ lua-feedparser: $(LUA-DEEDPARSER_DEPS) $(DL_DIR)/$(LUA-FEEDPARSER_SOURCE) | $(TA
 	$(UNTAR)/$(LUA-FEEDPARSER_SOURCE)
 	$(CHDIR)/$(LUA-FEEDPARSER_DIR); \
 		$(SED) 's|^PREFIX =|PREFIX ?=|' Makefile; \
-		$(call apply_patches, $(LUA-FEEDPARSER_PATCH)); \
+		$(call apply_patches,$(LUA-FEEDPARSER_PATCH)); \
 		$(MAKE) install PREFIX=$(TARGET_prefix)
 	$(REMOVE)/$(LUA-FEEDPARSER_DIR)
 	$(TOUCH)
@@ -167,7 +167,7 @@ luaposix: $(LUAPOSIX_DEPS) $(DL_DIR)/$(SLINGSHOT_SOURCE) $(DL_DIR)/$(GNULIB_SOUR
 	$(CHDIR)/$(LUAPOSIX_DIR); \
 		tar -C gnulib --strip=1 -xf $(DL_DIR)/$(GNULIB_SOURCE); \
 		tar -C slingshot --strip=1 -xf $(DL_DIR)/$(SLINGSHOT_SOURCE); \
-		$(call apply_patches, $(LUAPOSIX_PATCH)); \
+		$(call apply_patches,$(LUAPOSIX_PATCH)); \
 		export LUA=$(HOST_LUA); \
 		./bootstrap; \
 		autoreconf -fi; \

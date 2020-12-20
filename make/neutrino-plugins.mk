@@ -8,9 +8,9 @@ plugins:
 	$(MAKE) logo-addon
 	$(MAKE) neutrino-mediathek
 	$(MAKE) doscam-webif-skin
-ifneq ($(BOXSERIES), hd1)
+ifneq ($(BOXSERIES),hd1)
 	$(MAKE) channellogos
-  ifneq ($(BOXMODEL), kronos_v2)
+  ifneq ($(BOXMODEL),kronos_v2)
 	$(MAKE) links
   endif
 endif
@@ -55,7 +55,7 @@ NEUTRINO-PLUGINS_CONF_OPTS = \
 	--with-targetprefix=$(prefix) \
 	--with-boxtype=$(BOXTYPE)
 
-ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd1 hd2))
+ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd1 hd2))
   NEUTRINO-PLUGINS_CONF_OPTS += --with-boxmodel=$(BOXSERIES)
 else
   NEUTRINO-PLUGINS_CONF_OPTS += --with-boxmodel=$(BOXMODEL)
@@ -67,8 +67,8 @@ NEUTRINO-PLUGINS_CONF_OPTS += \
 	--disable-mountpointmanagement \
 	--disable-stbup
 
-ifeq ($(BOXTYPE), coolstream)
-  ifeq ($(BOXSERIES), hd1)
+ifeq ($(BOXTYPE),coolstream)
+  ifeq ($(BOXSERIES),hd1)
     NEUTRINO-PLUGINS_CONF_OPTS += \
 	--disable-spiegel_tv_doc \
 	--disable-tierwelt_tv
@@ -82,7 +82,7 @@ endif
 
 # -----------------------------------------------------------------------------
 
-ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd1 hd2))
+ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd1 hd2))
   NEUTRINO-PLUGINS_BOXMODEL = $(BOXSERIES)
 else
   NEUTRINO-PLUGINS_BOXMODEL = $(BOXMODEL)
@@ -227,11 +227,11 @@ LINKS_PATCH  = links.patch
 LINKS_PATCH += links-ac-prog-cxx.patch
 LINKS_PATCH += links-accept_https_play.patch
 
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), coolstream))
+ifeq ($(BOXTYPE),$(filter $(BOXTYPE),coolstream))
   LINKS_PATCH += links-input-nevis_ir.patch
-else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), hd51 bre2ze4k))
+else ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k))
   LINKS_PATCH += links-input-event1.patch
-else ifeq ($(BOXMODEL), $(filter $(BOXMODEL), h7))
+else ifeq ($(BOXMODEL),$(filter $(BOXMODEL),h7))
   LINKS_PATCH += links-input-event2.patch
 endif
 
@@ -244,7 +244,7 @@ links: $(LINKS_DEPS) $(DL_DIR)/$(LINKS_SOURCE) $(SHARE_PLUGINS) | $(TARGET_DIR)
 		echo "german" >> index.txt; \
 		./gen-intl
 	$(CHDIR)/$(LINKS_DIR); \
-		$(call apply_patches, $(LINKS_PATCH)); \
+		$(call apply_patches,$(LINKS_PATCH)); \
 		autoreconf -vfi; \
 		$(CONFIGURE) \
 			--prefix=$(prefix) \

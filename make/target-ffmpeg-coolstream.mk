@@ -7,7 +7,7 @@ FFMPEG_DEPS = openssl rtmpdump libbluray libass
 
 # -----------------------------------------------------------------------------
 
-ifeq ($(NI-FFMPEG_BRANCH), ni/ffmpeg/2.8)
+ifeq ($(NI-FFMPEG_BRANCH),ni/ffmpeg/2.8)
   FFMPEG_DEPS += libroxml
   FFMPEG_CONFIGURE_BRANCH =
 else
@@ -152,14 +152,14 @@ FFMPEG_CONFIGURE_GENERIC = \
 
 # -----------------------------------------------------------------------------
 
-ifeq ($(BOXSERIES), hd1)
+ifeq ($(BOXSERIES),hd1)
   FFMPEG_CONFIGURE_PLATFORM = \
 			--enable-small \
 			--cpu=armv6 \
 			--extra-cflags="-Wno-deprecated-declarations -I$(TARGET_includedir)"
 endif
 
-ifeq ($(BOXSERIES), hd2)
+ifeq ($(BOXSERIES),hd2)
   FFMPEG_CONFIGURE_PLATFORM = \
 			--enable-decoder=h264 \
 			--enable-decoder=vc1 \

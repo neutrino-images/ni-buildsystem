@@ -62,7 +62,7 @@ CROSSTOOL-NG_SITE   = https://github.com/neutrino-images
 CROSSTOOL-NG_PATCH  = crosstool-ng-bash-version.patch
 
 CROSSTOOL-NG_CONFIG = $(CONFIGS)/ct-ng-$(BOXTYPE).config
-ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd1 hd2))
+ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd1 hd2))
   CROSSTOOL-NG_CONFIG = $(CONFIGS)/ct-ng-$(BOXTYPE)-$(BOXSERIES).config
 endif
 
@@ -87,11 +87,11 @@ $(CROSS_DIR): | $(BUILD_DIR)
 	$(REMOVE)/$(CROSSTOOL-NG_DIR)
 	$(GET-GIT-SOURCE) $(CROSSTOOL-NG_SITE)/$(CROSSTOOL-NG_SOURCE) $(DL_DIR)/$(CROSSTOOL-NG_SOURCE)
 	$(CPDIR)/$(CROSSTOOL-NG_SOURCE)
-ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd1 hd2))
+ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd1 hd2))
 	$(CHDIR)/$(CROSSTOOL-NG_DIR); \
 		git checkout 1dbb06f2; \
-		$(call apply_patches, $(CROSSTOOL-NG_PATCH))
-  ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2))
+		$(call apply_patches,$(CROSSTOOL-NG_PATCH))
+  ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd2))
 	$(CHDIR)/$(CROSSTOOL-NG_DIR); \
 		$(INSTALL_COPY) $(PATCHES)/crosstool-ng/gcc/* patches/gcc/linaro-6.3-2017.02
   endif
@@ -112,7 +112,7 @@ endif
 		chmod 0755 ct-ng; \
 		./ct-ng oldconfig; \
 		./ct-ng build
-ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd1 hd2))
+ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd1 hd2))
 	test -e $(CROSS_DIR)/$(TARGET)/lib && mv $(CROSS_DIR)/$(TARGET)/lib $(CROSS_DIR)/$(TARGET)/lib.x
 endif
 	test -e $(CROSS_DIR)/$(TARGET)/lib || ln -sf sys-root/lib $(CROSS_DIR)/$(TARGET)/

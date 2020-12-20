@@ -18,7 +18,7 @@ BOOTSTRAP += target-dir
 BOOTSTRAP += libs-static
 BOOTSTRAP += libs-cross
 
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), coolstream))
+ifeq ($(BOXTYPE),$(filter $(BOXTYPE),coolstream))
   BOOTSTRAP += var-update
 endif
 
@@ -52,7 +52,7 @@ target-dir:
 	mkdir -p $(TARGET_localstatedir)/keys
 	mkdir -p $(TARGET_localstatedir)/root
 	mkdir -p $(TARGET_localstatedir)/spool/cron/crontabs
-ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd5x hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
+ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd5x hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
 	mkdir -p $(TARGET_DIR)/boot
 endif
 	mkdir -p $(TARGET_DIR)/dev
@@ -65,8 +65,8 @@ endif
 	mkdir -p $(TARGET_DIR)/tmp
 	mkdir -p $(PKG_CONFIG_PATH)
 	make skeleton
-ifeq ($(PERSISTENT_VAR_PARTITION), yes)
-  ifeq ($(IMAGE_NEW), yes)
+ifeq ($(PERSISTENT_VAR_PARTITION),yes)
+  ifeq ($(IMAGE_NEW),yes)
 	touch -f $(TARGET_localstatedir)/etc/.newimage
   endif
 endif
@@ -99,7 +99,7 @@ libs-cross: | $(TARGET_DIR)
 	else \
 		false; \
 	fi
-ifeq ($(BOXSERIES), hd2)
+ifeq ($(BOXSERIES),hd2)
 	$(CD) $(TARGET_base_libdir); \
 		ln -sf libuClibc-$(UCLIBC_VER).so libcrypt.so.0; \
 		ln -sf libuClibc-$(UCLIBC_VER).so libdl.so.0; \
@@ -107,25 +107,25 @@ ifeq ($(BOXSERIES), hd2)
 		ln -sf libuClibc-$(UCLIBC_VER).so libpthread.so.0; \
 		ln -sf libuClibc-$(UCLIBC_VER).so librt.so.0
 endif
-ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd5x hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
+ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd5x hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
 	$(CD) $(TARGET_base_libdir); \
 		ln -sf ld-2.23.so ld-linux.so.3
 endif
 
 # -----------------------------------------------------------------------------
 
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), coolstream))
+ifeq ($(BOXTYPE),$(filter $(BOXTYPE),coolstream))
 
 var-update: $(TARGET_localstatedir)/update
 
 $(TARGET_localstatedir)/update: | $(TARGET_DIR)
 	mkdir -p $(@)
-ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd1))
+ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd1))
 	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/zImage $(@)
-else ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd2))
+else ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd2))
 	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/vmlinux.ub.gz $(@)
 	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/uldr.bin $(@)
-  ifeq ($(BOXMODEL), kronos_v2)
+  ifeq ($(BOXMODEL),kronos_v2)
 	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/u-boot.bin.kronos_v2 $(@)/u-boot.bin
   else
 	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/u-boot.bin $(@)
