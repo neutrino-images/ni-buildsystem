@@ -34,40 +34,6 @@ libid3tag: $(LIBID3TAG_DEPS) $(DL_DIR)/$(LIBID3TAG_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-FLAC_VER    = 1.3.2
-FLAC_DIR    = flac-$(FLAC_VER)
-FLAC_SOURCE = flac-$(FLAC_VER).tar.xz
-FLAC_SITE   = https://ftp.osuosl.org/pub/xiph/releases/flac
-
-$(DL_DIR)/$(FLAC_SOURCE):
-	$(DOWNLOAD) $(FLAC_SITE)/$(FLAC_SOURCE)
-
-libFLAC: $(DL_DIR)/$(FLAC_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(LIBFLAC_DIR)
-	$(UNTAR)/$(LIBFLAC_SOURCE)
-	$(CHDIR)/$(LIBFLAC_DIR); \
-		autoreconf -fi; \
-		$(CONFIGURE) \
-			--prefix=$(prefix) \
-			--datarootdir=$(REMOVE_datarootdir) \
-			--enable-shared \
-			--disable-static \
-			--disable-cpplibs \
-			--disable-xmms-plugin \
-			--disable-ogg \
-			--disable-altivec \
-			; \
-		$(MAKE) all; \
-		$(MAKE) install DESTDIR=$(TARGET_DIR); \
-	$(REWRITE_LIBTOOL_LA)
-	$(REWRITE_PKGCONF_PC)
-	rm -rf $(TARGET_bindir)/flac
-	rm -rf $(TARGET_bindir)/metaflac
-	$(REMOVE)/$(LIBFLAC_DIR)
-	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
 BZIP2_VER    = 1.0.8
 BZIP2_DIR    = bzip2-$(BZIP2_VER)
 BZIP2_SOURCE = bzip2-$(BZIP2_VER).tar.gz

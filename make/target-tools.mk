@@ -1829,6 +1829,40 @@ rsync: $(RSYNC_DEPS) $(DL_DIR)/$(RSYNC_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
+FLAC_VER    = 1.3.3
+FLAC_DIR    = flac-$(FLAC_VER)
+FLAC_SOURCE = flac-$(FLAC_VER).tar.xz
+FLAC_SITE   = http://downloads.xiph.org/releases/flac
+
+$(DL_DIR)/$(FLAC_SOURCE):
+	$(DOWNLOAD) $(FLAC_SITE)/$(FLAC_SOURCE)
+
+flac: $(DL_DIR)/$(FLAC_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(FLAC_DIR)
+	$(UNTAR)/$(FLAC_SOURCE)
+	$(CHDIR)/$(FLAC_DIR); \
+		autoreconf -fi; \
+		$(CONFIGURE) \
+			--prefix=$(prefix) \
+			--bindir=$(REMOVE_bindir) \
+			--datarootdir=$(REMOVE_datarootdir) \
+			--enable-shared \
+			--disable-static \
+			--disable-cpplibs \
+			--disable-xmms-plugin \
+			--disable-altivec \
+			--disable-ogg \
+			--disable-sse \
+			; \
+		$(MAKE) all; \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(REWRITE_LIBTOOL_LA)
+	$(REWRITE_PKGCONF_PC)
+	$(REMOVE)/$(FLAC_DIR)
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
 CA-BUNDLE_SOURCE = cacert.pem
 CA-BUNDLE_SITE   = https://curl.haxx.se/ca
 
