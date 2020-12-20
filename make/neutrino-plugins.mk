@@ -17,89 +17,103 @@ endif
 
 # -----------------------------------------------------------------------------
 
-NP_OBJ_DIR = $(BUILD_DIR)/$(NI-NEUTRINO-PLUGINS)
-
-NP_DEPS  = ffmpeg
-NP_DEPS += libcurl
-NP_DEPS += libpng
-NP_DEPS += libjpeg-turbo
-NP_DEPS += giflib
-NP_DEPS += freetype
-NP_DEPS += luaexpat
-NP_DEPS += luajson
-NP_DEPS += luacurl
-NP_DEPS += luaposix
-NP_DEPS += lua-feedparser
+NEUTRINO-PLUGINS_BUILD_DIR = $(BUILD_DIR)/$(NI-NEUTRINO-PLUGINS)
 
 # -----------------------------------------------------------------------------
 
-NP_CONFIGURE_ADDITIONS = \
-		--disable-logoupdater \
-		--disable-logoview \
-		--disable-mountpointmanagement \
-		--disable-stbup
-
-ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd1 hd2))
-  ifeq ($(BOXSERIES), hd1)
-    NP_CONFIGURE_ADDITIONS += \
-		--disable-spiegel_tv_doc \
-		--disable-tierwelt_tv
-  endif
-  NP_CONFIGURE_ADDITIONS += \
-		--disable-showiframe \
-		--disable-stb_startup \
-		--disable-imgbackup \
-		--disable-rcu_switcher
-endif
+NEUTRINO-PLUGINS_DEPS  = ffmpeg
+NEUTRINO-PLUGINS_DEPS += libcurl
+NEUTRINO-PLUGINS_DEPS += libpng
+NEUTRINO-PLUGINS_DEPS += libjpeg-turbo
+NEUTRINO-PLUGINS_DEPS += giflib
+NEUTRINO-PLUGINS_DEPS += freetype
+NEUTRINO-PLUGINS_DEPS += luaexpat
+NEUTRINO-PLUGINS_DEPS += luajson
+NEUTRINO-PLUGINS_DEPS += luacurl
+NEUTRINO-PLUGINS_DEPS += luaposix
+NEUTRINO-PLUGINS_DEPS += lua-feedparser
 
 # -----------------------------------------------------------------------------
 
+NEUTRINO-PLUGINS_CONF_ENV = \
+	$(MAKE_ENV)
+
+# -----------------------------------------------------------------------------
+
+NEUTRINO-PLUGINS_CONF_OPTS = \
+	--host=$(TARGET) \
+	--build=$(BUILD) \
+	--prefix=$(prefix) \
+	--sysconfdir=$(sysconfdir) \
+	--enable-maintainer-mode \
+	--enable-silent-rules \
+	\
+	--with-neutrino-source=$(SOURCE_DIR)/$(NI-NEUTRINO) \
+	--with-neutrino-build=$(NEUTRINO_BUILD_DIR) \
+	\
+	--with-target=cdk \
+	--with-targetprefix=$(prefix) \
+	--with-boxtype=$(BOXTYPE)
+
 ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd1 hd2))
-  NP_BOXMODEL = $(BOXSERIES)
+  NEUTRINO-PLUGINS_CONF_OPTS += --with-boxmodel=$(BOXSERIES)
 else
-  NP_BOXMODEL = $(BOXMODEL)
+  NEUTRINO-PLUGINS_CONF_OPTS += --with-boxmodel=$(BOXMODEL)
+endif
+
+NEUTRINO-PLUGINS_CONF_OPTS += \
+	--disable-logoupdater \
+	--disable-logoview \
+	--disable-mountpointmanagement \
+	--disable-stbup
+
+ifeq ($(BOXTYPE), coolstream)
+  ifeq ($(BOXSERIES), hd1)
+    NEUTRINO-PLUGINS_CONF_OPTS += \
+	--disable-spiegel_tv_doc \
+	--disable-tierwelt_tv
+  endif
+  NEUTRINO-PLUGINS_CONF_OPTS += \
+	--disable-showiframe \
+	--disable-stb_startup \
+	--disable-imgbackup \
+	--disable-rcu_switcher
 endif
 
 # -----------------------------------------------------------------------------
 
-$(NP_OBJ_DIR)/config.status: $(NP_DEPS)
-	test -d $(NP_OBJ_DIR) || mkdir -p $(NP_OBJ_DIR)
-	$(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/autogen.sh
-	$(CD) $(NP_OBJ_DIR); \
-		$(MAKE_ENV) \
-		$(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/configure \
-			--host=$(TARGET) \
-			--build=$(BUILD) \
-			--prefix=$(prefix) \
-			--sysconfdir=$(sysconfdir) \
-			--enable-maintainer-mode \
-			--enable-silent-rules \
-			\
-			--with-neutrino-source=$(SOURCE_DIR)/$(NI-NEUTRINO) \
-			--with-neutrino-build=$(N_OBJ_DIR) \
-			\
-			$(NP_CONFIGURE_ADDITIONS) \
-			\
-			--with-target=cdk \
-			--with-targetprefix=$(prefix) \
-			--with-boxtype=$(BOXTYPE) \
-			--with-boxmodel=$(NP_BOXMODEL)
+ifeq ($(BOXSERIES), $(filter $(BOXSERIES), hd1 hd2))
+  NEUTRINO-PLUGINS_BOXMODEL = $(BOXSERIES)
+else
+  NEUTRINO-PLUGINS_BOXMODEL = $(BOXMODEL)
+endif
 
 # -----------------------------------------------------------------------------
 
-NP_INIT-SCRIPTS-DEFAULTS  = emmrd
-NP_INIT-SCRIPTS-DEFAULTS += fritzcallmonitor
-NP_INIT-SCRIPTS-DEFAULTS += ovpn
-NP_INIT-SCRIPTS-DEFAULTS += rcu_switcher
-#NP_INIT-SCRIPTS-DEFAULTS += stbup
-NP_INIT-SCRIPTS-DEFAULTS += tuxcald
-NP_INIT-SCRIPTS-DEFAULTS += tuxmaild
+$(NEUTRINO-PLUGINS_BUILD_DIR)/config.status: $(NEUTRINO-PLUGINS_DEPS)
+	test -d $(NEUTRINO-PLUGINS_BUILD_DIR) || mkdir -p $(NEUTRINO-PLUGINS_BUILD_DIR)
+	$(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/autogen.sh
+	$(CD) $(NEUTRINO-PLUGINS_BUILD_DIR); \
+		$(NEUTRINO_PLUGINS_CONF_ENV) \
+		$(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS)/configure \
+			$(NEUTRINO-PLUGINS_CONF_OPTS)
 
-NP_INIT-SCRIPTS  = $(NP_INIT-SCRIPTS_DEFAULTS)
-NP_INIT-SCRIPTS += turnoff_power
+# -----------------------------------------------------------------------------
 
-define NP_RUNLEVEL-LINKS_INSTALL
-	for script in $(NP_INIT-SCRIPTS-DEFAULTS); do \
+NEUTRINO-PLUGINS_INIT-SCRIPTS_DEFAULTS  =
+NEUTRINO-PLUGINS_INIT-SCRIPTS_DEFAULTS += emmrd
+NEUTRINO-PLUGINS_INIT-SCRIPTS_DEFAULTS += fritzcallmonitor
+NEUTRINO-PLUGINS_INIT-SCRIPTS_DEFAULTS += ovpn
+NEUTRINO-PLUGINS_INIT-SCRIPTS_DEFAULTS += rcu_switcher
+#NEUTRINO-PLUGINS_INIT-SCRIPTS_DEFAULTS += stbup
+NEUTRINO-PLUGINS_INIT-SCRIPTS_DEFAULTS += tuxcald
+NEUTRINO-PLUGINS_INIT-SCRIPTS_DEFAULTS += tuxmaild
+
+NEUTRINO-PLUGINS_INIT-SCRIPTS  = $(NEUTRINO-PLUGINS_INIT-SCRIPTS_DEFAULTS)
+NEUTRINO-PLUGINS_INIT-SCRIPTS += turnoff_power
+
+define NEUTRINO-PLUGINS_RUNLEVEL-LINKS_INSTALL
+	for script in $(NEUTRINO-PLUGINS_INIT-SCRIPTS_DEFAULTS); do \
 		if [ -x $(TARGET_sysconfdir)/init.d/$$script ]; then \
 			$(UPDATE-RC.D) $$script defaults 80 20; \
 		fi; \
@@ -109,8 +123,8 @@ define NP_RUNLEVEL-LINKS_INSTALL
 	fi
 endef
 
-define NP_RUNLEVEL-LINKS_UNINSTALL
-	for link in $(NP_INIT-SCRIPTS); do \
+define NEUTRINO-PLUGINS_RUNLEVEL-LINKS_UNINSTALL
+	for link in $(NEUTRINO-PLUGINS_INIT-SCRIPTS); do \
 		find $(TARGET_sysconfdir) -type l -name [SK]??$$link -print0 | \
 			xargs --no-run-if-empty -0 rm -f; \
 	done
@@ -118,37 +132,37 @@ endef
 
 # -----------------------------------------------------------------------------
 
-neutrino-plugins: neutrino $(NP_OBJ_DIR)/config.status
+neutrino-plugins: neutrino $(NEUTRINO-PLUGINS_BUILD_DIR)/config.status
 	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
-	$(MAKE) -C $(NP_OBJ_DIR) all     DESTDIR=$(TARGET_DIR)
-	$(MAKE) -C $(NP_OBJ_DIR) install DESTDIR=$(TARGET_DIR)
-	$(NP_RUNLEVEL-LINKS_INSTALL)
+	$(MAKE) -C $(NEUTRINO-PLUGINS_BUILD_DIR) all     DESTDIR=$(TARGET_DIR)
+	$(MAKE) -C $(NEUTRINO-PLUGINS_BUILD_DIR) install DESTDIR=$(TARGET_DIR)
+	$(NEUTRINO-PLUGINS_RUNLEVEL-LINKS_INSTALL)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
 neutrino-plugins-uninstall:
-	-make -C $(NP_OBJ_DIR) uninstall DESTDIR=$(TARGET_DIR)
-	$(NP_RUNLEVEL-LINKS_UNINSTALL)
+	-make -C $(NEUTRINO-PLUGINS_BUILD_DIR) uninstall DESTDIR=$(TARGET_DIR)
+	$(NEUTRINO-PLUGINS_RUNLEVEL-LINKS_UNINSTALL)
 
 neutrino-plugins-distclean:
-	-make -C $(NP_OBJ_DIR) distclean
+	-make -C $(NEUTRINO-PLUGINS_BUILD_DIR) distclean
 
 neutrino-plugins-clean: neutrino-plugins-uninstall neutrino-plugins-distclean
-	rm -f $(NP_OBJ_DIR)/config.status
+	rm -f $(NEUTRINO-PLUGINS_BUILD_DIR)/config.status
 	rm -f $(DEPS_DIR)/neutrino-plugins
 
 neutrino-plugins-clean-all: neutrino-plugins-clean
-	rm -rf $(NP_OBJ_DIR)
+	rm -rf $(NEUTRINO-PLUGINS_BUILD_DIR)
 
 # -----------------------------------------------------------------------------
 
 # To build single plugins from neutrino-plugins repository call
 # make neutrino-plugin-<subdir>; e.g. make neutrino-plugin-tuxwetter
 
-neutrino-plugin-%: $(NP_OBJ_DIR)/config.status
+neutrino-plugin-%: $(NEUTRINO-PLUGINS_BUILD_DIR)/config.status
 	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
-	$(MAKE) -C $(NP_OBJ_DIR)/$(subst neutrino-plugin-,,$(@)) all install DESTDIR=$(TARGET_DIR)
+	$(MAKE) -C $(NEUTRINO-PLUGINS_BUILD_DIR)/$(subst neutrino-plugin-,,$(@)) all install DESTDIR=$(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
