@@ -223,8 +223,8 @@ coreutils: $(DL_DIR)/$(COREUTILS_SOURCE) | $(TARGET_DIR)
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	for bin in $(COREUTILS_BIN); do \
-		rm -f $(TARGET_bindir)/$$bin; \
-		$(INSTALL_EXEC) -D $(TARGET_DIR)/bin.$(@F)/$$bin $(TARGET_bindir)/$$bin; \
+		rm -f $(TARGET_base_bindir)/$$bin; \
+		$(INSTALL_EXEC) -D $(TARGET_DIR)/bin.$(@F)/$$bin $(TARGET_base_bindir)/$$bin; \
 	done
 	$(REMOVE)/$(COREUTILS_DIR) \
 		$(TARGET_DIR)/bin.$(@F)
