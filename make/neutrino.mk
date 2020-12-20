@@ -127,6 +127,9 @@ else
 	--with-stb-hal-includes=$(SOURCE_DIR)/$(NI-LIBSTB-HAL)/include \
 	--with-stb-hal-build=$(LIBSTB-HAL_BUILD_DIR)
 
+  NEUTRINO_DEPS += graphlcd-base
+  NEUTRINO_CONF_OPTS += --enable-graphlcd
+
   ifeq ($(BOXTYPE), armbox)
     NEUTRINO_CONF_OPTS += --disable-arm-acc
   endif
