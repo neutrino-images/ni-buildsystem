@@ -1232,7 +1232,7 @@ endif
 
 GLIB2_CONF   = $(if $(filter $(BOXSERIES),hd1),--enable-static --disable-shared)
 
-ifeq ($(BOXSERIES),$(filter $(BOXSERIES),vusolo4k vuduo4k vuduo4kse vuultimo4k vuuno4kse))
+ifeq ($(BOXTYPE),$(filter $(BOXTYPE),armbox mipsbox))
   GLIB2_DEPS += libiconv
   GLIB2_CONF += --with-libiconv=gnu
 endif
