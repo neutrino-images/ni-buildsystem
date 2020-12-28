@@ -49,27 +49,23 @@ github = https://github.com/$(1)/$(2)/archive/$(3)
 # -----------------------------------------------------------------------------
 
 # rewrite libtool libraries
-REWRITE_LIBTOOL_RULES  = $(SED) "s,^libdir=.*,libdir='$(TARGET_libdir)',; \
-				 s,\(^dependency_libs='\| \|-L\|^dependency_libs='\)/lib,\ $(TARGET_libdir),g"
+REWRITE_LIBTOOL_RULES = "s,^libdir=.*,libdir='$(1)',; \
+			 s,\(^dependency_libs='\| \|-L\|^dependency_libs='\)/lib,\ $(1),g"
 
-REWRITE_LIBTOOL        = $(REWRITE_LIBTOOL_RULES) $(TARGET_libdir)
+REWRITE_LIBTOOL_TAG = rewritten=1
 
-REWRITE_LIBTOOL_TAG    = rewritten=1
-
-define rewrite_libtool
-	cd $(TARGET_libdir); \
-	LA=$$(find . -name "*.la" -type f); \
-	for la in $${LA}; do \
+define REWRITE_LIBTOOL # (libdir)
+	for la in $$(find $(1) -name "*.la" -type f); do \
 		if ! grep -q "$(REWRITE_LIBTOOL_TAG)" $${la}; then \
-			echo -e "$(TERM_YELLOW)Rewriting $${la}$(TERM_NORMAL)"; \
-			$(REWRITE_LIBTOOL)/$${la}; \
+			echo -e "$(TERM_YELLOW)Rewriting $${la#$(TARGET_DIR)/}$(TERM_NORMAL)"; \
+			$(SED) $(REWRITE_LIBTOOL_RULES) $${la}; \
 			echo -e "\n# Adapted to buildsystem\n$(REWRITE_LIBTOOL_TAG)" >> $${la}; \
 		fi; \
 	done
 endef
 
 # rewrite libtool libraries automatically
-REWRITE_LIBTOOL_LA = $(call rewrite_libtool)
+REWRITE_LIBTOOL_LA = $(call REWRITE_LIBTOOL,$(TARGET_libdir))
 
 # -----------------------------------------------------------------------------
 
