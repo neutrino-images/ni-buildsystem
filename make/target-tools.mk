@@ -1746,7 +1746,7 @@ dvbsnoop: | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-ETHTOOL_VER    = 5.9
+ETHTOOL_VER    = 5.10
 ETHTOOL_DIR    = ethtool-$(ETHTOOL_VER)
 ETHTOOL_SOURCE = ethtool-$(ETHTOOL_VER).tar.xz
 ETHTOOL_SITE   = $(KERNEL_MIRROR)/software/network/ethtool
