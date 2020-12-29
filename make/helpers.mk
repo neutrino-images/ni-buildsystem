@@ -70,30 +70,27 @@ REWRITE_LIBTOOL_LA = $(call REWRITE_LIBTOOL,$(TARGET_libdir))
 # -----------------------------------------------------------------------------
 
 # rewrite pkg-config files
-REWRITE_CONFIG_RULES   = $(SED) "s,^prefix=.*,prefix='$(TARGET_prefix)',; \
-				 s,^exec_prefix=.*,exec_prefix='$(TARGET_exec_prefix)',; \
-				 s,^libdir=.*,libdir='$(TARGET_libdir)',; \
-				 s,^includedir=.*,includedir='$(TARGET_includedir)',"
+REWRITE_CONFIG_RULES = "s,^prefix=.*,prefix='$(TARGET_prefix)',; \
+			s,^exec_prefix=.*,exec_prefix='$(TARGET_exec_prefix)',; \
+			s,^libdir=.*,libdir='$(TARGET_libdir)',; \
+			s,^includedir=.*,includedir='$(TARGET_includedir)',"
 
-REWRITE_CONFIG         = $(REWRITE_CONFIG_RULES)
-REWRITE_PKGCONF        = $(REWRITE_CONFIG_RULES) $(PKG_CONFIG_PATH)
+REWRITE_CONFIG = $(SED) $(REWRITE_CONFIG_RULES)
 
-REWRITE_CONFIG_TAG     = rewritten=1
+REWRITE_CONFIG_TAG = rewritten=1
 
-define rewrite_pkgconf
-	cd $(PKG_CONFIG_PATH); \
-	PC=$$(find . -name "*.pc" -type f); \
-	for pc in $${PC}; do \
+define REWRITE_PKGCONF
+	for pc in $$(find $(PKG_CONFIG_PATH) -name "*.pc" -type f); do \
 		if ! grep -q "$(REWRITE_CONFIG_TAG)" $${pc}; then \
-			echo -e "$(TERM_YELLOW)Rewriting $${pc}$(TERM_NORMAL)"; \
-			$(REWRITE_PKGCONF)/$${pc}; \
-			echo -e "\n$(REWRITE_CONFIG_TAG)" >> $${pc}; \
+			echo -e "$(TERM_YELLOW)Rewriting $${pc#$(TARGET_DIR)/}$(TERM_NORMAL)"; \
+			$(SED) $(REWRITE_CONFIG_RULES) $${pc}; \
+			echo -e "\n# Adapted to buildsystem\n$(REWRITE_CONFIG_TAG)" >> $${pc}; \
 		fi; \
 	done
 endef
 
 # rewrite pkg-config files automatically
-REWRITE_PKGCONF_PC = $(call rewrite_pkgconf)
+REWRITE_PKGCONF_PC = $(call REWRITE_PKGCONF)
 
 # -----------------------------------------------------------------------------
 
