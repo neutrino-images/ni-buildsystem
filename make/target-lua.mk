@@ -181,6 +181,6 @@ luaposix: $(LUAPOSIX_DEPS) $(DL_DIR)/$(SLINGSHOT_SOURCE) $(DL_DIR)/$(GNULIB_SOUR
 			--enable-silent-rules \
 			; \
 		$(MAKE); \
-		$(MAKE) all check install
+		$(MAKE) install
 	$(REMOVE)/$(LUAPOSIX_DIR)
 	$(TOUCH)

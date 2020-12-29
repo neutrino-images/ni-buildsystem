@@ -33,7 +33,7 @@ valgrind3: $(DL_DIR)/$(VALGRIND_SOURCE) | $(TARGET_DIR)
 			--mandir=$(REMOVE_mandir) \
 			--datadir=$(REMOVE_datadir) \
 			; \
-		$(MAKE) all; \
+		$(MAKE); \
 		make install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF_PC)
 	rm -f $(addprefix $(TARGET_libdir)/valgrind/,*.a *.xml)
@@ -59,7 +59,7 @@ valgrind12305: | $(TARGET_DIR)
 			--mandir=$(REMOVE_mandir) \
 			--datadir=$(REMOVE_datadir) \
 			; \
-		$(MAKE) all; \
+		$(MAKE); \
 		make install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/valgrind
@@ -84,7 +84,7 @@ strace: $(DL_DIR)/$(STRACE_SOURCE) | $(TARGET_DIR)
 			--mandir=$(REMOVE_mandir) \
 			--enable-silent-rules \
 			; \
-		$(MAKE) all; \
+		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	rm -f $(addprefix $(TARGET_bindir)/,strace-graph strace-log-merge)
 	$(REMOVE)/$(STRACE_DIR)

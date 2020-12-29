@@ -1222,7 +1222,7 @@ samba36: $(SAMBA36_DEPS) $(DL_DIR)/$(SAMBA36_SOURCE) | $(TARGET_DIR)
 			--disable-relro \
 			--disable-swat \
 			; \
-		$(MAKE) all; \
+		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	mkdir -p $(TARGET_localstatedir)/samba/locks
 	$(INSTALL_DATA) $(TARGET_FILES)/configs/smb3.conf $(TARGET_sysconfdir)/samba/smb.conf
@@ -1336,7 +1336,7 @@ fbshot: $(FBSHOT_DEPS) $(DL_DIR)/$(FBSHOT_SOURCE) | $(TARGET_DIR)
 		$(call apply_patches,$(FBSHOT_PATCH)); \
 		$(SED) 's|	gcc |	$(TARGET_CC) $(TARGET_CFLAGS) $(TARGET_LDFLAGS) |' Makefile; \
 		$(SED) '/strip fbshot/d' Makefile; \
-		$(MAKE) all; \
+		$(MAKE); \
 		$(INSTALL_EXEC) -D fbshot $(TARGET_bindir)/fbshot
 	$(REMOVE)/$(FBSHOT_DIR)
 	$(TOUCH)
@@ -1369,7 +1369,7 @@ lcd4linux: $(LCD4LINUX_DEPS) | $(TARGET_DIR)
 			--with-plugins='all,!dbus,!mpris_dbus,!asterisk,!isdn,!pop3,!ppp,!seti,!huawei,!imon,!kvv,!sample,!w1retap,!wireless,!xmms,!gps,!mpd,!mysql,!qnaplog,!iconv' \
 			; \
 		$(MAKE) vcs_version; \
-		$(MAKE) all; \
+		$(MAKE); \
 		$(MAKE) install
 	$(INSTALL_COPY) $(TARGET_FILES)/lcd4linux/* $(TARGET_DIR)/
 	#$(MAKE) samsunglcd4linux
@@ -1635,7 +1635,7 @@ mc: $(MC_DEPS) $(DL_DIR)/$(MC_SOURCE) | $(TARGET_DIR)
 			--without-gpm-mouse \
 			--without-x \
 			; \
-		$(MAKE) all; \
+		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	rm -rf $(TARGET_datadir)/mc/examples
 	find $(TARGET_datadir)/mc/skins -type f ! -name default.ini | xargs --no-run-if-empty rm
@@ -1717,7 +1717,7 @@ aio-grab: $(AIO-GRAB_DEPS) | $(TARGET_DIR)
 			--prefix=$(prefix) \
 			--enable-silent-rules \
 			; \
-		$(MAKE) all; \
+		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REMOVE)/$(AIO-GRAB_DIR)
 	$(TOUCH)
@@ -1854,7 +1854,7 @@ flac: $(DL_DIR)/$(FLAC_SOURCE) | $(TARGET_DIR)
 			--disable-ogg \
 			--disable-sse \
 			; \
-		$(MAKE) all; \
+		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL_LA)
 	$(REWRITE_PKGCONF_PC)

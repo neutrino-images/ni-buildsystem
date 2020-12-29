@@ -57,7 +57,7 @@ libfuse: $(DL_DIR)/$(LIBFUSE_SOURCE) | $(TARGET_DIR)
 			--enable-lib \
 			--enable-silent-rules \
 			; \
-		$(MAKE) all; \
+		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL_LA)
 	$(REWRITE_PKGCONF_PC)
@@ -184,7 +184,7 @@ libcurl: $(LIBCURL_DEPS) $(DL_DIR)/$(LIBCURL_SOURCE) | $(TARGET_DIR)
 			--enable-optimize \
 			$(LIBCURL_CONF) \
 			; \
-		$(MAKE) all; \
+		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	mv $(TARGET_bindir)/curl-config $(HOST_DIR)/bin/
 	$(REWRITE_CONFIG) $(HOST_DIR)/bin/curl-config
@@ -222,7 +222,7 @@ libpng: $(LIBPNG_DEPS) $(DL_DIR)/$(LIBPNG_SOURCE) | $(TARGET_DIR)
 			--disable-static \
 			$(LIBPNG_CONF) \
 			; \
-		$(MAKE) all; \
+		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	mv $(TARGET_bindir)/libpng*-config $(HOST_DIR)/bin/
 	$(REWRITE_CONFIG) $(HOST_DIR)/bin/libpng16-config
@@ -269,7 +269,7 @@ freetype: $(FREETYPE_DEPS) $(DL_DIR)/$(FREETYPE_SOURCE) | $(TARGET_DIR)
 			--without-harfbuzz \
 			--without-bzip2 \
 			; \
-		$(MAKE) all; \
+		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	ln -sf freetype2 $(TARGET_includedir)/freetype
 	mv $(TARGET_bindir)/freetype-config $(HOST_DIR)/bin
@@ -1094,7 +1094,7 @@ libmad: $(DL_DIR)/$(LIBMAD_SOURCE) | $(TARGET_DIR)
 			--enable-fpm=arm \
 			--enable-sso \
 			; \
-		$(MAKE) all; \
+		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL_LA)
 	$(REWRITE_PKGCONF_PC)
@@ -1122,7 +1122,7 @@ libvorbisidec: $(LIBVORBISIDEC_DEPS) $(DL_DIR)/$(LIBVORBISIDEC_SOURCE) | $(TARGE
 		$(CONFIGURE) \
 			--prefix=$(prefix) \
 			; \
-		$(MAKE) all; \
+		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR); \
 	$(REWRITE_LIBTOOL_LA)
 	$(REWRITE_PKGCONF_PC)
@@ -1205,7 +1205,7 @@ libffi: $(DL_DIR)/$(LIBFFI_SOURCE) | $(TARGET_DIR)
 			--datarootdir=$(REMOVE_datarootdir) \
 			$(LIBFFI_CONF) \
 			; \
-		$(MAKE) all; \
+		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL_LA)
 	$(REWRITE_PKGCONF_PC)

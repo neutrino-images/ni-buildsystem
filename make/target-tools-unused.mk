@@ -237,7 +237,7 @@ readline: $(DL_DIR)/$(READLINE_SOURCE) | $(TARGET_DIR)
 			--prefix=$(prefix) \
 			--datarootdir=$(REMOVE_datarootdir) \
 			; \
-		$(MAKE) all; \
+		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(READLINE_DIR)

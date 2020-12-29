@@ -170,7 +170,7 @@ $(NEUTRINO_BUILD_DIR)/config.status: $(NEUTRINO_DEPS)
 
 neutrino: $(NEUTRINO_BUILD_DIR)/config.status
 	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
-	$(MAKE) -C $(NEUTRINO_BUILD_DIR) all     DESTDIR=$(TARGET_DIR)
+	$(MAKE) -C $(NEUTRINO_BUILD_DIR)
 	$(MAKE) -C $(NEUTRINO_BUILD_DIR) install DESTDIR=$(NEUTRINO_INST_DIR)
 	$(MAKE) $(TARGET_sysconfdir)/init.d/start_neutrino
 	$(TOUCH)
@@ -225,7 +225,7 @@ $(LIBSTB-HAL_BUILD_DIR)/config.status: $(LIBSTB-HAL_DEPS)
 
 libstb-hal: $(LIBSTB-HAL_BUILD_DIR)/config.status
 	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
-	$(MAKE) -C $(LIBSTB-HAL_BUILD_DIR) all     DESTDIR=$(TARGET_DIR)
+	$(MAKE) -C $(LIBSTB-HAL_BUILD_DIR)
 	$(MAKE) -C $(LIBSTB-HAL_BUILD_DIR) install DESTDIR=$(NEUTRINO_INST_DIR)
 	$(REWRITE_LIBTOOL_LA)
 	$(TOUCH)
@@ -238,7 +238,7 @@ ifeq ($(CLEAN),yes)
 endif
 	$(MAKE) $(NEUTRINO_BUILD_DIR)/config.status
 	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
-	$(MAKE) -C $(NEUTRINO_BUILD_DIR) all DESTDIR=$(TARGET_DIR)
+	$(MAKE) -C $(NEUTRINO_BUILD_DIR)
 	$(INSTALL_EXEC) -D $(NEUTRINO_BUILD_DIR)/src/neutrino $(TARGET_bindir)/neutrino
 ifneq ($(DEBUG),yes)
 	$(TARGET_STRIP) $(TARGET_bindir)/neutrino

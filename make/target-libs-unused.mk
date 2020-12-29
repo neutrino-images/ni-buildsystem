@@ -25,7 +25,7 @@ libid3tag: $(LIBID3TAG_DEPS) $(DL_DIR)/$(LIBID3TAG_SOURCE) | $(TARGET_DIR)
 			--prefix=$(prefix) \
 			--enable-shared=yes \
 			; \
-		$(MAKE) all; \
+		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL_LA)
 	$(REWRITE_PKGCONF_PC)
@@ -51,7 +51,7 @@ bzip2: $(DL_DIR)/$(BZIP2_SOURCE) | $(TARGET_DIR)
 		$(call apply_patches,$(BZIP2_PATCH)); \
 		mv Makefile-libbz2_so Makefile; \
 		$(MAKE_ENV) \
-		$(MAKE) all; \
+		$(MAKE); \
 		$(MAKE) install PREFIX=$(TARGET_DIR)
 	rm -f $(TARGET_bindir)/bzip2
 	$(REMOVE)/$(BZIP2_DIR)
@@ -81,7 +81,7 @@ fontconfig: $(FONTCONFIG_DEPS) $(DL_DIR)/$(FONTCONFIG_SOURCE) | $(TARGET_DIR)
 			--sysconfdir=/etc \
 			--disable-docs \
 			; \
-		$(MAKE) all; \
+		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL_LA)
 	$(REWRITE_PKGCONF_PC)
@@ -116,7 +116,7 @@ pixman: $(PIXMAN_DEPS) $(DL_DIR)/$(PIXMAN_SOURCE) | $(TARGET_DIR)
 			--disable-loongson-mmi \
 			--disable-docs \
 			; \
-		$(MAKE) all; \
+		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL_LA)
 	$(REWRITE_PKGCONF_PC)
@@ -154,7 +154,7 @@ cairo: $(CAIRO_DEPS) $(DL_DIR)/$(CAIRO_SOURCE) | $(TARGET_DIR)
 			--disable-gl \
 			--enable-tee \
 			; \
-		$(MAKE) all; \
+		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	rm -rf $(TARGET_bindir)/cairo-sphinx
 	rm -rf $(TARGET_libdir)/cairo/cairo-fdr*
@@ -195,7 +195,7 @@ harfbuzz: $(HARFBUZZ_DEPS) $(DL_DIR)/$(HARFBUZZ_SOURCE) | $(TARGET_DIR)
 			--without-graphite2 \
 			--without-icu \
 			; \
-		$(MAKE) all; \
+		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL_LA)
 	$(REWRITE_PKGCONF_PC)
