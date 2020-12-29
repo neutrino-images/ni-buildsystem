@@ -5,8 +5,11 @@
 
 NEUTRINO_INST_DIR ?= $(TARGET_DIR)
 
-NEUTRINO_BUILD_DIR = $(BUILD_DIR)/$(NI-NEUTRINO)
-LIBSTB-HAL_BUILD_DIR = $(BUILD_DIR)/$(NI-LIBSTB-HAL)
+NEUTRINO_OBJ       = $(NI-NEUTRINO)-obj
+NEUTRINO_BUILD_DIR = $(BUILD_DIR)/$(NEUTRINO_OBJ)
+
+LIBSTB-HAL_OBJ       = $(NI-LIBSTB-HAL)-obj
+LIBSTB-HAL_BUILD_DIR = $(BUILD_DIR)/$(LIBSTB-HAL_OBJ)
 
 # -----------------------------------------------------------------------------
 

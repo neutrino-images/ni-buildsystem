@@ -17,7 +17,8 @@ endif
 
 # -----------------------------------------------------------------------------
 
-NEUTRINO-PLUGINS_BUILD_DIR = $(BUILD_DIR)/$(NI-NEUTRINO-PLUGINS)
+NEUTRINO-PLUGINS_OBJ       = $(NI-NEUTRINO-PLUGINS)-obj
+NEUTRINO-PLUGINS_BUILD_DIR = $(BUILD_DIR)/$(NEUTRINO-PLUGINS_OBJ)
 
 # -----------------------------------------------------------------------------
 
