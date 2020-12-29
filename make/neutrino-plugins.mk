@@ -133,7 +133,6 @@ endef
 # -----------------------------------------------------------------------------
 
 neutrino-plugins: neutrino $(NEUTRINO-PLUGINS_BUILD_DIR)/config.status
-	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
 	$(MAKE) -C $(NEUTRINO-PLUGINS_BUILD_DIR)
 	$(MAKE) -C $(NEUTRINO-PLUGINS_BUILD_DIR) install DESTDIR=$(TARGET_DIR)
 	$(NEUTRINO-PLUGINS_RUNLEVEL-LINKS_INSTALL)
@@ -161,7 +160,6 @@ neutrino-plugins-clean-all: neutrino-plugins-clean
 # make neutrino-plugin-<subdir>; e.g. make neutrino-plugin-tuxwetter
 
 neutrino-plugin-%: $(NEUTRINO-PLUGINS_BUILD_DIR)/config.status
-	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
 	$(MAKE) -C $(NEUTRINO-PLUGINS_BUILD_DIR)/$(subst neutrino-plugin-,,$(@))
 	$(MAKE) -C $(NEUTRINO-PLUGINS_BUILD_DIR)/$(subst neutrino-plugin-,,$(@)) install DESTDIR=$(TARGET_DIR)
 

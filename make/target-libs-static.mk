@@ -35,7 +35,6 @@ $(STATIC_libdir)/libcortex-strings.la: $(DL_DIR)/$(CORTEX-STRINGS_SOURCE) | $(ST
 		CPPFLAGS="-pipe -O2 $(TARGET_DEBUGGING) $(CXX11_ABI) -I$(TARGET_includedir)" \
 		CXXFLAGS="-pipe -O2 $(TARGET_DEBUGGING) $(CXX11_ABI) -I$(TARGET_includedir)" \
 		LDFLAGS="-Wl,-O1 -L$(TARGET_libdir)" \
-		PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
 		./configure $(CONFIGURE_OPTS) \
 			--prefix=$(prefix) \
 			--disable-shared \
