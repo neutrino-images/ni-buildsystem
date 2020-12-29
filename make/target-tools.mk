@@ -158,7 +158,6 @@ bash: $(DL_DIR)/$(BASH_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF_PC)
 	-rm $(addprefix $(TARGET_libdir)/bash/, loadables.h Makefile.inc)
 	$(BASH_ADD_TO_SHELLS)
 	$(REMOVE)/$(BASH_DIR)
@@ -271,7 +270,6 @@ procps-ng: $(PROCPS-NG_DEPS) $(DL_DIR)/$(PROCPS-NG_SOURCE) | $(TARGET_DIR)
 		$(INSTALL_EXEC) -D $(TARGET_DIR)/bin.$(@F)/$$bin $(TARGET_bindir)/$$bin; \
 	done
 	$(REWRITE_LIBTOOL_LA)
-	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(PROCPS-NG_DIR) \
 		$(TARGET_DIR)/bin.$(@F) \
 		$(TARGET_DIR)/sbin.$(@F)
@@ -491,7 +489,6 @@ e2fsprogs: $(DL_DIR)/$(E2FSPROGS_SOURCE) | $(TARGET_DIR)
 	-rm $(addprefix $(TARGET_base_sbindir)/, dumpe2fs e2mmpstatus e2undo logsave)
 	-rm $(addprefix $(TARGET_bindir)/, chattr compile_et lsattr mk_cmds uuidgen)
 	-rm $(addprefix $(TARGET_sbindir)/, e2freefrag e4crypt filefrag)
-	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(E2FSPROGS_DIR)
 	$(TOUCH)
 
@@ -709,7 +706,6 @@ parted: $(PARTED_DEPS) $(DL_DIR)/$(PARTED_SOURCE) | $(TARGET_DIR)
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL_LA)
-	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(PARTED_DIR)
 	$(TOUCH)
 
@@ -1857,7 +1853,6 @@ flac: $(DL_DIR)/$(FLAC_SOURCE) | $(TARGET_DIR)
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL_LA)
-	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(FLAC_DIR)
 	$(TOUCH)
 

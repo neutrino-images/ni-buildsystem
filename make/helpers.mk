@@ -77,21 +77,6 @@ REWRITE_CONFIG_RULES = "s,^prefix=.*,prefix='$(TARGET_prefix)',; \
 
 REWRITE_CONFIG = $(SED) $(REWRITE_CONFIG_RULES)
 
-REWRITE_CONFIG_TAG = rewritten=1
-
-define REWRITE_PKGCONF
-	for pc in $$(find $(PKG_CONFIG_PATH) -name "*.pc" -type f); do \
-		if ! grep -q "$(REWRITE_CONFIG_TAG)" $${pc}; then \
-			echo -e "$(TERM_YELLOW)Rewriting $${pc#$(TARGET_DIR)/}$(TERM_NORMAL)"; \
-			$(SED) $(REWRITE_CONFIG_RULES) $${pc}; \
-			echo -e "\n# Adapted to buildsystem\n$(REWRITE_CONFIG_TAG)" >> $${pc}; \
-		fi; \
-	done
-endef
-
-# rewrite pkg-config files automatically
-REWRITE_PKGCONF_PC = $(call REWRITE_PKGCONF)
-
 # -----------------------------------------------------------------------------
 
 #

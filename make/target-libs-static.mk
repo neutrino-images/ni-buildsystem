@@ -11,7 +11,6 @@ endif
 libs-static: $(LIBS-STATIC) | $(TARGET_DIR)
 	$(INSTALL_COPY) $(STATIC_DIR)/. $(TARGET_DIR)/
 	$(REWRITE_LIBTOOL_LA)
-	$(REWRITE_PKGCONF_PC)
 
 # -----------------------------------------------------------------------------
 

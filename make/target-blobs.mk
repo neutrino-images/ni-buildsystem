@@ -274,7 +274,6 @@ hd61-libgles: $(DL_DIR)/$(BOXMODEL-LIBGLES_SOURCE) | $(TARGET_DIR)
 		ln -sf libMali.so libGLESv1_CM.so.1.1; ln -sf libGLESv1_CM.so.1.1 libGLESv1_CM.so.1; ln -sf libGLESv1_CM.so.1 libGLESv1_CM.so; \
 		ln -sf libMali.so libGLESv2.so.2.0; ln -sf libGLESv2.so.2.0 libGLESv2.so.2; ln -sf libGLESv2.so.2 libGLESv2.so; \
 		ln -sf libMali.so libgbm.so
-	$(REWRITE_PKGCONF_PC)
 	$(TOUCH)
 
 vusolo4k-libgles \

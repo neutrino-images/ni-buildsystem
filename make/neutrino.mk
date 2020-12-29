@@ -76,7 +76,8 @@ NEUTRINO_CONF_ENV = \
 
 NEUTRINO_CONF_ENV += \
 	PKG_CONFIG=$(PKG_CONFIG) \
-	PKG_CONFIG_PATH="$(PKG_CONFIG_PATH)"
+	PKG_CONFIG_PATH="$(PKG_CONFIG_PATH)" \
+	PKG_CONFIG_SYSROOT_DIR=$(PKG_CONFIG_SYSROOT_DIR)
 
 # -----------------------------------------------------------------------------
 

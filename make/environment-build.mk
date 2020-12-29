@@ -75,6 +75,7 @@ PKG_DIR         = $($(PKG_UPPER)_DIR)
 PKG_SOURCE      = $($(PKG_UPPER)_SOURCE)
 PKG_SITE        = $($(PKG_UPPER)_SITE)
 PKG_BUILD_DIR   = $(BUILD_DIR)/$(PKG_DIR)
+PKG_FILES_DIR   = $(BASE_DIR)/package/$(subst host-,,$(PKG_NAME))/files
 PKG_PATCHES_DIR = $(PATCHES)/$(subst host-,,$(PKG_NAME))
 
 # -----------------------------------------------------------------------------
@@ -192,6 +193,7 @@ PATH := $(HOST_DIR)/bin:$(HOST_DIR)/sbin:$(CROSS_DIR)/bin:$(PATH)
 PKG_CONFIG = $(HOST_DIR)/bin/$(TARGET)-pkg-config
 PKG_CONFIG_LIBDIR = $(TARGET_libdir)
 PKG_CONFIG_PATH = $(PKG_CONFIG_LIBDIR)/pkgconfig
+PKG_CONFIG_SYSROOT_DIR=$(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
@@ -263,7 +265,9 @@ MAKE_ENV = \
 
 MAKE_ENV += \
 	PKG_CONFIG=$(PKG_CONFIG) \
-	PKG_CONFIG_PATH="$(PKG_CONFIG_PATH)"
+	PKG_CONFIG_PATH="$(PKG_CONFIG_PATH)" \
+	PKG_CONFIG_SYSROOT_DIR=$(PKG_CONFIG_SYSROOT_DIR)
+
 
 CONFIGURE_OPTS = \
 	--build=$(BUILD) \

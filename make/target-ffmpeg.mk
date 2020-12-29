@@ -356,6 +356,5 @@ endif
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF_PC)
 	$(REMOVE)/$(FFMPEG_DIR)
 	$(TOUCH)

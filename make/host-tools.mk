@@ -11,7 +11,7 @@ $(HOST_DIR):
 # -----------------------------------------------------------------------------
 
 host-tools: $(HOST_DIR) \
-	host-pkg-config \
+	host-pkgconf \
 	$(PKG_CONFIG) \
 	host-mtd-utils \
 	host-mkimage \
@@ -27,38 +27,18 @@ host-tools: $(HOST_DIR) \
 # -----------------------------------------------------------------------------
 
 pkg-config-preqs:
-	@PATH=$(subst $(HOST_DIR)/bin:,,$(PATH)); \
+	@PATH=$(subst $(HOST_DIR)/bin:$(HOST_DIR)/sbin:,,$(PATH)); \
 	if ! pkg-config --exists glib-2.0; then \
 		echo "pkg-config and glib2-devel packages are needed for building cross-pkg-config."; false; \
 	fi
 
 # -----------------------------------------------------------------------------
 
-HOST_PKG-CONFIG_VER    = 0.29.2
-HOST_PKG-CONFIG_DIR    = pkg-config-$(HOST_PKG-CONFIG_VER)
-HOST_PKG-CONFIG_SOURCE = pkg-config-$(HOST_PKG-CONFIG_VER).tar.gz
-HOST_PKG-CONFIG_SITE   = https://pkg-config.freedesktop.org/releases
-
-$(DL_DIR)/$(HOST_PKG-CONFIG_SOURCE):
-	$(DOWNLOAD) $(HOST_PKG-CONFIG_SITE)/$(HOST_PKG-CONFIG_SOURCE)
-
 HOST_PKG-CONFIG = $(HOST_DIR)/bin/pkg-config
-
-host-pkg-config: $(HOST_PKG-CONFIG)
-$(HOST_PKG-CONFIG): $(DL_DIR)/$(HOST_PKG-CONFIG_SOURCE) | $(HOST_DIR) pkg-config-preqs
-	$(REMOVE)/$(HOST_PKG-CONFIG_DIR)
-	$(UNTAR)/$(HOST_PKG-CONFIG_SOURCE)
-	$(CHDIR)/$(HOST_PKG-CONFIG_DIR); \
-		./configure \
-			--with-pc_path=$(PKG_CONFIG_PATH) \
-			; \
-		$(MAKE); \
-		$(INSTALL_EXEC) -D pkg-config $(HOST_PKG-CONFIG)
-	$(REMOVE)/$(HOST_PKG-CONFIG_DIR)
 
 # -----------------------------------------------------------------------------
 
-HOST_PKGCONF_VER    = 1.6.3
+HOST_PKGCONF_VER    = 1.7.3
 HOST_PKGCONF_DIR    = pkgconf-$(HOST_PKGCONF_VER)
 HOST_PKGCONF_SOURCE = pkgconf-$(HOST_PKGCONF_VER).tar.gz
 HOST_PKGCONF_SITE   = https://distfiles.dereferenced.org/pkgconf
@@ -66,28 +46,25 @@ HOST_PKGCONF_SITE   = https://distfiles.dereferenced.org/pkgconf
 $(DL_DIR)/$(HOST_PKGCONF_SOURCE):
 	$(DOWNLOAD) $(HOST_PKGCONF_SITE)/$(HOST_PKGCONF_SOURCE)
 
-HOST_PKGCONF_PATCH  = 0001-Only-prefix-with-the-sysroot-a-subset-of-variables.patch
-HOST_PKGCONF_PATCH += 0002-Revert-main-assume-modversion-insted-of-version-if-o.patch
-
 host-pkgconf: $(DL_DIR)/$(HOST_PKGCONF_SOURCE) | $(HOST_DIR) pkg-config-preqs
 	$(REMOVE)/$(HOST_PKGCONF_DIR)
 	$(UNTAR)/$(HOST_PKGCONF_SOURCE)
 	$(CHDIR)/$(HOST_PKGCONF_DIR); \
-		$(call apply_patches,$(addprefix $(@F)/,$(HOST_PKGCONF_PATCH))); \
+		$(APPLY_PATCHES); \
 		./configure \
 			--prefix=$(HOST_DIR) \
-			--with-sysroot=$(TARGET_DIR) \
-			--with-system-libdir=$(TARGET_libdir) \
-			--with-system-includedir=$(TARGET_includedir) \
 			; \
 		$(MAKE); \
 		$(MAKE) install
-	$(INSTALL_EXEC) $(PATCHES)/$(@F)/pkgconf-pkg-config $(HOST_PKG-CONFIG)
+	$(INSTALL_EXEC) $(PKG_FILES_DIR)/pkg-config.in $(HOST_PKG-CONFIG)
 	$(REMOVE)/$(HOST_PKGCONF_DIR)
+	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
-$(PKG_CONFIG): $(HOST_PKG-CONFIG)
+PKG_CONFIG_DEPS = host-pkgconf
+
+$(PKG_CONFIG): $(PKG_CONFIG_DEPS) | $(HOST_DIR)
 	ln -sf pkg-config $(@)
 
 # -----------------------------------------------------------------------------
