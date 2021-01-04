@@ -139,31 +139,39 @@ util-linux: $(UTUL-LINUX_DEPS) $(DL_DIR)/$(UTIL-LINUX_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(UTIL-LINUX_DIR); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
-			--prefix=$(base_prefix) \
+			--libdir=$(libdir) \
 			--localedir=$(REMOVE_localedir) \
+			--docdir=$(REMOVE_docdir) \
 			--mandir=$(REMOVE_mandir) \
-			--enable-static \
-			--disable-shared \
 			--disable-hardlink \
 			--disable-gtk-doc \
 			\
 			--disable-all-programs \
-				--enable-fdisks \
-				--enable-libfdisk \
-				--enable-libsmartcols \
-				--enable-libuuid \
+			\
+			--enable-libfdisk \
+			--enable-libsmartcols \
+			--enable-libuuid \
+			--enable-libblkid \
+			--enable-libmount \
 			\
 			--disable-makeinstall-chown \
 			--disable-makeinstall-setuid \
 			--disable-makeinstall-chown \
 			\
+			--without-audit \
+			--without-cap-ng \
+			--without-btrfs \
 			--without-ncursesw \
 			--without-python \
+			--without-readline \
 			--without-slang \
+			--without-smack \
+			--without-libmagic \
 			--without-systemd \
 			--without-systemdsystemunitdir \
 			--without-tinfo \
 			--without-udev \
+			--without-utempter \
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
