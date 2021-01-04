@@ -105,6 +105,7 @@ $(ROOTFS): | $(TARGET_DIR)
 rootfs-cleanup: $(ROOTFS)
 	rm -rf $(ROOTFS)$(REMOVE_DIR)
 	rm -rf $(ROOTFS)$(base_includedir)
+	rm -rf $(ROOTFS)$(base_libdir)/pkgconfig
 	rm -rf $(ROOTFS)$(includedir)
 	rm -rf $(ROOTFS)$(libdir)/pkgconfig
 	rm -rf $(ROOTFS)$(libdir)/sigc++*

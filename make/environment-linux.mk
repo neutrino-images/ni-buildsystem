@@ -34,7 +34,7 @@ else ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7))
   KERNEL_SITE   = http://downloads.mutant-digital.net
 
   KERNEL_BRANCH = $(EMPTY)
-  KERNEL_DTB    = $(BUILD_DIR)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/dts/bcm7445-bcm97445svmb.dtb
+  KERNEL_DTB    = $(BUILD_DIR)/$(KERNEL_OBJ)/arch/$(TARGET_ARCH)/boot/dts/bcm7445-bcm97445svmb.dtb
   KERNEL_CONFIG = $(CONFIGS)/kernel-hd5x.config
 
   BOOT_PARTITION = 1
@@ -47,7 +47,7 @@ else ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd60))
   KERNEL_SITE   = http://source.mynonpublic.com/gfutures
 
   KERNEL_BRANCH = $(EMPTY)
-  KERNEL_DTB    = $(BUILD_DIR)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/dts/hi3798mv200.dtb
+  KERNEL_DTB    = $(BUILD_DIR)/$(KERNEL_OBJ)/arch/$(TARGET_ARCH)/boot/dts/hi3798mv200.dtb
   KERNEL_CONFIG = $(CONFIGS)/kernel-hd6x.config
 
   BOOT_PARTITION = 4
@@ -60,7 +60,7 @@ else ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd61))
   KERNEL_SITE   = http://source.mynonpublic.com/gfutures
 
   KERNEL_BRANCH = $(EMPTY)
-  KERNEL_DTB    = $(BUILD_DIR)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/dts/hi3798mv200.dtb
+  KERNEL_DTB    = $(BUILD_DIR)/$(KERNEL_OBJ)/arch/$(TARGET_ARCH)/boot/dts/hi3798mv200.dtb
   KERNEL_CONFIG = $(CONFIGS)/kernel-hd6x.config
 
   BOOT_PARTITION = 4
@@ -201,18 +201,18 @@ KERNEL_NAME     = NI $(shell echo $(BOXFAMILY) | sed 's/.*/\u&/') Kernel
 KERNEL_modulesdir = $(BUILD_DIR)/$(KERNEL_MODULES)/lib/modules/$(KERNEL_VER)
 
 ifeq ($(BOXMODEL),nevis)
-  KERNEL_UIMAGE   = $(BUILD_DIR)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/Image
+  KERNEL_UIMAGE   = $(BUILD_DIR)/$(KERNEL_OBJ)/arch/$(TARGET_ARCH)/boot/Image
 else
-  KERNEL_UIMAGE   = $(BUILD_DIR)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/uImage
+  KERNEL_UIMAGE   = $(BUILD_DIR)/$(KERNEL_OBJ)/arch/$(TARGET_ARCH)/boot/uImage
 endif
-KERNEL_ZIMAGE     = $(BUILD_DIR)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/zImage
-KERNEL_ZIMAGE_DTB = $(BUILD_DIR)/$(KERNEL_OBJ)/arch/$(BOXARCH)/boot/zImage_dtb
+KERNEL_ZIMAGE     = $(BUILD_DIR)/$(KERNEL_OBJ)/arch/$(TARGET_ARCH)/boot/zImage
+KERNEL_ZIMAGE_DTB = $(BUILD_DIR)/$(KERNEL_OBJ)/arch/$(TARGET_ARCH)/boot/zImage_dtb
 KERNEL_VMLINUX    = $(BUILD_DIR)/$(KERNEL_OBJ)/vmlinux
 
 # -----------------------------------------------------------------------------
 
 KERNEL_MAKEVARS = \
-	ARCH=$(BOXARCH) \
+	ARCH=$(TARGET_ARCH) \
 	CROSS_COMPILE=$(TARGET_CROSS) \
 	INSTALL_MOD_PATH=$(BUILD_DIR)/$(KERNEL_MODULES) \
 	LOCALVERSION= \

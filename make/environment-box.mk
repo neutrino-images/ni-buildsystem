@@ -203,13 +203,10 @@ endif
 
 ifeq ($(BOXTYPE),coolstream)
   BOXTYPE_SC = cst
-  BOXARCH = arm
 else ifeq ($(BOXTYPE),armbox)
   BOXTYPE_SC = arm
-  BOXARCH = arm
 else ifeq ($(BOXTYPE),mipsbox)
   BOXTYPE_SC = mips
-  BOXARCH = mips
 endif
 
 # -----------------------------------------------------------------------------
@@ -259,9 +256,6 @@ ifndef BOXTYPE
 endif
 ifndef BOXTYPE_SC
   $(error BOXTYPE_SC not set)
-endif
-ifndef BOXARCH
-  $(error BOXARCH not set)
 endif
 ifndef BOXSERIES
   $(error BOXSERIES not set)

@@ -324,17 +324,17 @@ FFMPEG_CONFIGURE_GENERIC = \
 			--enable-hardcoded-tables \
 			\
 			--target-os=linux \
-			--arch=$(BOXARCH) \
+			--arch=$(TARGET_ARCH) \
 			--extra-ldflags="$(TARGET_LDFLAGS)"
 
 # -----------------------------------------------------------------------------
 
-ifeq ($(BOXARCH),arm)
+ifeq ($(TARGET_ARCH),arm)
   FFMPEG_CONFIGURE_PLATFORM = \
 			--cpu=cortex-a15 \
 			--extra-cflags="-Wno-deprecated-declarations -I$(TARGET_includedir) -mfpu=neon-vfpv4 -mfloat-abi=hard"
 
-else ifeq ($(BOXARCH),mips)
+else ifeq ($(TARGET_ARCH),mips)
   FFMPEG_CONFIGURE_PLATFORM = \
 			--cpu=generic \
 			--extra-cflags="-Wno-deprecated-declarations -I$(TARGET_includedir)"

@@ -63,7 +63,7 @@ endif
 	mkdir -p $(TARGET_DIR)/srv
 	mkdir -p $(TARGET_DIR)/sys
 	mkdir -p $(TARGET_DIR)/tmp
-	mkdir -p $(PKG_CONFIG_PATH)
+	$(foreach dir,$(subst :, ,$(PKG_CONFIG_PATH)),$(shell mkdir -p $(dir)))
 	make skeleton
 ifeq ($(PERSISTENT_VAR_PARTITION),yes)
   ifeq ($(IMAGE_NEW),yes)

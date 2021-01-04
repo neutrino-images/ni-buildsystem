@@ -27,6 +27,71 @@ MAKEFLAGS += --no-print-directory
 
 # -----------------------------------------------------------------------------
 
+ifeq ($(BOXSERIES),hd1)
+  DRIVERS-BIN_DIR        = $(BOXTYPE)/$(BOXFAMILY)
+  CORTEX-STRINGS_LDFLAG  =
+  TARGET                 = arm-cx2450x-linux-gnueabi
+  TARGET_OPTIMIZATION    = -Os
+  TARGET_DEBUGGING       = -g
+  TARGET_ARCH            = arm
+  TARGET_CPU             = armv6
+  TARGET_ABI             = -march=$(TARGET_CPU) -mfloat-abi=soft -mlittle-endian
+  TARGET_ENDIAN          = little
+  TARGET_EXTRA_CFLAGS    = -fdata-sections -ffunction-sections
+  TARGET_EXTRA_LDFLAGS   = -Wl,--gc-sections
+  CXX11_ABI              =
+
+else ifeq ($(BOXSERIES),hd2)
+  DRIVERS-BIN_DIR        = $(BOXTYPE)/$(BOXFAMILY)
+  CORTEX-STRINGS_LDFLAG  = -lcortex-strings
+  TARGET                 = arm-cortex-linux-uclibcgnueabi
+  TARGET_OPTIMIZATION    = -O2
+  TARGET_DEBUGGING       = -g
+  TARGET_ARCH            = arm
+  TARGET_CPU             = armv7-a
+  TARGET_ABI             = -march=$(TARGET_CPU) -mtune=cortex-a9 -mfpu=vfpv3-d16 -mfloat-abi=hard -mlittle-endian
+  TARGET_ENDIAN          = little
+  TARGET_EXTRA_CFLAGS    =
+  TARGET_EXTRA_LDFLAGS   =
+  ifeq ($(BOXMODEL),kronos_v2)
+    TARGET_OPTIMIZATION  = -Os
+    TARGET_EXTRA_CFLAGS  = -fdata-sections -ffunction-sections
+    TARGET_EXTRA_LDFLAGS = -Wl,--gc-sections
+  endif
+  CXX11_ABI              = -D_GLIBCXX_USE_CXX11_ABI=0
+
+else ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd5x hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
+  DRIVERS-BIN_DIR        = $(BOXTYPE)/$(BOXMODEL)
+  CORTEX-STRINGS_LDFLAG  = -lcortex-strings
+  TARGET                 = arm-cortex-linux-gnueabihf
+  TARGET_OPTIMIZATION    = -O2
+  TARGET_DEBUGGING       = -g
+  TARGET_ARCH            = arm
+  TARGET_CPU             = armv7ve
+  TARGET_ABI             = -march=$(TARGET_CPU) -mtune=cortex-a15 -mfpu=neon-vfpv4 -mfloat-abi=hard
+  TARGET_ENDIAN          = little
+  TARGET_EXTRA_CFLAGS    =
+  TARGET_EXTRA_LDFLAGS   =
+  CXX11_ABI              =
+
+else ifeq ($(BOXSERIES),$(filter $(BOXSERIES),vuduo))
+  DRIVERS-BIN_DIR        = $(BOXTYPE)/$(BOXMODEL)
+  CORTEX-STRINGS_LDFLAG  =
+  TARGET                 = mipsel-unknown-linux-gnu
+  TARGET_OPTIMIZATION    = -O2
+  TARGET_DEBUGGING       = -g
+  TARGET_ARCH            = mips
+  TARGET_CPU             = mips32
+  TARGET_ABI             = -march=$(TARGET_CPU) -mtune=mips32
+  TARGET_ENDIAN          = little
+  TARGET_EXTRA_CFLAGS    =
+  TARGET_EXTRA_LDFLAGS   =
+  CXX11_ABI              =
+
+endif
+
+# -----------------------------------------------------------------------------
+
 BASE_DIR     := $(shell pwd)
 MAINTAINER   ?= unknown
 WHOAMI       := $(shell id -un)
@@ -46,9 +111,9 @@ IMAGE_DIR     = $(STAGING_DIR)/images
 UPDATE_DIR    = $(STAGING_DIR)/updates
 HELPERS_DIR   = $(BASE_DIR)/helpers
 CROSS_BASE    = $(BASE_DIR)/cross
-CROSS_DIR    ?= $(CROSS_BASE)/$(BOXARCH)-linux-$(KERNEL_VER)
+CROSS_DIR    ?= $(CROSS_BASE)/$(TARGET_ARCH)-linux-$(KERNEL_VER)
 STATIC_BASE   = $(BASE_DIR)/static
-STATIC_DIR    = $(STATIC_BASE)/$(BOXARCH)-linux-$(KERNEL_VER)
+STATIC_DIR    = $(STATIC_BASE)/$(TARGET_ARCH)-linux-$(KERNEL_VER)
 CONFIGS       = $(BASE_DIR)/configs
 PATCHES       = $(BASE_DIR)/patches
 SKEL-ROOT     = $(BASE_DIR)/skel-root/$(BOXSERIES)
@@ -62,8 +127,7 @@ BUILD        ?= $(shell /usr/share/libtool/config.guess 2>/dev/null || /usr/shar
 
 # -----------------------------------------------------------------------------
 
-HOST_DIR      = $(BASE_DIR)/host
-HOST_DEPS_DIR = $(HOST_DIR)/deps
+include make/environment-host.mk
 
 # -----------------------------------------------------------------------------
 
@@ -81,7 +145,7 @@ PKG_PATCHES_DIR = $(PATCHES)/$(subst host-,,$(PKG_NAME))
 # -----------------------------------------------------------------------------
 
 CCACHE        = /usr/bin/ccache
-CCACHE_DIR    = $(HOME)/.ccache-ni-buildsystem-$(BOXARCH)-linux-$(KERNEL_VER)
+CCACHE_DIR    = $(HOME)/.ccache-ni-buildsystem-$(TARGET_ARCH)-linux-$(KERNEL_VER)
 export CCACHE_DIR
 
 # -----------------------------------------------------------------------------
@@ -91,69 +155,19 @@ DEBUG ?= no
 
 # -----------------------------------------------------------------------------
 
-ifeq ($(BOXSERIES),hd1)
-  DRIVERS-BIN_DIR        = $(BOXTYPE)/$(BOXFAMILY)
-  CORTEX-STRINGS_LDFLAG  =
-  TARGET                 = arm-cx2450x-linux-gnueabi
-  TARGET_OPTIMIZATION    = -Os
-  TARGET_DEBUGGING       = -g
-  TARGET_ARCH            = armv6
-  TARGET_ABI             = -march=$(TARGET_ARCH) -mfloat-abi=soft -mlittle-endian
-  TARGET_EXTRA_CFLAGS    = -fdata-sections -ffunction-sections
-  TARGET_EXTRA_LDFLAGS   = -Wl,--gc-sections
-  CXX11_ABI              =
-
-else ifeq ($(BOXSERIES),hd2)
-  DRIVERS-BIN_DIR        = $(BOXTYPE)/$(BOXFAMILY)
-  CORTEX-STRINGS_LDFLAG  = -lcortex-strings
-  TARGET                 = arm-cortex-linux-uclibcgnueabi
-  TARGET_OPTIMIZATION    = -O2
-  TARGET_DEBUGGING       = -g
-  TARGET_ARCH            = armv7-a
-  TARGET_ABI             = -march=$(TARGET_ARCH) -mtune=cortex-a9 -mfpu=vfpv3-d16 -mfloat-abi=hard -mlittle-endian
-  TARGET_EXTRA_CFLAGS    =
-  TARGET_EXTRA_LDFLAGS   =
-  ifeq ($(BOXMODEL),kronos_v2)
-    TARGET_OPTIMIZATION  = -Os
-    TARGET_EXTRA_CFLAGS  = -fdata-sections -ffunction-sections
-    TARGET_EXTRA_LDFLAGS = -Wl,--gc-sections
-  endif
-  CXX11_ABI              = -D_GLIBCXX_USE_CXX11_ABI=0
-
-else ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd5x hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
-  DRIVERS-BIN_DIR        = $(BOXTYPE)/$(BOXMODEL)
-  CORTEX-STRINGS_LDFLAG  = -lcortex-strings
-  TARGET                 = arm-cortex-linux-gnueabihf
-  TARGET_OPTIMIZATION    = -O2
-  TARGET_DEBUGGING       = -g
-  TARGET_ARCH            = armv7ve
-  TARGET_ABI             = -march=$(TARGET_ARCH) -mtune=cortex-a15 -mfpu=neon-vfpv4 -mfloat-abi=hard
-  TARGET_EXTRA_CFLAGS    =
-  TARGET_EXTRA_LDFLAGS   =
-  CXX11_ABI              =
-
-else ifeq ($(BOXSERIES),$(filter $(BOXSERIES),vuduo))
-  DRIVERS-BIN_DIR        = $(BOXTYPE)/$(BOXMODEL)
-  CORTEX-STRINGS_LDFLAG  =
-  TARGET                 = mipsel-unknown-linux-gnu
-  TARGET_OPTIMIZATION    = -O2
-  TARGET_DEBUGGING       = -g
-  TARGET_ARCH            = mips32
-  TARGET_ABI             = -march=$(TARGET_ARCH) -mtune=mips32
-  TARGET_EXTRA_CFLAGS    =
-  TARGET_EXTRA_LDFLAGS   =
-  CXX11_ABI              =
-
-endif
-
 include make/environment-target.mk
+
+# -----------------------------------------------------------------------------
 
 STATIC_libdir = $(STATIC_DIR)/$(prefix)/lib
 
 TARGET_CFLAGS   = -pipe $(TARGET_OPTIMIZATION) $(TARGET_DEBUGGING) $(TARGET_ABI) $(TARGET_EXTRA_CFLAGS) $(CXX11_ABI) -I$(TARGET_includedir)
 TARGET_CPPFLAGS = $(TARGET_CFLAGS)
 TARGET_CXXFLAGS = $(TARGET_CFLAGS)
-TARGET_LDFLAGS  = $(CORTEX-STRINGS_LDFLAG) -Wl,-O1 -Wl,-rpath,$(TARGET_libdir) -Wl,-rpath-link,$(TARGET_libdir) -L$(TARGET_libdir) $(TARGET_EXTRA_LDFLAGS)
+TARGET_LDFLAGS  = $(CORTEX-STRINGS_LDFLAG) $(TARGET_EXTRA_LDFLAGS)
+TARGET_LDFLAGS += -L$(TARGET_base_libdir) -L$(TARGET_libdir)
+TARGET_LDFLAGS += -Wl,-rpath,$(TARGET_libdir) -Wl,-rpath-link,$(TARGET_libdir)
+TARGET_LDFLAGS += -Wl,-O1
 
 TARGET_CROSS    = $(TARGET)-
 
@@ -191,8 +205,8 @@ PATH := $(HOST_DIR)/bin:$(HOST_DIR)/sbin:$(CROSS_DIR)/bin:$(PATH)
 # -----------------------------------------------------------------------------
 
 PKG_CONFIG = $(HOST_DIR)/bin/$(TARGET)-pkg-config
-PKG_CONFIG_LIBDIR = $(TARGET_libdir)
-PKG_CONFIG_PATH = $(PKG_CONFIG_LIBDIR)/pkgconfig
+PKG_CONFIG_LIBDIR = $(TARGET_base_libdir):$(TARGET_libdir)
+PKG_CONFIG_PATH = $(TARGET_base_libdir)/pkgconfig:$(TARGET_libdir)/pkgconfig
 PKG_CONFIG_SYSROOT_DIR=$(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
@@ -253,7 +267,7 @@ MAKE_OPTS = \
 	RANLIB="$(TARGET_RANLIB)" \
 	READELF="$(TARGET_READELF)" \
 	STRIP="$(TARGET_STRIP)" \
-	ARCH=$(BOXARCH)
+	ARCH=$(TARGET_ARCH)
 
 MAKE_ENV = \
 	$(MAKE_OPTS) \
@@ -278,6 +292,58 @@ CONFIGURE = \
 	$(MAKE_ENV) \
 	./configure $(CONFIGURE_OPTS)
 
+define meson-cross-config # (dest dir)
+	mkdir -p $(1)
+	( \
+		echo "# Note: Buildsystems's and Meson's terminologies differ about the meaning"; \
+		echo "# of 'build', 'host' and 'target':"; \
+		echo "# - Buildsystems's 'host' is Meson's 'build'"; \
+		echo "# - Buildsystems's 'target' is Meson's 'host'"; \
+		echo ""; \
+		echo "[binaries]"; \
+		echo "c = '$(TARGET_CC)'"; \
+		echo "cpp = '$(TARGET_CXX)'"; \
+		echo "ar = '$(TARGET_AR)'"; \
+		echo "strip = '$(TARGET_STRIP)'"; \
+		echo "pkgconfig = '$(PKG_CONFIG)'"; \
+		echo ""; \
+		echo "[built-in options]"; \
+		echo "c_args = '$(TARGET_CFLAGS)'"; \
+		echo "c_link_args = '$(TARGET_LDFLAGS)'"; \
+		echo "cpp_args = '$(TARGET_CXXFLAGS)'"; \
+		echo "cpp_link_args = '$(TARGET_LDFLAGS)'"; \
+		echo ""; \
+		echo "[properties]"; \
+		echo "needs_exe_wrapper = true"; \
+		echo "sys_root = '$(TARGET_DIR)'"; \
+		echo "pkg_config_libdir = '$(PKG_CONFIG_LIBDIR)'"; \
+		echo ""; \
+		echo "[host_machine]"; \
+		echo "system = 'linux'"; \
+		echo "cpu_family = '$(TARGET_ARCH)'"; \
+		echo "cpu = '$(TARGET_CPU)'"; \
+		echo "endian = '$(TARGET_ENDIAN)'" \
+	) > $(1)/meson-cross.config
+endef
+
+# -----------------------------------------------------------------------------
+
+MESON_CONFIGURE = \
+	$(call meson-cross-config,$(PKG_BUILD_DIR)/build); \
+	unset CC CXX CPP LD AR NM STRIP; \
+	PKG_CONFIG_PATH="$(PKG_CONFIG_PATH)" \
+	$(HOST_MESON) \
+		--buildtype=release \
+		--cross-file $(PKG_BUILD_DIR)/build/meson-cross.config \
+		-Dstrip=false \
+		$(PKG_BUILD_DIR) $(PKG_BUILD_DIR)/build
+
+NINJA = \
+	$(HOST_NINJA) -C $(PKG_BUILD_DIR)/build
+
+NINJA_INSTALL = DESTDIR=$(TARGET_DIR) \
+	$(HOST_NINJA) -C $(PKG_BUILD_DIR)/build install
+
 # -----------------------------------------------------------------------------
 
 CMAKE_OPTS = \
@@ -285,7 +351,7 @@ CMAKE_OPTS = \
 	-DENABLE_STATIC=OFF \
 	-DCMAKE_BUILD_TYPE="None" \
 	-DCMAKE_SYSTEM_NAME="Linux" \
-	-DCMAKE_SYSTEM_PROCESSOR="$(BOXARCH)" \
+	-DCMAKE_SYSTEM_PROCESSOR="$(TARGET_ARCH)" \
 	-DCMAKE_INSTALL_PREFIX="$(prefix)" \
 	-DCMAKE_INSTALL_DOCDIR="$(REMOVE_docdir)" \
 	-DCMAKE_INSTALL_MANDIR="$(REMOVE_mandir)" \

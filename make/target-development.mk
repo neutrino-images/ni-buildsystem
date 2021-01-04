@@ -18,7 +18,7 @@ VALGRIND_SITE   = ftp://sourceware.org/pub/valgrind
 $(DL_DIR)/$(VALGRIND_SOURCE):
 	$(DOWNLOAD) $(VALGRIND_SITE)/$(VALGRIND_SOURCE)
 
-VALGRIND_PATCH  = valgrind-fix-build-$(TARGET_ARCH).patch
+VALGRIND_PATCH  = valgrind-fix-build-$(TARGET_CPU).patch
 
 valgrind3: $(DL_DIR)/$(VALGRIND_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(VALGRIND_DIR)

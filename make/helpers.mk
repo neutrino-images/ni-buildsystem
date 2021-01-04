@@ -65,7 +65,8 @@ define REWRITE_LIBTOOL # (libdir)
 endef
 
 # rewrite libtool libraries automatically
-REWRITE_LIBTOOL_LA = $(call REWRITE_LIBTOOL,$(TARGET_libdir))
+REWRITE_LIBTOOL_LA = $(call REWRITE_LIBTOOL,$(TARGET_base_libdir)); \
+		     $(call REWRITE_LIBTOOL,$(TARGET_libdir))
 
 # -----------------------------------------------------------------------------
 

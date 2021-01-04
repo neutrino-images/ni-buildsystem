@@ -20,6 +20,7 @@ host-tools: $(HOST_DIR) \
 	host-dosfstools \
 	host-mtools \
 	host-e2fsprocs \
+	host-meson \
 	host-lua \
 	host-luarocks \
 	host-ccache
@@ -53,7 +54,7 @@ host-pkgconf: $(DL_DIR)/$(HOST_PKGCONF_SOURCE) | $(HOST_DIR) pkg-config-preqs
 		$(APPLY_PATCHES); \
 		./configure \
 			--prefix=$(HOST_DIR) \
-			; \
+		; \
 		$(MAKE); \
 		$(MAKE) install
 	$(INSTALL_EXEC) $(PKG_FILES_DIR)/pkg-config.in $(HOST_PKG-CONFIG)
@@ -91,7 +92,7 @@ host-mtd-utils: $(DL_DIR)/$(HOST_MTD-UTILS_SOURCE) | $(HOST_DIR)
 			--without-ubifs \
 			--without-xattr \
 			--disable-tests \
-			; \
+		; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(HOST_DIR)
 	$(REMOVE)/$(HOST_MTD-UTILS_DIR)
@@ -138,8 +139,8 @@ HOST_TZDATA_SITE   = ftp://ftp.iana.org/tz/releases
 
 HOST_ZIC = $(HOST_DIR)/sbin/zic
 
-host-zic: $(HOST_DIR)/sbin/zic
-$(HOST_DIR)/sbin/zic: $(DL_DIR)/$(HOST_TZDATA_SOURCE) $(DL_DIR)/$(HOST_TZCODE_SOURCE) | $(HOST_DIR)
+host-zic: $(HOST_ZIC)
+$(HOST_ZIC): $(DL_DIR)/$(HOST_TZDATA_SOURCE) $(DL_DIR)/$(HOST_TZCODE_SOURCE) | $(HOST_DIR)
 	$(REMOVE)/$(HOST_TZCODE_DIR)
 	$(MKDIR)/$(HOST_TZCODE_DIR)
 	$(CHDIR)/$(HOST_TZCODE_DIR); \
@@ -174,7 +175,7 @@ host-parted: $(DL_DIR)/$(HOST_PARTED_SOURCE) | $(HOST_DIR)
 			--disable-shared \
 			--disable-device-mapper \
 			--without-readline \
-			; \
+		; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(HOST_DIR)
 	$(REMOVE)/$(HOST_PARTED_DIR)
@@ -197,7 +198,7 @@ host-dosfstools: $(DL_DIR)/$(HOST_DOSFSTOOLS_SOURCE) | $(HOST_DIR)
 		./configure \
 			--prefix= \
 			--without-udev \
-			; \
+		; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(HOST_DIR)
 	ln -sf mkfs.fat $(HOST_DIR)/sbin/mkfs.vfat
@@ -222,7 +223,7 @@ host-mtools: $(DL_DIR)/$(HOST_MTOOLS_SOURCE) | $(HOST_DIR)
 	$(CHDIR)/$(HOST_MTOOLS_DIR); \
 		./configure \
 			--prefix= \
-			; \
+		; \
 		$(MAKE1); \
 		$(MAKE1) install DESTDIR=$(HOST_DIR)
 	$(REMOVE)/$(HOST_MTOOLS_DIR)
@@ -252,29 +253,161 @@ host-e2fsprocs: $(DL_DIR)/$(HOST_E2FSPROGS_SOURCE) | $(HOST_DIR)
 
 # -----------------------------------------------------------------------------
 
+HOST_MESON_VER    = 0.56.0
+HOST_MESON_DIR    = meson-$(HOST_MESON_VER)
+HOST_MESON_SOURCE = meson-$(HOST_MESON_VER).tar.gz
+HOST_MESON_SITE   = https://github.com/mesonbuild/meson/releases/download/$(HOST_MESON_VER)
+
+$(DL_DIR)/$(HOST_MESON_SOURCE):
+	$(DOWNLOAD) $(HOST_MESON_SITE)/$(HOST_MESON_SOURCE)
+
+HOST_MESON_DEPS   = host-ninja host-python3 host-python3-setuptools
+
+HOST_MESON = $(HOST_DIR)/bin/meson
+
+host-meson: $(HOST_MESON_DEPS) $(DL_DIR)/$(HOST_MESON_SOURCE) | $(HOST_DIR)
+	$(REMOVE)/$(HOST_MESON_DIR)
+	$(UNTAR)/$(HOST_MESON_SOURCE)
+	$(CHDIR)/$(HOST_MESON_DIR); \
+		$(APPLY_PATCHES); \
+		$(HOST_PYTHON_BUILD); \
+		$(HOST_PYTHON_INSTALL)
+	$(REMOVE)/$(HOST_MESON_DIR)
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
 HOST_NINJA_VER    = 1.10.0
 HOST_NINJA_DIR    = ninja-$(HOST_NINJA_VER)
 HOST_NINJA_SOURCE = ninja-$(HOST_NINJA_VER).tar.gz
 HOST_NINJA_SITE   = $(call github,ninja-build,ninja,v$(HOST_NINJA_VER))
 
-HOST_NINJA_PATCH  = ninja/0001-set-minimum-cmake-version-to-3.10.patch
-HOST_NINJA_PATCH += ninja/0002-remove-fdiagnostics-color-from-make-command.patch
-HOST_NINJA_PATCH += ninja/0003-CMake-fix-object-library-usage.patch
-
 $(DL_DIR)/$(HOST_NINJA_SOURCE):
 	$(DOWNLOAD) $(HOST_NINJA_SITE)/$(HOST_NINJA_SOURCE)
+
+HOST_NINJA = $(HOST_DIR)/bin/ninja
 
 host-ninja: $(DL_DIR)/$(HOST_NINJA_SOURCE) | $(HOST_DIR)
 	$(REMOVE)/$(HOST_NINJA_DIR)
 	$(UNTAR)/$(HOST_NINJA_SOURCE)
 	$(CHDIR)/$(HOST_NINJA_DIR); \
-		$(call apply_patches,$(HOST_NINJA_PATCH)); \
+		$(APPLY_PATCHES); \
 		cmake . \
 			-DCMAKE_INSTALL_PREFIX="" \
 			; \
 		$(MAKE)
-	$(INSTALL_EXEC) -D $(BUILD_DIR)/$(HOST_NINJA_DIR)/ninja $(HOST_DIR)/bin/ninja
+	$(INSTALL_EXEC) -D $(BUILD_DIR)/$(HOST_NINJA_DIR)/ninja $(HOST_NINJA)
 	$(REMOVE)/$(HOST_NINJA_DIR)
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
+HOST_EXPAT_VER    = $(EXPAT_VER)
+HOST_EXPAT_DIR    = expat-$(EXPAT_VER)
+HOST_EXPAT_SOURCE = expat-$(EXPAT_VER).tar.bz2
+HOST_EXPAT_SITE   = https://sourceforge.net/projects/expat/files/expat/$(EXPAT_VER)
+
+#$(DL_DIR)/$(HOST_EXPAT_SOURCE):
+#	$(DOWNLOAD) $(HOST_EXPAT_SITE)/$(EXPAT_SOURCE)
+
+host-expat: $(DL_DIR)/$(HOST_EXPAT_SOURCE) | $(HOST_DIR)
+	$(REMOVE)/$(HOST_EXPAT_DIR)
+	$(UNTAR)/$(HOST_EXPAT_SOURCE)
+	$(CHDIR)/$(HOST_EXPAT_DIR); \
+		./configure \
+			--prefix= \
+			--without-docbook \
+		; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(HOST_DIR)
+	$(REMOVE)/$(HOST_EXPAT_DIR)
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
+HOST_PYTHON3_VER    = 3.9.0
+HOST_PYTHON3_DIR    = Python-$(HOST_PYTHON3_VER)
+HOST_PYTHON3_SOURCE = Python-$(HOST_PYTHON3_VER).tar.xz
+HOST_PYTHON3_SITE   = https://www.python.org/ftp/python/$(HOST_PYTHON3_VER)
+
+HOST_PYTHON3_BASE_DIR    = lib/python$(basename $(HOST_PYTHON3_VER))
+HOST_PYTHON3_INCLUDE_DIR = include/python$(basename $(HOST_PYTHON3_VER))
+
+$(DL_DIR)/$(HOST_PYTHON3_SOURCE):
+	$(DOWNLOAD) $(HOST_PYTHON3_SITE)/$(HOST_PYTHON3_SOURCE)
+
+HOST_PYTHON3_DEPS   = host-expat
+
+host-python3: $(HOST_PYTHON3_DEPS) $(DL_DIR)/$(HOST_PYTHON3_SOURCE) | $(HOST_DIR)
+	$(REMOVE)/$(HOST_PYTHON3_DIR)
+	$(UNTAR)/$(HOST_PYTHON3_SOURCE)
+	$(CHDIR)/$(HOST_PYTHON3_DIR); \
+		#$(APPLY_PATCHES); \
+		autoconf; \
+		CONFIG_SITE= \
+		OPT="$(HOST_CFLAGS)" \
+		./configure \
+			--prefix=$(HOST_DIR) \
+			--without-ensurepip \
+			--without-cxx-main \
+			--disable-sqlite3 \
+			--disable-tk \
+			--with-expat=system \
+			--disable-curses \
+			--disable-codecs-cjk \
+			--disable-nis \
+			--enable-unicodedata \
+			--disable-test-modules \
+			--disable-idle3 \
+			--disable-ossaudiodev \
+		; \
+		$(MAKE); \
+		$(MAKE) install
+	$(REMOVE)/$(HOST_PYTHON3_DIR)
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
+HOST_PYTHON3-SETUPTOOLS_VER    = 44.0.0
+HOST_PYTHON3-SETUPTOOLS_DIR    = setuptools-$(HOST_PYTHON3-SETUPTOOLS_VER)
+HOST_PYTHON3-SETUPTOOLS_SOURCE = setuptools-$(HOST_PYTHON3-SETUPTOOLS_VER).zip
+HOST_PYTHON3-SETUPTOOLS_SITE   = https://files.pythonhosted.org/packages/b0/f3/44da7482ac6da3f36f68e253cb04de37365b3dba9036a3c70773b778b485
+
+$(DL_DIR)/$(HOST_PYTHON3-SETUPTOOLS_SOURCE):
+	$(DOWNLOAD) $(HOST_PYTHON3-SETUPTOOLS_SITE)/$(HOST_PYTHON3-SETUPTOOLS_SOURCE)
+
+HOST_PYTHON3-SETUPTOOLS_DEPS   = host-python3
+
+host-python3-setuptools: $(HOST_PYTHON3-SETUPTOOLS_DEPS) $(DL_DIR)/$(HOST_PYTHON3-SETUPTOOLS_SOURCE) | $(HOST_DIR)
+	$(REMOVE)/$(HOST_PYTHON3-SETUPTOOLS_DIR)
+	$(UNZIP)/$(HOST_PYTHON3-SETUPTOOLS_SOURCE)
+	$(CHDIR)/$(HOST_PYTHON3-SETUPTOOLS_DIR); \
+		$(APPLY_PATCHES); \
+		$(HOST_PYTHON_BUILD); \
+		$(HOST_PYTHON_INSTALL)
+	$(REMOVE)/$(HOST_PYTHON3-SETUPTOOLS_DIR)
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
+HOST_LIBFFI_VER    = $(LIBFFI_VER)
+HOST_LIBFFI_DIR    = libffi-$(HOST_LIBFFI_VER)
+HOST_LIBFFI_SOURCE = libffi-$(HOST_LIBFFI_VER).tar.gz
+HOST_LIBFFI_SITE   = $(call github,libffi,libffi,v$(HOST_LIBFFI_VER))
+
+#$(DL_DIR)/$(HOST_LIBFFI_SOURCE):
+#	$(DOWNLOAD) $(HOST_LIBFFI_SITE)/$(HOST_LIBFFI_SOURCE)
+
+host-libffi: $(DL_DIR)/$(HOST_LIBFFI_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(HOST_LIBFFI_DIR)
+	$(UNTAR)/$(HOST_LIBFFI_SOURCE)
+	$(CHDIR)/$(HOST_LIBFFI_DIR); \
+		./configure \
+			--prefix= \
+			; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(HOST_DIR)
+	$(REMOVE)/$(HOST_LIBFFI_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------

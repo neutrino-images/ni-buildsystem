@@ -312,9 +312,9 @@ $(DL_DIR)/$(OPENSSL_SOURCE):
 
 OPENSSL_PATCH  = 0000-Configure-align-O-flag.patch
 
-ifeq ($(BOXARCH),arm)
+ifeq ($(TARGET_ARCH),arm)
   OPENSSL_ARCH = linux-armv4
-else ifeq ($(BOXARCH),mips)
+else ifeq ($(TARGET_ARCH),mips)
   OPENSSL_ARCH = linux-generic32
 endif
 
@@ -402,7 +402,7 @@ ncurses: $(DL_DIR)/$(NCURSES_SOURCE) | $(TARGET_DIR)
 		$(MAKE) libs; \
 		$(MAKE) install.libs DESTDIR=$(TARGET_DIR)
 	rm -f $(addprefix $(TARGET_libdir)/,libform* libmenu* libpanel*)
-	rm -f $(addprefix $(PKG_CONFIG_PATH)/,form.pc menu.pc panel.pc)
+	rm -f $(addprefix $(TARGET_libdir)/pkgconfig/,form.pc menu.pc panel.pc)
 	rm -f $(HOST_DIR)/bin/ncurses*
 	mv $(TARGET_bindir)/ncurses6-config $(HOST_DIR)/bin
 	$(REWRITE_CONFIG) $(HOST_DIR)/bin/ncurses6-config
@@ -1094,7 +1094,7 @@ libvorbisidec: $(LIBVORBISIDEC_DEPS) $(DL_DIR)/$(LIBVORBISIDEC_SOURCE) | $(TARGE
 			--prefix=$(prefix) \
 			; \
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL_LA)
 	$(REMOVE)/$(LIBVORBISIDEC_DIR)
 	$(TOUCH)

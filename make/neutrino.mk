@@ -49,12 +49,15 @@ NEUTRINO_CFLAGS += -Wno-psabi
 
 # -----------------------------------------------------------------------------
 
-NEUTRINO_LDFLAGS = -lcrypto -ldl -lz $(CORTEX-STRINGS_LDFLAG) -L$(TARGET_libdir)
+NEUTRINO_LDFLAGS  = $(CORTEX-STRINGS_LDFLAG)
+NEUTRINO_LDFLAGS += -L$(TARGET_base_libdir) -L$(TARGET_libdir)
+NEUTRINO_LDFLAGS += -Wl,-rpath,$(TARGET_libdir) -Wl,-rpath-link,$(TARGET_libdir)
 ifeq ($(DEBUG),yes)
-  NEUTRINO_LDFLAGS += -Wl,-rpath-link,$(TARGET_libdir)
+  NEUTRINO_LDFLAGS += -Wl,-O0
 else
-  NEUTRINO_LDFLAGS += -Wl,-O1 -Wl,-rpath-link,$(TARGET_libdir) $(TARGET_EXTRA_LDFLAGS)
+  NEUTRINO_LDFLAGS += -Wl,-O1 $(TARGET_EXTRA_LDFLAGS)
 endif
+NEUTRINO_LDFLAGS += -lcrypto -ldl -lz
 
 # -----------------------------------------------------------------------------
 

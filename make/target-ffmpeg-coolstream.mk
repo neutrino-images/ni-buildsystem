@@ -147,7 +147,7 @@ FFMPEG_CONFIGURE_GENERIC = \
 			--enable-shared \
 			\
 			--target-os=linux \
-			--arch=$(BOXARCH) \
+			--arch=$(TARGET_ARCH) \
 			--extra-ldflags="$(TARGET_LDFLAGS)"
 
 # -----------------------------------------------------------------------------

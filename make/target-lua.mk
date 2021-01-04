@@ -32,7 +32,7 @@ lua: $(LUA_DEPS) $(DL_DIR)/$(LUA_SOURCE) | $(TARGET_DIR)
 			LDFLAGS="$(TARGET_LDFLAGS)" \
 			; \
 		$(MAKE) install INSTALL_TOP=$(TARGET_prefix) INSTALL_MAN=$(TARGET_DIR)$(REMOVE_man1dir); \
-		$(MAKE) pc INSTALL_TOP=$(TARGET_prefix) > $(PKG_CONFIG_PATH)/lua.pc
+		$(MAKE) pc INSTALL_TOP=$(TARGET_prefix) > $(TARGET_libdir)/pkgconfig/lua.pc
 	rm -rf $(TARGET_bindir)/luac
 	$(REMOVE)/$(LUA_DIR)
 	$(TOUCH)
