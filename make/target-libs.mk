@@ -1181,7 +1181,7 @@ libffi: $(DL_DIR)/$(LIBFFI_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-GLIB2_VER    = 2.56.3
+GLIB2_VER    = 2.62.4
 GLIB2_DIR    = glib-$(GLIB2_VER)
 GLIB2_SOURCE = glib-$(GLIB2_VER).tar.xz
 GLIB2_SITE   = https://ftp.gnome.org/pub/gnome/sources/glib/$(basename $(GLIB2_VER))
@@ -1189,10 +1189,7 @@ GLIB2_SITE   = https://ftp.gnome.org/pub/gnome/sources/glib/$(basename $(GLIB2_V
 $(DL_DIR)/$(GLIB2_SOURCE):
 	$(DOWNLOAD) $(GLIB2_SITE)/$(GLIB2_SOURCE)
 
-GLIB2_PATCH  = glib2-disable-tests.patch
-GLIB2_PATCH += glib2-automake.patch
-
-GLIB2_DEPS   = zlib libffi
+GLIB2_DEPS   = zlib libffi util-linux
 ifeq ($(BOXSERIES),hd2)
   GLIB2_DEPS += gettext
 endif
@@ -1208,32 +1205,22 @@ glib2: $(GLIB2_DEPS) $(DL_DIR)/$(GLIB2_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(GLIB2_DIR)
 	$(UNTAR)/$(GLIB2_SOURCE)
 	$(CHDIR)/$(GLIB2_DIR); \
-		$(call apply_patches,$(GLIB2_PATCH)); \
-		echo "ac_cv_type_long_long=yes"		 > arm-linux.cache; \
-		echo "glib_cv_stack_grows=no"		>> arm-linux.cache; \
-		echo "glib_cv_uscore=no"		>> arm-linux.cache; \
-		echo "glib_cv_va_copy=no"		>> arm-linux.cache; \
-		echo "glib_cv_va_val_copy=yes"		>> arm-linux.cache; \
-		echo "ac_cv_func_posix_getpwuid_r=yes"	>> arm-linux.cache; \
-		echo "ac_cv_func_posix_getgrgid_r=yes"	>> arm-linux.cache; \
-		autoreconf -fi; \
-		$(CONFIGURE) \
+		$(APPLY_PATCHES); \
+		$(MESON_CONFIGURE) \
 			--prefix=$(prefix) \
-			--datarootdir=$(REMOVE_datarootdir) \
-			--cache-file=arm-linux.cache \
-			--disable-debug \
-			--disable-selinux \
-			--disable-libmount \
-			--disable-fam \
-			--disable-gtk-doc \
-			--disable-gtk-doc-html \
-			--disable-compile-warnings \
-			--with-threads="posix" \
-			--with-pcre=internal \
-			$(GLIB2_CONF) \
-			; \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	rm -f $(addprefix $(TARGET_bindir)/,gapplication gdbus* gio* glib* gobject-query gresource gsettings gtester*)
+			-Dman=false \
+			-Ddtrace=false \
+			-Dsystemtap=false \
+			-Dgtk_doc=false \
+			-Dinternal_pcre=true \
+			-Diconv=external \
+			-Dgio_module_dir=$(libdir)/gio/modules \
+			-Dinstalled_tests=false \
+			-Doss_fuzz=disabled \
+			-Dselinux=disabled \
+		; \
+		$(NINJA); \
+		$(NINJA_INSTALL)
 	$(REWRITE_LIBTOOL_LA)
 	$(REMOVE)/$(GLIB2_DIR)
 	$(TOUCH)
