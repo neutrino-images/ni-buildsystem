@@ -893,6 +893,35 @@ sqlite: $(DL_DIR)/$(SQLITE_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
+MINIDLNA_VER    = 1.3.0
+MINIDLNA_DIR    = minidlna-$(MINIDLNA_VER)
+MINIDLNA_SOURCE = minidlna-$(MINIDLNA_VER).tar.gz
+MINIDLNA_SITE   = https://sourceforge.net/projects/minidlna/files/minidlna/$(MINIDLNA_VER)
+
+$(DL_DIR)/$(MINIDLNA_SOURCE):
+	$(DOWNLOAD) $(MINIDLNA_SITE)/$(MINIDLNA_SOURCE)
+
+MINIDLNA_DEPS   = zlib sqlite libexif libjpeg-turbo libid3tag libogg libvorbis flac ffmpeg
+
+minidlna: $(MINIDLNA_DEPS) $(DL_DIR)/$(MINIDLNA_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(MINIDLNA_DIR)
+	$(UNTAR)/$(MINIDLNA_SOURCE)
+	$(CHDIR)/$(MINIDLNA_DIR); \
+		autoreconf -fi; \
+		$(CONFIGURE) \
+			--prefix=$(prefix) \
+			--localedir=$(REMOVE_localedir) \
+			--disable-static \
+			; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(INSTALL_DATA) -D $(PKG_BUILD_DIR)/minidlna.conf $(TARGET_sysconfdir)/minidlna.conf
+	$(SED) 's|^media_dir=.*|media_dir=A,/media/sda1/music\nmedia_dir=V,/media/sda1/movies\nmedia_dir=P,/media/sda1/pictures|' $(TARGET_sysconfdir)/minidlna.conf
+	$(REMOVE)/$(MINIDLNA_DIR)
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
 SMARTMONTOOLS_VER    = 7.1
 SMARTMONTOOLS_DIR    = smartmontools-$(SMARTMONTOOLS_VER)
 SMARTMONTOOLS_SOURCE = smartmontools-$(SMARTMONTOOLS_VER).tar.gz
