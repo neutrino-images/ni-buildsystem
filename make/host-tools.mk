@@ -20,7 +20,6 @@ host-tools: $(HOST_DIR) \
 	host-dosfstools \
 	host-mtools \
 	host-e2fsprocs \
-	host-meson \
 	host-lua \
 	host-luarocks \
 	host-ccache
