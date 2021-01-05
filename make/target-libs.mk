@@ -1126,6 +1126,32 @@ libogg: $(DL_DIR)/$(LIBOGG_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
+LIBEXIF_VER    = 0.6.22
+LIBEXIF_DIR    = libexif-$(LIBEXIF_VER)
+LIBEXIF_SOURCE = libexif-$(LIBEXIF_VER).tar.xz
+LIBEXIF_SITE   = https://github.com/libexif/libexif/releases/download/libexif-$(subst .,_,$(LIBEXIF_VER))-release
+
+$(DL_DIR)/$(LIBEXIF_SOURCE):
+	$(DOWNLOAD) $(LIBEXIF_SITE)/$(LIBEXIF_SOURCE)
+
+libexif: $(DL_DIR)/$(LIBEXIF_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(LIBEXIF_DIR)
+	$(UNTAR)/$(LIBEXIF_SOURCE)
+	$(CHDIR)/$(LIBEXIF_DIR); \
+		$(APPLY_PATCHES); \
+		$(CONFIGURE) \
+			--prefix=$(prefix) \
+			--datarootdir=$(REMOVE_datarootdir) \
+			--with-doc-dir=$(REMOVE_docdir) \
+			; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(REWRITE_LIBTOOL_LA)
+	$(REMOVE)/$(LIBEXIF_DIR)
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
 FRIBIDI_VER    = 1.0.10
 FRIBIDI_DIR    = fribidi-$(FRIBIDI_VER)
 FRIBIDI_SOURCE = fribidi-$(FRIBIDI_VER).tar.xz
