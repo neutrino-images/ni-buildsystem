@@ -842,7 +842,7 @@ USHARE_PATCH += ushare-disable-iconv-check.patch
 
 USHARE_DEPS   = libupnp
 
-ushare: $(USHARE_DEPS) $(DL_DIR)/$(USHARE_SOURCE)| $(TARGET_DIR)
+ushare: $(USHARE_DEPS) $(DL_DIR)/$(USHARE_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(USHARE_DIR)
 	$(UNTAR)/$(USHARE_SOURCE)
 	$(CHDIR)/$(USHARE_DIR); \
@@ -864,6 +864,31 @@ ushare: $(USHARE_DEPS) $(DL_DIR)/$(USHARE_SOURCE)| $(TARGET_DIR)
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/ushare.init $(TARGET_sysconfdir)/init.d/ushare
 	$(UPDATE-RC.D) ushare defaults 75 25
 	$(REMOVE)/$(USHARE_DIR)
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
+SQLITE_VER    = 3330000
+SQLITE_DIR    = sqlite-autoconf-$(SQLITE_VER)
+SQLITE_SOURCE = sqlite-autoconf-$(SQLITE_VER).tar.gz
+SQLITE_SITE   = http://www.sqlite.org/2020
+
+$(DL_DIR)/$(SQLITE_SOURCE):
+	$(DOWNLOAD) $(SQLITE_SITE)/$(SQLITE_SOURCE)
+
+sqlite: $(DL_DIR)/$(SQLITE_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(SQLITE_DIR)
+	$(UNTAR)/$(SQLITE_SOURCE)
+	$(CHDIR)/$(SQLITE_DIR); \
+		$(CONFIGURE) \
+			--prefix=$(prefix) \
+			--bindir=$(REMOVE_bindir) \
+			--mandir=$(REMOVE_mandir) \
+			; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(REWRITE_LIBTOOL_LA)
+	$(REMOVE)/$(SQLITE_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
