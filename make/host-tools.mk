@@ -393,7 +393,7 @@ host-python3-setuptools: $(HOST_PYTHON3-SETUPTOOLS_DEPS) $(DL_DIR)/$(HOST_PYTHON
 HOST_LIBFFI_VER    = $(LIBFFI_VER)
 HOST_LIBFFI_DIR    = libffi-$(HOST_LIBFFI_VER)
 HOST_LIBFFI_SOURCE = libffi-$(HOST_LIBFFI_VER).tar.gz
-HOST_LIBFFI_SITE   = $(call github,libffi,libffi,v$(HOST_LIBFFI_VER))
+HOST_LIBFFI_SITE   = https://github.com/libffi/libffi/releases/download/v$(HOST_LIBFFI_VER)
 
 #$(DL_DIR)/$(HOST_LIBFFI_SOURCE):
 #	$(DOWNLOAD) $(HOST_LIBFFI_SITE)/$(HOST_LIBFFI_SOURCE)

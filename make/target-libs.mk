@@ -1181,7 +1181,7 @@ fribidi: $(DL_DIR)/$(FRIBIDI_SOURCE) | $(TARGET_DIR)
 LIBFFI_VER    = 3.3
 LIBFFI_DIR    = libffi-$(LIBFFI_VER)
 LIBFFI_SOURCE = libffi-$(LIBFFI_VER).tar.gz
-LIBFFI_SITE   = $(call github,libffi,libffi,v$(LIBFFI_VER))
+LIBFFI_SITE   = https://github.com/libffi/libffi/releases/download/v$(HOST_LIBFFI_VER)
 
 $(DL_DIR)/$(LIBFFI_SOURCE):
 	$(DOWNLOAD) $(LIBFFI_SITE)/$(LIBFFI_SOURCE)
