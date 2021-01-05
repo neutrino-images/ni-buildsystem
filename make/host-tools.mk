@@ -336,7 +336,7 @@ HOST_PYTHON3_INCLUDE_DIR = include/python$(basename $(HOST_PYTHON3_VER))
 $(DL_DIR)/$(HOST_PYTHON3_SOURCE):
 	$(DOWNLOAD) $(HOST_PYTHON3_SITE)/$(HOST_PYTHON3_SOURCE)
 
-HOST_PYTHON3_DEPS   = host-expat
+HOST_PYTHON3_DEPS   = host-expat host-libffi
 
 host-python3: $(HOST_PYTHON3_DEPS) $(DL_DIR)/$(HOST_PYTHON3_SOURCE) | $(HOST_DIR)
 	$(REMOVE)/$(HOST_PYTHON3_DIR)
@@ -398,10 +398,11 @@ HOST_LIBFFI_SITE   = $(call github,libffi,libffi,v$(HOST_LIBFFI_VER))
 #$(DL_DIR)/$(HOST_LIBFFI_SOURCE):
 #	$(DOWNLOAD) $(HOST_LIBFFI_SITE)/$(HOST_LIBFFI_SOURCE)
 
-host-libffi: $(DL_DIR)/$(HOST_LIBFFI_SOURCE) | $(TARGET_DIR)
+host-libffi: $(DL_DIR)/$(HOST_LIBFFI_SOURCE) | $(HOST_DIR)
 	$(REMOVE)/$(HOST_LIBFFI_DIR)
 	$(UNTAR)/$(HOST_LIBFFI_SOURCE)
 	$(CHDIR)/$(HOST_LIBFFI_DIR); \
+		$(APPLY_PATCHES); \
 		./configure \
 			--prefix= \
 			; \
