@@ -1074,6 +1074,33 @@ libmad: $(DL_DIR)/$(LIBMAD_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
+LIBVORBIS_VER    = 1.3.7
+LIBVORBIS_DIR    = libvorbis-$(LIBVORBIS_VER)
+LIBVORBIS_SOURCE = libvorbis-$(LIBVORBIS_VER).tar.xz
+LIBVORBIS_SITE   = https://downloads.xiph.org/releases/vorbis
+
+$(DL_DIR)/$(LIBVORBIS_SOURCE):
+	$(DOWNLOAD) $(LIBVORBIS_SITE)/$(LIBVORBIS_SOURCE)
+
+LIBVORBIS_DEPS   = libogg
+
+libvorbis: $(LIBVORBIS_DEPS) $(DL_DIR)/$(LIBVORBIS_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(LIBVORBIS_DIR)
+	$(UNTAR)/$(LIBVORBIS_SOURCE)
+	$(CHDIR)/$(LIBVORBIS_DIR); \
+		$(CONFIGURE) \
+			--prefix=$(prefix) \
+			--datarootdir=$(REMOVE_datarootdir) \
+			; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(REWRITE_LIBTOOL_LA)
+	$(REMOVE)/$(LIBVORBIS_DIR)
+	$(TOUCH)
+
+
+# -----------------------------------------------------------------------------
+
 LIBVORBISIDEC_VER    = 1.2.1+git20180316
 LIBVORBISIDEC_DIR    = libvorbisidec-$(LIBVORBISIDEC_VER)
 LIBVORBISIDEC_SOURCE = libvorbisidec_$(LIBVORBISIDEC_VER).orig.tar.gz
