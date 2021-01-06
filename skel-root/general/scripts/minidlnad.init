@@ -1,0 +1,39 @@
+#!/bin/sh
+
+. /etc/init.d/globals
+
+start() {
+	if [ -e /var/etc/.minidlnad ]; then
+		minidlnad "$@"
+	fi
+}
+
+stop() {
+	if [ -e /var/etc/.minidlnad ]; then
+		kill -TERM $(pidof minidlnad)
+	fi
+}
+
+restart() {
+	stop
+	sleep 1
+	start "$@"
+}
+
+case "$1" in
+	start)
+		start
+	;;
+	stop)
+		stop
+	;;
+	restart|reload)
+		restart
+	;;
+	force-reload)
+		restart -R
+	;;
+	*)
+		echo "[$BASENAME] Usage: $0 {start|restart|reload|force-reload|stop}"
+	;;
+esac

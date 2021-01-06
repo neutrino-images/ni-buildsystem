@@ -917,6 +917,10 @@ minidlna: $(MINIDLNA_DEPS) $(DL_DIR)/$(MINIDLNA_SOURCE) | $(TARGET_DIR)
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(INSTALL_DATA) -D $(PKG_BUILD_DIR)/minidlna.conf $(TARGET_sysconfdir)/minidlna.conf
 	$(SED) 's|^media_dir=.*|media_dir=A,/media/sda1/music\nmedia_dir=V,/media/sda1/movies\nmedia_dir=P,/media/sda1/pictures|' $(TARGET_sysconfdir)/minidlna.conf
+	$(SED) 's|^#user=.*|user=root|' $(TARGET_sysconfdir)/minidlna.conf
+	$(SED) 's|^#friendly_name=.*|friendly_name=$(BOXMODEL):ReadyMedia|' $(TARGET_sysconfdir)/minidlna.conf
+	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/minidlnad.init $(TARGET_sysconfdir)/init.d/minidlnad
+	$(UPDATE-RC.D) minidlnad defaults 75 25
 	$(REMOVE)/$(MINIDLNA_DIR)
 	$(TOUCH)
 

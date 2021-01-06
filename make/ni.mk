@@ -69,6 +69,7 @@ ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd2 hd5x hd6x vusolo4k vuduo4k vuduo4ks
 	$(MAKE) bash
 	$(MAKE) iperf
 	$(MAKE) minicom
+	$(MAKE) minidlna
 	$(MAKE) mc
   endif
   ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd5x hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo))
