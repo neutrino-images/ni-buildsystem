@@ -123,64 +123,6 @@ shadow: $(DL_DIR)/$(SHADOW_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-UTIL-LINUX_VER    = 2.36.1
-UTIL-LINUX_DIR    = util-linux-$(UTIL-LINUX_VER)
-UTIL-LINUX_SOURCE = util-linux-$(UTIL-LINUX_VER).tar.xz
-UTIL-LINUX_SITE   = $(KERNEL_MIRROR)/linux/utils/util-linux/v$(basename $(UTIL-LINUX_VER))
-
-$(DL_DIR)/$(UTIL-LINUX_SOURCE):
-	$(DOWNLOAD) $(UTIL-LINUX_SITE)/$(UTIL-LINUX_SOURCE)
-
-UTUL-LINUX_DEPS   = ncurses zlib
-
-util-linux: $(UTUL-LINUX_DEPS) $(DL_DIR)/$(UTIL-LINUX_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(UTIL-LINUX_DIR)
-	$(UNTAR)/$(UTIL-LINUX_SOURCE)
-	$(CHDIR)/$(UTIL-LINUX_DIR); \
-		autoreconf -fi; \
-		$(CONFIGURE) \
-			--libdir=$(libdir) \
-			--localedir=$(REMOVE_localedir) \
-			--docdir=$(REMOVE_docdir) \
-			--mandir=$(REMOVE_mandir) \
-			--disable-hardlink \
-			--disable-gtk-doc \
-			\
-			--disable-all-programs \
-			\
-			--enable-libfdisk \
-			--enable-libsmartcols \
-			--enable-libuuid \
-			--enable-libblkid \
-			--enable-libmount \
-			\
-			--disable-makeinstall-chown \
-			--disable-makeinstall-setuid \
-			--disable-makeinstall-chown \
-			\
-			--without-audit \
-			--without-cap-ng \
-			--without-btrfs \
-			--without-ncursesw \
-			--without-python \
-			--without-readline \
-			--without-slang \
-			--without-smack \
-			--without-libmagic \
-			--without-systemd \
-			--without-systemdsystemunitdir \
-			--without-tinfo \
-			--without-udev \
-			--without-utempter \
-			; \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL_LA)
-	$(REMOVE)/$(UTIL-LINUX_DIR)
-	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
 ASTRA-SM_VER    = git
 ASTRA-SM_DIR    = astra-sm.$(ASTRA-SM_VER)
 ASTRA-SM_SOURCE = astra-sm.$(ASTRA-SM_VER)
