@@ -515,6 +515,36 @@ hdparm: $(DL_DIR)/$(HDPARM_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
+F2FS-TOOLS_VER    = 1.14.0
+F2FS-TOOLS_DIR    = f2fs-tools-$(F2FS-TOOLS_VER)
+F2FS-TOOLS_SOURCE = f2fs-tools-$(F2FS-TOOLS_VER).tar.gz
+F2FS-TOOLS_SITE   = https://git.kernel.org/pub/scm/linux/kernel/git/jaegeuk/f2fs-tools.git/snapshot
+
+$(DL_DIR)/$(F2FS-TOOLS_SOURCE):
+	$(DOWNLOAD) $(F2FS-TOOLS_SITE)/$(F2FS-TOOLS_SOURCE)
+
+F2FS-TOOLS_DEPS   = util-linux
+
+f2fs-tools: $(F2FS-TOOLS_DEPS) $(DL_DIR)/$(F2FS-TOOLS_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(F2FS-TOOLS_DIR)
+	$(UNTAR)/$(F2FS-TOOLS_SOURCE)
+	$(CHDIR)/$(F2FS-TOOLS_DIR); \
+		autoreconf -fi; \
+		ac_cv_file__git=no \
+		$(CONFIGURE) \
+			--prefix=$(base_prefix) \
+			--mandir=$(REMOVE_mandir) \
+			--without-selinux \
+			; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(REWRITE_LIBTOOL_LA)
+	$(REMOVE)/$(F2FS-TOOLS_DIR)
+	$(TOUCH)
+
+
+# -----------------------------------------------------------------------------
+
 #
 # $(prefix) tools
 #
