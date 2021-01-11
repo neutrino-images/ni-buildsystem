@@ -5,6 +5,7 @@ nodev proc
 nodev devpts
 ntfs
 ntfs-3g
+f2fs
 fuseblk
 vfat
 exfat
