@@ -19,6 +19,7 @@ files-etc: \
 	$(TARGET_sysconfdir)/passwd \
 	$(TARGET_sysconfdir)/profile \
 	$(TARGET_sysconfdir)/profile.local \
+	$(TARGET_sysconfdir)/profile.d \
 	$(TARGET_sysconfdir)/protocols \
 	$(TARGET_sysconfdir)/services
 
@@ -66,9 +67,6 @@ $(TARGET_sysconfdir)/issue.net:
 $(TARGET_sysconfdir)/nsswitch.conf:
 	$(INSTALL_DATA) -D $(TARGET_FILES)/files-etc/nsswitch.conf $(@)
 
-$(TARGET_sysconfdir)/profile:
-	$(INSTALL_DATA) -D $(TARGET_FILES)/files-etc/profile $(@)
-
 $(TARGET_sysconfdir)/passwd:
 ifeq ($(PERSISTENT_VAR_PARTITION),yes)
 	$(INSTALL_DATA) -D $(TARGET_FILES)/files-etc/passwd $(TARGET_localstatedir)/etc/passwd
@@ -76,12 +74,19 @@ else
 	$(INSTALL_DATA) -D $(TARGET_FILES)/files-etc/passwd $(@)
 endif
 
+$(TARGET_sysconfdir)/profile:
+	$(INSTALL_DATA) -D $(TARGET_FILES)/files-etc/profile $(@)
+
 $(TARGET_sysconfdir)/profile.local:
 ifeq ($(PERSISTENT_VAR_PARTITION),yes)
 	$(INSTALL_DATA) -D $(TARGET_FILES)/files-etc/profile.local-var $(TARGET_localstatedir)/etc/profile.local
 else
 	$(INSTALL_DATA) -D $(TARGET_FILES)/files-etc/profile.local $(@)
 endif
+
+$(TARGET_sysconfdir)/profile.d:
+	$(foreach p,$(wildcard $(TARGET_FILES)/files-etc/profile.d/*.sh),\
+		$(shell $(INSTALL_DATA) -D $(p) $(TARGET_sysconfdir)/profile.d/$(notdir $(p))))
 
 $(TARGET_sysconfdir)/services:
 	$(INSTALL_DATA) -D $(TARGET_FILES)/files-etc/services $(@)

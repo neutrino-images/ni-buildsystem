@@ -1,0 +1,7 @@
+alias l='ls -al'
+alias ll='ls -l'
+alias dir='ls -lA'
+alias ..='cd ..'
+alias mc='mc -a'
+alias sc='setconsole'
+alias sr='setconsole -r'

@@ -7,17 +7,22 @@ if [ -d "/usr/local/bin" ]; then
 	PATH="/usr/local/bin:$PATH"
 fi
 
-TERM=linux
+if [ -z "$PS1" ]; then
+	if [ "`id -u`" -eq 0 ]; then
+		PS1='[\h] \w \# '
+	else
+		PS1='[\h] \w \$ '
+	fi
+fi
 
-PS1='[\h] \w \$ '
-
-alias l='ls -al'
-alias ll='ls -l'
-alias dir='ls -lA'
-alias ..='cd ..'
-alias mc='mc -a'
-alias sc='setconsole'
-alias sr='setconsole -r'
+if [ -d /etc/profile.d ]; then
+	for i in /etc/profile.d/*.sh; do
+		if [ -f $i -a -r $i ]; then
+			. $i
+		fi
+	done
+	unset i
+fi
 
 # add user's private modifications if it exists
 if [ -e /var/etc/profile.local ]; then
@@ -25,3 +30,5 @@ if [ -e /var/etc/profile.local ]; then
 elif [ -e /etc/profile.local ]; then
 	. /etc/profile.local
 fi
+
+export PATH PS1
