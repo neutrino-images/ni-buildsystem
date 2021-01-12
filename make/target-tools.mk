@@ -1132,6 +1132,8 @@ nano: $(NANO_DEPS) $(DL_DIR)/$(NANO_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE) CURSES_LIB="-lncurses"; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(INSTALL) -d $(TARGET_sysconfdir)/profile.d
+	echo "export EDITOR=nano" > $(TARGET_sysconfdir)/profile.d/editor.sh
 	$(REMOVE)/$(NANO_DIR)
 	$(TOUCH)
 
