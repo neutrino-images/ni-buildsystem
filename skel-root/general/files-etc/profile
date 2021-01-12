@@ -15,6 +15,8 @@ if [ -z "$PS1" ]; then
 	fi
 fi
 
+export PATH PS1
+
 if [ -d /etc/profile.d ]; then
 	for i in /etc/profile.d/*.sh; do
 		if [ -f $i -a -r $i ]; then
@@ -30,5 +32,3 @@ if [ -e /var/etc/profile.local ]; then
 elif [ -e /etc/profile.local ]; then
 	. /etc/profile.local
 fi
-
-export PATH PS1
