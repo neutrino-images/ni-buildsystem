@@ -1053,8 +1053,8 @@ inadyn: $(INADYN_DEPS) $(DL_DIR)/$(INADYN_SOURCE) | $(TARGET_DIR)
 		autoreconf -fi; \
 		$(CONFIGURE) \
 			--prefix=$(prefix) \
-			--libdir=$(TARGET_libdir) \
-			--includedir=$(TARGET_includedir) \
+			--sysconfdir=$(sysconfdir) \
+			--localstatedir=$(localstatedir) \
 			--mandir=$(REMOVE_mandir) \
 			--docdir=$(REMOVE_docdir) \
 			--enable-openssl \
