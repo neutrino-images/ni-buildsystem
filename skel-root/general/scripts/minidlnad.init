@@ -4,6 +4,8 @@
 
 start() {
 	if [ -e /var/etc/.minidlnad ]; then
+		# minidlnad needs /tmp/minidlna or it will exit silently
+		mkdir -p /tmp/minidlna
 		minidlnad "$@"
 	fi
 }

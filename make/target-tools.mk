@@ -998,6 +998,7 @@ minidlna: $(MINIDLNA_DEPS) $(DL_DIR)/$(MINIDLNA_SOURCE) | $(TARGET_DIR)
 		$(CONFIGURE) \
 			--prefix=$(prefix) \
 			--localedir=$(REMOVE_localedir) \
+			--with-log-path=/tmp/minidlna \
 			--disable-static \
 			; \
 		$(MAKE); \
