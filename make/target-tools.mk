@@ -1890,6 +1890,62 @@ dvbsnoop: | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
+DVB-APPS_VER    = git
+DVB-APPS_DIR    = dvb-apps.$(DVB-APPS_VER)
+DVB-APPS_SOURCE = dvb-apps.$(DVB-APPS_VER)
+DVB-APPS_SITE   = https://github.com/openpli-arm
+
+DVB-APPS_DEPS   = kernel libiconv
+
+DVB-APPS_MAKE_OPTS = \
+	enable_shared=no \
+	PERL5LIB=$(PKG_BUILD_DIR)/util/scan \
+
+dvb-apps: $(DVB-APPS_DEPS) | $(TARGET_DIR)
+	$(REMOVE)/$(DVB-APPS_DIR)
+	$(GET-GIT-SOURCE) $(DVB-APPS_SITE)/$(DVB-APPS_SOURCE) $(DL_DIR)/$(DVB-APPS_SOURCE)
+	$(CPDIR)/$(DVB-APPS_SOURCE)
+	$(CHDIR)/$(DVB-APPS_DIR); \
+		$(APPLY_PATCHES); \
+		$(MAKE_ENV) LDLIBS="-liconv" \
+		$(MAKE) $(DVB-APPS_MAKE_OPTS) TARGET_DIR=$(TARGET_DIR); \
+		$(MAKE) $(DVB-APPS_MAKE_OPTS) install DESTDIR=$(TARGET_DIR)
+	$(REMOVE)/$(DVB-APPS_DIR)
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
+MINISATIP_VER    = git
+MINISATIP_DIR    = minisatip.$(MINISATIP_VER)
+MINISATIP_SOURCE = minisatip.$(MINISATIP_VER)
+MINISATIP_SITE   = https://github.com/catalinii
+
+MINISATIP_DEPS   = libdvbcsa openssl dvb-apps
+
+minisatip: $(MINISATIP_DEPS) | $(TARGET_DIR)
+	$(REMOVE)/$(MINISATIP_DIR)
+	$(GET-GIT-SOURCE) $(MINISATIP_SITE)/$(MINISATIP_SOURCE) $(DL_DIR)/$(MINISATIP_SOURCE)
+	$(CPDIR)/$(MINISATIP_SOURCE)
+	$(CHDIR)/$(MINISATIP_DIR); \
+		$(CONFIGURE) \
+			--prefix=$(prefix) \
+			--enable-static \
+			--enable-enigma \
+			; \
+		$(MAKE_ENV) \
+		$(MAKE)
+	$(INSTALL_EXEC) -D $(PKG_BUILD_DIR)/minisatip $(TARGET_bindir)/minisatip
+	$(INSTALL) -d $(TARGET_datadir)/minisatip
+	$(INSTALL_COPY) $(PKG_BUILD_DIR)/html $(TARGET_datadir)/minisatip
+	$(INSTALL) -d $(TARGET_sysconfdir)/default
+	echo 'MINISATIP_OPTS="-x 9090 -t -o /tmp/camd.socket"' > $(TARGET_sysconfdir)/default/minisatip
+	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/minisatip.init $(TARGET_sysconfdir)/init.d/minisatip
+	$(UPDATE-RC.D) minisatip defaults 75 25
+	$(REMOVE)/$(MINISATIP_DIR)
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
 ETHTOOL_VER    = 5.10
 ETHTOOL_DIR    = ethtool-$(ETHTOOL_VER)
 ETHTOOL_SOURCE = ethtool-$(ETHTOOL_VER).tar.xz

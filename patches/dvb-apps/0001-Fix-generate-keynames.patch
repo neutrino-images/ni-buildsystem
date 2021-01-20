@@ -1,0 +1,35 @@
+diff --git a/Makefile b/Makefile
+index 65a2273..34ae964 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1,7 +1,7 @@
+ # Makefile for linuxtv.org dvb-apps
+ 
+ # get DVB API version
+-VERSION_FILE := "/usr/include/linux/dvb/version.h"
++VERSION_FILE := "$(TARGET_DIR)/usr/include/linux/dvb/version.h"
+ 
+ DVB_API_MAJOR := $(word 3, $(shell grep -m1 "DVB_API_VERSION" $(VERSION_FILE)) )
+ DVB_API_MINOR := $(word 3, $(shell grep -m1 "DVB_API_VERSION_MINOR" $(VERSION_FILE)) )
+diff --git a/util/av7110_loadkeys/generate-keynames.sh b/util/av7110_loadkeys/generate-keynames.sh
+index 49d2b71..3633bc7 100644
+--- a/util/av7110_loadkeys/generate-keynames.sh
++++ b/util/av7110_loadkeys/generate-keynames.sh
+@@ -18,7 +18,7 @@ echo "};" >> $1
+ echo >> $1
+ echo >> $1
+ echo "static struct input_key_name key_name [] = {" >> $1
+-for x in $(cat /usr/include/linux/input.h input_fake.h | \
++for x in $(cat ${TARGET_DIR}/usr/include/linux/input.h input_fake.h | \
+            egrep "#define[ \t]+KEY_" | grep -v KEY_MAX | \
+            cut -f 1 | cut -f 2 -d " " | sort -u) ; do
+     echo "        { \"$(echo $x | cut -b 5-)\", $x }," >> $1
+@@ -26,7 +26,7 @@ done
+ echo "};" >> $1
+ echo >> $1
+ echo "static struct input_key_name btn_name [] = {" >> $1
+-for x in $(cat /usr/include/linux/input.h input_fake.h | \
++for x in $(cat ${TARGET_DIR}/usr/include/linux/input.h input_fake.h | \
+            egrep "#define[ \t]+BTN_" | \
+            cut -f 1 | cut -f 2 -d " " | sort -u) ; do
+      echo "        { \"$(echo $x | cut -b 5-)\", $x }," >> $1

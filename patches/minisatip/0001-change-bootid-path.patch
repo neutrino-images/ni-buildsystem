@@ -1,0 +1,22 @@
+diff --git a/src/minisatip.c b/src/minisatip.c
+index 626cd27..1eee479 100644
+--- a/src/minisatip.c
++++ b/src/minisatip.c
+@@ -1863,7 +1863,7 @@ int main(int argc, char *argv[]) {
+ int readBootID() {
+     int did = 0;
+     opts.bootid = 0;
+-    FILE *f = fopen("bootid", "rt");
++    FILE *f = fopen("/tmp/bootid", "rt");
+     __attribute__((unused)) int rv;
+     if (f) {
+         rv = fscanf(f, "%d %d", &opts.bootid, &did);
+@@ -1874,7 +1874,7 @@ int readBootID() {
+     opts.bootid++;
+     if (opts.device_id < 1)
+         opts.device_id = 1;
+-    f = fopen("bootid", "wt");
++    f = fopen("/tmp/bootid", "wt");
+     if (f) {
+         fprintf(f, "%d %d", opts.bootid, opts.device_id);
+         fclose(f);

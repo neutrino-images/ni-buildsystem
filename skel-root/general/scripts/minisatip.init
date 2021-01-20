@@ -1,0 +1,40 @@
+#!/bin/sh
+
+. /etc/init.d/globals
+
+if [ -e /etc/default/minisatip ]; then
+	. /etc/default/minisatip
+fi
+
+start() {
+	if [ -e /var/etc/.minisatip ]; then
+		minisatip -R /usr/share/minisatip/html $MINISATIP_OPTS
+	fi
+}
+
+stop() {
+	if [ -e /var/etc/.minisatip ]; then
+		kill -TERM $(pidof minisatip)
+	fi
+}
+
+restart() {
+	stop
+	sleep 1
+	start "$@"
+}
+
+case "$1" in
+	start)
+		start
+	;;
+	stop)
+		stop
+	;;
+	restart|reload|force-reload)
+		restart
+	;;
+	*)
+		echo "[$BASENAME] Usage: $0 {start|restart|reload|force-reload|stop}"
+	;;
+esac

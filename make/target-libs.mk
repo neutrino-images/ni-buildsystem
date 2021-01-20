@@ -84,7 +84,7 @@ libupnp: $(DL_DIR)/$(LIBUPNP_SOURCE) | $(TARGET_DIR)
 			--disable-static \
 			; \
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL_LA)
 	$(REMOVE)/$(LIBUPNP_DIR)
 	$(TOUCH)
@@ -111,9 +111,31 @@ libdvbsi: | $(TARGET_DIR)
 			--disable-static \
 			; \
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL_LA)
 	$(REMOVE)/$(LIBDVBSI_DIR)
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
+LIBDVBCSA_VER    = git
+LIBDVBCSA_DIR    = libdvbcsa.$(LIBDVBCSA_VER)
+LIBDVBCSA_SOURCE = libdvbcsa.$(LIBDVBCSA_VER)
+LIBDVBCSA_SITE   = https://code.videolan.org/videolan
+
+libdvbcsa: | $(TARGET_DIR)
+	$(REMOVE)/$(LIBDVBCSA_DIR)
+	$(GET-GIT-SOURCE) $(LIBDVBCSA_SITE)/$(LIBDVBCSA_SOURCE) $(DL_DIR)/$(LIBDVBCSA_SOURCE)
+	$(CPDIR)/$(LIBDVBCSA_SOURCE)
+	$(CHDIR)/$(LIBDVBCSA_DIR); \
+		./bootstrap; \
+		$(CONFIGURE) \
+			--prefix=$(prefix) \
+			; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(REWRITE_LIBTOOL_LA)
+	$(REMOVE)/$(LIBDVBCSA_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
