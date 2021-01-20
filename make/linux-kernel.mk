@@ -233,8 +233,7 @@ kernel.do_compile: kernel.do_prepare
 	$(CHDIR)/$(KERNEL_DIR); \
 		$(MAKE) $(KERNEL_MAKEVARS) silentoldconfig; \
 		$(MAKE) $(KERNEL_MAKEVARS) $(KERNEL_MAKEOPTS); \
-		$(MAKE) $(KERNEL_MAKEVARS) modules_install; \
-		$(MAKE) $(KERNEL_MAKEVARS) headers_install INSTALL_HDR_PATH=$(TARGET_prefix)
+		$(MAKE) $(KERNEL_MAKEVARS) modules_install
 ifneq ($(KERNEL_DTB),$(EMPTY))
 	cat $(KERNEL_ZIMAGE) $(KERNEL_DTB) > $(KERNEL_ZIMAGE_DTB)
 endif
