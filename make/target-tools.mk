@@ -1895,7 +1895,7 @@ DVB-APPS_DIR    = dvb-apps.$(DVB-APPS_VER)
 DVB-APPS_SOURCE = dvb-apps.$(DVB-APPS_VER)
 DVB-APPS_SITE   = https://github.com/openpli-arm
 
-DVB-APPS_DEPS   = kernel libiconv
+DVB-APPS_DEPS   = libiconv
 
 DVB-APPS_MAKE_OPTS = \
 	enable_shared=no \

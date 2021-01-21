@@ -71,7 +71,6 @@ ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd2 hd5x hd6x vusolo4k vuduo4k vuduo4ks
 	$(MAKE) iperf
 	$(MAKE) minicom
 	$(MAKE) minidlna
-	$(MAKE) minisatip
 	$(MAKE) mc
   endif
   ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd5x hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo))
@@ -80,6 +79,7 @@ ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd2 hd5x hd6x vusolo4k vuduo4k vuduo4ks
 	$(MAKE) ofgwrite
 	$(MAKE) aio-grab
 	$(MAKE) dvbsnoop
+	$(MAKE) minisatip
   endif
   ifeq ($(DEBUG),yes)
 	$(MAKE) strace
