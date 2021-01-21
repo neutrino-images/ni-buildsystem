@@ -1931,6 +1931,7 @@ minisatip: $(MINISATIP_DEPS) | $(TARGET_DIR)
 			--prefix=$(prefix) \
 			--enable-static \
 			--enable-enigma \
+			--disable-netcv \
 			; \
 		$(MAKE_ENV) \
 		$(MAKE)
