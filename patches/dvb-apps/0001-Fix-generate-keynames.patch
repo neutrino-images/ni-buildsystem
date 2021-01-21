@@ -7,7 +7,7 @@ index 65a2273..34ae964 100644
  
  # get DVB API version
 -VERSION_FILE := "/usr/include/linux/dvb/version.h"
-+VERSION_FILE := "$(TARGET_DIR)/usr/include/linux/dvb/version.h"
++VERSION_FILE := "$(KERNEL_HEADERS)/include/linux/dvb/version.h"
  
  DVB_API_MAJOR := $(word 3, $(shell grep -m1 "DVB_API_VERSION" $(VERSION_FILE)) )
  DVB_API_MINOR := $(word 3, $(shell grep -m1 "DVB_API_VERSION_MINOR" $(VERSION_FILE)) )
@@ -20,7 +20,7 @@ index 49d2b71..3633bc7 100644
  echo >> $1
  echo "static struct input_key_name key_name [] = {" >> $1
 -for x in $(cat /usr/include/linux/input.h input_fake.h | \
-+for x in $(cat ${TARGET_DIR}/usr/include/linux/input.h input_fake.h | \
++for x in $(cat ${KERNEL_HEADERS}/include/linux/input.h input_fake.h | \
             egrep "#define[ \t]+KEY_" | grep -v KEY_MAX | \
             cut -f 1 | cut -f 2 -d " " | sort -u) ; do
      echo "        { \"$(echo $x | cut -b 5-)\", $x }," >> $1
@@ -29,7 +29,7 @@ index 49d2b71..3633bc7 100644
  echo >> $1
  echo "static struct input_key_name btn_name [] = {" >> $1
 -for x in $(cat /usr/include/linux/input.h input_fake.h | \
-+for x in $(cat ${TARGET_DIR}/usr/include/linux/input.h input_fake.h | \
++for x in $(cat ${KERNEL_HEADERS}/include/linux/input.h input_fake.h | \
             egrep "#define[ \t]+BTN_" | \
             cut -f 1 | cut -f 2 -d " " | sort -u) ; do
       echo "        { \"$(echo $x | cut -b 5-)\", $x }," >> $1

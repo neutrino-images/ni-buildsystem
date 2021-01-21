@@ -1895,9 +1895,10 @@ DVB-APPS_DIR    = dvb-apps.$(DVB-APPS_VER)
 DVB-APPS_SOURCE = dvb-apps.$(DVB-APPS_VER)
 DVB-APPS_SITE   = https://github.com/openpli-arm
 
-DVB-APPS_DEPS   = libiconv
+DVB-APPS_DEPS   = kernel libiconv
 
 DVB-APPS_MAKE_OPTS = \
+	KERNEL_HEADERS=$(BUILD_DIR)/$(KERNEL_HEADERS) \
 	enable_shared=no \
 	PERL5LIB=$(PKG_BUILD_DIR)/util/scan \
 
@@ -1908,7 +1909,7 @@ dvb-apps: $(DVB-APPS_DEPS) | $(TARGET_DIR)
 	$(CHDIR)/$(DVB-APPS_DIR); \
 		$(APPLY_PATCHES); \
 		$(MAKE_ENV) LDLIBS="-liconv" \
-		$(MAKE) $(DVB-APPS_MAKE_OPTS) TARGET_DIR=$(TARGET_DIR); \
+		$(MAKE) $(DVB-APPS_MAKE_OPTS); \
 		$(MAKE) $(DVB-APPS_MAKE_OPTS) install DESTDIR=$(TARGET_DIR)
 	$(REMOVE)/$(DVB-APPS_DIR)
 	$(TOUCH)
