@@ -207,8 +207,10 @@ kernel.do_prepare:
 	#
 	$(REMOVE)/$(KERNEL_OBJ)
 	$(REMOVE)/$(KERNEL_MODULES)
+	$(REMOVE)/$(KERNEL_HEADERS)
 	$(MKDIR)/$(KERNEL_OBJ)
 	$(MKDIR)/$(KERNEL_MODULES)
+	$(MKDIR)/$(KERNEL_HEADERS)
 	$(INSTALL_DATA) $(KERNEL_CONFIG) $(BUILD_DIR)/$(KERNEL_OBJ)/.config
 ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 hd60 hd61))
 	$(INSTALL_DATA) $(PATCHES)/initramfs-subdirboot.cpio.gz $(BUILD_DIR)/$(KERNEL_OBJ)
@@ -233,7 +235,8 @@ kernel.do_compile: kernel.do_prepare
 	$(CHDIR)/$(KERNEL_DIR); \
 		$(MAKE) $(KERNEL_MAKEVARS) silentoldconfig; \
 		$(MAKE) $(KERNEL_MAKEVARS) $(KERNEL_MAKEOPTS); \
-		$(MAKE) $(KERNEL_MAKEVARS) modules_install
+		$(MAKE) $(KERNEL_MAKEVARS) modules_install; \
+		$(MAKE) $(KERNEL_MAKEVARS) headers_install
 ifneq ($(KERNEL_DTB),$(EMPTY))
 	cat $(KERNEL_ZIMAGE) $(KERNEL_DTB) > $(KERNEL_ZIMAGE_DTB)
 endif
