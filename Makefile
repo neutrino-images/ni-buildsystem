@@ -81,6 +81,7 @@ Makefile.local:
 	@cp Makefile.example $@
 
 -include config.local
+include make/buildsystem-utils.mk
 include make/environment-box.mk
 include make/environment-linux.mk
 include make/environment-build.mk
