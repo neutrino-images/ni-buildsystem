@@ -149,17 +149,18 @@ help:
 
 -include internal/internal.mk
 
-include make/bootstrap.mk
-include make/clean.mk
+include make/buildsystem-bootstrap.mk
+include make/buildsystem-clean.mk
+include make/buildsystem-helpers.mk
+include make/buildsystem-prerequisites.mk
+include make/buildsystem-update.mk
 include make/crosstool.mk
-include make/helpers.mk
-include make/image-updates.mk
-include make/images.mk
+include make/flash-updates.mk
+include make/flash-images.mk
 include make/linux-kernel.mk
 include make/linux-drivers.mk
-include make/neutrino.mk
-include make/neutrino-plugins.mk
-include make/prerequisites.mk
+include make/target-neutrino.mk
+include make/target-neutrino-plugins.mk
 include make/target-blobs.mk
 include make/target-development.mk
 include make/target-ffmpeg$(if $(filter $(BOXTYPE),coolstream),-coolstream).mk
@@ -173,7 +174,6 @@ include make/target-scripts.mk
 include make/target-tools.mk
 include make/target-tools-unused.mk
 include make/host-tools.mk
-include make/update.mk
 
 include make/ni.mk
 

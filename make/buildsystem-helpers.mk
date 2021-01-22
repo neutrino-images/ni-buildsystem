@@ -216,6 +216,25 @@ patches-info:
 
 # -----------------------------------------------------------------------------
 
+# Create reversed changelog using git log --reverse.
+# Remove duplicated commits and re-reverse the changelog using awk.
+# This keeps the original commit and removes all picked duplicates.
+define make-changelog
+	git log --reverse --pretty=oneline --no-merges --abbrev-commit | \
+	awk '!seen[substr($$0,12)]++' | \
+	awk '{a[i++]=$$0} END {for (j=i-1; j>=0;) print a[j--]}'
+endef
+
+changelogs:
+	$(call make-changelog) > $(STAGING_DIR)/changelog-buildsystem
+	$(CD) $(SOURCE_DIR)/$(NI-NEUTRINO); \
+		$(call make-changelog) > $(STAGING_DIR)/changelog-neutrino
+	$(CD) $(SOURCE_DIR)/$(NI-LIBSTB-HAL); \
+		$(call make-changelog) > $(STAGING_DIR)/changelog-libstb-hal
+
+# -----------------------------------------------------------------------------
+
 PHONY += archives-list
 PHONY += archives-info
 PHONY += patches-info
+PHONY += changelogs
