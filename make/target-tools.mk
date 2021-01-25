@@ -439,6 +439,47 @@ exfat-utils: $(EXFAT-UTILS_DEPS) $(DL_DIR)/$(EXFAT-UTILS_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
+XFSPROGS_VER    = 5.8.0
+XFSPROGS_DIR    = xfsprogs-$(XFSPROGS_VER)
+XFSPROGS_SOURCE = xfsprogs-$(XFSPROGS_VER).tar.xz
+XFSPROGS_SITE   = $(KERNEL_MIRROR)/linux/utils/fs/xfs/xfsprogs
+
+$(DL_DIR)/$(XFSPROGS_SOURCE):
+	$(DOWNLOAD) $(XFSPROGS_SITE)/$(XFSPROGS_SOURCE)
+
+XFSPROGS_DEPS   = util-linux
+
+XFSPROGS_CONF_ENV = \
+	ac_cv_header_aio_h=yes \
+	ac_cv_lib_rt_lio_listio=yes \
+	PLATFORM="linux"
+
+XFSPROGS_CONF_OPTS = \
+	--datarootdir=$(REMOVE_datarootdir) \
+	--enable-lib64=no \
+	--enable-gettext=no \
+	--disable-libicu \
+	INSTALL_USER=root \
+	INSTALL_GROUP=root \
+	--enable-static
+
+xfsprogs: $(XFSPROGS_DEPS) $(DL_DIR)/$(XFSPROGS_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(XFSPROGS_DIR)
+	$(UNTAR)/$(XFSPROGS_SOURCE)
+	$(CHDIR)/$(XFSPROGS_DIR); \
+		$(APPLY_PATCHES); \
+		$(XFSPROGS_CONF_ENV) \
+		$(CONFIGURE) \
+			$(XFSPROGS_CONF_OPTS) \
+			; \
+		$(MAKE); \
+		$(MAKE) install DIST_ROOT=$(TARGET_DIR)
+	-rm -r $(addprefix $(TARGET_libdir)/, xfsprogs)
+	$(REMOVE)/$(XFSPROGS_DIR)
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
 # for coolstream: formatting ext4 failes with newer versions then 1.43.8
 E2FSPROGS_VER    = $(if $(filter $(BOXTYPE),coolstream),1.43.8,1.45.6)
 E2FSPROGS_DIR    = e2fsprogs-$(E2FSPROGS_VER)
