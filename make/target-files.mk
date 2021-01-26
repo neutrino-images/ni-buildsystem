@@ -23,6 +23,10 @@ files-etc: \
 	$(TARGET_sysconfdir)/protocols \
 	$(TARGET_sysconfdir)/services
 
+PHONY += $(TARGET_sysconfdir)/profile.d
+
+# -----------------------------------------------------------------------------
+
 $(TARGET_sysconfdir)/default/rcS:
 	$(INSTALL_DATA) -D $(TARGET_FILES)/files-etc/default/rcS $(@)
 
@@ -86,7 +90,7 @@ endif
 
 $(TARGET_sysconfdir)/profile.d:
 	$(foreach p,$(wildcard $(TARGET_FILES)/files-etc/profile.d/*.sh),\
-		$(shell $(INSTALL_DATA) -D $(p) $(TARGET_sysconfdir)/profile.d/$(notdir $(p))))
+		$(INSTALL_DATA) -D $(p) $(TARGET_sysconfdir)/profile.d/$(notdir $(p)) $(sep))
 
 $(TARGET_sysconfdir)/services:
 	$(INSTALL_DATA) -D $(TARGET_FILES)/files-etc/services $(@)
@@ -98,6 +102,8 @@ $(TARGET_sysconfdir)/protocols:
 
 files-var-etc: \
 	$(TARGET_localstatedir)/etc/fstab
+
+# -----------------------------------------------------------------------------
 
 $(TARGET_localstatedir)/etc/fstab:
 	$(INSTALL_DATA) -D $(TARGET_FILES)/files-etc/fstab-var $(@)
