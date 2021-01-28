@@ -6,6 +6,7 @@ nodev devpts
 ntfs
 ntfs-3g
 f2fs
+xfs
 fuseblk
 vfat
 exfat
