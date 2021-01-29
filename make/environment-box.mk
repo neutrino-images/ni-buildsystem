@@ -212,42 +212,48 @@ endif
 # -----------------------------------------------------------------------------
 
 ifeq ($(BOXMODEL),nevis)
-  BOXNAME="HD1, BSE, Neo, Neo², Zee"
+  BOXNAME = "HD1, BSE, Neo, Neo², Zee"
 else ifeq ($(BOXMODEL),apollo)
-  BOXNAME="Tank"
+  BOXNAME = "Tank"
 else ifeq ($(BOXMODEL),shiner)
-  BOXNAME="Trinity"
+  BOXNAME = "Trinity"
 else ifeq ($(BOXMODEL),kronos)
-  BOXNAME="Zee², Trinity V2"
+  BOXNAME = "Zee², Trinity V2"
 else ifeq ($(BOXMODEL),kronos_v2)
-  BOXNAME="Link, Trinity Duo"
+  BOXNAME = "Link, Trinity Duo"
 else ifeq ($(BOXMODEL),hd51)
-  BOXNAME="AX/Mut@nt HD51"
+  BOXNAME = "AX/Mut@nt HD51"
 else ifeq ($(BOXMODEL),bre2ze4k)
-  BOXNAME="WWIO BRE2ZE4K"
+  BOXNAME = "WWIO BRE2ZE4K"
 else ifeq ($(BOXMODEL),h7)
-  BOXNAME="Air Digital Zgemma H7S/C"
+  BOXNAME = "Air Digital Zgemma H7S/C"
 else ifeq ($(BOXMODEL),hd60)
-  BOXNAME="AX/Mut@nt HD60"
+  BOXNAME = "AX/Mut@nt HD60"
 else ifeq ($(BOXMODEL),hd61)
-  BOXNAME="AX/Mut@nt HD61"
+  BOXNAME = "AX/Mut@nt HD61"
 else ifeq ($(BOXMODEL),vusolo4k)
-  BOXNAME="VU+ Solo 4K"
+  BOXNAME = "VU+ Solo 4K"
 else ifeq ($(BOXMODEL),vuduo4k)
-  BOXNAME="VU+ Duo 4K"
+  BOXNAME = "VU+ Duo 4K"
 else ifeq ($(BOXMODEL),vuduo4kse)
-  BOXNAME="VU+ Duo 4K SE"
+  BOXNAME = "VU+ Duo 4K SE"
 else ifeq ($(BOXMODEL),vuultimo4k)
-  BOXNAME="VU+ Ultimo 4K"
+  BOXNAME = "VU+ Ultimo 4K"
 else ifeq ($(BOXMODEL),vuzero4k)
-  BOXNAME="VU+ Zero 4K"
+  BOXNAME = "VU+ Zero 4K"
 else ifeq ($(BOXMODEL),vuuno4k)
-  BOXNAME="VU+ Uno 4K"
+  BOXNAME = "VU+ Uno 4K"
 else ifeq ($(BOXMODEL),vuuno4kse)
-  BOXNAME="VU+ Uno 4K SE"
+  BOXNAME = "VU+ Uno 4K SE"
 else ifeq ($(BOXMODEL),vuduo)
-  BOXNAME="VU+ Duo"
+  BOXNAME = "VU+ Duo"
 endif
+
+BOXMODELS  = nevis apollo shiner kronos kronos_v2
+BOXMODELS += hd51 bre2ze4k h7
+BOXMODELS += hd60 hd61
+BOXMODELS += vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse
+BOXMODELS += vuduo
 
 # -----------------------------------------------------------------------------
 
