@@ -145,6 +145,9 @@ else
   endif
 endif
 
+NEUTRINO_DEPS += lcd4linux
+NEUTRINO_CONF_OPTS += --enable-lcd4linux
+
 # enable ffmpeg audio decoder in neutrino
 NEUTRINO_AUDIODEC = ffmpeg
 
