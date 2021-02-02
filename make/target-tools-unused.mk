@@ -23,7 +23,6 @@ usbutils: $(USBUTILS_DEPS) $(DL_DIR)/$(USBUTILS_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(USBUTILS_DIR); \
 		$(call apply_patches,$(USBUTILS_PATCH)); \
 		$(CONFIGURE) \
-			--target=$(TARGET) \
 			--prefix=$(prefix) \
 			--mandir=$(REMOVE_mandir) \
 			--infodir=$(REMOVE_infodir) \
@@ -55,7 +54,6 @@ binutils: $(DL_DIR)/$(BINUTILS_SOURCE) | $(TARGET_DIR)
 	$(UNTAR)/$(BINUTILS_SOURCE)
 	$(CHDIR)/$(BINUTILS_DIR); \
 		$(CONFIGURE) \
-			--target=$(TARGET) \
 			--prefix=$(prefix) \
 			--disable-multilib \
 			--disable-werror \

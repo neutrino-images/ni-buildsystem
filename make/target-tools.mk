@@ -207,7 +207,6 @@ coreutils: $(DL_DIR)/$(COREUTILS_SOURCE) | $(TARGET_DIR)
 		$(call apply_patches,$(COREUTILS_PATCH)); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
-			--target=$(TARGET) \
 			--prefix=$(base_prefix) \
 			--bindir=/bin.$(@F) \
 			--libexecdir=$(REMOVE_libexecdir) \
@@ -254,7 +253,6 @@ procps-ng: $(PROCPS-NG_DEPS) $(DL_DIR)/$(PROCPS-NG_SOURCE) | $(TARGET_DIR)
 		export ac_cv_func_realloc_0_nonnull=yes; \
 		autoreconf -fi; \
 		$(CONFIGURE) \
-			--target=$(TARGET) \
 			--prefix=$(base_prefix) \
 			--bindir=/bin.$(@F) \
 			--sbindir=/sbin.$(@F) \
@@ -297,7 +295,6 @@ mtd-utils: $(MTD-UTILS_DEPS) $(DL_DIR)/$(MTD-UTILS_SOURCE) | $(TARGET_DIR)
 	$(UNTAR)/$(MTD-UTILS_SOURCE)
 	$(CHDIR)/$(MTD-UTILS_DIR); \
 		$(CONFIGURE) \
-			--target=$(TARGET) \
 			--prefix=$(base_prefix) \
 			--sbindir=/sbin.$(@F) \
 			--mandir=$(REMOVE_mandir) \
@@ -495,7 +492,6 @@ e2fsprogs: $(DL_DIR)/$(E2FSPROGS_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(E2FSPROGS_DIR); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
-			--target=$(TARGET) \
 			--prefix=$(prefix) \
 			--with-root-prefix=$(base_prefix)\ \
 			--libdir=$(libdir) \
@@ -786,7 +782,6 @@ iperf: $(DL_DIR)/$(IPERF_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(IPERF_DIR); \
 		$(call apply_patches,$(IPERF_PATCH)); \
 		$(CONFIGURE) \
-			--target=$(TARGET) \
 			--prefix=$(prefix) \
 			--mandir=$(REMOVE_mandir) \
 			; \
@@ -818,7 +813,6 @@ parted: $(PARTED_DEPS) $(DL_DIR)/$(PARTED_SOURCE) | $(TARGET_DIR)
 		$(call apply_patches,$(PARTED_PATCH)); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
-			--target=$(TARGET) \
 			--prefix=$(prefix) \
 			--mandir=$(REMOVE_mandir) \
 			--infodir=$(REMOVE_infodir) \
@@ -874,7 +868,6 @@ less: $(LESS_DEPS) $(DL_DIR)/$(LESS_SOURCE) | $(TARGET_DIR)
 	$(UNTAR)/$(LESS_SOURCE)
 	$(CHDIR)/$(LESS_DIR); \
 		$(CONFIGURE) \
-			--target=$(TARGET) \
 			--prefix=$(prefix) \
 			--mandir=$(REMOVE_mandir) \
 			; \
@@ -901,7 +894,6 @@ ntp: $(NTP_DEPS) $(DL_DIR)/$(NTP_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(NTP_DIR); \
 		$(APPLY_PATCHES); \
 		$(CONFIGURE) \
-			--target=$(TARGET) \
 			--prefix=$(prefix) \
 			--disable-debugging \
 			--with-shared \
@@ -1068,7 +1060,6 @@ smartmontools: $(DL_DIR)/$(SMARTMONTOOLS_SOURCE) | $(TARGET_DIR)
 	$(UNTAR)/$(SMARTMONTOOLS_SOURCE)
 	$(CHDIR)/$(SMARTMONTOOLS_DIR); \
 		$(CONFIGURE) \
-			--target=$(TARGET) \
 			--prefix=$(prefix) \
 			; \
 		$(MAKE); \
@@ -1163,7 +1154,6 @@ nano: $(NANO_DEPS) $(DL_DIR)/$(NANO_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(NANO_DIR); \
 		export ac_cv_prog_NCURSESW_CONFIG=false; \
 		$(CONFIGURE) \
-			--target=$(TARGET) \
 			--prefix=$(prefix) \
 			--datarootdir=$(REMOVE_datarootdir) \
 			--disable-nls \
@@ -1199,7 +1189,6 @@ minicom: $(MINICOM_DEPS) $(DL_DIR)/$(MINICOM_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(MINICOM_DIR); \
 		$(call apply_patches,$(MINICOM_PATCH)); \
 		$(CONFIGURE) \
-			--target=$(TARGET) \
 			--prefix=$(prefix) \
 			--disable-nls \
 			; \
@@ -1669,7 +1658,6 @@ nfs-utils: $(NFS-UTILS_DEPS) $(DL_DIR)/$(NFS-UTILS_SOURCE) | $(TARGET_DIR)
 		export knfsd_cv_bsd_signals=no; \
 		autoreconf -fi; \
 		$(CONFIGURE) \
-			--target=$(TARGET) \
 			--prefix=$(prefix) \
 			--docdir=$(REMOVE_docdir) \
 			--mandir=$(REMOVE_mandir) \
@@ -1716,7 +1704,6 @@ rpcbind: $(RPCBIND_DEPS) $(DL_DIR)/$(RPCBIND_SOURCE) | $(TARGET_DIR)
 		$(call apply_patches,$(RPCBIND_PATCH)); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
-			--target=$(TARGET) \
 			--prefix=$(prefix) \
 			--enable-silent-rules \
 			--with-rpcuser=root \
@@ -1850,7 +1837,6 @@ wget: $(WGET_DEPS) $(DL_DIR)/$(WGET_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(WGET_DIR); \
 		$(call apply_patches,$(addprefix $(@F)/,$(WGET_PATCH))); \
 		$(CONFIGURE) \
-			--target=$(TARGET) \
 			--prefix=$(prefix) \
 			--datarootdir=$(REMOVE_datarootdir) \
 			--sysconfdir=$(REMOVE_sysconfdir) \
@@ -1898,7 +1884,6 @@ aio-grab: $(AIO-GRAB_DEPS) | $(TARGET_DIR)
 		autoconf --force; \
 		automake --add-missing --copy --force-missing --foreign; \
 		$(CONFIGURE) \
-			--target=$(TARGET) \
 			--prefix=$(prefix) \
 			--enable-silent-rules \
 			; \

@@ -405,7 +405,6 @@ ncurses: $(DL_DIR)/$(NCURSES_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(NCURSES_DIR); \
 		$(call apply_patches,$(NCURSES_PATCH)); \
 		$(CONFIGURE) \
-			--target=$(TARGET) \
 			--prefix=$(prefix) \
 			--enable-pc-files \
 			--with-pkg-config \
@@ -706,7 +705,6 @@ libass: $(LIBASS_DEPS) $(DL_DIR)/$(LIBASS_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(LIBASS_DIR); \
 		$(call apply_patches,$(LIBASS_PATCH)); \
 		$(CONFIGURE) \
-			--target=$(TARGET) \
 			--prefix=$(prefix) \
 			--disable-static \
 			--disable-test \
@@ -988,7 +986,6 @@ libtirpc: $(DL_DIR)/$(LIBTIRPC_SOURCE) | $(TARGET_DIR)
 		$(call apply_patches,$(addprefix $(@F)/,$(LIBTIRP_PATCH))); \
 		autoreconf -fi; \
 		$(CONFIGURE) \
-			--target=$(TARGET) \
 			--prefix=$(prefix) \
 			--sysconfdir=$(sysconfdir) \
 			--disable-gssapi \
@@ -1393,7 +1390,6 @@ libiconv: $(DL_DIR)/$(LIBICONV_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(LIBICONV_DIR); \
 		$(SED) '/preload/d' Makefile.in; \
 		$(CONFIGURE) CPPFLAGS="$(TARGET_CPPFLAGS) -fPIC" \
-			--target=$(TARGET) \
 			--prefix=$(prefix) \
 			--datarootdir=$(REMOVE_datarootdir) \
 			--enable-static \

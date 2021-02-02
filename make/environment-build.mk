@@ -282,10 +282,10 @@ MAKE_ENV += \
 	PKG_CONFIG_PATH="$(PKG_CONFIG_PATH)" \
 	PKG_CONFIG_SYSROOT_DIR=$(PKG_CONFIG_SYSROOT_DIR)
 
-
 CONFIGURE_OPTS = \
 	--build=$(BUILD) \
-	--host=$(TARGET)
+	--host=$(TARGET) \
+	--target=$(TARGET) \
 
 CONFIGURE = \
 	test -f ./configure || ./autogen.sh && \
