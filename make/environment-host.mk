@@ -8,66 +8,66 @@ HOST_DEPS_DIR = $(HOST_DIR)/deps
 
 # -----------------------------------------------------------------------------
 
-ifndef HOST_AR
-HOST_AR := ar
+ifndef HOSTAR
+HOSTAR := ar
 endif
-ifndef HOST_AS
-HOST_AS := as
+ifndef HOSTAS
+HOSTAS := as
 endif
-ifndef HOST_CC
-HOST_CC := gcc
-HOST_CC := $(shell which $(HOST_CC) || type -p $(HOST_CC) || echo gcc)
+ifndef HOSTCC
+HOSTCC := gcc
+HOSTCC := $(shell which $(HOSTCC) || type -p $(HOSTCC) || echo gcc)
 endif
-HOST_CC_NOCCACHE := $(HOST_CC)
-ifndef HOST_CXX
-HOST_CXX := g++
-HOST_CXX := $(shell which $(HOST_CXX) || type -p $(HOST_CXX) || echo g++)
+HOSTCC_NOCCACHE := $(HOSTCC)
+ifndef HOSTCXX
+HOSTCXX := g++
+HOSTCXX := $(shell which $(HOSTCXX) || type -p $(HOSTCXX) || echo g++)
 endif
-HOST_CXX_NOCCACHE := $(HOST_CXX)
-ifndef HOST_CPP
-HOST_CPP := cpp
+HOSTCXX_NOCCACHE := $(HOSTCXX)
+ifndef HOSTCPP
+HOSTCPP := cpp
 endif
-ifndef HOST_LD
-HOST_LD := ld
+ifndef HOSTLD
+HOSTLD := ld
 endif
-ifndef HOST_LN
-HOST_LN := ln
+ifndef HOSTLN
+HOSTLN := ln
 endif
-ifndef HOST_NM
-HOST_NM := nm
+ifndef HOSTNM
+HOSTNM := nm
 endif
-ifndef HOST_OBJCOPY
-HOST_OBJCOPY := objcopy
+ifndef HOSTOBJCOPY
+HOSTOBJCOPY := objcopy
 endif
-ifndef HOST_RANLIB
-HOST_RANLIB := ranlib
+ifndef HOSTRANLIB
+HOSTRANLIB := ranlib
 endif
-HOST_AR := $(shell which $(HOST_AR) || type -p $(HOST_AR) || echo ar)
-HOST_AS := $(shell which $(HOST_AS) || type -p $(HOST_AS) || echo as)
-HOST_CPP := $(shell which $(HOST_CPP) || type -p $(HOST_CPP) || echo cpp)
-HOST_LD := $(shell which $(HOST_LD) || type -p $(HOST_LD) || echo ld)
-HOST_LN := $(shell which $(HOST_LN) || type -p $(HOST_LN) || echo ln)
-HOST_NM := $(shell which $(HOST_NM) || type -p $(HOST_NM) || echo nm)
-HOST_OBJCOPY := $(shell which $(HOST_OBJCOPY) || type -p $(HOST_OBJCOPY) || echo objcopy)
-HOST_RANLIB := $(shell which $(HOST_RANLIB) || type -p $(HOST_RANLIB) || echo ranlib)
+HOSTAR := $(shell which $(HOSTAR) || type -p $(HOSTAR) || echo ar)
+HOSTAS := $(shell which $(HOSTAS) || type -p $(HOSTAS) || echo as)
+HOSTCPP := $(shell which $(HOSTCPP) || type -p $(HOSTCPP) || echo cpp)
+HOSTLD := $(shell which $(HOSTLD) || type -p $(HOSTLD) || echo ld)
+HOSTLN := $(shell which $(HOSTLN) || type -p $(HOSTLN) || echo ln)
+HOSTNM := $(shell which $(HOSTNM) || type -p $(HOSTNM) || echo nm)
+HOSTOBJCOPY := $(shell which $(HOSTOBJCOPY) || type -p $(HOSTOBJCOPY) || echo objcopy)
+HOSTRANLIB := $(shell which $(HOSTRANLIB) || type -p $(HOSTRANLIB) || echo ranlib)
 
-export HOST_AR HOST_AS HOST_CC HOST_CXX HOST_LD
-export HOST_CC_NOCCACHE HOST_CXX_NOCCACHE
+export HOSTAR HOSTAS HOSTCC HOSTCXX HOSTLD
+export HOSTCC_NOCCACHE HOSTCXX_NOCCACHE
 
 # -----------------------------------------------------------------------------
 
 HOST_PYTHON_BUILD = \
-	CC="$(HOST_CC)" \
+	CC="$(HOSTCC)" \
 	CFLAGS="$(CFLAGS)" \
 	LDFLAGS="$(LDFLAGS)" \
-	LDSHARED="$(HOST_CC) -shared" \
+	LDSHARED="$(HOSTCC) -shared" \
 	PYTHONPATH=$(HOST_DIR)/$(HOST_PYTHON3_BASE_DIR)/site-packages \
 	$(HOST_DIR)/bin/python3 ./setup.py build --executable=/usr/python
 
 HOST_PYTHON_INSTALL = \
-	CC="$(HOST_CC)" \
+	CC="$(HOSTCC)" \
 	CFLAGS="$(CFLAGS)" \
 	LDFLAGS="$(LDFLAGS)" \
-	LDSHARED="$(HOST_CC) -shared" \
+	LDSHARED="$(HOSTCC) -shared" \
 	PYTHONPATH=$(HOST_DIR)/$(HOST_PYTHON3_BASE_DIR)/site-packages \
 	$(HOST_DIR)/bin/python3 ./setup.py install --root=$(HOST_DIR) --prefix=
