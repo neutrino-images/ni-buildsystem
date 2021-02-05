@@ -123,7 +123,7 @@ endif
 TARGET_FILES  = $(BASE_DIR)/skel-root/general
 BOOTMENU_DIR  = $(BASE_DIR)/bootmenu
 
-BUILD        ?= $(shell /usr/share/libtool/config.guess 2>/dev/null || /usr/share/libtool/config/config.guess 2>/dev/null || /usr/share/misc/config.guess)
+BUILD        ?= $(shell /usr/share/libtool/config/config.guess 2>/dev/null || /usr/share/misc/config.guess 2>/dev/null)
 
 # -----------------------------------------------------------------------------
 
