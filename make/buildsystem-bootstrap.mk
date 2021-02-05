@@ -92,13 +92,7 @@ $(UPDATE_DIR):
 # -----------------------------------------------------------------------------
 
 libs-cross: | $(TARGET_DIR)
-	if [ -d $(CROSS_DIR)/$(TARGET)/sys-root/lib/ ]; then \
-		$(INSTALL_COPY) $(CROSS_DIR)/$(TARGET)/sys-root/lib/*so* $(TARGET_base_libdir); \
-	elif [ -d $(CROSS_DIR)/$(TARGET)/lib/ ]; then \
-		$(INSTALL_COPY) $(CROSS_DIR)/$(TARGET)/lib/*so* $(TARGET_base_libdir); \
-	else \
-		false; \
-	fi
+	$(INSTALL_COPY) $(CROSS_DIR)/$(TARGET)/sys-root/lib/*so* $(TARGET_base_libdir)
 ifeq ($(BOXSERIES),hd2)
 	$(CD) $(TARGET_base_libdir); \
 		ln -sf libuClibc-$(UCLIBC_VER).so libcrypt.so.0; \
