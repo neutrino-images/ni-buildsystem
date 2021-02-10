@@ -361,7 +361,10 @@ ntfs-3g: $(NTFS-3G_DEPS) $(DL_DIR)/$(NTFS-3G_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(NTFS-3G_DIR)
 	$(UNTAR)/$(NTFS-3G_SOURCE)
 	$(CHDIR)/$(NTFS-3G_DIR); \
+		$(APPLY_PATCHES); \
 		$(CONFIGURE) \
+			--program-prefix= \
+			--program-suffix= \
 			--prefix=$(prefix) \
 			--bindir=$(base_bindir) \
 			--sbindir=$(base_sbindir) \
@@ -376,7 +379,7 @@ ntfs-3g: $(NTFS-3G_DEPS) $(DL_DIR)/$(NTFS-3G_SOURCE) | $(TARGET_DIR)
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	-rm $(addprefix $(TARGET_base_bindir)/,lowntfs-3g ntfs-3g.probe)
 	-rm $(addprefix $(TARGET_base_sbindir)/,mount.lowntfs-3g)
-	ln -sf ntfs-3g $(TARGET_base_sbindir)/mount.ntfs
+	ln -sf $(base_bindir)/ntfs-3g $(TARGET_base_sbindir)/mount.ntfs
 	$(REMOVE)/$(NTFS-3G_DIR)
 	$(TOUCH)
 
