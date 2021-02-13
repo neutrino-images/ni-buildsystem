@@ -286,6 +286,9 @@ CONFIGURE_OPTS = \
 	--build=$(BUILD) \
 	--host=$(TARGET) \
 	--target=$(TARGET) \
+	\
+	--program-prefix= \
+	--program-suffix=
 
 CONFIGURE = \
 	test -f ./configure || ./autogen.sh && \

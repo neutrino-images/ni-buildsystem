@@ -363,8 +363,6 @@ ntfs-3g: $(NTFS-3G_DEPS) $(DL_DIR)/$(NTFS-3G_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(NTFS-3G_DIR); \
 		$(APPLY_PATCHES); \
 		$(CONFIGURE) \
-			--program-prefix= \
-			--program-suffix= \
 			--prefix=$(prefix) \
 			--bindir=$(base_bindir) \
 			--sbindir=$(base_sbindir) \
