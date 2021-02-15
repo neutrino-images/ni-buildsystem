@@ -138,10 +138,10 @@ else
   NEUTRINO_CONF_OPTS += --enable-graphlcd
 
   ifeq ($(BOXTYPE),armbox)
-    NEUTRINO_CONF_OPTS += --disable-arm-acc
+    #NEUTRINO_CONF_OPTS += --disable-arm-acc
   endif
   ifeq ($(BOXTYPE),mipsbox)
-    NEUTRINO_CONF_OPTS += --disable-mips-acc
+    #NEUTRINO_CONF_OPTS += --disable-mips-acc
   endif
 endif
 
