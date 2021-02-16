@@ -2092,7 +2092,7 @@ flac: $(DL_DIR)/$(FLAC_SOURCE) | $(TARGET_DIR)
 # -----------------------------------------------------------------------------
 
 CA-BUNDLE_SOURCE = cacert.pem
-CA-BUNDLE_SITE   = https://curl.haxx.se/ca
+CA-BUNDLE_SITE   = https://curl.se/ca
 
 $(DL_DIR)/$(CA-BUNDLE_SOURCE):
 	$(DOWNLOAD) $(CA-BUNDLE_SITE)/$(CA-BUNDLE_SOURCE)
@@ -2102,6 +2102,6 @@ CA-BUNDLE_DIR    = /etc/ssl/certs
 
 ca-bundle: $(DL_DIR)/$(CA-BUNDLE_SOURCE) | $(TARGET_DIR)
 	$(CD) $(DL_DIR); \
-		curl --remote-name --time-cond $(CA-BUNDLE_SOURCE) $(CA-BUNDLE_SITE)/$(CA-BUNDLE_SOURCE) || true
+		curl --remote-name --remote-time -z $(CA-BUNDLE_SOURCE) $(CA-BUNDLE_SITE)/$(CA-BUNDLE_SOURCE) || true
 	$(INSTALL_DATA) -D $(DL_DIR)/$(CA-BUNDLE_SOURCE) $(TARGET_DIR)/$(CA-BUNDLE_DIR)/$(CA-BUNDLE)
 	$(TOUCH)
