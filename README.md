@@ -46,6 +46,6 @@ make images
 
 ## 7) Aktualisieren und aufräumen
 ```bash
-make update-all
+make update
 make clean
 ```

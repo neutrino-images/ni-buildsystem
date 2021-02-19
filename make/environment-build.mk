@@ -394,12 +394,12 @@ NI-PUBLIC		= $(GITHUB)/neutrino-images
 NI-PRIVATE		= $(BITBUCKET_SSH):neutrino-images
 
 NI-NEUTRINO		= ni-neutrino
-NI-NEUTRINO_BRANCH	?= master
 NI-NEUTRINO-PLUGINS	= ni-neutrino-plugins
 
 BUILD-GENERIC-PC	= build-generic-pc
 NI-BUILD-GENERIC-PC	= ni-build-generic-pc
 NI-DRIVERS-BIN		= ni-drivers-bin
+NI-FFMPEG		= ni-ffmpeg
 NI-LIBSTB-HAL		= ni-libstb-hal
 NI-LINUX-KERNEL		= ni-linux-kernel
 NI-LOGO-STUFF		= ni-logo-stuff
@@ -407,12 +407,3 @@ NI-OFGWRITE		= ni-ofgwrite
 NI-OPENTHREADS		= ni-openthreads
 NI-RTMPDUMP		= ni-rtmpdump
 NI-STREAMRIPPER		= ni-streamripper
-
-# Note: NI-FFMPEG-variables are only used for Coolstream-builds
-#
-# ffmpeg/master is currently not mature enough for daily use
-# if you want to help testing you can enable it here
-NI-FFMPEG		= ni-ffmpeg
-NI-FFMPEG_BRANCH	?= ni/ffmpeg/2.8
-#NI-FFMPEG_BRANCH	?= ni/ffmpeg/master
-#NI-FFMPEG_BRANCH	?= ffmpeg/master

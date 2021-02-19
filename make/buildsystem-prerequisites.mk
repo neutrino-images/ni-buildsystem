@@ -49,7 +49,7 @@ bashcheck:
 
 # -----------------------------------------------------------------------------
 
-preqs: download ni-sources
+preqs: download ni-sources checkout-branches
 
 $(CCACHE):
 	$(call draw_line);
@@ -101,8 +101,6 @@ $(SOURCE_DIR)/$(NI-LIBCOOLSTREAM):
 ifeq ($(HAS_LIBCS),yes)
 	$(CD) $(SOURCE_DIR); \
 		git clone $(NI-PRIVATE)/$(@F).git
-	$(CD) $(@); \
-		git checkout $(NI-LIBCOOLSTREAM_BRANCH)
 endif
 
 # upstream for rebase
@@ -169,6 +167,11 @@ ni-sources: $(SOURCE_DIR) \
 	$(SOURCE_DIR)/$(NI-OPENTHREADS) \
 	$(SOURCE_DIR)/$(NI-RTMPDUMP) \
 	$(SOURCE_DIR)/$(NI-STREAMRIPPER)
+
+checkout-branches:
+	$(CD) $(SOURCE_DIR)/$(NI-FFMPEG); git checkout $(FFMPEG_BRANCH)
+	$(CD) $(SOURCE_DIR)/$(NI-LINUX-KERNEL); git checkout $(KERNEL_BRANCH)
+	$(CD) $(SOURCE_DIR)/$(NI-NEUTRINO); git checkout $(NEUTRINO_BRANCH)
 
 # -----------------------------------------------------------------------------
 

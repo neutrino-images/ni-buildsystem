@@ -3,11 +3,14 @@
 #
 # -----------------------------------------------------------------------------
 
+FFMPEG_BRANCH ?= ni/ffmpeg/2.8
+#FFMPEG_BRANCH ?= ffmpeg/master
+
 FFMPEG_DEPS = openssl rtmpdump libbluray libass
 
 # -----------------------------------------------------------------------------
 
-ifeq ($(NI-FFMPEG_BRANCH),ni/ffmpeg/2.8)
+ifeq ($(FFMPEG_BRANCH),ni/ffmpeg/2.8)
   FFMPEG_DEPS += libroxml
   FFMPEG_CONFIGURE_BRANCH =
 else
@@ -173,7 +176,7 @@ endif
 ffmpeg: $(FFMPEG_DEPS) | $(TARGET_DIR)
 	$(REMOVE)/$(NI-FFMPEG)
 	$(CD) $(SOURCE_DIR)/$(NI-FFMPEG); \
-		git checkout $(NI-FFMPEG_BRANCH)
+		git checkout $(FFMPEG_BRANCH)
 	tar -C $(SOURCE_DIR) -cp $(NI-FFMPEG) --exclude-vcs | tar -C $(BUILD_DIR) -x
 	$(CHDIR)/$(NI-FFMPEG); \
 		./configure \

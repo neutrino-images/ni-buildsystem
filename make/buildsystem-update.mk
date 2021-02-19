@@ -13,14 +13,14 @@ endif
 update-neutrino:
 	export GIT_MERGE_AUTOEDIT=no; \
 	$(CD) $(SOURCE_DIR)/$(NI-NEUTRINO); \
-		git checkout $(NI-NEUTRINO_BRANCH); \
-		git pull origin $(NI-NEUTRINO_BRANCH)
+		git checkout master; \
+		git pull --all
 
 update-remotes:
 ifeq ($(NI_ADMIN),true)
 	export GIT_MERGE_AUTOEDIT=no; \
 	$(CD) $(SOURCE_DIR)/$(NI-NEUTRINO); \
-		git checkout $(NI-NEUTRINO_BRANCH); \
+		git checkout master; \
 		git fetch --all
 	$(CD) $(SOURCE_DIR)/$(NI-LIBSTB-HAL); \
 		git checkout master; \
@@ -43,29 +43,27 @@ update-ni-force:
 	make ni-sources
 	make update-ni-sources
 
-update-ni-sources: ni-sources
+update-ni-sources: ni-sources update-neutrino
 	$(CD) $(BUILD-GENERIC-PC); git pull
 	$(CD) $(SOURCE_DIR)/$(NI-DRIVERS-BIN); git pull
-	$(CD) $(SOURCE_DIR)/$(NI-FFMPEG); git pull --all; git checkout $(NI-FFMPEG_BRANCH)
+	$(CD) $(SOURCE_DIR)/$(NI-FFMPEG); git pull --all
 ifeq ($(HAS_LIBCS),yes)
-	$(CD) $(SOURCE_DIR)/$(NI-LIBCOOLSTREAM); git pull --all; git checkout $(NI-LIBCOOLSTREAM_BRANCH)
+	$(CD) $(SOURCE_DIR)/$(NI-LIBCOOLSTREAM); git pull
 endif
 	$(CD) $(SOURCE_DIR)/$(NI-LIBSTB-HAL); git pull
-	$(CD) $(SOURCE_DIR)/$(NI-LINUX-KERNEL); git pull --all; git checkout $(KERNEL_BRANCH)
+	$(CD) $(SOURCE_DIR)/$(NI-LINUX-KERNEL); git pull --all
 	$(CD) $(SOURCE_DIR)/$(NI-LOGO-STUFF); git pull
 	$(CD) $(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS); git pull
 	$(CD) $(SOURCE_DIR)/$(NI-OFGWRITE); git pull
 	$(CD) $(SOURCE_DIR)/$(NI-OPENTHREADS); git pull
 	$(CD) $(SOURCE_DIR)/$(NI-RTMPDUMP); git pull
 	$(CD) $(SOURCE_DIR)/$(NI-STREAMRIPPER); git pull
+	make checkout-branches
 
-update-ni:
-	make update-self
-	make update-neutrino
-	make update-ni-sources
+update: update-self update-ni-sources
 
 pull \
-update-all: update-ni update-remotes
+update-all: update update-remotes
 
 push:
 	git push

@@ -8,6 +8,12 @@ NEUTRINO_INST_DIR ?= $(TARGET_DIR)
 NEUTRINO_OBJ       = $(NI-NEUTRINO)-obj
 NEUTRINO_BUILD_DIR = $(BUILD_DIR)/$(NEUTRINO_OBJ)
 
+ifeq ($(BOXTYPE),coolstream)
+  NEUTRINO_BRANCH = ni/$(BOXTYPE)
+else
+  NEUTRINO_BRANCH ?= master
+endif
+
 LIBSTB-HAL_OBJ       = $(NI-LIBSTB-HAL)-obj
 LIBSTB-HAL_BUILD_DIR = $(BUILD_DIR)/$(LIBSTB-HAL_OBJ)
 
@@ -169,7 +175,7 @@ endif
 $(NEUTRINO_BUILD_DIR)/config.status: $(NEUTRINO_DEPS)
 	test -d $(NEUTRINO_BUILD_DIR) || mkdir -p $(NEUTRINO_BUILD_DIR)
 	$(CD) $(SOURCE_DIR)/$(NI-NEUTRINO); \
-		git checkout $(NI-NEUTRINO_BRANCH)
+		git checkout $(NEUTRINO_BRANCH)
 	$(SOURCE_DIR)/$(NI-NEUTRINO)/autogen.sh
 	$(CD) $(NEUTRINO_BUILD_DIR); \
 		$(NEUTRINO_CONF_ENV) \

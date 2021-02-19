@@ -130,7 +130,7 @@ kronos_v2-drivers \
 coolstream-drivers: $(SOURCE_DIR)/$(NI-DRIVERS-BIN) | $(TARGET_DIR)
 	mkdir -p $(TARGET_libdir)
 	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/lib/. $(TARGET_libdir)
-	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/libcoolstream/$(shell echo -n $(NI-FFMPEG_BRANCH) | sed 's,/,-,g')/. $(TARGET_libdir)
+	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/libcoolstream/$(shell echo -n $(FFMPEG_BRANCH) | sed 's,/,-,g')/. $(TARGET_libdir)
 ifeq ($(BOXMODEL),nevis)
 	ln -sf libnxp.so $(TARGET_libdir)/libconexant.so
 endif
