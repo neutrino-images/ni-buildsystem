@@ -69,7 +69,7 @@ else ifeq ($(BOXMODEL),vusolo4k)
   KERNEL_VER    = 3.14.28-1.8
   KERNEL_DIR    = linux
   KERNEL_SOURCE = stblinux-3.14-1.8.tar.bz2
-  KERNEL_SITE   = http://archive.vuplus.com/download/kernel
+  KERNEL_SITE   = http://code.vuplus.com/download/release/kernel
 
   KERNEL_BRANCH = $(EMPTY)
   KERNEL_DTB    = $(EMPTY)
@@ -85,7 +85,7 @@ else ifeq ($(BOXMODEL),vuduo4k)
   KERNEL_VER    = 4.1.45-1.17
   KERNEL_DIR    = linux
   KERNEL_SOURCE = stblinux-4.1-1.17.tar.bz2
-  KERNEL_SITE   = http://archive.vuplus.com/download/kernel
+  KERNEL_SITE   = http://code.vuplus.com/download/release/kernel
 
   KERNEL_BRANCH = $(EMPTY)
   KERNEL_DTB    = $(EMPTY)
@@ -101,7 +101,7 @@ else ifeq ($(BOXMODEL),vuduo4kse)
   KERNEL_VER    = 4.1.45-1.17
   KERNEL_DIR    = linux
   KERNEL_SOURCE = stblinux-4.1-1.17.tar.bz2
-  KERNEL_SITE   = http://archive.vuplus.com/download/kernel
+  KERNEL_SITE   = http://code.vuplus.com/download/release/kernel
 
   KERNEL_BRANCH = $(EMPTY)
   KERNEL_DTB    = $(EMPTY)
@@ -117,7 +117,7 @@ else ifeq ($(BOXMODEL),vuultimo4k)
   KERNEL_VER    = 3.14.28-1.12
   KERNEL_DIR    = linux
   KERNEL_SOURCE = stblinux-3.14-1.12.tar.bz2
-  KERNEL_SITE   = http://archive.vuplus.com/download/kernel
+  KERNEL_SITE   = http://code.vuplus.com/download/release/kernel
 
   KERNEL_BRANCH = $(EMPTY)
   KERNEL_DTB    = $(EMPTY)
@@ -133,7 +133,7 @@ else ifeq ($(BOXMODEL),vuzero4k)
   KERNEL_VER    = 4.1.20-1.9
   KERNEL_DIR    = linux
   KERNEL_SOURCE = stblinux-4.1-1.9.tar.bz2
-  KERNEL_SITE   = http://archive.vuplus.com/download/kernel
+  KERNEL_SITE   = http://code.vuplus.com/download/release/kernel
 
   KERNEL_BRANCH = $(EMPTY)
   KERNEL_DTB    = $(EMPTY)
@@ -149,7 +149,7 @@ else ifeq ($(BOXMODEL),vuuno4k)
   KERNEL_VER    = 3.14.28-1.12
   KERNEL_DIR    = linux
   KERNEL_SOURCE = stblinux-3.14-1.12.tar.bz2
-  KERNEL_SITE   = http://archive.vuplus.com/download/kernel
+  KERNEL_SITE   = http://code.vuplus.com/download/release/kernel
 
   KERNEL_BRANCH = $(EMPTY)
   KERNEL_DTB    = $(EMPTY)
@@ -165,7 +165,7 @@ else ifeq ($(BOXMODEL),vuuno4kse)
   KERNEL_VER    = 4.1.20-1.9
   KERNEL_DIR    = linux
   KERNEL_SOURCE = stblinux-4.1-1.9.tar.bz2
-  KERNEL_SITE   = http://archive.vuplus.com/download/kernel
+  KERNEL_SITE   = http://code.vuplus.com/download/release/kernel
 
   KERNEL_BRANCH = $(EMPTY)
   KERNEL_DTB    = $(EMPTY)
@@ -181,7 +181,7 @@ else ifeq ($(BOXMODEL),vuduo)
   KERNEL_VER    = 3.9.6
   KERNEL_DIR    = linux
   KERNEL_SOURCE = stblinux-$(KERNEL_VER).tar.bz2
-  KERNEL_SITE   = http://archive.vuplus.com/download/kernel
+  KERNEL_SITE   = http://code.vuplus.com/download/release/kernel
 
   KERNEL_BRANCH = $(EMPTY)
   KERNEL_DTB    = $(EMPTY)

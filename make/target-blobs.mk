@@ -65,7 +65,7 @@ HD61-DRIVERS_SITE   = http://source.mynonpublic.com/gfutures
 
 VUSOLO4K-DRIVERS_VER    = 20190424
 VUSOLO4K-DRIVERS_SOURCE = vuplus-dvb-proxy-vusolo4k-3.14.28-$(VUSOLO4K-DRIVERS_VER).r0.tar.gz
-VUSOLO4K-DRIVERS_SITE   = http://archive.vuplus.com/download/build_support/vuplus
+VUSOLO4K-DRIVERS_SITE   = http://code.vuplus.com/download/release/vuplus-dvb-proxy
 
 ifeq ($(VUPLUS-DRIVERS_LATEST),yes)
 VUDUO4K-DRIVERS_VER    = 20191218
@@ -73,11 +73,11 @@ else
 VUDUO4K-DRIVERS_VER    = 20190212
 endif
 VUDUO4K-DRIVERS_SOURCE = vuplus-dvb-proxy-vuduo4k-4.1.45-$(VUDUO4K-DRIVERS_VER).r0.tar.gz
-VUDUO4K-DRIVERS_SITE   = http://archive.vuplus.com/download/build_support/vuplus
+VUDUO4K-DRIVERS_SITE   = http://code.vuplus.com/download/release/vuplus-dvb-proxy
 
 VUDUO4KSE-DRIVERS_VER    = 20200903
 VUDUO4KSE-DRIVERS_SOURCE = vuplus-dvb-proxy-vuduo4kse-4.1.45-$(VUDUO4KSE-DRIVERS_VER).r0.tar.gz
-VUDUO4KSE-DRIVERS_SITE   = http://archive.vuplus.com/download/build_support/vuplus
+VUDUO4KSE-DRIVERS_SITE   = http://code.vuplus.com/download/release/vuplus-dvb-proxy
 
 ifeq ($(VUPLUS-DRIVERS_LATEST),yes)
 VUULTIMO4K-DRIVERS_VER    = 20190424
@@ -85,11 +85,11 @@ else
 VUULTIMO4K-DRIVERS_VER    = 20190104
 endif
 VUULTIMO4K-DRIVERS_SOURCE = vuplus-dvb-proxy-vuultimo4k-3.14.28-$(VUULTIMO4K-DRIVERS_VER).r0.tar.gz
-VUULTIMO4K-DRIVERS_SITE   = http://archive.vuplus.com/download/build_support/vuplus
+VUULTIMO4K-DRIVERS_SITE   = http://code.vuplus.com/download/release/vuplus-dvb-proxy
 
 VUZERO4K-DRIVERS_VER    = 20190424
 VUZERO4K-DRIVERS_SOURCE = vuplus-dvb-proxy-vuzero4k-4.1.20-$(VUZERO4K-DRIVERS_VER).r0.tar.gz
-VUZERO4K-DRIVERS_SITE   = http://archive.vuplus.com/download/build_support/vuplus
+VUZERO4K-DRIVERS_SITE   = http://code.vuplus.com/download/release/vuplus-dvb-proxy
 
 ifeq ($(VUPLUS-DRIVERS_LATEST),yes)
 VUUNO4K-DRIVERS_VER    = 20190424
@@ -97,7 +97,7 @@ else
 VUUNO4K-DRIVERS_VER    = 20190104
 endif
 VUUNO4K-DRIVERS_SOURCE = vuplus-dvb-proxy-vuuno4k-3.14.28-$(VUUNO4K-DRIVERS_VER).r0.tar.gz
-VUUNO4K-DRIVERS_SITE   = http://archive.vuplus.com/download/build_support/vuplus
+VUUNO4K-DRIVERS_SITE   = http://code.vuplus.com/download/release/vuplus-dvb-proxy
 
 ifeq ($(VUPLUS-DRIVERS_LATEST),yes)
 VUUNO4KSE-DRIVERS_VER    = 20190424
@@ -105,11 +105,11 @@ else
 VUUNO4KSE-DRIVERS_VER    = 20190104
 endif
 VUUNO4KSE-DRIVERS_SOURCE = vuplus-dvb-proxy-vuuno4kse-4.1.20-$(VUUNO4KSE-DRIVERS_VER).r0.tar.gz
-VUUNO4KSE-DRIVERS_SITE   = http://archive.vuplus.com/download/build_support/vuplus
+VUUNO4KSE-DRIVERS_SITE   = http://code.vuplus.com/download/release/vuplus-dvb-proxy
 
 VUDUO-DRIVERS_VER    = 20151124
 VUDUO-DRIVERS_SOURCE = vuplus-dvb-modules-bm750-3.9.6-$(VUDUO-DRIVERS_VER).tar.gz
-VUDUO-DRIVERS_SITE   = http://archive.vuplus.com/download/drivers
+VUDUO-DRIVERS_SITE   = http://code.vuplus.com/download/release/vuplus-dvb-modules
 
 # -----------------------------------------------------------------------------
 
@@ -206,37 +206,37 @@ HD6x-LIBGLES-HEADERS_SITE   = https://github.com/HD-Digital/meta-gfutures/raw/re
 VUSOLO4K-LIBGLES_VER    = $(VUSOLO4K-DRIVERS_VER)
 VUSOLO4K-LIBGLES_DIR    = libgles-vusolo4k
 VUSOLO4K-LIBGLES_SOURCE = libgles-vusolo4k-17.1-$(VUSOLO4K-LIBGLES_VER).r0.tar.gz
-VUSOLO4K-LIBGLES_SITE   = http://archive.vuplus.com/download/build_support/vuplus
+VUSOLO4K-LIBGLES_SITE   = http://code.vuplus.com/download/release/libgles
 
 VUDUO4K-LIBGLES_VER    = $(VUDUO4K-DRIVERS_VER)
 VUDUO4K-LIBGLES_DIR    = libgles-vuduo4k
 VUDUO4K-LIBGLES_SOURCE = libgles-vuduo4k-18.1-$(VUDUO4K-LIBGLES_VER).r0.tar.gz
-VUDUO4K-LIBGLES_SITE   = http://archive.vuplus.com/download/build_support/vuplus
+VUDUO4K-LIBGLES_SITE   = http://code.vuplus.com/download/release/libgles
 
 VUDUO4KSE-LIBGLES_VER    = $(VUDUO4KSE-DRIVERS_VER)
 VUDUO4KSE-LIBGLES_DIR    = libgles-vuduo4kse
 VUDUO4KSE-LIBGLES_SOURCE = libgles-vuduo4kse-17.1-$(VUDUO4KSE-LIBGLES_VER).r0.tar.gz
-VUDUO4KSE-LIBGLES_SITE   = http://archive.vuplus.com/download/build_support/vuplus
+VUDUO4KSE-LIBGLES_SITE   = http://code.vuplus.com/download/release/libgles
 
 VUULTIMO4K-LIBGLES_VER    = $(VUULTIMO4K-DRIVERS_VER)
 VUULTIMO4K-LIBGLES_DIR    = libgles-vuultimo4k
 VUULTIMO4K-LIBGLES_SOURCE = libgles-vuultimo4k-17.1-$(VUULTIMO4K-LIBGLES_VER).r0.tar.gz
-VUULTIMO4K-LIBGLES_SITE   = http://archive.vuplus.com/download/build_support/vuplus
+VUULTIMO4K-LIBGLES_SITE   = http://code.vuplus.com/download/release/libgles
 
 VUZERO4K-LIBGLES_VER    = $(VUZERO4K-DRIVERS_VER)
 VUZERO4K-LIBGLES_DIR    = libgles-vuzero4k
 VUZERO4K-LIBGLES_SOURCE = libgles-vuzero4k-17.1-$(VUZERO4K-LIBGLES_VER).r0.tar.gz
-VUZERO4K-LIBGLES_SITE   = http://archive.vuplus.com/download/build_support/vuplus
+VUZERO4K-LIBGLES_SITE   = http://code.vuplus.com/download/release/libgles
 
 VUUNO4K-LIBGLES_VER    = $(VUUNO4K-DRIVERS_VER)
 VUUNO4K-LIBGLES_DIR    = libgles-vuuno4k
 VUUNO4K-LIBGLES_SOURCE = libgles-vuuno4k-17.1-$(VUUNO4K-LIBGLES_VER).r0.tar.gz
-VUUNO4K-LIBGLES_SITE   = http://archive.vuplus.com/download/build_support/vuplus
+VUUNO4K-LIBGLES_SITE   = http://code.vuplus.com/download/release/libgles
 
 VUUNO4KSE-LIBGLES_VER    = $(VUUNO4KSE-DRIVERS_VER)
 VUUNO4KSE-LIBGLES_DIR    = libgles-vuuno4kse
 VUUNO4KSE-LIBGLES_SOURCE = libgles-vuuno4kse-17.1-$(VUUNO4KSE-LIBGLES_VER).r0.tar.gz
-VUUNO4KSE-LIBGLES_SITE   = http://archive.vuplus.com/download/build_support/vuplus
+VUUNO4KSE-LIBGLES_SITE   = http://code.vuplus.com/download/release/libgles
 
 # -----------------------------------------------------------------------------
 
@@ -333,37 +333,37 @@ hd61-libs: $(DL_DIR)/$(BOXMODEL-LIBS_SOURCE) | $(TARGET_DIR)
 VUSOLO4K-PLATFORM-UTIL_VER    = $(VUSOLO4K-DRIVERS_VER)
 VUSOLO4K-PLATFORM-UTIL_DIR    = platform-util-vusolo4k
 VUSOLO4K-PLATFORM-UTIL_SOURCE = platform-util-vusolo4k-17.1-$(VUSOLO4K-PLATFORM-UTIL_VER).r0.tar.gz
-VUSOLO4K-PLATFORM-UTIL_SITE   = http://archive.vuplus.com/download/build_support/vuplus
+VUSOLO4K-PLATFORM-UTIL_SITE   = http://code.vuplus.com/download/release/platform-util
 
 VUDUO4K-PLATFORM-UTIL_VER    = $(VUDUO4K-DRIVERS_VER)
 VUDUO4K-PLATFORM-UTIL_DIR    = platform-util-vuduo4k
 VUDUO4K-PLATFORM-UTIL_SOURCE = platform-util-vuduo4k-18.1-$(VUDUO4K-PLATFORM-UTIL_VER).r0.tar.gz
-VUDUO4K-PLATFORM-UTIL_SITE   = http://archive.vuplus.com/download/build_support/vuplus
+VUDUO4K-PLATFORM-UTIL_SITE   = http://code.vuplus.com/download/release/platform-util
 
 VUDUO4KSE-PLATFORM-UTIL_VER    = $(VUDUO4KSE-DRIVERS_VER)
 VUDUO4KSE-PLATFORM-UTIL_DIR    = platform-util-vuduo4kse
 VUDUO4KSE-PLATFORM-UTIL_SOURCE = platform-util-vuduo4kse-17.1-$(VUDUO4KSE-PLATFORM-UTIL_VER).r0.tar.gz
-VUDUO4KSE-PLATFORM-UTIL_SITE   = http://archive.vuplus.com/download/build_support/vuplus
+VUDUO4KSE-PLATFORM-UTIL_SITE   = http://code.vuplus.com/download/release/platform-util
 
 VUULTIMO4K-PLATFORM-UTIL_VER    = $(VUULTIMO4K-DRIVERS_VER)
 VUULTIMO4K-PLATFORM-UTIL_DIR    = platform-util-vuultimo4k
 VUULTIMO4K-PLATFORM-UTIL_SOURCE = platform-util-vuultimo4k-17.1-$(VUULTIMO4K-PLATFORM-UTIL_VER).r0.tar.gz
-VUULTIMO4K-PLATFORM-UTIL_SITE   = http://archive.vuplus.com/download/build_support/vuplus
+VUULTIMO4K-PLATFORM-UTIL_SITE   = http://code.vuplus.com/download/release/platform-util
 
 VUZERO4K-PLATFORM-UTIL_VER    = $(VUZERO4K-DRIVERS_VER)
 VUZERO4K-PLATFORM-UTIL_DIR    = platform-util-vuzero4k
 VUZERO4K-PLATFORM-UTIL_SOURCE = platform-util-vuzero4k-17.1-$(VUZERO4K-PLATFORM-UTIL_VER).r0.tar.gz
-VUZERO4K-PLATFORM-UTIL_SITE   = http://archive.vuplus.com/download/build_support/vuplus
+VUZERO4K-PLATFORM-UTIL_SITE   = http://code.vuplus.com/download/release/platform-util
 
 VUUNO4K-PLATFORM-UTIL_VER    = $(VUUNO4K-DRIVERS_VER)
 VUUNO4K-PLATFORM-UTIL_DIR    = platform-util-vuuno4k
 VUUNO4K-PLATFORM-UTIL_SOURCE = platform-util-vuuno4k-17.1-$(VUUNO4K-PLATFORM-UTIL_VER).r0.tar.gz
-VUUNO4K-PLATFORM-UTIL_SITE   = http://archive.vuplus.com/download/build_support/vuplus
+VUUNO4K-PLATFORM-UTIL_SITE   = http://code.vuplus.com/download/release/platform-util
 
 VUUNO4KSE-PLATFORM-UTIL_VER    = $(VUUNO4KSE-DRIVERS_VER)
 VUUNO4KSE-PLATFORM-UTIL_DIR    = platform-util-vuuno4kse
 VUUNO4KSE-PLATFORM-UTIL_SOURCE = platform-util-vuuno4kse-17.1-$(VUUNO4KSE-PLATFORM-UTIL_VER).r0.tar.gz
-VUUNO4KSE-PLATFORM-UTIL_SITE   = http://archive.vuplus.com/download/build_support/vuplus
+VUUNO4KSE-PLATFORM-UTIL_SITE   = http://code.vuplus.com/download/release/platform-util
 
 # -----------------------------------------------------------------------------
 
