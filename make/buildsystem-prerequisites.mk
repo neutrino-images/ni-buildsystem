@@ -169,8 +169,12 @@ ni-sources: $(SOURCE_DIR) \
 	$(SOURCE_DIR)/$(NI_STREAMRIPPER)
 
 checkout-branches:
+ifneq ($(FFMPEG_BRANCH),$(empty))
 	$(CD) $(SOURCE_DIR)/$(NI_FFMPEG); git checkout $(FFMPEG_BRANCH)
+endif
+ifneq ($(KERNEL_BRANCH),$(empty))
 	$(CD) $(SOURCE_DIR)/$(NI_LINUX_KERNEL); git checkout $(KERNEL_BRANCH)
+endif
 	$(CD) $(SOURCE_DIR)/$(NI_NEUTRINO); git checkout $(NEUTRINO_BRANCH)
 
 # -----------------------------------------------------------------------------
