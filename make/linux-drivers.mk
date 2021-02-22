@@ -13,7 +13,7 @@ rtl8192eu: kernel-$(BOXTYPE) | $(TARGET_DIR)
 	$(GET-GIT-SOURCE) $(RTL8192EU_SITE) $(DL_DIR)/$(RTL8192EU_SOURCE)
 	$(CPDIR)/$(RTL8192EU_SOURCE)
 	$(CHDIR)/$(RTL8192EU_DIR); \
-		$(MAKE) $(KERNEL_MAKEVARS); \
+		$(MAKE) $(KERNEL_MAKE_VARS); \
 		$(INSTALL_DATA) 8192eu.ko $(TARGET_modulesdir)/kernel/drivers/net/wireless/
 	make depmod
 	$(REMOVE)/$(RTL8192EU_DIR)
@@ -34,7 +34,7 @@ rtl8812au: kernel-$(BOXTYPE) $(DL_DIR)/$(RTL8812AU_SOURCE) | $(TARGET_DIR)
 	$(UNZIP)/$(RTL8812AU_SOURCE)
 	$(CHDIR)/$(RTL8812AU_DIR); \
 		$(APPLY_PATCHES); \
-		$(MAKE) $(KERNEL_MAKEVARS); \
+		$(MAKE) $(KERNEL_MAKE_VARS); \
 		$(INSTALL_DATA) 8812au.ko $(TARGET_modulesdir)/kernel/drivers/net/wireless/
 	make depmod
 	$(REMOVE)/$(RTL8812AU_DIR)
@@ -55,7 +55,7 @@ rtl8822bu: kernel-$(BOXTYPE) $(DL_DIR)/$(RTL8822BU_SOURCE) | $(TARGET_DIR)
 	$(UNZIP)/$(RTL8822BU_SOURCE)
 	$(CHDIR)/$(RTL8822BU_DIR); \
 		$(APPLY_PATCHES); \
-		$(MAKE) $(KERNEL_MAKEVARS); \
+		$(MAKE) $(KERNEL_MAKE_VARS); \
 		$(INSTALL_DATA) 88x2bu.ko $(TARGET_modulesdir)/kernel/drivers/net/wireless/
 	make depmod
 	$(REMOVE)/$(RTL8822BU_DIR)
@@ -63,18 +63,16 @@ rtl8822bu: kernel-$(BOXTYPE) $(DL_DIR)/$(RTL8822BU_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-HD6x-MALI-DRIVERS_VER    = DX910-SW-99002-r7p0-00rel0
-HD6x-MALI-DRIVERS_DIR    = $(HD6x-MALI-DRIVERS_VER)
-HD6x-MALI-DRIVERS_SOURCE = $(HD6x-MALI-DRIVERS_VER).tgz
-HD6x-MALI-DRIVERS_SITE   = https://developer.arm.com/-/media/Files/downloads/mali-drivers/kernel/mali-utgard-gpu
+HD6x_MALI_DRIVERS_VER    = DX910-SW-99002-r7p0-00rel0
+HD6x_MALI_DRIVERS_DIR    = $(HD6x_MALI_DRIVERS_VER)
+HD6x_MALI_DRIVERS_SOURCE = $(HD6x_MALI_DRIVERS_VER).tgz
+HD6x_MALI_DRIVERS_SITE   = https://developer.arm.com/-/media/Files/downloads/mali-drivers/kernel/mali-utgard-gpu
 
-$(DL_DIR)/$(HD6x-MALI-DRIVERS_SOURCE):
-	$(DOWNLOAD) $(HD6x-MALI-DRIVERS_SITE)/$(HD6x-MALI-DRIVERS_SOURCE)
+$(DL_DIR)/$(HD6x_MALI_DRIVERS_SOURCE):
+	$(DOWNLOAD) $(HD6x_MALI_DRIVERS_SITE)/$(HD6x_MALI_DRIVERS_SOURCE)
 
-HD6x-MALI-DRIVERS_PATCH  = hi3798mv200-support.patch
-
-HD6x-MALI-DRIVERS_MAKEVARS = \
-	M=$(BUILD_DIR)/$(HD6x-MALI-DRIVERS_DIR)/driver/src/devicedrv/mali \
+HD6x_MALI_DRIVERS_MAKE_VARS = \
+	M=$(BUILD_DIR)/$(HD6x_MALI_DRIVERS_DIR)/driver/src/devicedrv/mali \
 	EXTRA_CFLAGS="-DCONFIG_MALI_DVFS=y -DCONFIG_GPU_AVS_ENABLE=y" \
 	CONFIG_MALI_SHARED_INTERRUPTS=y \
 	CONFIG_MALI400=m \
@@ -82,14 +80,14 @@ HD6x-MALI-DRIVERS_MAKEVARS = \
 	CONFIG_MALI_DVFS=y \
 	CONFIG_GPU_AVS_ENABLE=y
 
-hd6x-mali-drivers: kernel-$(BOXTYPE) hd6x-libgles-headers $(DL_DIR)/$(HD6x-MALI-DRIVERS_SOURCE) | $(TARGET_DIR)
+hd6x-mali-drivers: kernel-$(BOXTYPE) hd6x-libgles-headers $(DL_DIR)/$(HD6x_MALI_DRIVERS_SOURCE) | $(TARGET_DIR)
 	$(START_BUILD)
-	$(REMOVE)/$(HD6x-MALI-DRIVERS_DIR)
-	$(UNTAR)/$(HD6x-MALI-DRIVERS_SOURCE)
-	$(CHDIR)/$(HD6x-MALI-DRIVERS_DIR); \
-		$(call apply_patches,$(HD6x-MALI-DRIVERS_PATCH)); \
-		$(MAKE) -C $(BUILD_DIR)/$(KERNEL_OBJ) $(KERNEL_MAKEVARS) $(HD6x-MALI-DRIVERS_MAKEVARS); \
-		$(MAKE) -C $(BUILD_DIR)/$(KERNEL_OBJ) $(KERNEL_MAKEVARS) $(HD6x-MALI-DRIVERS_MAKEVARS) INSTALL_MOD_PATH=$(TARGET_DIR) modules_install
+	$(REMOVE)/$(HD6x_MALI_DRIVERS_DIR)
+	$(UNTAR)/$(HD6x_MALI_DRIVERS_SOURCE)
+	$(CHDIR)/$(HD6x_MALI_DRIVERS_DIR); \
+		$(APPLY_PATCHES); \
+		$(MAKE) -C $(BUILD_DIR)/$(KERNEL_OBJ) $(KERNEL_MAKE_VARS) $(HD6x_MALI_DRIVERS_MAKE_VARS); \
+		$(MAKE) -C $(BUILD_DIR)/$(KERNEL_OBJ) $(KERNEL_MAKE_VARS) $(HD6x_MALI_DRIVERS_MAKE_VARS) INSTALL_MOD_PATH=$(TARGET_DIR) modules_install
 	make depmod
-	$(REMOVE)/$(HD6x-MALI-DRIVERS_DIR)
+	$(REMOVE)/$(HD6x_MALI_DRIVERS_DIR)
 	$(TOUCH)

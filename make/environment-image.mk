@@ -35,22 +35,22 @@ IMAGE_SUMMARIZE = yes
 IMAGE_NEW = no
 
 # Beta/Release Server
-NI-SERVER = http://neutrino-images.de/neutrino-images
+NI_SERVER = http://neutrino-images.de/neutrino-images
 ifeq ($(IMAGE_TYPE),0)
   # Release
-  NI-SUBDIR = release
+  NI_SUBDIR = release
   IMAGE_TYPE_STRING = release
 else ifeq ($(IMAGE_TYPE),1)
   # Beta
-  NI-SUBDIR = beta
+  NI_SUBDIR = beta
   IMAGE_TYPE_STRING = beta
 else ifeq ($(IMAGE_TYPE),2)
   # Nightly
-  NI-SUBDIR = nightly
+  NI_SUBDIR = nightly
   IMAGE_TYPE_STRING = nightly
 else
   # Selfmade; just for compatibility; not needed for our builds
-  NI-SUBDIR = selfmade
+  NI_SUBDIR = selfmade
   IMAGE_TYPE_STRING = selfmade
 endif
 
@@ -60,7 +60,7 @@ else
   IMAGE_DESC ="$(BOXNAME) [$(IMAGE_SUFFIX)] $(shell echo $(IMAGE_TYPE_STRING) | sed 's/.*/\u&/')"
 endif
 
-IMAGE_SITE = $(NI-SERVER)/$(NI-SUBDIR)
+IMAGE_SITE = $(NI_SERVER)/$(NI_SUBDIR)
 IMAGE_MD5FILE = $(IMAGE_TYPE_STRING)-$(IMAGE_SUFFIX).txt
 
 IMAGE_BUILD_DIR = $(BUILD_DIR)/image-build

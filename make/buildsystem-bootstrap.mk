@@ -33,7 +33,7 @@ bootstrap: $(BOOTSTRAP)
 # -----------------------------------------------------------------------------
 
 skeleton: | $(TARGET_DIR)
-	$(INSTALL_COPY) --remove-destination $(SKEL-ROOT)/. $(TARGET_DIR)/
+	$(INSTALL_COPY) --remove-destination $(SKEL_ROOT)/. $(TARGET_DIR)/
 	$(SED) 's|%(BOOT_PARTITION)|$(BOOT_PARTITION)|' $(TARGET_sysconfdir)/mdev.conf
 
 # -----------------------------------------------------------------------------
@@ -115,17 +115,17 @@ var-update: $(TARGET_localstatedir)/update
 $(TARGET_localstatedir)/update: | $(TARGET_DIR)
 	mkdir -p $(@)
 ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd1))
-	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/zImage $(@)
+	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI_DRIVERS_BIN)/$(DRIVERS_BIN_DIR)/zImage $(@)
 else ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd2))
-	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/vmlinux.ub.gz $(@)
-	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/uldr.bin $(@)
+	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI_DRIVERS_BIN)/$(DRIVERS_BIN_DIR)/vmlinux.ub.gz $(@)
+	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI_DRIVERS_BIN)/$(DRIVERS_BIN_DIR)/uldr.bin $(@)
   ifeq ($(BOXMODEL),kronos_v2)
-	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/u-boot.bin.kronos_v2 $(@)/u-boot.bin
+	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI_DRIVERS_BIN)/$(DRIVERS_BIN_DIR)/u-boot.bin.kronos_v2 $(@)/u-boot.bin
   else
-	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/u-boot.bin $(@)
+	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI_DRIVERS_BIN)/$(DRIVERS_BIN_DIR)/u-boot.bin $(@)
   endif
 endif
-	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/stb_update.data $(@)
+	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI_DRIVERS_BIN)/$(DRIVERS_BIN_DIR)/stb_update.data $(@)
 
 endif
 

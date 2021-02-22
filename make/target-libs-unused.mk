@@ -11,49 +11,23 @@ LIBID3TAG_SITE   = https://sourceforge.net/projects/mad/files/libid3tag/$(LIBID3
 $(DL_DIR)/$(LIBID3TAG_SOURCE):
 	$(DOWNLOAD) $(LIBID3TAG_SITE)/$(LIBID3TAG_SOURCE)
 
-LIBID3TAG_PATCH  = libid3tag-pc.patch
+LIBID3TAG_DEPS = zlib
 
-LIBID3TAG_DEPS   = zlib
+LIBID3TAG_AUTORECONF = YES
+
+LIBID3TAG_CONF_OPTS = \
+	--enable-shared=yes
 
 libid3tag: $(LIBID3TAG_DEPS) $(DL_DIR)/$(LIBID3TAG_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(LIBID3TAG_DIR)
-	$(UNTAR)/$(LIBID3TAG_SOURCE)
-	$(CHDIR)/$(LIBID3TAG_DIR); \
-		$(call apply_patches,$(LIBID3TAG_PATCH)); \
-		autoreconf -fi; \
-		$(CONFIGURE) \
-			--prefix=$(prefix) \
-			--enable-shared=yes \
-			; \
+	$(REMOVE)/$(PKG_DIR)
+	$(UNTAR)/$(PKG_SOURCE)
+	$(CHDIR)/$(PKG_DIR); \
+		$(APPLY_PATCHES); \
+		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL_LA)
-	$(REMOVE)/$(LIBID3TAG_DIR)
-	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
-BZIP2_VER    = 1.0.8
-BZIP2_DIR    = bzip2-$(BZIP2_VER)
-BZIP2_SOURCE = bzip2-$(BZIP2_VER).tar.gz
-BZIP2_SITE   = https://sourceware.org/pub/bzip2
-
-$(DL_DIR)/$(BZIP2_SOURCE):
-	$(DOWNLOAD) $(BZIP2_SITE)/$(BZIP2_SOURCE)
-
-BZIP2_PATCH  = bzip2.patch
-
-bzip2: $(DL_DIR)/$(BZIP2_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(BZIP2_DIR)
-	$(UNTAR)/$(BZIP2_SOURCE)
-	$(CHDIR)/$(BZIP2_DIR); \
-		$(call apply_patches,$(BZIP2_PATCH)); \
-		mv Makefile-libbz2_so Makefile; \
-		$(MAKE_ENV) \
-		$(MAKE); \
-		$(MAKE) install PREFIX=$(TARGET_DIR)
-	rm -f $(TARGET_bindir)/bzip2
-	$(REMOVE)/$(BZIP2_DIR)
+	$(REWRITE_LIBTOOL)
+	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -66,24 +40,25 @@ FONTCONFIG_SITE   = https://www.freedesktop.org/software/fontconfig/release
 $(DL_DIR)/$(FONTCONFIG_SOURCE):
 	$(DOWNLOAD) $(FONTCONFIG_SITE)/$(FONTCONFIG_SOURCE)
 
-FONTCONFIG_DEPS   = freetype expat
+FONTCONFIG_DEPS = freetype expat
+
+FONTCONFIG_CONF_OPTS = \
+	--with-freetype-config=$(HOST_DIR)/bin/freetype-config \
+	--with-expat-includes=$(TARGET_includedir) \
+	--with-expat-lib=$(TARGET_libdir) \
+	--disable-docs
 
 fontconfig: $(FONTCONFIG_DEPS) $(DL_DIR)/$(FONTCONFIG_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(FONTCONFIG_DIR)
-	$(UNTAR)/$(FONTCONFIG_SOURCE)
-	$(CHDIR)/$(FONTCONFIG_DIR); \
-		$(CONFIGURE) \
-			--prefix=$(prefix) \
-			--with-freetype-config=$(HOST_DIR)/bin/freetype-config \
-			--with-expat-includes=$(TARGET_includedir) \
-			--with-expat-lib=$(TARGET_libdir) \
-			--sysconfdir=/etc \
-			--disable-docs \
-			; \
+	$(REMOVE)/$(PKG_DIR)
+	$(UNTAR)/$(PKG_SOURCE)
+	$(CHDIR)/$(PKG_DIR); \
+		$(APPLY_PATCHES); \
+		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL_LA)
-	$(REMOVE)/$(FONTCONFIG_DIR)
+	$(REWRITE_CONFIG) $(HOST_DIR)/bin/freetype-config
+	$(REWRITE_LIBTOOL)
+	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -96,28 +71,24 @@ PIXMAN_SITE   = https://www.cairographics.org/releases
 $(DL_DIR)/$(PIXMAN_SOURCE):
 	$(DOWNLOAD) $(PIXMAN_SITE)/$(PIXMAN_SOURCE)
 
-PIXMAN_PATCH  = pixman-0001-ARM-qemu-related-workarounds-in-cpu-features-detecti.patch
-PIXMAN_PATCH += pixman-asm_include.patch
-PIXMAN_PATCH += pixman-0001-test-utils-Check-for-FE_INVALID-definition-before-us.patch
+PIXMAN_DEPS = zlib libpng
 
-PIXMAN_DEPS   = zlib libpng
+PIXMAN_CONF_OPTS = \
+	--disable-gtk \
+	--disable-arm-simd \
+	--disable-loongson-mmi \
+	--disable-docs
 
 pixman: $(PIXMAN_DEPS) $(DL_DIR)/$(PIXMAN_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PIXMAN_DIR)
-	$(UNTAR)/$(PIXMAN_SOURCE)
-	$(CHDIR)/$(PIXMAN_DIR); \
-		$(call apply_patches,$(PIXMAN_PATCH)); \
-		$(CONFIGURE) \
-			--prefix=$(prefix) \
-			--disable-gtk \
-			--disable-arm-simd \
-			--disable-loongson-mmi \
-			--disable-docs \
-			; \
+	$(REMOVE)/$(PKG_DIR)
+	$(UNTAR)/$(PKG_SOURCE)
+	$(CHDIR)/$(PKG_DIR); \
+		$(APPLY_PATCHES); \
+		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL_LA)
-	$(REMOVE)/$(PIXMAN_DIR)
+	$(REWRITE_LIBTOOL)
+	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -130,27 +101,27 @@ CAIRO_SITE   = https://www.cairographics.org/releases
 $(DL_DIR)/$(CAIRO_SOURCE):
 	$(DOWNLOAD) $(CAIRO_SITE)/$(CAIRO_SOURCE)
 
-CAIRO_PATCH  = cairo-get_bitmap_surface.diff
+CAIRO_DEPS = fontconfig glib2 libpng pixman zlib
 
-CAIRO_DEPS   = fontconfig glib2 libpng pixman zlib
+CAIRO_CONF_ENV = \
+	ax_cv_c_float_words_bigendian="no"
+
+CAIRO_CONF_OPTS = \
+	--with-html-dir=$(REMOVE_htmldir) \
+	--with-x=no \
+	--disable-xlib \
+	--disable-xcb \
+	--disable-egl \
+	--disable-glesv2 \
+	--disable-gl \
+	--enable-tee
 
 cairo: $(CAIRO_DEPS) $(DL_DIR)/$(CAIRO_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(CAIRO_DIR)
-	$(UNTAR)/$(CAIRO_SOURCE)
-	$(CHDIR)/$(CAIRO_DIR); \
-		$(call apply_patches,$(CAIRO_PATCH)); \
-		$(MAKE_ENV) \
-		ax_cv_c_float_words_bigendian="no" \
-		./configure $(CONFIGURE_OPTS) \
-			--prefix=$(prefix) \
-			--with-x=no \
-			--disable-xlib \
-			--disable-xcb \
-			--disable-egl \
-			--disable-glesv2 \
-			--disable-gl \
-			--enable-tee \
-			; \
+	$(REMOVE)/$(PKG_DIR)
+	$(UNTAR)/$(PKG_SOURCE)
+	$(CHDIR)/$(PKG_DIR); \
+		$(APPLY_PATCHES); \
+		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	rm -rf $(TARGET_bindir)/cairo-sphinx
@@ -158,8 +129,8 @@ cairo: $(CAIRO_DEPS) $(DL_DIR)/$(CAIRO_SOURCE) | $(TARGET_DIR)
 	rm -rf $(TARGET_libdir)/cairo/cairo-sphinx*
 	rm -rf $(TARGET_libdir)/cairo/.debug/cairo-fdr*
 	rm -rf $(TARGET_libdir)/cairo/.debug/cairo-sphinx*
-	$(REWRITE_LIBTOOL_LA)
-	$(REMOVE)/$(CAIRO_DIR)
+	$(REWRITE_LIBTOOL)
+	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -172,27 +143,26 @@ HARFBUZZ_SITE   = https://www.freedesktop.org/software/harfbuzz/release
 $(DL_DIR)/$(HARFBUZZ_SOURCE):
 	$(DOWNLOAD) $(HARFBUZZ_SITE)/$(HARFBUZZ_SOURCE)
 
-HARFBUZZ_PATCH  = harfbuzz-disable-docs.patch
+HARFBUZZ_DEPS = fontconfig glib2 cairo freetype
 
-HARFBUZZ_DEPS   = fontconfig glib2 cairo freetype
+HARFBUZZ_AUTORECONF = YES
+
+HARFBUZZ_CONF_OPTS = \
+	--with-cairo \
+	--with-fontconfig \
+	--with-freetype \
+	--with-glib \
+	--without-graphite2 \
+	--without-icu
 
 harfbuzz: $(HARFBUZZ_DEPS) $(DL_DIR)/$(HARFBUZZ_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(HARFBUZZ_DIR)
-	$(UNTAR)/$(HARFBUZZ_SOURCE)
-	$(CHDIR)/$(HARFBUZZ_DIR); \
-		$(call apply_patches,$(HARFBUZZ_PATCH)); \
-		autoreconf -fi; \
-		$(CONFIGURE) \
-			--prefix=$(prefix) \
-			--with-cairo \
-			--with-fontconfig \
-			--with-freetype \
-			--with-glib \
-			--without-graphite2 \
-			--without-icu \
-			; \
+	$(REMOVE)/$(PKG_DIR)
+	$(UNTAR)/$(PKG_SOURCE)
+	$(CHDIR)/$(PKG_DIR); \
+		$(APPLY_PATCHES); \
+		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL_LA)
-	$(REMOVE)/$(HARFBUZZ_DIR)
+	$(REWRITE_LIBTOOL)
+	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)

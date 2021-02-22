@@ -90,7 +90,7 @@ endif
 
 $(TARGET_sysconfdir)/profile.d:
 	$(foreach p,$(wildcard $(TARGET_FILES)/files-etc/profile.d/*.sh),\
-		$(INSTALL_DATA) -D $(p) $(TARGET_sysconfdir)/profile.d/$(notdir $(p)) $(sep))
+		$(INSTALL_DATA) -D $(p) $(TARGET_sysconfdir)/profile.d/$(notdir $(p))$(sep))
 
 $(TARGET_sysconfdir)/services:
 	$(INSTALL_DATA) -D $(TARGET_FILES)/files-etc/services $(@)

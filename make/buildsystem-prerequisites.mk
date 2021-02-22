@@ -70,12 +70,12 @@ download:
 $(SOURCE_DIR):
 	mkdir -p $(@)
 
-$(BUILD-GENERIC-PC):
-	git clone $(NI-PUBLIC)/$(NI-BUILD-GENERIC-PC).git $(BUILD-GENERIC-PC)
+$(BUILD_GENERIC_PC):
+	git clone $(NI_PUBLIC)/$(NI_BUILD_GENERIC_PC).git $(BUILD_GENERIC_PC)
 
-$(SOURCE_DIR)/$(NI-NEUTRINO):
+$(SOURCE_DIR)/$(NI_NEUTRINO):
 	$(CD) $(SOURCE_DIR); \
-		git clone $(NI-PUBLIC)/$(@F).git
+		git clone $(NI_PUBLIC)/$(@F).git
 ifeq ($(NI_ADMIN),true)
 	$(CD) $(@); \
 		git remote add tuxbox $(GITHUB)/tuxbox-neutrino/gui-neutrino.git; \
@@ -85,9 +85,9 @@ ifeq ($(NI_ADMIN),true)
 		git fetch --all
 endif
 
-$(SOURCE_DIR)/$(NI-LIBSTB-HAL):
+$(SOURCE_DIR)/$(NI_LIBSTB_HAL):
 	$(CD) $(SOURCE_DIR); \
-		git clone $(NI-PUBLIC)/$(@F).git
+		git clone $(NI_PUBLIC)/$(@F).git
 ifeq ($(NI_ADMIN),true)
 	$(CD) $(@); \
 		git remote add tuxbox $(GITHUB)/tuxbox-neutrino/library-stb-hal.git; \
@@ -100,13 +100,13 @@ endif
 $(SOURCE_DIR)/$(NI-LIBCOOLSTREAM):
 ifeq ($(HAS_LIBCS),yes)
 	$(CD) $(SOURCE_DIR); \
-		git clone $(NI-PRIVATE)/$(@F).git
+		git clone $(NI_PRIVATE)/$(@F).git
 endif
 
 # upstream for rebase
-$(SOURCE_DIR)/$(NI-FFMPEG):
+$(SOURCE_DIR)/$(NI_FFMPEG):
 	$(CD) $(SOURCE_DIR); \
-		git clone $(NI-PUBLIC)/$(@F).git
+		git clone $(NI_PUBLIC)/$(@F).git
 ifeq ($(NI_ADMIN),true)
 	$(CD) $(@); \
 		git remote add upstream https://git.ffmpeg.org/ffmpeg.git; \
@@ -115,9 +115,9 @@ endif
 
 # upstream for rebase
 # torvalds for cherry-picking
-$(SOURCE_DIR)/$(NI-LINUX-KERNEL):
+$(SOURCE_DIR)/$(NI_LINUX_KERNEL):
 	$(CD) $(SOURCE_DIR); \
-		git clone $(NI-PUBLIC)/$(@F).git
+		git clone $(NI_PUBLIC)/$(@F).git
 ifeq ($(NI_ADMIN),true)
 	$(CD) $(@); \
 		git remote add upstream https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git; \
@@ -126,9 +126,9 @@ ifeq ($(NI_ADMIN),true)
 endif
 
 # upstream for rebase
-$(SOURCE_DIR)/$(NI-OFGWRITE):
+$(SOURCE_DIR)/$(NI_OFGWRITE):
 	$(CD) $(SOURCE_DIR); \
-		git clone $(NI-PUBLIC)/$(@F).git
+		git clone $(NI_PUBLIC)/$(@F).git
 ifeq ($(NI_ADMIN),true)
 	$(CD) $(@); \
 		git remote add upstream $(GITHUB)/oe-alliance/ofgwrite.git; \
@@ -136,42 +136,42 @@ ifeq ($(NI_ADMIN),true)
 endif
 
 # upstream for rebase
-$(SOURCE_DIR)/$(NI-RTMPDUMP):
+$(SOURCE_DIR)/$(NI_RTMPDUMP):
 	$(CD) $(SOURCE_DIR); \
-		git clone $(NI-PUBLIC)/$(@F).git
+		git clone $(NI_PUBLIC)/$(@F).git
 ifeq ($(NI_ADMIN),true)
 	$(CD) $(@); \
 		git remote add upstream git://git.ffmpeg.org/rtmpdump; \
 		git fetch --all
 endif
 
-$(SOURCE_DIR)/$(NI-DRIVERS-BIN) \
-$(SOURCE_DIR)/$(NI-LOGO-STUFF) \
-$(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS) \
-$(SOURCE_DIR)/$(NI-OPENTHREADS) \
-$(SOURCE_DIR)/$(NI-STREAMRIPPER):
+$(SOURCE_DIR)/$(NI_DRIVERS_BIN) \
+$(SOURCE_DIR)/$(NI_LOGO_STUFF) \
+$(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS) \
+$(SOURCE_DIR)/$(NI_OPENTHREADS) \
+$(SOURCE_DIR)/$(NI_STREAMRIPPER):
 	$(CD) $(SOURCE_DIR); \
-		git clone $(NI-PUBLIC)/$(@F).git
+		git clone $(NI_PUBLIC)/$(@F).git
 
 ni-sources: $(SOURCE_DIR) \
-	$(BUILD-GENERIC-PC) \
-	$(SOURCE_DIR)/$(NI-DRIVERS-BIN) \
-	$(SOURCE_DIR)/$(NI-FFMPEG) \
+	$(BUILD_GENERIC_PC) \
+	$(SOURCE_DIR)/$(NI_DRIVERS_BIN) \
+	$(SOURCE_DIR)/$(NI_FFMPEG) \
 	$(SOURCE_DIR)/$(NI-LIBCOOLSTREAM) \
-	$(SOURCE_DIR)/$(NI-LIBSTB-HAL) \
-	$(SOURCE_DIR)/$(NI-LINUX-KERNEL) \
-	$(SOURCE_DIR)/$(NI-LOGO-STUFF) \
-	$(SOURCE_DIR)/$(NI-NEUTRINO) \
-	$(SOURCE_DIR)/$(NI-NEUTRINO-PLUGINS) \
-	$(SOURCE_DIR)/$(NI-OFGWRITE) \
-	$(SOURCE_DIR)/$(NI-OPENTHREADS) \
-	$(SOURCE_DIR)/$(NI-RTMPDUMP) \
-	$(SOURCE_DIR)/$(NI-STREAMRIPPER)
+	$(SOURCE_DIR)/$(NI_LIBSTB_HAL) \
+	$(SOURCE_DIR)/$(NI_LINUX_KERNEL) \
+	$(SOURCE_DIR)/$(NI_LOGO_STUFF) \
+	$(SOURCE_DIR)/$(NI_NEUTRINO) \
+	$(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS) \
+	$(SOURCE_DIR)/$(NI_OFGWRITE) \
+	$(SOURCE_DIR)/$(NI_OPENTHREADS) \
+	$(SOURCE_DIR)/$(NI_RTMPDUMP) \
+	$(SOURCE_DIR)/$(NI_STREAMRIPPER)
 
 checkout-branches:
-	$(CD) $(SOURCE_DIR)/$(NI-FFMPEG); git checkout $(FFMPEG_BRANCH)
-	$(CD) $(SOURCE_DIR)/$(NI-LINUX-KERNEL); git checkout $(KERNEL_BRANCH)
-	$(CD) $(SOURCE_DIR)/$(NI-NEUTRINO); git checkout $(NEUTRINO_BRANCH)
+	$(CD) $(SOURCE_DIR)/$(NI_FFMPEG); git checkout $(FFMPEG_BRANCH)
+	$(CD) $(SOURCE_DIR)/$(NI_LINUX_KERNEL); git checkout $(KERNEL_BRANCH)
+	$(CD) $(SOURCE_DIR)/$(NI_NEUTRINO); git checkout $(NEUTRINO_BRANCH)
 
 # -----------------------------------------------------------------------------
 

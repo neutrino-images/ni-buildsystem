@@ -46,8 +46,8 @@ SHARP_SIGN := \#
 # implementation that avoids the use of __tmp, but that would be even
 # more unreadable and is not worth the effort.
 
-[LOWER] := a b c d e f g h i j k l m n o p q r s t u v w x y z
-[UPPER] := A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
+[LOWER] := a b c d e f g h i j k l m n o p q r s t u v w x y z - .
+[UPPER] := A B C D E F G H I J K L M N O P Q R S T U V W X Y Z _ _
 
 define caseconvert-helper
 $(1) = $$(strip \
@@ -69,10 +69,20 @@ reverse = $(if $(1),$(call reverse,$(wordlist 2,$(words $(1)),$(1))) $(firstword
 # slashes, colons (OK in filenames but not in rules), and spaces.
 sanitize = $(subst $(space),_,$(subst :,_,$(subst /,_,$(strip $(1)))))
 
-# MESSAGE Macro -- display a message in bold type
-MESSAGE = echo "$(TERM_BOLD)>>> $($(PKG)_NAME) $($(PKG)_VERSION) $(call qstrip,$(1))$(TERM_RESET)"
+TERM_RED	= \033[40;0;31m
+TERM_RED_BOLD	= \033[40;1;31m
+TERM_GREEN	= \033[40;0;32m
+TERM_GREEN_BOLD	= \033[40;1;32m
+TERM_YELLOW	= \033[40;0;33m
+TERM_YELLOW_BOLD= \033[40;1;33m
+TERM_NORMAL	= \033[0m
+
 TERM_BOLD := $(shell tput smso 2>/dev/null)
 TERM_RESET := $(shell tput rmso 2>/dev/null)
+
+# MESSAGE Macro -- display a message in bold type
+MESSAGE = echo -e "$(TERM_YELLOW)$(call qstrip,$(1))$(TERM_NORMAL)"
+#MESSAGE = echo "$(TERM_BOLD)>>> $($(PKG)_NAME) $($(PKG)_VERSION) $(call qstrip,$(1))$(TERM_RESET)"
 
 # Utility functions for 'find'
 # findfileclauses(filelist) => -name 'X' -o -name 'Y'
@@ -134,4 +144,36 @@ define PRINTF
 		$(subst $(PERCENT),$(PERCENT)$(PERCENT),\
 			$(subst $(QUOTE),$(QUOTE)\$(QUOTE)$(QUOTE),\
 				$(subst \,\\,$(1)))))\n'
+endef
+
+#
+# $(1) = title
+# $(2) = color
+#	0 - Black
+#	1 - Red
+#	2 - Green
+#	3 - Yellow
+#	4 - Blue
+#	5 - Magenta
+#	6 - Cyan
+#	7 - White
+# $(3) = left|center|right
+#
+define draw_line
+	@ \
+	printf '%.0s-' {1..$(shell tput cols)}; \
+	if test "$(1)"; then \
+		cols=$(shell tput cols); \
+		length=$(shell echo $(1) | awk '{print length}'); \
+		case "$(3)" in \
+			*right)  let indent="length + 1" ;; \
+			*center) let indent="cols - (cols - length) / 2" ;; \
+			*left|*) let indent="cols" ;; \
+		esac; \
+		tput cub $$indent; \
+		test "$(2)" && printf $$(tput setaf $(2)); \
+		printf '$(1)'; \
+		test "$(2)" && printf $$(tput sgr0); \
+	fi; \
+	echo
 endef

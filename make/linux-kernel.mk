@@ -193,17 +193,17 @@ VUDUO_PATCH = \
 $(DL_DIR)/$(KERNEL_SOURCE):
 	$(DOWNLOAD) $(KERNEL_SITE)/$(KERNEL_SOURCE)
 
-$(DL_DIR)/$(VMLINUZ-INITRD_SOURCE):
-	$(DOWNLOAD) $(VMLINUZ-INITRD_SITE)/$(VMLINUZ-INITRD_SOURCE)
+$(DL_DIR)/$(VMLINUZ_INITRD_SOURCE):
+	$(DOWNLOAD) $(VMLINUZ_INITRD_SITE)/$(VMLINUZ_INITRD_SOURCE)
 
 # -----------------------------------------------------------------------------
 
-kernel.do_checkout: $(SOURCE_DIR)/$(NI-LINUX-KERNEL)
-	$(CD) $(SOURCE_DIR)/$(NI-LINUX-KERNEL); \
+kernel.do_checkout: $(SOURCE_DIR)/$(NI_LINUX_KERNEL)
+	$(CD) $(SOURCE_DIR)/$(NI_LINUX_KERNEL); \
 		git checkout $(KERNEL_BRANCH)
 
 kernel.do_prepare:
-	$(MAKE) kernel.do_prepare.$(if $(filter $(KERNEL_SOURCE),git),git,tar)
+	$(MAKE) kernel.do_prepare_$(if $(filter $(KERNEL_SOURCE),git),git,tar)
 	#
 	$(REMOVE)/$(KERNEL_OBJ)
 	$(REMOVE)/$(KERNEL_MODULES)
@@ -213,31 +213,31 @@ kernel.do_prepare:
 	$(MKDIR)/$(KERNEL_HEADERS)
 	$(INSTALL_DATA) $(KERNEL_CONFIG) $(BUILD_DIR)/$(KERNEL_OBJ)/.config
 ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 hd60 hd61))
-	$(INSTALL_DATA) $(PATCHES)/initramfs-subdirboot.cpio.gz $(BUILD_DIR)/$(KERNEL_OBJ)
+	$(INSTALL_DATA) $(PKG_FILES_DIR)/initramfs-subdirboot.cpio.gz $(BUILD_DIR)/$(KERNEL_OBJ)
 endif
 	$(TOUCH)
 
-kernel.do_prepare.git:
+kernel.do_prepare_git:
 	$(MAKE) kernel.do_checkout
 	#
 	$(REMOVE)/$(KERNEL_DIR)
-	tar -C $(SOURCE_DIR) -cp $(NI-LINUX-KERNEL) --exclude-vcs | tar -C $(BUILD_DIR) -x
+	tar -C $(SOURCE_DIR) -cp $(NI_LINUX_KERNEL) --exclude-vcs | tar -C $(BUILD_DIR) -x
 	$(CD) $(BUILD_DIR); \
-		mv $(NI-LINUX-KERNEL) $(KERNEL_DIR)
+		mv $(NI_LINUX_KERNEL) $(KERNEL_DIR)
 
-kernel.do_prepare.tar: $(DL_DIR)/$(KERNEL_SOURCE)
+kernel.do_prepare_tar: $(DL_DIR)/$(KERNEL_SOURCE)
 	$(REMOVE)/$(KERNEL_DIR)
 	$(UNTAR)/$(KERNEL_SOURCE)
 	$(CHDIR)/$(KERNEL_DIR); \
-		$(call apply_patches,$(addprefix kernel/,$(KERNEL_PATCH)))
+		$(call apply_patches,$(addprefix $(PKG_PATCHES_DIR)/,$(KERNEL_PATCH)))
 
 kernel.do_compile: kernel.do_prepare
 	$(CHDIR)/$(KERNEL_DIR); \
-		$(MAKE) $(KERNEL_MAKEVARS) silentoldconfig; \
-		$(MAKE) $(KERNEL_MAKEVARS) $(KERNEL_MAKEOPTS); \
-		$(MAKE) $(KERNEL_MAKEVARS) modules_install; \
-		$(MAKE) $(KERNEL_MAKEVARS) headers_install
-ifneq ($(KERNEL_DTB),$(EMPTY))
+		$(MAKE) $(KERNEL_MAKE_VARS) silentoldconfig; \
+		$(MAKE) $(KERNEL_MAKE_VARS) modules $(KERNEL_MAKE_TARGETS); \
+		$(MAKE) $(KERNEL_MAKE_VARS) modules_install; \
+		$(MAKE) $(KERNEL_MAKE_VARS) headers_install
+ifneq ($(KERNEL_DTB),$(empty))
 	cat $(KERNEL_ZIMAGE) $(KERNEL_DTB) > $(KERNEL_ZIMAGE_DTB)
 endif
 	$(TOUCH)
@@ -253,12 +253,12 @@ kernel-coolstream: kernel-coolstream-$(BOXSERIES)
 	$(TOUCH)
 
 kernel-coolstream-hd1: kernel.do_compile | $(IMAGE_DIR)
-	mkimage -A $(TARGET_ARCH) -O linux -T kernel -C none -a 0x48000 -e 0x48000 -n "$(KERNEL_NAME)" -d $(KERNEL_UIMAGE) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-uImage.img
-	mkimage -A $(TARGET_ARCH) -O linux -T kernel -C none -a 0x48000 -e 0x48000 -n "$(KERNEL_NAME)" -d $(KERNEL_ZIMAGE) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-zImage.img
+	$(HOST_MKIMAGE) -A $(TARGET_ARCH) -O linux -T kernel -C none -a 0x48000 -e 0x48000 -n "$(KERNEL_NAME)" -d $(KERNEL_UIMAGE) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-uImage.img
+	$(HOST_MKIMAGE) -A $(TARGET_ARCH) -O linux -T kernel -C none -a 0x48000 -e 0x48000 -n "$(KERNEL_NAME)" -d $(KERNEL_ZIMAGE) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-zImage.img
 	$(TOUCH)
 
 kernel-coolstream-hd2: kernel.do_compile | $(IMAGE_DIR)
-	mkimage -A $(TARGET_ARCH) -O linux -T kernel -C none -a 0x8000 -e 0x8000 -n "$(KERNEL_NAME)" -d $(KERNEL_ZIMAGE_DTB) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-vmlinux.ub.gz
+	$(HOST_MKIMAGE) -A $(TARGET_ARCH) -O linux -T kernel -C none -a 0x8000 -e 0x8000 -n "$(KERNEL_NAME)" -d $(KERNEL_ZIMAGE_DTB) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-vmlinux.ub.gz
 ifeq ($(BOXMODEL),$(filter $(BOXMODEL),apollo shiner))
   ifeq ($(BOXMODEL),apollo)
 	# create also shiner-kernel when building apollo
@@ -271,7 +271,7 @@ endif
 	$(TOUCH)
 
 kernel-armbox: kernel.do_compile | $(IMAGE_DIR)
-#ifneq ($(KERNEL_DTB),$(EMPTY))
+#ifneq ($(KERNEL_DTB),$(empty))
 #	$(INSTALL_DATA) $(KERNEL_ZIMAGE_DTB) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL).bin
 #else
 #	$(INSTALL_DATA) $(KERNEL_ZIMAGE) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL).bin
@@ -287,21 +287,21 @@ kernel-mipsbox: kernel.do_compile | $(IMAGE_DIR)
 kernel-modules-coolstream: kernel-modules-coolstream-$(BOXSERIES)
 	$(TOUCH)
 
-STRIP-MODULES-COOLSTREAM-HD1  =
-STRIP-MODULES-COOLSTREAM-HD1 += kernel/drivers/mtd/devices/mtdram.ko
-STRIP-MODULES-COOLSTREAM-HD1 += kernel/drivers/mtd/devices/block2mtd.ko
-STRIP-MODULES-COOLSTREAM-HD1 += kernel/drivers/net/tun.ko
-STRIP-MODULES-COOLSTREAM-HD1 += kernel/drivers/staging/rt2870/rt2870sta.ko
-STRIP-MODULES-COOLSTREAM-HD1 += kernel/drivers/usb/serial/ftdi_sio.ko
-STRIP-MODULES-COOLSTREAM-HD1 += kernel/drivers/usb/serial/pl2303.ko
-STRIP-MODULES-COOLSTREAM-HD1 += kernel/drivers/usb/serial/usbserial.ko
-STRIP-MODULES-COOLSTREAM-HD1 += kernel/fs/autofs4/autofs4.ko
-STRIP-MODULES-COOLSTREAM-HD1 += kernel/fs/cifs/cifs.ko
-STRIP-MODULES-COOLSTREAM-HD1 += kernel/fs/fuse/fuse.ko
+STRIP_MODULES_COOLSTREAM_HD1  =
+STRIP_MODULES_COOLSTREAM_HD1 += kernel/drivers/mtd/devices/mtdram.ko
+STRIP_MODULES_COOLSTREAM_HD1 += kernel/drivers/mtd/devices/block2mtd.ko
+STRIP_MODULES_COOLSTREAM_HD1 += kernel/drivers/net/tun.ko
+STRIP_MODULES_COOLSTREAM_HD1 += kernel/drivers/staging/rt2870/rt2870sta.ko
+STRIP_MODULES_COOLSTREAM_HD1 += kernel/drivers/usb/serial/ftdi_sio.ko
+STRIP_MODULES_COOLSTREAM_HD1 += kernel/drivers/usb/serial/pl2303.ko
+STRIP_MODULES_COOLSTREAM_HD1 += kernel/drivers/usb/serial/usbserial.ko
+STRIP_MODULES_COOLSTREAM_HD1 += kernel/fs/autofs4/autofs4.ko
+STRIP_MODULES_COOLSTREAM_HD1 += kernel/fs/cifs/cifs.ko
+STRIP_MODULES_COOLSTREAM_HD1 += kernel/fs/fuse/fuse.ko
 
 kernel-modules-coolstream-hd1: kernel-coolstream
 	mkdir -p $(TARGET_modulesdir)
-	for module in $(STRIP-MODULES-COOLSTREAM-HD1); do \
+	for module in $(STRIP_MODULES_COOLSTREAM_HD1); do \
 		mkdir -p $(TARGET_modulesdir)/$$(dirname $$module); \
 		$(TARGET_OBJCOPY) --strip-unneeded $(KERNEL_modulesdir)/$$module $(TARGET_modulesdir)/$$module; \
 	done;
@@ -344,8 +344,8 @@ kernel-modules-mipsbox: kernel-mipsbox
 
 # -----------------------------------------------------------------------------
 
-vmlinuz-initrd: $(DL_DIR)/$(VMLINUZ-INITRD_SOURCE)
-	$(UNTAR)/$(VMLINUZ-INITRD_SOURCE)
+vmlinuz-initrd: $(DL_DIR)/$(VMLINUZ_INITRD_SOURCE)
+	$(UNTAR)/$(VMLINUZ_INITRD_SOURCE)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -366,11 +366,11 @@ kernel-install-coolstream: kernel-install-coolstream-$(BOXSERIES)
 
 kernel-install-coolstream-hd1: kernel-coolstream-hd1
 	$(INSTALL_DATA) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-zImage.img \
-		$(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/zImage
+		$(SOURCE_DIR)/$(NI_DRIVERS_BIN)/$(DRIVERS_BIN_DIR)/zImage
 
 kernel-install-coolstream-hd2: kernel-coolstream-hd2
 	$(INSTALL_DATA) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-vmlinux.ub.gz \
-		$(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR)/vmlinux.ub.gz
+		$(SOURCE_DIR)/$(NI_DRIVERS_BIN)/$(DRIVERS_BIN_DIR)/vmlinux.ub.gz
 
 kernel-install-coolstream-all:
 	make clean BOXFAMILY=nevis
@@ -396,8 +396,8 @@ kernel-install-coolstream-all:
 	#
 	make clean > /dev/null 2>&1
 	#
-	@echo -e "$(TERM_YELLOW)Align stb_update.data in $(SOURCE_DIR)/$(NI-DRIVERS-BIN)$(TERM_NORMAL)"
-	@echo -e "$(TERM_YELLOW)and commit your changes in $(SOURCE_DIR)/$(NI-DRIVERS-BIN)$(TERM_NORMAL)"
+	@echo -e "$(TERM_YELLOW)Align stb_update.data in $(SOURCE_DIR)/$(NI_DRIVERS_BIN)$(TERM_NORMAL)"
+	@echo -e "$(TERM_YELLOW)and commit your changes in $(SOURCE_DIR)/$(NI_DRIVERS_BIN)$(TERM_NORMAL)"
 
 # -----------------------------------------------------------------------------
 

@@ -20,7 +20,7 @@ $(TARGET_DIR)/.version: | $(TARGET_DIR)
 	echo "describe=$$(git describe --always --long --tags | sed 's/-/./2')"	>> $(@)
 	echo "builddate=$$(date)"						>> $(@)
 	echo "box_model=$(BOXMODEL)"						>> $(@)
-	echo "creator=$(MAINTAINER)"						>> $(@)
+	echo "creator=$(TARGET_VENDOR), $(MAINTAINER)"				>> $(@)
 	echo "homepage=www.neutrino-images.de"					>> $(@)
 ifeq ($(BOXTYPE),$(filter $(BOXTYPE),armbox mipsbox))
 	echo "imagedir=$(IMAGE_SUBDIR)"						>> $(@)
@@ -30,7 +30,7 @@ endif
 
 update.urls: $(TARGET_localstatedir)/etc/update.urls
 $(TARGET_localstatedir)/etc/update.urls: | $(TARGET_DIR)
-	echo "$(NI-SERVER)/update.php"				 > $(@)
+	echo "$(NI_SERVER)/update.php"				 > $(@)
 	echo "$(CHANNELLISTS_SITE)/$(CHANNELLISTS_MD5FILE)"	>> $(@)
 
 # -----------------------------------------------------------------------------
@@ -122,14 +122,14 @@ rootfs-cleanup: $(ROOTFS)
 
 # -----------------------------------------------------------------------------
 
-ROOTFS-STRIP_BINS  = $(base_bindir)
-ROOTFS-STRIP_BINS += $(base_sbindir)
-ROOTFS-STRIP_BINS += $(bindir)
-ROOTFS-STRIP_BINS += $(sbindir)
-ROOTFS-STRIP_BINS += /usr/share/tuxbox/neutrino/plugins
+ROOTFS_STRIP_BINS  = $(base_bindir)
+ROOTFS_STRIP_BINS += $(base_sbindir)
+ROOTFS_STRIP_BINS += $(bindir)
+ROOTFS_STRIP_BINS += $(sbindir)
+ROOTFS_STRIP_BINS += /usr/share/tuxbox/neutrino/plugins
 
-ROOTFS-STRIP_LIBS  = $(base_libdir)
-ROOTFS-STRIP_LIBS += $(libdir)
+ROOTFS_STRIP_LIBS  = $(base_libdir)
+ROOTFS_STRIP_LIBS += $(libdir)
 
 # strip bins and libs in root filesystem
 rootfs-strip: $(ROOTFS)
@@ -137,10 +137,10 @@ ifneq ($(DEBUG),yes)
 	$(call draw_line);
 	@echo "The following warnings from strip are harmless!"
 	$(call draw_line);
-	for dir in $(ROOTFS-STRIP_BINS); do \
+	for dir in $(ROOTFS_STRIP_BINS); do \
 		find $(ROOTFS)$${dir} -type f -print0 | xargs -0 $(TARGET_STRIP) || true; \
 	done
-	for dir in $(ROOTFS-STRIP_LIBS); do \
+	for dir in $(ROOTFS_STRIP_LIBS); do \
 		find $(ROOTFS)$${dir} \( \
 				-path $(ROOTFS)/lib/libnexus.so -o \
 				-path $(ROOTFS)/lib/libnxpl.so -o \
@@ -168,7 +168,7 @@ get-update-info-hd2:
 	$(call draw_line);
 	@echo "Get update info for boxmodel $(BOXMODEL)"
 	@echo
-	@$(CD) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR); \
+	@$(CD) $(SOURCE_DIR)/$(NI_DRIVERS_BIN)/$(DRIVERS_BIN_DIR); \
 	if [ -e vmlinux.ub.gz ]; then \
 		dd status=none if=vmlinux.ub.gz bs=1 skip=$$(LC_ALL=C grep -a -b -o $$'\x1f\x8b\x08\x00\x00\x00\x00\x00' vmlinux.ub.gz \
 		| cut -d ':' -f 1) | zcat -q | grep -a "Linux version"; \
@@ -185,7 +185,7 @@ get-update-info-hd1:
 	$(call draw_line);
 	@echo "Get update info for boxmodel $(BOXMODEL)"
 	@echo
-	@$(CD) $(SOURCE_DIR)/$(NI-DRIVERS-BIN)/$(DRIVERS-BIN_DIR); \
+	@$(CD) $(SOURCE_DIR)/$(NI_DRIVERS_BIN)/$(DRIVERS_BIN_DIR); \
 	if [ -e zImage ]; then \
 		dd if=zImage bs=1 skip=$$(LC_ALL=C grep -a -b -o $$'\x1f\x8b\x08\x00\x00\x00\x00\x00' zImage \
 		| cut -d ':' -f 1) | zcat -q | grep -a "Linux version"; \

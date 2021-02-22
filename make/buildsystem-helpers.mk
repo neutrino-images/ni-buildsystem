@@ -3,6 +3,43 @@
 #
 # -----------------------------------------------------------------------------
 
+# download archives into download directory
+DOWNLOAD = wget --no-check-certificate -t3 -T60 -c -P $(DL_DIR)
+
+# unpack archives into build directory
+UNTAR = tar -C $(BUILD_DIR) -xf $(DL_DIR)
+UNZIP = unzip -d $(BUILD_DIR) -o $(DL_DIR)
+
+# clean up
+REMOVE = rm -rf $(BUILD_DIR)
+
+# build helper variables
+CD    = set -e; cd
+CHDIR = $(CD) $(BUILD_DIR)
+MKDIR = mkdir -p $(BUILD_DIR)
+CPDIR = cp -a -t $(BUILD_DIR) $(DL_DIR)
+#TOUCH = @touch $(DEPS_DIR)/$(@)
+TOUCH = @touch $(if $(findstring host-,$(@)),$(HOST_DEPS_DIR),$(DEPS_DIR))/$(@)
+SED   = $(shell which sed || type -p sed) -i -e
+
+INSTALL      = install
+INSTALL_DATA = $(INSTALL) -m 0644
+INSTALL_EXEC = $(INSTALL) -m 0755
+INSTALL_COPY = cp -a
+
+define INSTALL_EXIST # (source, dest)
+	if [ -d $(dir $(1)) ]; then \
+		$(INSTALL) -d $(2); \
+		$(INSTALL_COPY) $(1) $(2); \
+	fi
+endef
+
+GET-GIT-ARCHIVE = $(HELPERS_DIR)/get-git-archive.sh
+GET-GIT-SOURCE  = $(HELPERS_DIR)/get-git-source.sh
+GET-SVN-SOURCE  = $(HELPERS_DIR)/get-svn-source.sh
+UPDATE-RC.D     = $(HELPERS_DIR)/update-rc.d -r $(TARGET_DIR)
+
+# -----------------------------------------------------------------------------
 # execute local scripts
 define local-script
 	@if [ -x $(LOCAL_DIR)/scripts/$(1) ]; then \
@@ -16,22 +53,22 @@ endef
 define apply_patches
 	l=$(strip $(2)); test -z $$l && l=1; \
 	for i in $(1); do \
-		if [ -e $$i -o -e $(PATCHES)/$$i ]; then \
+		if [ -e $$i -o -e $(PKG_PATCHES_DIR)/$$i ]; then \
 			if [ -d $$i ]; then \
 				for p in $$i/*; do \
-					echo -e "$(TERM_YELLOW)Applying $${p#$(PATCHES)/}$(TERM_NORMAL)"; \
+					echo -e "$(TERM_YELLOW)Applying $${p#$(PKG_PATCHES_DIR)/}$(TERM_NORMAL)"; \
 					if [ $${p:0:1} == "/" ]; then \
 						patch -p$$l -i $$p; \
 					else \
-						patch -p$$l -i $(PATCHES)/$$p; \
+						patch -p$$l -i $(PKG_PATCHES_DIR)/$$p; \
 					fi; \
 				done; \
 			else \
-				echo -e "$(TERM_YELLOW)Applying $${i#$(PATCHES)/}$(TERM_NORMAL)"; \
+				echo -e "$(TERM_YELLOW)Applying $${i#$(PKG_PATCHES_DIR)/}$(TERM_NORMAL)"; \
 				if [ $${i:0:1} == "/" ]; then \
 					patch -p$$l -i $$i; \
 				else \
-					patch -p$$l -i $(PATCHES)/$$i; \
+					patch -p$$l -i $(PKG_PATCHES_DIR)/$$i; \
 				fi; \
 			fi; \
 		fi; \
@@ -54,10 +91,10 @@ REWRITE_LIBTOOL_RULES = "s,^libdir=.*,libdir='$(1)',; \
 
 REWRITE_LIBTOOL_TAG = rewritten=1
 
-define REWRITE_LIBTOOL # (libdir)
+define rewrite_libtool # (libdir)
 	for la in $$(find $(1) -name "*.la" -type f); do \
 		if ! grep -q "$(REWRITE_LIBTOOL_TAG)" $${la}; then \
-			echo -e "$(TERM_YELLOW)Rewriting $${la#$(TARGET_DIR)/}$(TERM_NORMAL)"; \
+			$(call MESSAGE,"Rewriting $${la#$(TARGET_DIR)/}"); \
 			$(SED) $(REWRITE_LIBTOOL_RULES) $${la}; \
 			echo -e "\n# Adapted to buildsystem\n$(REWRITE_LIBTOOL_TAG)" >> $${la}; \
 		fi; \
@@ -65,8 +102,8 @@ define REWRITE_LIBTOOL # (libdir)
 endef
 
 # rewrite libtool libraries automatically
-REWRITE_LIBTOOL_LA = $(call REWRITE_LIBTOOL,$(TARGET_base_libdir)); \
-		     $(call REWRITE_LIBTOOL,$(TARGET_libdir))
+REWRITE_LIBTOOL = $(foreach libdir,$(TARGET_base_libdir) $(TARGET_libdir),\
+			$(call rewrite_libtool,$(libdir))$(sep))
 
 # -----------------------------------------------------------------------------
 
@@ -102,120 +139,6 @@ endef
 
 # -----------------------------------------------------------------------------
 
-#
-# $(1) = title
-# $(2) = color
-#	0 - Black
-#	1 - Red
-#	2 - Green
-#	3 - Yellow
-#	4 - Blue
-#	5 - Magenta
-#	6 - Cyan
-#	7 - White
-# $(3) = left|center|right
-#
-define draw_line
-	@ \
-	printf '%.0s-' {1..$(shell tput cols)}; \
-	if test "$(1)"; then \
-		cols=$(shell tput cols); \
-		length=$(shell echo $(1) | awk '{print length}'); \
-		case "$(3)" in \
-			*right)  let indent="length + 1" ;; \
-			*center) let indent="cols - (cols - length) / 2" ;; \
-			*left|*) let indent="cols" ;; \
-		esac; \
-		tput cub $$indent; \
-		test "$(2)" && printf $$(tput setaf $(2)); \
-		printf '$(1)'; \
-		test "$(2)" && printf $$(tput sgr0); \
-	fi; \
-	echo
-endef
-
-# -----------------------------------------------------------------------------
-
-archives-list:
-	@rm -f $(BUILD_DIR)/$(@)
-	@make -qp | grep --only-matching '^\$(DL_DIR).*:' | sed "s|:||g" > $(BUILD_DIR)/$(@)
-
-DOCLEANUP ?= no
-GETMISSING ?= no
-archives-info: archives-list
-	@echo "[ ** ] Unused targets in make/archives.mk"
-	@grep --only-matching '^\$$(DL_DIR).*:' make/archives.mk | sed "s|:||g" | \
-	while read target; do \
-		found=false; \
-		for makefile in make/*.mk; do \
-			if [ "$${makefile##*/}" = "archives.mk" ]; then \
-				continue; \
-			fi; \
-			if [ "$${makefile: -9}" = "-extra.mk" ]; then \
-				continue; \
-			fi; \
-			if grep -q "$$target" $$makefile; then \
-				found=true; \
-			fi; \
-			if [ "$$found" = "true" ]; then \
-				continue; \
-			fi; \
-		done; \
-		if [ "$$found" = "false" ]; then \
-			echo -e "[$(TERM_RED) !! $(TERM_NORMAL)] $$target"; \
-		fi; \
-	done;
-	@echo "[ ** ] Unused archives"
-	@find $(DL_DIR)/ -maxdepth 1 -type f | \
-	while read archive; do \
-		if ! grep -q $$archive $(BUILD_DIR)/archives-list; then \
-			echo -e "[$(TERM_YELLOW) rm $(TERM_NORMAL)] $$archive"; \
-			if [ "$(DOCLEANUP)" = "yes" ]; then \
-				rm $$archive; \
-			fi; \
-		fi; \
-	done;
-	@echo "[ ** ] Missing archives"
-	@cat $(BUILD_DIR)/archives-list | \
-	while read archive; do \
-		if [ -e $$archive ]; then \
-			#echo -e "[$(TERM_GREEN) ok $(TERM_NORMAL)] $$archive"; \
-			true; \
-		else \
-			echo -e "[$(TERM_YELLOW) -- $(TERM_NORMAL)] $$archive"; \
-			if [ "$(GETMISSING)" = "yes" ]; then \
-				make $$archive; \
-			fi; \
-		fi; \
-	done;
-	@$(REMOVE)/archives-list
-
-# -----------------------------------------------------------------------------
-
-# FIXME - how to resolve variables while grepping makefiles?
-patches-info:
-	@echo "[ ** ] Unused patches"
-	@for patch in $(PATCHES)/*; do \
-		if [ ! -f $$patch ]; then \
-			continue; \
-		fi; \
-		patch=$${patch##*/}; \
-		found=false; \
-		for makefile in make/*.mk; do \
-			if grep -q "$$patch" $$makefile; then \
-				found=true; \
-			fi; \
-			if [ "$$found" = "true" ]; then \
-				continue; \
-			fi; \
-		done; \
-		if [ "$$found" = "false" ]; then \
-			echo -e "[$(TERM_RED) !! $(TERM_NORMAL)] $$patch"; \
-		fi; \
-	done;
-
-# -----------------------------------------------------------------------------
-
 # Create reversed changelog using git log --reverse.
 # Remove duplicated commits and re-reverse the changelog using awk.
 # This keeps the original commit and removes all picked duplicates.
@@ -227,14 +150,11 @@ endef
 
 changelogs:
 	$(call make-changelog) > $(STAGING_DIR)/changelog-buildsystem
-	$(CD) $(SOURCE_DIR)/$(NI-NEUTRINO); \
+	$(CD) $(SOURCE_DIR)/$(NI_NEUTRINO); \
 		$(call make-changelog) > $(STAGING_DIR)/changelog-neutrino
-	$(CD) $(SOURCE_DIR)/$(NI-LIBSTB-HAL); \
+	$(CD) $(SOURCE_DIR)/$(NI_LIBSTB_HAL); \
 		$(call make-changelog) > $(STAGING_DIR)/changelog-libstb-hal
 
 # -----------------------------------------------------------------------------
 
-PHONY += archives-list
-PHONY += archives-info
-PHONY += patches-info
 PHONY += changelogs

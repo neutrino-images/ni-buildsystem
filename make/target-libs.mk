@@ -11,24 +11,24 @@ ZLIB_SITE   = https://sourceforge.net/projects/libpng/files/zlib/$(ZLIB_VER)
 $(DL_DIR)/$(ZLIB_SOURCE):
 	$(DOWNLOAD) $(ZLIB_SITE)/$(ZLIB_SOURCE)
 
-ZLIB_PATCH  = zlib-ldflags-tests.patch
-ZLIB_PATCH += zlib-remove.ldconfig.call.patch
+ZLIB_CONF_ENV = \
+	mandir=$(REMOVE_mandir)
+
+ZLIB_CONF_OPTS = \
+	--prefix=$(prefix) \
+	--shared \
+	--uname=Linux
 
 zlib: $(DL_DIR)/$(ZLIB_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(ZLIB_DIR)
-	$(UNTAR)/$(ZLIB_SOURCE)
-	$(CHDIR)/$(ZLIB_DIR); \
-		$(call apply_patches,$(ZLIB_PATCH)); \
-		$(MAKE_ENV) \
-		mandir=$(REMOVE_mandir) \
-		./configure \
-			--prefix=$(prefix) \
-			--shared \
-			--uname=Linux \
-			; \
+	$(REMOVE)/$(PKG_DIR)
+	$(UNTAR)/$(PKG_SOURCE)
+	$(CHDIR)/$(PKG_DIR); \
+		$(APPLY_PATCHES); \
+		$(TARGET_CONFIGURE_ENV) \
+		./configure $($(PKG)_CONF_OPTS); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/$(ZLIB_DIR)
+	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -41,27 +41,27 @@ LIBFUSE_SITE   = https://github.com/libfuse/libfuse/releases/download/fuse-$(LIB
 $(DL_DIR)/$(LIBFUSE_SOURCE):
 	$(DOWNLOAD) $(LIBFUSE_SITE)/$(LIBFUSE_SOURCE)
 
+LIBFUSE_CONF_OPTS = \
+	--datarootdir=$(REMOVE_datarootdir) \
+	--disable-static \
+	--disable-example \
+	--disable-mtab \
+	--with-gnu-ld \
+	--enable-util \
+	--enable-lib \
+	--enable-silent-rules
+
 libfuse: $(DL_DIR)/$(LIBFUSE_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(LIBFUSE_DIR)
-	$(UNTAR)/$(LIBFUSE_SOURCE)
-	$(CHDIR)/$(LIBFUSE_DIR); \
-		$(CONFIGURE) \
-			--prefix=$(prefix) \
-			--datarootdir=$(REMOVE_datarootdir) \
-			--disable-static \
-			--disable-example \
-			--disable-mtab \
-			--with-gnu-ld \
-			--enable-util \
-			--enable-lib \
-			--enable-silent-rules \
-			; \
+	$(REMOVE)/$(PKG_DIR)
+	$(UNTAR)/$(PKG_SOURCE)
+	$(CHDIR)/$(PKG_DIR); \
+		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL_LA)
-	rm -rf $(TARGET_sysconfdir)/udev
-	rm -rf $(TARGET_sysconfdir)/init.d/fuse
-	$(REMOVE)/$(LIBFUSE_DIR)
+	$(REWRITE_LIBTOOL)
+	-rm -r $(TARGET_sysconfdir)/udev
+	-rm $(TARGET_sysconfdir)/init.d/fuse
+	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -74,19 +74,19 @@ LIBUPNP_SITE   = http://sourceforge.net/projects/pupnp/files/pupnp/libUPnP%20$(L
 $(DL_DIR)/$(LIBUPNP_SOURCE):
 	$(DOWNLOAD) $(LIBUPNP_SITE)/$(LIBUPNP_SOURCE)
 
+LIBUPNP_CONV_OPTS = \
+	--enable-shared \
+	--disable-static
+
 libupnp: $(DL_DIR)/$(LIBUPNP_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(LIBUPNP_DIR)
-	$(UNTAR)/$(LIBUPNP_SOURCE)
-	$(CHDIR)/$(LIBUPNP_DIR); \
-		$(CONFIGURE) \
-			--prefix=$(prefix) \
-			--enable-shared \
-			--disable-static \
-			; \
+	$(REMOVE)/$(PKG_DIR)
+	$(UNTAR)/$(PKG_SOURCE)
+	$(CHDIR)/$(PKG_DIR); \
+		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL_LA)
-	$(REMOVE)/$(LIBUPNP_DIR)
+	$(REWRITE_LIBTOOL)
+	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 	
 # -----------------------------------------------------------------------------
@@ -96,24 +96,22 @@ LIBDVBSI_DIR    = libdvbsi.$(LIBDVBSI_VER)
 LIBDVBSI_SOURCE = libdvbsi.$(LIBDVBSI_VER)
 LIBDVBSI_SITE   = https://github.com/OpenVisionE2
 
-LIBDVBSI_PATCH  = libdvbsi++-content_identifier_descriptor.patch
+LIBDVBSI_CONV_OPTS = \
+	--enable-silent-rules \
+	--enable-shared \
+	--disable-static
 
 libdvbsi: | $(TARGET_DIR)
-	$(REMOVE)/$(LIBDVBSI_DIR)
-	$(GET-GIT-SOURCE) $(LIBDVBSI_SITE)/$(LIBDVBSI_SOURCE) $(DL_DIR)/$(LIBDVBSI_SOURCE)
-	$(CPDIR)/$(LIBDVBSI_SOURCE)
-	$(CHDIR)/$(LIBDVBSI_DIR); \
-		$(call apply_patches,$(LIBDVBSI_PATCH)); \
-		$(CONFIGURE) \
-			--prefix=$(prefix) \
-			--enable-shared \
-			--enable-silent-rules \
-			--disable-static \
-			; \
+	$(REMOVE)/$(PKG_DIR)
+	$(GET-GIT-SOURCE) $(PKG_SITE)/$(PKG_SOURCE) $(DL_DIR)/$(PKG_SOURCE)
+	$(CPDIR)/$(PKG_SOURCE)
+	$(CHDIR)/$(PKG_DIR); \
+		$(APPLY_PATCHES); \
+		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL_LA)
-	$(REMOVE)/$(LIBDVBSI_DIR)
+	$(REWRITE_LIBTOOL)
+	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -123,19 +121,18 @@ LIBDVBCSA_DIR    = libdvbcsa.$(LIBDVBCSA_VER)
 LIBDVBCSA_SOURCE = libdvbcsa.$(LIBDVBCSA_VER)
 LIBDVBCSA_SITE   = https://code.videolan.org/videolan
 
+LIBDVBCSA_AUTORECONF = YES
+
 libdvbcsa: | $(TARGET_DIR)
-	$(REMOVE)/$(LIBDVBCSA_DIR)
-	$(GET-GIT-SOURCE) $(LIBDVBCSA_SITE)/$(LIBDVBCSA_SOURCE) $(DL_DIR)/$(LIBDVBCSA_SOURCE)
-	$(CPDIR)/$(LIBDVBCSA_SOURCE)
-	$(CHDIR)/$(LIBDVBCSA_DIR); \
-		./bootstrap; \
-		$(CONFIGURE) \
-			--prefix=$(prefix) \
-			; \
+	$(REMOVE)/$(PKG_DIR)
+	$(GET-GIT-SOURCE) $(PKG_SITE)/$(PKG_SOURCE) $(DL_DIR)/$(PKG_SOURCE)
+	$(CPDIR)/$(PKG_SOURCE)
+	$(CHDIR)/$(PKG_DIR); \
+		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL_LA)
-	$(REMOVE)/$(LIBDVBCSA_DIR)
+	$(REWRITE_LIBTOOL)
+	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -149,13 +146,13 @@ $(DL_DIR)/$(GIFLIB_SOURCE):
 	$(DOWNLOAD) $(GIFLIB_SITE)/$(GIFLIB_SOURCE)
 
 giflib: $(DL_DIR)/$(GIFLIB_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(GIFLIB_DIR)
-	$(UNTAR)/$(GIFLIB_SOURCE)
-	$(CHDIR)/$(GIFLIB_DIR); \
-		$(MAKE_ENV) \
+	$(REMOVE)/$(PKG_DIR)
+	$(UNTAR)/$(PKG_SOURCE)
+	$(CHDIR)/$(PKG_DIR); \
+		$(TARGET_CONFIGURE_ENV) \
 		$(MAKE); \
 		$(MAKE) install-include install-lib DESTDIR=$(TARGET_DIR) PREFIX=$(prefix)
-	$(REMOVE)/$(GIFLIB_DIR)
+	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -168,47 +165,44 @@ LIBCURL_SITE   = https://curl.haxx.se/download
 $(DL_DIR)/$(LIBCURL_SOURCE):
 	$(DOWNLOAD) $(LIBCURL_SITE)/$(LIBCURL_SOURCE)
 
-LIBCURL_DEPS   = zlib openssl rtmpdump ca-bundle
+LIBCURL_DEPS = zlib openssl rtmpdump ca-bundle
 
-LIBCURL_CONF   = $(if $(filter $(BOXSERIES),hd1),--disable-ipv6,--enable-ipv6)
+LIBCURL_CONF_OPTS = \
+	--datarootdir=$(REMOVE_datarootdir) \
+	$(if $(filter $(BOXSERIES),hd1),--disable-ipv6,--enable-ipv6) \
+	--disable-manual \
+	--disable-file \
+	--disable-rtsp \
+	--disable-dict \
+	--disable-ldap \
+	--disable-curldebug \
+	--disable-static \
+	--disable-imap \
+	--disable-gopher \
+	--disable-pop3 \
+	--disable-smtp \
+	--disable-verbose \
+	--disable-manual \
+	--disable-ntlm-wb \
+	--disable-ares \
+	--without-libidn \
+	--with-ca-bundle=$(CA_BUNDLE_DIR)/$(CA_BUNDLE_CRT) \
+	--with-random=/dev/urandom \
+	--with-ssl=$(TARGET_prefix) \
+	--with-librtmp=$(TARGET_libdir) \
+	--enable-optimize
 
 libcurl: $(LIBCURL_DEPS) $(DL_DIR)/$(LIBCURL_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(LIBCURL_DIR)
-	$(UNTAR)/$(LIBCURL_SOURCE)
-	$(CHDIR)/$(LIBCURL_DIR); \
-		$(CONFIGURE) \
-			--prefix=$(prefix) \
-			--datarootdir=$(REMOVE_datarootdir) \
-			--disable-manual \
-			--disable-file \
-			--disable-rtsp \
-			--disable-dict \
-			--disable-ldap \
-			--disable-curldebug \
-			--disable-static \
-			--disable-imap \
-			--disable-gopher \
-			--disable-pop3 \
-			--disable-smtp \
-			--disable-verbose \
-			--disable-manual \
-			--disable-ntlm-wb \
-			--disable-ares \
-			--without-libidn \
-			--with-ca-bundle=$(CA-BUNDLE_DIR)/$(CA-BUNDLE) \
-			--with-random=/dev/urandom \
-			--with-ssl=$(TARGET_prefix) \
-			--with-librtmp=$(TARGET_libdir) \
-			--enable-optimize \
-			$(LIBCURL_CONF) \
-			; \
+	$(REMOVE)/$(PKG_DIR)
+	$(UNTAR)/$(PKG_SOURCE)
+	$(CHDIR)/$(PKG_DIR); \
+		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	mv $(TARGET_bindir)/curl-config $(HOST_DIR)/bin/
 	$(REWRITE_CONFIG) $(HOST_DIR)/bin/curl-config
-	rm -f $(TARGET_datadir)/zsh
-	$(REWRITE_LIBTOOL_LA)
-	$(REMOVE)/$(LIBCURL_DIR)
+	$(REWRITE_LIBTOOL)
+	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -221,30 +215,25 @@ LIBPNG_SITE   = https://sourceforge.net/projects/libpng/files/libpng16/$(LIBPNG_
 $(DL_DIR)/$(LIBPNG_SOURCE):
 	$(DOWNLOAD) $(LIBPNG_SITE)/$(LIBPNG_SOURCE)
 
-LIBPNG_PATCH  = libpng-Disable-pngfix-and-png-fix-itxt.patch
+LIBPNG_DEPS = zlib
 
-LIBPNG_DEPS   = zlib
-
-LIBPNG_CONF   = $(if $(filter $(BOXSERIES),hd5x hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse),--enable-arm-neon,--disable-arm-neon)
+LIBPNG_CONF_OPTS = \
+	--enable-silent-rules \
+	--disable-static \
+	$(if $(filter $(BOXSERIES),hd5x hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse),--enable-arm-neon,--disable-arm-neon)
 
 libpng: $(LIBPNG_DEPS) $(DL_DIR)/$(LIBPNG_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(LIBPNG_DIR)
-	$(UNTAR)/$(LIBPNG_SOURCE)
-	$(CHDIR)/$(LIBPNG_DIR); \
-		$(call apply_patches,$(LIBPNG_PATCH)); \
-		$(CONFIGURE) \
-			--prefix=$(prefix) \
-			--mandir=$(REMOVE_mandir) \
-			--enable-silent-rules \
-			--disable-static \
-			$(LIBPNG_CONF) \
-			; \
+	$(REMOVE)/$(PKG_DIR)
+	$(UNTAR)/$(PKG_SOURCE)
+	$(CHDIR)/$(PKG_DIR); \
+		$(APPLY_PATCHES); \
+		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	mv $(TARGET_bindir)/libpng*-config $(HOST_DIR)/bin/
 	$(REWRITE_CONFIG) $(HOST_DIR)/bin/libpng16-config
-	$(REWRITE_LIBTOOL_LA)
-	$(REMOVE)/$(LIBPNG_DIR)
+	$(REWRITE_LIBTOOL)
+	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -257,69 +246,63 @@ FREETYPE_SITE   = https://sourceforge.net/projects/freetype/files/freetype2/$(FR
 $(DL_DIR)/$(FREETYPE_SOURCE):
 	$(DOWNLOAD) $(FREETYPE_SITE)/$(FREETYPE_SOURCE)
 
-FREETYPE_PATCH  = freetype2-subpixel.patch
-FREETYPE_PATCH += freetype2-config.patch
-FREETYPE_PATCH += freetype2-pkgconf.patch
+FREETYPE_DEPS = zlib libpng
 
-FREETYPE_DEPS   = zlib libpng
+FREETYPE_CONF_OPTS = \
+	--enable-shared \
+	--disable-static \
+	--enable-freetype-config \
+	--with-png \
+	--with-zlib \
+	--without-harfbuzz \
+	--without-bzip2
 
 freetype: $(FREETYPE_DEPS) $(DL_DIR)/$(FREETYPE_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(FREETYPE_DIR)
-	$(UNTAR)/$(FREETYPE_SOURCE)
-	$(CHDIR)/$(FREETYPE_DIR); \
-		$(call apply_patches,$(FREETYPE_PATCH)); \
+	$(REMOVE)/$(PKG_DIR)
+	$(UNTAR)/$(PKG_SOURCE)
+	$(CHDIR)/$(PKG_DIR); \
+		$(APPLY_PATCHES); \
 		$(SED) '/^FONT_MODULES += \(type1\|cid\|pfr\|type42\|pcf\|bdf\|winfonts\|cff\)/d' modules.cfg
-	$(CHDIR)/$(FREETYPE_DIR)/builds/unix; \
+	$(CHDIR)/$(PKG_DIR)/builds/unix; \
 		libtoolize --force --copy; \
 		aclocal -I .; \
 		autoconf
-	$(CHDIR)/$(FREETYPE_DIR); \
-		$(CONFIGURE) \
-			--prefix=$(prefix) \
-			--mandir=$(REMOVE_mandir) \
-			--enable-shared \
-			--disable-static \
-			--enable-freetype-config \
-			--with-png \
-			--with-zlib \
-			--without-harfbuzz \
-			--without-bzip2 \
-			; \
+	$(CHDIR)/$(PKG_DIR); \
+		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	ln -sf freetype2 $(TARGET_includedir)/freetype
 	mv $(TARGET_bindir)/freetype-config $(HOST_DIR)/bin
 	$(REWRITE_CONFIG) $(HOST_DIR)/bin/freetype-config
-	$(REWRITE_LIBTOOL_LA)
-	$(REMOVE)/$(FREETYPE_DIR) \
+	$(REWRITE_LIBTOOL)
+	$(REMOVE)/$(PKG_DIR) \
 		$(TARGET_datadir)/aclocal
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
-LIBJPEG-TURBO_VER    = 2.0.6
-LIBJPEG-TURBO_DIR    = libjpeg-turbo-$(LIBJPEG-TURBO_VER)
-LIBJPEG-TURBO_SOURCE = libjpeg-turbo-$(LIBJPEG-TURBO_VER).tar.gz
-LIBJPEG-TURBO_SITE   = https://sourceforge.net/projects/libjpeg-turbo/files/$(LIBJPEG-TURBO_VER)
+LIBJPEG_TURBO_VER    = 2.0.6
+LIBJPEG_TURBO_DIR    = libjpeg-turbo-$(LIBJPEG_TURBO_VER)
+LIBJPEG_TURBO_SOURCE = libjpeg-turbo-$(LIBJPEG_TURBO_VER).tar.gz
+LIBJPEG_TURBO_SITE   = https://sourceforge.net/projects/libjpeg-turbo/files/$(LIBJPEG_TURBO_VER)
 
-$(DL_DIR)/$(LIBJPEG-TURBO_SOURCE):
-	$(DOWNLOAD) $(LIBJPEG-TURBO_SITE)/$(LIBJPEG-TURBO_SOURCE)
+$(DL_DIR)/$(LIBJPEG_TURBO_SOURCE):
+	$(DOWNLOAD) $(LIBJPEG_TURBO_SITE)/$(LIBJPEG_TURBO_SOURCE)
 
-LIBJPEG-TURBO_PATCH  = libjpeg-turbo-tiff-ojpeg.patch
+LIBJPEG_TURBO_CONF_OPTS = \
+	-DWITH_SIMD=False \
+	-DWITH_JPEG8=80
 
-libjpeg-turbo: $(DL_DIR)/$(LIBJPEG-TURBO_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(LIBJPEG-TURBO_DIR)
-	$(UNTAR)/$(LIBJPEG-TURBO_SOURCE)
-	$(CHDIR)/$(LIBJPEG-TURBO_DIR); \
-		$(call apply_patches,$(LIBJPEG-TURBO_PATCH)); \
-		$(CMAKE) \
-			-DWITH_SIMD=False \
-			-DWITH_JPEG8=80 \
-			; \
+libjpeg-turbo: $(DL_DIR)/$(LIBJPEG_TURBO_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(PKG_DIR)
+	$(UNTAR)/$(PKG_SOURCE)
+	$(CHDIR)/$(PKG_DIR); \
+		$(APPLY_PATCHES); \
+		$(CMAKE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	rm -f $(addprefix $(TARGET_bindir)/,cjpeg djpeg jpegtran rdjpgcom tjbench wrjpgcom)
-	$(REMOVE)/$(LIBJPEG-TURBO_DIR)
+	-rm $(addprefix $(TARGET_bindir)/,cjpeg djpeg jpegtran rdjpgcom tjbench wrjpgcom)
+	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -332,40 +315,42 @@ OPENSSL_SITE   = https://www.openssl.org/source
 $(DL_DIR)/$(OPENSSL_SOURCE):
 	$(DOWNLOAD) $(OPENSSL_SITE)/$(OPENSSL_SOURCE)
 
-OPENSSL_PATCH  = 0000-Configure-align-O-flag.patch
-
 ifeq ($(TARGET_ARCH),arm)
-  OPENSSL_ARCH = linux-armv4
+  OPENSSL_TARGET_ARCH = linux-armv4
 else ifeq ($(TARGET_ARCH),mips)
-  OPENSSL_ARCH = linux-generic32
+  OPENSSL_TARGET_ARCH = linux-generic32
 endif
 
+OPENSSL_CONV_OPTS = \
+	--cross-compile-prefix=$(TARGET_CROSS) \
+	--prefix=$(prefix) \
+	--openssldir=$(sysconfdir)/ssl
+
+OPENSSL_CONV_OPTS += \
+	$(OPENSSL_TARGET_ARCH) \
+	shared \
+	threads \
+	no-hw \
+	no-engine \
+	no-sse2 \
+	no-perlasm \
+	no-tests \
+	no-fuzz-afl \
+	no-fuzz-libfuzzer
+
+OPENSSL_CONV_OPTS += \
+	-DTERMIOS -fomit-frame-pointer \
+	-DOPENSSL_SMALL_FOOTPRINT \
+	$(TARGET_CFLAGS) \
+	$(TARGET_LDFLAGS) \
+
 openssl: $(DL_DIR)/$(OPENSSL_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(OPENSSL_DIR)
-	$(UNTAR)/$(OPENSSL_SOURCE)
-	$(CHDIR)/$(OPENSSL_DIR); \
-		$(call apply_patches,$(addprefix $(@F)/,$(OPENSSL_PATCH))); \
+	$(REMOVE)/$(PKG_DIR)
+	$(UNTAR)/$(PKG_SOURCE)
+	$(CHDIR)/$(PKG_DIR); \
+		$(APPLY_PATCHES); \
 		./Configure \
-			$(OPENSSL_ARCH) \
-			shared \
-			threads \
-			no-hw \
-			no-engine \
-			no-sse2 \
-			no-perlasm \
-			no-tests \
-			no-fuzz-afl \
-			no-fuzz-libfuzzer \
-			\
-			$(TARGET_CFLAGS) \
-			-DTERMIOS -fomit-frame-pointer \
-			-DOPENSSL_SMALL_FOOTPRINT \
-			$(TARGET_LDFLAGS) \
-			\
-			--cross-compile-prefix=$(TARGET_CROSS) \
-			--prefix=$(prefix)/ \
-			--openssldir=/etc/ssl \
-			; \
+			$($(PKG)_CONV_OPTS); \
 		$(SED) 's| build_tests||' Makefile; \
 		$(SED) 's|^MANDIR=.*|MANDIR=$(REMOVE_mandir)|' Makefile; \
 		$(SED) 's|^HTMLDIR=.*|HTMLDIR=$(REMOVE_htmldir)|' Makefile; \
@@ -384,7 +369,7 @@ endif
 		ln -sf libcrypto.so.1.0.0 $(TARGET_libdir)/libcrypto.so.$$version; \
 		ln -sf libssl.so.1.0.0 $(TARGET_libdir)/libssl.so.$$version; \
 	done
-	$(REMOVE)/$(OPENSSL_DIR)
+	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -397,53 +382,51 @@ NCURSES_SITE   = $(GNU_MIRROR)/ncurses
 $(DL_DIR)/$(NCURSES_SOURCE):
 	$(DOWNLOAD) $(NCURSES_SITE)/$(NCURSES_SOURCE)
 
-NCURSES_PATCH  = ncurses-gcc-5.x-MKlib_gen.patch
+NCURSES_CONF_OPTS = \
+	--enable-pc-files \
+	--with-pkg-config \
+	--with-pkg-config-libdir=$(libdir)/pkgconfig \
+	--with-shared \
+	--with-fallbacks='linux vt100 xterm' \
+	--disable-big-core \
+	--without-manpages \
+	--without-progs \
+	--without-tests \
+	--without-debug \
+	--without-ada \
+	--without-profile \
+	--without-cxx-binding
 
 ncurses: $(DL_DIR)/$(NCURSES_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(NCURSES_DIR)
-	$(UNTAR)/$(NCURSES_SOURCE)
-	$(CHDIR)/$(NCURSES_DIR); \
-		$(call apply_patches,$(NCURSES_PATCH)); \
-		$(CONFIGURE) \
-			--prefix=$(prefix) \
-			--enable-pc-files \
-			--with-pkg-config \
-			--with-pkg-config-libdir=$(libdir)/pkgconfig \
-			--with-shared \
-			--with-fallbacks='linux vt100 xterm' \
-			--disable-big-core \
-			--without-manpages \
-			--without-progs \
-			--without-tests \
-			--without-debug \
-			--without-ada \
-			--without-profile \
-			--without-cxx-binding \
-			; \
+	$(REMOVE)/$(PKG_DIR)
+	$(UNTAR)/$(PKG_SOURCE)
+	$(CHDIR)/$(PKG_DIR); \
+		$(APPLY_PATCHES); \
+		$(CONFIGURE); \
 		$(MAKE) libs; \
 		$(MAKE) install.libs DESTDIR=$(TARGET_DIR)
-	rm -f $(addprefix $(TARGET_libdir)/,libform* libmenu* libpanel*)
-	rm -f $(addprefix $(TARGET_libdir)/pkgconfig/,form.pc menu.pc panel.pc)
-	rm -f $(HOST_DIR)/bin/ncurses*
+	-rm $(addprefix $(TARGET_libdir)/,libform* libmenu* libpanel*)
+	-rm $(addprefix $(TARGET_libdir)/pkgconfig/,form.pc menu.pc panel.pc)
 	mv $(TARGET_bindir)/ncurses6-config $(HOST_DIR)/bin
 	$(REWRITE_CONFIG) $(HOST_DIR)/bin/ncurses6-config
-	$(REMOVE)/$(NCURSES_DIR)
+	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
-openthreads: $(SOURCE_DIR)/$(NI-OPENTHREADS) | $(TARGET_DIR)
-	$(REMOVE)/$(NI-OPENTHREADS)
-	tar -C $(SOURCE_DIR) -cp $(NI-OPENTHREADS) --exclude-vcs | tar -C $(BUILD_DIR) -x
-	$(CHDIR)/$(NI-OPENTHREADS)/; \
-		$(CMAKE) \
-			-DCMAKE_SUPPRESS_DEVELOPER_WARNINGS="1" \
-			-D_OPENTHREADS_ATOMIC_USE_GCC_BUILTINS_EXITCODE="0" \
-			; \
+OPENTHREADS_CONF_OPTS = \
+	-DCMAKE_SUPPRESS_DEVELOPER_WARNINGS="1" \
+	-D_OPENTHREADS_ATOMIC_USE_GCC_BUILTINS_EXITCODE="0" \
+	-D_OPENTHREADS_ATOMIC_USE_GCC_BUILTINS_EXITCODE__TRYRUN_OUTPUT="1"
+
+openthreads: $(SOURCE_DIR)/$(NI_OPENTHREADS) | $(TARGET_DIR)
+	$(REMOVE)/$(NI_OPENTHREADS)
+	tar -C $(SOURCE_DIR) -cp $(NI_OPENTHREADS) --exclude-vcs | tar -C $(BUILD_DIR) -x
+	$(CHDIR)/$(NI_OPENTHREADS)/; \
+		$(CMAKE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	rm -f $(TARGET_libdir)/cmake
-	$(REMOVE)/$(NI-OPENTHREADS)
+	$(REMOVE)/$(NI_OPENTHREADS)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -456,48 +439,44 @@ LIBUSB_SITE   = https://github.com/libusb/libusb/releases/download/v$(LIBUSB_VER
 $(DL_DIR)/$(LIBUSB_SOURCE):
 	$(DOWNLOAD) $(LIBUSB_SITE)/$(LIBUSB_SOURCE)
 
+LIBUSB_CONF_OPTS = \
+	--disable-udev
+
 libusb: $(DL_DIR)/$(LIBUSB_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(LIBUSB_DIR)
-	$(UNTAR)/$(LIBUSB_SOURCE)
-	$(CHDIR)/$(LIBUSB_DIR); \
-		$(CONFIGURE) \
-			--prefix=$(prefix) \
-			--disable-udev \
-			; \
+	$(REMOVE)/$(PKG_DIR)
+	$(UNTAR)/$(PKG_SOURCE)
+	$(CHDIR)/$(PKG_DIR); \
+		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR); \
-	$(REWRITE_LIBTOOL_LA)
-	$(REMOVE)/$(LIBUSB_DIR)
+	$(REWRITE_LIBTOOL)
+	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
-LIBUSB-COMPAT_VER    = 0.1.7
-LIBUSB-COMPAT_DIR    = libusb-compat-$(LIBUSB-COMPAT_VER)
-LIBUSB-COMPAT_SOURCE = libusb-compat-$(LIBUSB-COMPAT_VER).tar.bz2
-LIBUSB-COMPAT_SITE   = https://github.com/libusb/libusb-compat-0.1/releases/download/v$(LIBUSB-COMPAT_VER)
+LIBUSB_COMPAT_VER    = 0.1.7
+LIBUSB_COMPAT_DIR    = libusb-compat-$(LIBUSB_COMPAT_VER)
+LIBUSB_COMPAT_SOURCE = libusb-compat-$(LIBUSB_COMPAT_VER).tar.bz2
+LIBUSB_COMPAT_SITE   = https://github.com/libusb/libusb-compat-0.1/releases/download/v$(LIBUSB_COMPAT_VER)
 
-$(DL_DIR)/$(LIBUSB-COMPAT_SOURCE):
-	$(DOWNLOAD) $(LIBUSB-COMPAT_SITE)/$(LIBUSB-COMPAT_SOURCE)
+$(DL_DIR)/$(LIBUSB_COMPAT_SOURCE):
+	$(DOWNLOAD) $(LIBUSB_COMPAT_SITE)/$(LIBUSB_COMPAT_SOURCE)
 
-LIBUSB-COMPAT_PATCH  = 0001-fix-a-build-issue-on-linux.patch
+LIBUSB_COMPAT_DEPS = libusb
 
-LUBUSB-COMPAT_DEPS   = libusb
-
-libusb-compat: $(LUBUSB-COMPAT_DEPS) $(DL_DIR)/$(LIBUSB-COMPAT_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(LIBUSB-COMPAT_DIR)
-	$(UNTAR)/$(LIBUSB-COMPAT_SOURCE)
-	$(CHDIR)/$(LIBUSB-COMPAT_DIR); \
-		$(call apply_patches,$(addprefix $(@F)/,$(LIBUSB-COMPAT_PATCH))); \
-		$(CONFIGURE) \
-			--prefix=$(prefix) \
-			; \
+libusb-compat: $(LIBUSB_COMPAT_DEPS) $(DL_DIR)/$(LIBUSB_COMPAT_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(PKG_DIR)
+	$(UNTAR)/$(PKG_SOURCE)
+	$(CHDIR)/$(PKG_DIR); \
+		$(APPLY_PATCHES); \
+		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR); \
 	mv $(TARGET_bindir)/libusb-config $(HOST_DIR)/bin
 	$(REWRITE_CONFIG) $(HOST_DIR)/bin/libusb-config
-	$(REWRITE_LIBTOOL_LA)
-	$(REMOVE)/$(LIBUSB-COMPAT_DIR)
+	$(REWRITE_LIBTOOL)
+	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -510,24 +489,23 @@ LIBGD_SITE   = https://github.com/libgd/libgd/releases/download/gd-$(LIBGD_VER)
 $(DL_DIR)/$(LIBGD_SOURCE):
 	$(DOWNLOAD) $(LIBGD_SITE)/$(LIBGD_SOURCE)
 
-LIBGD_DEPS   = zlib libpng libjpeg-turbo freetype
+LIBGD_DEPS = zlib libpng libjpeg-turbo freetype
+
+LIBGD_CONF_OPTS = \
+	--bindir=$(REMOVE_bindir) \
+	--without-fontconfig \
+	--without-xpm \
+	--without-x
 
 libgd: $(LIBGD_DEPS) $(DL_DIR)/$(LIBGD_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(LIBGD_DIR)
-	$(UNTAR)/$(LIBGD_SOURCE)
-	$(CHDIR)/$(LIBGD_DIR); \
-		./bootstrap.sh; \
-		$(CONFIGURE) \
-			--prefix=$(prefix) \
-			--bindir=$(REMOVE_bindir) \
-			--without-fontconfig \
-			--without-xpm \
-			--without-x \
-			; \
+	$(REMOVE)/$(PKG_DIR)
+	$(UNTAR)/$(PKG_SOURCE)
+	$(CHDIR)/$(PKG_DIR); \
+		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL_LA)
-	$(REMOVE)/$(LIBGD_DIR)
+	$(REWRITE_LIBTOOL)
+	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -537,23 +515,23 @@ LIBDPF_DIR    = dpf-ax.$(LIBDPF_VER)
 LIBDPF_SOURCE = dpf-ax.$(LIBDPF_VER)
 LIBDPF_SITE   = $(GITHUB)/MaxWiesel
 
-LIBDPF_PATCH  = libdpf-crossbuild.patch
+LIBDPF_DEPS = libusb-compat
 
-LIBDPF_DEPS   = libusb-compat
+LIBDPF_MAKE_OPTS = \
+	CC=$(TARGET_CC) PREFIX=$(TARGET_prefix)
 
 libdpf: $(LIBDPF_DEPS) | $(TARGET_DIR)
-	$(REMOVE)/$(LIBDPF_DIR)
-	$(GET-GIT-SOURCE) $(LIBDPF_SITE)/$(LIBDPF_SOURCE) $(DL_DIR)/$(LIBDPF_SOURCE)
-	$(CPDIR)/$(LIBDPF_SOURCE)
-	$(CHDIR)/$(LIBDPF_DIR)/dpflib; \
-		$(call apply_patches,$(LIBDPF_PATCH)); \
-		make libdpf.a CC=$(TARGET_CC) PREFIX=$(TARGET_prefix); \
-		mkdir -p $(TARGET_includedir)/libdpf; \
-		cp dpf.h $(TARGET_includedir)/libdpf/libdpf.h; \
-		cp ../include/spiflash.h $(TARGET_includedir)/libdpf/; \
-		cp ../include/usbuser.h $(TARGET_includedir)/libdpf/; \
-		cp libdpf.a $(TARGET_libdir)/
-	$(REMOVE)/$(LIBDPF_DIR)
+	$(REMOVE)/$(PKG_DIR)
+	$(GET-GIT-SOURCE) $(PKG_SITE)/$(PKG_SOURCE) $(DL_DIR)/$(PKG_SOURCE)
+	$(CPDIR)/$(PKG_SOURCE)
+	$(CHDIR)/$(PKG_DIR); \
+		$(APPLY_PATCHES); \
+		$(MAKE1) -C dpflib libdpf.a $($(PKG)_MAKE_OPTS)
+	$(INSTALL_DATA) -D $(PKG_BUILD_DIR)/dpflib/libdpf.a $(TARGET_libdir)/libdpf.a
+	$(INSTALL_DATA) -D $(PKG_BUILD_DIR)/dpflib/dpf.h $(TARGET_includedir)/libdpf/libdpf.h
+	$(INSTALL_DATA) -D $(PKG_BUILD_DIR)/include/spiflash.h $(TARGET_includedir)/libdpf/spiflash.h
+	$(INSTALL_DATA) -D $(PKG_BUILD_DIR)/include/usbuser.h $(TARGET_includedir)/libdpf/usbuser.h
+	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -567,18 +545,14 @@ $(DL_DIR)/$(LZO_SOURCE):
 	$(DOWNLOAD) $(LZO_SITE)/$(LZO_SOURCE)
 
 lzo: $(DL_DIR)/$(LZO_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(LZO_DIR)
-	$(UNTAR)/$(LZO_SOURCE)
-	$(CHDIR)/$(LZO_DIR); \
-		$(CONFIGURE) \
-			--mandir=$(REMOVE_mandir) \
-			--docdir=$(REMOVE_docdir) \
-			--prefix=$(prefix) \
-			; \
+	$(REMOVE)/$(PKG_DIR)
+	$(UNTAR)/$(PKG_SOURCE)
+	$(CHDIR)/$(PKG_DIR); \
+		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL_LA)
-	$(REMOVE)/$(LZO_DIR)
+	$(REWRITE_LIBTOOL)
+	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -591,21 +565,23 @@ LIBSIGC_SITE   = https://download.gnome.org/sources/libsigc++/$(basename $(LIBSI
 $(DL_DIR)/$(LIBSIGC_SOURCE):
 	$(DOWNLOAD) $(LIBSIGC_SITE)/$(LIBSIGC_SOURCE)
 
+LIBSIGC_CONF_OPTS = \
+	--disable-benchmark \
+	--disable-documentation \
+	--disable-warnings \
+	--without-boost
+
 libsigc: $(DL_DIR)/$(LIBSIGC_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(LIBSIGC_DIR)
-	$(UNTAR)/$(LIBSIGC_SOURCE)
-	$(CHDIR)/$(LIBSIGC_DIR); \
-		$(CONFIGURE) \
-			--prefix=$(prefix) \
-			--disable-documentation \
-			--enable-silent-rules \
-			; \
+	$(REMOVE)/$(PKG_DIR)
+	$(UNTAR)/$(PKG_SOURCE)
+	$(CHDIR)/$(PKG_DIR); \
+		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR); \
 		cp sigc++config.h $(TARGET_includedir)
 	ln -sf ./sigc++-2.0/sigc++ $(TARGET_includedir)/sigc++
-	$(REWRITE_LIBTOOL_LA)
-	$(REMOVE)/$(LIBSIGC_DIR)
+	$(REWRITE_LIBTOOL)
+	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -618,26 +594,23 @@ EXPAT_SITE   = https://sourceforge.net/projects/expat/files/expat/$(EXPAT_VER)
 $(DL_DIR)/$(EXPAT_SOURCE):
 	$(DOWNLOAD) $(EXPAT_SITE)/$(EXPAT_SOURCE)
 
-EXPAT_PATCH  = expat-libtool-tag.patch
+EXPAT_AUTORECONF = YES
+
+EXPAT_CONF_OPTS = \
+	--docdir=$(REMOVE_docdir) \
+	--without-xmlwf \
+	--without-docbook
 
 expat: $(DL_DIR)/$(EXPAT_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(EXPAT_DIR)
-	$(UNTAR)/$(EXPAT_SOURCE)
-	$(CHDIR)/$(EXPAT_DIR); \
-		$(call apply_patches,$(EXPAT_PATCH)); \
-		autoreconf -fi; \
-		$(CONFIGURE) \
-			--prefix=$(prefix) \
-			--docdir=$(REMOVE_docdir) \
-			--mandir=$(REMOVE_mandir) \
-			--enable-shared \
-			--disable-static \
-			--without-xmlwf \
-			; \
+	$(REMOVE)/$(PKG_DIR)
+	$(UNTAR)/$(PKG_SOURCE)
+	$(CHDIR)/$(PKG_DIR); \
+		$(APPLY_PATCHES); \
+		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL_LA)
-	$(REMOVE)/$(EXPAT_DIR)
+	$(REWRITE_LIBTOOL)
+	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -650,39 +623,36 @@ LIBBLURAY_SITE   = ftp.videolan.org/pub/videolan/libbluray/$(LIBBLURAY_VER)
 $(DL_DIR)/$(LIBBLURAY_SOURCE):
 	$(DOWNLOAD) $(LIBBLURAY_SITE)/$(LIBBLURAY_SOURCE)
 
-LIBBLURAY_PATCH  = libbluray.patch
-
-LIBBLURAY_DEPS   = freetype
+LIBBLURAY_DEPS = freetype
 ifeq ($(BOXSERIES),hd2)
   LIBBLURAY_DEPS += libaacs libbdplus
 endif
 
+LIBBLURAY_CONF_OPTS = \
+	--enable-shared \
+	--disable-static \
+	--disable-extra-warnings \
+	--disable-doxygen-doc \
+	--disable-doxygen-dot \
+	--disable-doxygen-html \
+	--disable-doxygen-ps \
+	--disable-doxygen-pdf \
+	--disable-examples \
+	--disable-bdjava \
+	--without-libxml2 \
+	--without-fontconfig
+
 libbluray: $(LIBBLURAY_DEPS) $(DL_DIR)/$(LIBBLURAY_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(LIBBLURAY_DIR)
-	$(UNTAR)/$(LIBBLURAY_SOURCE)
-	$(CHDIR)/$(LIBBLURAY_DIR); \
-		$(call apply_patches,$(LIBBLURAY_PATCH)); \
+	$(REMOVE)/$(PKG_DIR)
+	$(UNTAR)/$(PKG_SOURCE)
+	$(CHDIR)/$(PKG_DIR); \
+		$(APPLY_PATCHES); \
 		./bootstrap; \
-		$(CONFIGURE) \
-			--prefix=$(prefix) \
-			--enable-shared \
-			--disable-static \
-			--disable-extra-warnings \
-			--disable-doxygen-doc \
-			--disable-doxygen-dot \
-			--disable-doxygen-html \
-			--disable-doxygen-ps \
-			--disable-doxygen-pdf \
-			--disable-examples \
-			--disable-bdjava \
-			--without-libxml2 \
-			--without-fontconfig \
-			$(BLURAY_CONFIGURE) \
-			; \
+		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL_LA)
-	$(REMOVE)/$(LIBBLURAY_DIR)
+	$(REWRITE_LIBTOOL)
+	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -695,64 +665,64 @@ LIBASS_SITE   = https://github.com/libass/libass/releases/download/$(LIBASS_VER)
 $(DL_DIR)/$(LIBASS_SOURCE):
 	$(DOWNLOAD) $(LIBASS_SITE)/$(LIBASS_SOURCE)
 
-LIBASS_PATCH  = libass.patch
+LIBASS_DEPS = freetype fribidi
 
-LIBASS_DEPS   = freetype fribidi
+LIBASS_CONF_OPTS = \
+	--disable-static \
+	--disable-test \
+	--disable-fontconfig \
+	--disable-harfbuzz \
+	--disable-require-system-font-provider
 
 libass: $(LIBASS_DEPS) $(DL_DIR)/$(LIBASS_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(LIBASS_DIR)
-	$(UNTAR)/$(LIBASS_SOURCE)
-	$(CHDIR)/$(LIBASS_DIR); \
-		$(call apply_patches,$(LIBASS_PATCH)); \
-		$(CONFIGURE) \
-			--prefix=$(prefix) \
-			--disable-static \
-			--disable-test \
-			--disable-fontconfig \
-			--disable-harfbuzz \
-			--disable-require-system-font-provider \
-			; \
+	$(REMOVE)/$(PKG_DIR)
+	$(UNTAR)/$(PKG_SOURCE)
+	$(CHDIR)/$(PKG_DIR); \
+		$(APPLY_PATCHES); \
+		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL_LA)
-	$(REMOVE)/$(LIBASS_DIR)
+	$(REWRITE_LIBTOOL)
+	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 	
 # -----------------------------------------------------------------------------
 
-LIBGPG-ERROR_VER    = 1.37
-LIBGPG-ERROR_DIR    = libgpg-error-$(LIBGPG-ERROR_VER)
-LIBGPG-ERROR_SOURCE = libgpg-error-$(LIBGPG-ERROR_VER).tar.bz2
-LIBGPG-ERROR_SITE   = ftp://ftp.gnupg.org/gcrypt/libgpg-error
+LIBGPG_ERROR_VER    = 1.37
+LIBGPG_ERROR_DIR    = libgpg-error-$(LIBGPG_ERROR_VER)
+LIBGPG_ERROR_SOURCE = libgpg-error-$(LIBGPG_ERROR_VER).tar.bz2
+LIBGPG_ERROR_SITE   = ftp://ftp.gnupg.org/gcrypt/libgpg-error
 
-$(DL_DIR)/$(LIBGPG-ERROR_SOURCE):
-	$(DOWNLOAD) $(LIBGPG-ERROR_SITE)/$(LIBGPG-ERROR_SOURCE)
+$(DL_DIR)/$(LIBGPG_ERROR_SOURCE):
+	$(DOWNLOAD) $(LIBGPG_ERROR_SITE)/$(LIBGPG_ERROR_SOURCE)
 
-libgpg-error: $(DL_DIR)/$(LIBGPG-ERROR_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(LIBGPG-ERROR_DIR)
-	$(UNTAR)/$(LIBGPG-ERROR_SOURCE)
-	$(CHDIR)/$(LIBGPG-ERROR_DIR); \
+LIBGPG_ERROR_AUTORECONF = YES
+
+LIBGPG_ERROR_CONF_OPTS = \
+	--datarootdir=$(REMOVE_datarootdir) \
+	--enable-maintainer-mode \
+	--enable-shared \
+	--disable-doc \
+	--disable-languages \
+	--disable-static \
+	--disable-tests
+
+libgpg-error: $(DL_DIR)/$(LIBGPG_ERROR_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(PKG_DIR)
+	$(UNTAR)/$(PKG_SOURCE)
+	$(CHDIR)/$(PKG_DIR); \
 		pushd src/syscfg; \
 			ln -s lock-obj-pub.arm-unknown-linux-gnueabi.h lock-obj-pub.$(TARGET).h; \
 			ln -s lock-obj-pub.arm-unknown-linux-gnueabi.h lock-obj-pub.linux-uclibcgnueabi.h; \
 		popd; \
-		$(CONFIGURE) \
-			--prefix=$(prefix) \
-			--datarootdir=$(REMOVE_datarootdir) \
-			--enable-maintainer-mode \
-			--enable-shared \
-			--disable-doc \
-			--disable-languages \
-			--disable-static \
-			--disable-tests \
-			; \
+		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	mv $(TARGET_bindir)/gpg-error-config $(HOST_DIR)/bin
 	$(REWRITE_CONFIG) $(HOST_DIR)/bin/gpg-error-config
-	$(REWRITE_LIBTOOL_LA)
-	rm -f $(addprefix $(TARGET_bindir)/,gpg-error gpgrt-config)
-	$(REMOVE)/$(LIBGPG-ERROR_DIR)
+	$(REWRITE_LIBTOOL)
+	-rm $(addprefix $(TARGET_bindir)/,gpg-error gpgrt-config)
+	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -765,30 +735,28 @@ LIBGCRYPT_SITE   = ftp://ftp.gnupg.org/gcrypt/libgcrypt
 $(DL_DIR)/$(LIBGCRYPT_SOURCE):
 	$(DOWNLOAD) $(LIBGCRYPT_SITE)/$(LIBGCRYPT_SOURCE)
 
-LIBGCRYPT_DEPS   = libgpg-error
+LIBGCRYPT_DEPS = libgpg-error
+
+LIBGCRYPT_CONF_OPTS = \
+	--datarootdir=$(REMOVE_datarootdir) \
+	--enable-maintainer-mode \
+	--enable-silent-rules \
+	--enable-shared \
+	--disable-static \
+	--disable-tests
 
 libgcrypt: $(LIBGCRYPT_DEPS) $(DL_DIR)/$(LIBGCRYPT_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(LIBGCRYPT_DIR)
-	$(UNTAR)/$(LIBGCRYPT_SOURCE)
-	$(CHDIR)/$(LIBGCRYPT_DIR); \
-		$(CONFIGURE) \
-			--prefix=$(prefix) \
-			--datarootdir=$(REMOVE_datarootdir) \
-			--enable-maintainer-mode \
-			--enable-silent-rules \
-			--enable-shared \
-			--disable-static \
-			--disable-tests \
-			; \
+	$(REMOVE)/$(PKG_DIR)
+	$(UNTAR)/$(PKG_SOURCE)
+	$(CHDIR)/$(PKG_DIR); \
+		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	mv $(TARGET_bindir)/libgcrypt-config $(HOST_DIR)/bin
 	$(REWRITE_CONFIG) $(HOST_DIR)/bin/libgcrypt-config
-	$(REWRITE_LIBTOOL_LA)
-	rm -rf $(TARGET_bindir)/dumpsexp
-	rm -rf $(TARGET_bindir)/hmac256
-	rm -rf $(TARGET_bindir)/mpicalc
-	$(REMOVE)/$(LIBGCRYPT_DIR)
+	$(REWRITE_LIBTOOL)
+	-rm $(addprefix $(TARGET_bindir)/,dumpsexp hmac256 mpicalc)
+	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -801,27 +769,27 @@ LIBAACS_SITE   = ftp://ftp.videolan.org/pub/videolan/libaacs/$(LIBAACS_VER)
 $(DL_DIR)/$(LIBAACS_SOURCE):
 	$(DOWNLOAD) $(LIBAACS_SITE)/$(LIBAACS_SOURCE)
 
-LIBAACS_DEPS   = libgcrypt
+LIBAACS_DEPS = libgcrypt
+
+LIBAACS_CONF_OPTS = \
+	--enable-maintainer-mode \
+	--enable-silent-rules \
+	--enable-shared \
+	--disable-static
 
 libaacs: $(LIBAACS_DEPS) $(DL_DIR)/$(LIBAACS_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(LIBAACS_DIR)
-	$(UNTAR)/$(LIBAACS_SOURCE)
-	$(CHDIR)/$(LIBAACS_DIR); \
+	$(REMOVE)/$(PKG_DIR)
+	$(UNTAR)/$(PKG_SOURCE)
+	$(CHDIR)/$(PKG_DIR); \
 		./bootstrap; \
-		$(CONFIGURE) \
-			--prefix=$(prefix) \
-			--enable-maintainer-mode \
-			--enable-silent-rules \
-			--enable-shared \
-			--disable-static \
-			; \
+		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL_LA)
+	$(REWRITE_LIBTOOL)
 	$(CD) $(TARGET_DIR); \
 		mkdir -p .config/aacs .cache/aacs/vuk
 	cp $(TARGET_FILES)/libaacs/KEYDB.cfg $(TARGET_DIR)/.config/aacs
-	$(REMOVE)/$(LIBAACS_DIR)
+	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -834,27 +802,27 @@ LIBBDPLUS_SITE   = ftp://ftp.videolan.org/pub/videolan/libbdplus/$(LIBBDPLUS_VER
 $(DL_DIR)/$(LIBBDPLUS_SOURCE):
 	$(DOWNLOAD) $(LIBBDPLUS_SITE)/$(LIBBDPLUS_SOURCE)
 
-LIBBDPLUS_DEPS   = libaacs
+LIBBDPLUS_DEPS = libaacs
+
+LIBBDPLUS_CONF_OPTS = \
+	--enable-maintainer-mode \
+	--enable-silent-rules \
+	--enable-shared \
+	--disable-static
 
 libbdplus: $(LIBBDPLUS_DEPS) $(DL_DIR)/$(LIBBDPLUS_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(LIBBDPLUS_DIR)
-	$(UNTAR)/$(LIBBDPLUS_SOURCE)
-	$(CHDIR)/$(LIBBDPLUS_DIR); \
+	$(REMOVE)/$(PKG_DIR)
+	$(UNTAR)/$(PKG_SOURCE)
+	$(CHDIR)/$(PKG_DIR); \
 		./bootstrap; \
-		$(CONFIGURE) \
-			--prefix=$(prefix) \
-			--enable-maintainer-mode \
-			--enable-silent-rules \
-			--enable-shared \
-			--disable-static \
-			; \
+		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL_LA)
+	$(REWRITE_LIBTOOL)
 	$(CD) $(TARGET_DIR); \
 		mkdir -p .config/bdplus/vm0
 	cp -f $(TARGET_FILES)/libbdplus/* $(TARGET_DIR)/.config/bdplus/vm0
-	$(REMOVE)/$(LIBBDPLUS_DIR)
+	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -867,34 +835,34 @@ LIBXML2_SITE   = http://xmlsoft.org/sources
 $(DL_DIR)/$(LIBXML2_SOURCE):
 	$(DOWNLOAD) $(LIBXML2_SITE)/$(LIBXML2_SOURCE)
 
+LIBXML2_CONF_OPTS = \
+	--datarootdir=$(REMOVE_datarootdir) \
+	--enable-shared \
+	--disable-static \
+	--without-python \
+	--without-debug \
+	--without-c14n \
+	--without-legacy \
+	--without-catalog \
+	--without-docbook \
+	--without-mem-debug \
+	--without-lzma \
+	--without-schematron
+
 libxml2: $(DL_DIR)/$(LIBXML2_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(LIBXML2_DIR)
-	$(UNTAR)/$(LIBXML2_SOURCE)
-	$(CHDIR)/$(LIBXML2_DIR); \
+	$(REMOVE)/$(PKG_DIR)
+	$(UNTAR)/$(PKG_SOURCE)
+	$(CHDIR)/$(PKG_DIR); \
 		$(APPLY_PATCHES); \
-		$(CONFIGURE) \
-			--prefix=$(prefix) \
-			--enable-shared \
-			--disable-static \
-			--datarootdir=$(REMOVE_datarootdir) \
-			--without-python \
-			--without-debug \
-			--without-c14n \
-			--without-legacy \
-			--without-catalog \
-			--without-docbook \
-			--without-mem-debug \
-			--without-lzma \
-			--without-schematron \
-			; \
+		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	mv $(TARGET_bindir)/xml2-config $(HOST_DIR)/bin
 	$(REWRITE_CONFIG) $(HOST_DIR)/bin/xml2-config
-	$(REWRITE_LIBTOOL_LA)
-	rm -rf $(TARGET_libdir)/xml2Conf.sh
-	rm -rf $(TARGET_libdir)/cmake
-	$(REMOVE)/$(LIBXML2_DIR)
+	$(REWRITE_LIBTOOL)
+	-rm -r $(TARGET_libdir)/cmake
+	-rm $(addprefix $(TARGET_libdir)/,xml2Conf.sh)
+	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -907,18 +875,16 @@ PUGIXML_SITE   = https://github.com/zeux/pugixml/releases/download/v$(PUGIXML_VE
 $(DL_DIR)/$(PUGIXML_SOURCE):
 	$(DOWNLOAD) $(PUGIXML_SITE)/$(PUGIXML_SOURCE)
 
-PUGIXML_PATCH  = pugixml-config.patch
-
 pugixml: $(DL_DIR)/$(PUGIXML_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PUGIXML_DIR)
-	$(UNTAR)/$(PUGIXML_SOURCE)
-	$(CHDIR)/$(PUGIXML_DIR); \
-		$(call apply_patches,$(PUGIXML_PATCH)); \
+	$(REMOVE)/$(PKG_DIR)
+	$(UNTAR)/$(PKG_SOURCE)
+	$(CHDIR)/$(PKG_DIR); \
+		$(APPLY_PATCHES); \
 		$(CMAKE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	-rm -r $(TARGET_libdir)/cmake
-	$(REMOVE)/$(PUGIXML_DIR)
+	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -931,38 +897,41 @@ LIBROXML_SITE   = http://download.libroxml.net/pool/v3.x
 $(DL_DIR)/$(LIBROXML_SOURCE):
 	$(DOWNLOAD) $(LIBROXML_SITE)/$(LIBROXML_SOURCE)
 
+LIBROXML_CONF_OPTS = \
+	--disable-roxml
+
 libroxml: $(DL_DIR)/$(LIBROXML_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(LIBROXML_DIR)
-	$(UNTAR)/$(LIBROXML_SOURCE)
-	$(CHDIR)/$(LIBROXML_DIR); \
-		$(CONFIGURE) \
-			--prefix=$(prefix) \
-			--disable-roxml \
-			; \
+	$(REMOVE)/$(PKG_DIR)
+	$(UNTAR)/$(PKG_SOURCE)
+	$(CHDIR)/$(PKG_DIR); \
+		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL_LA)
-	$(REMOVE)/$(LIBROXML_DIR)
+	$(REWRITE_LIBTOOL)
+	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
-RTMPDUMP_DEPS   = zlib openssl
+RTMPDUMP_DEPS = zlib openssl
+
+RTMPDUMP_MAKE_ENV = \
+	CROSS_COMPILE=$(TARGET_CROSS) \
+	XCFLAGS="$(TARGET_CFLAGS)" \
+	XLDFLAGS="$(TARGET_LDFLAGS)"
 
 RTMPDUMP_MAKE_OPTS = \
-	prefix= \
+	prefix=$(prefix) \
 	mandir=$(REMOVE_mandir)
 
-rtmpdump: $(RTMPDUMP_DEPS) $(SOURCE_DIR)/$(NI-RTMPDUMP) | $(TARGET_DIR)
-	$(REMOVE)/$(NI-RTMPDUMP)
-	tar -C $(SOURCE_DIR) -cp $(NI-RTMPDUMP) --exclude-vcs | tar -C $(BUILD_DIR) -x
-	$(CHDIR)/$(NI-RTMPDUMP); \
-		$(MAKE) $(RTMPDUMP_MAKE_OPTS) CROSS_COMPILE=$(TARGET_CROSS) XCFLAGS="$(TARGET_CFLAGS)" XLDFLAGS="$(TARGET_LDFLAGS)"; \
-		$(MAKE) $(RTMPDUMP_MAKE_OPTS) install prefix=$(prefix) DESTDIR=$(TARGET_DIR)
-	rm -rf $(TARGET_DIR)/sbin/rtmpgw
-	rm -rf $(TARGET_DIR)/sbin/rtmpsrv
-	rm -rf $(TARGET_DIR)/sbin/rtmpsuck
-	$(REMOVE)/$(NI-RTMPDUMP)
+rtmpdump: $(RTMPDUMP_DEPS) $(SOURCE_DIR)/$(NI_RTMPDUMP) | $(TARGET_DIR)
+	$(REMOVE)/$(NI_RTMPDUMP)
+	tar -C $(SOURCE_DIR) -cp $(NI_RTMPDUMP) --exclude-vcs | tar -C $(BUILD_DIR) -x
+	$(CHDIR)/$(NI_RTMPDUMP); \
+		$($(PKG)_MAKE_ENV) $(MAKE) $($(PKG)_MAKE_OPTS); \
+		$($(PKG)_MAKE_ENV) $(MAKE) $($(PKG)_MAKE_OPTS) install DESTDIR=$(TARGET_DIR)
+	-rm $(addprefix $(TARGET_sbindir)/,rtmpgw rtmpsrv rtmpsuck)
+	$(REMOVE)/$(NI_RTMPDUMP)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -975,30 +944,25 @@ LIBTIRPC_SITE   = https://sourceforge.net/projects/libtirpc/files/libtirpc/$(LIB
 $(DL_DIR)/$(LIBTIRPC_SOURCE):
 	$(DOWNLOAD) $(LIBTIRPC_SITE)/$(LIBTIRPC_SOURCE)
 
-LIBTIRP_PATCH  = 0001-Disable-parts-of-TIRPC-requiring-NIS-support.patch
-LIBTIRP_PATCH += 0003-Automatically-generate-XDR-header-files-from-.x-sour.patch
-LIBTIRP_PATCH += 0004-Add-more-XDR-files-needed-to-build-rpcbind-on-top-of.patch
+LIBTIRPC_AUTORECONF = YES
+
+LIBTIRPC_CONF_OPTS = \
+	--disable-gssapi \
+	--enable-silent-rules
 
 libtirpc: $(DL_DIR)/$(LIBTIRPC_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(LIBTIRPC_DIR)
-	$(UNTAR)/$(LIBTIRPC_SOURCE)
-	$(CHDIR)/$(LIBTIRPC_DIR); \
-		$(call apply_patches,$(addprefix $(@F)/,$(LIBTIRP_PATCH))); \
-		autoreconf -fi; \
-		$(CONFIGURE) \
-			--prefix=$(prefix) \
-			--sysconfdir=$(sysconfdir) \
-			--disable-gssapi \
-			--enable-silent-rules \
-			--mandir=$(REMOVE_mandir) \
-			; \
+	$(REMOVE)/$(PKG_DIR)
+	$(UNTAR)/$(PKG_SOURCE)
+	$(CHDIR)/$(PKG_DIR); \
+		$(APPLY_PATCHES); \
+		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL_LA)
+	$(REWRITE_LIBTOOL)
 ifeq ($(BOXSERIES),hd1)
 	$(SED) '/^\(udp\|tcp\)6/ d' $(TARGET_sysconfdir)/netconfig
 endif
-	$(REMOVE)/$(LIBTIRPC_DIR)
+	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -1011,21 +975,20 @@ CONFUSE_SITE   = https://github.com/martinh/libconfuse/releases/download/v$(CONF
 $(DL_DIR)/$(CONFUSE_SOURCE):
 	$(DOWNLOAD) $(CONFUSE_SITE)/$(CONFUSE_SOURCE)
 
+CONFUSE_CONF_OPTS = \
+	--docdir=$(REMOVE_docdir) \
+	--enable-silent-rules \
+	--enable-static \
+	--disable-shared
+
 confuse: $(DL_DIR)/$(CONFUSE_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(CONFUSE_DIR)
-	$(UNTAR)/$(CONFUSE_SOURCE)
-	$(CHDIR)/$(CONFUSE_DIR); \
-		$(CONFIGURE) \
-			--prefix=$(prefix) \
-			--docdir=$(REMOVE_docdir) \
-			--mandir=$(REMOVE_mandir) \
-			--enable-silent-rules \
-			--enable-static \
-			--disable-shared \
-			; \
+	$(REMOVE)/$(PKG_DIR)
+	$(UNTAR)/$(PKG_SOURCE)
+	$(CHDIR)/$(PKG_DIR); \
+		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/$(CONFUSE_DIR)
+	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -1038,21 +1001,20 @@ LIBITE_SITE   = https://github.com/troglobit/libite/releases/download/v$(LIBITE_
 $(DL_DIR)/$(LIBITE_SOURCE):
 	$(DOWNLOAD) $(LIBITE_SITE)/$(LIBITE_SOURCE)
 
+LIBITE_CONF_OPTS = \
+	--docdir=$(REMOVE_docdir) \
+	--enable-silent-rules \
+	--enable-static \
+	--disable-shared
+
 libite: $(DL_DIR)/$(LIBITE_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(LIBITE_DIR)
-	$(UNTAR)/$(LIBITE_SOURCE)
-	$(CHDIR)/$(LIBITE_DIR); \
-		$(CONFIGURE) \
-			--prefix=$(prefix) \
-			--docdir=$(REMOVE_docdir) \
-			--mandir=$(REMOVE_docdir) \
-			--enable-silent-rules \
-			--enable-static \
-			--disable-shared \
-			; \
+	$(REMOVE)/$(PKG_DIR)
+	$(UNTAR)/$(PKG_SOURCE)
+	$(CHDIR)/$(PKG_DIR); \
+		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/$(LIBITE_DIR)
+	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -1065,30 +1027,24 @@ LIBMAD_SITE   = https://sourceforge.net/projects/mad/files/libmad/$(LIBMAD_VER)
 $(DL_DIR)/$(LIBMAD_SOURCE):
 	$(DOWNLOAD) $(LIBMAD_SITE)/$(LIBMAD_SOURCE)
 
-LIBMAD_PATCH  = libmad-pc.patch
-LIBMAD_PATCH += libmad-frame_length.diff
-LIBMAD_PATCH += libmad-mips-h-constraint-removal.patch
-LIBMAD_PATCH += libmad-remove-deprecated-cflags.patch
-LIBMAD_PATCH += libmad-thumb2-fixed-arm.patch
-LIBMAD_PATCH += libmad-thumb2-imdct-arm.patch
+LIBMAD_AUTORECONF = YES
+
+LIBMAD_CONF_OPTS = \
+	--enable-shared=yes \
+	--enable-accuracy \
+	--enable-fpm=arm \
+	--enable-sso
 
 libmad: $(DL_DIR)/$(LIBMAD_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(LIBMAD_DIR)
-	$(UNTAR)/$(LIBMAD_SOURCE)
-	$(CHDIR)/$(LIBMAD_DIR); \
-		$(call apply_patches,$(LIBMAD_PATCH)); \
-		autoreconf -fi; \
-		$(CONFIGURE) \
-			--prefix=$(prefix) \
-			--enable-shared=yes \
-			--enable-accuracy \
-			--enable-fpm=arm \
-			--enable-sso \
-			; \
+	$(REMOVE)/$(PKG_DIR)
+	$(UNTAR)/$(PKG_SOURCE)
+	$(CHDIR)/$(PKG_DIR); \
+		$(APPLY_PATCHES); \
+		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL_LA)
-	$(REMOVE)/$(LIBMAD_DIR)
+	$(REWRITE_LIBTOOL)
+	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -1101,20 +1057,25 @@ LIBVORBIS_SITE   = https://downloads.xiph.org/releases/vorbis
 $(DL_DIR)/$(LIBVORBIS_SOURCE):
 	$(DOWNLOAD) $(LIBVORBIS_SITE)/$(LIBVORBIS_SOURCE)
 
-LIBVORBIS_DEPS   = libogg
+LIBVORBIS_DEPS = libogg
+
+LIBVORBIS_AUTORECONF = YES
+
+LIBVORBIS_CONF_OPTS = \
+	--datarootdir=$(REMOVE_datarootdir) \
+	--disable-docs \
+	--disable-examples \
+	--disable-oggtest
 
 libvorbis: $(LIBVORBIS_DEPS) $(DL_DIR)/$(LIBVORBIS_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(LIBVORBIS_DIR)
-	$(UNTAR)/$(LIBVORBIS_SOURCE)
-	$(CHDIR)/$(LIBVORBIS_DIR); \
-		$(CONFIGURE) \
-			--prefix=$(prefix) \
-			--datarootdir=$(REMOVE_datarootdir) \
-			; \
+	$(REMOVE)/$(PKG_DIR)
+	$(UNTAR)/$(PKG_SOURCE)
+	$(CHDIR)/$(PKG_DIR); \
+		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL_LA)
-	$(REMOVE)/$(LIBVORBIS_DIR)
+	$(REWRITE_LIBTOOL)
+	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
 
@@ -1128,21 +1089,20 @@ LIBVORBISIDEC_SITE   = https://ftp.de.debian.org/debian/pool/main/libv/libvorbis
 $(DL_DIR)/$(LIBVORBISIDEC_SOURCE):
 	$(DOWNLOAD) $(LIBVORBISIDEC_SITE)/$(LIBVORBISIDEC_SOURCE)
 
-LIBVORBISIDEC_DEPS   = libogg
+LIBVORBISIDEC_DEPS = libogg
+
+LIBVORBISIDEC_AUTORECONF = YES
 
 libvorbisidec: $(LIBVORBISIDEC_DEPS) $(DL_DIR)/$(LIBVORBISIDEC_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(LIBVORBISIDEC_DIR)
-	$(UNTAR)/$(LIBVORBISIDEC_SOURCE)
-	$(CHDIR)/$(LIBVORBISIDEC_DIR); \
+	$(REMOVE)/$(PKG_DIR)
+	$(UNTAR)/$(PKG_SOURCE)
+	$(CHDIR)/$(PKG_DIR); \
 		$(SED) '122 s/^/#/' configure.in; \
-		autoreconf -fi; \
-		$(CONFIGURE) \
-			--prefix=$(prefix) \
-			; \
+		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL_LA)
-	$(REMOVE)/$(LIBVORBISIDEC_DIR)
+	$(REWRITE_LIBTOOL)
+	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -1155,19 +1115,19 @@ LIBOGG_SITE   = http://downloads.xiph.org/releases/ogg
 $(DL_DIR)/$(LIBOGG_SOURCE):
 	$(DOWNLOAD) $(LIBOGG_SITE)/$(LIBOGG_SOURCE)
 
+LIBOGG_CONF_OPTS = \
+	--datarootdir=$(REMOVE_datarootdir) \
+	--enable-shared
+
 libogg: $(DL_DIR)/$(LIBOGG_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(LIBOGG_DIR)
-	$(UNTAR)/$(LIBOGG_SOURCE)
-	$(CHDIR)/$(LIBOGG_DIR); \
-		$(CONFIGURE) \
-			--prefix=$(prefix) \
-			--datarootdir=$(REMOVE_datarootdir) \
-			--enable-shared \
-			; \
+	$(REMOVE)/$(PKG_DIR)
+	$(UNTAR)/$(PKG_SOURCE)
+	$(CHDIR)/$(PKG_DIR); \
+		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL_LA)
-	$(REMOVE)/$(LIBOGG_DIR)
+	$(REWRITE_LIBTOOL)
+	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -1180,20 +1140,20 @@ LIBEXIF_SITE   = https://github.com/libexif/libexif/releases/download/libexif-$(
 $(DL_DIR)/$(LIBEXIF_SOURCE):
 	$(DOWNLOAD) $(LIBEXIF_SITE)/$(LIBEXIF_SOURCE)
 
+LIBEXIF_CONF_OPTS = \
+	--datarootdir=$(REMOVE_datarootdir) \
+	--with-doc-dir=$(REMOVE_docdir)
+
 libexif: $(DL_DIR)/$(LIBEXIF_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(LIBEXIF_DIR)
-	$(UNTAR)/$(LIBEXIF_SOURCE)
-	$(CHDIR)/$(LIBEXIF_DIR); \
+	$(REMOVE)/$(PKG_DIR)
+	$(UNTAR)/$(PKG_SOURCE)
+	$(CHDIR)/$(PKG_DIR); \
 		$(APPLY_PATCHES); \
-		$(CONFIGURE) \
-			--prefix=$(prefix) \
-			--datarootdir=$(REMOVE_datarootdir) \
-			--with-doc-dir=$(REMOVE_docdir) \
-			; \
+		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL_LA)
-	$(REMOVE)/$(LIBEXIF_DIR)
+	$(REWRITE_LIBTOOL)
+	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -1206,20 +1166,19 @@ FRIBIDI_SITE   = https://github.com/fribidi/fribidi/releases/download/v$(FRIBIDI
 $(DL_DIR)/$(FRIBIDI_SOURCE):
 	$(DOWNLOAD) $(FRIBIDI_SITE)/$(FRIBIDI_SOURCE)
 
+FRIBIDI_CONF_OPTS = \
+	--disable-debug \
+	--disable-deprecated
+
 fribidi: $(DL_DIR)/$(FRIBIDI_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(FRIBIDI_DIR)
-	$(UNTAR)/$(FRIBIDI_SOURCE)
-	$(CHDIR)/$(FRIBIDI_DIR); \
-		$(CONFIGURE) \
-			--prefix=$(prefix) \
-			--mandir=$(REMOVE_mandir) \
-			--disable-debug \
-			--disable-deprecated \
-			; \
+	$(REMOVE)/$(PKG_DIR)
+	$(UNTAR)/$(PKG_SOURCE)
+	$(CHDIR)/$(PKG_DIR); \
+		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL_LA)
-	$(REMOVE)/$(FRIBIDI_DIR)
+	$(REWRITE_LIBTOOL)
+	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -1232,23 +1191,22 @@ LIBFFI_SITE   = https://github.com/libffi/libffi/releases/download/v$(HOST_LIBFF
 $(DL_DIR)/$(LIBFFI_SOURCE):
 	$(DOWNLOAD) $(LIBFFI_SITE)/$(LIBFFI_SOURCE)
 
-LIBFFI_CONF   = $(if $(filter $(BOXSERIES),hd1),--enable-static --disable-shared)
+LIBFFI_AUTORECONF = YES
+
+LIBFFI_CONF_OPTS = \
+	--datarootdir=$(REMOVE_datarootdir) \
+	$(if $(filter $(BOXSERIES),hd1),--enable-static --disable-shared)
 
 libffi: $(DL_DIR)/$(LIBFFI_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(LIBFFI_DIR)
-	$(UNTAR)/$(LIBFFI_SOURCE)
-	$(CHDIR)/$(LIBFFI_DIR); \
+	$(REMOVE)/$(PKG_DIR)
+	$(UNTAR)/$(PKG_SOURCE)
+	$(CHDIR)/$(PKG_DIR); \
 		$(APPLY_PATCHES); \
-		autoreconf -fi; \
-		$(CONFIGURE) \
-			--prefix=$(prefix) \
-			--datarootdir=$(REMOVE_datarootdir) \
-			$(LIBFFI_CONF) \
-			; \
+		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL_LA)
-	$(REMOVE)/$(LIBFFI_DIR)
+	$(REWRITE_LIBTOOL)
+	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -1261,26 +1219,38 @@ GLIB2_SITE   = https://ftp.gnome.org/pub/gnome/sources/glib/$(basename $(GLIB2_V
 $(DL_DIR)/$(GLIB2_SOURCE):
 	$(DOWNLOAD) $(GLIB2_SITE)/$(GLIB2_SOURCE)
 
-GLIB2_PATCH  = glib2-disable-tests.patch
-GLIB2_PATCH += glib2-automake.patch
-
-GLIB2_DEPS   = zlib libffi
+GLIB2_DEPS = zlib libffi
 ifeq ($(BOXSERIES),hd2)
   GLIB2_DEPS += gettext
 endif
 
-GLIB2_CONF   = $(if $(filter $(BOXSERIES),hd1),--enable-static --disable-shared)
+GLIB2_AUTORECONF = YES
+
+GLIB2_CONF_OPTS = \
+	--bindir=$(REMOVE_bindir) \
+	--datadir=$(REMOVE_datadir) \
+	$(if $(filter $(BOXSERIES),hd1),--enable-static --disable-shared) \
+	--cache-file=arm-linux.cache \
+	--disable-debug \
+	--disable-selinux \
+	--disable-libmount \
+	--disable-fam \
+	--disable-gtk-doc \
+	--disable-gtk-doc-html \
+	--disable-compile-warnings \
+	--with-threads="posix" \
+	--with-pcre=internal
 
 ifeq ($(BOXTYPE),$(filter $(BOXTYPE),armbox mipsbox))
   GLIB2_DEPS += libiconv
-  GLIB2_CONF += --with-libiconv=gnu
+  GLIB2_CONF_OPTS += --with-libiconv=gnu
 endif
 
 glib2: $(GLIB2_DEPS) $(DL_DIR)/$(GLIB2_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(GLIB2_DIR)
-	$(UNTAR)/$(GLIB2_SOURCE)
-	$(CHDIR)/$(GLIB2_DIR); \
-		$(call apply_patches,$(GLIB2_PATCH)); \
+	$(REMOVE)/$(PKG_DIR)
+	$(UNTAR)/$(PKG_SOURCE)
+	$(CHDIR)/$(PKG_DIR); \
+		$(APPLY_PATCHES); \
 		echo "ac_cv_type_long_long=yes"		 > arm-linux.cache; \
 		echo "glib_cv_stack_grows=no"		>> arm-linux.cache; \
 		echo "glib_cv_uscore=no"		>> arm-linux.cache; \
@@ -1288,66 +1258,55 @@ glib2: $(GLIB2_DEPS) $(DL_DIR)/$(GLIB2_SOURCE) | $(TARGET_DIR)
 		echo "glib_cv_va_val_copy=yes"		>> arm-linux.cache; \
 		echo "ac_cv_func_posix_getpwuid_r=yes"	>> arm-linux.cache; \
 		echo "ac_cv_func_posix_getgrgid_r=yes"	>> arm-linux.cache; \
-		autoreconf -fi; \
-		$(CONFIGURE) \
-			--prefix=$(prefix) \
-			--datarootdir=$(REMOVE_datarootdir) \
-			--cache-file=arm-linux.cache \
-			--disable-debug \
-			--disable-selinux \
-			--disable-libmount \
-			--disable-fam \
-			--disable-gtk-doc \
-			--disable-gtk-doc-html \
-			--disable-compile-warnings \
-			--with-threads="posix" \
-			--with-pcre=internal \
-			$(GLIB2_CONF) \
-			; \
+		$(CONFIGURE); \
+		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	rm -f $(addprefix $(TARGET_bindir)/,gapplication gdbus* gio* glib* gobject-query gresource gsettings gtester*)
-	$(REWRITE_LIBTOOL_LA)
-	$(REMOVE)/$(GLIB2_DIR)
+	$(REWRITE_LIBTOOL)
+	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
-ALSA-LIB_VER    = 1.2.4
-ALSA-LIB_DIR    = alsa-lib-$(ALSA-LIB_VER)
-ALSA-LIB_SOURCE = alsa-lib-$(ALSA-LIB_VER).tar.bz2
-ALSA-LIB_SITE   = https://www.alsa-project.org/files/pub/lib
+ALSA_LIB_VER    = 1.2.4
+ALSA_LIB_DIR    = alsa-lib-$(ALSA_LIB_VER)
+ALSA_LIB_SOURCE = alsa-lib-$(ALSA_LIB_VER).tar.bz2
+ALSA_LIB_SITE   = https://www.alsa-project.org/files/pub/lib
 
-$(DL_DIR)/$(ALSA-LIB_SOURCE):
-	$(DOWNLOAD) $(ALSA-LIB_SITE)/$(ALSA-LIB_SOURCE)
+$(DL_DIR)/$(ALSA_LIB_SOURCE):
+	$(DOWNLOAD) $(ALSA_LIB_SITE)/$(ALSA_LIB_SOURCE)
 
-alsa-lib: $(DL_DIR)/$(ALSA-LIB_SOURCE)
-	$(REMOVE)/$(ALSA-LIB_DIR)
-	$(UNTAR)/$(ALSA-LIB_SOURCE)
-	$(CHDIR)/$(ALSA-LIB_DIR); \
+ALSA_LIB_AUTORECONF = YES
+
+ALSA_LIB_CONF_OPTS = \
+	--with-alsa-devdir=/dev/snd/ \
+	--with-plugindir=$(libdir)/alsa \
+	--without-debug \
+	--with-debug=no \
+	--with-versioned=no \
+	--enable-symbolic-functions \
+	--disable-aload \
+	--disable-rawmidi \
+	--disable-resmgr \
+	--disable-old-symbols \
+	--disable-alisp \
+	--disable-ucm \
+	--disable-hwdep \
+	--disable-python \
+	--disable-topology
+
+alsa-lib: $(DL_DIR)/$(ALSA_LIB_SOURCE)
+	$(REMOVE)/$(PKG_DIR)
+	$(UNTAR)/$(PKG_SOURCE)
+	$(CHDIR)/$(PKG_DIR); \
 		$(APPLY_PATCHES); \
-		autoreconf -fi; \
-		$(CONFIGURE) \
-			--prefix=$(prefix) \
-			--datarootdir=$(REMOVE_datarootdir) \
-			--with-alsa-devdir=/dev/snd/ \
-			--with-plugindir=/lib/alsa \
-			--without-debug \
-			--with-debug=no \
-			--with-versioned=no \
-			--enable-symbolic-functions \
-			--disable-aload \
-			--disable-rawmidi \
-			--disable-resmgr \
-			--disable-old-symbols \
-			--disable-alisp \
-			--disable-hwdep \
-			--disable-python \
-			--disable-topology \
-			; \
+		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL_LA)
-	$(REMOVE)/$(ALSA-LIB_DIR)
+	$(REWRITE_LIBTOOL)
+	find $(TARGET_datadir)/alsa/cards/ -name '*.conf' ! -name 'aliases.conf' | xargs --no-run-if-empty rm
+	find $(TARGET_datadir)/alsa/pcm/ -name '*.conf' ! -name 'default.conf' ! -name 'dmix.conf' ! -name 'dsnoop.conf' | xargs --no-run-if-empty rm
+	-rm -r $(TARGET_datadir)/aclocal
+	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -1360,18 +1319,18 @@ POPT_SITE   = ftp://anduin.linuxfromscratch.org/BLFS/popt
 $(DL_DIR)/$(POPT_SOURCE):
 	$(DOWNLOAD) $(POPT_SITE)/$(POPT_SOURCE)
 
+POPT_CONF_OPTS = \
+	--datarootdir=$(REMOVE_datarootdir)
+
 popt: $(DL_DIR)/$(POPT_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(POPT_DIR)
-	$(UNTAR)/$(POPT_SOURCE)
-	$(CHDIR)/$(POPT_DIR); \
-		$(CONFIGURE) \
-			--prefix=$(prefix) \
-			--datarootdir=$(REMOVE_datarootdir) \
-			; \
+	$(REMOVE)/$(PKG_DIR)
+	$(UNTAR)/$(PKG_SOURCE)
+	$(CHDIR)/$(PKG_DIR); \
+		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL_LA)
-	$(REMOVE)/$(POPT_DIR)
+	$(REWRITE_LIBTOOL)
+	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -1384,22 +1343,25 @@ LIBICONV_SITE   = $(GNU_MIRROR)/libiconv
 $(DL_DIR)/$(LIBICONV_SOURCE):
 	$(DOWNLOAD) $(LIBICONV_SITE)/$(LIBICONV_SOURCE)
 
+LIBICONV_CONF_ENV = \
+	CPPFLAGS="$(TARGET_CPPFLAGS) -fPIC"
+
+LIBICONV_CONF_OPTS = \
+	--datarootdir=$(REMOVE_datarootdir) \
+	--enable-static \
+	--disable-shared \
+	--enable-relocatable
+
 libiconv: $(DL_DIR)/$(LIBICONV_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(LIBICONV_DIR)
-	$(UNTAR)/$(LIBICONV_SOURCE)
-	$(CHDIR)/$(LIBICONV_DIR); \
+	$(REMOVE)/$(PKG_DIR)
+	$(UNTAR)/$(PKG_SOURCE)
+	$(CHDIR)/$(PKG_DIR); \
 		$(SED) '/preload/d' Makefile.in; \
-		$(CONFIGURE) CPPFLAGS="$(TARGET_CPPFLAGS) -fPIC" \
-			--prefix=$(prefix) \
-			--datarootdir=$(REMOVE_datarootdir) \
-			--enable-static \
-			--disable-shared \
-			--enable-relocatable \
-			; \
+		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL_LA)
-	$(REMOVE)/$(LIBICONV_DIR)
+	$(REWRITE_LIBTOOL)
+	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -1419,14 +1381,14 @@ endif
 GRAPHLCD_BASE_DEPS   = freetype libiconv libusb
 
 graphlcd-base: $(GRAPHLCD_BASE_DEPS) | $(TARGET_DIR)
-	$(REMOVE)/$(GRAPHLCD_BASE_DIR)
-	$(GET-GIT-SOURCE) $(GRAPHLCD_BASE_SITE)/$(GRAPHLCD_BASE_SOURCE) $(DL_DIR)/$(GRAPHLCD_BASE_SOURCE)
-	$(CPDIR)/$(GRAPHLCD_BASE_DIR)
-	$(CHDIR)/$(GRAPHLCD_BASE_DIR); \
-		$(call apply_patches,$(addprefix $(@)/,$(GRAPHLCD_BASE_PATCH))); \
-		$(MAKE_ENV) \
+	$(REMOVE)/$(PKG_DIR)
+	$(GET-GIT-SOURCE) $(PKG_SITE)/$(PKG_SOURCE) $(DL_DIR)/$(PKG_SOURCE)
+	$(CPDIR)/$(PKG_SOURCE)
+	$(CHDIR)/$(PKG_DIR); \
+		$(call apply_patches,$(addprefix $(PKG_PATCHES_DIR)/,$(PKG_PATCH))); \
+		$(TARGET_CONFIGURE_ENV) \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR) PREFIX=$(prefix)
 	-rm -r $(TARGET_sysconfdir)/udev
-	$(REMOVE)/$(GRAPHLCD_BASE_DIR)
+	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)

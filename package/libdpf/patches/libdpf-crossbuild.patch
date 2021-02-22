@@ -1,0 +1,11 @@
+--- a/dpflib/Makefile
++++ b/dpflib/Makefile
+@@ -10,7 +10,7 @@
+ LIBS=-lusb -lsgutils2
+ endif
+ 
+-CFLAGS = -Wall -fPIC -I../include -g
++CFLAGS = -Wall -fPIC -I$(PREFIX)/include -I../include -g
+ # CFLAGS += -DDEBUG
+ 
+ ifndef DESTDIR

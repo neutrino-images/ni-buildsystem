@@ -135,7 +135,7 @@ help:
 	@echo " * make image      - Builds our beautiful NI-Image"
 	@echo ""
 	@echo "Later, you might find those useful:"
-	@echo " * make update-all - Update buildsystem and all sources"
+	@echo " * make update     - Update buildsystem and all sources"
 	@echo ""
 	@echo "Cleanup:"
 	@echo " * make clean      - Clean up from previous build an prepare for a new one"

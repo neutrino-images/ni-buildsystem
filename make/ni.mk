@@ -3,7 +3,7 @@
 #
 # -----------------------------------------------------------------------------
 
-BOXMODEL_IMAGE  = $(EMPTY)
+BOXMODEL_IMAGE  =
 ifneq ($(DEBUG),yes)
   BOXMODEL_IMAGE += nevis
 endif
@@ -35,29 +35,29 @@ ni-image:
 	$(MAKE) tzdata
 	$(MAKE) smartmontools
 	$(MAKE) sg3_utils
-	$(MAKE) nfs-utils
-	$(MAKE) procps-ng
 	$(MAKE) nano
 	make hd-idle
+	$(MAKE) hdparm
+	$(MAKE) nfs-utils
 	$(MAKE) e2fsprogs
 	$(MAKE) ntfs-3g
 	$(MAKE) exfat-utils
-	$(MAKE) vsftpd
+	$(MAKE) dosfstools
+	$(MAKE) mtd-utils
 	make djmount
 	$(MAKE) ushare
 	$(MAKE) xupnpd
 	make inadyn
 	make samba
+	$(MAKE) vsftpd
 	make dropbear
-	$(MAKE) hdparm
 	$(MAKE) busybox
 	$(MAKE) sysvinit
 	$(MAKE) coreutils
-	$(MAKE) dosfstools
+	$(MAKE) procps-ng
 	$(MAKE) wpa_supplicant
-	$(MAKE) mtd-utils
 	$(MAKE) wget
-	#$(MAKE) streamripper
+	$(MAKE) streamripper
 ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd2 hd5x hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo))
 	$(MAKE) less
 	$(MAKE) parted

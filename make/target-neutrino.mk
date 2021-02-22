@@ -5,7 +5,7 @@
 
 NEUTRINO_INST_DIR ?= $(TARGET_DIR)
 
-NEUTRINO_OBJ       = $(NI-NEUTRINO)-obj
+NEUTRINO_OBJ       = $(NI_NEUTRINO)-obj
 NEUTRINO_BUILD_DIR = $(BUILD_DIR)/$(NEUTRINO_OBJ)
 
 ifeq ($(BOXTYPE),coolstream)
@@ -14,8 +14,8 @@ else
   NEUTRINO_BRANCH ?= master
 endif
 
-LIBSTB-HAL_OBJ       = $(NI-LIBSTB-HAL)-obj
-LIBSTB-HAL_BUILD_DIR = $(BUILD_DIR)/$(LIBSTB-HAL_OBJ)
+LIBSTB_HAL_OBJ       = $(NI_LIBSTB_HAL)-obj
+LIBSTB_HAL_BUILD_DIR = $(BUILD_DIR)/$(LIBSTB_HAL_OBJ)
 
 # -----------------------------------------------------------------------------
 
@@ -55,7 +55,7 @@ NEUTRINO_CFLAGS += -Wno-psabi
 
 # -----------------------------------------------------------------------------
 
-NEUTRINO_LDFLAGS  = $(CORTEX-STRINGS_LDFLAG)
+NEUTRINO_LDFLAGS  = $(CORTEX_STRINGS_LDFLAG)
 NEUTRINO_LDFLAGS += -L$(TARGET_base_libdir) -L$(TARGET_libdir)
 NEUTRINO_LDFLAGS += -Wl,-rpath,$(TARGET_libdir) -Wl,-rpath-link,$(TARGET_libdir)
 ifeq ($(DEBUG),yes)
@@ -76,7 +76,7 @@ NEUTRINO_WEATHER_DEV_KEY ?=
 # -----------------------------------------------------------------------------
 
 NEUTRINO_CONF_ENV = \
-	$(MAKE_OPTS) \
+	$(TARGET_MAKE_OPTS) \
 	\
 	CFLAGS="$(NEUTRINO_CFLAGS)" \
 	CPPFLAGS="$(NEUTRINO_CFLAGS)" \
@@ -91,8 +91,9 @@ NEUTRINO_CONF_ENV += \
 # -----------------------------------------------------------------------------
 
 NEUTRINO_CONF_OPTS = \
-	--host=$(TARGET) \
 	--build=$(BUILD) \
+	--host=$(TARGET) \
+	--target=$(TARGET) \
 	--prefix=$(prefix) \
 	--enable-maintainer-mode \
 	--enable-silent-rules \
@@ -137,8 +138,8 @@ ifeq ($(BOXTYPE),coolstream)
 else
   NEUTRINO_DEPS += libstb-hal
   NEUTRINO_CONF_OPTS += \
-	--with-stb-hal-includes=$(SOURCE_DIR)/$(NI-LIBSTB-HAL)/include \
-	--with-stb-hal-build=$(LIBSTB-HAL_BUILD_DIR)
+	--with-stb-hal-includes=$(SOURCE_DIR)/$(NI_LIBSTB_HAL)/include \
+	--with-stb-hal-build=$(LIBSTB_HAL_BUILD_DIR)
 
   NEUTRINO_DEPS += graphlcd-base
   NEUTRINO_CONF_OPTS += --enable-graphlcd
@@ -174,12 +175,12 @@ endif
 
 $(NEUTRINO_BUILD_DIR)/config.status: $(NEUTRINO_DEPS)
 	test -d $(NEUTRINO_BUILD_DIR) || mkdir -p $(NEUTRINO_BUILD_DIR)
-	$(CD) $(SOURCE_DIR)/$(NI-NEUTRINO); \
+	$(CD) $(SOURCE_DIR)/$(NI_NEUTRINO); \
 		git checkout $(NEUTRINO_BRANCH)
-	$(SOURCE_DIR)/$(NI-NEUTRINO)/autogen.sh
+	$(SOURCE_DIR)/$(NI_NEUTRINO)/autogen.sh
 	$(CD) $(NEUTRINO_BUILD_DIR); \
 		$(NEUTRINO_CONF_ENV) \
-		$(SOURCE_DIR)/$(NI-NEUTRINO)/configure \
+		$(SOURCE_DIR)/$(NI_NEUTRINO)/configure \
 			$(NEUTRINO_CONF_OPTS)
 
 # -----------------------------------------------------------------------------
@@ -197,20 +198,21 @@ $(TARGET_sysconfdir)/init.d/start_neutrino:
 
 # -----------------------------------------------------------------------------
 
-LIBSTB-HAL_DEPS  =
-LIBSTB-HAL_DEPS += ffmpeg
-LIBSTB-HAL_DEPS += openthreads
+LIBSTB_HAL_DEPS  =
+LIBSTB_HAL_DEPS += ffmpeg
+LIBSTB_HAL_DEPS += openthreads
 
 # -----------------------------------------------------------------------------
 
-LIBSTB-HAL_CONF_ENV = \
+LIBSTB_HAL_CONF_ENV = \
 	$(NEUTRINO_CONF_ENV)
 
 # -----------------------------------------------------------------------------
 
-LIBSTB-HAL_CONF_OPTS = \
-	--host=$(TARGET) \
+LIBSTB_HAL_CONF_OPTS = \
 	--build=$(BUILD) \
+	--host=$(TARGET) \
+	--target=$(TARGET) \
 	--prefix=$(prefix) \
 	--enable-maintainer-mode \
 	--enable-silent-rules \
@@ -221,27 +223,27 @@ LIBSTB-HAL_CONF_OPTS = \
 	--with-boxtype=$(BOXTYPE)
 
 ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd1 hd2))
-  LIBSTB-HAL_CONF_OPTS += --with-boxmodel=$(BOXSERIES)
+  LIBSTB_HAL_CONF_OPTS += --with-boxmodel=$(BOXSERIES)
 else
-  LIBSTB-HAL_CONF_OPTS += --with-boxmodel=$(BOXMODEL)
+  LIBSTB_HAL_CONF_OPTS += --with-boxmodel=$(BOXMODEL)
 endif
 
 # -----------------------------------------------------------------------------
 
-$(LIBSTB-HAL_BUILD_DIR)/config.status: $(LIBSTB-HAL_DEPS)
-	test -d $(LIBSTB-HAL_BUILD_DIR) || mkdir -p $(LIBSTB-HAL_BUILD_DIR)
-	$(SOURCE_DIR)/$(NI-LIBSTB-HAL)/autogen.sh
-	$(CD) $(LIBSTB-HAL_BUILD_DIR); \
-		$(LIBSTB-HAL_CONF_ENV) \
-		$(SOURCE_DIR)/$(NI-LIBSTB-HAL)/configure \
-			$(LIBSTB-HAL_CONF_OPTS)
+$(LIBSTB_HAL_BUILD_DIR)/config.status: $(LIBSTB_HAL_DEPS)
+	test -d $(LIBSTB_HAL_BUILD_DIR) || mkdir -p $(LIBSTB_HAL_BUILD_DIR)
+	$(SOURCE_DIR)/$(NI_LIBSTB_HAL)/autogen.sh
+	$(CD) $(LIBSTB_HAL_BUILD_DIR); \
+		$(LIBSTB_HAL_CONF_ENV) \
+		$(SOURCE_DIR)/$(NI_LIBSTB_HAL)/configure \
+			$(LIBSTB_HAL_CONF_OPTS)
 
 # -----------------------------------------------------------------------------
 
-libstb-hal: $(LIBSTB-HAL_BUILD_DIR)/config.status
-	$(MAKE) -C $(LIBSTB-HAL_BUILD_DIR)
-	$(MAKE) -C $(LIBSTB-HAL_BUILD_DIR) install DESTDIR=$(NEUTRINO_INST_DIR)
-	$(REWRITE_LIBTOOL_LA)
+libstb-hal: $(LIBSTB_HAL_BUILD_DIR)/config.status
+	$(MAKE) -C $(LIBSTB_HAL_BUILD_DIR)
+	$(MAKE) -C $(LIBSTB_HAL_BUILD_DIR) install DESTDIR=$(NEUTRINO_INST_DIR)
+	$(REWRITE_LIBTOOL)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -277,17 +279,17 @@ neutrino-clean-all: neutrino-clean
 # -----------------------------------------------------------------------------
 
 libstb-hal-uninstall:
-	-make -C $(LIBSTB-HAL_BUILD_DIR) uninstall DESTDIR=$(TARGET_DIR)
+	-make -C $(LIBSTB_HAL_BUILD_DIR) uninstall DESTDIR=$(TARGET_DIR)
 
 libstb-hal-distclean:
-	-make -C $(LIBSTB-HAL_BUILD_DIR) distclean
+	-make -C $(LIBSTB_HAL_BUILD_DIR) distclean
 
 libstb-hal-clean: libstb-hal-uninstall libstb-hal-distclean
-	rm -f $(LIBSTB-HAL_BUILD_DIR)/config.status
+	rm -f $(LIBSTB_HAL_BUILD_DIR)/config.status
 	rm -f $(DEPS_DIR)/libstb-hal
 
 libstb-hal-clean-all: libstb-hal-clean
-	rm -rf $(LIBSTB-HAL_BUILD_DIR)
+	rm -rf $(LIBSTB_HAL_BUILD_DIR)
 
 # -----------------------------------------------------------------------------
 
