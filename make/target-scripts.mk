@@ -22,6 +22,7 @@ init-scripts: \
 	$(TARGET_sysconfdir)/init.d/networking \
 	$(TARGET_sysconfdir)/init.d/partitions-by-name \
 	$(TARGET_sysconfdir)/init.d/proc \
+	$(TARGET_sysconfdir)/init.d/rc.local \
 	$(TARGET_sysconfdir)/init.d/resizerootfs \
 	$(TARGET_sysconfdir)/init.d/swap \
 	$(TARGET_sysconfdir)/init.d/sys_update.sh \
@@ -105,6 +106,11 @@ ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 hd60 hd61 vusolo4k vuduo
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/proc.init $(@)
 	$(UPDATE-RC.D) $(@F) start 90 S .
 endif
+
+$(TARGET_sysconfdir)/init.d/rc.local:
+	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/rc.local.init $(@)
+	$(UPDATE-RC.D) $(@F) start 99 2 3 4 5 .
+	$(INSTALL_EXEC) -D $(TARGET_FILES)/files-etc/rc.local $(TARGET_sysconfdir)/rc.local
 
 $(TARGET_sysconfdir)/init.d/resizerootfs:
 ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 hd60 hd61))
