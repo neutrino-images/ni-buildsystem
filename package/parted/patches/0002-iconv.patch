@@ -1,0 +1,24 @@
+--- a/parted/Makefile.am
++++ b/parted/Makefile.am
+@@ -41,7 +41,8 @@ parted_LDADD = \
+   libver.a \
+   $(top_builddir)/libparted/libparted.la \
+   $(INTLLIBS) $(LIBS) \
+-  $(PARTED_LIBS)
++  $(PARTED_LIBS) \
++  $(LIBICONV)
+ 
+ parted_LDFLAGS = $(PARTEDLDFLAGS)
+ 
+--- a/partprobe/Makefile.am
++++ b/partprobe/Makefile.am
+@@ -9,7 +9,8 @@ partprobe_SOURCES = partprobe.c
+ partprobe_LDADD = \
+   $(top_builddir)/libparted/libparted.la \
+   $(INTLLIBS) $(LIBS) \
+-  $(PARTED_LIBS)
++  $(PARTED_LIBS) \
++  $(LIBICONV)
+ 
+ partprobe_LDFLAGS = $(PARTEDLDFLAGS)
+ 
