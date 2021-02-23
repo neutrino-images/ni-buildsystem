@@ -178,7 +178,7 @@ $(TARGET_sbindir)/service:
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/service $(@)
 
 $(TARGET_sbindir)/update-rc.d:
-	$(INSTALL_EXEC) -D $(HELPERS_DIR)/update-rc.d $(@)
+	$(INSTALL_EXEC) -D support/scripts/update-rc.d $(@)
 
 $(TARGET_datadir)/udhcpc/default.script:
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/udhcpc-default.script $(@)

@@ -3,12 +3,41 @@
 #
 # -----------------------------------------------------------------------------
 
+MAINTAINER := $(shell whoami)
 UID := $(shell id -u)
 ifeq ($(UID),0)
 warn:
-	@echo "You are running as root. Don't do this, it's dangerous."
-	@echo "Refusing to build. Good bye."
+	@echo "You are running as root. Do not do this, it is dangerous."
+	@echo "Aborting the build. Log in as a regular user and retry."
 else
+
+# Delete default rules. We don't use them. This saves a bit of time.
+.SUFFIXES:
+
+# we want bash as shell
+SHELL := $(shell if [ -x "$$BASH" ]; then echo $$BASH; \
+	 else if [ -x /bin/bash ]; then echo /bin/bash; \
+	 else echo sh; fi; fi)
+
+# Include some helper macros and variables
+include support/misc/utils.mk
+
+# bash prints the name of the directory on 'cd <dir>' if CDPATH is
+# set, so unset it here to not cause problems. Notice that the export
+# line doesn't affect the environment of $(shell ..) calls.
+export CDPATH :=
+
+# Disable top-level parallel build if per-package directories is not
+# used. Indeed, per-package directories is necessary to guarantee
+# determinism and reproducibility with top-level parallel build.
+.NOTPARALLEL:
+
+# kconfig uses CONFIG_SHELL
+CONFIG_SHELL := $(SHELL)
+
+export SHELL CONFIG_SHELL
+
+# -----------------------------------------------------------------------------
 
 # first target is default ...
 default: all
@@ -81,7 +110,6 @@ Makefile.local:
 	@cp Makefile.example $@
 
 -include config.local
-include make/buildsystem-utils.mk
 include make/environment-box.mk
 include make/environment-linux.mk
 include make/environment-build.mk

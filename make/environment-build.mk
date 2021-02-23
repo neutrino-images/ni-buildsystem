@@ -6,8 +6,6 @@
 LD_LIBRARY_PATH =
 export LD_LIBRARY_PATH
 
-SHELL := /bin/bash
-
 # -----------------------------------------------------------------------------
 
 ifndef MAKE
@@ -116,7 +114,6 @@ LOCAL_DIR     = $(BASE_DIR)/local
 STAGING_DIR   = $(BASE_DIR)/staging
 IMAGE_DIR     = $(STAGING_DIR)/images
 UPDATE_DIR    = $(STAGING_DIR)/updates
-HELPERS_DIR   = $(BASE_DIR)/helpers
 CROSS_BASE    = $(BASE_DIR)/cross
 CROSS_DIR    ?= $(CROSS_BASE)/$(TARGET_ARCH)-linux-$(KERNEL_VER)
 STATIC_BASE   = $(BASE_DIR)/static
