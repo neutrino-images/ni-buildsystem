@@ -289,7 +289,7 @@ flash-image-hd6x-multi-recovery: | $(IMAGE_DIR)
 	echo "bootargs=root=/dev/mmcblk0p23 rootsubdir=linuxrootfs4 rootfstype=ext4 kernel=/dev/mmcblk0p22" >> $(IMAGE_BUILD_DIR)/STARTUP_LINUX_4
 	echo "bootcmd=setenv bootargs \$$(bootargs_common); mmc read 0 0x1000000 0x1000 0x9000; bootm 0x1000000" > $(IMAGE_BUILD_DIR)/STARTUP_RECOVERY
 	echo "bootcmd=setenv bootargs \$$(bootargs_common); mmc read 0 0x1000000 0x1000 0x9000; bootm 0x1000000" > $(IMAGE_BUILD_DIR)/STARTUP_ONCE
-	$(INSTALL_DATA) -D $(BOOTMENU_DIR)/$(BOXMODEL)/bootmenu.conf $(IMAGE_BUILD_DIR)/bootmenu.conf
+	$(INSTALL_DATA) -D $(PACKAGE_DIR)/bootmenu/files/$(BOXMODEL)/bootmenu.conf $(IMAGE_BUILD_DIR)/bootmenu.conf
 	mcopy -i $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(HD6x_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP ::
 	mcopy -i $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(HD6x_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP_ANDROID ::
 	mcopy -i $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(HD6x_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP_ANDROID_DISABLE_LINUXSE ::
