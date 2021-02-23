@@ -91,7 +91,7 @@ NEUTRINO_CONF_ENV += \
 # -----------------------------------------------------------------------------
 
 NEUTRINO_CONF_OPTS = \
-	--build=$(BUILD) \
+	--build=$(GNU_HOST_NAME) \
 	--host=$(TARGET) \
 	--target=$(TARGET) \
 	--prefix=$(prefix) \
@@ -210,7 +210,7 @@ LIBSTB_HAL_CONF_ENV = \
 # -----------------------------------------------------------------------------
 
 LIBSTB_HAL_CONF_OPTS = \
-	--build=$(BUILD) \
+	--build=$(GNU_HOST_NAME) \
 	--host=$(TARGET) \
 	--target=$(TARGET) \
 	--prefix=$(prefix) \

@@ -130,8 +130,6 @@ endif
 TARGET_FILES  = $(BASE_DIR)/skel-root/general
 PACKAGE_DIR   = $(BASE_DIR)/package
 
-BUILD        ?= $(shell /usr/share/libtool/config/config.guess 2>/dev/null || /usr/share/misc/config.guess 2>/dev/null)
-
 # -----------------------------------------------------------------------------
 
 include make/environment-host.mk
@@ -178,6 +176,8 @@ TARGET_READELF  = $(TARGET_CROSS)readelf
 TARGET_OBJCOPY  = $(TARGET_CROSS)objcopy
 TARGET_OBJDUMP  = $(TARGET_CROSS)objdump
 TARGET_STRIP    = $(TARGET_CROSS)strip
+
+GNU_HOST_NAME  := $(shell support/gnuconfig/config.guess)
 
 # -----------------------------------------------------------------------------
 
@@ -261,7 +261,7 @@ TARGET_CONFIGURE_ENV += \
 	$($(PKG)_CONF_ENV)
 
 TARGET_CONFIGURE_OPTS = \
-	--build=$(BUILD) \
+	--build=$(GNU_HOST_NAME) \
 	--host=$(TARGET) \
 	--target=$(TARGET) \
 	\

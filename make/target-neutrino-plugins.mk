@@ -42,7 +42,7 @@ NEUTRINO_PLUGINS_CONF_ENV = \
 # -----------------------------------------------------------------------------
 
 NEUTRINO_PLUGINS_CONF_OPTS = \
-	--build=$(BUILD) \
+	--build=$(GNU_HOST_NAME) \
 	--host=$(TARGET) \
 	--target=$(TARGET) \
 	--prefix=$(prefix) \
