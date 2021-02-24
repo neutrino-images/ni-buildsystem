@@ -98,7 +98,6 @@ endif
 # -----------------------------------------------------------------------------
 
 BASE_DIR     := $(shell pwd)
-MAINTAINER   ?= unknown
 WHOAMI       := $(shell id -un)
 DL_DIR        = $(BASE_DIR)/download
 BUILD_DIR     = $(BASE_DIR)/build_tmp

@@ -3,7 +3,8 @@
 #
 # -----------------------------------------------------------------------------
 
-MAINTAINER := $(shell whoami)
+MAINTAINER ?= unknown
+
 UID := $(shell id -u)
 ifeq ($(UID),0)
 warn:
@@ -228,9 +229,4 @@ PHONY += printenv help done all everything
 PHONY += .print-phony
 .PHONY: $(PHONY)
 
-# this makes sure we do not build top-level dependencies in parallel
-# (which would not be too helpful anyway, running many configure and
-# downloads in parallel...), but the sub-targets are still built in
-# parallel, which is useful on multi-processor / multi-core machines
-.NOTPARALLEL:
 endif
