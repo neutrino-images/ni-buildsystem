@@ -832,7 +832,7 @@ iperf: $(DL_DIR)/$(IPERF_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-PARTED_VER    = 3.3
+PARTED_VER    = 3.2
 PARTED_DIR    = parted-$(PARTED_VER)
 PARTED_SOURCE = parted-$(PARTED_VER).tar.xz
 PARTED_SITE   = $(GNU_MIRROR)/parted
@@ -840,13 +840,14 @@ PARTED_SITE   = $(GNU_MIRROR)/parted
 $(DL_DIR)/$(PARTED_SOURCE):
 	$(DOWNLOAD) $(PARTED_SITE)/$(PARTED_SOURCE)
 
-PARTED_DEPS = e2fsprogs libiconv
+PARTED_DEPS = util-linux libiconv
 
 PARTED_AUTORECONF = YES
 
 PARTED_CONF_OPTS = \
-	--disable-shared \
-	--enable-static \
+	--infodir=$(REMOVE_infodir) \
+	--enable-shared \
+	--disable-static \
 	--disable-debug \
 	--disable-pc98 \
 	--disable-nls \

@@ -1,3 +1,14 @@
+--- a/configure.ac
++++ b/configure.ac
+@@ -288,6 +288,8 @@ fi
+ AC_PROG_LIBTOOL
+ LT_INIT
+ 
++AM_ICONV
++
+ AM_GNU_GETTEXT_VERSION([0.18])
+ AM_GNU_GETTEXT([external])
+ if test "$USE_INCLUDED_LIBINTL" = "yes"; then
 --- a/parted/Makefile.am
 +++ b/parted/Makefile.am
 @@ -41,7 +41,8 @@ parted_LDADD = \
@@ -21,4 +32,15 @@
 +  $(LIBICONV)
  
  partprobe_LDFLAGS = $(PARTEDLDFLAGS)
+ 
+--- a/libparted/labels/Makefile.am
++++ b/libparted/labels/Makefile.am
+@@ -35,7 +35,7 @@ liblabels_la_SOURCES = \
+   rdb.c		\
+   sun.c
+ 
+-liblabels_la_LIBADD = $(OS_LIBS) $(INTLLIBS)
++liblabels_la_LIBADD = $(OS_LIBS) $(INTLLIBS) $(LIBICONV)
+ 
+ AM_CPPFLAGS = $(partedincludedir) $(INTLINCS)
  
