@@ -125,7 +125,7 @@ endif
 
 ifeq ($(BOXTYPE),coolstream)
   NEUTRINO_DEPS += coolstream-drivers
-  ifeq ($(HAS_LIBCS),yes)
+  ifeq ($(HAS_LIBCOOLSTREAM),yes)
     NEUTRINO_DEPS += libcoolstream
     ifeq ($(DEBUG),yes)
       NEUTRINO_CONF_OPTS += \

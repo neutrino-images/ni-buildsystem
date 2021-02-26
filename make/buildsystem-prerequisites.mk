@@ -98,7 +98,7 @@ ifeq ($(NI_ADMIN),true)
 endif
 
 $(SOURCE_DIR)/$(NI-LIBCOOLSTREAM):
-ifeq ($(HAS_LIBCS),yes)
+ifeq ($(HAS_LIBCOOLSTREAM),yes)
 	$(CD) $(SOURCE_DIR); \
 		git clone $(NI_PRIVATE)/$(@F).git
 endif

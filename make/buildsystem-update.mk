@@ -47,7 +47,7 @@ update-ni-sources: ni-sources update-neutrino
 	$(CD) $(BUILD_GENERIC_PC); git pull
 	$(CD) $(SOURCE_DIR)/$(NI_DRIVERS_BIN); git pull
 	$(CD) $(SOURCE_DIR)/$(NI_FFMPEG); git pull --all
-ifeq ($(HAS_LIBCS),yes)
+ifeq ($(HAS_LIBCOOLSTREAM),yes)
 	$(CD) $(SOURCE_DIR)/$(NI-LIBCOOLSTREAM); git pull
 endif
 	$(CD) $(SOURCE_DIR)/$(NI_LIBSTB_HAL); git pull
@@ -73,7 +73,7 @@ endif
 	$(CD) $(BUILD_GENERIC_PC); git push
 	$(CD) $(SOURCE_DIR)/$(NI_DRIVERS_BIN); git push
 	$(CD) $(SOURCE_DIR)/$(NI_FFMPEG); git push --all
-ifeq ($(HAS_LIBCS),yes)
+ifeq ($(HAS_LIBCOOLSTREAM),yes)
 	$(CD) $(SOURCE_DIR)/$(NI-LIBCOOLSTREAM); git push --all
 endif
 	$(CD) $(SOURCE_DIR)/$(NI_LIBSTB_HAL); git push
@@ -94,7 +94,7 @@ endif
 	$(CD) $(BUILD_GENERIC_PC); git status -s -b
 	$(CD) $(SOURCE_DIR)/$(NI_DRIVERS_BIN); git status -s -b
 	$(CD) $(SOURCE_DIR)/$(NI_FFMPEG); git status -s -b
-ifeq ($(HAS_LIBCS),yes)
+ifeq ($(HAS_LIBCOOLSTREAM),yes)
 	$(CD) $(SOURCE_DIR)/$(NI-LIBCOOLSTREAM); git status -s -b
 endif
 	$(CD) $(SOURCE_DIR)/$(NI_LIBSTB_HAL); git status -s -b
