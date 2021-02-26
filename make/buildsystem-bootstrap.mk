@@ -103,7 +103,7 @@ ifeq ($(BOXSERIES),hd2)
 endif
 ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd5x hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
 	$(CD) $(TARGET_base_libdir); \
-		ln -sf ld-2.23.so ld-linux.so.3
+		ln -sf ld-2.27.so ld-linux.so.3
 endif
 
 # -----------------------------------------------------------------------------
