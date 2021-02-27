@@ -111,10 +111,10 @@ channellists: matze-192 matze-192-130
 matze-192 \
 matze-192-130:
 	$(MAKE) u-init
-	$(INSTALL_EXEC) $(TARGET_FILES)/channellists/update-ctrl/preinstall.sh $(PREINSTALL_SH)
-	$(INSTALL_EXEC) $(TARGET_FILES)/channellists/update-ctrl/postinstall.sh $(POSTINSTALL_SH)
-	mkdir -pv $(UPDATE_INST_DIR)/var/tuxbox/config/zapit && \
-	cp -f $(TARGET_FILES)/channellists/$(@)/* $(UPDATE_INST_DIR)/var/tuxbox/config/zapit/
+	$(INSTALL_EXEC) $(PACKAGE_DIR)/channellists/files/update-ctrl/preinstall.sh $(PREINSTALL_SH)
+	$(INSTALL_EXEC) $(PACKAGE_DIR)/channellists/files/update-ctrl/postinstall.sh $(POSTINSTALL_SH)
+	mkdir -p $(UPDATE_INST_DIR)/var/tuxbox/config/zapit
+	$(INSTALL_COPY) $(PACKAGE_DIR)/channellists/files/$(@)/* $(UPDATE_INST_DIR)/var/tuxbox/config/zapit/
 	# remove non-printable chars and re-format xml-files
 	$(CD) $(UPDATE_INST_DIR)/var/tuxbox/config/zapit/; \
 	for file in *.xml; do \
@@ -135,9 +135,9 @@ matze-192-130:
 	#
 	# we should try to keep this array table up-to-date ;-)
 	#
-	DIR[0]="#directory"	&& DESC[0]="#description"		&& DATE[0]="#date"	 ; \
-	DIR[1]="matze-192"	&& DESC[1]="matze-Settings 19.2"	&& DATE[1]="20.12.2020"	 ; \
-	DIR[2]="matze-192-130"	&& DESC[2]="matze-Settings 19.2, 13.0"	&& DATE[2]="20.12.2020"	 ; \
+	DIR[0]="#directory"	; DESC[0]="#description"		; DATE[0]="#date"	 ; \
+	DIR[1]="matze-192"	; DESC[1]="matze-Settings 19.2"		; DATE[1]="20.12.2020"	 ; \
+	DIR[2]="matze-192-130"	; DESC[2]="matze-Settings 19.2, 13.0"	; DATE[2]="20.12.2020"	 ; \
 	#; \
 	i=0; \
 	for dir in $${DIR[*]}; do \
@@ -149,7 +149,7 @@ matze-192-130:
 		else \
 			i=$$((i+1)); \
 		fi; \
-	done && \
+	done; \
 	$(MAKE) u-update-bin \
 			UPDATE_TYPE=S \
 			UPDATE_SITE=$(CHANNELLISTS_SITE) \
@@ -163,8 +163,8 @@ matze-192-130:
 initial-settings: matze-192
 	$(REMOVE)/initial
 	$(MKDIR)/initial
-	$(CHDIR)/initial && \
-		tar -xf $(STAGING_DIR)/updates/matze-192.bin && \
+	$(CHDIR)/initial; \
+		tar -xf $(STAGING_DIR)/updates/matze-192.bin; \
 		cp temp_inst/inst/var/tuxbox/config/zapit/* $(SOURCE_DIR)/$(NI_NEUTRINO)/data/initial/
 	P192=`grep -m 1 'position=\"192\"' $(SOURCE_DIR)/$(NI_NEUTRINO)/data/config/satellites.xml`; \
 	P192=`echo $$P192`; \
