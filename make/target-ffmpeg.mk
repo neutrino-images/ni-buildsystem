@@ -285,6 +285,7 @@ FFMPEG_CONF_OPTS = \
 	\
 	--disable-filters \
 		--enable-filter=drawtext \
+		--enable-filter=overlay \
 		--enable-filter=scale \
 	\
 	--disable-extra-warnings \
