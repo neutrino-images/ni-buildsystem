@@ -381,9 +381,9 @@ vuplus-platform-util: $(DL_DIR)/$(BOXMODEL_PLATFORM_UTIL_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(BOXMODEL_PLATFORM_UTIL_DIR)
 	$(UNTAR)/$(BOXMODEL_PLATFORM_UTIL_SOURCE)
 	$(INSTALL_EXEC) -D $(BUILD_DIR)/$(BOXMODEL_PLATFORM_UTIL_DIR)/* $(TARGET_bindir)
-	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/vuplus-platform-util.init $(TARGET_sysconfdir)/init.d/vuplus-platform-util
+	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/vuplus-platform-util.init $(TARGET_sysconfdir)/init.d/vuplus-platform-util
 ifeq ($(BOXMODEL),$(filter $(BOXMODEL),vuduo4k))
-	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/bp3flash.sh $(TARGET_bindir)/bp3flash.sh
+	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/bp3flash.sh $(TARGET_bindir)/bp3flash.sh
 endif
 	$(REMOVE)/$(BOXMODEL_PLATFORM_UTIL_DIR)
 	$(TOUCH)

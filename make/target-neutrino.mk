@@ -188,13 +188,8 @@ $(NEUTRINO_BUILD_DIR)/config.status: $(NEUTRINO_DEPS)
 neutrino: $(NEUTRINO_BUILD_DIR)/config.status
 	$(MAKE) -C $(NEUTRINO_BUILD_DIR)
 	$(MAKE) -C $(NEUTRINO_BUILD_DIR) install DESTDIR=$(NEUTRINO_INST_DIR)
-	$(MAKE) $(TARGET_sysconfdir)/init.d/start_neutrino
+	$(INSTALL_EXEC) $(PKG_FILES_DIR)/start_neutrino.$(BOXTYPE) $(TARGET_sysconfdir)/init.d/start_neutrino
 	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
-$(TARGET_sysconfdir)/init.d/start_neutrino:
-	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/start_neutrino.$(BOXTYPE) $(@)
 
 # -----------------------------------------------------------------------------
 

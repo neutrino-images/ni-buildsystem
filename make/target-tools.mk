@@ -936,7 +936,7 @@ ntp: $(NTP_DEPS) $(DL_DIR)/$(NTP_SOURCE) | $(TARGET_DIR)
 		$(CONFIGURE); \
 		$(MAKE); \
 		$(INSTALL_EXEC) -D ntpdate/ntpdate $(TARGET_sbindir)/ntpdate
-	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/ntpdate.init $(TARGET_sysconfdir)/init.d/ntpdate
+	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/ntpdate.init $(TARGET_sysconfdir)/init.d/ntpdate
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
@@ -967,7 +967,7 @@ djmount: $(DJMOUNT_DEPS) $(DL_DIR)/$(DJMOUNT_SOURCE) | $(TARGET_DIR)
 		$(CONFIGURE); \
 		$(MAKE1); \
 		$(MAKE1) install DESTDIR=$(TARGET_DIR)
-	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/djmount.init $(TARGET_sysconfdir)/init.d/djmount
+	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/djmount.init $(TARGET_sysconfdir)/init.d/djmount
 	$(UPDATE-RC.D) djmount defaults 75 25
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
@@ -1001,9 +1001,9 @@ ushare: $(USHARE_DEPS) $(DL_DIR)/$(USHARE_SOURCE) | $(TARGET_DIR)
 		ln -sf ../config.h src/; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(INSTALL_DATA) -D $(TARGET_FILES)/configs/ushare.conf $(TARGET_sysconfdir)/ushare.conf
+	$(INSTALL_DATA) -D $(PKG_FILES_DIR)/ushare.conf $(TARGET_sysconfdir)/ushare.conf
 	$(SED) 's|%(BOXTYPE)|$(BOXTYPE)|; s|%(BOXMODEL)|$(BOXMODEL)|' $(TARGET_sysconfdir)/ushare.conf
-	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/ushare.init $(TARGET_sysconfdir)/init.d/ushare
+	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/ushare.init $(TARGET_sysconfdir)/init.d/ushare
 	$(UPDATE-RC.D) ushare defaults 75 25
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
@@ -1062,7 +1062,7 @@ minidlna: $(MINIDLNA_DEPS) $(DL_DIR)/$(MINIDLNA_SOURCE) | $(TARGET_DIR)
 	$(SED) 's|^media_dir=.*|media_dir=A,/media/sda1/music\nmedia_dir=V,/media/sda1/movies\nmedia_dir=P,/media/sda1/pictures|' $(TARGET_sysconfdir)/minidlna.conf
 	$(SED) 's|^#user=.*|user=root|' $(TARGET_sysconfdir)/minidlna.conf
 	$(SED) 's|^#friendly_name=.*|friendly_name=$(BOXTYPE)-$(BOXMODEL):ReadyMedia|' $(TARGET_sysconfdir)/minidlna.conf
-	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/minidlnad.init $(TARGET_sysconfdir)/init.d/minidlnad
+	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/minidlnad.init $(TARGET_sysconfdir)/init.d/minidlnad
 	$(UPDATE-RC.D) minidlnad defaults 75 25
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
@@ -1112,9 +1112,9 @@ inadyn: $(INADYN_DEPS) $(DL_DIR)/$(INADYN_SOURCE) | $(TARGET_DIR)
 		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(INSTALL_DATA) -D $(TARGET_FILES)/configs/inadyn.conf $(TARGET_localstatedir)/etc/inadyn.conf
+	$(INSTALL_DATA) -D $(PKG_FILES_DIR)/inadyn.conf $(TARGET_localstatedir)/etc/inadyn.conf
 	ln -sf /var/etc/inadyn.conf $(TARGET_sysconfdir)/inadyn.conf
-	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/inadyn.init $(TARGET_sysconfdir)/init.d/inadyn
+	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/inadyn.init $(TARGET_sysconfdir)/init.d/inadyn
 	$(UPDATE-RC.D) inadyn defaults 75 25
 	$(REMOVE)/$(INADYN_DIR)
 	$(TOUCH)
@@ -1144,9 +1144,9 @@ vsftpd: $(VSFTPD_DEPS) $(DL_DIR)/$(VSFTPD_SOURCE) | $(TARGET_DIR)
 		$(MAKE) $(TARGET_CONFIGURE_ENV) LIBS="$($(PKG)_LIBS)"; \
 		$(INSTALL_EXEC) -D vsftpd $(TARGET_sbindir)/vsftpd
 	mkdir -p $(TARGET_datadir)/empty
-	$(INSTALL_DATA) -D $(TARGET_FILES)/configs/vsftpd.conf $(TARGET_sysconfdir)/vsftpd.conf
-	$(INSTALL_DATA) -D $(TARGET_FILES)/configs/vsftpd.chroot_list $(TARGET_sysconfdir)/vsftpd.chroot_list
-	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/vsftpd.init $(TARGET_sysconfdir)/init.d/vsftpd
+	$(INSTALL_DATA) -D $(PKG_FILES_DIR)/vsftpd.conf $(TARGET_sysconfdir)/vsftpd.conf
+	$(INSTALL_DATA) -D $(PKG_FILES_DIR)/vsftpd.chroot_list $(TARGET_sysconfdir)/vsftpd.chroot_list
+	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/vsftpd.init $(TARGET_sysconfdir)/init.d/vsftpd
 	$(UPDATE-RC.D) vsftpd defaults 75 25
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
@@ -1333,8 +1333,8 @@ samba33: $(SAMBA33_DEPS) $(DL_DIR)/$(SAMBA33_SOURCE) | $(TARGET_DIR)
 		$(MAKE1) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	mkdir -p $(TARGET_localstatedir)/samba/locks
-	$(INSTALL_DATA) -D $(TARGET_FILES)/configs/smb3.conf $(TARGET_sysconfdir)/samba/smb.conf
-	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/samba3.init $(TARGET_sysconfdir)/init.d/samba
+	$(INSTALL_DATA) -D $(PKG_FILES_DIR)/smb3.conf $(TARGET_sysconfdir)/samba/smb.conf
+	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/samba3.init $(TARGET_sysconfdir)/init.d/samba
 	$(UPDATE-RC.D) samba defaults 75 25
 	rm -rf $(TARGET_bindir)/testparm
 	rm -rf $(TARGET_bindir)/findsmb
@@ -1403,8 +1403,8 @@ samba36: $(SAMBA36_DEPS) $(DL_DIR)/$(SAMBA36_SOURCE) | $(TARGET_DIR)
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	mkdir -p $(TARGET_localstatedir)/samba/locks
-	$(INSTALL_DATA) -D $(TARGET_FILES)/configs/smb3.conf $(TARGET_sysconfdir)/samba/smb.conf
-	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/samba3.init $(TARGET_sysconfdir)/init.d/samba
+	$(INSTALL_DATA) -D $(PKG_FILES_DIR)/smb3.conf $(TARGET_sysconfdir)/samba/smb.conf
+	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/samba3.init $(TARGET_sysconfdir)/init.d/samba
 	$(UPDATE-RC.D) samba defaults 75 25
 	rm -rf $(TARGET_bindir)/testparm
 	rm -rf $(TARGET_bindir)/findsmb
@@ -1455,7 +1455,7 @@ dropbear: $(DROPBEAR_DEPS) $(DL_DIR)/$(DROPBEAR_SOURCE) | $(TARGET_DIR)
 		$(MAKE) $($(PKG)_MAKE_OPTS) SCPPROGRESS=1; \
 		$(MAKE) $($(PKG)_MAKE_OPTS) install DESTDIR=$(TARGET_DIR)
 	mkdir -p $(TARGET_sysconfdir)/dropbear
-	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/dropbear.init $(TARGET_sysconfdir)/init.d/dropbear
+	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/dropbear.init $(TARGET_sysconfdir)/init.d/dropbear
 	$(UPDATE-RC.D) dropbear defaults 75 25
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
@@ -1487,7 +1487,7 @@ sg3_utils: $(DL_DIR)/$(SG3_UTILS_SOURCE) | $(TARGET_DIR)
 		$(INSTALL_EXEC) -D $(TARGET_bindir).$(@F)/$$bin $(TARGET_bindir)/$$bin; \
 	done
 	rm -r $(TARGET_bindir).$(@F)
-	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/sdX.init $(TARGET_sysconfdir)/init.d/sdX
+	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/sdX.init $(TARGET_sysconfdir)/init.d/sdX
 	$(UPDATE-RC.D) sdX stop 97 0 6 .
 	$(REWRITE_LIBTOOL)
 	$(REMOVE)/$(PKG_DIR)
@@ -1587,8 +1587,8 @@ wpa_supplicant: $(WPA_SUPPLICANT_DEPS) $(DL_DIR)/$(WPA_SUPPLICANT_SOURCE) | $(TA
 		$(TARGET_CONFIGURE_ENV) \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR) BINDIR=$(sbindir)
-	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/pre-wlan0.sh $(TARGET_sysconfdir)/network/pre-wlan0.sh
-	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/post-wlan0.sh $(TARGET_sysconfdir)/network/post-wlan0.sh
+	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/pre-wlan0.sh $(TARGET_sysconfdir)/network/pre-wlan0.sh
+	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/post-wlan0.sh $(TARGET_sysconfdir)/network/post-wlan0.sh
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
@@ -1670,7 +1670,7 @@ nfs-utils: $(NFS_UTILS_DEPS) $(DL_DIR)/$(NFS_UTILS_SOURCE) | $(TARGET_DIR)
 	chmod 0755 $(TARGET_base_sbindir)/mount.nfs
 	rm -f $(addprefix $(TARGET_base_sbindir)/,mount.nfs4 osd_login umount.nfs umount.nfs4)
 	rm -f $(addprefix $(TARGET_sbindir)/,mountstats nfsiostat)
-	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/nfsd.init $(TARGET_sysconfdir)/init.d/nfsd
+	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/nfsd.init $(TARGET_sysconfdir)/init.d/nfsd
 	$(UPDATE-RC.D) nfsd defaults 75 25
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
@@ -1729,7 +1729,7 @@ streamripper: $(STREAMRIPPER_DEPS) | $(TARGET_DIR)
 		$(CONFIGURE); \
 		$(MAKE); \
 		$(INSTALL_EXEC) -D streamripper $(TARGET_bindir)/streamripper
-	$(INSTALL_EXEC) $(TARGET_FILES)/scripts/streamripper.sh $(TARGET_bindir)/
+	$(INSTALL_EXEC) $(PKG_FILES_DIR)/streamripper.sh $(TARGET_bindir)/
 	$(REMOVE)/$(NI_STREAMRIPPER)
 	$(TOUCH)
 
@@ -1955,7 +1955,7 @@ minisatip: $(MINISATIP_DEPS) | $(TARGET_DIR)
 	$(INSTALL_COPY) $(PKG_BUILD_DIR)/html $(TARGET_datadir)/minisatip
 	$(INSTALL) -d $(TARGET_sysconfdir)/default
 	echo 'MINISATIP_OPTS="-x 9090 -t -o /tmp/camd.socket"' > $(TARGET_sysconfdir)/default/minisatip
-	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/minisatip.init $(TARGET_sysconfdir)/init.d/minisatip
+	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/minisatip.init $(TARGET_sysconfdir)/init.d/minisatip
 	$(UPDATE-RC.D) minisatip defaults 75 25
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
