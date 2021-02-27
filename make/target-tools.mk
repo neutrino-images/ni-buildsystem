@@ -1545,7 +1545,7 @@ lcd4linux: $(LCD4LINUX_DEPS) | $(TARGET_DIR)
 		$(MAKE) vcs_version; \
 		$(MAKE); \
 		$(MAKE) install
-	$(INSTALL_COPY) $(TARGET_FILES)/lcd4linux/* $(TARGET_DIR)/
+	$(INSTALL_COPY) $(PKG_FILES_DIR)-skel/* $(TARGET_DIR)/
 	#$(MAKE) samsunglcd4linux
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
