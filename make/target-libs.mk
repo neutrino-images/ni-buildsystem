@@ -786,9 +786,8 @@ libaacs: $(LIBAACS_DEPS) $(DL_DIR)/$(LIBAACS_SOURCE) | $(TARGET_DIR)
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL)
-	$(CD) $(TARGET_DIR); \
-		mkdir -p .config/aacs .cache/aacs/vuk
-	cp $(TARGET_FILES)/libaacs/KEYDB.cfg $(TARGET_DIR)/.config/aacs
+	$(INSTALL) -d $(TARGET_DIR)/.cache/aacs/vuk
+	$(INSTALL_DATA) -D $(PKG_FILES_DIR)/KEYDB.cfg $(TARGET_DIR)/.config/aacs/KEYDB.cfg
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
@@ -819,9 +818,8 @@ libbdplus: $(LIBBDPLUS_DEPS) $(DL_DIR)/$(LIBBDPLUS_SOURCE) | $(TARGET_DIR)
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL)
-	$(CD) $(TARGET_DIR); \
-		mkdir -p .config/bdplus/vm0
-	cp -f $(TARGET_FILES)/libbdplus/* $(TARGET_DIR)/.config/bdplus/vm0
+	$(INSTALL) -d $(TARGET_DIR)/.config/bdplus/vm0
+	$(INSTALL_COPY) $(PKG_FILES_DIR)/* $(TARGET_DIR)/.config/bdplus/vm0
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
