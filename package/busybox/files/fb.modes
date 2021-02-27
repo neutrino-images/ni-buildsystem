@@ -1,0 +1,14 @@
+#
+#   fb.modes file describing various video modes
+#   for frame buffer driver
+#
+#
+mode "1280x720p-50"
+	geometry 1280 720 1280 1440 32 
+	timings 13468 400 0 5 0 300 25
+endmode
+
+mode "1920x1080p-50"
+	geometry 1920 1080 1920 2160 32 
+	timings 13468 242 0 45 0 118 20
+endmode
