@@ -1624,9 +1624,8 @@ xupnpd: $(XUPNPD_DEPS) | $(TARGET_DIR)
 	$(INSTALL_DATA) -D $(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS)/scripts-lua/xupnpd/xupnpd_neutrino.lua $(TARGET_datadir)/xupnpd/plugins/
 	$(INSTALL_DATA) -D $(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS)/scripts-lua/xupnpd/xupnpd_vimeo.lua $(TARGET_datadir)/xupnpd/plugins/
 	$(INSTALL_DATA) -D $(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS)/scripts-lua/xupnpd/xupnpd_youtube.lua $(TARGET_datadir)/xupnpd/plugins/
-	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/xupnpd.init $(TARGET_sysconfdir)/init.d/xupnpd
+	$(INSTALL_COPY) $(PKG_FILES_DIR)-skel/* $(TARGET_DIR)/
 	$(UPDATE-RC.D) xupnpd defaults 75 25
-	$(INSTALL_COPY) $(TARGET_FILES)/xupnpd/* $(TARGET_DIR)/
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
