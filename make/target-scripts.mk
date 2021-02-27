@@ -24,7 +24,6 @@ init-scripts: \
 	$(TARGET_sysconfdir)/init.d/proc \
 	$(TARGET_sysconfdir)/init.d/rc.local \
 	$(TARGET_sysconfdir)/init.d/resizerootfs \
-	$(TARGET_sysconfdir)/init.d/swap \
 	$(TARGET_sysconfdir)/init.d/sys_update.sh \
 	$(TARGET_sysconfdir)/init.d/syslogd \
 	$(TARGET_sysconfdir)/init.d/sendsigs \
@@ -115,12 +114,6 @@ $(TARGET_sysconfdir)/init.d/rc.local:
 $(TARGET_sysconfdir)/init.d/resizerootfs:
 ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 hd60 hd61))
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/resizerootfs.init $(@)
-endif
-
-$(TARGET_sysconfdir)/init.d/swap:
-ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 hd60 hd61 vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo))
-	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/swap.init $(@)
-	$(UPDATE-RC.D) $(@F) stop 98 0 6 .
 endif
 
 $(TARGET_sysconfdir)/init.d/sys_update.sh:
