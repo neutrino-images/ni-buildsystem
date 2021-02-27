@@ -204,7 +204,7 @@ flash-image-hd5x-multi: | $(IMAGE_DIR)
 	# Create final USB-image
 	mkdir -p $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)
 	cp $(EMMC_IMAGE) $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)
-	cp $(TARGET_FILES)/splash-images/ni-splash.bmp $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/splash.bin
+	cp $(SUPPORT_DIR)/splash-images/ni-splash.bmp $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/splash.bin
 	cp $(KERNEL_ZIMAGE_DTB) $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/kernel.bin
 	$(CD) $(ROOTFS); \
 		tar -cvf $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/rootfs.tar -C $(ROOTFS) . >/dev/null 2>&1; \
@@ -308,7 +308,7 @@ flash-image-hd6x-multi-recovery: | $(IMAGE_DIR)
 	rm -rf $(IMAGE_BUILD_DIR)/*.txt
 	rm -rf $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/*.txt
 	rm -rf $(IMAGE_BUILD_DIR)/$(HD6x_IMAGE_LINK)
-	cp $(TARGET_FILES)/splash-images/ni-splash-$(BOXSERIES).img $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/logo.img
+	cp $(SUPPORT_DIR)/splash-images/ni-splash-$(BOXSERIES).img $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/logo.img
 	echo $(IMAGE_NAME)_recovery > $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/recoveryversion
 	echo "***** ACHTUNG *****" >$(IMAGE_BUILD_DIR)/recovery_$(BOXMODEL)_lies.mich
 	echo "Das RECOVERY wird nur benötigt wenn es Probleme beim Zugriff auf das MULTIBOOT MENÜ gibt." >> $(IMAGE_BUILD_DIR)/recovery_$(BOXMODEL)_lies.mich
@@ -361,7 +361,7 @@ flash-image-vuplus-multi: vmlinuz-initrd
 flash-image-vuplus-multi: | $(IMAGE_DIR)
 	rm -rf $(IMAGE_BUILD_DIR)
 	mkdir -p $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)
-	cp $(TARGET_FILES)/splash-images/ni-splash.bmp $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/splash_auto.bin
+	cp $(SUPPORT_DIR)/splash-images/ni-splash.bmp $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/splash_auto.bin
 	cp $(BUILD_DIR)/$(VMLINUZ_INITRD) $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/initrd_auto.bin
 	echo Dummy for update. > $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/kernel_auto.bin
 	cp $(KERNEL_ZIMAGE) $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/kernel1_auto.bin

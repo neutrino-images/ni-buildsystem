@@ -125,6 +125,7 @@ ifeq ($(BOXMODEL),$(filter $(BOXMODEL),vusolo4k vuduo4k vuduo4kse vuultimo4k vuz
 endif
 TARGET_FILES  = $(BASE_DIR)/skel-root/general
 PACKAGE_DIR   = $(BASE_DIR)/package
+SUPPORT_DIR   = $(BASE_DIR)/support
 
 # -----------------------------------------------------------------------------
 
