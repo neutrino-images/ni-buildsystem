@@ -188,8 +188,8 @@ logo-addon: $(SOURCE_DIR)/$(NI_LOGO_STUFF) $(SHARE_PLUGINS)
 # -----------------------------------------------------------------------------
 
 doscam-webif-skin:
-	$(INSTALL_DATA) -D $(TARGET_FILES)/doscam-webif-skin/doscam_ni-dark.css $(TARGET_datadir)/doscam/skin/doscam_ni-dark.css
-	$(INSTALL_DATA) -D $(TARGET_FILES)/doscam-webif-skin/IC_doscam_ni.tpl $(TARGET_datadir)/doscam/tpl/IC_doscam_ni.tpl
+	$(INSTALL_DATA) -D $(PKG_FILES_DIR)/doscam_ni-dark.css $(TARGET_datadir)/doscam/skin/doscam_ni-dark.css
+	$(INSTALL_DATA) -D $(PKG_FILES_DIR)/IC_doscam_ni.tpl $(TARGET_datadir)/doscam/tpl/IC_doscam_ni.tpl
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
