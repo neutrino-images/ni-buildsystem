@@ -796,14 +796,14 @@ tzdata: $(TZDATA_DEPS) $(DL_DIR)/$(TZDATA_SOURCE) | $(TARGET_DIR)
 		tar -xf $(DL_DIR)/$(PKG_SOURCE); \
 		unset ${!LC_*}; LANG=POSIX; LC_ALL=POSIX; export LANG LC_ALL; \
 		$(HOST_ZIC) -b fat -d zoneinfo.tmp $(TZDATA_ZONELIST); \
-		sed -n '/zone=/{s/.*zone="\(.*\)".*$$/\1/; p}' $(TARGET_FILES)/tzdata/timezone.xml | sort -u | \
+		sed -n '/zone=/{s/.*zone="\(.*\)".*$$/\1/; p}' $(PKG_FILES_DIR)/timezone.xml | sort -u | \
 		while read x; do \
 			find zoneinfo.tmp -type f -name $$x | sort | \
 			while read y; do \
 				test -e $$y && $(INSTALL_DATA) -D $$y $(TARGET_datadir)/zoneinfo/$$x; \
 			done; \
 		done; \
-	$(INSTALL_DATA) -D $(TARGET_FILES)/tzdata/timezone.xml $(TARGET_sysconfdir)/timezone.xml
+	$(INSTALL_DATA) -D $(PKG_FILES_DIR)/timezone.xml $(TARGET_sysconfdir)/timezone.xml
 	ln -sf $(datadir)/zoneinfo/$(TZDATA_LOCALTIME) $(TARGET_DIR)$(ETC_LOCALTIME)
 	echo "$(TZDATA_LOCALTIME)" > $(TARGET_sysconfdir)/timezone
 	$(REMOVE)/$(PKG_DIR)
