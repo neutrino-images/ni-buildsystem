@@ -265,7 +265,7 @@ links: $(LINKS_DEPS) $(DL_DIR)/$(LINKS_SOURCE) $(SHARE_PLUGINS) | $(TARGET_DIR)
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	mv -f $(TARGET_bindir)/links $(SHARE_PLUGINS)/links.so
-	$(INSTALL_COPY) $(TARGET_FILES)/links/* $(TARGET_DIR)/
+	$(INSTALL_COPY) $(PKG_FILES_DIR)-skel/* $(TARGET_DIR)/
 	$(REMOVE)/$(LINKS_DIR)
 	$(TOUCH)
 
