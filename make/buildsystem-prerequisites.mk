@@ -44,7 +44,7 @@ toolcheck: $(TOOLCHECK)
 
 bashcheck:
 	@if test "$(subst /bin/,,$(shell readlink /bin/sh))" != "bash"; then \
-		echo -e "$(TERM_YELLOW)WARNING$(TERM_NORMAL): /bin/sh is not linked to bash."; \
+		@$(call MESSAGE_RED,"Warning",": /bin/sh is not linked to bash"); \
 	fi
 
 # -----------------------------------------------------------------------------

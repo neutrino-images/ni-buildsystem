@@ -56,7 +56,7 @@ define apply_patches
 		if [ -e $$i -o -e $(PKG_PATCHES_DIR)/$$i ]; then \
 			if [ -d $$i ]; then \
 				for p in $$i/*; do \
-					echo -e "$(TERM_YELLOW)Applying $${p#$(PKG_PATCHES_DIR)/}$(TERM_NORMAL)"; \
+					$(call MESSAGE,"Applying $${p#$(PKG_PATCHES_DIR)/}"); \
 					if [ $${p:0:1} == "/" ]; then \
 						patch -p$$l -i $$p; \
 					else \
@@ -64,7 +64,7 @@ define apply_patches
 					fi; \
 				done; \
 			else \
-				echo -e "$(TERM_YELLOW)Applying $${i#$(PKG_PATCHES_DIR)/}$(TERM_NORMAL)"; \
+				$(call MESSAGE,"Applying $${i#$(PKG_PATCHES_DIR)/}"); \
 				if [ $${i:0:1} == "/" ]; then \
 					patch -p$$l -i $$i; \
 				else \
@@ -159,7 +159,7 @@ changelogs:
 
 done:
 	$(call draw_line);
-	@echo -e "$(TERM_GREEN)Done$(TERM_NORMAL)"
+	@$(call MESSAGE_GREEN,"Done")
 	$(call draw_line);
 
 # -----------------------------------------------------------------------------

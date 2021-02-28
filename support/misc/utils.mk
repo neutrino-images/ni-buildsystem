@@ -81,8 +81,9 @@ TERM_BOLD := $(shell tput smso 2>/dev/null)
 TERM_RESET := $(shell tput rmso 2>/dev/null)
 
 # MESSAGE Macro -- display a message in bold type
-MESSAGE = echo -e "$(TERM_YELLOW)$(call qstrip,$(1))$(TERM_NORMAL)"
-#MESSAGE = echo "$(TERM_BOLD)>>> $($(PKG)_NAME) $($(PKG)_VERSION) $(call qstrip,$(1))$(TERM_RESET)"
+MESSAGE = echo -e "$(TERM_YELLOW)$(call qstrip,$(1))$(TERM_NORMAL)$(call qstrip,$(2))"
+MESSAGE_GREEN = echo -e "$(TERM_GREEN)$(call qstrip,$(1))$(TERM_NORMAL)$(call qstrip,$(2))"
+MESSAGE_RED = echo -e "$(TERM_RED_BOLD)$(call qstrip,$(1))$(TERM_NORMAL)$(call qstrip,$(2))"
 
 # Utility functions for 'find'
 # findfileclauses(filelist) => -name 'X' -o -name 'Y'

@@ -169,7 +169,7 @@ initial-settings: matze-192
 	P192=`grep -m 1 'position=\"192\"' $(SOURCE_DIR)/$(NI_NEUTRINO)/data/config/satellites.xml`; \
 	P192=`echo $$P192`; \
 	$(SED) "/position=\"192\"/c\	$$P192" $(SOURCE_DIR)/$(NI_NEUTRINO)/data/initial/services.xml
-	@echo -e "$(TERM_YELLOW)Commit your changes in $(SOURCE_DIR)/$(NI_NEUTRINO)/data/initial$(TERM_NORMAL)"
+	@$(call MESSAGE,"Commit your changes in $(SOURCE_DIR)/$(NI_NEUTRINO)/data/initial")
 
 # -----------------------------------------------------------------------------
 

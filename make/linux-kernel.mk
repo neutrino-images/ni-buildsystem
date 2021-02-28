@@ -396,8 +396,8 @@ kernel-install-coolstream-all:
 	#
 	make clean > /dev/null 2>&1
 	#
-	@echo -e "$(TERM_YELLOW)Align stb_update.data in $(SOURCE_DIR)/$(NI_DRIVERS_BIN)$(TERM_NORMAL)"
-	@echo -e "$(TERM_YELLOW)and commit your changes in $(SOURCE_DIR)/$(NI_DRIVERS_BIN)$(TERM_NORMAL)"
+	@$(call MESSAGE,"Align stb_update.data in $(SOURCE_DIR)/$(NI_DRIVERS_BIN)")
+	@$(call MESSAGE,"and commit your changes in $(SOURCE_DIR)/$(NI_DRIVERS_BIN)")
 
 # -----------------------------------------------------------------------------
 

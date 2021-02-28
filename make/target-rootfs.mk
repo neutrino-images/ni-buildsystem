@@ -115,10 +115,7 @@ rootfs-cleanup: $(ROOTFS)
 	find $(ROOTFS) \( -name Makefile.am \) -type f -print0 | xargs --no-run-if-empty -0 rm -f
 	find $(ROOTFS)$(base_libdir) \( -name '*.a' -o -name '*.la' \) -print0 | xargs --no-run-if-empty -0 rm -f
 	find $(ROOTFS)$(libdir) \( -name '*.a' -o -name '*.la' \) -print0 | xargs --no-run-if-empty -0 rm -f
-	@echo -e "$(TERM_YELLOW)"
-	@echo -n "After cleanup: "
-	@du -sh $(ROOTFS)
-	@echo -e "$(TERM_NORMAL)"
+	@$(call MESSAGE,"After cleanup: $$(du -sh $(ROOTFS))")
 
 # -----------------------------------------------------------------------------
 
@@ -152,10 +149,7 @@ ifneq ($(DEBUG),yes)
   ifeq ($(BOXSERIES),hd2)
 	find $(ROOTFS)/lib/modules/$(KERNEL_VER)/kernel -type f -name '*.ko' | xargs -n 1 $(TARGET_OBJCOPY) --strip-unneeded
   endif
-	@echo -e "$(TERM_YELLOW)"
-	@echo -n "After strip: "
-	@du -sh $(ROOTFS)
-	@echo -e "$(TERM_NORMAL)"
+	@$(call MESSAGE,"After strip: $$(du -sh $(ROOTFS))")
 endif
 
 # -----------------------------------------------------------------------------
