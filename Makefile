@@ -3,8 +3,6 @@
 #
 # -----------------------------------------------------------------------------
 
-MAINTAINER ?= unknown
-
 UID := $(shell id -u)
 ifeq ($(UID),0)
 warn:
@@ -43,8 +41,7 @@ export SHELL CONFIG_SHELL
 # first target is default ...
 default: all
 
-local-files: config.local Makefile.local
-	@mkdir -p local/{root,scripts}
+local-files: config.local Makefile.local local
 
 # workaround unset variables at first start
 config.local: $(eval BOXMODEL=hd51)
@@ -103,19 +100,14 @@ config.local: $(eval BOXMODEL=hd51)
 		51)	boxmodel=vuduo;; \
 		*)	boxmodel=hd51;; \
 	esac; \
-	cp config.example $@; \
+	cp support/config.example $@; \
 	sed -i -e "s|^#BOXMODEL = $$boxmodel|BOXMODEL = $$boxmodel|" $@
-	@echo ""
 
 Makefile.local:
-	@cp Makefile.example $@
+	@cp support/Makefile.example $@
 
--include config.local
-include make/environment-box.mk
-include make/environment-linux.mk
-include make/environment-build.mk
-include make/environment-image.mk
-include make/environment-update.mk
+local:
+	@mkdir -p $(@)/{root,scripts}
 
 printenv:
 	$(call draw_line);
@@ -174,7 +166,20 @@ help:
 	@echo "                     but doesn't touch your local stuff"
 	$(call draw_line);
 
+all:
+	@echo "'make all' is not a valid target."
+
+# target for testing only. not useful otherwise
+everything: $(shell sed -n 's/^\$$.D.\/\(.*\):.*/\1/p' make/*.mk)
+
 # -----------------------------------------------------------------------------
+
+-include config.local
+include make/environment-box.mk
+include make/environment-linux.mk
+include make/environment-build.mk
+include make/environment-image.mk
+include make/environment-update.mk
 
 -include internal/internal.mk
 
@@ -207,25 +212,18 @@ include make/host-tools.mk
 include make/ni.mk
 
 # for your local extensions, e.g. special plugins or similar ...
-# put them into $(BASE_DIR)/local since that is ignored in .gitignore
 -include ./Makefile.local
 
-all:
-	@echo "'make all' is not a valid target. Please read the documentation."
+# Quotes are needed for spaces and all in the original PATH content.
+PATH := "$(HOST_DIR)/bin:$(HOST_DIR)/sbin:$(CROSS_DIR)/bin:$(PATH)"
 
-done:
-	$(call draw_line);
-	@echo -e "$(TERM_GREEN)Done$(TERM_NORMAL)"
-	$(call draw_line);
-
-# target for testing only. not useful otherwise
-everything: $(shell sed -n 's/^\$$.D.\/\(.*\):.*/\1/p' make/*.mk)
+# -----------------------------------------------------------------------------
 
 .print-phony:
 	@echo $(PHONY)
 
 PHONY += local-files
-PHONY += printenv help done all everything
+PHONY += printenv help all everything
 PHONY += .print-phony
 .PHONY: $(PHONY)
 

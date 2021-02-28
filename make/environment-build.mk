@@ -98,7 +98,6 @@ endif
 # -----------------------------------------------------------------------------
 
 BASE_DIR     := $(shell pwd)
-WHOAMI       := $(shell id -un)
 DL_DIR        = $(BASE_DIR)/download
 BUILD_DIR     = $(BASE_DIR)/build_tmp
 ROOTFS        = $(BUILD_DIR)/rootfs
@@ -126,6 +125,8 @@ endif
 TARGET_FILES  = $(BASE_DIR)/skel-root/general
 PACKAGE_DIR   = $(BASE_DIR)/package
 SUPPORT_DIR   = $(BASE_DIR)/support
+
+MAINTAINER   ?= unknown
 
 # -----------------------------------------------------------------------------
 
@@ -180,8 +181,6 @@ GNU_HOST_NAME  := $(shell support/gnuconfig/config.guess)
 
 # search path(s) for all prerequisites
 VPATH = $(DEPS_DIR) $(HOST_DEPS_DIR)
-
-PATH := $(HOST_DIR)/bin:$(HOST_DIR)/sbin:$(CROSS_DIR)/bin:$(PATH)
 
 # -----------------------------------------------------------------------------
 
