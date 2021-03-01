@@ -214,9 +214,6 @@ include make/ni.mk
 # for your local extensions, e.g. special plugins or similar ...
 -include ./Makefile.local
 
-# Quotes are needed for spaces and all in the original PATH content.
-PATH := "$(HOST_DIR)/bin:$(HOST_DIR)/sbin:$(CROSS_DIR)/bin:$(PATH)"
-
 # -----------------------------------------------------------------------------
 
 .print-phony:
