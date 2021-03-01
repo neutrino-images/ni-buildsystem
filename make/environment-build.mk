@@ -182,6 +182,9 @@ GNU_HOST_NAME  := $(shell support/gnuconfig/config.guess)
 # search path(s) for all prerequisites
 VPATH = $(DEPS_DIR) $(HOST_DEPS_DIR)
 
+# Quotes are needed for spaces and all in the original PATH content.
+PATH := "$(HOST_DIR)/bin:$(HOST_DIR)/sbin:$(CROSS_DIR)/bin:$(PATH)"
+
 # -----------------------------------------------------------------------------
 
 PKG_CONFIG = $(HOST_DIR)/bin/$(TARGET)-pkg-config
