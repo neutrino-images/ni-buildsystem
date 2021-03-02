@@ -856,6 +856,9 @@ tzdata: $(TZDATA_DEPS) $(DL_DIR)/$(TZDATA_SOURCE) | $(TARGET_DIR)
 		done; \
 	$(INSTALL_DATA) -D $(PKG_FILES_DIR)/timezone.xml $(TARGET_sysconfdir)/timezone.xml
 	ln -sf $(datadir)/zoneinfo/$(TZDATA_LOCALTIME) $(TARGET_DIR)$(ETC_LOCALTIME)
+  ifeq ($(PERSISTENT_VAR_PARTITION),yes)
+	ln -sf $(ETC_LOCALTIME) $(TARGET_sysconfdir)/localtime
+  endif
 	echo "$(TZDATA_LOCALTIME)" > $(TARGET_sysconfdir)/timezone
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)

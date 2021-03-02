@@ -30,6 +30,7 @@ $(TARGET_sysconfdir)/default/rcS:
 $(TARGET_sysconfdir)/network/interfaces:
 ifeq ($(PERSISTENT_VAR_PARTITION),yes)
 	$(INSTALL_DATA) -D $(TARGET_FILES)/files-etc/network/interfaces $(TARGET_localstatedir)/etc/network/interfaces
+	ln -sf /var/etc/network/interfaces $(@)
 else
 	$(INSTALL_DATA) -D $(TARGET_FILES)/files-etc/network/interfaces $(@)
 endif
@@ -58,6 +59,7 @@ $(TARGET_sysconfdir)/nsswitch.conf:
 $(TARGET_sysconfdir)/passwd:
 ifeq ($(PERSISTENT_VAR_PARTITION),yes)
 	$(INSTALL_DATA) -D $(TARGET_FILES)/files-etc/passwd $(TARGET_localstatedir)/etc/passwd
+	ln -sf /var/etc/passwd $(@)
 else
 	$(INSTALL_DATA) -D $(TARGET_FILES)/files-etc/passwd $(@)
 endif

@@ -48,11 +48,7 @@ symbolic-links: | $(TARGET_DIR)
 ifeq ($(PERSISTENT_VAR_PARTITION),yes)
 	$(CD) $(TARGET_sysconfdir); \
 		ln -sf /var/etc/hostname hostname; \
-		ln -sf /var/etc/localtime localtime; \
-		ln -sf /var/etc/passwd passwd; \
 		ln -sf /var/etc/resolv.conf resolv.conf
-	$(CD) $(TARGET_sysconfdir)/network; \
-		ln -sf /var/etc/network/interfaces interfaces
 endif
 	mkdir -p $(TARGET_localstatedir)/tuxbox/config
 	$(CD) $(TARGET_localstatedir)/tuxbox/config; \
