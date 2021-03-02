@@ -1,0 +1,21 @@
+#!/bin/sh
+
+. /etc/profile
+. /etc/init.d/functions
+. /etc/init.d/globals
+
+SHOWINFO "start"
+
+if [ -e /tmp/.flash.start ]; then
+	lcd4l_cmd=stop
+	lcd4l_msg="Updating STB ..."
+else
+	lcd4l_cmd=off
+	lcd4l_msg="Shutdown STB ..."
+fi
+
+# first stopping lcd4linux
+test -d /tmp/lcd/ && echo ${lcd4l_msg} > /tmp/lcd/goodbye
+service lcd4linux ${lcd4l_cmd}
+
+SHOWINFO "done"
