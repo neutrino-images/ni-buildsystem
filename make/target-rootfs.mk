@@ -47,12 +47,10 @@ symbolic-links: | $(TARGET_DIR)
 		ln -sf /proc/mounts mtab
 ifeq ($(PERSISTENT_VAR_PARTITION),yes)
 	$(CD) $(TARGET_sysconfdir); \
-		ln -sf /var/etc/exports exports; \
 		ln -sf /var/etc/hostname hostname; \
 		ln -sf /var/etc/localtime localtime; \
 		ln -sf /var/etc/passwd passwd; \
-		ln -sf /var/etc/resolv.conf resolv.conf; \
-		ln -sf /var/etc/wpa_supplicant.conf wpa_supplicant.conf
+		ln -sf /var/etc/resolv.conf resolv.conf
 	$(CD) $(TARGET_sysconfdir)/network; \
 		ln -sf /var/etc/network/interfaces interfaces
 endif

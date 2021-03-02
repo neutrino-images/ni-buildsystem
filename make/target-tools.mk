@@ -1640,6 +1640,9 @@ wpa_supplicant: $(WPA_SUPPLICANT_DEPS) $(DL_DIR)/$(WPA_SUPPLICANT_SOURCE) | $(TA
 		$(MAKE) install DESTDIR=$(TARGET_DIR) BINDIR=$(sbindir)
 	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/pre-wlan0.sh $(TARGET_sysconfdir)/network/pre-wlan0.sh
 	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/post-wlan0.sh $(TARGET_sysconfdir)/network/post-wlan0.sh
+  ifeq ($(PERSISTENT_VAR_PARTITION),yes)
+	ln -sf /var/etc/wpa_supplicant.conf $(TARGET_sysconfdir)/wpa_supplicant.conf
+  endif
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
@@ -1723,6 +1726,7 @@ nfs-utils: $(NFS_UTILS_DEPS) $(DL_DIR)/$(NFS_UTILS_SOURCE) | $(TARGET_DIR)
 	rm -f $(addprefix $(TARGET_sbindir)/,mountstats nfsiostat)
   ifeq ($(PERSISTENT_VAR_PARTITION),yes)
 	$(INSTALL_DATA) -D $(PKG_FILES_DIR)/exports-var $(TARGET_localstatedir)/etc/exports
+	ln -sf /var/etc/exports $(TARGET_sysconfdir)/exports
   else
 	$(INSTALL_DATA) -D $(PKG_FILES_DIR)/exports $(TARGET_sysconfdir)/exports
   endif
