@@ -13,7 +13,6 @@ files-etc: \
 	$(TARGET_sysconfdir)/group \
 	$(TARGET_sysconfdir)/hosts \
 	$(TARGET_sysconfdir)/inetd.conf \
-	$(TARGET_sysconfdir)/inittab \
 	$(TARGET_sysconfdir)/issue.net \
 	$(TARGET_sysconfdir)/nsswitch.conf \
 	$(TARGET_sysconfdir)/passwd \
@@ -61,9 +60,6 @@ $(TARGET_sysconfdir)/hosts:
 
 $(TARGET_sysconfdir)/inetd.conf:
 	$(INSTALL_DATA) -D $(TARGET_FILES)/files-etc/inetd.conf $(@)
-
-$(TARGET_sysconfdir)/inittab:
-	$(INSTALL_DATA) -D $(TARGET_FILES)/files-etc/inittab $(@)
 
 $(TARGET_sysconfdir)/issue.net:
 	$(INSTALL_DATA) -D $(TARGET_FILES)/files-etc/issue.net $(@)

@@ -6,9 +6,6 @@
 init-scripts: \
 	$(TARGET_sysconfdir)/init.d/globals \
 	$(TARGET_sysconfdir)/init.d/functions \
-	$(TARGET_sysconfdir)/init.d/rc \
-	$(TARGET_sysconfdir)/init.d/rcS \
-	$(TARGET_sysconfdir)/init.d/rcK \
 	\
 	$(TARGET_sysconfdir)/init.d/camd \
 	$(TARGET_sysconfdir)/init.d/camd_datefix \
@@ -41,20 +38,6 @@ $(TARGET_sysconfdir)/init.d/globals:
 
 $(TARGET_sysconfdir)/init.d/functions:
 	$(INSTALL_DATA) -D $(TARGET_FILES)/scripts/init.functions $(@)
-
-$(TARGET_sysconfdir)/init.d/rc:
-	$(INSTALL_EXEC) -D $(TARGET_FILES)/files-etc/init.d/rc $(@)
-
-$(TARGET_sysconfdir)/init.d/rcS:
-ifeq ($(BOXMODEL),$(filter $(BOXMODEL),vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
-	$(INSTALL_EXEC) -D $(TARGET_FILES)/files-etc/init.d/rcS-vuplus $(@)
-else
-	$(INSTALL_EXEC) -D $(TARGET_FILES)/files-etc/init.d/rcS-$(BOXSERIES) $(@)
-endif
-	$(SED) "s|%(BOXMODEL)|$(BOXMODEL)|g" $(@)
-
-$(TARGET_sysconfdir)/init.d/rcK:
-	$(INSTALL_EXEC) -D $(TARGET_FILES)/files-etc/init.d/rcK $(@)
 
 $(TARGET_sysconfdir)/init.d/camd:
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/camd.init $(@)
@@ -163,15 +146,7 @@ endif
 # -----------------------------------------------------------------------------
 
 scripts: \
-	$(TARGET_sbindir)/service \
-	$(TARGET_sbindir)/update-rc.d \
 	$(TARGET_datadir)/udhcpc/default.script
-
-$(TARGET_sbindir)/service:
-	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/service $(@)
-
-$(TARGET_sbindir)/update-rc.d:
-	$(INSTALL_EXEC) -D support/scripts/update-rc.d $(@)
 
 $(TARGET_datadir)/udhcpc/default.script:
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/udhcpc-default.script $(@)

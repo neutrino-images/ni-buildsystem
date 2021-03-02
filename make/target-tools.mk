@@ -133,13 +133,13 @@ busybox: $(BUSYBOX_DEPS) $(DL_DIR)/$(BUSYBOX_SOURCE) | $(TARGET_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
 		$(APPLY_PATCHES); \
-	$(BUSYBOX_INSTALL_CONFIG)
-	$(BUSYBOX_MODIFY_CONFIG)
+	$($(PKG)_INSTALL_CONFIG)
+	$($(PKG)_MODIFY_CONFIG)
 	$(CHDIR)/$(PKG_DIR); \
 		$($(PKG)_MAKE_ENV) $(MAKE) $($(PKG)_MAKE_OPTS) busybox; \
 		$($(PKG)_MAKE_ENV) $(MAKE) $($(PKG)_MAKE_OPTS) install-noclobber
-	$(BUSYBOX_ADD_TO_SHELLS)
-	$(BUSYBOX_INSTALL_FILES)
+	$($(PKG)_ADD_TO_SHELLS)
+	$($(PKG)_INSTALL_FILES)
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
@@ -194,6 +194,27 @@ SYSVINIT_SITE   = http://download.savannah.nongnu.org/releases/sysvinit
 $(DL_DIR)/$(SYSVINIT_SOURCE):
 	$(DOWNLOAD) $(SYSVINIT_SITE)/$(SYSVINIT_SOURCE)
 
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
+  define SYSVINIT_INSTALL_RCS
+	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/rcS-vuplus $(TARGET_sysconfdir)/init.d/rcS
+  endef
+else
+  define SYSVINIT_INSTALL_RCS
+	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/rcS-$(BOXSERIES) $(TARGET_sysconfdir)/init.d/rcS
+  endef
+endif
+
+define SYSVINIT_INSTALL_FILES
+	$(INSTALL_DATA) -D $(PKG_FILES_DIR)/inittab $(TARGET_sysconfdir)/inittab
+	$(INSTALL_DATA) -D $(PKG_FILES_DIR)/default-rcS $(TARGET_sysconfdir)/default/rcS
+	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/rc $(TARGET_sysconfdir)/init.d/rc
+	$(SYSVINIT_INSTALL_RCS)
+	$(SED) "s|%(BOXMODEL)|$(BOXMODEL)|g" $(TARGET_sysconfdir)/init.d/rcS
+	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/rcK $(TARGET_sysconfdir)/init.d/rcK
+	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/service $(TARGET_sbindir)/service
+	$(INSTALL_EXEC) -D support/scripts/update-rc.d $(TARGET_sbindir)/update-rc.d
+endef
+
 sysvinit: $(DL_DIR)/$(SYSVINIT_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
@@ -204,6 +225,7 @@ sysvinit: $(DL_DIR)/$(SYSVINIT_SOURCE) | $(TARGET_DIR)
 		$(MAKE) install ROOT=$(TARGET_DIR) MANDIR=$(REMOVE_mandir)
 	-rm $(addprefix $(TARGET_base_sbindir)/,bootlogd fstab-decode logsave telinit)
 	-rm $(addprefix $(TARGET_bindir)/,last lastb mesg readbootlog utmpdump wall)
+	$($(PKG)_INSTALL_FILES)
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
