@@ -172,6 +172,7 @@ host-parted: $(DL_DIR)/$(HOST_PARTED_SOURCE) | $(HOST_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
 		$(APPLY_PATCHES); \
+		autoreconf -fi; \
 		$($(PKG)_CONF_ENV) ./configure $($(PKG)_CONF_OPTS); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(HOST_DIR)
