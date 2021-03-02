@@ -126,6 +126,15 @@ endef
 define BUSYBOX_INSTALL_FILES
 	$(BUSYBOX_INSTALL_SWAP)
 	$(BUSYBOX_INSTALL_FBSET)
+	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/udhcpc-default.script $(TARGET_datadir)/udhcpc/default.script
+	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/crond.init $(TARGET_sysconfdir)/init.d/crond
+	$(UPDATE-RC.D) crond defaults 50
+	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/inetd.init $(TARGET_sysconfdir)/init.d/inetd
+	$(UPDATE-RC.D) inetd defaults 50
+	$(INSTALL_DATA) -D $(PKG_FILES_DIR)/inetd.conf $(TARGET_sysconfdir)/inetd.conf
+	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/mdev.init $(TARGET_sysconfdir)/init.d/mdev
+	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/syslogd.init $(TARGET_sysconfdir)/init.d/syslogd
+	$(UPDATE-RC.D) syslogd stop 98 0 6 .
 endef
 
 busybox: $(BUSYBOX_DEPS) $(DL_DIR)/$(BUSYBOX_SOURCE) | $(TARGET_DIR)

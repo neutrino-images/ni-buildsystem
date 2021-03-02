@@ -90,7 +90,6 @@ endif
 	make autofs
 	make files-etc
 	make files-var-etc
-	make scripts
 	make init-scripts
 ifeq ($(PERSONALIZE),yes)
 	make personalize

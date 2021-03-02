@@ -10,19 +10,15 @@ init-scripts: \
 	$(TARGET_sysconfdir)/init.d/camd \
 	$(TARGET_sysconfdir)/init.d/camd_datefix \
 	$(TARGET_sysconfdir)/init.d/coredump \
-	$(TARGET_sysconfdir)/init.d/crond \
 	$(TARGET_sysconfdir)/init.d/custom-poweroff \
 	$(TARGET_sysconfdir)/init.d/fstab \
 	$(TARGET_sysconfdir)/init.d/hostname \
-	$(TARGET_sysconfdir)/init.d/inetd \
-	$(TARGET_sysconfdir)/init.d/mdev \
 	$(TARGET_sysconfdir)/init.d/networking \
 	$(TARGET_sysconfdir)/init.d/partitions-by-name \
 	$(TARGET_sysconfdir)/init.d/proc \
 	$(TARGET_sysconfdir)/init.d/rc.local \
 	$(TARGET_sysconfdir)/init.d/resizerootfs \
 	$(TARGET_sysconfdir)/init.d/sys_update.sh \
-	$(TARGET_sysconfdir)/init.d/syslogd \
 	$(TARGET_sysconfdir)/init.d/sendsigs \
 	$(TARGET_sysconfdir)/init.d/umountfs \
 	$(TARGET_sysconfdir)/init.d/suspend \
@@ -50,10 +46,6 @@ $(TARGET_sysconfdir)/init.d/coredump:
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/coredump.init $(@)
 	$(UPDATE-RC.D) $(@F) start 40 S .
 
-$(TARGET_sysconfdir)/init.d/crond:
-	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/crond.init $(@)
-	$(UPDATE-RC.D) $(@F) defaults 50
-
 $(TARGET_sysconfdir)/init.d/custom-poweroff:
 ifeq ($(BOXTYPE),coolstream)
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/custom-poweroff.init $(@)
@@ -66,13 +58,6 @@ $(TARGET_sysconfdir)/init.d/fstab:
 
 $(TARGET_sysconfdir)/init.d/hostname:
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/hostname.init $(@)
-
-$(TARGET_sysconfdir)/init.d/inetd:
-	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/inetd.init $(@)
-	$(UPDATE-RC.D) $(@F) defaults 50
-
-$(TARGET_sysconfdir)/init.d/mdev:
-	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/mdev.init $(@)
 
 $(TARGET_sysconfdir)/init.d/networking:
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/networking.init $(@)
@@ -101,10 +86,6 @@ endif
 
 $(TARGET_sysconfdir)/init.d/sys_update.sh:
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/sys_update.sh $(@)
-
-$(TARGET_sysconfdir)/init.d/syslogd:
-	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/syslogd.init $(@)
-	$(UPDATE-RC.D) $(@F) stop 98 0 6 .
 
 $(TARGET_sysconfdir)/init.d/sendsigs:
 ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd60 hd61))
@@ -142,11 +123,3 @@ $(TARGET_sysconfdir)/init.d/var_update.sh:
 ifeq ($(PERSISTENT_VAR_PARTITION),yes)
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/var_update.sh $(@)
 endif
-
-# -----------------------------------------------------------------------------
-
-scripts: \
-	$(TARGET_datadir)/udhcpc/default.script
-
-$(TARGET_datadir)/udhcpc/default.script:
-	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/udhcpc-default.script $(@)
