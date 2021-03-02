@@ -1721,6 +1721,11 @@ nfs-utils: $(NFS_UTILS_DEPS) $(DL_DIR)/$(NFS_UTILS_SOURCE) | $(TARGET_DIR)
 	chmod 0755 $(TARGET_base_sbindir)/mount.nfs
 	rm -f $(addprefix $(TARGET_base_sbindir)/,mount.nfs4 osd_login umount.nfs umount.nfs4)
 	rm -f $(addprefix $(TARGET_sbindir)/,mountstats nfsiostat)
+  ifeq ($(PERSISTENT_VAR_PARTITION),yes)
+	$(INSTALL_DATA) -D $(PKG_FILES_DIR)/exports-var $(TARGET_localstatedir)/etc/exports
+  else
+	$(INSTALL_DATA) -D $(PKG_FILES_DIR)/exports $(TARGET_sysconfdir)/exports
+  endif
 	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/nfsd.init $(TARGET_sysconfdir)/init.d/nfsd
 	$(UPDATE-RC.D) nfsd defaults 75 25
 	$(REMOVE)/$(PKG_DIR)

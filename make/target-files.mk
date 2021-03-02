@@ -7,7 +7,6 @@ files-etc: \
 	$(TARGET_sysconfdir)/default/rcS \
 	$(TARGET_sysconfdir)/network/interfaces \
 	$(TARGET_sysconfdir)/date-dummy \
-	$(TARGET_sysconfdir)/exports \
 	$(TARGET_sysconfdir)/filesystems \
 	$(TARGET_sysconfdir)/fstab \
 	$(TARGET_sysconfdir)/group \
@@ -37,13 +36,6 @@ endif
 
 $(TARGET_sysconfdir)/date-dummy:
 	echo "$(shell date +%Y)01010000" > $(@)
-
-$(TARGET_sysconfdir)/exports:
-ifeq ($(PERSISTENT_VAR_PARTITION),yes)
-	$(INSTALL_DATA) -D $(TARGET_FILES)/files-etc/exports-var $(TARGET_localstatedir)/etc/exports
-else
-	$(INSTALL_DATA) -D $(TARGET_FILES)/files-etc/exports $(@)
-endif
 
 $(TARGET_sysconfdir)/filesystems:
 	$(INSTALL_DATA) -D $(TARGET_FILES)/files-etc/filesystems $(@)
