@@ -894,7 +894,11 @@ PARTED_SITE   = $(GNU_MIRROR)/parted
 $(DL_DIR)/$(PARTED_SOURCE):
 	$(DOWNLOAD) $(PARTED_SITE)/$(PARTED_SOURCE)
 
-PARTED_DEPS = util-linux libiconv
+PARTED_DEPS = util-linux
+
+ifeq ($(BOXTYPE),$(filter $(BOXTYPE),armbox mipsbox))
+  PARTED_DEPS += libiconv
+endif
 
 PARTED_AUTORECONF = YES
 
