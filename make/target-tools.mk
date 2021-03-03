@@ -123,10 +123,17 @@ define BUSYBOX_ADD_TO_SHELLS
 	fi
 endef
 
+ifeq ($(PERSISTENT_VAR_PARTITION),yes)
+  define BUSYBOX_INSTALL_LINK_RESOLV_CONF
+	ln -sf /var/etc/resolv.conf $(TARGET_sysconfdir)/resolv.conf
+  endef
+endif
+
 define BUSYBOX_INSTALL_FILES
 	$(BUSYBOX_INSTALL_SWAP)
 	$(BUSYBOX_INSTALL_FBSET)
 	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/udhcpc-default.script $(TARGET_datadir)/udhcpc/default.script
+	$(BUSYBOX_INSTALL_LINK_RESOLV_CONF)
 	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/crond.init $(TARGET_sysconfdir)/init.d/crond
 	$(UPDATE-RC.D) crond defaults 50
 	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/inetd.init $(TARGET_sysconfdir)/init.d/inetd

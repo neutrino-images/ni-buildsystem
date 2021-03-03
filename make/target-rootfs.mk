@@ -47,8 +47,7 @@ symbolic-links: | $(TARGET_DIR)
 		ln -sf /proc/mounts mtab
 ifeq ($(PERSISTENT_VAR_PARTITION),yes)
 	$(CD) $(TARGET_sysconfdir); \
-		ln -sf /var/etc/hostname hostname; \
-		ln -sf /var/etc/resolv.conf resolv.conf
+		ln -sf /var/etc/hostname hostname
 endif
 	mkdir -p $(TARGET_localstatedir)/tuxbox/config
 	$(CD) $(TARGET_localstatedir)/tuxbox/config; \
