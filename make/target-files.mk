@@ -4,7 +4,6 @@
 # -----------------------------------------------------------------------------
 
 files-etc: \
-	$(TARGET_sysconfdir)/network/interfaces \
 	$(TARGET_sysconfdir)/date-dummy \
 	$(TARGET_sysconfdir)/filesystems \
 	$(TARGET_sysconfdir)/fstab \
@@ -22,14 +21,6 @@ files-etc: \
 PHONY += $(TARGET_sysconfdir)/profile.d
 
 # -----------------------------------------------------------------------------
-
-$(TARGET_sysconfdir)/network/interfaces:
-ifeq ($(PERSISTENT_VAR_PARTITION),yes)
-	$(INSTALL_DATA) -D $(TARGET_FILES)/files-etc/network/interfaces $(TARGET_localstatedir)/etc/network/interfaces
-	ln -sf /var/etc/network/interfaces $(@)
-else
-	$(INSTALL_DATA) -D $(TARGET_FILES)/files-etc/network/interfaces $(@)
-endif
 
 $(TARGET_sysconfdir)/date-dummy:
 	echo "$(shell date +%Y)01010000" > $(@)

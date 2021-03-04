@@ -46,7 +46,6 @@ target-dir:
 	mkdir -p $(TARGET_sbindir)
 	mkdir -p $(TARGET_datadir)
 	#mkdir -p $(TARGET_prefix)/local/{bin,include,lib,sbin,share}
-	mkdir -p $(TARGET_sysconfdir)/network/if-{up,pre-up,post-up,down,pre-down,post-down}.d
 	mkdir -p $(TARGET_localstatedir)/bin
 	mkdir -p $(TARGET_localstatedir)/etc/init.d
 	mkdir -p $(TARGET_localstatedir)/keys

@@ -132,6 +132,7 @@ endif
 define BUSYBOX_INSTALL_FILES
 	$(BUSYBOX_INSTALL_SWAP)
 	$(BUSYBOX_INSTALL_FBSET)
+	$(MAKE) ifupdown-scripts
 	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/udhcpc-default.script $(TARGET_datadir)/udhcpc/default.script
 	$(BUSYBOX_INSTALL_LINK_RESOLV_CONF)
 	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/crond.init $(TARGET_sysconfdir)/init.d/crond

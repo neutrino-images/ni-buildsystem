@@ -127,7 +127,7 @@ insmod 8192cu.ko
 insmod rt2870sta.ko
 
 # fire up network/wlan
-service networking start
+service network start
 service ntpdate start
 
 # load rest of modules

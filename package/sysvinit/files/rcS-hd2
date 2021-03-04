@@ -145,7 +145,7 @@ ln -sf /dev/cs_ir /dev/input/nevis_ir
 ln -sf /dev/cs_ir /dev/input/input0
 
 # fire up network/wlan
-service networking start
+service network start
 service ntpdate start
 
 # say hi to everyone

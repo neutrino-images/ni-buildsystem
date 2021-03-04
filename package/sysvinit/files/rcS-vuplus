@@ -76,7 +76,7 @@ showiframe.sh bootlogo.m2v
 service mdev start
 
 # fire up network/wlan
-service networking start
+service network start
 service ntpdate start
 
 # say hi to everyone

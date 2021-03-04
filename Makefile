@@ -209,6 +209,8 @@ include make/target-tools.mk
 include make/target-tools-unused.mk
 include make/host-tools.mk
 
+include $(sort $(wildcard package/*/*.mk))
+
 include make/ni.mk
 
 # for your local extensions, e.g. special plugins or similar ...

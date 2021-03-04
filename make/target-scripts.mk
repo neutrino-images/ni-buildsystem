@@ -13,7 +13,6 @@ init-scripts: \
 	$(TARGET_sysconfdir)/init.d/custom-poweroff \
 	$(TARGET_sysconfdir)/init.d/fstab \
 	$(TARGET_sysconfdir)/init.d/hostname \
-	$(TARGET_sysconfdir)/init.d/networking \
 	$(TARGET_sysconfdir)/init.d/partitions-by-name \
 	$(TARGET_sysconfdir)/init.d/proc \
 	$(TARGET_sysconfdir)/init.d/rc.local \
@@ -58,10 +57,6 @@ $(TARGET_sysconfdir)/init.d/fstab:
 
 $(TARGET_sysconfdir)/init.d/hostname:
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/hostname.init $(@)
-
-$(TARGET_sysconfdir)/init.d/networking:
-	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/networking.init $(@)
-	$(UPDATE-RC.D) $(@F) stop 98 0 6 .
 
 $(TARGET_sysconfdir)/init.d/partitions-by-name:
 ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 hd60 hd61))
