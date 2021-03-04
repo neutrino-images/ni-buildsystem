@@ -51,7 +51,6 @@ target-dir:
 	mkdir -p $(TARGET_localstatedir)/etc/init.d
 	mkdir -p $(TARGET_localstatedir)/keys
 	mkdir -p $(TARGET_localstatedir)/root
-	mkdir -p $(TARGET_localstatedir)/spool/cron/crontabs
 ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd5x hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
 	mkdir -p $(TARGET_DIR)/boot
 endif

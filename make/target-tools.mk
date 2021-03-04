@@ -136,6 +136,8 @@ define BUSYBOX_INSTALL_FILES
 	$(BUSYBOX_INSTALL_LINK_RESOLV_CONF)
 	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/crond.init $(TARGET_sysconfdir)/init.d/crond
 	$(UPDATE-RC.D) crond defaults 50
+	$(INSTALL) -d $(TARGET_localstatedir)/spool/cron/crontabs \
+		$(TARGET_sysconfdir)/cron.{daily,hourly,monthly,weekly}
 	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/inetd.init $(TARGET_sysconfdir)/init.d/inetd
 	$(UPDATE-RC.D) inetd defaults 50
 	$(INSTALL_DATA) -D $(PKG_FILES_DIR)/inetd.conf $(TARGET_sysconfdir)/inetd.conf
