@@ -91,20 +91,22 @@ libupnp: $(DL_DIR)/$(LIBUPNP_SOURCE) | $(TARGET_DIR)
 	
 # -----------------------------------------------------------------------------
 
-LIBDVBSI_VER    = git
-LIBDVBSI_DIR    = libdvbsi.$(LIBDVBSI_VER)
-LIBDVBSI_SOURCE = libdvbsi.$(LIBDVBSI_VER)
-LIBDVBSI_SITE   = https://github.com/OpenVisionE2
+LIBDVBSI_VER    = 0.3.9
+LIBDVBSI_DIR    = libdvbsi++-$(LIBDVBSI_VER)
+LIBDVBSI_SOURCE = libdvbsi++-$(LIBDVBSI_VER).tar.bz2
+LIBDVBSI_SITE   = https://github.com/mtdcr/libdvbsi/releases/download/$(LIBDVBSI_VER)
+
+$(DL_DIR)/$(LIBDVBSI_SOURCE):
+	$(DOWNLOAD) $(LIBDVBSI_SITE)/$(LIBDVBSI_SOURCE)
 
 LIBDVBSI_CONV_OPTS = \
 	--enable-silent-rules \
 	--enable-shared \
 	--disable-static
 
-libdvbsi: | $(TARGET_DIR)
+libdvbsi: $(DL_DIR)/$(LIBDVBSI_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
-	$(GET-GIT-SOURCE) $(PKG_SITE)/$(PKG_SOURCE) $(DL_DIR)/$(PKG_SOURCE)
-	$(CPDIR)/$(PKG_SOURCE)
+	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
 		$(APPLY_PATCHES); \
 		$(CONFIGURE); \
