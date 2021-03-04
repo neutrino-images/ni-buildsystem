@@ -4,7 +4,6 @@
 # -----------------------------------------------------------------------------
 
 files-etc: \
-	$(TARGET_sysconfdir)/default/rcS \
 	$(TARGET_sysconfdir)/network/interfaces \
 	$(TARGET_sysconfdir)/date-dummy \
 	$(TARGET_sysconfdir)/filesystems \
@@ -23,9 +22,6 @@ files-etc: \
 PHONY += $(TARGET_sysconfdir)/profile.d
 
 # -----------------------------------------------------------------------------
-
-$(TARGET_sysconfdir)/default/rcS:
-	$(INSTALL_DATA) -D $(TARGET_FILES)/files-etc/default/rcS $(@)
 
 $(TARGET_sysconfdir)/network/interfaces:
 ifeq ($(PERSISTENT_VAR_PARTITION),yes)
