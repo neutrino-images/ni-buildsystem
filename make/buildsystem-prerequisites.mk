@@ -35,17 +35,15 @@ TOOLCHECK += find-tic
 TOOLCHECK += find-yacc
 
 find-%:
-	@TOOL=$(patsubst find-%,%,$(@)); \
-	type -p $$TOOL >/dev/null || { echo "required tool $$TOOL missing."; false; }
-
-toolcheck: $(TOOLCHECK)
-	@echo "All required tools seem to be installed."
-	@make bashcheck
+	@TOOL=$(patsubst find-%,%,$(@)); type -p $$TOOL >/dev/null || \
+		{ $(call MESSAGE_RED,"Warning",": required tool $$TOOL missing."); false; }
 
 bashcheck:
-	@if test "$(subst /bin/,,$(shell readlink /bin/sh))" != "bash"; then \
-		@$(call MESSAGE_RED,"Warning",": /bin/sh is not linked to bash"); \
-	fi
+	@test "$(subst /bin/,,$(shell readlink /bin/sh))" == "bash" || \
+		{ $(call MESSAGE_RED,"Warning",": /bin/sh is not linked to bash"); false; }
+
+toolcheck: bashcheck $(TOOLCHECK)
+	@$(call MESSAGE_GREEN,"All required tools seem to be installed.")
 
 # -----------------------------------------------------------------------------
 
