@@ -913,6 +913,43 @@ libroxml: $(DL_DIR)/$(LIBROXML_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
+LIBXSLT_VER    = 1.1.34
+LIBXSLT_DIR    = libxslt-$(LIBXSLT_VER)
+LIBXSLT_SOURCE = libxslt-$(LIBXSLT_VER).tar.gz
+LIBXSLT_SITE   = ftp://xmlsoft.org/libxml2
+
+$(DL_DIR)/$(LIBXSLT_SOURCE):
+	$(DOWNLOAD) $(LIBXSLT_SITE)/$(LIBXSLT_SOURCE)
+
+LIBXSLT_DEPS = libxml2
+
+LIBXSLT_CONFIG_SCRIPTS = xslt-config
+
+LIBXSLT_CONF_OPTS = \
+	--datarootdir=$(REMOVE_datarootdir) \
+	--enable-shared \
+	--disable-static \
+	--without-python \
+	--without-crypto \
+	--without-debug \
+	--without-mem-debug
+
+libxslt: $(LIBXSLT_DEPS) $(DL_DIR)/$(LIBXSLT_SOURCE) | $(TARGET_DIR)
+	$(REMOVE)/$(PKG_DIR)
+	$(UNTAR)/$(PKG_SOURCE)
+	$(CHDIR)/$(PKG_DIR); \
+		$(CONFIGURE); \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	-rm -r $(TARGET_libdir)/libxslt-plugins/
+	-rm $(addprefix $(TARGET_libdir)/,xsltConf.sh)
+	$(REWRITE_CONFIG_SCRIPTS)
+	$(REWRITE_LIBTOOL)
+	$(REMOVE)/$(PKG_DIR)
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
 RTMPDUMP_DEPS = zlib openssl
 
 RTMPDUMP_MAKE_ENV = \
