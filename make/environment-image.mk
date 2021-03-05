@@ -3,6 +3,9 @@
 #
 # -----------------------------------------------------------------------------
 
+# Debug image
+DEBUG ?= no
+
 # Versioning
 GITTAG=$(shell git tag -l "NI-*" | tail -n1)
 GITREV=$(shell git rev-list $(GITTAG)..HEAD --count)

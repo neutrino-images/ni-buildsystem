@@ -46,15 +46,12 @@ HOST_PKGCONF_SITE   = https://distfiles.dereferenced.org/pkgconf
 $(DL_DIR)/$(HOST_PKGCONF_SOURCE):
 	$(DOWNLOAD) $(HOST_PKGCONF_SITE)/$(HOST_PKGCONF_SOURCE)
 
-HOST_PKGCONF_CONF_OPTS = \
-	--prefix=$(HOST_DIR)
-
 host-pkgconf: $(DL_DIR)/$(HOST_PKGCONF_SOURCE) | $(HOST_DIR) pkg-config-preqs
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
 		$(APPLY_PATCHES); \
-		$($(PKG)_CONF_ENV) ./configure $($(PKG)_CONF_OPTS); \
+		$(HOST_CONFIGURE);\
 		$(MAKE); \
 		$(MAKE) install
 	$(INSTALL_EXEC) $(PKG_FILES_DIR)/pkg-config.in $(HOST_PKG-CONFIG)
@@ -85,8 +82,6 @@ HOST_MTD_UTILS_CONF_ENV = \
 	UUID_LIBS="-luuid"
 
 HOST_MTD_UTILS_CONF_OPTS = \
-	--prefix= \
-	--enable-silent-rules \
 	--without-ubifs \
 	--without-xattr \
 	--disable-tests
@@ -95,9 +90,9 @@ host-mtd-utils: $(DL_DIR)/$(HOST_MTD_UTILS_SOURCE) | $(HOST_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
-		$($(PKG)_CONF_ENV) ./configure $($(PKG)_CONF_OPTS); \
+		$(HOST_CONFIGURE);\
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(HOST_DIR)
+		$(MAKE) install
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
@@ -160,8 +155,6 @@ HOST_PARTED_SITE   = $(GNU_MIRROR)/parted
 HOST_PARTED_AUTORECONF = YES
 
 HOST_PARTED_CONF_OPTS = \
-	--prefix= \
-	--enable-silent-rules \
 	--enable-static \
 	--disable-shared \
 	--disable-device-mapper \
@@ -172,10 +165,9 @@ host-parted: $(DL_DIR)/$(HOST_PARTED_SOURCE) | $(HOST_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
 		$(APPLY_PATCHES); \
-		autoreconf -fi; \
-		$($(PKG)_CONF_ENV) ./configure $($(PKG)_CONF_OPTS); \
+		$(HOST_CONFIGURE);\
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(HOST_DIR)
+		$(MAKE) install
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
@@ -190,16 +182,15 @@ HOST_DOSFSTOOLS_SITE   = https://github.com/dosfstools/dosfstools/releases/downl
 #	$(DOWNLOAD) $(HOST_DOSFSTOOLS_SITE)/$(HOST_DOSFSTOOLS_SOURCE)
 
 HOST_DOSFSTOOLS_CONF_OPTS = \
-	--prefix= \
 	--without-udev
 
 host-dosfstools: $(DL_DIR)/$(HOST_DOSFSTOOLS_SOURCE) | $(HOST_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
-		$($(PKG)_CONF_ENV) ./configure $($(PKG)_CONF_OPTS); \
+		$(HOST_CONFIGURE);\
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(HOST_DIR)
+		$(MAKE) install
 	ln -sf mkfs.fat $(HOST_DIR)/sbin/mkfs.vfat
 	ln -sf mkfs.fat $(HOST_DIR)/sbin/mkfs.msdos
 	ln -sf mkfs.fat $(HOST_DIR)/sbin/mkdosfs
@@ -216,16 +207,13 @@ HOST_MTOOLS_SITE   = $(GNU_MIRROR)/mtools
 $(DL_DIR)/$(HOST_MTOOLS_SOURCE):
 	$(DOWNLOAD) $(HOST_MTOOLS_SITE)/$(HOST_MTOOLS_SOURCE)
 
-HOST_MTOOLS_CONF_OPTS = \
-	--prefix=
-
 host-mtools: $(DL_DIR)/$(HOST_MTOOLS_SOURCE) | $(HOST_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
-		$($(PKG)_CONF_ENV) ./configure $($(PKG)_CONF_OPTS); \
+		$(HOST_CONFIGURE);\
 		$(MAKE1); \
-		$(MAKE1) install DESTDIR=$(HOST_DIR)
+		$(MAKE) install
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
@@ -240,15 +228,16 @@ HOST_E2FSPROGS_SITE   = https://sourceforge.net/projects/e2fsprogs/files/e2fspro
 #	$(DOWNLOAD) $(HOST_E2FSPROGS_SITE)/$(HOST_E2FSPROGS_SOURCE)
 
 HOST_E2FSPROGS_CONF_OPTS = \
-	--prefix=
+	--enable-symlink-install \
+	--with-crond-dir=no
 
 host-e2fsprogs: $(DL_DIR)/$(HOST_E2FSPROGS_SOURCE) | $(HOST_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
-		$($(PKG)_CONF_ENV) ./configure $($(PKG)_CONF_OPTS); \
+		$(HOST_CONFIGURE);\
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(HOST_DIR)
+		$(MAKE) install
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
@@ -286,9 +275,6 @@ HOST_NINJA_SITE   = $(call github,ninja-build,ninja,v$(HOST_NINJA_VER))
 $(DL_DIR)/$(HOST_NINJA_SOURCE):
 	$(DOWNLOAD) $(HOST_NINJA_SITE)/$(HOST_NINJA_SOURCE)
 
-HOST_NINJA_CONF_OPTS = \
-	-DCMAKE_INSTALL_PREFIX=""
-
 HOST_NINJA = $(HOST_DIR)/bin/ninja
 
 host-ninja: $(DL_DIR)/$(HOST_NINJA_SOURCE) | $(HOST_DIR)
@@ -296,7 +282,7 @@ host-ninja: $(DL_DIR)/$(HOST_NINJA_SOURCE) | $(HOST_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
 		$(APPLY_PATCHES); \
-		$($(PKG)_CONF_ENV) cmake $($(PKG)_CONF_OPTS); \
+		$(HOST_CMAKE); \
 		$(MAKE)
 	$(INSTALL_EXEC) -D $(PKG_BUILD_DIR)/ninja $(HOST_NINJA)
 	$(REMOVE)/$(PKG_DIR)
@@ -313,16 +299,15 @@ HOST_EXPAT_SITE   = https://sourceforge.net/projects/expat/files/expat/$(EXPAT_V
 #	$(DOWNLOAD) $(HOST_EXPAT_SITE)/$(EXPAT_SOURCE)
 
 HOST_EXPAT_CONF_OPTS = \
-	--prefix= \
 	--without-docbook
 
 host-expat: $(DL_DIR)/$(HOST_EXPAT_SOURCE) | $(HOST_DIR)
 	$(REMOVE)/$(HOST_EXPAT_DIR)
 	$(UNTAR)/$(HOST_EXPAT_SOURCE)
 	$(CHDIR)/$(HOST_EXPAT_DIR); \
-		$($(PKG)_CONF_ENV) ./configure $($(PKG)_CONF_OPTS); \
+		$(HOST_CONFIGURE);\
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(HOST_DIR)
+		$(MAKE) install
 	$(REMOVE)/$(HOST_EXPAT_DIR)
 	$(TOUCH)
 
@@ -342,11 +327,9 @@ $(DL_DIR)/$(HOST_PYTHON3_SOURCE):
 HOST_PYTHON3_DEPS = host-expat host-libffi
 
 HOST_PYTHON3_CONF_ENV = \
-	CONFIG_SITE= \
 	OPT="$(HOST_CFLAGS)"
 
 HOST_PYTHON3_CONF_OPTS = \
-	--prefix=$(HOST_DIR) \
 	--without-ensurepip \
 	--without-cxx-main \
 	--disable-sqlite3 \
@@ -366,7 +349,7 @@ host-python3: $(HOST_PYTHON3_DEPS) $(DL_DIR)/$(HOST_PYTHON3_SOURCE) | $(HOST_DIR
 	$(CHDIR)/$(PKG_DIR); \
 		#$(APPLY_PATCHES); \
 		autoconf; \
-		$($(PKG)_CONF_ENV) ./configure $($(PKG)_CONF_OPTS); \
+		$(HOST_CONFIGURE);\
 		$(MAKE); \
 		$(MAKE) install
 	$(REMOVE)/$(PKG_DIR)
@@ -404,17 +387,14 @@ HOST_LIBFFI_SITE   = https://github.com/libffi/libffi/releases/download/v$(HOST_
 #$(DL_DIR)/$(HOST_LIBFFI_SOURCE):
 #	$(DOWNLOAD) $(HOST_LIBFFI_SITE)/$(HOST_LIBFFI_SOURCE)
 
-HOST_LIBFFI_CONF_OPTS = \
-	--prefix=
-
 host-libffi: $(DL_DIR)/$(HOST_LIBFFI_SOURCE) | $(HOST_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
 		$(APPLY_PATCHES); \
-		$($(PKG)_CONF_ENV) ./configure $($(PKG)_CONF_OPTS); \
+		$(HOST_CONFIGURE);\
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(HOST_DIR)
+		$(MAKE) install
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
@@ -468,8 +448,6 @@ HOST_LUAROCKS_MAKE_ENV = \
 	TARGET_libdir="$(TARGET_libdir)"
 
 HOST_LUAROCKS_CONF_OPTS = \
-	--prefix=$(HOST_DIR) \
-	--sysconfdir=$(HOST_DIR)/etc \
 	--with-lua=$(HOST_DIR) \
 	--rocks-tree=$(TARGET_DIR)
 
@@ -480,8 +458,7 @@ host-luarocks: $(HOST_LUAROCKS_DEPS) $(DL_DIR)/$(HOST_LUAROCKS_SOURCE) | $(HOST_
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
 		$(APPLY_PATCHES); \
-		$($(PKG)_CONF_ENV) ./configure $($(PKG)_CONF_OPTS); \
-		rm -f $(PKG_CONFIG_FILE); \
+		$(HOST_CONFIGURE);\
 		$(MAKE); \
 		$(MAKE) install
 	cat $(PKG_FILES_DIR)/luarocks-config.lua >> $(HOST_LUAROCKS_CONFIG)
@@ -491,12 +468,21 @@ host-luarocks: $(HOST_LUAROCKS_DEPS) $(DL_DIR)/$(HOST_LUAROCKS_SOURCE) | $(HOST_
 # -----------------------------------------------------------------------------
 
 # helper target to create ccache links
+
+ifndef CCACHE
+CCACHE := ccache
+endif
+CCACHE := $(shell which $(CCACHE) || type -p $(CCACHE) || echo ccache)
+
+CCACHE_DIR = $(HOME)/.ccache-$(call LOWERCASE,$(TARGET_VENDOR))-$(TARGET_ARCH)-$(TARGET_OS)-$(KERNEL_VER)
+export CCACHE_DIR
+
 host-ccache: find-ccache $(CCACHE) | $(HOST_DIR)
-	@ln -sf $(CCACHE) $(HOST_DIR)/bin/cc
-	@ln -sf $(CCACHE) $(HOST_DIR)/bin/gcc
-	@ln -sf $(CCACHE) $(HOST_DIR)/bin/g++
-	@ln -sf $(CCACHE) $(HOST_DIR)/bin/$(TARGET_CC)
-	@ln -sf $(CCACHE) $(HOST_DIR)/bin/$(TARGET_CXX)
+	ln -sf $(CCACHE) $(HOST_DIR)/bin/cc
+	ln -sf $(CCACHE) $(HOST_DIR)/bin/gcc
+	ln -sf $(CCACHE) $(HOST_DIR)/bin/g++
+	ln -sf $(CCACHE) $(HOST_DIR)/bin/$(TARGET_CC)
+	ln -sf $(CCACHE) $(HOST_DIR)/bin/$(TARGET_CXX)
 
 # -----------------------------------------------------------------------------
 

@@ -97,7 +97,7 @@ endif
 
 # -----------------------------------------------------------------------------
 
-BASE_DIR     := $(shell pwd)
+BASE_DIR     := $(CURDIR)
 DL_DIR        = $(BASE_DIR)/download
 BUILD_DIR     = $(BASE_DIR)/build_tmp
 ROOTFS        = $(BUILD_DIR)/rootfs
@@ -131,25 +131,17 @@ MAINTAINER   ?= unknown
 # -----------------------------------------------------------------------------
 
 include make/environment-host.mk
-
-# -----------------------------------------------------------------------------
-
-CCACHE        = /usr/bin/ccache
-CCACHE_DIR    = $(HOME)/.ccache-ni-buildsystem-$(TARGET_ARCH)-linux-$(KERNEL_VER)
-export CCACHE_DIR
-
-# -----------------------------------------------------------------------------
-
-# create debug image
-DEBUG ?= no
-
-# -----------------------------------------------------------------------------
-
 include make/environment-target.mk
 
+STATIC_libdir = $(STATIC_DIR)/$(prefix)/lib
+
 # -----------------------------------------------------------------------------
 
-STATIC_libdir = $(STATIC_DIR)/$(prefix)/lib
+HOST_CPPFLAGS   = -I$(HOST_DIR)/include
+HOST_CFLAGS    ?= -O2
+HOST_CFLAGS    += $(HOST_CPPFLAGS)
+HOST_CXXFLAGS  += $(HOST_CFLAGS)
+HOST_LDFLAGS   += -L$(HOST_DIR)/lib -Wl,-rpath,$(HOST_DIR)/lib
 
 TARGET_CFLAGS   = -pipe $(TARGET_OPTIMIZATION) $(TARGET_DEBUGGING) $(TARGET_ABI) $(TARGET_EXTRA_CFLAGS) $(CXX11_ABI) -I$(TARGET_includedir)
 TARGET_CPPFLAGS = $(TARGET_CFLAGS)
@@ -212,6 +204,24 @@ PKG_CHDIR       = $(CD) $(PKG_BUILD_DIR)
 
 # -----------------------------------------------------------------------------
 
+#HOST_MAKE_ENV = \
+#	$($(PKG)_MAKE_ENV)
+
+HOST_MAKE_OPTS = \
+	CC="$(HOSTCC)" \
+	GCC="$(HOSTCC)" \
+	CPP="$(HOSTCPP)" \
+	CXX="$(HOSTCXX)" \
+	LD="$(HOSTLD)" \
+	AR="$(HOSTAR)" \
+	AS="$(HOSTAS)" \
+	NM="$(HOSTNM)" \
+	OBJCOPY="$(HOSTOBJCOPY)" \
+	RANLIB="$(HOSTRANLIB)"
+
+#HOST_MAKE_OPTS += \
+#	$($(PKG)_MAKE_OPTS)
+
 #TARGET_MAKE_ENV = \
 #	$($(PKG)_MAKE_ENV)
 
@@ -235,13 +245,28 @@ TARGET_MAKE_OPTS = \
 #TARGET_MAKE_OPTS += \
 #	$($(PKG)_MAKE_OPTS)
 
-#HOST_MAKE_ENV = \
-#	$($(PKG)_MAKE_ENV)
-
-#HOST_MAKE_OPTS += \
-#	$($(PKG)_MAKE_OPTS)
-
 # -----------------------------------------------------------------------------
+
+HOST_CONFIGURE_ENV = \
+	$(HOST_MAKE_OPTS) \
+	CFLAGS="$(HOST_CFLAGS)" \
+	CPPFLAGS="$(HOST_CPPFLAGS)" \
+	CXXFLAGS="$(HOST_CXXFLAGS)" \
+	LDFLAGS="$(HOST_LDFLAGS)"
+
+HOST_CONFIGURE_ENV += \
+	PKG_CONFIG=/usr/bin/pkg-config \
+	PKG_CONFIG_LIBDIR="$(HOST_DIR)/lib/pkgconfig"
+
+HOST_CONFIGURE_ENV += \
+	$($(PKG)_CONF_ENV)
+
+HOST_CONFIGURE_OPTS = \
+	--prefix=$(HOST_DIR) \
+	--sysconfdir=$(HOST_DIR)/etc
+
+HOST_CONFIGURE_OPTS += \
+	$($(PKG)_CONF_OPTS)
 
 TARGET_CONFIGURE_ENV = \
 	$(TARGET_MAKE_OPTS) \
@@ -277,13 +302,16 @@ TARGET_CONFIGURE_OPTS = \
 TARGET_CONFIGURE_OPTS += \
 	$($(PKG)_CONF_OPTS)
 
-#HOST_CONFIGURE_ENV = \
-#	$($(PKG)_CONF_ENV)
+HOST_CONFIGURE = \
+	if [ "$($(PKG)_AUTORECONF)" == "YES" ]; then \
+		$(call MESSAGE,"Autoreconfiguring"); \
+		$($(PKG)_AUTORECONF_ENV) autoreconf -fi $($(PKG)_AUTORECONF_OPTS); \
+	fi; \
+	test -f ./configure || ./autogen.sh && \
+	CONFIG_SITE=/dev/null \
+	$(HOST_CONFIGURE_ENV) ./configure $(HOST_CONFIGURE_OPTS)
 
-#HOST_CONFIGURE_OPTS = \
-#	$($(PKG)_CONF_OPTS)
-
-CONFIGURE = \
+TARGET_CONFIGURE = \
 	if [ "$($(PKG)_AUTORECONF)" == "YES" ]; then \
 		$(call MESSAGE,"Autoreconfiguring"); \
 		$($(PKG)_AUTORECONF_ENV) autoreconf -fi $($(PKG)_AUTORECONF_OPTS); \
@@ -292,13 +320,38 @@ CONFIGURE = \
 	CONFIG_SITE=/dev/null \
 	$(TARGET_CONFIGURE_ENV) ./configure $(TARGET_CONFIGURE_OPTS)
 
+CONFIGURE = $(TARGET_CONFIGURE)
+
 # -----------------------------------------------------------------------------
+
+HOST_CMAKE_ENV = \
+	$($(PKG)_CONF_ENV)
+
+HOST_CMAKE_OPTS += \
+	--no-warn-unused-cli
+
+HOST_CMAKE_OPTS += \
+	-DENABLE_STATIC=OFF \
+	-DBUILD_SHARED_LIBS=ON \
+	-DBUILD_DOC=OFF \
+	-DBUILD_DOCS=OFF \
+	-DBUILD_EXAMPLE=OFF \
+	-DBUILD_EXAMPLES=OFF \
+	-DBUILD_TEST=OFF \
+	-DBUILD_TESTS=OFF \
+	-DBUILD_TESTING=OFF \
+	-DCMAKE_COLOR_MAKEFILE=OFF \
+	-DCMAKE_INSTALL_PREFIX="$(HOST_DIR)" \
+	-DCMAKE_PREFIX_PATH="$(HOST_DIR)"
+
+HOST_CMAKE_OPTS += \
+	$($(PKG)_CONF_OPTS)
 
 TARGET_CMAKE_ENV = \
 	$($(PKG)_CONF_ENV)
 
 TARGET_CMAKE_OPTS = \
-	--no-warn-unused-cli 
+	--no-warn-unused-cli
 
 TARGET_CMAKE_OPTS += \
 	-DENABLE_STATIC=OFF \
@@ -310,6 +363,7 @@ TARGET_CMAKE_OPTS += \
 	-DBUILD_TEST=OFF \
 	-DBUILD_TESTS=OFF \
 	-DBUILD_TESTING=OFF \
+	-DCMAKE_COLOR_MAKEFILE=OFF \
 	-DCMAKE_BUILD_TYPE="None" \
 	-DCMAKE_SYSTEM_NAME="Linux" \
 	-DCMAKE_SYSTEM_PROCESSOR="$(TARGET_ARCH)" \
@@ -337,15 +391,15 @@ TARGET_CMAKE_OPTS += \
 TARGET_CMAKE_OPTS += \
 	$($(PKG)_CONF_OPTS)
 
-#HOST_CMAKE_ENV = \
-#	$($(PKG)_CONF_ENV)
+HOST_CMAKE = \
+	rm -f CMakeCache.txt; \
+	$(HOST_CMAKE_ENV) cmake $(HOST_CMAKE_OPTS)
 
-#HOST_CMAKE_OPTS = \
-#	$($(PKG)_CONF_OPTS)
-
-CMAKE = \
+TARGET_CMAKE = \
 	rm -f CMakeCache.txt; \
 	$(TARGET_CMAKE_ENV) cmake $(TARGET_CMAKE_OPTS)
+
+CMAKE = $(TARGET_CMAKE)
 
 # -----------------------------------------------------------------------------
 
