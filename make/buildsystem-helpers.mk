@@ -113,7 +113,8 @@ REWRITE_CONFIG_RULES = "s,^prefix=.*,prefix='$(TARGET_prefix)',; \
 			s,^libdir=.*,libdir='$(TARGET_libdir)',; \
 			s,^includedir=.*,includedir='$(TARGET_includedir)',"
 
-REWRITE_CONFIG = $(SED) $(REWRITE_CONFIG_RULES)
+# currenty unused
+#REWRITE_CONFIG = $(SED) $(REWRITE_CONFIG_RULES)
 
 define rewrite_config_script # (config-script)
 	mv $(TARGET_bindir)/$(1) $(HOST_DIR)/bin; \

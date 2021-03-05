@@ -169,6 +169,8 @@ $(DL_DIR)/$(LIBCURL_SOURCE):
 
 LIBCURL_DEPS = zlib openssl rtmpdump ca-bundle
 
+LIBCURL_CONFIG_SCRIPTS = curl-config
+
 LIBCURL_CONF_OPTS = \
 	--datarootdir=$(REMOVE_datarootdir) \
 	$(if $(filter $(BOXSERIES),hd1),--disable-ipv6,--enable-ipv6) \
@@ -201,8 +203,7 @@ libcurl: $(LIBCURL_DEPS) $(DL_DIR)/$(LIBCURL_SOURCE) | $(TARGET_DIR)
 		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	mv $(TARGET_bindir)/curl-config $(HOST_DIR)/bin/
-	$(REWRITE_CONFIG) $(HOST_DIR)/bin/curl-config
+	$(REWRITE_CONFIG_SCRIPTS)
 	$(REWRITE_LIBTOOL)
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
@@ -219,6 +220,8 @@ $(DL_DIR)/$(LIBPNG_SOURCE):
 
 LIBPNG_DEPS = zlib
 
+LIBPNG_CONFIG_SCRIPTS = libpng16-config
+
 LIBPNG_CONF_OPTS = \
 	--enable-silent-rules \
 	--disable-static \
@@ -232,8 +235,7 @@ libpng: $(LIBPNG_DEPS) $(DL_DIR)/$(LIBPNG_SOURCE) | $(TARGET_DIR)
 		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	mv $(TARGET_bindir)/libpng*-config $(HOST_DIR)/bin/
-	$(REWRITE_CONFIG) $(HOST_DIR)/bin/libpng16-config
+	$(REWRITE_CONFIG_SCRIPTS)
 	$(REWRITE_LIBTOOL)
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
@@ -249,6 +251,8 @@ $(DL_DIR)/$(FREETYPE_SOURCE):
 	$(DOWNLOAD) $(FREETYPE_SITE)/$(FREETYPE_SOURCE)
 
 FREETYPE_DEPS = zlib libpng
+
+FREETYPE_CONFIG_SCRIPTS = freetype-config
 
 FREETYPE_CONF_OPTS = \
 	--enable-shared \
@@ -274,8 +278,7 @@ freetype: $(FREETYPE_DEPS) $(DL_DIR)/$(FREETYPE_SOURCE) | $(TARGET_DIR)
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	ln -sf freetype2 $(TARGET_includedir)/freetype
-	mv $(TARGET_bindir)/freetype-config $(HOST_DIR)/bin
-	$(REWRITE_CONFIG) $(HOST_DIR)/bin/freetype-config
+	$(REWRITE_CONFIG_SCRIPTS)
 	$(REWRITE_LIBTOOL)
 	$(REMOVE)/$(PKG_DIR) \
 		$(TARGET_datadir)/aclocal
@@ -384,6 +387,8 @@ NCURSES_SITE   = $(GNU_MIRROR)/ncurses
 $(DL_DIR)/$(NCURSES_SOURCE):
 	$(DOWNLOAD) $(NCURSES_SITE)/$(NCURSES_SOURCE)
 
+NCURSES_CONFIG_SCRIPTS = ncurses6-config
+
 NCURSES_CONF_OPTS = \
 	--enable-pc-files \
 	--with-pkg-config \
@@ -409,8 +414,7 @@ ncurses: $(DL_DIR)/$(NCURSES_SOURCE) | $(TARGET_DIR)
 		$(MAKE) install.libs DESTDIR=$(TARGET_DIR)
 	-rm $(addprefix $(TARGET_libdir)/,libform* libmenu* libpanel*)
 	-rm $(addprefix $(TARGET_libdir)/pkgconfig/,form.pc menu.pc panel.pc)
-	mv $(TARGET_bindir)/ncurses6-config $(HOST_DIR)/bin
-	$(REWRITE_CONFIG) $(HOST_DIR)/bin/ncurses6-config
+	$(REWRITE_CONFIG_SCRIPTS)
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
@@ -465,6 +469,8 @@ LIBUSB_COMPAT_SITE   = https://github.com/libusb/libusb-compat-0.1/releases/down
 $(DL_DIR)/$(LIBUSB_COMPAT_SOURCE):
 	$(DOWNLOAD) $(LIBUSB_COMPAT_SITE)/$(LIBUSB_COMPAT_SOURCE)
 
+LIBUSB_COMPAT_CONFIG_SCRIPTS = libusb-config
+
 LIBUSB_COMPAT_DEPS = libusb
 
 libusb-compat: $(LIBUSB_COMPAT_DEPS) $(DL_DIR)/$(LIBUSB_COMPAT_SOURCE) | $(TARGET_DIR)
@@ -475,8 +481,7 @@ libusb-compat: $(LIBUSB_COMPAT_DEPS) $(DL_DIR)/$(LIBUSB_COMPAT_SOURCE) | $(TARGE
 		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR); \
-	mv $(TARGET_bindir)/libusb-config $(HOST_DIR)/bin
-	$(REWRITE_CONFIG) $(HOST_DIR)/bin/libusb-config
+	$(REWRITE_CONFIG_SCRIPTS)
 	$(REWRITE_LIBTOOL)
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
@@ -700,6 +705,8 @@ $(DL_DIR)/$(LIBGPG_ERROR_SOURCE):
 
 LIBGPG_ERROR_AUTORECONF = YES
 
+LIBGPG_ERROR_CONFIG_SCRIPTS = gpg-error-config
+
 LIBGPG_ERROR_CONF_OPTS = \
 	--datarootdir=$(REMOVE_datarootdir) \
 	--enable-maintainer-mode \
@@ -720,10 +727,9 @@ libgpg-error: $(DL_DIR)/$(LIBGPG_ERROR_SOURCE) | $(TARGET_DIR)
 		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	mv $(TARGET_bindir)/gpg-error-config $(HOST_DIR)/bin
-	$(REWRITE_CONFIG) $(HOST_DIR)/bin/gpg-error-config
-	$(REWRITE_LIBTOOL)
 	-rm $(addprefix $(TARGET_bindir)/,gpg-error gpgrt-config)
+	$(REWRITE_CONFIG_SCRIPTS)
+	$(REWRITE_LIBTOOL)
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
@@ -738,6 +744,8 @@ $(DL_DIR)/$(LIBGCRYPT_SOURCE):
 	$(DOWNLOAD) $(LIBGCRYPT_SITE)/$(LIBGCRYPT_SOURCE)
 
 LIBGCRYPT_DEPS = libgpg-error
+
+LIBGCRYPT_CONFIG_SCRIPTS = libgcrypt-config
 
 LIBGCRYPT_CONF_OPTS = \
 	--datarootdir=$(REMOVE_datarootdir) \
@@ -754,10 +762,9 @@ libgcrypt: $(LIBGCRYPT_DEPS) $(DL_DIR)/$(LIBGCRYPT_SOURCE) | $(TARGET_DIR)
 		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	mv $(TARGET_bindir)/libgcrypt-config $(HOST_DIR)/bin
-	$(REWRITE_CONFIG) $(HOST_DIR)/bin/libgcrypt-config
-	$(REWRITE_LIBTOOL)
 	-rm $(addprefix $(TARGET_bindir)/,dumpsexp hmac256 mpicalc)
+	$(REWRITE_CONFIG_SCRIPTS)
+	$(REWRITE_LIBTOOL)
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
@@ -835,6 +842,8 @@ LIBXML2_SITE   = http://xmlsoft.org/sources
 $(DL_DIR)/$(LIBXML2_SOURCE):
 	$(DOWNLOAD) $(LIBXML2_SITE)/$(LIBXML2_SOURCE)
 
+LIBXML2_CONFIG_SCRIPTS = xml2-config
+
 LIBXML2_CONF_OPTS = \
 	--datarootdir=$(REMOVE_datarootdir) \
 	--enable-shared \
@@ -857,11 +866,10 @@ libxml2: $(DL_DIR)/$(LIBXML2_SOURCE) | $(TARGET_DIR)
 		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	mv $(TARGET_bindir)/xml2-config $(HOST_DIR)/bin
-	$(REWRITE_CONFIG) $(HOST_DIR)/bin/xml2-config
-	$(REWRITE_LIBTOOL)
 	-rm -r $(TARGET_libdir)/cmake
 	-rm $(addprefix $(TARGET_libdir)/,xml2Conf.sh)
+	$(REWRITE_CONFIG_SCRIPTS)
+	$(REWRITE_LIBTOOL)
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
