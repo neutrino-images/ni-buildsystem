@@ -10,8 +10,8 @@
 # isn't any error.
 # - the build directory, optional, default value is '.'. The place where are
 # the package sources.
-# - the patch directory, optional, default '../kernel-patches'. The place
-# where are the scripts you want to apply.
+# - the patch directory, optional, default '../patches'. The place where are
+# the scripts you want to apply.
 # - other parameters are the patch name patterns, optional, default value is
 # '*'. Pattern(s) describing the patch names you want to apply.
 #
@@ -42,7 +42,7 @@ fi
 
 # Set directories from arguments, or use defaults.
 builddir=${1-.}
-patchdir=${2-../kernel-patches}
+patchdir=${2-../patches}
 shift 2
 patchpattern=${@-*}
 
@@ -98,7 +98,6 @@ function apply_patch {
         esac
     fi
     if [ -z "$silent" ] ; then
-        echo ""
         echo "Applying $patch using ${type}: "
     fi
     if [ ! -e "${path}/$patch" ] ; then
@@ -118,11 +117,12 @@ function apply_patch {
         echo "Error: patch contains some renames, not supported by old patch versions"
         exit 1
     fi
-    echo "${path}/${patch}" >> ${builddir}/.applied_patches_list
     ${uncomp} "${path}/$patch" | patch -g0 -p1 -E --no-backup-if-mismatch -d "${builddir}" -t -N $silent
     if [ $? != 0 ] ; then
         echo "Patch failed!  Please fix ${patch}!"
         exit 1
+    else
+        echo "${path}/${patch}" >> ${builddir}/.applied_patches_list
     fi
 }
 
