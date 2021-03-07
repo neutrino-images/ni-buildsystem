@@ -28,11 +28,11 @@ NEUTRINO_PLUGINS_DEPS += libpng
 NEUTRINO_PLUGINS_DEPS += libjpeg-turbo
 NEUTRINO_PLUGINS_DEPS += giflib
 NEUTRINO_PLUGINS_DEPS += freetype
+NEUTRINO_PLUGINS_DEPS += lua-curl
+NEUTRINO_PLUGINS_DEPS += lua-feedparser
 NEUTRINO_PLUGINS_DEPS += luaexpat
 NEUTRINO_PLUGINS_DEPS += luajson
-NEUTRINO_PLUGINS_DEPS += luacurl
 NEUTRINO_PLUGINS_DEPS += luaposix
-NEUTRINO_PLUGINS_DEPS += lua-feedparser
 
 # -----------------------------------------------------------------------------
 
@@ -194,10 +194,10 @@ doscam-webif-skin:
 
 # -----------------------------------------------------------------------------
 
-NEUTRINO_MEDIATHEK_VER    = git
-NEUTRINO_MEDIATHEK_DIR    = mediathek.$(NEUTRINO_MEDIATHEK_VER)
-NEUTRINO_MEDIATHEK_SOURCE = mediathek.$(NEUTRINO_MEDIATHEK_VER)
-NEUTRINO_MEDIATHEK_SITE   = https://github.com/neutrino-mediathek
+NEUTRINO_MEDIATHEK_VERSION = git
+NEUTRINO_MEDIATHEK_DIR = mediathek.$(NEUTRINO_MEDIATHEK_VERSION)
+NEUTRINO_MEDIATHEK_SOURCE = mediathek.$(NEUTRINO_MEDIATHEK_VERSION)
+NEUTRINO_MEDIATHEK_SITE = https://github.com/neutrino-mediathek
 
 neutrino-mediathek: $(SHARE_PLUGINS) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
@@ -214,10 +214,10 @@ neutrino-mediathek: $(SHARE_PLUGINS) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-LINKS_VER    = 2.20.2
-LINKS_DIR    = links-$(LINKS_VER)
-LINKS_SOURCE = links-$(LINKS_VER).tar.bz2
-LINKS_SITE   = http://links.twibright.com/download
+LINKS_VERSION = 2.20.2
+LINKS_DIR = links-$(LINKS_VERSION)
+LINKS_SOURCE = links-$(LINKS_VERSION).tar.bz2
+LINKS_SITE = http://links.twibright.com/download
 
 $(DL_DIR)/$(LINKS_SOURCE):
 	$(DOWNLOAD) $(LINKS_SITE)/$(LINKS_SOURCE)

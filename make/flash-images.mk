@@ -3,19 +3,19 @@
 #
 # -----------------------------------------------------------------------------
 
-MKFSFLAGS	= -U -D $(BUILD_DIR)/devtable-$(BOXSERIES).txt -r $(ROOTFS)
+MKFSFLAGS = -U -D $(BUILD_DIR)/devtable-$(BOXSERIES).txt -r $(ROOTFS)
 ifeq ($(BOXSERIES),hd1)
-  MKFSFLAGS	+= -p
+  MKFSFLAGS += -p
 endif
 ifeq ($(BOXSERIES),hd2)
-  MKFSFLAGS	+= -n -l
+  MKFSFLAGS += -n -l
 endif
 
 ifeq ($(BOXSERIES),hd1)
-  SUMFLAGS	= -p
+  SUMFLAGS = -p
 endif
 ifeq ($(BOXSERIES),hd2)
-  SUMFLAGS	= -n -l
+  SUMFLAGS = -n -l
 endif
 
 # -----------------------------------------------------------------------------
@@ -46,6 +46,12 @@ $(BUILD_DIR)/devtable-hd2.txt:
 
 devtable-remove:
 	$(REMOVE)/devtable-$(BOXSERIES).txt
+
+# -----------------------------------------------------------------------------
+
+define create_md5file # image-file
+	echo $(IMAGE_SITE)/$(1) $(IMAGE_VERSION_STRING) $$(md5sum $(IMAGE_DIR)/$(1) | cut -c1-32) $(IMAGE_DESC) $(IMAGE_VERSION) >> $(IMAGE_DIR)/$(IMAGE_MD5FILE)
+endef
 
 # -----------------------------------------------------------------------------
 
@@ -85,7 +91,7 @@ ifeq ($(IMAGE_SUMMARIZE),yes)
 	rm -f $(IMAGE_DIR)/$(IMAGE_NAME).img
 	mv $(IMAGE_DIR)/$(IMAGE_NAME)-sum.img $(IMAGE_DIR)/$(IMAGE_NAME).img
 endif
-	echo $(IMAGE_SITE)/$(IMAGE_NAME).img $(IMAGE_TYPE)$(IMAGE_VER)$(IMAGE_DATE) `md5sum $(IMAGE_DIR)/$(IMAGE_NAME).img | cut -c1-32` $(IMAGE_DESC) $(IMAGE_VERSION) >> $(IMAGE_DIR)/$(IMAGE_MD5FILE)
+	$(call create_md5file,$(IMAGE_NAME).img)
 	make check-image-size IMAGE_TO_CHECK=$(IMAGE_DIR)/$(IMAGE_NAME).img
 
 # -----------------------------------------------------------------------------
@@ -124,7 +130,7 @@ flash-image-hd5x: | $(IMAGE_DIR)
 	# Create minimal image
 	$(CD) $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR); \
 		tar -czf $(IMAGE_DIR)/$(IMAGE_NAME).tgz kernel.bin rootfs.tar.bz2
-	echo $(IMAGE_SITE)/$(IMAGE_NAME).tgz $(IMAGE_TYPE)$(IMAGE_VER)$(IMAGE_DATE) `md5sum $(IMAGE_DIR)/$(IMAGE_NAME).tgz | cut -c1-32` $(IMAGE_DESC) $(IMAGE_VERSION) >> $(IMAGE_DIR)/$(IMAGE_MD5FILE)
+	$(call create_md5file,$(IMAGE_NAME).tgz)
 	rm -rf $(IMAGE_BUILD_DIR)
 
 # -----------------------------------------------------------------------------
@@ -227,7 +233,7 @@ flash-image-hd6x: | $(IMAGE_DIR)
 	# Create minimal image
 	$(CD) $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR); \
 		tar -czf $(IMAGE_DIR)/$(IMAGE_NAME).tgz uImage rootfs.tar.bz2
-	echo $(IMAGE_SITE)/$(IMAGE_NAME).tgz $(IMAGE_TYPE)$(IMAGE_VER)$(IMAGE_DATE) `md5sum $(IMAGE_DIR)/$(IMAGE_NAME).tgz | cut -c1-32` $(IMAGE_DESC) $(IMAGE_VERSION) >> $(IMAGE_DIR)/$(IMAGE_MD5FILE)
+	$(call create_md5file,$(IMAGE_NAME).tgz)
 	rm -rf $(IMAGE_BUILD_DIR)
 
 # -----------------------------------------------------------------------------
@@ -239,16 +245,16 @@ HD6x_IMAGE_LINK = $(HD6x_IMAGE_NAME).ext4
 
 # partition offsets/sizes
 HD6x_BOOTOPTIONS_PARTITION_SIZE = 32768
-HD6x_IMAGE_ROOTFS_SIZE          = 1024M
+HD6x_IMAGE_ROOTFS_SIZE = 1024M
 
-HD6x_BOOTARGS_DATE    = 20200504
-HD6x_BOOTARGS_SOURCE  = $(BOXMODEL)-bootargs-$(HD6x_BOOTARGS_DATE).zip
-HD6x_PARTITONS_DATE   = 20200319
+HD6x_BOOTARGS_DATE = 20200504
+HD6x_BOOTARGS_SOURCE = $(BOXMODEL)-bootargs-$(HD6x_BOOTARGS_DATE).zip
+HD6x_PARTITONS_DATE = 20200319
 HD6x_PARTITONS_SOURCE = $(BOXMODEL)-partitions-$(HD6x_PARTITONS_DATE).zip
-HD6x_RECOVERY_DATE    = 20200424
-HD6x_RECOVERY_SOURCE  = $(BOXMODEL)-recovery-$(HD6x_RECOVERY_DATE).zip
+HD6x_RECOVERY_DATE = 20200424
+HD6x_RECOVERY_SOURCE = $(BOXMODEL)-recovery-$(HD6x_RECOVERY_DATE).zip
 
-HD6x_MULTI_DISK_VER  = 1.0
+HD6x_MULTI_DISK_VERSION = 1.0
 HD6x_MULTI_DISK_SITE = http://downloads.mutant-digital.net/$(BOXMODEL)
 
 $(DL_DIR)/$(HD6x_BOOTARGS_SOURCE):
@@ -352,9 +358,11 @@ flash-image-vuplus: | $(IMAGE_DIR)
 		tar -cvf $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/rootfs.tar -C $(ROOTFS) . >/dev/null 2>&1; \
 		bzip2 $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/rootfs.tar
 	# Create minimal image
+	echo $(IMAGE_DATE)
+	echo $(IMAGE_NAME)
 	$(CD) $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR); \
 		tar -czf $(IMAGE_DIR)/$(IMAGE_NAME).tgz kernel_auto.bin rootfs.tar.bz2
-	echo $(IMAGE_SITE)/$(IMAGE_NAME).tgz $(IMAGE_TYPE)$(IMAGE_VER)$(IMAGE_DATE) `md5sum $(IMAGE_DIR)/$(IMAGE_NAME).tgz | cut -c1-32` $(IMAGE_DESC) $(IMAGE_VERSION) >> $(IMAGE_DIR)/$(IMAGE_MD5FILE)
+	$(call create_md5file,$(IMAGE_NAME).tgz)
 	rm -rf $(IMAGE_BUILD_DIR)
 
 flash-image-vuplus-multi: vmlinuz-initrd

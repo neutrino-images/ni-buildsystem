@@ -93,11 +93,11 @@ libs-cross: | $(TARGET_DIR)
 	$(INSTALL_COPY) $(CROSS_DIR)/$(TARGET)/sys-root/lib/*so* $(TARGET_base_libdir)
 ifeq ($(BOXSERIES),hd2)
 	$(CD) $(TARGET_base_libdir); \
-		ln -sf libuClibc-$(UCLIBC_VER).so libcrypt.so.0; \
-		ln -sf libuClibc-$(UCLIBC_VER).so libdl.so.0; \
-		ln -sf libuClibc-$(UCLIBC_VER).so libm.so.0; \
-		ln -sf libuClibc-$(UCLIBC_VER).so libpthread.so.0; \
-		ln -sf libuClibc-$(UCLIBC_VER).so librt.so.0
+		ln -sf libuClibc-$(UCLIBC_VERSION).so libcrypt.so.0; \
+		ln -sf libuClibc-$(UCLIBC_VERSION).so libdl.so.0; \
+		ln -sf libuClibc-$(UCLIBC_VERSION).so libm.so.0; \
+		ln -sf libuClibc-$(UCLIBC_VERSION).so libpthread.so.0; \
+		ln -sf libuClibc-$(UCLIBC_VERSION).so librt.so.0
 endif
 ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd5x hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
 	$(CD) $(TARGET_base_libdir); \

@@ -31,7 +31,6 @@ ni-image:
 	$(MAKE) neutrino
 	make plugins
 	make fbshot
-	$(MAKE) luacurl
 	$(MAKE) tzdata
 	$(MAKE) smartmontools
 	$(MAKE) sg3_utils

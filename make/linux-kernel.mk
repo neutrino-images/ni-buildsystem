@@ -351,7 +351,7 @@ vmlinuz-initrd: $(DL_DIR)/$(VMLINUZ_INITRD_SOURCE)
 # -----------------------------------------------------------------------------
 
 depmod:
-	PATH=$(PATH):/sbin:/usr/sbin depmod -b $(TARGET_DIR) $(KERNEL_VER)
+	PATH=$(PATH):/sbin:/usr/sbin depmod -b $(TARGET_DIR) $(KERNEL_VERSION)
 ifeq ($(BOXSERIES),hd1)
 	mv $(TARGET_modulesdir)/modules.dep $(TARGET_modulesdir)/.modules.dep
 	rm $(TARGET_modulesdir)/modules.*

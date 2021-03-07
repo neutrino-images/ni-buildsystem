@@ -4,10 +4,10 @@
 # -----------------------------------------------------------------------------
 
 # usbutils-008 needs udev
-USBUTILS_VER    = 007
-USBUTILS_DIR    = usbutils-$(USBUTILS_VER)
-USBUTILS_SOURCE = usbutils-$(USBUTILS_VER).tar.xz
-USBUTILS_SITE   = $(KERNEL_MIRROR)/linux/utils/usb/usbutils
+USBUTILS_VERSION = 007
+USBUTILS_DIR = usbutils-$(USBUTILS_VERSION)
+USBUTILS_SOURCE = usbutils-$(USBUTILS_VERSION).tar.xz
+USBUTILS_SITE = $(KERNEL_MIRROR)/linux/utils/usb/usbutils
 
 $(DL_DIR)/$(USBUTILS_SOURCE):
 	$(DOWNLOAD) $(USBUTILS_SITE)/$(USBUTILS_SOURCE)
@@ -32,10 +32,10 @@ usbutils: $(USBUTILS_DEPS) $(DL_DIR)/$(USBUTILS_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-BINUTILS_VER    = 2.35
-BINUTILS_DIR    = binutils-$(BINUTILS_VER)
-BINUTILS_SOURCE = binutils-$(BINUTILS_VER).tar.bz2
-BINUTILS_SITE   = $(GNU_MIRROR)/binutils
+BINUTILS_VERSION = 2.35
+BINUTILS_DIR = binutils-$(BINUTILS_VERSION)
+BINUTILS_SOURCE = binutils-$(BINUTILS_VERSION).tar.bz2
+BINUTILS_SITE = $(GNU_MIRROR)/binutils
 
 $(DL_DIR)/$(BINUTILS_SOURCE):
 	$(DOWNLOAD) $(BINUTILS_SITE)/$(BINUTILS_SOURCE)
@@ -64,10 +64,10 @@ binutils: $(DL_DIR)/$(BINUTILS_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-BASE_PASSWD_VER    = 3.5.29
-BASE_PASSWD_DIR    = base-passwd-$(BASE_PASSWD_VER)
-BASE_PASSWD_SOURCE = base-passwd_$(BASE_PASSWD_VER).tar.gz
-BASE_PASSWD_SITE   = https://launchpad.net/debian/+archive/primary/+files
+BASE_PASSWD_VERSION = 3.5.29
+BASE_PASSWD_DIR = base-passwd-$(BASE_PASSWD_VERSION)
+BASE_PASSWD_SOURCE = base-passwd_$(BASE_PASSWD_VERSION).tar.gz
+BASE_PASSWD_SITE = https://launchpad.net/debian/+archive/primary/+files
 
 $(DL_DIR)/$(BASE_PASSWD_SOURCE):
 	$(DOWNLOAD) $(BASE_PASSWD_SITE)/$(BASE_PASSWD_SOURCE)
@@ -87,10 +87,10 @@ base-passwd: $(DL_DIR)/$(BASE_PASSWD_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-SHADOW_VER    = 4.8.1
-SHADOW_DIR    = shadow-$(SHADOW_VER)
-SHADOW_SOURCE = shadow-$(SHADOW_VER).tar.xz
-SHADOW_SITE   = https://github.com/shadow-maint/shadow/releases/download/$(SHADOW_VER)
+SHADOW_VERSION = 4.8.1
+SHADOW_DIR = shadow-$(SHADOW_VERSION)
+SHADOW_SOURCE = shadow-$(SHADOW_VERSION).tar.xz
+SHADOW_SITE = https://github.com/shadow-maint/shadow/releases/download/$(SHADOW_VERSION)
 
 $(DL_DIR)/$(SHADOW_SOURCE):
 	$(DOWNLOAD) $(SHADOW_SITE)/$(SHADOW_SOURCE)
@@ -113,10 +113,10 @@ shadow: $(DL_DIR)/$(SHADOW_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-BZIP2_VER    = 1.0.8
-BZIP2_DIR    = bzip2-$(BZIP2_VER)
-BZIP2_SOURCE = bzip2-$(BZIP2_VER).tar.gz
-BZIP2_SITE   = https://sourceware.org/pub/bzip2
+BZIP2_VERSION = 1.0.8
+BZIP2_DIR = bzip2-$(BZIP2_VERSION)
+BZIP2_SOURCE = bzip2-$(BZIP2_VERSION).tar.gz
+BZIP2_SITE = https://sourceware.org/pub/bzip2
 
 $(DL_DIR)/$(BZIP2_SOURCE):
 	$(DOWNLOAD) $(BZIP2_SITE)/$(BZIP2_SOURCE)
@@ -136,10 +136,10 @@ bzip2: $(DL_DIR)/$(BZIP2_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-ASTRA_SM_VER    = git
-ASTRA_SM_DIR    = astra-sm.$(ASTRA_SM_VER)
-ASTRA_SM_SOURCE = astra-sm.$(ASTRA_SM_VER)
-ASTRA_SM_SITE   = https://gitlab.com/crazycat69
+ASTRA_SM_VERSION = git
+ASTRA_SM_DIR = astra-sm.$(ASTRA_SM_VERSION)
+ASTRA_SM_SOURCE = astra-sm.$(ASTRA_SM_VERSION)
+ASTRA_SM_SITE = https://gitlab.com/crazycat69
 
 ASTRA_SM_DEPS = openssl
 
@@ -162,10 +162,10 @@ astra-sm: $(ASTRA_SM_DEPS) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-IOZONE_VER    = 3_490
-IOZONE_DIR    = iozone$(IOZONE_VER)
-IOZONE_SOURCE = iozone$(IOZONE_VER).tar
-IOZONE_SITE   = http://www.iozone.org/src/current
+IOZONE_VERSION = 3_490
+IOZONE_DIR = iozone$(IOZONE_VERSION)
+IOZONE_SOURCE = iozone$(IOZONE_VERSION).tar
+IOZONE_SITE = http://www.iozone.org/src/current
 
 $(DL_DIR)/$(IOZONE_SOURCE):
 	$(DOWNLOAD) $(IOZONE_SITE)/$(IOZONE_SOURCE)
@@ -184,10 +184,10 @@ iozone: $(DL_DIR)/$(IOZONE_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-READLINE_VER    = 8.1
-READLINE_DIR    = readline-$(READLINE_VER)
-READLINE_SOURCE = readline-$(READLINE_VER).tar.gz
-READLINE_SITE   = $(GNU_MIRROR)/readline
+READLINE_VERSION = 8.1
+READLINE_DIR = readline-$(READLINE_VERSION)
+READLINE_SOURCE = readline-$(READLINE_VERSION).tar.gz
+READLINE_SITE = $(GNU_MIRROR)/readline
 
 $(DL_DIR)/$(READLINE_SOURCE):
 	$(DOWNLOAD) $(READLINE_SITE)/$(READLINE_SOURCE)
@@ -207,10 +207,10 @@ readline: $(DL_DIR)/$(READLINE_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-LIBZEN_VER    = 0.4.38
-LIBZEN_DIR    = ZenLib
-LIBZEN_SOURCE = libzen_$(LIBZEN_VER).tar.bz2
-LIBZEN_SITE   = https://mediaarea.net/download/source/libzen/$(LIBZEN_VER)
+LIBZEN_VERSION = 0.4.38
+LIBZEN_DIR = ZenLib
+LIBZEN_SOURCE = libzen_$(LIBZEN_VERSION).tar.bz2
+LIBZEN_SITE = https://mediaarea.net/download/source/libzen/$(LIBZEN_VERSION)
 
 $(DL_DIR)/$(LIBZEN_SOURCE):
 	$(DOWNLOAD) $(LIBZEN_SITE)/$(LIBZEN_SOURCE)
@@ -232,10 +232,10 @@ libzen: $(LIBZEN_DEPS) $(DL_DIR)/$(LIBZEN_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-LIBMEDIAINFO_VER    = 20.08
-LIBMEDIAINFO_DIR    = MediaInfoLib
-LIBMEDIAINFO_SOURCE = libmediainfo_$(LIBMEDIAINFO_VER).tar.bz2
-LIBMEDIAINFO_SITE   = https://mediaarea.net/download/source/libmediainfo/$(LIBMEDIAINFO_VER)
+LIBMEDIAINFO_VERSION = 20.08
+LIBMEDIAINFO_DIR = MediaInfoLib
+LIBMEDIAINFO_SOURCE = libmediainfo_$(LIBMEDIAINFO_VERSION).tar.bz2
+LIBMEDIAINFO_SITE = https://mediaarea.net/download/source/libmediainfo/$(LIBMEDIAINFO_VERSION)
 
 $(DL_DIR)/$(LIBMEDIAINFO_SOURCE):
 	$(DOWNLOAD) $(LIBMEDIAINFO_SITE)/$(LIBMEDIAINFO_SOURCE)
@@ -257,10 +257,10 @@ libmediainfo: $(LIBMEDIAINFO_DEPS) $(DL_DIR)/$(LIBMEDIAINFO_SOURCE) | $(TARGET_D
 
 # -----------------------------------------------------------------------------
 
-MEDIAINFO_VER    = 20.08
-MEDIAINFO_DIR    = MediaInfo
-MEDIAINFO_SOURCE = mediainfo_$(MEDIAINFO_VER).tar.bz2
-MEDIAINFO_SITE   = https://mediaarea.net/download/source/mediainfo/$(MEDIAINFO_VER)
+MEDIAINFO_VERSION = 20.08
+MEDIAINFO_DIR = MediaInfo
+MEDIAINFO_SOURCE = mediainfo_$(MEDIAINFO_VERSION).tar.bz2
+MEDIAINFO_SITE = https://mediaarea.net/download/source/mediainfo/$(MEDIAINFO_VERSION)
 
 $(DL_DIR)/$(MEDIAINFO_SOURCE):
 	$(DOWNLOAD) $(MEDIAINFO_SITE)/$(MEDIAINFO_SOURCE)

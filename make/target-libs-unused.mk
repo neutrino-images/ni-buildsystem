@@ -3,10 +3,10 @@
 #
 # -----------------------------------------------------------------------------
 
-LIBID3TAG_VER    = 0.15.1b
-LIBID3TAG_DIR    = libid3tag-$(LIBID3TAG_VER)
-LIBID3TAG_SOURCE = libid3tag-$(LIBID3TAG_VER).tar.gz
-LIBID3TAG_SITE   = https://sourceforge.net/projects/mad/files/libid3tag/$(LIBID3TAG_VER)
+LIBID3TAG_VERSION = 0.15.1b
+LIBID3TAG_DIR = libid3tag-$(LIBID3TAG_VERSION)
+LIBID3TAG_SOURCE = libid3tag-$(LIBID3TAG_VERSION).tar.gz
+LIBID3TAG_SITE = https://sourceforge.net/projects/mad/files/libid3tag/$(LIBID3TAG_VERSION)
 
 $(DL_DIR)/$(LIBID3TAG_SOURCE):
 	$(DOWNLOAD) $(LIBID3TAG_SITE)/$(LIBID3TAG_SOURCE)
@@ -32,10 +32,10 @@ libid3tag: $(LIBID3TAG_DEPS) $(DL_DIR)/$(LIBID3TAG_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-FONTCONFIG_VER    = 2.11.93
-FONTCONFIG_DIR    = fontconfig-$(FONTCONFIG_VER)
-FONTCONFIG_SOURCE = fontconfig-$(FONTCONFIG_VER).tar.bz2
-FONTCONFIG_SITE   = https://www.freedesktop.org/software/fontconfig/release
+FONTCONFIG_VERSION = 2.11.93
+FONTCONFIG_DIR = fontconfig-$(FONTCONFIG_VERSION)
+FONTCONFIG_SOURCE = fontconfig-$(FONTCONFIG_VERSION).tar.bz2
+FONTCONFIG_SITE = https://www.freedesktop.org/software/fontconfig/release
 
 $(DL_DIR)/$(FONTCONFIG_SOURCE):
 	$(DOWNLOAD) $(FONTCONFIG_SITE)/$(FONTCONFIG_SOURCE)
@@ -62,10 +62,10 @@ fontconfig: $(FONTCONFIG_DEPS) $(DL_DIR)/$(FONTCONFIG_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-PIXMAN_VER    = 0.34.0
-PIXMAN_DIR    = pixman-$(PIXMAN_VER)
-PIXMAN_SOURCE = pixman-$(PIXMAN_VER).tar.gz
-PIXMAN_SITE   = https://www.cairographics.org/releases
+PIXMAN_VERSION = 0.34.0
+PIXMAN_DIR = pixman-$(PIXMAN_VERSION)
+PIXMAN_SOURCE = pixman-$(PIXMAN_VERSION).tar.gz
+PIXMAN_SITE = https://www.cairographics.org/releases
 
 $(DL_DIR)/$(PIXMAN_SOURCE):
 	$(DOWNLOAD) $(PIXMAN_SITE)/$(PIXMAN_SOURCE)
@@ -92,10 +92,10 @@ pixman: $(PIXMAN_DEPS) $(DL_DIR)/$(PIXMAN_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-CAIRO_VER    = 1.16.0
-CAIRO_DIR    = cairo-$(CAIRO_VER)
-CAIRO_SOURCE = cairo-$(CAIRO_VER).tar.xz
-CAIRO_SITE   = https://www.cairographics.org/releases
+CAIRO_VERSION = 1.16.0
+CAIRO_DIR = cairo-$(CAIRO_VERSION)
+CAIRO_SOURCE = cairo-$(CAIRO_VERSION).tar.xz
+CAIRO_SITE = https://www.cairographics.org/releases
 
 $(DL_DIR)/$(CAIRO_SOURCE):
 	$(DOWNLOAD) $(CAIRO_SITE)/$(CAIRO_SOURCE)
@@ -134,10 +134,10 @@ cairo: $(CAIRO_DEPS) $(DL_DIR)/$(CAIRO_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-HARFBUZZ_VER    = 1.8.8
-HARFBUZZ_DIR    = harfbuzz-$(HARFBUZZ_VER)
-HARFBUZZ_SOURCE = harfbuzz-$(HARFBUZZ_VER).tar.bz2
-HARFBUZZ_SITE   = https://www.freedesktop.org/software/harfbuzz/release
+HARFBUZZ_VERSION = 1.8.8
+HARFBUZZ_DIR = harfbuzz-$(HARFBUZZ_VERSION)
+HARFBUZZ_SOURCE = harfbuzz-$(HARFBUZZ_VERSION).tar.bz2
+HARFBUZZ_SITE = https://www.freedesktop.org/software/harfbuzz/release
 
 $(DL_DIR)/$(HARFBUZZ_SOURCE):
 	$(DOWNLOAD) $(HARFBUZZ_SITE)/$(HARFBUZZ_SOURCE)

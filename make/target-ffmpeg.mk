@@ -3,10 +3,10 @@
 #
 # -----------------------------------------------------------------------------
 
-FFMPEG_VER    = 4.3.1
-FFMPEG_DIR    = ffmpeg-$(FFMPEG_VER)
-FFMPEG_SOURCE = ffmpeg-$(FFMPEG_VER).tar.xz
-FFMPEG_SITE   = http://www.ffmpeg.org/releases
+FFMPEG_VERSION = 4.3.1
+FFMPEG_DIR = ffmpeg-$(FFMPEG_VERSION)
+FFMPEG_SOURCE = ffmpeg-$(FFMPEG_VERSION).tar.xz
+FFMPEG_SITE = http://www.ffmpeg.org/releases
 
 $(DL_DIR)/$(FFMPEG_SOURCE):
 	$(DOWNLOAD) $(FFMPEG_SITE)/$(FFMPEG_SOURCE)

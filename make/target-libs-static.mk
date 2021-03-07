@@ -14,13 +14,13 @@ libs-static: $(LIBS-STATIC) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-CORTEX_STRINGS_VER    = 48fd30c
-CORTEX_STRINGS_DIR    = cortex-strings-$(CORTEX_STRINGS_VER)
-CORTEX_STRINGS_SOURCE = cortex-strings-$(CORTEX_STRINGS_VER).tar.bz2
-CORTEX_STRINGS_SITE   = http://git.linaro.org/git-ro/toolchain/cortex-strings.git
+CORTEX_STRINGS_VERSION = 48fd30c
+CORTEX_STRINGS_DIR = cortex-strings-$(CORTEX_STRINGS_VERSION)
+CORTEX_STRINGS_SOURCE = cortex-strings-$(CORTEX_STRINGS_VERSION).tar.bz2
+CORTEX_STRINGS_SITE = http://git.linaro.org/git-ro/toolchain/cortex-strings.git
 
 $(DL_DIR)/$(CORTEX_STRINGS_SOURCE):
-	$(GET-GIT-ARCHIVE) $(CORTEX_STRINGS_SITE) $(CORTEX_STRINGS_VER) $(@F) $(DL_DIR)
+	$(GET-GIT-ARCHIVE) $(CORTEX_STRINGS_SITE) $(CORTEX_STRINGS_VERSION) $(@F) $(DL_DIR)
 
 CORTEX_STRINGS_CONF_ENV = \
 	CFLAGS="-pipe -O2 $(TARGET_DEBUGGING) $(CXX11_ABI) -I$(TARGET_includedir)" \

@@ -3,11 +3,11 @@
 #
 # -----------------------------------------------------------------------------
 
-LUA_ABIVER = 5.2
-LUA_VER    = 5.2.4
-LUA_DIR    = lua-$(LUA_VER)
-LUA_SOURCE = lua-$(LUA_VER).tar.gz
-LUA_SITE   = https://www.lua.org
+LUA_ABIVERSION = 5.2
+LUA_VERSION = 5.2.4
+LUA_DIR = lua-$(LUA_VERSION)
+LUA_SOURCE = lua-$(LUA_VERSION).tar.gz
+LUA_SITE = https://www.lua.org
 
 $(DL_DIR)/$(LUA_SOURCE):
 	$(DOWNLOAD) $(LUA_SITE)/ftp/$(LUA_SOURCE)
@@ -20,7 +20,7 @@ lua: $(LUA_DEPS) $(DL_DIR)/$(LUA_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(LUA_DIR); \
 		$(APPLY_PATCHES); \
 		$(MAKE) linux \
-			PKG_VERSION=$(LUA_VER) \
+			PKG_VERSION=$(LUA_VERSION) \
 			$(TARGET_MAKE_OPTS) \
 			AR="$(TARGET_AR) rcu" \
 			LDFLAGS="$(TARGET_LDFLAGS)" \
@@ -33,13 +33,13 @@ lua: $(LUA_DEPS) $(DL_DIR)/$(LUA_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-LUAEXPAT_VER    = 1.3.3
-LUAEXPAT_DIR    = luaexpat-$(LUAEXPAT_VER)
-LUAEXPAT_SOURCE = luaexpat-$(LUAEXPAT_VER).tar.gz
-LUAEXPAT_SITE   = https://github.com/tomasguisasola/luaexpat/archive
+LUAEXPAT_VERSION = 1.3.3
+LUAEXPAT_DIR = luaexpat-$(LUAEXPAT_VERSION)
+LUAEXPAT_SOURCE = luaexpat-$(LUAEXPAT_VERSION).tar.gz
+LUAEXPAT_SITE = https://github.com/tomasguisasola/luaexpat/archive
 
 $(DL_DIR)/$(LUAEXPAT_SOURCE):
-	$(DOWNLOAD) $(LUAEXPAT_SITE)/v$(LUAEXPAT_VER).tar.gz -O $(@)
+	$(DOWNLOAD) $(LUAEXPAT_SITE)/v$(LUAEXPAT_VERSION).tar.gz -O $(@)
 
 LUAEXPAT_DEPS = expat lua
 
@@ -48,7 +48,7 @@ LUAEXPAT_MAKE_ENV = \
 
 LUAEXPAT_MAKE_OPTS = \
 	PREFIX=$(TARGET_prefix) \
-	LUA_SYS_VER=$(LUA_ABIVER)
+	LUA_SYS_VER=$(LUA_ABIVERSION)
 
 luaexpat: $(LUAEXPAT_DEPS) $(DL_DIR)/$(LUAEXPAT_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
@@ -64,13 +64,13 @@ luaexpat: $(LUAEXPAT_DEPS) $(DL_DIR)/$(LUAEXPAT_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-LUA_FEEDPARSER_VER    = 0.71
-LUA_FEEDPARSER_DIR    = lua-feedparser-$(LUA_FEEDPARSER_VER)
-LUA_FEEDPARSER_SOURCE = lua-feedparser-$(LUA_FEEDPARSER_VER).tar.gz
-LUA_FEEDPARSER_SITE   = https://github.com/slact/lua-feedparser/archive
+LUA_FEEDPARSER_VERSION = 0.71
+LUA_FEEDPARSER_DIR = lua-feedparser-$(LUA_FEEDPARSER_VERSION)
+LUA_FEEDPARSER_SOURCE = lua-feedparser-$(LUA_FEEDPARSER_VERSION).tar.gz
+LUA_FEEDPARSER_SITE = https://github.com/slact/lua-feedparser/archive
 
 $(DL_DIR)/$(LUA_FEEDPARSER_SOURCE):
-	$(DOWNLOAD) $(LUA_FEEDPARSER_SITE)/$(LUA_FEEDPARSER_VER).tar.gz -O $(@)
+	$(DOWNLOAD) $(LUA_FEEDPARSER_SITE)/$(LUA_FEEDPARSER_VERSION).tar.gz -O $(@)
 
 LUA_FEEDPARSER_DEPS = luaexpat
 
@@ -87,7 +87,7 @@ lua-feedparser: $(LUA-DEEDPARSER_DEPS) $(DL_DIR)/$(LUA_FEEDPARSER_SOURCE) | $(TA
 # -----------------------------------------------------------------------------
 
 LUAJSON_SOURCE = JSON.lua
-LUAJSON_SITE   = http://regex.info/code
+LUAJSON_SITE = http://regex.info/code
 
 $(DL_DIR)/$(LUAJSON_SOURCE):
 	$(DOWNLOAD) $(LUAJSON_SITE)/$(LUAJSON_SOURCE)
@@ -95,29 +95,29 @@ $(DL_DIR)/$(LUAJSON_SOURCE):
 luajson: $(DL_DIR)/$(LUAJSON_SOURCE) | $(TARGET_DIR)
 	$(CD) $(DL_DIR); \
 		curl --remote-name --time-cond $(PKG_SOURCE) $(PKG_SITE)/$(PKG_SOURCE) || true
-	$(INSTALL_DATA) -D $(DL_DIR)/$(PKG_SOURCE) $(TARGET_datadir)/lua/$(LUA_ABIVER)
-	ln -sf $(PKG_SOURCE) $(TARGET_datadir)/lua/$(LUA_ABIVER)/json.lua
+	$(INSTALL_DATA) -D $(DL_DIR)/$(PKG_SOURCE) $(TARGET_datadir)/lua/$(LUA_ABIVERSION)
+	ln -sf $(PKG_SOURCE) $(TARGET_datadir)/lua/$(LUA_ABIVERSION)/json.lua
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
-LUACURL_VER    = git
-LUACURL_DIR    = lua-curlv3.$(LUACURL_VER)
-LUACURL_SOURCE = lua-curlv3.$(LUACURL_VER)
-LUACURL_SITE   = https://github.com/lua-curl/$(LUACURL_SOURCE)
+LUA_CURL_VERSION = git
+LUA_CURL_DIR = lua-curlv3.$(LUA_CURL_VERSION)
+LUA_CURL_SOURCE = lua-curlv3.$(LUA_CURL_VERSION)
+LUA_CURL_SITE = https://github.com/lua-curl/$(LUA_CURL_SOURCE)
 
-LUACURL_DEPS = libcurl lua
+LUA_CURL_DEPS = libcurl lua
 
-LUACURL_MAKE_ENV = \
+LUA_CURL_MAKE_ENV = \
 	$(TARGET_CONFIGURE_ENV)
 
-LUACURL_MAKE_OPTS = \
+LUA_CURL_MAKE_OPTS = \
 	LIBDIR=$(TARGET_libdir) \
 	LUA_INC=$(TARGET_includedir) \
-	LUA_CMOD=$(libdir)/lua/$(LUA_ABIVER) \
-	LUA_LMOD=$(datadir)/lua/$(LUA_ABIVER)
+	LUA_CMOD=$(libdir)/lua/$(LUA_ABIVERSION) \
+	LUA_LMOD=$(datadir)/lua/$(LUA_ABIVERSION)
 
-luacurl: $(LUACURL_DEPS) | $(TARGET_DIR)
+lua-curl: $(LUA_CURL_DEPS) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(GET-GIT-SOURCE) $(PKG_SITE) $(DL_DIR)/$(PKG_SOURCE)
 	$(CPDIR)/$(PKG_SOURCE)
@@ -129,13 +129,13 @@ luacurl: $(LUACURL_DEPS) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-LUAPOSIX_VER    = 31
-LUAPOSIX_DIR    = luaposix-$(LUAPOSIX_VER)
-LUAPOSIX_SOURCE = luaposix-$(LUAPOSIX_VER).tar.gz
-LUAPOSIX_SITE   = https://github.com/luaposix/luaposix/archive
+LUAPOSIX_VERSION = 31
+LUAPOSIX_DIR = luaposix-$(LUAPOSIX_VERSION)
+LUAPOSIX_SOURCE = luaposix-$(LUAPOSIX_VERSION).tar.gz
+LUAPOSIX_SITE = https://github.com/luaposix/luaposix/archive
 
 $(DL_DIR)/$(LUAPOSIX_SOURCE):
-	$(DOWNLOAD) $(LUAPOSIX_SITE)/v$(LUAPOSIX_VER).tar.gz -O $(@)
+	$(DOWNLOAD) $(LUAPOSIX_SITE)/v$(LUAPOSIX_VERSION).tar.gz -O $(@)
 
 LUAPOSIX_DEPS = $(HOST_LUA) lua luaexpat
 
@@ -145,25 +145,25 @@ LUAPOSIX_CONF_ENV = \
 	LUA=$(HOST_LUA)
 
 LUAPOSIX_CONF_OPTS = \
-	--libdir=$(TARGET_libdir)/lua/$(LUA_ABIVER) \
-	--datadir=$(TARGET_datadir)/lua/$(LUA_ABIVER) \
+	--libdir=$(TARGET_libdir)/lua/$(LUA_ABIVERSION) \
+	--datadir=$(TARGET_datadir)/lua/$(LUA_ABIVERSION) \
 	--mandir=$(TARGET_DIR)$(REMOVE_mandir) \
 	--docdir=$(TARGET_DIR)$(REMOVE_docdir) \
 	--enable-silent-rules
 
-GNULIB_VER    = 20140202
-GNULIB_SOURCE = gnulib-$(GNULIB_VER)-stable.tar.gz
-GNULIB_SITE   = http://erislabs.net/ianb/projects/gnulib
+GNULIB_VERSION = 20140202
+GNULIB_SOURCE = gnulib-$(GNULIB_VERSION)-stable.tar.gz
+GNULIB_SITE = http://erislabs.net/ianb/projects/gnulib
 
 $(DL_DIR)/$(GNULIB_SOURCE):
 	$(DOWNLOAD) $(GNULIB_SITE)/$(GNULIB_SOURCE)
 
-SLINGSHOT_VER    = 6
-SLINGSHOT_SOURCE = slingshot-$(SLINGSHOT_VER).tar.gz
-SLINGSHOT_SITE   = https://github.com/gvvaughan/slingshot/archive
+SLINGSHOT_VERSION = 6
+SLINGSHOT_SOURCE = slingshot-$(SLINGSHOT_VERSION).tar.gz
+SLINGSHOT_SITE = https://github.com/gvvaughan/slingshot/archive
 
 $(DL_DIR)/$(SLINGSHOT_SOURCE):
-	$(DOWNLOAD) $(SLINGSHOT_SITE)/v$(SLINGSHOT_VER).tar.gz -O $(@)
+	$(DOWNLOAD) $(SLINGSHOT_SITE)/v$(SLINGSHOT_VERSION).tar.gz -O $(@)
 
 luaposix: $(LUAPOSIX_DEPS) $(DL_DIR)/$(SLINGSHOT_SOURCE) $(DL_DIR)/$(GNULIB_SOURCE) $(DL_DIR)/$(LUAPOSIX_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)

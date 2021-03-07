@@ -16,7 +16,7 @@ base_datadir		= $(base_datarootdir)
 base_includedir		= $(base_prefix)/include
 base_libdir		= $(base_prefix)/lib
 
-modulesdir		= $(base_libdir)/modules/$(KERNEL_VER)
+modulesdir		= $(base_libdir)/modules/$(KERNEL_VERSION)
 
 # -----------------------------------------------------------------------------
 

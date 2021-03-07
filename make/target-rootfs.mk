@@ -16,7 +16,7 @@ $(TARGET_DIR)/.version: | $(TARGET_DIR)
 	echo "imagename=NI \o/ Neutrino-Image"					>> $(@)
 	echo "imagedescription=$(IMAGE_DESC)"					>> $(@)
 	echo "imageversion=$(IMAGE_VERSION)"					>> $(@)
-	echo "version=$(IMAGE_TYPE)$(IMAGE_VER)$(IMAGE_DATE)"	 		>> $(@)
+	echo "version=$(IMAGE_VERSION_STRING)"			 		>> $(@)
 	echo "describe=$$(git describe --always --long --tags | sed 's/-/./2')"	>> $(@)
 	echo "builddate=$$(date)"						>> $(@)
 	echo "box_model=$(BOXMODEL)"						>> $(@)
@@ -55,7 +55,7 @@ endif
 
 # -----------------------------------------------------------------------------
 
-e2-multiboot: | $(TARGET_DIR)
+e2-multiboot: .version | $(TARGET_DIR)
 	mkdir -p $(TARGET_bindir)
 	echo -e "#!/bin/sh\necho Nope!" > $(TARGET_bindir)/enigma2
 	chmod 0755 $(TARGET_bindir)/enigma2
@@ -140,7 +140,7 @@ ifneq ($(DEBUG),yes)
 		-type f -print0 | xargs -0 $(TARGET_STRIP) || true; \
 	done
   ifeq ($(BOXSERIES),hd2)
-	find $(ROOTFS)/lib/modules/$(KERNEL_VER)/kernel -type f -name '*.ko' | xargs -n 1 $(TARGET_OBJCOPY) --strip-unneeded
+	find $(ROOTFS)/lib/modules/$(KERNEL_VERSION)/kernel -type f -name '*.ko' | xargs -n 1 $(TARGET_OBJCOPY) --strip-unneeded
   endif
 	@$(call MESSAGE,"After strip: $$(du -sh $(ROOTFS))")
 endif

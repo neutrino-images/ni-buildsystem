@@ -3,10 +3,10 @@
 #
 # -----------------------------------------------------------------------------
 
-VALGRIND_VER    = 3.13.0
-VALGRIND_DIR    = valgrind-$(VALGRIND_VER)
-VALGRIND_SOURCE = valgrind-$(VALGRIND_VER).tar.bz2
-VALGRIND_SITE   = ftp://sourceware.org/pub/valgrind
+VALGRIND_VERSION = 3.13.0
+VALGRIND_DIR = valgrind-$(VALGRIND_VERSION)
+VALGRIND_SOURCE = valgrind-$(VALGRIND_VERSION).tar.bz2
+VALGRIND_SITE = ftp://sourceware.org/pub/valgrind
 
 $(DL_DIR)/$(VALGRIND_SOURCE):
 	$(DOWNLOAD) $(VALGRIND_SITE)/$(VALGRIND_SOURCE)
@@ -34,10 +34,10 @@ valgrind: $(DL_DIR)/$(VALGRIND_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-STRACE_VER    = 5.1
-STRACE_DIR    = strace-$(STRACE_VER)
-STRACE_SOURCE = strace-$(STRACE_VER).tar.xz
-STRACE_SITE   = https://strace.io/files/$(STRACE_VER)
+STRACE_VERSION = 5.1
+STRACE_DIR = strace-$(STRACE_VERSION)
+STRACE_SOURCE = strace-$(STRACE_VERSION).tar.xz
+STRACE_SITE = https://strace.io/files/$(STRACE_VERSION)
 
 $(DL_DIR)/$(STRACE_SOURCE):
 	$(DOWNLOAD) $(STRACE_SITE)/$(STRACE_SOURCE)
@@ -55,10 +55,10 @@ strace: $(DL_DIR)/$(STRACE_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-GDB_VER    = 8.3
-GDB_DIR    = gdb-$(GDB_VER)
-GDB_SOURCE = gdb-$(GDB_VER).tar.xz
-GDB_SITE   = https://sourceware.org/pub/gdb/releases
+GDB_VERSION = 8.3
+GDB_DIR = gdb-$(GDB_VERSION)
+GDB_SOURCE = gdb-$(GDB_VERSION).tar.xz
+GDB_SITE = https://sourceware.org/pub/gdb/releases
 
 $(DL_DIR)/$(GDB_SOURCE):
 	$(DOWNLOAD) $(GDB_SITE)/$(GDB_SOURCE)

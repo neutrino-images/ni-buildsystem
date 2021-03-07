@@ -3,10 +3,10 @@
 #
 # -----------------------------------------------------------------------------
 
-RTL8192EU_VER    = git
-RTL8192EU_DIR    = rtl8192eu-linux-driver.$(RTL8192EU_VER)
-RTL8192EU_SOURCE = rtl8192eu-linux-driver.$(RTL8192EU_VER)
-RTL8192EU_SITE   = https://github.com/mange/$(RTL8192EU_SOURCE)
+RTL8192EU_VERSION = git
+RTL8192EU_DIR = rtl8192eu-linux-driver.$(RTL8192EU_VERSION)
+RTL8192EU_SOURCE = rtl8192eu-linux-driver.$(RTL8192EU_VERSION)
+RTL8192EU_SITE = https://github.com/mange/$(RTL8192EU_SOURCE)
 
 rtl8192eu: kernel-$(BOXTYPE) | $(TARGET_DIR)
 	$(REMOVE)/$(RTL8192EU_DIR)
@@ -21,10 +21,10 @@ rtl8192eu: kernel-$(BOXTYPE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-RTL8812AU_VER    = 4.3.14
-RTL8812AU_DIR    = rtl8812AU-driver-$(RTL8812AU_VER)
-RTL8812AU_SOURCE = rtl8812AU-driver-$(RTL8812AU_VER).zip
-RTL8812AU_SITE   = http://source.mynonpublic.com
+RTL8812AU_VERSION = 4.3.14
+RTL8812AU_DIR = rtl8812AU-driver-$(RTL8812AU_VERSION)
+RTL8812AU_SOURCE = rtl8812AU-driver-$(RTL8812AU_VERSION).zip
+RTL8812AU_SITE = http://source.mynonpublic.com
 
 $(DL_DIR)/$(RTL8812AU_SOURCE):
 	$(DOWNLOAD) $(RTL8812AU_SITE)/$(RTL8812AU_SOURCE)
@@ -42,10 +42,10 @@ rtl8812au: kernel-$(BOXTYPE) $(DL_DIR)/$(RTL8812AU_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-RTL8822BU_VER    = 1.0.0.9-20180511a
-RTL8822BU_DIR    = rtl8822bu
-RTL8822BU_SOURCE = rtl8822bu-driver-$(RTL8822BU_VER).zip
-RTL8822BU_SITE   = http://source.mynonpublic.com
+RTL8822BU_VERSION = 1.0.0.9-20180511a
+RTL8822BU_DIR = rtl8822bu
+RTL8822BU_SOURCE = rtl8822bu-driver-$(RTL8822BU_VERSION).zip
+RTL8822BU_SITE = http://source.mynonpublic.com
 
 $(DL_DIR)/$(RTL8822BU_SOURCE):
 	$(DOWNLOAD) $(RTL8822BU_SITE)/$(RTL8822BU_SOURCE)
@@ -63,10 +63,10 @@ rtl8822bu: kernel-$(BOXTYPE) $(DL_DIR)/$(RTL8822BU_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-HD6x_MALI_DRIVERS_VER    = DX910-SW-99002-r7p0-00rel0
-HD6x_MALI_DRIVERS_DIR    = $(HD6x_MALI_DRIVERS_VER)
-HD6x_MALI_DRIVERS_SOURCE = $(HD6x_MALI_DRIVERS_VER).tgz
-HD6x_MALI_DRIVERS_SITE   = https://developer.arm.com/-/media/Files/downloads/mali-drivers/kernel/mali-utgard-gpu
+HD6x_MALI_DRIVERS_VERSION = DX910-SW-99002-r7p0-00rel0
+HD6x_MALI_DRIVERS_DIR = $(HD6x_MALI_DRIVERS_VERSION)
+HD6x_MALI_DRIVERS_SOURCE = $(HD6x_MALI_DRIVERS_VERSION).tgz
+HD6x_MALI_DRIVERS_SITE = https://developer.arm.com/-/media/Files/downloads/mali-drivers/kernel/mali-utgard-gpu
 
 $(DL_DIR)/$(HD6x_MALI_DRIVERS_SOURCE):
 	$(DOWNLOAD) $(HD6x_MALI_DRIVERS_SITE)/$(HD6x_MALI_DRIVERS_SOURCE)

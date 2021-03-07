@@ -199,7 +199,7 @@ u-clean-all: u-clean
 u-update-bin:
 	$(CD) $(BUILD_DIR); \
 		tar -czvf $(UPDATE_DIR)/$(UPDATE_NAME).bin temp_inst
-	echo $(UPDATE_SITE)/$(UPDATE_NAME).bin $(UPDATE_TYPE)$(UPDATE_VER)$(UPDATE_DATE) `md5sum $(UPDATE_DIR)/$(UPDATE_NAME).bin | cut -c1-32` $(UPDATE_DESC) $(UPDATE_VERSION) >> $(UPDATE_DIR)/$(UPDATE_MD5FILE)
+	echo $(UPDATE_SITE)/$(UPDATE_NAME).bin $(UPDATE_VERSION_STRING) `md5sum $(UPDATE_DIR)/$(UPDATE_NAME).bin | cut -c1-32` $(UPDATE_DESC) $(UPDATE_VERSION) >> $(UPDATE_DIR)/$(UPDATE_MD5FILE)
 	$(MAKE) u-clean
 
 # -----------------------------------------------------------------------------

@@ -8,10 +8,10 @@
 #
 # -----------------------------------------------------------------------------
 
-BUSYBOX_VER    = 1.31.1
-BUSYBOX_DIR    = busybox-$(BUSYBOX_VER)
-BUSYBOX_SOURCE = busybox-$(BUSYBOX_VER).tar.bz2
-BUSYBOX_SITE   = https://busybox.net/downloads
+BUSYBOX_VERSION = 1.31.1
+BUSYBOX_DIR = busybox-$(BUSYBOX_VERSION)
+BUSYBOX_SOURCE = busybox-$(BUSYBOX_VERSION).tar.bz2
+BUSYBOX_SITE = https://busybox.net/downloads
 
 $(DL_DIR)/$(BUSYBOX_SOURCE):
 	$(DOWNLOAD) $(BUSYBOX_SITE)/$(BUSYBOX_SOURCE)
@@ -164,10 +164,10 @@ busybox: $(BUSYBOX_DEPS) $(DL_DIR)/$(BUSYBOX_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-BASH_VER    = 5.0
-BASH_DIR    = bash-$(BASH_VER)
-BASH_SOURCE = bash-$(BASH_VER).tar.gz
-BASH_SITE   = $(GNU_MIRROR)/bash
+BASH_VERSION = 5.0
+BASH_DIR = bash-$(BASH_VERSION)
+BASH_SOURCE = bash-$(BASH_VERSION).tar.gz
+BASH_SITE = $(GNU_MIRROR)/bash
 
 $(DL_DIR)/$(BASH_SOURCE):
 	$(DOWNLOAD) $(BASH_SITE)/$(BASH_SOURCE)
@@ -205,10 +205,10 @@ bash: $(DL_DIR)/$(BASH_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-SYSVINIT_VER    = 2.98
-SYSVINIT_DIR    = sysvinit-$(SYSVINIT_VER)
-SYSVINIT_SOURCE = sysvinit-$(SYSVINIT_VER).tar.xz
-SYSVINIT_SITE   = http://download.savannah.nongnu.org/releases/sysvinit
+SYSVINIT_VERSION = 2.98
+SYSVINIT_DIR = sysvinit-$(SYSVINIT_VERSION)
+SYSVINIT_SOURCE = sysvinit-$(SYSVINIT_VERSION).tar.xz
+SYSVINIT_SITE = http://download.savannah.nongnu.org/releases/sysvinit
 
 $(DL_DIR)/$(SYSVINIT_SOURCE):
 	$(DOWNLOAD) $(SYSVINIT_SITE)/$(SYSVINIT_SOURCE)
@@ -250,10 +250,10 @@ sysvinit: $(DL_DIR)/$(SYSVINIT_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-COREUTILS_VER    = 8.30
-COREUTILS_DIR    = coreutils-$(COREUTILS_VER)
-COREUTILS_SOURCE = coreutils-$(COREUTILS_VER).tar.xz
-COREUTILS_SITE   = $(GNU_MIRROR)/coreutils
+COREUTILS_VERSION = 8.30
+COREUTILS_DIR = coreutils-$(COREUTILS_VERSION)
+COREUTILS_SOURCE = coreutils-$(COREUTILS_VERSION).tar.xz
+COREUTILS_SITE = $(GNU_MIRROR)/coreutils
 
 $(DL_DIR)/$(COREUTILS_SOURCE):
 	$(DOWNLOAD) $(COREUTILS_SITE)/$(COREUTILS_SOURCE)
@@ -295,10 +295,10 @@ coreutils: $(DL_DIR)/$(COREUTILS_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-PROCPS_NG_VER    = 3.3.16
-PROCPS_NG_DIR    = procps-ng-$(PROCPS_NG_VER)
-PROCPS_NG_SOURCE = procps-ng-$(PROCPS_NG_VER).tar.xz
-PROCPS_NG_SITE   = http://sourceforge.net/projects/procps-ng/files/Production
+PROCPS_NG_VERSION = 3.3.16
+PROCPS_NG_DIR = procps-ng-$(PROCPS_NG_VERSION)
+PROCPS_NG_SOURCE = procps-ng-$(PROCPS_NG_VERSION).tar.xz
+PROCPS_NG_SITE = http://sourceforge.net/projects/procps-ng/files/Production
 
 $(DL_DIR)/$(PROCPS_NG_SOURCE):
 	$(DOWNLOAD) $(PROCPS_NG_SITE)/$(PROCPS_NG_SOURCE)
@@ -343,10 +343,10 @@ procps-ng: $(PROCPS_NG_DEPS) $(DL_DIR)/$(PROCPS_NG_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-MTD_UTILS_VER    = 2.0.2
-MTD_UTILS_DIR    = mtd-utils-$(MTD_UTILS_VER)
-MTD_UTILS_SOURCE = mtd-utils-$(MTD_UTILS_VER).tar.bz2
-MTD_UTILS_SITE   = ftp://ftp.infradead.org/pub/mtd-utils
+MTD_UTILS_VERSION = 2.0.2
+MTD_UTILS_DIR = mtd-utils-$(MTD_UTILS_VERSION)
+MTD_UTILS_SOURCE = mtd-utils-$(MTD_UTILS_VERSION).tar.bz2
+MTD_UTILS_SITE = ftp://ftp.infradead.org/pub/mtd-utils
 
 $(DL_DIR)/$(MTD_UTILS_SOURCE):
 	$(DOWNLOAD) $(MTD_UTILS_SITE)/$(MTD_UTILS_SOURCE)
@@ -394,10 +394,10 @@ mtd-utils: $(MTD_UTILS_DEPS) $(DL_DIR)/$(MTD_UTILS_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-DOSFSTOOLS_VER    = 4.1
-DOSFSTOOLS_DIR    = dosfstools-$(DOSFSTOOLS_VER)
-DOSFSTOOLS_SOURCE = dosfstools-$(DOSFSTOOLS_VER).tar.xz
-DOSFSTOOLS_SITE   = https://github.com/dosfstools/dosfstools/releases/download/v$(DOSFSTOOLS_VER)
+DOSFSTOOLS_VERSION = 4.1
+DOSFSTOOLS_DIR = dosfstools-$(DOSFSTOOLS_VERSION)
+DOSFSTOOLS_SOURCE = dosfstools-$(DOSFSTOOLS_VERSION).tar.xz
+DOSFSTOOLS_SITE = https://github.com/dosfstools/dosfstools/releases/download/v$(DOSFSTOOLS_VERSION)
 
 $(DL_DIR)/$(DOSFSTOOLS_SOURCE):
 	$(DOWNLOAD) $(DOSFSTOOLS_SITE)/$(DOSFSTOOLS_SOURCE)
@@ -427,10 +427,10 @@ dosfstools: $(DL_DIR)/$(DOSFSTOOLS_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-NTFS_3G_VER    = 2017.3.23
-NTFS_3G_DIR    = ntfs-3g_ntfsprogs-$(NTFS_3G_VER)
-NTFS_3G_SOURCE = ntfs-3g_ntfsprogs-$(NTFS_3G_VER).tgz
-NTFS_3G_SITE   = https://tuxera.com/opensource
+NTFS_3G_VERSION = 2017.3.23
+NTFS_3G_DIR = ntfs-3g_ntfsprogs-$(NTFS_3G_VERSION)
+NTFS_3G_SOURCE = ntfs-3g_ntfsprogs-$(NTFS_3G_VERSION).tgz
+NTFS_3G_SITE = https://tuxera.com/opensource
 
 $(DL_DIR)/$(NTFS_3G_SOURCE):
 	$(DOWNLOAD) $(NTFS_3G_SITE)/$(NTFS_3G_SOURCE)
@@ -464,10 +464,10 @@ ntfs-3g: $(NTFS_3G_DEPS) $(DL_DIR)/$(NTFS_3G_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-FUSE_EXFAT_VER    = 1.3.0
-FUSE_EXFAT_DIR    = fuse-exfat-$(FUSE_EXFAT_VER)
-FUSE_EXFAT_SOURCE = fuse-exfat-$(FUSE_EXFAT_VER).tar.gz
-FUSE_EXFAT_SITE   = https://github.com/relan/exfat/releases/download/v$(FUSE_EXFAT_VER)
+FUSE_EXFAT_VERSION = 1.3.0
+FUSE_EXFAT_DIR = fuse-exfat-$(FUSE_EXFAT_VERSION)
+FUSE_EXFAT_SOURCE = fuse-exfat-$(FUSE_EXFAT_VERSION).tar.gz
+FUSE_EXFAT_SITE = https://github.com/relan/exfat/releases/download/v$(FUSE_EXFAT_VERSION)
 
 $(DL_DIR)/$(FUSE_EXFAT_SOURCE):
 	$(DOWNLOAD) $(FUSE_EXFAT_SITE)/$(FUSE_EXFAT_SOURCE)
@@ -495,10 +495,10 @@ fuse-exfat: $(FUSE_EXFAT_DEPS) $(DL_DIR)/$(FUSE_EXFAT_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-EXFAT_UTILS_VER    = 1.3.0
-EXFAT_UTILS_DIR    = exfat-utils-$(EXFAT_UTILS_VER)
-EXFAT_UTILS_SOURCE = exfat-utils-$(EXFAT_UTILS_VER).tar.gz
-EXFAT_UTILS_SITE   = https://github.com/relan/exfat/releases/download/v$(EXFAT_UTILS_VER)
+EXFAT_UTILS_VERSION = 1.3.0
+EXFAT_UTILS_DIR = exfat-utils-$(EXFAT_UTILS_VERSION)
+EXFAT_UTILS_SOURCE = exfat-utils-$(EXFAT_UTILS_VERSION).tar.gz
+EXFAT_UTILS_SITE = https://github.com/relan/exfat/releases/download/v$(EXFAT_UTILS_VERSION)
 
 $(DL_DIR)/$(EXFAT_UTILS_SOURCE):
 	$(DOWNLOAD) $(EXFAT_UTILS_SITE)/$(EXFAT_UTILS_SOURCE)
@@ -526,10 +526,10 @@ exfat-utils: $(EXFAT_UTILS_DEPS) $(DL_DIR)/$(EXFAT_UTILS_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-XFSPROGS_VER    = 5.8.0
-XFSPROGS_DIR    = xfsprogs-$(XFSPROGS_VER)
-XFSPROGS_SOURCE = xfsprogs-$(XFSPROGS_VER).tar.xz
-XFSPROGS_SITE   = $(KERNEL_MIRROR)/linux/utils/fs/xfs/xfsprogs
+XFSPROGS_VERSION = 5.8.0
+XFSPROGS_DIR = xfsprogs-$(XFSPROGS_VERSION)
+XFSPROGS_SOURCE = xfsprogs-$(XFSPROGS_VERSION).tar.xz
+XFSPROGS_SITE = $(KERNEL_MIRROR)/linux/utils/fs/xfs/xfsprogs
 
 $(DL_DIR)/$(XFSPROGS_SOURCE):
 	$(DOWNLOAD) $(XFSPROGS_SITE)/$(XFSPROGS_SOURCE)
@@ -565,10 +565,10 @@ xfsprogs: $(XFSPROGS_DEPS) $(DL_DIR)/$(XFSPROGS_SOURCE) | $(TARGET_DIR)
 # -----------------------------------------------------------------------------
 
 # for coolstream: formatting ext4 failes with newer versions then 1.43.8
-E2FSPROGS_VER    = $(if $(filter $(BOXTYPE),coolstream),1.43.8,1.45.6)
-E2FSPROGS_DIR    = e2fsprogs-$(E2FSPROGS_VER)
-E2FSPROGS_SOURCE = e2fsprogs-$(E2FSPROGS_VER).tar.gz
-E2FSPROGS_SITE   = https://sourceforge.net/projects/e2fsprogs/files/e2fsprogs/v$(E2FSPROGS_VER)
+E2FSPROGS_VERSION = $(if $(filter $(BOXTYPE),coolstream),1.43.8,1.45.6)
+E2FSPROGS_DIR = e2fsprogs-$(E2FSPROGS_VERSION)
+E2FSPROGS_SOURCE = e2fsprogs-$(E2FSPROGS_VERSION).tar.gz
+E2FSPROGS_SITE = https://sourceforge.net/projects/e2fsprogs/files/e2fsprogs/v$(E2FSPROGS_VERSION)
 
 $(DL_DIR)/$(E2FSPROGS_SOURCE):
 	$(DOWNLOAD) $(E2FSPROGS_SITE)/$(E2FSPROGS_SOURCE)
@@ -628,10 +628,10 @@ e2fsprogs: $(E2FSPROGS_DEPS) $(DL_DIR)/$(E2FSPROGS_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-HDPARM_VER    = 9.60
-HDPARM_DIR    = hdparm-$(HDPARM_VER)
-HDPARM_SOURCE = hdparm-$(HDPARM_VER).tar.gz
-HDPARM_SITE   = https://sourceforge.net/projects/hdparm/files/hdparm
+HDPARM_VERSION = 9.60
+HDPARM_DIR = hdparm-$(HDPARM_VERSION)
+HDPARM_SOURCE = hdparm-$(HDPARM_VERSION).tar.gz
+HDPARM_SITE = https://sourceforge.net/projects/hdparm/files/hdparm
 
 $(DL_DIR)/$(HDPARM_SOURCE):
 	$(DOWNLOAD) $(HDPARM_SITE)/$(HDPARM_SOURCE)
@@ -649,10 +649,10 @@ hdparm: $(DL_DIR)/$(HDPARM_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-F2FS_TOOLS_VER    = 1.14.0
-F2FS_TOOLS_DIR    = f2fs-tools-$(F2FS_TOOLS_VER)
-F2FS_TOOLS_SOURCE = f2fs-tools-$(F2FS_TOOLS_VER).tar.gz
-F2FS_TOOLS_SITE   = https://git.kernel.org/pub/scm/linux/kernel/git/jaegeuk/f2fs-tools.git/snapshot
+F2FS_TOOLS_VERSION = 1.14.0
+F2FS_TOOLS_DIR = f2fs-tools-$(F2FS_TOOLS_VERSION)
+F2FS_TOOLS_SOURCE = f2fs-tools-$(F2FS_TOOLS_VERSION).tar.gz
+F2FS_TOOLS_SITE = https://git.kernel.org/pub/scm/linux/kernel/git/jaegeuk/f2fs-tools.git/snapshot
 
 $(DL_DIR)/$(F2FS_TOOLS_SOURCE):
 	$(DOWNLOAD) $(F2FS_TOOLS_SITE)/$(F2FS_TOOLS_SOURCE)
@@ -685,10 +685,10 @@ f2fs-tools: $(F2FS_TOOLS_DEPS) $(DL_DIR)/$(F2FS_TOOLS_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-UTIL_LINUX_VER    = 2.36.2
-UTIL_LINUX_DIR    = util-linux-$(UTIL_LINUX_VER)
-UTIL_LINUX_SOURCE = util-linux-$(UTIL_LINUX_VER).tar.xz
-UTIL_LINUX_SITE   = $(KERNEL_MIRROR)/linux/utils/util-linux/v$(basename $(UTIL_LINUX_VER))
+UTIL_LINUX_VERSION = 2.36.2
+UTIL_LINUX_DIR = util-linux-$(UTIL_LINUX_VERSION)
+UTIL_LINUX_SOURCE = util-linux-$(UTIL_LINUX_VERSION).tar.xz
+UTIL_LINUX_SITE = $(KERNEL_MIRROR)/linux/utils/util-linux/v$(basename $(UTIL_LINUX_VERSION))
 
 $(DL_DIR)/$(UTIL_LINUX_SOURCE):
 	$(DOWNLOAD) $(UTIL_LINUX_SITE)/$(UTIL_LINUX_SOURCE)
@@ -750,10 +750,10 @@ util-linux: $(UTIL_LINUX_DEPS) $(DL_DIR)/$(UTIL_LINUX_SOURCE) | $(TARGET_DIR)
 #
 # -----------------------------------------------------------------------------
 
-OPENVPN_VER    = 2.5.0
-OPENVPN_DIR    = openvpn-$(OPENVPN_VER)
-OPENVPN_SOURCE = openvpn-$(OPENVPN_VER).tar.xz
-OPENVPN_SITE   = http://build.openvpn.net/downloads/releases
+OPENVPN_VERSION = 2.5.0
+OPENVPN_DIR = openvpn-$(OPENVPN_VERSION)
+OPENVPN_SOURCE = openvpn-$(OPENVPN_VERSION).tar.xz
+OPENVPN_SITE = http://build.openvpn.net/downloads/releases
 
 $(DL_DIR)/$(OPENVPN_SOURCE):
 	$(DOWNLOAD) $(OPENVPN_SITE)/$(OPENVPN_SOURCE)
@@ -790,10 +790,10 @@ openvpn: $(OPENVPN_DEPS) $(DL_DIR)/$(OPENVPN_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-OPENSSH_VER    = 8.4p1
-OPENSSH_DIR    = openssh-$(OPENSSH_VER)
-OPENSSH_SOURCE = openssh-$(OPENSSH_VER).tar.gz
-OPENSSH_SITE   = https://artfiles.org/openbsd/OpenSSH/portable
+OPENSSH_VERSION = 8.4p1
+OPENSSH_DIR = openssh-$(OPENSSH_VERSION)
+OPENSSH_SOURCE = openssh-$(OPENSSH_VERSION).tar.gz
+OPENSSH_SITE = https://artfiles.org/openbsd/OpenSSH/portable
 
 $(DL_DIR)/$(OPENSSH_SOURCE):
 	$(DOWNLOAD) $(OPENSSH_SITE)/$(OPENSSH_SOURCE)
@@ -832,10 +832,10 @@ openssh: $(OPENSSH_DEPS) $(DL_DIR)/$(OPENSSH_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-TZDATA_VER    = 2020f
-TZDATA_DIR    = tzdata$(TZDATA_VER)
-TZDATA_SOURCE = tzdata$(TZDATA_VER).tar.gz
-TZDATA_SITE   = ftp://ftp.iana.org/tz/releases
+TZDATA_VERSION = 2020f
+TZDATA_DIR = tzdata$(TZDATA_VERSION)
+TZDATA_SOURCE = tzdata$(TZDATA_VERSION).tar.gz
+TZDATA_SITE = ftp://ftp.iana.org/tz/releases
 
 $(DL_DIR)/$(TZDATA_SOURCE):
 	$(DOWNLOAD) $(TZDATA_SITE)/$(TZDATA_SOURCE)
@@ -875,10 +875,10 @@ tzdata: $(TZDATA_DEPS) $(DL_DIR)/$(TZDATA_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-IPERF_VER    = 3.1.3
-IPERF_DIR    = iperf-$(IPERF_VER)
-IPERF_SOURCE = iperf-$(IPERF_VER)-source.tar.gz
-IPERF_SITE   = https://iperf.fr/download/source
+IPERF_VERSION = 3.1.3
+IPERF_DIR = iperf-$(IPERF_VERSION)
+IPERF_SOURCE = iperf-$(IPERF_VERSION)-source.tar.gz
+IPERF_SITE = https://iperf.fr/download/source
 
 $(DL_DIR)/$(IPERF_SOURCE):
 	$(DOWNLOAD) $(IPERF_SITE)/$(IPERF_SOURCE)
@@ -896,10 +896,10 @@ iperf: $(DL_DIR)/$(IPERF_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-PARTED_VER    = 3.2
-PARTED_DIR    = parted-$(PARTED_VER)
-PARTED_SOURCE = parted-$(PARTED_VER).tar.xz
-PARTED_SITE   = $(GNU_MIRROR)/parted
+PARTED_VERSION = 3.2
+PARTED_DIR = parted-$(PARTED_VERSION)
+PARTED_SOURCE = parted-$(PARTED_VERSION).tar.xz
+PARTED_SITE = $(GNU_MIRROR)/parted
 
 $(DL_DIR)/$(PARTED_SOURCE):
 	$(DOWNLOAD) $(PARTED_SITE)/$(PARTED_SOURCE)
@@ -936,10 +936,10 @@ parted: $(PARTED_DEPS) $(DL_DIR)/$(PARTED_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-HD_IDLE_VER    = 1.05
-HD_IDLE_DIR    = hd-idle
-HD_IDLE_SOURCE = hd-idle-$(HD_IDLE_VER).tgz
-HD_IDLE_SITE   = https://sourceforge.net/projects/hd-idle/files
+HD_IDLE_VERSION = 1.05
+HD_IDLE_DIR = hd-idle
+HD_IDLE_SOURCE = hd-idle-$(HD_IDLE_VERSION).tgz
+HD_IDLE_SITE = https://sourceforge.net/projects/hd-idle/files
 
 $(DL_DIR)/$(HD_IDLE_SOURCE):
 	$(DOWNLOAD) $(HD_IDLE_SITE)/$(HD_IDLE_SOURCE)
@@ -956,10 +956,10 @@ hd-idle: $(DL_DIR)/$(HD_IDLE_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-LESS_VER    = 563
-LESS_DIR    = less-$(LESS_VER)
-LESS_SOURCE = less-$(LESS_VER).tar.gz
-LESS_SITE   = $(GNU_MIRROR)/less
+LESS_VERSION = 563
+LESS_DIR = less-$(LESS_VERSION)
+LESS_SOURCE = less-$(LESS_VERSION).tar.gz
+LESS_SITE = $(GNU_MIRROR)/less
 
 $(DL_DIR)/$(LESS_SOURCE):
 	$(DOWNLOAD) $(LESS_SITE)/$(LESS_SOURCE)
@@ -978,10 +978,10 @@ less: $(LESS_DEPS) $(DL_DIR)/$(LESS_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-NTP_VER    = 4.2.8p15
-NTP_DIR    = ntp-$(NTP_VER)
-NTP_SOURCE = ntp-$(NTP_VER).tar.gz
-NTP_SITE   = https://www.eecis.udel.edu/~ntp/ntp_spool/ntp4/ntp-$(basename $(NTP_VER))
+NTP_VERSION = 4.2.8p15
+NTP_DIR = ntp-$(NTP_VERSION)
+NTP_SOURCE = ntp-$(NTP_VERSION).tar.gz
+NTP_SITE = https://www.eecis.udel.edu/~ntp/ntp_spool/ntp4/ntp-$(basename $(NTP_VERSION))
 
 $(DL_DIR)/$(NTP_SOURCE):
 	$(DOWNLOAD) $(NTP_SITE)/$(NTP_SOURCE)
@@ -1010,10 +1010,10 @@ ntp: $(NTP_DEPS) $(DL_DIR)/$(NTP_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-DJMOUNT_VER    = 0.71
-DJMOUNT_DIR    = djmount-$(DJMOUNT_VER)
-DJMOUNT_SOURCE = djmount-$(DJMOUNT_VER).tar.gz
-DJMOUNT_SITE   = https://sourceforge.net/projects/djmount/files/djmount/$(DJMOUNT_VER)
+DJMOUNT_VERSION = 0.71
+DJMOUNT_DIR = djmount-$(DJMOUNT_VERSION)
+DJMOUNT_SOURCE = djmount-$(DJMOUNT_VERSION).tar.gz
+DJMOUNT_SITE = https://sourceforge.net/projects/djmount/files/djmount/$(DJMOUNT_VERSION)
 
 $(DL_DIR)/$(DJMOUNT_SOURCE):
 	$(DOWNLOAD) $(DJMOUNT_SITE)/$(DJMOUNT_SOURCE)
@@ -1042,10 +1042,10 @@ djmount: $(DJMOUNT_DEPS) $(DL_DIR)/$(DJMOUNT_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-USHARE_VER    = 1.1a
-USHARE_DIR    = ushare-uShare_v$(USHARE_VER)
-USHARE_SOURCE = uShare_v$(USHARE_VER).tar.gz
-USHARE_SITE   = https://github.com/GeeXboX/ushare/archive
+USHARE_VERSION = 1.1a
+USHARE_DIR = ushare-uShare_v$(USHARE_VERSION)
+USHARE_SOURCE = uShare_v$(USHARE_VERSION).tar.gz
+USHARE_SITE = https://github.com/GeeXboX/ushare/archive
 
 $(DL_DIR)/$(USHARE_SOURCE):
 	$(DOWNLOAD) $(USHARE_SITE)/$(USHARE_SOURCE)
@@ -1078,10 +1078,10 @@ ushare: $(USHARE_DEPS) $(DL_DIR)/$(USHARE_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-SQLITE_VER    = 3330000
-SQLITE_DIR    = sqlite-autoconf-$(SQLITE_VER)
-SQLITE_SOURCE = sqlite-autoconf-$(SQLITE_VER).tar.gz
-SQLITE_SITE   = http://www.sqlite.org/2020
+SQLITE_VERSION = 3330000
+SQLITE_DIR = sqlite-autoconf-$(SQLITE_VERSION)
+SQLITE_SOURCE = sqlite-autoconf-$(SQLITE_VERSION).tar.gz
+SQLITE_SITE = http://www.sqlite.org/2020
 
 $(DL_DIR)/$(SQLITE_SOURCE):
 	$(DOWNLOAD) $(SQLITE_SITE)/$(SQLITE_SOURCE)
@@ -1102,10 +1102,10 @@ sqlite: $(DL_DIR)/$(SQLITE_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-MINIDLNA_VER    = 1.3.0
-MINIDLNA_DIR    = minidlna-$(MINIDLNA_VER)
-MINIDLNA_SOURCE = minidlna-$(MINIDLNA_VER).tar.gz
-MINIDLNA_SITE   = https://sourceforge.net/projects/minidlna/files/minidlna/$(MINIDLNA_VER)
+MINIDLNA_VERSION = 1.3.0
+MINIDLNA_DIR = minidlna-$(MINIDLNA_VERSION)
+MINIDLNA_SOURCE = minidlna-$(MINIDLNA_VERSION).tar.gz
+MINIDLNA_SITE = https://sourceforge.net/projects/minidlna/files/minidlna/$(MINIDLNA_VERSION)
 
 $(DL_DIR)/$(MINIDLNA_SOURCE):
 	$(DOWNLOAD) $(MINIDLNA_SITE)/$(MINIDLNA_SOURCE)
@@ -1137,10 +1137,10 @@ minidlna: $(MINIDLNA_DEPS) $(DL_DIR)/$(MINIDLNA_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-SMARTMONTOOLS_VER    = 7.1
-SMARTMONTOOLS_DIR    = smartmontools-$(SMARTMONTOOLS_VER)
-SMARTMONTOOLS_SOURCE = smartmontools-$(SMARTMONTOOLS_VER).tar.gz
-SMARTMONTOOLS_SITE   = https://sourceforge.net/projects/smartmontools/files/smartmontools/$(SMARTMONTOOLS_VER)
+SMARTMONTOOLS_VERSION = 7.1
+SMARTMONTOOLS_DIR = smartmontools-$(SMARTMONTOOLS_VERSION)
+SMARTMONTOOLS_SOURCE = smartmontools-$(SMARTMONTOOLS_VERSION).tar.gz
+SMARTMONTOOLS_SITE = https://sourceforge.net/projects/smartmontools/files/smartmontools/$(SMARTMONTOOLS_VERSION)
 
 $(DL_DIR)/$(SMARTMONTOOLS_SOURCE):
 	$(DOWNLOAD) $(SMARTMONTOOLS_SITE)/$(SMARTMONTOOLS_SOURCE)
@@ -1157,10 +1157,10 @@ smartmontools: $(DL_DIR)/$(SMARTMONTOOLS_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-INADYN_VER    = 2.6
-INADYN_DIR    = inadyn-$(INADYN_VER)
-INADYN_SOURCE = inadyn-$(INADYN_VER).tar.xz
-INADYN_SITE   = https://github.com/troglobit/inadyn/releases/download/v$(INADYN_VER)
+INADYN_VERSION = 2.6
+INADYN_DIR = inadyn-$(INADYN_VERSION)
+INADYN_SOURCE = inadyn-$(INADYN_VERSION).tar.xz
+INADYN_SITE = https://github.com/troglobit/inadyn/releases/download/v$(INADYN_VERSION)
 
 $(DL_DIR)/$(INADYN_SOURCE):
 	$(DOWNLOAD) $(INADYN_SITE)/$(INADYN_SOURCE)
@@ -1189,10 +1189,10 @@ inadyn: $(INADYN_DEPS) $(DL_DIR)/$(INADYN_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-VSFTPD_VER    = 3.0.3
-VSFTPD_DIR    = vsftpd-$(VSFTPD_VER)
-VSFTPD_SOURCE = vsftpd-$(VSFTPD_VER).tar.gz
-VSFTPD_SITE   = https://security.appspot.com/downloads
+VSFTPD_VERSION = 3.0.3
+VSFTPD_DIR = vsftpd-$(VSFTPD_VERSION)
+VSFTPD_SOURCE = vsftpd-$(VSFTPD_VERSION).tar.gz
+VSFTPD_SITE = https://security.appspot.com/downloads
 
 $(DL_DIR)/$(VSFTPD_SOURCE):
 	$(DOWNLOAD) $(VSFTPD_SITE)/$(VSFTPD_SOURCE)
@@ -1221,10 +1221,10 @@ vsftpd: $(VSFTPD_DEPS) $(DL_DIR)/$(VSFTPD_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-NANO_VER    = 5.4
-NANO_DIR    = nano-$(NANO_VER)
-NANO_SOURCE = nano-$(NANO_VER).tar.gz
-NANO_SITE   = $(GNU_MIRROR)/nano
+NANO_VERSION = 5.4
+NANO_DIR = nano-$(NANO_VERSION)
+NANO_SOURCE = nano-$(NANO_VERSION).tar.gz
+NANO_SITE = $(GNU_MIRROR)/nano
 
 $(DL_DIR)/$(NANO_SOURCE):
 	$(DOWNLOAD) $(NANO_SITE)/$(NANO_SOURCE)
@@ -1256,10 +1256,10 @@ nano: $(NANO_DEPS) $(DL_DIR)/$(NANO_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-MINICOM_VER    = 2.7.1
-MINICOM_DIR    = minicom-$(MINICOM_VER)
-MINICOM_SOURCE = minicom-$(MINICOM_VER).tar.gz
-MINICOM_SITE   = http://fossies.org/linux/misc
+MINICOM_VERSION = 2.7.1
+MINICOM_DIR = minicom-$(MINICOM_VERSION)
+MINICOM_SOURCE = minicom-$(MINICOM_VERSION).tar.gz
+MINICOM_SITE = http://fossies.org/linux/misc
 
 $(DL_DIR)/$(MINICOM_SOURCE):
 	$(DOWNLOAD) $(MINICOM_SITE)/$(MINICOM_SOURCE)
@@ -1282,10 +1282,10 @@ minicom: $(MINICOM_DEPS) $(DL_DIR)/$(MINICOM_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-AUTOFS_VER    = 5.1.6
-AUTOFS_DIR    = autofs-$(AUTOFS_VER)
-AUTOFS_SOURCE = autofs-$(AUTOFS_VER).tar.xz
-AUTOFS_SITE   = $(KERNEL_MIRROR)/linux/daemons/autofs/v5
+AUTOFS_VERSION = 5.1.6
+AUTOFS_DIR = autofs-$(AUTOFS_VERSION)
+AUTOFS_SOURCE = autofs-$(AUTOFS_VERSION).tar.xz
+AUTOFS_SITE = $(KERNEL_MIRROR)/linux/daemons/autofs/v5
 
 $(DL_DIR)/$(AUTOFS_SOURCE):
 	$(DOWNLOAD) $(AUTOFS_SITE)/$(AUTOFS_SOURCE)
@@ -1342,10 +1342,10 @@ samba: $(if $(filter $(BOXSERIES),hd1),samba33,samba36)
 
 # -----------------------------------------------------------------------------
 
-SAMBA33_VER    = 3.3.16
-SAMBA33_DIR    = samba-$(SAMBA33_VER)
-SAMBA33_SOURCE = samba-$(SAMBA33_VER).tar.gz
-SAMBA33_SITE   = https://download.samba.org/pub/samba
+SAMBA33_VERSION = 3.3.16
+SAMBA33_DIR = samba-$(SAMBA33_VERSION)
+SAMBA33_SOURCE = samba-$(SAMBA33_VERSION).tar.gz
+SAMBA33_SITE = https://download.samba.org/pub/samba
 
 $(DL_DIR)/$(SAMBA33_SOURCE):
 	$(DOWNLOAD) $(SAMBA33_SITE)/$(SAMBA33_SOURCE)
@@ -1414,10 +1414,10 @@ samba33: $(SAMBA33_DEPS) $(DL_DIR)/$(SAMBA33_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-SAMBA36_VER    = 3.6.25
-SAMBA36_DIR    = samba-$(SAMBA36_VER)
-SAMBA36_SOURCE = samba-$(SAMBA36_VER).tar.gz
-SAMBA36_SITE   = https://download.samba.org/pub/samba/stable
+SAMBA36_VERSION = 3.6.25
+SAMBA36_DIR = samba-$(SAMBA36_VERSION)
+SAMBA36_SOURCE = samba-$(SAMBA36_VERSION).tar.gz
+SAMBA36_SITE = https://download.samba.org/pub/samba/stable
 
 $(DL_DIR)/$(SAMBA36_SOURCE):
 	$(DOWNLOAD) $(SAMBA36_SITE)/$(SAMBA36_SOURCE)
@@ -1484,10 +1484,10 @@ samba36: $(SAMBA36_DEPS) $(DL_DIR)/$(SAMBA36_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-DROPBEAR_VER    = 2019.78
-DROPBEAR_DIR    = dropbear-$(DROPBEAR_VER)
-DROPBEAR_SOURCE = dropbear-$(DROPBEAR_VER).tar.bz2
-DROPBEAR_SITE   = http://matt.ucc.asn.au/dropbear/releases
+DROPBEAR_VERSION = 2019.78
+DROPBEAR_DIR = dropbear-$(DROPBEAR_VERSION)
+DROPBEAR_SOURCE = dropbear-$(DROPBEAR_VERSION).tar.bz2
+DROPBEAR_SITE = http://matt.ucc.asn.au/dropbear/releases
 
 $(DL_DIR)/$(DROPBEAR_SOURCE):
 	$(DOWNLOAD) $(DROPBEAR_SITE)/$(DROPBEAR_SOURCE)
@@ -1530,10 +1530,10 @@ dropbear: $(DROPBEAR_DEPS) $(DL_DIR)/$(DROPBEAR_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-SG3_UTILS_VER    = 1.45
-SG3_UTILS_DIR    = sg3_utils-$(SG3_UTILS_VER)
-SG3_UTILS_SOURCE = sg3_utils-$(SG3_UTILS_VER).tar.xz
-SG3_UTILS_SITE   = http://sg.danny.cz/sg/p
+SG3_UTILS_VERSION = 1.45
+SG3_UTILS_DIR = sg3_utils-$(SG3_UTILS_VERSION)
+SG3_UTILS_SOURCE = sg3_utils-$(SG3_UTILS_VERSION).tar.xz
+SG3_UTILS_SITE = http://sg.danny.cz/sg/p
 
 $(DL_DIR)/$(SG3_UTILS_SOURCE):
 	$(DOWNLOAD) $(SG3_UTILS_SITE)/$(SG3_UTILS_SOURCE)
@@ -1563,10 +1563,10 @@ sg3_utils: $(DL_DIR)/$(SG3_UTILS_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-FBSHOT_VER    = 0.3
-FBSHOT_DIR    = fbshot-$(FBSHOT_VER)
-FBSHOT_SOURCE = fbshot-$(FBSHOT_VER).tar.gz
-FBSHOT_SITE   = http://distro.ibiblio.org/amigolinux/download/Utils/fbshot
+FBSHOT_VERSION = 0.3
+FBSHOT_DIR = fbshot-$(FBSHOT_VERSION)
+FBSHOT_SOURCE = fbshot-$(FBSHOT_VERSION).tar.gz
+FBSHOT_SITE = http://distro.ibiblio.org/amigolinux/download/Utils/fbshot
 
 $(DL_DIR)/$(FBSHOT_SOURCE):
 	$(DOWNLOAD) $(FBSHOT_SITE)/$(FBSHOT_SOURCE)
@@ -1587,10 +1587,10 @@ fbshot: $(FBSHOT_DEPS) $(DL_DIR)/$(FBSHOT_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-LCD4LINUX_VER    = git
-LCD4LINUX_DIR    = lcd4linux.$(LCD4LINUX_VER)
-LCD4LINUX_SOURCE = lcd4linux.$(LCD4LINUX_VER)
-LCD4LINUX_SITE   = https://github.com/TangoCash
+LCD4LINUX_VERSION = git
+LCD4LINUX_DIR = lcd4linux.$(LCD4LINUX_VERSION)
+LCD4LINUX_SOURCE = lcd4linux.$(LCD4LINUX_VERSION)
+LCD4LINUX_SITE = https://github.com/TangoCash
 
 LCD4LINUX_DEPS = ncurses libgd libdpf
 
@@ -1620,10 +1620,10 @@ lcd4linux: $(LCD4LINUX_DEPS) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-SAMSUNGLCD4LINUX_VER    = git
-SAMSUNGLCD4LINUX_DIR    = samsunglcd4linux.$(LCD4LINUX_VER)
-SAMSUNGLCD4LINUX_SOURCE = samsunglcd4linux.$(LCD4LINUX_VER)
-SAMSUNGLCD4LINUX_SITE   = https://github.com/horsti58
+SAMSUNGLCD4LINUX_VERSION = git
+SAMSUNGLCD4LINUX_DIR = samsunglcd4linux.$(LCD4LINUX_VERSION)
+SAMSUNGLCD4LINUX_SOURCE = samsunglcd4linux.$(LCD4LINUX_VERSION)
+SAMSUNGLCD4LINUX_SITE = https://github.com/horsti58
 
 samsunglcd4linux: | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
@@ -1637,10 +1637,10 @@ samsunglcd4linux: | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-WPA_SUPPLICANT_VER    = 0.7.3
-WPA_SUPPLICANT_DIR    = wpa_supplicant-$(WPA_SUPPLICANT_VER)
-WPA_SUPPLICANT_SOURCE = wpa_supplicant-$(WPA_SUPPLICANT_VER).tar.gz
-WPA_SUPPLICANT_SITE   = https://w1.fi/releases
+WPA_SUPPLICANT_VERSION = 0.7.3
+WPA_SUPPLICANT_DIR = wpa_supplicant-$(WPA_SUPPLICANT_VERSION)
+WPA_SUPPLICANT_SOURCE = wpa_supplicant-$(WPA_SUPPLICANT_VERSION).tar.gz
+WPA_SUPPLICANT_SITE = https://w1.fi/releases
 
 $(DL_DIR)/$(WPA_SUPPLICANT_SOURCE):
 	$(DOWNLOAD) $(WPA_SUPPLICANT_SITE)/$(WPA_SUPPLICANT_SOURCE)
@@ -1665,10 +1665,10 @@ wpa_supplicant: $(WPA_SUPPLICANT_DEPS) $(DL_DIR)/$(WPA_SUPPLICANT_SOURCE) | $(TA
 
 # -----------------------------------------------------------------------------
 
-XUPNPD_VER    = git
-XUPNPD_DIR    = xupnpd.$(XUPNPD_VER)
-XUPNPD_SOURCE = xupnpd.$(XUPNPD_VER)
-XUPNPD_SITE   = https://github.com/clark15b
+XUPNPD_VERSION = git
+XUPNPD_DIR = xupnpd.$(XUPNPD_VERSION)
+XUPNPD_SOURCE = xupnpd.$(XUPNPD_VERSION)
+XUPNPD_SITE = https://github.com/clark15b
 
 XUPNPD_CHECKOUT = 25d6d44
 
@@ -1702,10 +1702,10 @@ xupnpd: $(XUPNPD_DEPS) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-NFS_UTILS_VER    = 2.2.1
-NFS_UTILS_DIR    = nfs-utils-$(NFS_UTILS_VER)
-NFS_UTILS_SOURCE = nfs-utils-$(NFS_UTILS_VER).tar.xz
-NFS_UTILS_SITE   = $(KERNEL_MIRROR)/linux/utils/nfs-utils/$(NFS_UTILS_VER)
+NFS_UTILS_VERSION = 2.2.1
+NFS_UTILS_DIR = nfs-utils-$(NFS_UTILS_VERSION)
+NFS_UTILS_SOURCE = nfs-utils-$(NFS_UTILS_VERSION).tar.xz
+NFS_UTILS_SITE = $(KERNEL_MIRROR)/linux/utils/nfs-utils/$(NFS_UTILS_VERSION)
 
 $(DL_DIR)/$(NFS_UTILS_SOURCE):
 	$(DOWNLOAD) $(NFS_UTILS_SITE)/$(NFS_UTILS_SOURCE)
@@ -1754,10 +1754,10 @@ nfs-utils: $(NFS_UTILS_DEPS) $(DL_DIR)/$(NFS_UTILS_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-RPCBIND_VER    = 1.2.5
-RPCBIND_DIR    = rpcbind-$(RPCBIND_VER)
-RPCBIND_SOURCE = rpcbind-$(RPCBIND_VER).tar.bz2
-RPCBIND_SITE   = https://sourceforge.net/projects/rpcbind/files/rpcbind/$(RPCBIND_VER)
+RPCBIND_VERSION = 1.2.5
+RPCBIND_DIR = rpcbind-$(RPCBIND_VERSION)
+RPCBIND_SOURCE = rpcbind-$(RPCBIND_VERSION).tar.bz2
+RPCBIND_SITE = https://sourceforge.net/projects/rpcbind/files/rpcbind/$(RPCBIND_VERSION)
 
 $(DL_DIR)/$(RPCBIND_SOURCE):
 	$(DOWNLOAD) $(RPCBIND_SITE)/$(RPCBIND_SOURCE)
@@ -1812,10 +1812,10 @@ streamripper: $(STREAMRIPPER_DEPS) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-GETTEXT_VER    = 0.19.8.1
-GETTEXT_DIR    = gettext-$(GETTEXT_VER)
-GETTEXT_SOURCE = gettext-$(GETTEXT_VER).tar.xz
-GETTEXT_SITE   = $(GNU_MIRROR)/gettext
+GETTEXT_VERSION = 0.19.8.1
+GETTEXT_DIR = gettext-$(GETTEXT_VERSION)
+GETTEXT_SOURCE = gettext-$(GETTEXT_VERSION).tar.xz
+GETTEXT_SITE = $(GNU_MIRROR)/gettext
 
 $(DL_DIR)/$(GETTEXT_SOURCE):
 	$(DOWNLOAD) $(GETTEXT_SITE)/$(GETTEXT_SOURCE)
@@ -1847,10 +1847,10 @@ gettext: $(DL_DIR)/$(GETTEXT_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-MC_VER    = 4.8.25
-MC_DIR    = mc-$(MC_VER)
-MC_SOURCE = mc-$(MC_VER).tar.xz
-MC_SITE   = ftp.midnight-commander.org
+MC_VERSION = 4.8.25
+MC_DIR = mc-$(MC_VERSION)
+MC_SOURCE = mc-$(MC_VERSION).tar.xz
+MC_SITE = ftp.midnight-commander.org
 
 $(DL_DIR)/$(MC_SOURCE):
 	$(DOWNLOAD) $(MC_SITE)/$(MC_SOURCE)
@@ -1889,10 +1889,10 @@ mc: $(MC_DEPS) $(DL_DIR)/$(MC_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-WGET_VER    = 1.20.3
-WGET_DIR    = wget-$(WGET_VER)
-WGET_SOURCE = wget-$(WGET_VER).tar.gz
-WGET_SITE   = $(GNU_MIRROR)/wget
+WGET_VERSION = 1.20.3
+WGET_DIR = wget-$(WGET_VERSION)
+WGET_SOURCE = wget-$(WGET_VERSION).tar.gz
+WGET_SITE = $(GNU_MIRROR)/wget
 
 $(DL_DIR)/$(WGET_SOURCE):
 	$(DOWNLOAD) $(WGET_SITE)/$(WGET_SOURCE)
@@ -1935,10 +1935,10 @@ ofgwrite: $(SOURCE_DIR)/$(NI_OFGWRITE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-AIO_GRAB_VER    = git
-AIO_GRAB_DIR    = aio-grab.$(AIO_GRAB_VER)
-AIO_GRAB_SOURCE = aio-grab.$(AIO_GRAB_VER)
-AIO_GRAB_SITE   = https://github.com/oe-alliance
+AIO_GRAB_VERSION = git
+AIO_GRAB_DIR = aio-grab.$(AIO_GRAB_VERSION)
+AIO_GRAB_SOURCE = aio-grab.$(AIO_GRAB_VERSION)
+AIO_GRAB_SITE = https://github.com/oe-alliance
 
 AIO_GRAB_DEPS   = zlib libpng libjpeg-turbo
 
@@ -1960,10 +1960,10 @@ aio-grab: $(AIO_GRAB_DEPS) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-DVBSNOOP_VER    = git
-DVBSNOOP_DIR    = dvbsnoop.$(DVBSNOOP_VER)
-DVBSNOOP_SOURCE = dvbsnoop.$(DVBSNOOP_VER)
-DVBSNOOP_SITE   = https://github.com/Duckbox-Developers
+DVBSNOOP_VERSION = git
+DVBSNOOP_DIR = dvbsnoop.$(DVBSNOOP_VERSION)
+DVBSNOOP_SOURCE = dvbsnoop.$(DVBSNOOP_VERSION)
+DVBSNOOP_SITE = https://github.com/Duckbox-Developers
 
 DVBSNOOP_CONF-OPTS = \
 	--enable-silent-rules
@@ -1981,10 +1981,10 @@ dvbsnoop: | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-DVB_APPS_VER    = git
-DVB_APPS_DIR    = dvb-apps.$(DVB_APPS_VER)
-DVB_APPS_SOURCE = dvb-apps.$(DVB_APPS_VER)
-DVB_APPS_SITE   = https://github.com/openpli-arm
+DVB_APPS_VERSION = git
+DVB_APPS_DIR = dvb-apps.$(DVB_APPS_VERSION)
+DVB_APPS_SOURCE = dvb-apps.$(DVB_APPS_VERSION)
+DVB_APPS_SITE = https://github.com/openpli-arm
 
 DVB_APPS_DEPS = kernel libiconv
 
@@ -2007,10 +2007,10 @@ dvb-apps: $(DVB_APPS_DEPS) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-MINISATIP_VER    = git
-MINISATIP_DIR    = minisatip.$(MINISATIP_VER)
-MINISATIP_SOURCE = minisatip.$(MINISATIP_VER)
-MINISATIP_SITE   = https://github.com/catalinii
+MINISATIP_VERSION = git
+MINISATIP_DIR = minisatip.$(MINISATIP_VERSION)
+MINISATIP_SOURCE = minisatip.$(MINISATIP_VERSION)
+MINISATIP_SITE = https://github.com/catalinii
 
 MINISATIP_DEPS = libdvbcsa openssl dvb-apps
 
@@ -2039,10 +2039,10 @@ minisatip: $(MINISATIP_DEPS) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-ETHTOOL_VER    = 5.10
-ETHTOOL_DIR    = ethtool-$(ETHTOOL_VER)
-ETHTOOL_SOURCE = ethtool-$(ETHTOOL_VER).tar.xz
-ETHTOOL_SITE   = $(KERNEL_MIRROR)/software/network/ethtool
+ETHTOOL_VERSION = 5.10
+ETHTOOL_DIR = ethtool-$(ETHTOOL_VERSION)
+ETHTOOL_SOURCE = ethtool-$(ETHTOOL_VERSION).tar.xz
+ETHTOOL_SITE = $(KERNEL_MIRROR)/software/network/ethtool
 
 $(DL_DIR)/$(ETHTOOL_SOURCE):
 	$(DOWNLOAD) $(ETHTOOL_SITE)/$(ETHTOOL_SOURCE)
@@ -2064,10 +2064,10 @@ ethtool: $(DL_DIR)/$(ETHTOOL_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-GPTFDISK_VER    = 1.0.4
-GPTFDISK_DIR    = gptfdisk-$(GPTFDISK_VER)
-GPTFDISK_SOURCE = gptfdisk-$(GPTFDISK_VER).tar.gz
-GPTFDISK_SITE   = https://sourceforge.net/projects/gptfdisk/files/gptfdisk/$(GPTFDISK_VER)
+GPTFDISK_VERSION = 1.0.4
+GPTFDISK_DIR = gptfdisk-$(GPTFDISK_VERSION)
+GPTFDISK_SOURCE = gptfdisk-$(GPTFDISK_VERSION).tar.gz
+GPTFDISK_SITE = https://sourceforge.net/projects/gptfdisk/files/gptfdisk/$(GPTFDISK_VERSION)
 
 $(DL_DIR)/$(GPTFDISK_SOURCE):
 	$(DOWNLOAD) $(GPTFDISK_SITE)/$(GPTFDISK_SOURCE)
@@ -2091,10 +2091,10 @@ gptfdisk: $(GPTFDISK_DEPS) $(DL_DIR)/$(GPTFDISK_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-RSYNC_VER    = 3.1.3
-RSYNC_DIR    = rsync-$(RSYNC_VER)
-RSYNC_SOURCE = rsync-$(RSYNC_VER).tar.gz
-RSYNC_SITE   = https://download.samba.org/pub/rsync/src/
+RSYNC_VERSION = 3.1.3
+RSYNC_DIR = rsync-$(RSYNC_VERSION)
+RSYNC_SOURCE = rsync-$(RSYNC_VERSION).tar.gz
+RSYNC_SITE = https://download.samba.org/pub/rsync/src/
 
 $(DL_DIR)/$(RSYNC_SOURCE):
 	$(DOWNLOAD) $(RSYNC_SITE)/$(RSYNC_SOURCE)
@@ -2120,10 +2120,10 @@ rsync: $(RSYNC_DEPS) $(DL_DIR)/$(RSYNC_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-FLAC_VER    = 1.3.3
-FLAC_DIR    = flac-$(FLAC_VER)
-FLAC_SOURCE = flac-$(FLAC_VER).tar.xz
-FLAC_SITE   = http://downloads.xiph.org/releases/flac
+FLAC_VERSION = 1.3.3
+FLAC_DIR = flac-$(FLAC_VERSION)
+FLAC_SOURCE = flac-$(FLAC_VERSION).tar.xz
+FLAC_SITE = http://downloads.xiph.org/releases/flac
 
 $(DL_DIR)/$(FLAC_SOURCE):
 	$(DOWNLOAD) $(FLAC_SITE)/$(FLAC_SOURCE)
@@ -2155,7 +2155,7 @@ flac: $(DL_DIR)/$(FLAC_SOURCE) | $(TARGET_DIR)
 # -----------------------------------------------------------------------------
 
 CA_BUNDLE_SOURCE = cacert.pem
-CA_BUNDLE_SITE   = https://curl.se/ca
+CA_BUNDLE_SITE = https://curl.se/ca
 
 $(DL_DIR)/$(CA_BUNDLE_SOURCE):
 	$(DOWNLOAD) $(CA_BUNDLE_SITE)/$(CA_BUNDLE_SOURCE)

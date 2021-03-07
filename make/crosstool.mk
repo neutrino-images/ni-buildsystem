@@ -13,7 +13,7 @@ crosstools:
 
 # -----------------------------------------------------------------------------
 
-CROSSTOOL_BACKUP = $(DL_DIR)/crosstool-ng-$(TARGET_ARCH)-linux-$(KERNEL_VER)-backup.tar.gz
+CROSSTOOL_BACKUP = $(DL_DIR)/crosstool-ng-$(TARGET_ARCH)-linux-$(KERNEL_VERSION)-backup.tar.gz
 
 $(CROSSTOOL_BACKUP):
 	$(call draw_line);
@@ -45,21 +45,21 @@ crosstools-renew:
 # -----------------------------------------------------------------------------
 
 # wrapper for manually call
-kernel-tarball: $(BUILD_DIR)/linux-$(KERNEL_VER).tar
+kernel-tarball: $(BUILD_DIR)/linux-$(KERNEL_VERSION).tar
 
 # create kernel-tarball
-$(BUILD_DIR)/linux-$(KERNEL_VER).tar: | $(BUILD_DIR)
+$(BUILD_DIR)/linux-$(KERNEL_VERSION).tar: | $(BUILD_DIR)
 	$(MAKE) kernel.do_prepare_$(if $(filter $(KERNEL_SOURCE),git),git,tar)
 	tar cf $(@) --exclude-vcs -C $(BUILD_DIR)/$(KERNEL_DIR) .
 
 # -----------------------------------------------------------------------------
 
-CROSSTOOL_NG_VER    = git
-CROSSTOOL_NG_DIR    = crosstool-ng.$(CROSSTOOL_NG_VER)
-CROSSTOOL_NG_SOURCE = crosstool-ng.$(CROSSTOOL_NG_VER)
-CROSSTOOL_NG_SITE   = https://github.com/neutrino-images
+CROSSTOOL_NG_VERSION = git
+CROSSTOOL_NG_DIR = crosstool-ng.$(CROSSTOOL_NG_VERSION)
+CROSSTOOL_NG_SOURCE = crosstool-ng.$(CROSSTOOL_NG_VERSION)
+CROSSTOOL_NG_SITE = https://github.com/neutrino-images
 
-CROSSTOOL_NG_PATCH  = crosstool-ng-bash-version.patch
+CROSSTOOL_NG_PATCH = crosstool-ng-bash-version.patch
 
 CROSSTOOL_NG_CONFIG = $(PACKAGE_DIR)/crosstool-ng/files/ct-ng-$(BOXTYPE).config
 ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd1 hd2))
@@ -67,14 +67,14 @@ ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd1 hd2))
 endif
 
 # crosstool for hd2 depends on gcc-linaro
-GCC_LINARO_VER    = 4.9-2017.01
-GCC_LINARO_SOURCE = gcc-linaro-$(GCC_LINARO_VER).tar.xz
-GCC_LINARO_SITE   = https://releases.linaro.org/components/toolchain/gcc-linaro/$(GCC_LINARO_VER)
+GCC_LINARO_VERSION = 4.9-2017.01
+GCC_LINARO_SOURCE = gcc-linaro-$(GCC_LINARO_VERSION).tar.xz
+GCC_LINARO_SITE = https://releases.linaro.org/components/toolchain/gcc-linaro/$(GCC_LINARO_VERSION)
 
 $(DL_DIR)/$(GCC_LINARO_SOURCE):
 	$(DOWNLOAD) $(GCC_LINARO_SITE)/$(GCC_LINARO_SOURCE)
 
-UCLIBC_VER = 1.0.24
+UCLIBC_VERSION = 1.0.24
 
 # -----------------------------------------------------------------------------
 
@@ -82,7 +82,7 @@ UCLIBC_VER = 1.0.24
 $(CROSS_BASE)/arm/hd2: $(DL_DIR)/$(GCC_LINARO_SOURCE)
 
 $(CROSS_DIR): | $(BUILD_DIR)
-	make $(BUILD_DIR)/linux-$(KERNEL_VER).tar
+	make $(BUILD_DIR)/linux-$(KERNEL_VERSION).tar
 	#
 	$(REMOVE)/$(CROSSTOOL_NG_DIR)
 	$(GET-GIT-SOURCE) $(CROSSTOOL_NG_SITE)/$(CROSSTOOL_NG_SOURCE) $(DL_DIR)/$(CROSSTOOL_NG_SOURCE)
@@ -102,9 +102,9 @@ endif
 		$(SED) "s|^CT_PARALLEL_JOBS=.*|CT_PARALLEL_JOBS=$(PARALLEL_JOBS)|" .config; \
 		export NI_LOCAL_TARBALLS_DIR=$(DL_DIR); \
 		export NI_PREFIX_DIR=$(@); \
-		export NI_KERNEL_VERSION=$(KERNEL_VER); \
-		export NI_KERNEL_LOCATION=$(BUILD_DIR)/linux-$(KERNEL_VER).tar; \
-		export NI_LIBC_UCLIBC_CONFIG_FILE=$(PACKAGE_DIR)/crosstool-ng/files/ct-ng-uClibc-$(UCLIBC_VER).config; \
+		export NI_KERNEL_VERSION=$(KERNEL_VERSION); \
+		export NI_KERNEL_LOCATION=$(BUILD_DIR)/linux-$(KERNEL_VERSION).tar; \
+		export NI_LIBC_UCLIBC_CONFIG_FILE=$(PACKAGE_DIR)/crosstool-ng/files/ct-ng-uClibc-$(UCLIBC_VERSION).config; \
 		export LD_LIBRARY_PATH=; \
 		test -f ./configure || ./bootstrap; \
 		./configure --enable-local; \
