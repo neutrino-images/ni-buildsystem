@@ -52,17 +52,9 @@ LIBFUSE_CONF_OPTS = \
 	--enable-silent-rules
 
 libfuse: $(DL_DIR)/$(LIBFUSE_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL)
+	$(call autotools-package)
 	-rm -r $(TARGET_sysconfdir)/udev
 	-rm $(TARGET_sysconfdir)/init.d/fuse
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
@@ -79,15 +71,7 @@ LIBUPNP_CONV_OPTS = \
 	--disable-static
 
 libupnp: $(DL_DIR)/$(LIBUPNP_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
+	$(call autotools-package)
 	
 # -----------------------------------------------------------------------------
 
@@ -105,16 +89,7 @@ LIBDVBSI_CONV_OPTS = \
 	--disable-static
 
 libdvbsi: $(DL_DIR)/$(LIBDVBSI_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHES); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
+	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
 
@@ -197,16 +172,7 @@ LIBCURL_CONF_OPTS = \
 	--enable-optimize
 
 libcurl: $(LIBCURL_DEPENDENCIES) $(DL_DIR)/$(LIBCURL_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_CONFIG_SCRIPTS)
-	$(REWRITE_LIBTOOL)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
+	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
 
@@ -228,17 +194,7 @@ LIBPNG_CONF_OPTS = \
 	$(if $(filter $(BOXSERIES),hd5x hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse),--enable-arm-neon,--disable-arm-neon)
 
 libpng: $(LIBPNG_DEPENDENCIES) $(DL_DIR)/$(LIBPNG_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHES); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_CONFIG_SCRIPTS)
-	$(REWRITE_LIBTOOL)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
+	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
 
@@ -299,16 +255,8 @@ LIBJPEG_TURBO_CONF_OPTS = \
 	-DWITH_JPEG8=80
 
 libjpeg-turbo: $(DL_DIR)/$(LIBJPEG_TURBO_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHES); \
-		$(CMAKE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(call cmake-package)
 	-rm $(addprefix $(TARGET_bindir)/,cjpeg djpeg jpegtran rdjpgcom tjbench wrjpgcom)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
@@ -449,15 +397,7 @@ LIBUSB_CONF_OPTS = \
 	--disable-udev
 
 libusb: $(DL_DIR)/$(LIBUSB_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR); \
-	$(REWRITE_LIBTOOL)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
+	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
 
@@ -474,17 +414,7 @@ LIBUSB_COMPAT_CONFIG_SCRIPTS = libusb-config
 LIBUSB_COMPAT_DEPENDENCIES = libusb
 
 libusb-compat: $(LIBUSB_COMPAT_DEPENDENCIES) $(DL_DIR)/$(LIBUSB_COMPAT_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHES); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR); \
-	$(REWRITE_CONFIG_SCRIPTS)
-	$(REWRITE_LIBTOOL)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
+	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
 
@@ -505,15 +435,7 @@ LIBGD_CONF_OPTS = \
 	--without-x
 
 libgd: $(LIBGD_DEPENDENCIES) $(DL_DIR)/$(LIBGD_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
+	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
 
@@ -552,15 +474,7 @@ $(DL_DIR)/$(LZO_SOURCE):
 	$(DOWNLOAD) $(LZO_SITE)/$(LZO_SOURCE)
 
 lzo: $(DL_DIR)/$(LZO_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
+	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
 
@@ -609,16 +523,7 @@ EXPAT_CONF_OPTS = \
 	--without-docbook
 
 expat: $(DL_DIR)/$(EXPAT_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHES); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
+	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
 
@@ -682,16 +587,7 @@ LIBASS_CONF_OPTS = \
 	--disable-require-system-font-provider
 
 libass: $(LIBASS_DEPENDENCIES) $(DL_DIR)/$(LIBASS_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHES); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
+	$(call autotools-package)
 	
 # -----------------------------------------------------------------------------
 
@@ -756,17 +652,8 @@ LIBGCRYPT_CONF_OPTS = \
 	--disable-tests
 
 libgcrypt: $(LIBGCRYPT_DEPENDENCIES) $(DL_DIR)/$(LIBGCRYPT_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(call autotools-package)
 	-rm $(addprefix $(TARGET_bindir)/,dumpsexp hmac256 mpicalc)
-	$(REWRITE_CONFIG_SCRIPTS)
-	$(REWRITE_LIBTOOL)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
@@ -859,19 +746,9 @@ LIBXML2_CONF_OPTS = \
 	--without-schematron
 
 libxml2: $(DL_DIR)/$(LIBXML2_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHES); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(call autotools-package)
 	-rm -r $(TARGET_libdir)/cmake
 	-rm $(addprefix $(TARGET_libdir)/,xml2Conf.sh)
-	$(REWRITE_CONFIG_SCRIPTS)
-	$(REWRITE_LIBTOOL)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
@@ -884,16 +761,7 @@ $(DL_DIR)/$(PUGIXML_SOURCE):
 	$(DOWNLOAD) $(PUGIXML_SITE)/$(PUGIXML_SOURCE)
 
 pugixml: $(DL_DIR)/$(PUGIXML_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHES); \
-		$(CMAKE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	-rm -r $(TARGET_libdir)/cmake
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
+	$(call cmake-package)
 
 # -----------------------------------------------------------------------------
 
@@ -909,15 +777,7 @@ LIBROXML_CONF_OPTS = \
 	--disable-roxml
 
 libroxml: $(DL_DIR)/$(LIBROXML_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
+	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
 
@@ -943,18 +803,9 @@ LIBXSLT_CONF_OPTS = \
 	--without-mem-debug
 
 libxslt: $(LIBXSLT_DEPENDENCIES) $(DL_DIR)/$(LIBXSLT_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(call autotools-package)
 	-rm -r $(TARGET_libdir)/libxslt-plugins/
 	-rm $(addprefix $(TARGET_libdir)/,xsltConf.sh)
-	$(REWRITE_CONFIG_SCRIPTS)
-	$(REWRITE_LIBTOOL)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
@@ -996,19 +847,10 @@ LIBTIRPC_CONF_OPTS = \
 	--enable-silent-rules
 
 libtirpc: $(DL_DIR)/$(LIBTIRPC_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHES); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL)
+	$(call autotools-package)
 ifeq ($(BOXSERIES),hd1)
 	$(SED) '/^\(udp\|tcp\)6/ d' $(TARGET_sysconfdir)/netconfig
 endif
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
@@ -1027,14 +869,7 @@ CONFUSE_CONF_OPTS = \
 	--disable-shared
 
 confuse: $(DL_DIR)/$(CONFUSE_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
+	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
 
@@ -1053,14 +888,7 @@ LIBITE_CONF_OPTS = \
 	--disable-shared
 
 libite: $(DL_DIR)/$(LIBITE_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
+	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
 
@@ -1081,16 +909,7 @@ LIBMAD_CONF_OPTS = \
 	--enable-sso
 
 libmad: $(DL_DIR)/$(LIBMAD_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHES); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
+	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
 
@@ -1113,16 +932,7 @@ LIBVORBIS_CONF_OPTS = \
 	--disable-oggtest
 
 libvorbis: $(LIBVORBIS_DEPENDENCIES) $(DL_DIR)/$(LIBVORBIS_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
-
+	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
 
@@ -1165,15 +975,7 @@ LIBOGG_CONF_OPTS = \
 	--enable-shared
 
 libogg: $(DL_DIR)/$(LIBOGG_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
+	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
 
@@ -1190,16 +992,7 @@ LIBEXIF_CONF_OPTS = \
 	--with-doc-dir=$(REMOVE_docdir)
 
 libexif: $(DL_DIR)/$(LIBEXIF_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHES); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
+	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
 
@@ -1216,15 +1009,7 @@ FRIBIDI_CONF_OPTS = \
 	--disable-deprecated
 
 fribidi: $(DL_DIR)/$(FRIBIDI_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
+	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
 
@@ -1243,16 +1028,7 @@ LIBFFI_CONF_OPTS = \
 	$(if $(filter $(BOXSERIES),hd1),--enable-static --disable-shared)
 
 libffi: $(DL_DIR)/$(LIBFFI_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHES); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
+	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
 
@@ -1340,19 +1116,10 @@ ALSA_LIB_CONF_OPTS = \
 	--disable-topology
 
 alsa-lib: $(DL_DIR)/$(ALSA_LIB_SOURCE)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHES); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL)
+	$(call autotools-package)
 	find $(TARGET_datadir)/alsa/cards/ -name '*.conf' ! -name 'aliases.conf' | xargs --no-run-if-empty rm
 	find $(TARGET_datadir)/alsa/pcm/ -name '*.conf' ! -name 'default.conf' ! -name 'dmix.conf' ! -name 'dsnoop.conf' | xargs --no-run-if-empty rm
 	-rm -r $(TARGET_datadir)/aclocal
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
@@ -1368,15 +1135,7 @@ POPT_CONF_OPTS = \
 	--datarootdir=$(REMOVE_datarootdir)
 
 popt: $(DL_DIR)/$(POPT_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
+	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
 

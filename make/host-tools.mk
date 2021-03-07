@@ -34,7 +34,7 @@ pkg-config-preqs:
 
 # -----------------------------------------------------------------------------
 
-HOST_PKG-CONFIG = $(HOST_DIR)/bin/pkg-config
+HOST_PKG_CONFIG = $(HOST_DIR)/bin/pkg-config
 
 # -----------------------------------------------------------------------------
 
@@ -54,7 +54,7 @@ host-pkgconf: $(DL_DIR)/$(HOST_PKGCONF_SOURCE) | $(HOST_DIR) pkg-config-preqs
 		$(HOST_CONFIGURE);\
 		$(MAKE); \
 		$(MAKE) install
-	$(INSTALL_EXEC) $(PKG_FILES_DIR)/pkg-config.in $(HOST_PKG-CONFIG)
+	$(INSTALL_EXEC) $(PKG_FILES_DIR)/pkg-config.in $(HOST_PKG_CONFIG)
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 

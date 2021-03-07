@@ -185,22 +185,7 @@ PKG_CONFIG_SYSROOT_DIR=$(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-PKG_NAME        = $(basename $(@F))
-PKG_UPPER       = $(call UPPERCASE,$(PKG_NAME))
-PKG_LOWER       = $(call LOWERCASE,$(PKG_NAME))
-PKG             = $(PKG_UPPER)
-
-PKG_VERSION     = $($(PKG)_VERSION)
-PKG_DIR         = $($(PKG)_DIR)
-PKG_SOURCE      = $($(PKG)_SOURCE)
-PKG_SITE        = $($(PKG)_SITE)
-PKG_PATCH       = $($(PKG)_PATCH)
-
-PKG_BUILD_DIR   = $(BUILD_DIR)/$(PKG_DIR)
-PKG_FILES_DIR   = $(PACKAGE_DIR)/$(subst host-,,$(PKG_NAME))/files
-PKG_PATCHES_DIR = $(PACKAGE_DIR)/$(subst host-,,$(PKG_NAME))/patches
-
-PKG_CHDIR       = $(CD) $(PKG_BUILD_DIR)
+include package/pkg-utils.mk
 
 # -----------------------------------------------------------------------------
 
@@ -452,6 +437,10 @@ NINJA = \
 
 NINJA_INSTALL = DESTDIR=$(TARGET_DIR) \
 	$(HOST_NINJA) -C $(PKG_BUILD_DIR)/build install
+
+# -----------------------------------------------------------------------------
+
+include package/Makefile
 
 # -----------------------------------------------------------------------------
 

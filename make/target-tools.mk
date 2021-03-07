@@ -278,20 +278,12 @@ COREUTILS_CONF_OPTS = \
 COREUTILS_BINARIES = touch
 
 coreutils: $(DL_DIR)/$(COREUTILS_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHES); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(call autotools-package)
 	for bin in $($(PKG)_BINARIES); do \
 		rm -f $(TARGET_base_bindir)/$$bin; \
 		$(INSTALL_EXEC) -D $(TARGET_base_bindir).$(@F)/$$bin $(TARGET_base_bindir)/$$bin; \
 	done
 	rm -r $(TARGET_base_bindir).$(@F)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
@@ -324,22 +316,13 @@ PROCPS_NG_CONF_OPTS = \
 PROCPS_NG_BINARIES = ps top
 
 procps-ng: $(PROCPS_NG_DEPENDENCIES) $(DL_DIR)/$(PROCPS_NG_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHES); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(call autotools-package)
 	for bin in $($(PKG)_BINARIES); do \
 		rm -f $(TARGET_base_bindir)/$$bin; \
 		$(INSTALL_EXEC) -D $(TARGET_base_bindir).$(@F)/$$bin $(TARGET_base_bindir)/$$bin; \
 	done
 	rm -r $(TARGET_base_bindir).$(@F)
 	rm -r $(TARGET_base_sbindir).$(@F)
-	$(REWRITE_LIBTOOL)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
@@ -378,19 +361,12 @@ ifeq ($(BOXSERIES),hd2)
 endif
 
 mtd-utils: $(MTD_UTILS_DEPENDENCIES) $(DL_DIR)/$(MTD_UTILS_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(call autotools-package)
 	for sbin in $($(PKG)_SBINARIES); do \
 		rm -f $(TARGET_sbindir)/$$sbin; \
 		$(INSTALL_EXEC) -D $(TARGET_base_sbindir).$(@F)/$$sbin $(TARGET_base_sbindir)/$$sbin; \
 	done
 	rm -r $(TARGET_base_sbindir).$(@F)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
@@ -415,15 +391,7 @@ DOSFSTOOLS_CONF_OPTS = \
 	CFLAGS="$(DOSFSTOOLS_CFLAGS)"
 
 dosfstools: $(DL_DIR)/$(DOSFSTOOLS_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHES); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
+	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
 
@@ -449,18 +417,10 @@ NTFS_3G_CONF_OPTS = \
 	--with-fuse=external
 
 ntfs-3g: $(NTFS_3G_DEPENDENCIES) $(DL_DIR)/$(NTFS_3G_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHES); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(call autotools-package)
 	-rm $(addprefix $(TARGET_base_bindir)/,lowntfs-3g ntfs-3g.probe)
 	-rm $(addprefix $(TARGET_base_sbindir)/,mount.lowntfs-3g)
 	ln -sf $(base_bindir)/ntfs-3g $(TARGET_base_sbindir)/mount.ntfs
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
@@ -484,14 +444,7 @@ FUSE_EXFAT_CONF_OPTS = \
 	--docdir=$(REMOVE_docdir)
 
 fuse-exfat: $(FUSE_EXFAT_DEPENDENCIES) $(DL_DIR)/$(FUSE_EXFAT_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
+	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
 
@@ -515,14 +468,7 @@ EXFAT_UTILS_CONF_OPTS = \
 	--docdir=$(REMOVE_docdir)
 
 exfat-utils: $(EXFAT_UTILS_DEPENDENCIES) $(DL_DIR)/$(EXFAT_UTILS_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
+	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
 
@@ -672,16 +618,8 @@ F2FS_TOOLS_CONF_OPTS = \
 	--without-selinux
 
 f2fs-tools: $(F2FS_TOOLS_DEPENDENCIES) $(DL_DIR)/$(F2FS_TOOLS_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(call autotools-package)
 	-rm $(addprefix $(TARGET_base_sbindir)/,sg_write_buffer)
-	$(REWRITE_LIBTOOL)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
@@ -733,15 +671,7 @@ UTIL_LINUX_CONF_OPTS = \
 	--without-utempter
 
 util-linux: $(UTIL_LINUX_DEPENDENCIES) $(DL_DIR)/$(UTIL_LINUX_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
+	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
 
@@ -779,14 +709,7 @@ OPENVPN_CONF_OPTS = \
 	--disable-pkcs11
 
 openvpn: $(OPENVPN_DEPENDENCIES) $(DL_DIR)/$(OPENVPN_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
+	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
 
@@ -884,15 +807,7 @@ $(DL_DIR)/$(IPERF_SOURCE):
 	$(DOWNLOAD) $(IPERF_SITE)/$(IPERF_SOURCE)
 
 iperf: $(DL_DIR)/$(IPERF_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHES); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
+	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
 
@@ -923,16 +838,7 @@ PARTED_CONF_OPTS = \
 	--without-readline
 
 parted: $(PARTED_DEPENDENCIES) $(DL_DIR)/$(PARTED_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHES); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
+	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
 
@@ -967,14 +873,7 @@ $(DL_DIR)/$(LESS_SOURCE):
 LESS_DEPENDENCIES = ncurses
 
 less: $(LESS_DEPENDENCIES) $(DL_DIR)/$(LESS_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
+	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
 
@@ -1090,15 +989,7 @@ SQLITE_CONF_OPTS = \
 	--bindir=$(REMOVE_bindir)
 
 sqlite: $(DL_DIR)/$(SQLITE_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
+	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
 
@@ -1544,12 +1435,7 @@ SG3_UTILS_CONF_OPTS = \
 SG3_UTILS_BINARIES = sg_start
 
 sg3_utils: $(DL_DIR)/$(SG3_UTILS_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(call autotools-package)
 	for bin in $($(PKG)_BINARIES); do \
 		rm -f $(TARGET_bindir)/$$bin; \
 		$(INSTALL_EXEC) -D $(TARGET_bindir).$(@F)/$$bin $(TARGET_bindir)/$$bin; \
@@ -1557,9 +1443,6 @@ sg3_utils: $(DL_DIR)/$(SG3_UTILS_SOURCE) | $(TARGET_DIR)
 	rm -r $(TARGET_bindir).$(@F)
 	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/sdX.init $(TARGET_sysconfdir)/init.d/sdX
 	$(UPDATE-RC.D) sdX stop 97 0 6 .
-	$(REWRITE_LIBTOOL)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
@@ -1731,13 +1614,7 @@ NFS_UTILS_CONF_OPTS = \
 	--without-systemd
 
 nfs-utils: $(NFS_UTILS_DEPENDENCIES) $(DL_DIR)/$(NFS_UTILS_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHES); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(call autotools-package)
 	chmod 0755 $(TARGET_base_sbindir)/mount.nfs
 	rm -f $(addprefix $(TARGET_base_sbindir)/,mount.nfs4 osd_login umount.nfs umount.nfs4)
 	rm -f $(addprefix $(TARGET_sbindir)/,mountstats nfsiostat)
@@ -1749,8 +1626,6 @@ nfs-utils: $(NFS_UTILS_DEPENDENCIES) $(DL_DIR)/$(NFS_UTILS_SOURCE) | $(TARGET_DI
   endif
 	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/nfsd.init $(TARGET_sysconfdir)/init.d/nfsd
 	$(UPDATE-RC.D) nfsd defaults 75 25
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
@@ -1772,16 +1647,8 @@ RPCBIND_CONF_OPTS = \
 	--with-systemdsystemunitdir=no
 
 rpcbind: $(RPCBIND_DEPENDENCIES) $(DL_DIR)/$(RPCBIND_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHES); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(call autotools-package)
 	rm -rf $(TARGET_bindir)/rpcgen
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
@@ -1875,17 +1742,9 @@ MC_CONF_OPTS = \
 	--without-x
 
 mc: $(MC_DEPENDENCIES) $(DL_DIR)/$(MC_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHES); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(call autotools-package)
 	rm -rf $(TARGET_datadir)/mc/examples
 	find $(TARGET_datadir)/mc/skins -type f ! -name default.ini | xargs --no-run-if-empty rm
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
 
 # -----------------------------------------------------------------------------
 
@@ -1908,15 +1767,7 @@ WGET_CONF_OPTS = \
 	CFLAGS="$(TARGET_CFLAGS) -DOPENSSL_NO_ENGINE"
 
 wget: $(WGET_DEPENDENCIES) $(DL_DIR)/$(WGET_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHES); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
+	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
 
@@ -2053,14 +1904,7 @@ ETHTOOL_CONF_OPTS = \
 	--disable-netlink
 
 ethtool: $(DL_DIR)/$(ETHTOOL_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
+	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
 
@@ -2109,14 +1953,7 @@ RSYNC_CONF_OPTS = \
 	--with-included-popt=no
 
 rsync: $(RSYNC_DEPENDENCIES) $(DL_DIR)/$(RSYNC_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
+	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
 
@@ -2142,15 +1979,7 @@ FLAC_CONF_OPTS = \
 	--disable-sse
 
 flac: $(DL_DIR)/$(FLAC_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
+	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
 
