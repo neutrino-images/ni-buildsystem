@@ -167,7 +167,7 @@ LIBCURL_SITE = https://curl.haxx.se/download
 $(DL_DIR)/$(LIBCURL_SOURCE):
 	$(DOWNLOAD) $(LIBCURL_SITE)/$(LIBCURL_SOURCE)
 
-LIBCURL_DEPS = zlib openssl rtmpdump ca-bundle
+LIBCURL_DEPENDENCIES = zlib openssl rtmpdump ca-bundle
 
 LIBCURL_CONFIG_SCRIPTS = curl-config
 
@@ -196,7 +196,7 @@ LIBCURL_CONF_OPTS = \
 	--with-librtmp=$(TARGET_libdir) \
 	--enable-optimize
 
-libcurl: $(LIBCURL_DEPS) $(DL_DIR)/$(LIBCURL_SOURCE) | $(TARGET_DIR)
+libcurl: $(LIBCURL_DEPENDENCIES) $(DL_DIR)/$(LIBCURL_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
@@ -218,7 +218,7 @@ LIBPNG_SITE = https://sourceforge.net/projects/libpng/files/libpng16/$(LIBPNG_VE
 $(DL_DIR)/$(LIBPNG_SOURCE):
 	$(DOWNLOAD) $(LIBPNG_SITE)/$(LIBPNG_SOURCE)
 
-LIBPNG_DEPS = zlib
+LIBPNG_DEPENDENCIES = zlib
 
 LIBPNG_CONFIG_SCRIPTS = libpng16-config
 
@@ -227,7 +227,7 @@ LIBPNG_CONF_OPTS = \
 	--disable-static \
 	$(if $(filter $(BOXSERIES),hd5x hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse),--enable-arm-neon,--disable-arm-neon)
 
-libpng: $(LIBPNG_DEPS) $(DL_DIR)/$(LIBPNG_SOURCE) | $(TARGET_DIR)
+libpng: $(LIBPNG_DEPENDENCIES) $(DL_DIR)/$(LIBPNG_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
@@ -250,7 +250,7 @@ FREETYPE_SITE = https://sourceforge.net/projects/freetype/files/freetype2/$(FREE
 $(DL_DIR)/$(FREETYPE_SOURCE):
 	$(DOWNLOAD) $(FREETYPE_SITE)/$(FREETYPE_SOURCE)
 
-FREETYPE_DEPS = zlib libpng
+FREETYPE_DEPENDENCIES = zlib libpng
 
 FREETYPE_CONFIG_SCRIPTS = freetype-config
 
@@ -263,7 +263,7 @@ FREETYPE_CONF_OPTS = \
 	--without-harfbuzz \
 	--without-bzip2
 
-freetype: $(FREETYPE_DEPS) $(DL_DIR)/$(FREETYPE_SOURCE) | $(TARGET_DIR)
+freetype: $(FREETYPE_DEPENDENCIES) $(DL_DIR)/$(FREETYPE_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
@@ -471,9 +471,9 @@ $(DL_DIR)/$(LIBUSB_COMPAT_SOURCE):
 
 LIBUSB_COMPAT_CONFIG_SCRIPTS = libusb-config
 
-LIBUSB_COMPAT_DEPS = libusb
+LIBUSB_COMPAT_DEPENDENCIES = libusb
 
-libusb-compat: $(LIBUSB_COMPAT_DEPS) $(DL_DIR)/$(LIBUSB_COMPAT_SOURCE) | $(TARGET_DIR)
+libusb-compat: $(LIBUSB_COMPAT_DEPENDENCIES) $(DL_DIR)/$(LIBUSB_COMPAT_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
@@ -496,7 +496,7 @@ LIBGD_SITE = https://github.com/libgd/libgd/releases/download/gd-$(LIBGD_VERSION
 $(DL_DIR)/$(LIBGD_SOURCE):
 	$(DOWNLOAD) $(LIBGD_SITE)/$(LIBGD_SOURCE)
 
-LIBGD_DEPS = zlib libpng libjpeg-turbo freetype
+LIBGD_DEPENDENCIES = zlib libpng libjpeg-turbo freetype
 
 LIBGD_CONF_OPTS = \
 	--bindir=$(REMOVE_bindir) \
@@ -504,7 +504,7 @@ LIBGD_CONF_OPTS = \
 	--without-xpm \
 	--without-x
 
-libgd: $(LIBGD_DEPS) $(DL_DIR)/$(LIBGD_SOURCE) | $(TARGET_DIR)
+libgd: $(LIBGD_DEPENDENCIES) $(DL_DIR)/$(LIBGD_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
@@ -522,12 +522,12 @@ LIBDPF_DIR = dpf-ax.$(LIBDPF_VERSION)
 LIBDPF_SOURCE = dpf-ax.$(LIBDPF_VERSION)
 LIBDPF_SITE = $(GITHUB)/MaxWiesel
 
-LIBDPF_DEPS = libusb-compat
+LIBDPF_DEPENDENCIES = libusb-compat
 
 LIBDPF_MAKE_OPTS = \
 	CC=$(TARGET_CC) PREFIX=$(TARGET_prefix)
 
-libdpf: $(LIBDPF_DEPS) | $(TARGET_DIR)
+libdpf: $(LIBDPF_DEPENDENCIES) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(GET-GIT-SOURCE) $(PKG_SITE)/$(PKG_SOURCE) $(DL_DIR)/$(PKG_SOURCE)
 	$(CPDIR)/$(PKG_SOURCE)
@@ -630,9 +630,9 @@ LIBBLURAY_SITE = ftp.videolan.org/pub/videolan/libbluray/$(LIBBLURAY_VERSION)
 $(DL_DIR)/$(LIBBLURAY_SOURCE):
 	$(DOWNLOAD) $(LIBBLURAY_SITE)/$(LIBBLURAY_SOURCE)
 
-LIBBLURAY_DEPS = freetype
+LIBBLURAY_DEPENDENCIES = freetype
 ifeq ($(BOXSERIES),hd2)
-  LIBBLURAY_DEPS += libaacs libbdplus
+  LIBBLURAY_DEPENDENCIES += libaacs libbdplus
 endif
 
 LIBBLURAY_CONF_OPTS = \
@@ -649,7 +649,7 @@ LIBBLURAY_CONF_OPTS = \
 	--without-libxml2 \
 	--without-fontconfig
 
-libbluray: $(LIBBLURAY_DEPS) $(DL_DIR)/$(LIBBLURAY_SOURCE) | $(TARGET_DIR)
+libbluray: $(LIBBLURAY_DEPENDENCIES) $(DL_DIR)/$(LIBBLURAY_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
@@ -672,7 +672,7 @@ LIBASS_SITE = https://github.com/libass/libass/releases/download/$(LIBASS_VERSIO
 $(DL_DIR)/$(LIBASS_SOURCE):
 	$(DOWNLOAD) $(LIBASS_SITE)/$(LIBASS_SOURCE)
 
-LIBASS_DEPS = freetype fribidi
+LIBASS_DEPENDENCIES = freetype fribidi
 
 LIBASS_CONF_OPTS = \
 	--disable-static \
@@ -681,7 +681,7 @@ LIBASS_CONF_OPTS = \
 	--disable-harfbuzz \
 	--disable-require-system-font-provider
 
-libass: $(LIBASS_DEPS) $(DL_DIR)/$(LIBASS_SOURCE) | $(TARGET_DIR)
+libass: $(LIBASS_DEPENDENCIES) $(DL_DIR)/$(LIBASS_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
@@ -743,7 +743,7 @@ LIBGCRYPT_SITE = ftp://ftp.gnupg.org/gcrypt/libgcrypt
 $(DL_DIR)/$(LIBGCRYPT_SOURCE):
 	$(DOWNLOAD) $(LIBGCRYPT_SITE)/$(LIBGCRYPT_SOURCE)
 
-LIBGCRYPT_DEPS = libgpg-error
+LIBGCRYPT_DEPENDENCIES = libgpg-error
 
 LIBGCRYPT_CONFIG_SCRIPTS = libgcrypt-config
 
@@ -755,7 +755,7 @@ LIBGCRYPT_CONF_OPTS = \
 	--disable-static \
 	--disable-tests
 
-libgcrypt: $(LIBGCRYPT_DEPS) $(DL_DIR)/$(LIBGCRYPT_SOURCE) | $(TARGET_DIR)
+libgcrypt: $(LIBGCRYPT_DEPENDENCIES) $(DL_DIR)/$(LIBGCRYPT_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
@@ -778,7 +778,7 @@ LIBAACS_SITE = ftp://ftp.videolan.org/pub/videolan/libaacs/$(LIBAACS_VERSION)
 $(DL_DIR)/$(LIBAACS_SOURCE):
 	$(DOWNLOAD) $(LIBAACS_SITE)/$(LIBAACS_SOURCE)
 
-LIBAACS_DEPS = libgcrypt
+LIBAACS_DEPENDENCIES = libgcrypt
 
 LIBAACS_CONF_OPTS = \
 	--enable-maintainer-mode \
@@ -786,7 +786,7 @@ LIBAACS_CONF_OPTS = \
 	--enable-shared \
 	--disable-static
 
-libaacs: $(LIBAACS_DEPS) $(DL_DIR)/$(LIBAACS_SOURCE) | $(TARGET_DIR)
+libaacs: $(LIBAACS_DEPENDENCIES) $(DL_DIR)/$(LIBAACS_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
@@ -810,7 +810,7 @@ LIBBDPLUS_SITE = ftp://ftp.videolan.org/pub/videolan/libbdplus/$(LIBBDPLUS_VERSI
 $(DL_DIR)/$(LIBBDPLUS_SOURCE):
 	$(DOWNLOAD) $(LIBBDPLUS_SITE)/$(LIBBDPLUS_SOURCE)
 
-LIBBDPLUS_DEPS = libaacs
+LIBBDPLUS_DEPENDENCIES = libaacs
 
 LIBBDPLUS_CONF_OPTS = \
 	--enable-maintainer-mode \
@@ -818,7 +818,7 @@ LIBBDPLUS_CONF_OPTS = \
 	--enable-shared \
 	--disable-static
 
-libbdplus: $(LIBBDPLUS_DEPS) $(DL_DIR)/$(LIBBDPLUS_SOURCE) | $(TARGET_DIR)
+libbdplus: $(LIBBDPLUS_DEPENDENCIES) $(DL_DIR)/$(LIBBDPLUS_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
@@ -929,7 +929,7 @@ LIBXSLT_SITE = ftp://xmlsoft.org/libxml2
 $(DL_DIR)/$(LIBXSLT_SOURCE):
 	$(DOWNLOAD) $(LIBXSLT_SITE)/$(LIBXSLT_SOURCE)
 
-LIBXSLT_DEPS = libxml2
+LIBXSLT_DEPENDENCIES = libxml2
 
 LIBXSLT_CONFIG_SCRIPTS = xslt-config
 
@@ -942,7 +942,7 @@ LIBXSLT_CONF_OPTS = \
 	--without-debug \
 	--without-mem-debug
 
-libxslt: $(LIBXSLT_DEPS) $(DL_DIR)/$(LIBXSLT_SOURCE) | $(TARGET_DIR)
+libxslt: $(LIBXSLT_DEPENDENCIES) $(DL_DIR)/$(LIBXSLT_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
@@ -958,7 +958,7 @@ libxslt: $(LIBXSLT_DEPS) $(DL_DIR)/$(LIBXSLT_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-RTMPDUMP_DEPS = zlib openssl
+RTMPDUMP_DEPENDENCIES = zlib openssl
 
 RTMPDUMP_MAKE_ENV = \
 	CROSS_COMPILE=$(TARGET_CROSS) \
@@ -969,7 +969,7 @@ RTMPDUMP_MAKE_OPTS = \
 	prefix=$(prefix) \
 	mandir=$(REMOVE_mandir)
 
-rtmpdump: $(RTMPDUMP_DEPS) $(SOURCE_DIR)/$(NI_RTMPDUMP) | $(TARGET_DIR)
+rtmpdump: $(RTMPDUMP_DEPENDENCIES) $(SOURCE_DIR)/$(NI_RTMPDUMP) | $(TARGET_DIR)
 	$(REMOVE)/$(NI_RTMPDUMP)
 	tar -C $(SOURCE_DIR) -cp $(NI_RTMPDUMP) --exclude-vcs | tar -C $(BUILD_DIR) -x
 	$(CHDIR)/$(NI_RTMPDUMP); \
@@ -1102,7 +1102,7 @@ LIBVORBIS_SITE = https://downloads.xiph.org/releases/vorbis
 $(DL_DIR)/$(LIBVORBIS_SOURCE):
 	$(DOWNLOAD) $(LIBVORBIS_SITE)/$(LIBVORBIS_SOURCE)
 
-LIBVORBIS_DEPS = libogg
+LIBVORBIS_DEPENDENCIES = libogg
 
 LIBVORBIS_AUTORECONF = YES
 
@@ -1112,7 +1112,7 @@ LIBVORBIS_CONF_OPTS = \
 	--disable-examples \
 	--disable-oggtest
 
-libvorbis: $(LIBVORBIS_DEPS) $(DL_DIR)/$(LIBVORBIS_SOURCE) | $(TARGET_DIR)
+libvorbis: $(LIBVORBIS_DEPENDENCIES) $(DL_DIR)/$(LIBVORBIS_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
@@ -1134,11 +1134,11 @@ LIBVORBISIDEC_SITE = https://ftp.de.debian.org/debian/pool/main/libv/libvorbisid
 $(DL_DIR)/$(LIBVORBISIDEC_SOURCE):
 	$(DOWNLOAD) $(LIBVORBISIDEC_SITE)/$(LIBVORBISIDEC_SOURCE)
 
-LIBVORBISIDEC_DEPS = libogg
+LIBVORBISIDEC_DEPENDENCIES = libogg
 
 LIBVORBISIDEC_AUTORECONF = YES
 
-libvorbisidec: $(LIBVORBISIDEC_DEPS) $(DL_DIR)/$(LIBVORBISIDEC_SOURCE) | $(TARGET_DIR)
+libvorbisidec: $(LIBVORBISIDEC_DEPENDENCIES) $(DL_DIR)/$(LIBVORBISIDEC_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
@@ -1264,9 +1264,9 @@ GLIB2_SITE = https://ftp.gnome.org/pub/gnome/sources/glib/$(basename $(GLIB2_VER
 $(DL_DIR)/$(GLIB2_SOURCE):
 	$(DOWNLOAD) $(GLIB2_SITE)/$(GLIB2_SOURCE)
 
-GLIB2_DEPS = zlib libffi
+GLIB2_DEPENDENCIES = zlib libffi
 ifeq ($(BOXSERIES),hd2)
-  GLIB2_DEPS += gettext
+  GLIB2_DEPENDENCIES += gettext
 endif
 
 GLIB2_AUTORECONF = YES
@@ -1287,11 +1287,11 @@ GLIB2_CONF_OPTS = \
 	--with-pcre=internal
 
 ifeq ($(BOXTYPE),$(filter $(BOXTYPE),armbox mipsbox))
-  GLIB2_DEPS += libiconv
+  GLIB2_DEPENDENCIES += libiconv
   GLIB2_CONF_OPTS += --with-libiconv=gnu
 endif
 
-glib2: $(GLIB2_DEPS) $(DL_DIR)/$(GLIB2_SOURCE) | $(TARGET_DIR)
+glib2: $(GLIB2_DEPENDENCIES) $(DL_DIR)/$(GLIB2_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
@@ -1423,9 +1423,9 @@ ifeq ($(BOXMODEL),$(filter $(BOXMODEL),vuduo4k vuduo4kse vusolo4k vuultimo4k vuu
   GRAPHLCD_BASE_PATCH += 0005-add-vuplus-driver.patch
 endif
 
-GRAPHLCD_BASE_DEPS   = freetype libiconv libusb
+GRAPHLCD_BASE_DEPENDENCIES = freetype libiconv libusb
 
-graphlcd-base: $(GRAPHLCD_BASE_DEPS) | $(TARGET_DIR)
+graphlcd-base: $(GRAPHLCD_BASE_DEPENDENCIES) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(GET-GIT-SOURCE) $(PKG_SITE)/$(PKG_SOURCE) $(DL_DIR)/$(PKG_SOURCE)
 	$(CPDIR)/$(PKG_SOURCE)

@@ -138,12 +138,12 @@ FFMPEG_CONF_OPTS = \
 	--arch=$(TARGET_ARCH) \
 	--extra-ldflags="$(TARGET_LDFLAGS)"
 
-FFMPEG_DEPS = openssl rtmpdump libbluray libass
+FFMPEG_DEPENDENCIES = openssl rtmpdump libbluray libass
 
 ifeq ($(FFMPEG_BRANCH),ni/ffmpeg/2.8)
-  FFMPEG_DEPS += libroxml
+  FFMPEG_DEPENDENCIES += libroxml
 else
-  FFMPEG_DEPS +=  libxml2
+  FFMPEG_DEPENDENCIES +=  libxml2
   FFMPEG_CONF_OPTS += \
 	--enable-demuxer=dash \
 	--enable-libxml2
@@ -165,7 +165,7 @@ ifeq ($(BOXSERIES),hd2)
 	--extra-cflags="-Wno-deprecated-declarations -I$(TARGET_includedir) -mfpu=vfpv3-d16 -mfloat-abi=hard"
 endif
 
-ffmpeg: $(FFMPEG_DEPS) | $(TARGET_DIR)
+ffmpeg: $(FFMPEG_DEPENDENCIES) | $(TARGET_DIR)
 	$(REMOVE)/$(NI_FFMPEG)
 	$(CD) $(SOURCE_DIR)/$(NI_FFMPEG); \
 		git checkout $(FFMPEG_BRANCH)

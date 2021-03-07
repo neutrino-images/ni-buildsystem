@@ -3,9 +3,9 @@
 #
 # -----------------------------------------------------------------------------
 
-#BLOBS_DEPS = kernel # because of depmod
+#BLOBS_DEPENDENCIES = kernel # because of depmod
 
-blobs: $(BLOBS_DEPS)
+blobs: $(BLOBS_DEPENDENCIES)
 	$(MAKE) firmware
 	$(MAKE) $(BOXMODEL)-drivers
 ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 hd60 hd61 vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))

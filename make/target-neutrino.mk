@@ -19,21 +19,21 @@ LIBSTB_HAL_BUILD_DIR = $(BUILD_DIR)/$(LIBSTB_HAL_OBJ)
 
 # -----------------------------------------------------------------------------
 
-NEUTRINO_DEPS  =
-NEUTRINO_DEPS += ffmpeg
-NEUTRINO_DEPS += freetype
-NEUTRINO_DEPS += giflib
-NEUTRINO_DEPS += libcurl
-NEUTRINO_DEPS += libdvbsi
-NEUTRINO_DEPS += fribidi
-NEUTRINO_DEPS += libjpeg-turbo
-NEUTRINO_DEPS += libsigc
-NEUTRINO_DEPS += lua
-NEUTRINO_DEPS += ntp
-NEUTRINO_DEPS += openssl
-NEUTRINO_DEPS += openthreads
-NEUTRINO_DEPS += pugixml
-NEUTRINO_DEPS += zlib
+NEUTRINO_DEPENDENCIES =
+NEUTRINO_DEPENDENCIES += ffmpeg
+NEUTRINO_DEPENDENCIES += freetype
+NEUTRINO_DEPENDENCIES += giflib
+NEUTRINO_DEPENDENCIES += libcurl
+NEUTRINO_DEPENDENCIES += libdvbsi
+NEUTRINO_DEPENDENCIES += fribidi
+NEUTRINO_DEPENDENCIES += libjpeg-turbo
+NEUTRINO_DEPENDENCIES += libsigc
+NEUTRINO_DEPENDENCIES += lua
+NEUTRINO_DEPENDENCIES += ntp
+NEUTRINO_DEPENDENCIES += openssl
+NEUTRINO_DEPENDENCIES += openthreads
+NEUTRINO_DEPENDENCIES += pugixml
+NEUTRINO_DEPENDENCIES += zlib
 
 # -----------------------------------------------------------------------------
 
@@ -124,9 +124,9 @@ endif
 # -----------------------------------------------------------------------------
 
 ifeq ($(BOXTYPE),coolstream)
-  NEUTRINO_DEPS += coolstream-drivers
+  NEUTRINO_DEPENDENCIES += coolstream-drivers
   ifeq ($(HAS_LIBCOOLSTREAM),yes)
-    NEUTRINO_DEPS += libcoolstream
+    NEUTRINO_DEPENDENCIES += libcoolstream
     ifeq ($(DEBUG),yes)
       NEUTRINO_CONF_OPTS += \
 	--enable-libcoolstream-static \
@@ -136,12 +136,12 @@ ifeq ($(BOXTYPE),coolstream)
 
   NEUTRINO_CONF_OPTS += --enable-pip
 else
-  NEUTRINO_DEPS += libstb-hal
+  NEUTRINO_DEPENDENCIES += libstb-hal
   NEUTRINO_CONF_OPTS += \
 	--with-stb-hal-includes=$(SOURCE_DIR)/$(NI_LIBSTB_HAL)/include \
 	--with-stb-hal-build=$(LIBSTB_HAL_BUILD_DIR)
 
-  NEUTRINO_DEPS += graphlcd-base
+  NEUTRINO_DEPENDENCIES += graphlcd-base
   NEUTRINO_CONF_OPTS += --enable-graphlcd
 
   ifeq ($(BOXTYPE),armbox)
@@ -152,7 +152,7 @@ else
   endif
 endif
 
-NEUTRINO_DEPS += lcd4linux
+NEUTRINO_DEPENDENCIES += lcd4linux
 NEUTRINO_CONF_OPTS += --enable-lcd4linux
 
 # enable ffmpeg audio decoder in neutrino
@@ -161,19 +161,19 @@ NEUTRINO_AUDIODEC = ffmpeg
 ifeq ($(NEUTRINO_AUDIODEC),ffmpeg)
   NEUTRINO_CONF_OPTS += --enable-ffmpegdec
 else
-  NEUTRINO_DEPS += libid3tag
-  NEUTRINO_DEPS += libmad
+  NEUTRINO_DEPENDENCIES += libid3tag
+  NEUTRINO_DEPENDENCIES += libmad
 
-  NEUTRINO_DEPS += libvorbisidec
+  NEUTRINO_DEPENDENCIES += libvorbisidec
   NEUTRINO_CONF_OPTS += --with-tremor
 
-  NEUTRINO_DEPS += flac
+  NEUTRINO_DEPENDENCIES += flac
   NEUTRINO_CONF_OPTS += --enable-flac
 endif
 
 # -----------------------------------------------------------------------------
 
-$(NEUTRINO_BUILD_DIR)/config.status: $(NEUTRINO_DEPS)
+$(NEUTRINO_BUILD_DIR)/config.status: $(NEUTRINO_DEPENDENCIES)
 	test -d $(NEUTRINO_BUILD_DIR) || mkdir -p $(NEUTRINO_BUILD_DIR)
 	$(CD) $(SOURCE_DIR)/$(NI_NEUTRINO); \
 		git checkout $(NEUTRINO_BRANCH)
@@ -193,9 +193,9 @@ neutrino: $(NEUTRINO_BUILD_DIR)/config.status
 
 # -----------------------------------------------------------------------------
 
-LIBSTB_HAL_DEPS  =
-LIBSTB_HAL_DEPS += ffmpeg
-LIBSTB_HAL_DEPS += openthreads
+LIBSTB_HAL_DEPENDENCIES =
+LIBSTB_HAL_DEPENDENCIES += ffmpeg
+LIBSTB_HAL_DEPENDENCIES += openthreads
 
 # -----------------------------------------------------------------------------
 
@@ -225,7 +225,7 @@ endif
 
 # -----------------------------------------------------------------------------
 
-$(LIBSTB_HAL_BUILD_DIR)/config.status: $(LIBSTB_HAL_DEPS)
+$(LIBSTB_HAL_BUILD_DIR)/config.status: $(LIBSTB_HAL_DEPENDENCIES)
 	test -d $(LIBSTB_HAL_BUILD_DIR) || mkdir -p $(LIBSTB_HAL_BUILD_DIR)
 	$(SOURCE_DIR)/$(NI_LIBSTB_HAL)/autogen.sh
 	$(CD) $(LIBSTB_HAL_BUILD_DIR); \

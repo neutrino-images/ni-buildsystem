@@ -16,7 +16,7 @@ BUSYBOX_SITE = https://busybox.net/downloads
 $(DL_DIR)/$(BUSYBOX_SOURCE):
 	$(DOWNLOAD) $(BUSYBOX_SITE)/$(BUSYBOX_SOURCE)
 
-BUSYBOX_DEPS = libtirpc
+BUSYBOX_DEPENDENCIES = libtirpc
 
 # Link busybox against libtirpc so that we can leverage its RPC support for NFS
 # mounting with BusyBox
@@ -147,7 +147,7 @@ define BUSYBOX_INSTALL_FILES
 	$(UPDATE-RC.D) syslogd stop 98 0 6 .
 endef
 
-busybox: $(BUSYBOX_DEPS) $(DL_DIR)/$(BUSYBOX_SOURCE) | $(TARGET_DIR)
+busybox: $(BUSYBOX_DEPENDENCIES) $(DL_DIR)/$(BUSYBOX_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
@@ -303,7 +303,7 @@ PROCPS_NG_SITE = http://sourceforge.net/projects/procps-ng/files/Production
 $(DL_DIR)/$(PROCPS_NG_SOURCE):
 	$(DOWNLOAD) $(PROCPS_NG_SITE)/$(PROCPS_NG_SOURCE)
 
-PROCPS_NG_DEPS = ncurses
+PROCPS_NG_DEPENDENCIES = ncurses
 
 PROCPS_NG_AUTORECONF = YES
 
@@ -323,7 +323,7 @@ PROCPS_NG_CONF_OPTS = \
 
 PROCPS_NG_BINARIES = ps top
 
-procps-ng: $(PROCPS_NG_DEPS) $(DL_DIR)/$(PROCPS_NG_SOURCE) | $(TARGET_DIR)
+procps-ng: $(PROCPS_NG_DEPENDENCIES) $(DL_DIR)/$(PROCPS_NG_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
@@ -351,7 +351,7 @@ MTD_UTILS_SITE = ftp://ftp.infradead.org/pub/mtd-utils
 $(DL_DIR)/$(MTD_UTILS_SOURCE):
 	$(DOWNLOAD) $(MTD_UTILS_SITE)/$(MTD_UTILS_SOURCE)
 
-MTD_UTILS_DEPS =
+MTD_UTILS_DEPENDENCIES =
 
 MTD_UTILS_CONF_OPTS = \
 	--prefix=$(base_prefix) \
@@ -366,7 +366,7 @@ MTD_UTILS_CONF_OPTS = \
 	--without-xattr
 
 ifeq ($(BOXSERIES),hd2)
-  MTD_UTILS_DEPS += zlib lzo
+  MTD_UTILS_DEPENDENCIES += zlib lzo
   MTD_UTILS_CONF_OPTS += --with-jffs
 else
   MTD_UTILS_CONF_OPTS += --without-jffs
@@ -377,7 +377,7 @@ ifeq ($(BOXSERIES),hd2)
   MTD_UTILS_SBINARIES += nanddump nandtest nandwrite mkfs.jffs2
 endif
 
-mtd-utils: $(MTD_UTILS_DEPS) $(DL_DIR)/$(MTD_UTILS_SOURCE) | $(TARGET_DIR)
+mtd-utils: $(MTD_UTILS_DEPENDENCIES) $(DL_DIR)/$(MTD_UTILS_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
@@ -435,7 +435,7 @@ NTFS_3G_SITE = https://tuxera.com/opensource
 $(DL_DIR)/$(NTFS_3G_SOURCE):
 	$(DOWNLOAD) $(NTFS_3G_SITE)/$(NTFS_3G_SOURCE)
 
-NTFS_3G_DEPS = libfuse
+NTFS_3G_DEPENDENCIES = libfuse
 
 NTFS_3G_CONF_OPTS = \
 	--prefix=$(base_prefix) \
@@ -448,7 +448,7 @@ NTFS_3G_CONF_OPTS = \
 	--disable-library \
 	--with-fuse=external
 
-ntfs-3g: $(NTFS_3G_DEPS) $(DL_DIR)/$(NTFS_3G_SOURCE) | $(TARGET_DIR)
+ntfs-3g: $(NTFS_3G_DEPENDENCIES) $(DL_DIR)/$(NTFS_3G_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
@@ -472,7 +472,7 @@ FUSE_EXFAT_SITE = https://github.com/relan/exfat/releases/download/v$(FUSE_EXFAT
 $(DL_DIR)/$(FUSE_EXFAT_SOURCE):
 	$(DOWNLOAD) $(FUSE_EXFAT_SITE)/$(FUSE_EXFAT_SOURCE)
 
-FUSE_EXFAT_DEPS = libfuse
+FUSE_EXFAT_DEPENDENCIES = libfuse
 
 FUSE_EXFAT_AUTORECONF = YES
 
@@ -483,7 +483,7 @@ FUSE_EXFAT_CONF_OPTS = \
 	--libdir=$(libdir) \
 	--docdir=$(REMOVE_docdir)
 
-fuse-exfat: $(FUSE_EXFAT_DEPS) $(DL_DIR)/$(FUSE_EXFAT_SOURCE) | $(TARGET_DIR)
+fuse-exfat: $(FUSE_EXFAT_DEPENDENCIES) $(DL_DIR)/$(FUSE_EXFAT_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
@@ -503,7 +503,7 @@ EXFAT_UTILS_SITE = https://github.com/relan/exfat/releases/download/v$(EXFAT_UTI
 $(DL_DIR)/$(EXFAT_UTILS_SOURCE):
 	$(DOWNLOAD) $(EXFAT_UTILS_SITE)/$(EXFAT_UTILS_SOURCE)
 
-EXFAT_UTILS_DEPS = fuse-exfat
+EXFAT_UTILS_DEPENDENCIES = fuse-exfat
 
 EXFAT_UTILS_AUTORECONF = YES
 
@@ -514,7 +514,7 @@ EXFAT_UTILS_CONF_OPTS = \
 	--libdir=$(libdir) \
 	--docdir=$(REMOVE_docdir)
 
-exfat-utils: $(EXFAT_UTILS_DEPS) $(DL_DIR)/$(EXFAT_UTILS_SOURCE) | $(TARGET_DIR)
+exfat-utils: $(EXFAT_UTILS_DEPENDENCIES) $(DL_DIR)/$(EXFAT_UTILS_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
@@ -534,7 +534,7 @@ XFSPROGS_SITE = $(KERNEL_MIRROR)/linux/utils/fs/xfs/xfsprogs
 $(DL_DIR)/$(XFSPROGS_SOURCE):
 	$(DOWNLOAD) $(XFSPROGS_SITE)/$(XFSPROGS_SOURCE)
 
-XFSPROGS_DEPS = util-linux
+XFSPROGS_DEPENDENCIES = util-linux
 
 XFSPROGS_CONF_ENV = \
 	ac_cv_header_aio_h=yes \
@@ -550,7 +550,7 @@ XFSPROGS_CONF_OPTS = \
 	INSTALL_GROUP=root \
 	--enable-static
 
-xfsprogs: $(XFSPROGS_DEPS) $(DL_DIR)/$(XFSPROGS_SOURCE) | $(TARGET_DIR)
+xfsprogs: $(XFSPROGS_DEPENDENCIES) $(DL_DIR)/$(XFSPROGS_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
@@ -573,7 +573,7 @@ E2FSPROGS_SITE = https://sourceforge.net/projects/e2fsprogs/files/e2fsprogs/v$(E
 $(DL_DIR)/$(E2FSPROGS_SOURCE):
 	$(DOWNLOAD) $(E2FSPROGS_SITE)/$(E2FSPROGS_SOURCE)
 
-#E2FSPROGS_DEPS = util-linux
+#E2FSPROGS_DEPENDENCIES = util-linux
 
 E2FSPROGS_AUTORECONF = YES
 
@@ -613,7 +613,7 @@ E2FSPROGS_CONF_OPTS = \
 #	--without-libintl-prefix \
 #	--without-libiconv-prefix \
 
-e2fsprogs: $(E2FSPROGS_DEPS) $(DL_DIR)/$(E2FSPROGS_SOURCE) | $(TARGET_DIR)
+e2fsprogs: $(E2FSPROGS_DEPENDENCIES) $(DL_DIR)/$(E2FSPROGS_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
@@ -657,7 +657,7 @@ F2FS_TOOLS_SITE = https://git.kernel.org/pub/scm/linux/kernel/git/jaegeuk/f2fs-t
 $(DL_DIR)/$(F2FS_TOOLS_SOURCE):
 	$(DOWNLOAD) $(F2FS_TOOLS_SITE)/$(F2FS_TOOLS_SOURCE)
 
-F2FS_TOOLS_DEPS = util-linux
+F2FS_TOOLS_DEPENDENCIES = util-linux
 
 F2FS_TOOLS_AUTORECONF = YES
 
@@ -671,7 +671,7 @@ F2FS_TOOLS_CONF_OPTS = \
 	--libdir=$(libdir) \
 	--without-selinux
 
-f2fs-tools: $(F2FS_TOOLS_DEPS) $(DL_DIR)/$(F2FS_TOOLS_SOURCE) | $(TARGET_DIR)
+f2fs-tools: $(F2FS_TOOLS_DEPENDENCIES) $(DL_DIR)/$(F2FS_TOOLS_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
@@ -693,7 +693,7 @@ UTIL_LINUX_SITE = $(KERNEL_MIRROR)/linux/utils/util-linux/v$(basename $(UTIL_LIN
 $(DL_DIR)/$(UTIL_LINUX_SOURCE):
 	$(DOWNLOAD) $(UTIL_LINUX_SITE)/$(UTIL_LINUX_SOURCE)
 
-UTIL_LINUX_DEPS = ncurses zlib
+UTIL_LINUX_DEPENDENCIES = ncurses zlib
 
 UTIL_LINUX_AUTORECONF = YES
 
@@ -732,7 +732,7 @@ UTIL_LINUX_CONF_OPTS = \
 	--without-udev \
 	--without-utempter
 
-util-linux: $(UTIL_LINUX_DEPS) $(DL_DIR)/$(UTIL_LINUX_SOURCE) | $(TARGET_DIR)
+util-linux: $(UTIL_LINUX_DEPENDENCIES) $(DL_DIR)/$(UTIL_LINUX_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
@@ -758,7 +758,7 @@ OPENVPN_SITE = http://build.openvpn.net/downloads/releases
 $(DL_DIR)/$(OPENVPN_SOURCE):
 	$(DOWNLOAD) $(OPENVPN_SITE)/$(OPENVPN_SOURCE)
 
-OPENVPN_DEPS = lzo openssl
+OPENVPN_DEPENDENCIES = lzo openssl
 
 OPENVPN_CONF_ENV = \
 	NETSTAT="/bin/netstat" \
@@ -778,7 +778,7 @@ OPENVPN_CONF_OPTS = \
 	--disable-plugins \
 	--disable-pkcs11
 
-openvpn: $(OPENVPN_DEPS) $(DL_DIR)/$(OPENVPN_SOURCE) | $(TARGET_DIR)
+openvpn: $(OPENVPN_DEPENDENCIES) $(DL_DIR)/$(OPENVPN_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
@@ -798,7 +798,7 @@ OPENSSH_SITE = https://artfiles.org/openbsd/OpenSSH/portable
 $(DL_DIR)/$(OPENSSH_SOURCE):
 	$(DOWNLOAD) $(OPENSSH_SITE)/$(OPENSSH_SOURCE)
 
-OPENSSH_DEPS = openssl zlib
+OPENSSH_DEPENDENCIES = openssl zlib
 
 OPENSSH_CONF_ENV = \
 	ac_cv_search_dlopen=no
@@ -820,7 +820,7 @@ OPENSSH_CONF_OPTS = \
 	--disable-pututline \
 	--disable-pututxline
 
-openssh: $(OPENSSH_DEPS) $(DL_DIR)/$(OPENSSH_SOURCE) | $(TARGET_DIR)
+openssh: $(OPENSSH_DEPENDENCIES) $(DL_DIR)/$(OPENSSH_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
@@ -840,7 +840,7 @@ TZDATA_SITE = ftp://ftp.iana.org/tz/releases
 $(DL_DIR)/$(TZDATA_SOURCE):
 	$(DOWNLOAD) $(TZDATA_SITE)/$(TZDATA_SOURCE)
 
-TZDATA_DEPS = host-zic
+TZDATA_DEPENDENCIES = host-zic
 
 TZDATA_ZONELIST = \
 	africa antarctica asia australasia europe northamerica \
@@ -850,7 +850,7 @@ TZDATA_LOCALTIME = CET
 
 ETC_LOCALTIME = $(if $(filter $(PERSISTENT_VAR_PARTITION),yes),/var/etc/localtime,/etc/localtime)
 
-tzdata: $(TZDATA_DEPS) $(DL_DIR)/$(TZDATA_SOURCE) | $(TARGET_DIR)
+tzdata: $(TZDATA_DEPENDENCIES) $(DL_DIR)/$(TZDATA_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(MKDIR)/$(PKG_DIR)
 	$(CHDIR)/$(PKG_DIR); \
@@ -904,10 +904,10 @@ PARTED_SITE = $(GNU_MIRROR)/parted
 $(DL_DIR)/$(PARTED_SOURCE):
 	$(DOWNLOAD) $(PARTED_SITE)/$(PARTED_SOURCE)
 
-PARTED_DEPS = util-linux
+PARTED_DEPENDENCIES = util-linux
 
 ifeq ($(BOXTYPE),$(filter $(BOXTYPE),armbox mipsbox))
-  PARTED_DEPS += libiconv
+  PARTED_DEPENDENCIES += libiconv
 endif
 
 PARTED_AUTORECONF = YES
@@ -922,7 +922,7 @@ PARTED_CONF_OPTS = \
 	--disable-device-mapper \
 	--without-readline
 
-parted: $(PARTED_DEPS) $(DL_DIR)/$(PARTED_SOURCE) | $(TARGET_DIR)
+parted: $(PARTED_DEPENDENCIES) $(DL_DIR)/$(PARTED_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
@@ -964,9 +964,9 @@ LESS_SITE = $(GNU_MIRROR)/less
 $(DL_DIR)/$(LESS_SOURCE):
 	$(DOWNLOAD) $(LESS_SITE)/$(LESS_SOURCE)
 
-LESS_DEPS = ncurses
+LESS_DEPENDENCIES = ncurses
 
-less: $(LESS_DEPS) $(DL_DIR)/$(LESS_SOURCE) | $(TARGET_DIR)
+less: $(LESS_DEPENDENCIES) $(DL_DIR)/$(LESS_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
@@ -986,7 +986,7 @@ NTP_SITE = https://www.eecis.udel.edu/~ntp/ntp_spool/ntp4/ntp-$(basename $(NTP_V
 $(DL_DIR)/$(NTP_SOURCE):
 	$(DOWNLOAD) $(NTP_SITE)/$(NTP_SOURCE)
 
-NTP_DEPS = openssl
+NTP_DEPENDENCIES = openssl
 
 NTP_CONF_OPTS = \
 	--docdir=$(REMOVE_docdir) \
@@ -996,7 +996,7 @@ NTP_CONF_OPTS = \
 	--with-yielding-select=yes \
 	--without-ntpsnmpd
 
-ntp: $(NTP_DEPS) $(DL_DIR)/$(NTP_SOURCE) | $(TARGET_DIR)
+ntp: $(NTP_DEPENDENCIES) $(DL_DIR)/$(NTP_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
@@ -1018,7 +1018,7 @@ DJMOUNT_SITE = https://sourceforge.net/projects/djmount/files/djmount/$(DJMOUNT_
 $(DL_DIR)/$(DJMOUNT_SOURCE):
 	$(DOWNLOAD) $(DJMOUNT_SITE)/$(DJMOUNT_SOURCE)
 
-DJMOUNT_DEPS = libfuse
+DJMOUNT_DEPENDENCIES = libfuse
 
 DJMOUNT_AUTORECONF = YES
 
@@ -1026,7 +1026,7 @@ DJMOUNT_CONF_OPTS = \
 	--with-fuse-prefix=$(TARGET_prefix) \
 	--disable-debug
 
-djmount: $(DJMOUNT_DEPS) $(DL_DIR)/$(DJMOUNT_SOURCE) | $(TARGET_DIR)
+djmount: $(DJMOUNT_DEPENDENCIES) $(DL_DIR)/$(DJMOUNT_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
@@ -1050,7 +1050,7 @@ USHARE_SITE = https://github.com/GeeXboX/ushare/archive
 $(DL_DIR)/$(USHARE_SOURCE):
 	$(DOWNLOAD) $(USHARE_SITE)/$(USHARE_SOURCE)
 
-USHARE_DEPS = libupnp
+USHARE_DEPENDENCIES = libupnp
 
 USHARE_CONF_OPTS = \
 	--prefix=$(prefix) \
@@ -1060,7 +1060,7 @@ USHARE_CONF_OPTS = \
 	--cross-compile \
 	--cross-prefix=$(TARGET_CROSS)
 
-ushare: $(USHARE_DEPS) $(DL_DIR)/$(USHARE_SOURCE) | $(TARGET_DIR)
+ushare: $(USHARE_DEPENDENCIES) $(DL_DIR)/$(USHARE_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
@@ -1110,7 +1110,7 @@ MINIDLNA_SITE = https://sourceforge.net/projects/minidlna/files/minidlna/$(MINID
 $(DL_DIR)/$(MINIDLNA_SOURCE):
 	$(DOWNLOAD) $(MINIDLNA_SITE)/$(MINIDLNA_SOURCE)
 
-MINIDLNA_DEPS = zlib sqlite libexif libjpeg-turbo libid3tag libogg libvorbis flac ffmpeg
+MINIDLNA_DEPENDENCIES = zlib sqlite libexif libjpeg-turbo libid3tag libogg libvorbis flac ffmpeg
 
 MINIDLNA_AUTORECONF = YES
 
@@ -1119,7 +1119,7 @@ MINIDLNA_CONF_OPTS = \
 	--with-log-path=/tmp/minidlna \
 	--disable-static
 
-minidlna: $(MINIDLNA_DEPS) $(DL_DIR)/$(MINIDLNA_SOURCE) | $(TARGET_DIR)
+minidlna: $(MINIDLNA_DEPENDENCIES) $(DL_DIR)/$(MINIDLNA_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
@@ -1165,7 +1165,7 @@ INADYN_SITE = https://github.com/troglobit/inadyn/releases/download/v$(INADYN_VE
 $(DL_DIR)/$(INADYN_SOURCE):
 	$(DOWNLOAD) $(INADYN_SITE)/$(INADYN_SOURCE)
 
-INADYN_DEPS = openssl confuse libite
+INADYN_DEPENDENCIES = openssl confuse libite
 
 INADYN_AUTORECONF = YES
 
@@ -1173,7 +1173,7 @@ INADYN_CONF_OPTS = \
 	--docdir=$(REMOVE_docdir) \
 	--enable-openssl
 
-inadyn: $(INADYN_DEPS) $(DL_DIR)/$(INADYN_SOURCE) | $(TARGET_DIR)
+inadyn: $(INADYN_DEPENDENCIES) $(DL_DIR)/$(INADYN_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(INADYN_DIR)
 	$(UNTAR)/$(INADYN_SOURCE)
 	$(CHDIR)/$(INADYN_DIR); \
@@ -1199,9 +1199,9 @@ $(DL_DIR)/$(VSFTPD_SOURCE):
 
 VSFTPD_LIBS += -lcrypt $$($(PKG_CONFIG) --libs libssl libcrypto)
 
-VSFTPD_DEPS = openssl
+VSFTPD_DEPENDENCIES = openssl
 
-vsftpd: $(VSFTPD_DEPS) $(DL_DIR)/$(VSFTPD_SOURCE) | $(TARGET_DIR)
+vsftpd: $(VSFTPD_DEPENDENCIES) $(DL_DIR)/$(VSFTPD_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
@@ -1229,7 +1229,7 @@ NANO_SITE = $(GNU_MIRROR)/nano
 $(DL_DIR)/$(NANO_SOURCE):
 	$(DOWNLOAD) $(NANO_SITE)/$(NANO_SOURCE)
 
-NANO_DEPS = ncurses
+NANO_DEPENDENCIES = ncurses
 
 NANO_CONF_ENV = \
 	ac_cv_prog_NCURSESW_CONFIG=false
@@ -1242,7 +1242,7 @@ NANO_CONF_OPTS = \
 	--without-slang \
 	--with-wordbounds
 
-nano: $(NANO_DEPS) $(DL_DIR)/$(NANO_SOURCE) | $(TARGET_DIR)
+nano: $(NANO_DEPENDENCIES) $(DL_DIR)/$(NANO_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
@@ -1264,12 +1264,12 @@ MINICOM_SITE = http://fossies.org/linux/misc
 $(DL_DIR)/$(MINICOM_SOURCE):
 	$(DOWNLOAD) $(MINICOM_SITE)/$(MINICOM_SOURCE)
 
-MINICOM_DEPS = ncurses
+MINICOM_DEPENDENCIES = ncurses
 
 MINICOM_CONF_OPTS = \
 	--disable-nls
 
-minicom: $(MINICOM_DEPS) $(DL_DIR)/$(MINICOM_SOURCE) | $(TARGET_DIR)
+minicom: $(MINICOM_DEPENDENCIES) $(DL_DIR)/$(MINICOM_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
@@ -1294,7 +1294,7 @@ $(DL_DIR)/$(AUTOFS_SOURCE):
 # wget -N https://mirrors.edge.kernel.org/pub/linux/daemons/autofs/v5/patches-5.1.6/patch_order_5.1.5
 # for p in $(cat patch_order_5.1.5); do test -f $p || wget https://mirrors.edge.kernel.org/pub/linux/daemons/autofs/v5/patches-5.1.6/$p; done
 
-AUTOFS_DEPS = libtirpc
+AUTOFS_DEPENDENCIES = libtirpc
 
 AUTOFS_AUTORECONF = YES
 
@@ -1321,7 +1321,7 @@ AUTOFS_CONF_OPTS = \
 AUTOFS_MAKE_OPTS = \
 	SUBDIRS="lib daemon modules"
 
-autofs: $(AUTOFS_DEPS) $(DL_DIR)/$(AUTOFS_SOURCE) | $(TARGET_DIR)
+autofs: $(AUTOFS_DEPENDENCIES) $(DL_DIR)/$(AUTOFS_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
@@ -1350,7 +1350,7 @@ SAMBA33_SITE = https://download.samba.org/pub/samba
 $(DL_DIR)/$(SAMBA33_SOURCE):
 	$(DOWNLOAD) $(SAMBA33_SITE)/$(SAMBA33_SOURCE)
 
-SAMBA33_DEPS = zlib
+SAMBA33_DEPENDENCIES = zlib
 
 SAMBA33_CONF_ENV = \
 	CONFIG_SITE=$(PKG_FILES_DIR)/samba33-config.site
@@ -1390,7 +1390,7 @@ SAMBA33_CONF_OPTS = \
 	--disable-relro \
 	--disable-swat
 
-samba33: $(SAMBA33_DEPS) $(DL_DIR)/$(SAMBA33_SOURCE) | $(TARGET_DIR)
+samba33: $(SAMBA33_DEPENDENCIES) $(DL_DIR)/$(SAMBA33_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
@@ -1422,7 +1422,7 @@ SAMBA36_SITE = https://download.samba.org/pub/samba/stable
 $(DL_DIR)/$(SAMBA36_SOURCE):
 	$(DOWNLOAD) $(SAMBA36_SITE)/$(SAMBA36_SOURCE)
 
-SAMBA36_DEPS = zlib
+SAMBA36_DEPENDENCIES = zlib
 
 SAMBA36_CONF_ENV = \
 	CONFIG_SITE=$(PKG_FILES_DIR)/samba36-config.site
@@ -1460,7 +1460,7 @@ SAMBA36_CONF_OPTS = \
 	--disable-relro \
 	--disable-swat \
 
-samba36: $(SAMBA36_DEPS) $(DL_DIR)/$(SAMBA36_SOURCE) | $(TARGET_DIR)
+samba36: $(SAMBA36_DEPENDENCIES) $(DL_DIR)/$(SAMBA36_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
@@ -1492,7 +1492,7 @@ DROPBEAR_SITE = http://matt.ucc.asn.au/dropbear/releases
 $(DL_DIR)/$(DROPBEAR_SOURCE):
 	$(DOWNLOAD) $(DROPBEAR_SITE)/$(DROPBEAR_SOURCE)
 
-DROPBEAR_DEPS = zlib
+DROPBEAR_DEPENDENCIES = zlib
 
 DROPBEAR_CONF_OPTS = \
 	--disable-lastlog \
@@ -1507,7 +1507,7 @@ DROPBEAR_CONF_OPTS = \
 DROPBEAR_MAKE_OPTS = \
 	PROGRAMS="dropbear dbclient dropbearkey scp"
 
-dropbear: $(DROPBEAR_DEPS) $(DL_DIR)/$(DROPBEAR_SOURCE) | $(TARGET_DIR)
+dropbear: $(DROPBEAR_DEPENDENCIES) $(DL_DIR)/$(DROPBEAR_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
@@ -1571,9 +1571,9 @@ FBSHOT_SITE = http://distro.ibiblio.org/amigolinux/download/Utils/fbshot
 $(DL_DIR)/$(FBSHOT_SOURCE):
 	$(DOWNLOAD) $(FBSHOT_SITE)/$(FBSHOT_SOURCE)
 
-FBSHOT_DEPS = libpng
+FBSHOT_DEPENDENCIES = libpng
 
-fbshot: $(FBSHOT_DEPS) $(DL_DIR)/$(FBSHOT_SOURCE) | $(TARGET_DIR)
+fbshot: $(FBSHOT_DEPENDENCIES) $(DL_DIR)/$(FBSHOT_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
@@ -1592,7 +1592,7 @@ LCD4LINUX_DIR = lcd4linux.$(LCD4LINUX_VERSION)
 LCD4LINUX_SOURCE = lcd4linux.$(LCD4LINUX_VERSION)
 LCD4LINUX_SITE = https://github.com/TangoCash
 
-LCD4LINUX_DEPS = ncurses libgd libdpf
+LCD4LINUX_DEPENDENCIES = ncurses libgd libdpf
 
 LCD4LINUX_CONF_OPTS = \
 	--libdir=$(TARGET_libdir) \
@@ -1603,7 +1603,7 @@ LCD4LINUX_CONF_OPTS = \
 	--with-drivers='DPF, SamsungSPF, PNG' \
 	--with-plugins='all,!dbus,!mpris_dbus,!asterisk,!isdn,!pop3,!ppp,!seti,!huawei,!imon,!kvv,!sample,!w1retap,!wireless,!xmms,!gps,!mpd,!mysql,!qnaplog,!iconv' \
 
-lcd4linux: $(LCD4LINUX_DEPS) | $(TARGET_DIR)
+lcd4linux: $(LCD4LINUX_DEPENDENCIES) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(GET-GIT-SOURCE) $(PKG_SITE)/$(PKG_SOURCE) $(DL_DIR)/$(PKG_SOURCE)
 	$(CPDIR)/$(PKG_SOURCE)
@@ -1645,9 +1645,9 @@ WPA_SUPPLICANT_SITE = https://w1.fi/releases
 $(DL_DIR)/$(WPA_SUPPLICANT_SOURCE):
 	$(DOWNLOAD) $(WPA_SUPPLICANT_SITE)/$(WPA_SUPPLICANT_SOURCE)
 
-WPA_SUPPLICANT_DEPS   = openssl
+WPA_SUPPLICANT_DEPENDENCIES = openssl
 
-wpa_supplicant: $(WPA_SUPPLICANT_DEPS) $(DL_DIR)/$(WPA_SUPPLICANT_SOURCE) | $(TARGET_DIR)
+wpa_supplicant: $(WPA_SUPPLICANT_DEPENDENCIES) $(DL_DIR)/$(WPA_SUPPLICANT_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR)/wpa_supplicant; \
@@ -1672,12 +1672,12 @@ XUPNPD_SITE = https://github.com/clark15b
 
 XUPNPD_CHECKOUT = 25d6d44
 
-XUPNPD_DEPS = lua openssl
+XUPNPD_DEPENDENCIES = lua openssl
 
 XUPNPD_MAKE_OPTS = \
 	TARGET=$(TARGET) LUAFLAGS="$(TARGET_LDFLAGS) -I$(TARGET_includedir)"
 
-xupnpd: $(XUPNPD_DEPS) | $(TARGET_DIR)
+xupnpd: $(XUPNPD_DEPENDENCIES) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(GET-GIT-SOURCE) $(PKG_SITE)/$(PKG_SOURCE) $(DL_DIR)/$(PKG_SOURCE)
 	$(CPDIR)/$(PKG_SOURCE)
@@ -1710,7 +1710,7 @@ NFS_UTILS_SITE = $(KERNEL_MIRROR)/linux/utils/nfs-utils/$(NFS_UTILS_VERSION)
 $(DL_DIR)/$(NFS_UTILS_SOURCE):
 	$(DOWNLOAD) $(NFS_UTILS_SITE)/$(NFS_UTILS_SOURCE)
 
-NFS_UTILS_DEPS   = rpcbind
+NFS_UTILS_DEPENDENCIES = rpcbind
 
 NFS_UTILS_AUTORECONF = YES
 
@@ -1730,7 +1730,7 @@ NFS_UTILS_CONF_OPTS = \
 	--with-rpcgen=internal \
 	--without-systemd
 
-nfs-utils: $(NFS_UTILS_DEPS) $(DL_DIR)/$(NFS_UTILS_SOURCE) | $(TARGET_DIR)
+nfs-utils: $(NFS_UTILS_DEPENDENCIES) $(DL_DIR)/$(NFS_UTILS_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
@@ -1762,7 +1762,7 @@ RPCBIND_SITE = https://sourceforge.net/projects/rpcbind/files/rpcbind/$(RPCBIND_
 $(DL_DIR)/$(RPCBIND_SOURCE):
 	$(DOWNLOAD) $(RPCBIND_SITE)/$(RPCBIND_SOURCE)
 
-RPCBIND_DEPS = libtirpc
+RPCBIND_DEPENDENCIES = libtirpc
 
 RPCBIND_AUTORECONF = YES
 
@@ -1771,7 +1771,7 @@ RPCBIND_CONF_OPTS = \
 	--with-rpcuser=root \
 	--with-systemdsystemunitdir=no
 
-rpcbind: $(RPCBIND_DEPS) $(DL_DIR)/$(RPCBIND_SOURCE) | $(TARGET_DIR)
+rpcbind: $(RPCBIND_DEPENDENCIES) $(DL_DIR)/$(RPCBIND_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
@@ -1785,7 +1785,7 @@ rpcbind: $(RPCBIND_DEPS) $(DL_DIR)/$(RPCBIND_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-STREAMRIPPER_DEPS = libvorbisidec libmad glib2
+STREAMRIPPER_DEPENDENCIES = libvorbisidec libmad glib2
 
 STREAMRIPPER_AUTORECONF = yes
 
@@ -1799,7 +1799,7 @@ STREAMRIPPER_CONF_OPTS = \
 	--with-included-argv=yes \
 	--with-included-libmad=no
 
-streamripper: $(STREAMRIPPER_DEPS) | $(TARGET_DIR)
+streamripper: $(STREAMRIPPER_DEPENDENCIES) | $(TARGET_DIR)
 	$(REMOVE)/$(NI_STREAMRIPPER)
 	tar -C $(SOURCE_DIR) -cp $(NI_STREAMRIPPER) --exclude-vcs | tar -C $(BUILD_DIR) -x
 	$(CHDIR)/$(NI_STREAMRIPPER); \
@@ -1855,7 +1855,7 @@ MC_SITE = ftp.midnight-commander.org
 $(DL_DIR)/$(MC_SOURCE):
 	$(DOWNLOAD) $(MC_SITE)/$(MC_SOURCE)
 
-MC_DEPS = glib2 ncurses
+MC_DEPENDENCIES = glib2 ncurses
 
 MC_AUTORECONF = YES
 
@@ -1874,7 +1874,7 @@ MC_CONF_OPTS = \
 	--without-gpm-mouse \
 	--without-x
 
-mc: $(MC_DEPS) $(DL_DIR)/$(MC_SOURCE) | $(TARGET_DIR)
+mc: $(MC_DEPENDENCIES) $(DL_DIR)/$(MC_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
@@ -1897,7 +1897,7 @@ WGET_SITE = $(GNU_MIRROR)/wget
 $(DL_DIR)/$(WGET_SOURCE):
 	$(DOWNLOAD) $(WGET_SITE)/$(WGET_SOURCE)
 
-WGET_DEPS = openssl
+WGET_DEPENDENCIES = openssl
 
 WGET_CONF_OPTS = \
 	--datarootdir=$(REMOVE_datarootdir) \
@@ -1907,7 +1907,7 @@ WGET_CONF_OPTS = \
 	--disable-debug \
 	CFLAGS="$(TARGET_CFLAGS) -DOPENSSL_NO_ENGINE"
 
-wget: $(WGET_DEPS) $(DL_DIR)/$(WGET_SOURCE) | $(TARGET_DIR)
+wget: $(WGET_DEPENDENCIES) $(DL_DIR)/$(WGET_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
@@ -1940,14 +1940,14 @@ AIO_GRAB_DIR = aio-grab.$(AIO_GRAB_VERSION)
 AIO_GRAB_SOURCE = aio-grab.$(AIO_GRAB_VERSION)
 AIO_GRAB_SITE = https://github.com/oe-alliance
 
-AIO_GRAB_DEPS   = zlib libpng libjpeg-turbo
+AIO_GRAB_DEPENDENCIES = zlib libpng libjpeg-turbo
 
 AIO_GRAB_AUTORECONF = YES
 
 AIO_GRAB_CONF_OPTS = \
 	--enable-silent-rules
 
-aio-grab: $(AIO_GRAB_DEPS) | $(TARGET_DIR)
+aio-grab: $(AIO_GRAB_DEPENDENCIES) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(GET-GIT-SOURCE) $(PKG_SITE)/$(PKG_SOURCE) $(DL_DIR)/$(PKG_SOURCE)
 	$(CPDIR)/$(PKG_SOURCE)
@@ -1986,14 +1986,14 @@ DVB_APPS_DIR = dvb-apps.$(DVB_APPS_VERSION)
 DVB_APPS_SOURCE = dvb-apps.$(DVB_APPS_VERSION)
 DVB_APPS_SITE = https://github.com/openpli-arm
 
-DVB_APPS_DEPS = kernel libiconv
+DVB_APPS_DEPENDENCIES = kernel libiconv
 
 DVB_APPS_MAKE_OPTS = \
 	KERNEL_HEADERS=$(BUILD_DIR)/$(KERNEL_HEADERS) \
 	enable_shared=no \
 	PERL5LIB=$(PKG_BUILD_DIR)/util/scan \
 
-dvb-apps: $(DVB_APPS_DEPS) | $(TARGET_DIR)
+dvb-apps: $(DVB_APPS_DEPENDENCIES) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(GET-GIT-SOURCE) $(PKG_SITE)/$(PKG_SOURCE) $(DL_DIR)/$(PKG_SOURCE)
 	$(CPDIR)/$(PKG_SOURCE)
@@ -2012,14 +2012,14 @@ MINISATIP_DIR = minisatip.$(MINISATIP_VERSION)
 MINISATIP_SOURCE = minisatip.$(MINISATIP_VERSION)
 MINISATIP_SITE = https://github.com/catalinii
 
-MINISATIP_DEPS = libdvbcsa openssl dvb-apps
+MINISATIP_DEPENDENCIES = libdvbcsa openssl dvb-apps
 
 MINISATIP_CONF_OPTS = \
 	--enable-static \
 	--enable-enigma \
 	--disable-netcv
 
-minisatip: $(MINISATIP_DEPS) | $(TARGET_DIR)
+minisatip: $(MINISATIP_DEPENDENCIES) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(GET-GIT-SOURCE) $(PKG_SITE)/$(PKG_SOURCE) $(DL_DIR)/$(PKG_SOURCE)
 	$(CPDIR)/$(PKG_SOURCE)
@@ -2072,11 +2072,11 @@ GPTFDISK_SITE = https://sourceforge.net/projects/gptfdisk/files/gptfdisk/$(GPTFD
 $(DL_DIR)/$(GPTFDISK_SOURCE):
 	$(DOWNLOAD) $(GPTFDISK_SITE)/$(GPTFDISK_SOURCE)
 
-GPTFDISK_DEPS = popt e2fsprogs ncurses
+GPTFDISK_DEPENDENCIES = popt e2fsprogs ncurses
 
 GPTFDISK_SBINARIES = sgdisk
 
-gptfdisk: $(GPTFDISK_DEPS) $(DL_DIR)/$(GPTFDISK_SOURCE) | $(TARGET_DIR)
+gptfdisk: $(GPTFDISK_DEPENDENCIES) $(DL_DIR)/$(GPTFDISK_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
@@ -2099,7 +2099,7 @@ RSYNC_SITE = https://download.samba.org/pub/rsync/src/
 $(DL_DIR)/$(RSYNC_SOURCE):
 	$(DOWNLOAD) $(RSYNC_SITE)/$(RSYNC_SOURCE)
 
-RSYNC_DEPS = zlib popt
+RSYNC_DEPENDENCIES = zlib popt
 
 RSYNC_CONF_OPTS = \
 	--disable-debug \
@@ -2108,7 +2108,7 @@ RSYNC_CONF_OPTS = \
 	--with-included-zlib=no \
 	--with-included-popt=no
 
-rsync: $(RSYNC_DEPS) $(DL_DIR)/$(RSYNC_SOURCE) | $(TARGET_DIR)
+rsync: $(RSYNC_DEPENDENCIES) $(DL_DIR)/$(RSYNC_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \

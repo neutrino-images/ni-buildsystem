@@ -11,14 +11,14 @@ LIBID3TAG_SITE = https://sourceforge.net/projects/mad/files/libid3tag/$(LIBID3TA
 $(DL_DIR)/$(LIBID3TAG_SOURCE):
 	$(DOWNLOAD) $(LIBID3TAG_SITE)/$(LIBID3TAG_SOURCE)
 
-LIBID3TAG_DEPS = zlib
+LIBID3TAG_DEPENDENCIES = zlib
 
 LIBID3TAG_AUTORECONF = YES
 
 LIBID3TAG_CONF_OPTS = \
 	--enable-shared=yes
 
-libid3tag: $(LIBID3TAG_DEPS) $(DL_DIR)/$(LIBID3TAG_SOURCE) | $(TARGET_DIR)
+libid3tag: $(LIBID3TAG_DEPENDENCIES) $(DL_DIR)/$(LIBID3TAG_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
@@ -40,7 +40,7 @@ FONTCONFIG_SITE = https://www.freedesktop.org/software/fontconfig/release
 $(DL_DIR)/$(FONTCONFIG_SOURCE):
 	$(DOWNLOAD) $(FONTCONFIG_SITE)/$(FONTCONFIG_SOURCE)
 
-FONTCONFIG_DEPS = freetype expat
+FONTCONFIG_DEPENDENCIES = freetype expat
 
 FONTCONFIG_CONF_OPTS = \
 	--with-freetype-config=$(HOST_DIR)/bin/freetype-config \
@@ -48,7 +48,7 @@ FONTCONFIG_CONF_OPTS = \
 	--with-expat-lib=$(TARGET_libdir) \
 	--disable-docs
 
-fontconfig: $(FONTCONFIG_DEPS) $(DL_DIR)/$(FONTCONFIG_SOURCE) | $(TARGET_DIR)
+fontconfig: $(FONTCONFIG_DEPENDENCIES) $(DL_DIR)/$(FONTCONFIG_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
@@ -70,7 +70,7 @@ PIXMAN_SITE = https://www.cairographics.org/releases
 $(DL_DIR)/$(PIXMAN_SOURCE):
 	$(DOWNLOAD) $(PIXMAN_SITE)/$(PIXMAN_SOURCE)
 
-PIXMAN_DEPS = zlib libpng
+PIXMAN_DEPENDENCIES = zlib libpng
 
 PIXMAN_CONF_OPTS = \
 	--disable-gtk \
@@ -78,7 +78,7 @@ PIXMAN_CONF_OPTS = \
 	--disable-loongson-mmi \
 	--disable-docs
 
-pixman: $(PIXMAN_DEPS) $(DL_DIR)/$(PIXMAN_SOURCE) | $(TARGET_DIR)
+pixman: $(PIXMAN_DEPENDENCIES) $(DL_DIR)/$(PIXMAN_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
@@ -100,7 +100,7 @@ CAIRO_SITE = https://www.cairographics.org/releases
 $(DL_DIR)/$(CAIRO_SOURCE):
 	$(DOWNLOAD) $(CAIRO_SITE)/$(CAIRO_SOURCE)
 
-CAIRO_DEPS = fontconfig glib2 libpng pixman zlib
+CAIRO_DEPENDENCIES = fontconfig glib2 libpng pixman zlib
 
 CAIRO_CONF_ENV = \
 	ax_cv_c_float_words_bigendian="no"
@@ -115,7 +115,7 @@ CAIRO_CONF_OPTS = \
 	--disable-gl \
 	--enable-tee
 
-cairo: $(CAIRO_DEPS) $(DL_DIR)/$(CAIRO_SOURCE) | $(TARGET_DIR)
+cairo: $(CAIRO_DEPENDENCIES) $(DL_DIR)/$(CAIRO_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
@@ -142,7 +142,7 @@ HARFBUZZ_SITE = https://www.freedesktop.org/software/harfbuzz/release
 $(DL_DIR)/$(HARFBUZZ_SOURCE):
 	$(DOWNLOAD) $(HARFBUZZ_SITE)/$(HARFBUZZ_SOURCE)
 
-HARFBUZZ_DEPS = fontconfig glib2 cairo freetype
+HARFBUZZ_DEPENDENCIES = fontconfig glib2 cairo freetype
 
 HARFBUZZ_AUTORECONF = YES
 
@@ -154,7 +154,7 @@ HARFBUZZ_CONF_OPTS = \
 	--without-graphite2 \
 	--without-icu
 
-harfbuzz: $(HARFBUZZ_DEPS) $(DL_DIR)/$(HARFBUZZ_SOURCE) | $(TARGET_DIR)
+harfbuzz: $(HARFBUZZ_DEPENDENCIES) $(DL_DIR)/$(HARFBUZZ_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \

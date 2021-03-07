@@ -37,7 +37,7 @@ SDL2_CONF_OPTS += \
 	--enable-video-opengles \
 	--without-x
 
-sdl2: $(DL_DIR)/$(SDL2_SOURCE) | $(TARGET_DIR)
+sdl2: $(SDL2_DEPENDENCIES) $(DL_DIR)/$(SDL2_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \

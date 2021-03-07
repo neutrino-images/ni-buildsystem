@@ -63,7 +63,7 @@ GDB_SITE = https://sourceware.org/pub/gdb/releases
 $(DL_DIR)/$(GDB_SOURCE):
 	$(DOWNLOAD) $(GDB_SITE)/$(GDB_SOURCE)
 
-GDB_DEPS = zlib ncurses
+GDB_DEPENDENCIES = zlib ncurses
 
 GDB_CONF_OPTS = \
 	--infodir=$(REMOVE_infodir) \
@@ -80,7 +80,7 @@ GDB_CONF_OPTS = \
 	--without-x \
 	--enable-static
 
-gdb: $(GDB_DEPS) $(DL_DIR)/$(GDB_SOURCE) | $(TARGET_DIR)
+gdb: $(GDB_DEPENDENCIES) $(DL_DIR)/$(GDB_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(GDB_DIR)
 	$(UNTAR)/$(GDB_SOURCE)
 	$(CHDIR)/$(GDB_DIR); \

@@ -322,7 +322,7 @@ FFMPEG_CONF_OPTS = \
 	--extra-ldflags="$(TARGET_LDFLAGS)"
 
 # ffplay
-FFMPEG_DEPS += sdl2
+FFMPEG_DEPENDENCIES += sdl2
 FFMPEG_CONF_OPTS += --enable-ffplay
 FFMPEG_CONF_ENV += SDL_CONFIG=$(HOST_DIR)/bin/sdl2-config
 
@@ -337,9 +337,9 @@ else ifeq ($(TARGET_ARCH),mips)
 	--extra-cflags="-Wno-deprecated-declarations -I$(TARGET_includedir)"
 endif
 
-FFMPEG_DEPS = openssl freetype rtmpdump libbluray libass libxml2 alsa-lib
+FFMPEG_DEPENDENCIES = openssl freetype rtmpdump libbluray libass libxml2 alsa-lib
 
-ffmpeg: $(FFMPEG_DEPS) $(DL_DIR)/$(FFMPEG_SOURCE) | $(TARGET_DIR)
+ffmpeg: $(FFMPEG_DEPENDENCIES) $(DL_DIR)/$(FFMPEG_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 ifneq ($($(PKG)_UNPATCHED),yes)

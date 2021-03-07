@@ -60,9 +60,9 @@ host-pkgconf: $(DL_DIR)/$(HOST_PKGCONF_SOURCE) | $(HOST_DIR) pkg-config-preqs
 
 # -----------------------------------------------------------------------------
 
-PKG_CONFIG_DEPS = host-pkgconf
+PKG_CONFIG_DEPENDENCIES = host-pkgconf
 
-$(PKG_CONFIG): $(PKG_CONFIG_DEPS) | $(HOST_DIR)
+$(PKG_CONFIG): $(PKG_CONFIG_DEPENDENCIES) | $(HOST_DIR)
 	ln -sf pkg-config $(@)
 
 # -----------------------------------------------------------------------------
@@ -251,11 +251,11 @@ HOST_MESON_SITE = https://github.com/mesonbuild/meson/releases/download/$(HOST_M
 $(DL_DIR)/$(HOST_MESON_SOURCE):
 	$(DOWNLOAD) $(HOST_MESON_SITE)/$(HOST_MESON_SOURCE)
 
-HOST_MESON_DEPS = host-ninja host-python3 host-python3-setuptools
+HOST_MESON_DEPENDENCIES = host-ninja host-python3 host-python3-setuptools
 
 HOST_MESON = $(HOST_DIR)/bin/meson
 
-host-meson: $(HOST_MESON_DEPS) $(DL_DIR)/$(HOST_MESON_SOURCE) | $(HOST_DIR)
+host-meson: $(HOST_MESON_DEPENDENCIES) $(DL_DIR)/$(HOST_MESON_SOURCE) | $(HOST_DIR)
 	$(REMOVE)/$(HOST_MESON_DIR)
 	$(UNTAR)/$(HOST_MESON_SOURCE)
 	$(CHDIR)/$(HOST_MESON_DIR); \
@@ -324,7 +324,7 @@ HOST_PYTHON3_INCLUDE_DIR = include/python$(basename $(HOST_PYTHON3_VERSION))
 $(DL_DIR)/$(HOST_PYTHON3_SOURCE):
 	$(DOWNLOAD) $(HOST_PYTHON3_SITE)/$(HOST_PYTHON3_SOURCE)
 
-HOST_PYTHON3_DEPS = host-expat host-libffi
+HOST_PYTHON3_DEPENDENCIES = host-expat host-libffi
 
 HOST_PYTHON3_CONF_ENV = \
 	OPT="$(HOST_CFLAGS)"
@@ -343,7 +343,7 @@ HOST_PYTHON3_CONF_OPTS = \
 	--disable-idle3 \
 	--disable-ossaudiodev
 
-host-python3: $(HOST_PYTHON3_DEPS) $(DL_DIR)/$(HOST_PYTHON3_SOURCE) | $(HOST_DIR)
+host-python3: $(HOST_PYTHON3_DEPENDENCIES) $(DL_DIR)/$(HOST_PYTHON3_SOURCE) | $(HOST_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
@@ -365,9 +365,9 @@ HOST_PYTHON3_SETUPTOOLS_SITE = https://files.pythonhosted.org/packages/b0/f3/44d
 $(DL_DIR)/$(HOST_PYTHON3_SETUPTOOLS_SOURCE):
 	$(DOWNLOAD) $(HOST_PYTHON3_SETUPTOOLS_SITE)/$(HOST_PYTHON3_SETUPTOOLS_SOURCE)
 
-HOST_PYTHON3_SETUPTOOLS_DEPS = host-python3
+HOST_PYTHON3_SETUPTOOLS_DEPENDENCIES = host-python3
 
-host-python3-setuptools: $(HOST_PYTHON3_SETUPTOOLS_DEPS) $(DL_DIR)/$(HOST_PYTHON3_SETUPTOOLS_SOURCE) | $(HOST_DIR)
+host-python3-setuptools: $(HOST_PYTHON3_SETUPTOOLS_DEPENDENCIES) $(DL_DIR)/$(HOST_PYTHON3_SETUPTOOLS_SOURCE) | $(HOST_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNZIP)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
@@ -433,7 +433,7 @@ HOST_LUAROCKS_SITE = https://luarocks.github.io/luarocks/releases
 $(DL_DIR)/$(HOST_LUAROCKS_SOURCE):
 	$(DOWNLOAD) $(HOST_LUAROCKS_SITE)/$(HOST_LUAROCKS_SOURCE)
 
-HOST_LUAROCKS_DEPS = host-lua
+HOST_LUAROCKS_DEPENDENCIES = host-lua
 
 HOST_LUAROCKS_CONFIG = $(HOST_DIR)/etc/luarocks/config-$(LUA_ABIVERSION).lua
 
@@ -453,7 +453,7 @@ HOST_LUAROCKS_CONF_OPTS = \
 
 HOST_LUAROCKS = $(HOST_DIR)/bin/luarocks
 
-host-luarocks: $(HOST_LUAROCKS_DEPS) $(DL_DIR)/$(HOST_LUAROCKS_SOURCE) | $(HOST_DIR)
+host-luarocks: $(HOST_LUAROCKS_DEPENDENCIES) $(DL_DIR)/$(HOST_LUAROCKS_SOURCE) | $(HOST_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \

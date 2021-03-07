@@ -22,17 +22,17 @@ NEUTRINO_PLUGINS_BUILD_DIR = $(BUILD_DIR)/$(NEUTRINO_PLUGINS_OBJ)
 
 # -----------------------------------------------------------------------------
 
-NEUTRINO_PLUGINS_DEPS  = ffmpeg
-NEUTRINO_PLUGINS_DEPS += libcurl
-NEUTRINO_PLUGINS_DEPS += libpng
-NEUTRINO_PLUGINS_DEPS += libjpeg-turbo
-NEUTRINO_PLUGINS_DEPS += giflib
-NEUTRINO_PLUGINS_DEPS += freetype
-NEUTRINO_PLUGINS_DEPS += lua-curl
-NEUTRINO_PLUGINS_DEPS += lua-feedparser
-NEUTRINO_PLUGINS_DEPS += luaexpat
-NEUTRINO_PLUGINS_DEPS += luajson
-NEUTRINO_PLUGINS_DEPS += luaposix
+NEUTRINO_PLUGINS_DEPENDENCIES = ffmpeg
+NEUTRINO_PLUGINS_DEPENDENCIES += libcurl
+NEUTRINO_PLUGINS_DEPENDENCIES += libpng
+NEUTRINO_PLUGINS_DEPENDENCIES += libjpeg-turbo
+NEUTRINO_PLUGINS_DEPENDENCIES += giflib
+NEUTRINO_PLUGINS_DEPENDENCIES += freetype
+NEUTRINO_PLUGINS_DEPENDENCIES += lua-curl
+NEUTRINO_PLUGINS_DEPENDENCIES += lua-feedparser
+NEUTRINO_PLUGINS_DEPENDENCIES += luaexpat
+NEUTRINO_PLUGINS_DEPENDENCIES += luajson
+NEUTRINO_PLUGINS_DEPENDENCIES += luaposix
 
 # -----------------------------------------------------------------------------
 
@@ -92,7 +92,7 @@ endif
 
 # -----------------------------------------------------------------------------
 
-$(NEUTRINO_PLUGINS_BUILD_DIR)/config.status: $(NEUTRINO_PLUGINS_DEPS)
+$(NEUTRINO_PLUGINS_BUILD_DIR)/config.status: $(NEUTRINO_PLUGINS_DEPENDENCIES)
 	test -d $(NEUTRINO_PLUGINS_BUILD_DIR) || mkdir -p $(NEUTRINO_PLUGINS_BUILD_DIR)
 	$(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS)/autogen.sh
 	$(CD) $(NEUTRINO_PLUGINS_BUILD_DIR); \
@@ -222,7 +222,7 @@ LINKS_SITE = http://links.twibright.com/download
 $(DL_DIR)/$(LINKS_SOURCE):
 	$(DOWNLOAD) $(LINKS_SITE)/$(LINKS_SOURCE)
 
-LINKS_DEPS = libpng libjpeg-turbo openssl
+LINKS_DEPENDENCIES = libpng libjpeg-turbo openssl
 
 LINKS_PATCH  = links.patch
 LINKS_PATCH += links-ac-prog-cxx.patch
@@ -251,7 +251,7 @@ LINKS_CONF_OPTS = \
 	--without-svgalib \
 	--without-x
 
-links: $(LINKS_DEPS) $(DL_DIR)/$(LINKS_SOURCE) $(SHARE_PLUGINS) | $(TARGET_DIR)
+links: $(LINKS_DEPENDENCIES) $(DL_DIR)/$(LINKS_SOURCE) $(SHARE_PLUGINS) | $(TARGET_DIR)
 	$(REMOVE)/$(LINKS_DIR)
 	$(UNTAR)/$(LINKS_SOURCE)
 	$(CHDIR)/$(LINKS_DIR)/intl; \
