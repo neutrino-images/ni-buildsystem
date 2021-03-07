@@ -24,7 +24,6 @@ FFMPEG_CONF_OPTS = \
 	--disable-podpages \
 	--disable-txtpages \
 	\
-	--disable-ffplay \
 	--enable-ffprobe \
 	\
 	--disable-altivec \
@@ -321,6 +320,11 @@ FFMPEG_CONF_OPTS = \
 	--target-os=linux \
 	--arch=$(TARGET_ARCH) \
 	--extra-ldflags="$(TARGET_LDFLAGS)"
+
+# ffplay
+FFMPEG_DEPS += sdl2
+FFMPEG_CONF_OPTS += --enable-ffplay
+FFMPEG_CONF_ENV += SDL_CONFIG=$(HOST_DIR)/bin/sdl2-config
 
 ifeq ($(TARGET_ARCH),arm)
   FFMPEG_CONF_OPTS += \
