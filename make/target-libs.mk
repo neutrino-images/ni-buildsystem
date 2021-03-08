@@ -195,6 +195,7 @@ LIBPNG_CONF_OPTS = \
 
 libpng: $(LIBPNG_DEPENDENCIES) $(DL_DIR)/$(LIBPNG_SOURCE) | $(TARGET_DIR)
 	$(call autotools-package)
+	-rm $(addprefix $(TARGET_bindir)/,libpng-config)
 
 # -----------------------------------------------------------------------------
 
@@ -472,6 +473,9 @@ LZO_SITE = https://www.oberhumer.com/opensource/lzo/download
 
 $(DL_DIR)/$(LZO_SOURCE):
 	$(DOWNLOAD) $(LZO_SITE)/$(LZO_SOURCE)
+
+LZO_CONF_OPTS = \
+	--docdir=$(REMOVE_docdir)
 
 lzo: $(DL_DIR)/$(LZO_SOURCE) | $(TARGET_DIR)
 	$(call autotools-package)
