@@ -1,0 +1,12 @@
+#!/bin/sh
+
+. /etc/init.d/globals
+
+case $1 in
+	start)
+		sysctl -p /etc/sysctl.conf
+	;;
+	*)
+		echo "[$BASENAME] Usage: $0 {start}"
+	;;
+esac

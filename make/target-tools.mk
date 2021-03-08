@@ -309,7 +309,6 @@ PROCPS_NG_CONF_OPTS = \
 	--includedir=$(includedir) \
 	--libdir=$(libdir) \
 	--bindir=$(base_bindir).$(@F) \
-	--sbindir=$(base_sbindir).$(@F) \
 	--docdir=$(REMOVE_docdir) \
 	--without-systemd
 
@@ -317,12 +316,14 @@ PROCPS_NG_BINARIES = ps top
 
 procps-ng: $(PROCPS_NG_DEPENDENCIES) $(DL_DIR)/$(PROCPS_NG_SOURCE) | $(TARGET_DIR)
 	$(call autotools-package)
+	$(INSTALL_DATA) -D $(PKG_FILES_DIR)/sysctl.conf $(TARGET_sysconfdir)/sysctl.conf
+	$(INSTALL) -d $(TARGET_sysconfdir)/sysctl.d
+	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/sysctl.init $(TARGET_sysconfdir)/init.d/sysctl
 	for bin in $($(PKG)_BINARIES); do \
 		rm -f $(TARGET_base_bindir)/$$bin; \
 		$(INSTALL_EXEC) -D $(TARGET_base_bindir).$(@F)/$$bin $(TARGET_base_bindir)/$$bin; \
 	done
 	rm -r $(TARGET_base_bindir).$(@F)
-	rm -r $(TARGET_base_sbindir).$(@F)
 
 # -----------------------------------------------------------------------------
 
