@@ -8,6 +8,7 @@ define autotools-package
 	$(REMOVE)/$($(PKG)_DIR)
 	$(UNTAR)/$($(PKG)_SOURCE)
 	$(CHDIR)/$($(PKG)_DIR); \
+		$(APPLY_PATCHES); \
 		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
