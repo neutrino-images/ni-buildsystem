@@ -31,7 +31,7 @@ SHOWINFO "add some new dirs and files to var-partition"
 
 NEW_DIRS=" \
 	/var/root \
-	/var/xupnpd \
+	/var/etc/sysctl.d \
 "
 mkdir -p $NEW_DIRS
 
@@ -39,6 +39,8 @@ NEW_FILES=" \
 	/var/etc/auto.master \
 	/var/etc/auto.net \
 	/var/etc/inadyn.conf \
+	/var/etc/profile.local \
+	/var/etc/rc.local \
 	/var/tuxbox/config/myservices.xml \
 	/var/tuxbox/config/rssreader.conf \
 	/var/tuxbox/config/shellexec.conf \
@@ -50,6 +52,7 @@ NEW_FILES=" \
 "
 for f in $NEW_FILES; do
 	if [ ! -e ${f} ]; then
+		mkdir -p $(dirname ${f})
 		cp -a ${f//\/var/\/var_init} ${f}
 	fi
 done
