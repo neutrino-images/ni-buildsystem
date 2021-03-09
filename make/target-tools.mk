@@ -318,6 +318,7 @@ procps-ng: $(PROCPS_NG_DEPENDENCIES) $(DL_DIR)/$(PROCPS_NG_SOURCE) | $(TARGET_DI
 	$(call autotools-package)
 	$(INSTALL_DATA) -D $(PKG_FILES_DIR)/sysctl.conf $(TARGET_sysconfdir)/sysctl.conf
 	$(INSTALL) -d $(TARGET_sysconfdir)/sysctl.d
+	$(INSTALL) -d $(TARGET_localstatedir)/etc/sysctl.d
 	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/sysctl.init $(TARGET_sysconfdir)/init.d/sysctl
 	for bin in $($(PKG)_BINARIES); do \
 		rm -f $(TARGET_base_bindir)/$$bin; \
