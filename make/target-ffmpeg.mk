@@ -32,8 +32,6 @@ FFMPEG_CONF_OPTS = \
 	--disable-amd3dnow \
 	--disable-amd3dnowext \
 	--disable-armv5te \
-	--disable-armv6 \
-	--disable-armv6t2 \
 	--disable-avx \
 	--disable-avx2 \
 	--disable-fast-unaligned \
@@ -51,7 +49,6 @@ FFMPEG_CONF_OPTS = \
 	--disable-sse4 \
 	--disable-sse42 \
 	--disable-ssse3 \
-	--disable-vfp \
 	--disable-xop \
 	--disable-x86asm \
 	\
@@ -330,11 +327,21 @@ FFMPEG_CONF_ENV += SDL_CONFIG=$(HOST_DIR)/bin/sdl2-config
 
 ifeq ($(TARGET_ARCH),arm)
   FFMPEG_CONF_OPTS += \
+	--enable-armv6 \
+	--enable-armv6t2 \
+	--enable-neon  \
+	--enable-vfp \
+	\
 	--cpu=cortex-a15 \
 	--extra-cflags="-Wno-deprecated-declarations -I$(TARGET_includedir) -mfpu=neon-vfpv4 -mfloat-abi=hard"
 
 else ifeq ($(TARGET_ARCH),mips)
   FFMPEG_CONF_OPTS += \
+	--disable-armv6 \
+	--disable-armv6t2 \
+	--disable-neon \
+	--disable-vfp \
+	\
 	--cpu=generic \
 	--extra-cflags="-Wno-deprecated-declarations -I$(TARGET_includedir)"
 endif
