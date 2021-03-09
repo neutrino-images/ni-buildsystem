@@ -11,6 +11,8 @@ FFMPEG_SITE = http://www.ffmpeg.org/releases
 $(DL_DIR)/$(FFMPEG_SOURCE):
 	$(DOWNLOAD) $(FFMPEG_SITE)/$(FFMPEG_SOURCE)
 
+FFMPEG_DEPENDENCIES = openssl freetype rtmpdump libbluray libass libxml2 alsa-lib
+
 FFMPEG_UNPATCHED := no
 
 FFMPEG_CONF_OPTS = \
@@ -336,8 +338,6 @@ else ifeq ($(TARGET_ARCH),mips)
 	--cpu=generic \
 	--extra-cflags="-Wno-deprecated-declarations -I$(TARGET_includedir)"
 endif
-
-FFMPEG_DEPENDENCIES = openssl freetype rtmpdump libbluray libass libxml2 alsa-lib
 
 ffmpeg: $(FFMPEG_DEPENDENCIES) $(DL_DIR)/$(FFMPEG_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)

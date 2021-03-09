@@ -7,6 +7,8 @@ FFMPEG_BRANCH ?= ni/ffmpeg/2.8
 #FFMPEG_BRANCH ?= ni/ffmpeg/master
 #FFMPEG_BRANCH ?= ffmpeg/master
 
+FFMPEG_DEPENDENCIES = openssl rtmpdump libbluray libass
+
 FFMPEG_CONF_OPTS = \
 	--prefix=$(prefix) \
 	--cross-prefix=$(TARGET_CROSS) \
@@ -137,8 +139,6 @@ FFMPEG_CONF_OPTS = \
 	--target-os=linux \
 	--arch=$(TARGET_ARCH) \
 	--extra-ldflags="$(TARGET_LDFLAGS)"
-
-FFMPEG_DEPENDENCIES = openssl rtmpdump libbluray libass
 
 ifeq ($(FFMPEG_BRANCH),ni/ffmpeg/2.8)
   FFMPEG_DEPENDENCIES += libroxml
