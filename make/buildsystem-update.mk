@@ -11,10 +11,12 @@ ifeq ($(HAS_INTERNALS),yes)
 endif
 
 update-neutrino:
+	# upgly :(
 	export GIT_MERGE_AUTOEDIT=no; \
 	$(CD) $(SOURCE_DIR)/$(NI_NEUTRINO); \
-		git checkout master; \
-		git pull --all
+		git checkout ni/coolstream; git pull; \
+		git checkout master; git pull
+	make checkout-branches
 
 update-remotes:
 ifeq ($(NI_ADMIN),true)
@@ -79,7 +81,7 @@ endif
 	$(CD) $(SOURCE_DIR)/$(NI_LIBSTB_HAL); git push
 	$(CD) $(SOURCE_DIR)/$(NI_LINUX_KERNEL); git push --all
 	$(CD) $(SOURCE_DIR)/$(NI_LOGO_STUFF); git push
-	$(CD) $(SOURCE_DIR)/$(NI_NEUTRINO); git push
+	$(CD) $(SOURCE_DIR)/$(NI_NEUTRINO); git push --all
 	$(CD) $(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS); git push
 	$(CD) $(SOURCE_DIR)/$(NI_OFGWRITE); git push
 	$(CD) $(SOURCE_DIR)/$(NI_OPENTHREADS); git push
