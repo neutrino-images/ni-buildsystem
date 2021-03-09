@@ -7,7 +7,7 @@ update-self:
 	export GIT_MERGE_AUTOEDIT=no; \
 	git pull
 ifeq ($(HAS_INTERNALS),yes)
-	$(CD) $(BASE_DIR)/$(NI-INTERNALS); git pull
+	$(CD) $(BASE_DIR)/$(NI_INTERNALS); git pull
 endif
 
 update-neutrino:
@@ -70,7 +70,7 @@ update-all: update update-remotes
 push:
 	git push
 ifeq ($(HAS_INTERNALS),yes)
-	$(CD) $(BASE_DIR)/$(NI-INTERNALS); git push
+	$(CD) $(BASE_DIR)/$(NI_INTERNALS); git push
 endif
 	$(CD) $(BUILD_GENERIC_PC); git push
 	$(CD) $(SOURCE_DIR)/$(NI_DRIVERS_BIN); git push
@@ -91,7 +91,7 @@ endif
 status:
 	git status -s -b
 ifeq ($(HAS_INTERNALS),yes)
-	$(CD) $(BASE_DIR)/$(NI-INTERNALS); git status -s -b
+	$(CD) $(BASE_DIR)/$(NI_INTERNALS); git status -s -b
 endif
 	$(CD) $(BUILD_GENERIC_PC); git status -s -b
 	$(CD) $(SOURCE_DIR)/$(NI_DRIVERS_BIN); git status -s -b
