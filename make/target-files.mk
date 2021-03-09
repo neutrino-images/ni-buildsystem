@@ -57,9 +57,8 @@ $(TARGET_sysconfdir)/profile:
 $(TARGET_sysconfdir)/profile.local:
 ifeq ($(PERSISTENT_VAR_PARTITION),yes)
 	$(INSTALL_DATA) -D $(TARGET_FILES)/files-etc/profile.local-var $(TARGET_localstatedir)/etc/profile.local
-else
-	$(INSTALL_DATA) -D $(TARGET_FILES)/files-etc/profile.local $(@)
 endif
+	$(INSTALL_DATA) -D $(TARGET_FILES)/files-etc/profile.local $(@)
 
 $(TARGET_sysconfdir)/profile.d:
 	$(foreach p,$(wildcard $(TARGET_FILES)/files-etc/profile.d/*.sh),\

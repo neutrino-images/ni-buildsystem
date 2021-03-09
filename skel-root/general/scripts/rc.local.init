@@ -4,7 +4,11 @@
 
 case $1 in
 	start)
-		/etc/rc.local
+		if [ -e /var/etc/rc.local ]; then
+			/var/etc/rc.local
+		elif [ -e /etc/rc.local ]; then
+			/etc/rc.local
+		fi
 	;;
 	*)
 		echo "[${BASENAME}] Usage: $0 {start}"

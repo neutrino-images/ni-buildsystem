@@ -73,6 +73,9 @@ $(TARGET_sysconfdir)/init.d/rc.local:
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/rc.local.init $(@)
 	$(UPDATE-RC.D) $(@F) start 99 2 3 4 5 .
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/files-etc/rc.local $(TARGET_sysconfdir)/rc.local
+ifeq ($(PERSISTENT_VAR_PARTITION),yes)
+	$(INSTALL_DATA) -D $(TARGET_FILES)/files-etc/rc.local-var $(TARGET_localstatedir)/etc/rc.local
+endif
 
 $(TARGET_sysconfdir)/init.d/resizerootfs:
 ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 hd60 hd61))
