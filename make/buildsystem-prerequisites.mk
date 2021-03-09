@@ -95,7 +95,7 @@ ifeq ($(NI_ADMIN),true)
 		git fetch --all
 endif
 
-$(SOURCE_DIR)/$(NI-LIBCOOLSTREAM):
+$(SOURCE_DIR)/$(NI_LIBCOOLSTREAM):
 ifeq ($(HAS_LIBCOOLSTREAM),yes)
 	$(CD) $(SOURCE_DIR); \
 		git clone $(NI_PRIVATE)/$(@F).git
@@ -155,7 +155,7 @@ ni-sources: $(SOURCE_DIR) \
 	$(BUILD_GENERIC_PC) \
 	$(SOURCE_DIR)/$(NI_DRIVERS_BIN) \
 	$(SOURCE_DIR)/$(NI_FFMPEG) \
-	$(SOURCE_DIR)/$(NI-LIBCOOLSTREAM) \
+	$(SOURCE_DIR)/$(NI_LIBCOOLSTREAM) \
 	$(SOURCE_DIR)/$(NI_LIBSTB_HAL) \
 	$(SOURCE_DIR)/$(NI_LINUX_KERNEL) \
 	$(SOURCE_DIR)/$(NI_LOGO_STUFF) \
