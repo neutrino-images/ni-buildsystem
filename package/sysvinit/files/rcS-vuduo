@@ -66,6 +66,8 @@ service hostname start
 # logging as much as possible
 service syslogd start
 
+service sysctl start
+
 # load modules / create nodes
 load_module extra/brcmfb.ko
 load_module extra/dvb-bcm7335.ko

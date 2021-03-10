@@ -79,6 +79,8 @@ service hostname start
 # logging as much as possible
 service syslogd start
 
+service sysctl start
+
 # mdev coldplug for node permissions
 service mdev start
 

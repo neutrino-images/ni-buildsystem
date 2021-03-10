@@ -66,6 +66,8 @@ service hostname start
 # logging as much as possible
 service syslogd start
 
+service sysctl start
+
 # load modules / create nodes
 service vuplus-platform-util start
 

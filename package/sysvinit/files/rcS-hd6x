@@ -70,6 +70,8 @@ service hostname start
 # logging as much as possible
 service syslogd start
 
+service sysctl start
+
 # load modules / create nodes
 load_module extra/%(BOXMODEL)_1.ko
 load_module extra/%(BOXMODEL)_2.ko
