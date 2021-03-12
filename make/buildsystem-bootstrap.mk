@@ -112,10 +112,7 @@ var-update: $(TARGET_localstatedir)/update
 
 $(TARGET_localstatedir)/update: | $(TARGET_DIR)
 	mkdir -p $(@)
-ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd1))
-	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI_DRIVERS_BIN)/$(DRIVERS_BIN_DIR)/zImage $(@)
-else ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd2))
-	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI_DRIVERS_BIN)/$(DRIVERS_BIN_DIR)/vmlinux.ub.gz $(@)
+ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd2))
 	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI_DRIVERS_BIN)/$(DRIVERS_BIN_DIR)/uldr.bin $(@)
   ifeq ($(BOXMODEL),kronos_v2)
 	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI_DRIVERS_BIN)/$(DRIVERS_BIN_DIR)/u-boot.bin.kronos_v2 $(@)/u-boot.bin
@@ -123,7 +120,6 @@ else ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd2))
 	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI_DRIVERS_BIN)/$(DRIVERS_BIN_DIR)/u-boot.bin $(@)
   endif
 endif
-	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI_DRIVERS_BIN)/$(DRIVERS_BIN_DIR)/stb_update.data $(@)
 
 endif
 

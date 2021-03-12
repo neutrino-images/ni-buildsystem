@@ -253,19 +253,20 @@ kernel-coolstream: kernel-coolstream-$(BOXSERIES)
 	$(TOUCH)
 
 kernel-coolstream-hd1: kernel.do_compile | $(IMAGE_DIR)
-	$(HOST_MKIMAGE) -A $(TARGET_ARCH) -O linux -T kernel -C none -a 0x48000 -e 0x48000 -n "$(KERNEL_NAME)" -d $(KERNEL_UIMAGE) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-uImage.img
-	$(HOST_MKIMAGE) -A $(TARGET_ARCH) -O linux -T kernel -C none -a 0x48000 -e 0x48000 -n "$(KERNEL_NAME)" -d $(KERNEL_ZIMAGE) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-zImage.img
+	$(HOST_MKIMAGE) -A $(TARGET_ARCH) -O linux -T kernel -C none -a 0x48000 -e 0x48000 -n "$(KERNEL_NAME)" -d $(KERNEL_ZIMAGE) $(TARGET_localstatedir)/update/zImage
+	$(INSTALL_DATA) $(TARGET_localstatedir)/update/zImage $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-zImage.img
 	$(TOUCH)
 
 kernel-coolstream-hd2: kernel.do_compile | $(IMAGE_DIR)
-	$(HOST_MKIMAGE) -A $(TARGET_ARCH) -O linux -T kernel -C none -a 0x8000 -e 0x8000 -n "$(KERNEL_NAME)" -d $(KERNEL_ZIMAGE_DTB) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-vmlinux.ub.gz
+	$(HOST_MKIMAGE) -A $(TARGET_ARCH) -O linux -T kernel -C none -a 0x8000 -e 0x8000 -n "$(KERNEL_NAME)" -d $(KERNEL_ZIMAGE_DTB) $(TARGET_localstatedir)/update/vmlinux.ub.gz
+	$(INSTALL_DATA) $(TARGET_localstatedir)/update/vmlinux.ub.gz $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-vmlinux.ub.gz
 ifeq ($(BOXMODEL),$(filter $(BOXMODEL),apollo shiner))
   ifeq ($(BOXMODEL),apollo)
-	# create also shiner-kernel when building apollo
-	$(INSTALL_DATA) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-vmlinux.ub.gz $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-shiner-vmlinux.ub.gz
+	# create kernel for shiner too when building apollo
+	$(INSTALL_DATA) $(TARGET_localstatedir)/update/vmlinux.ub.gz $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-shiner-vmlinux.ub.gz
   else ifeq ($(BOXMODEL),shiner)
-	# create also apollo-kernel when building shiner
-	$(INSTALL_DATA) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-vmlinux.ub.gz $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-apollo-vmlinux.ub.gz
+	# create kernel for apollo too when building shiner
+	$(INSTALL_DATA) $(TARGET_localstatedir)/update/vmlinux.ub.gz $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-apollo-vmlinux.ub.gz
   endif
 endif
 	$(TOUCH)
