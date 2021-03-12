@@ -361,45 +361,4 @@ endif
 
 # -----------------------------------------------------------------------------
 
-# install coolstream kernels into ni-drivers-bin repository
-
-kernel-install-coolstream: kernel-install-coolstream-$(BOXSERIES)
-
-kernel-install-coolstream-hd1: kernel-coolstream-hd1
-	$(INSTALL_DATA) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-zImage.img \
-		$(SOURCE_DIR)/$(NI_DRIVERS_BIN)/$(DRIVERS_BIN_DIR)/zImage
-
-kernel-install-coolstream-hd2: kernel-coolstream-hd2
-	$(INSTALL_DATA) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-vmlinux.ub.gz \
-		$(SOURCE_DIR)/$(NI_DRIVERS_BIN)/$(DRIVERS_BIN_DIR)/vmlinux.ub.gz
-
-kernel-install-coolstream-all:
-	make clean BOXFAMILY=nevis
-	$(MAKE) kernel-coolstream-hd1 BOXFAMILY=nevis
-	make kernel-install-coolstream-hd1 BOXFAMILY=nevis
-	#
-	make clean BOXFAMILY=apollo
-	$(MAKE) kernel-coolstream-hd2 BOXFAMILY=apollo
-	make kernel-install-coolstream-hd2 BOXFAMILY=apollo
-	#
-	make clean BOXFAMILY=kronos
-	$(MAKE) kernel-coolstream-hd2 BOXFAMILY=kronos
-	make kernel-install-coolstream-hd2 BOXFAMILY=kronos
-	#
-	make clean BOXFAMILY=nevis > /dev/null 2>&1
-	make get-update-info-hd1 BOXFAMILY=nevis
-	#
-	make clean BOXFAMILY=apollo > /dev/null 2>&1
-	make get-update-info-hd2 BOXFAMILY=apollo
-	#
-	make clean BOXFAMILY=kronos > /dev/null 2>&1
-	make get-update-info-hd2 BOXFAMILY=kronos
-	#
-	make clean > /dev/null 2>&1
-	#
-	@$(call MESSAGE,"Align stb_update.data in $(SOURCE_DIR)/$(NI_DRIVERS_BIN)")
-	@$(call MESSAGE,"and commit your changes in $(SOURCE_DIR)/$(NI_DRIVERS_BIN)")
-
-# -----------------------------------------------------------------------------
-
 PHONY += kernel.do_checkout

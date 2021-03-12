@@ -147,42 +147,6 @@ endif
 
 # -----------------------------------------------------------------------------
 
-ifeq ($(BOXTYPE),$(filter $(BOXTYPE),coolstream))
-
-get-update-info: get-update-info-$(BOXSERIES)
-
-get-update-info-hd2:
-	$(call draw_line);
-	@echo "Get update info for boxmodel $(BOXMODEL)"
-	@echo
-	@$(CD) $(SOURCE_DIR)/$(NI_DRIVERS_BIN)/$(DRIVERS_BIN_DIR); \
-	if [ -e vmlinux.ub.gz ]; then \
-		dd status=none if=vmlinux.ub.gz bs=1 skip=$$(LC_ALL=C grep -a -b -o $$'\x1f\x8b\x08\x00\x00\x00\x00\x00' vmlinux.ub.gz \
-		| cut -d ':' -f 1) | zcat -q | grep -a "Linux version"; \
-	fi; \
-	if [ -e u-boot.bin ]; then \
-		strings u-boot.bin | grep -m1 "U-Boot "; \
-	fi; \
-	if [ -e uldr.bin ]; then \
-		strings uldr.bin | grep -m1 "Microloader "; \
-	fi
-	$(call draw_line);
-
-get-update-info-hd1:
-	$(call draw_line);
-	@echo "Get update info for boxmodel $(BOXMODEL)"
-	@echo
-	@$(CD) $(SOURCE_DIR)/$(NI_DRIVERS_BIN)/$(DRIVERS_BIN_DIR); \
-	if [ -e zImage ]; then \
-		dd if=zImage bs=1 skip=$$(LC_ALL=C grep -a -b -o $$'\x1f\x8b\x08\x00\x00\x00\x00\x00' zImage \
-		| cut -d ':' -f 1) | zcat -q | grep -a "Linux version"; \
-	fi
-	$(call draw_line);
-
-endif
-
-# -----------------------------------------------------------------------------
-
 PHONY += target-finish
 PHONY += .version $(TARGET_DIR)/.version
 PHONY += update.urls $(TARGET_localstatedir)/etc/update.urls
