@@ -121,7 +121,7 @@ else
   NEUTRINO_CONF_OPTS += --with-boxmodel=$(BOXMODEL)
 endif
 
-# -----------------------------------------------------------------------------
+NEUTRINO_CONF_OPTS += --enable-pip
 
 ifeq ($(BOXTYPE),coolstream)
   NEUTRINO_DEPENDENCIES += coolstream-drivers
@@ -134,7 +134,6 @@ ifeq ($(BOXTYPE),coolstream)
     endif
   endif
 
-  NEUTRINO_CONF_OPTS += --enable-pip
 else
   NEUTRINO_DEPENDENCIES += libstb-hal
   NEUTRINO_CONF_OPTS += \
@@ -150,8 +149,8 @@ else
   ifeq ($(BOXTYPE),mipsbox)
     #NEUTRINO_CONF_OPTS += --disable-mips-acc
   endif
-  NEUTRINO_CONF_OPTS += --enable-dynamicdemux
-  NEUTRINO_CONF_OPTS += --enable-pip
+  #NEUTRINO_CONF_OPTS += --enable-dynamicdemux
+
 endif
 
 NEUTRINO_DEPENDENCIES += lcd4linux
