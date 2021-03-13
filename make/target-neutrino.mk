@@ -150,8 +150,8 @@ else
   ifeq ($(BOXTYPE),mipsbox)
     #NEUTRINO_CONF_OPTS += --disable-mips-acc
   endif
-  NEUTRINO_CONFIG_OPTS += --enable-dynamicdemux
-  NEUTRINO_CONFIG_OPTS += --enable-pip
+  NEUTRINO_CONF_OPTS += --enable-dynamicdemux
+  NEUTRINO_CONF_OPTS += --enable-pip
 endif
 
 NEUTRINO_DEPENDENCIES += lcd4linux
