@@ -76,7 +76,7 @@ service sysctl start
 load_module extra/%(BOXMODEL)_1.ko
 load_module extra/%(BOXMODEL)_2.ko
 load_module extra/%(BOXMODEL)_3.ko
-load_module extra/%(BOXMODEL)_4.ko
+load_module extra/%(BOXMODEL)_4.ko boxmode=$(grep -q 'boxmode=12' /proc/cmdline && printf 12 || printf 1)
 
 # show bootlogo
 showiframe.sh bootlogo.m2v
