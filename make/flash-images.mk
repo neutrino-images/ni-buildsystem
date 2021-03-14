@@ -139,6 +139,12 @@ flash-image-hd5x: | $(IMAGE_DIR)
 HD5x_IMAGE_NAME = disk
 HD5x_BOOT_IMAGE = boot.img
 HD5x_IMAGE_LINK = $(HD5x_IMAGE_NAME).ext4
+HD5x_BOXMODE ?= 12
+ifeq ($(HD5x_BOXMODE),12)
+  HD5x_BRCM_CMA = brcm_cma=520M@248M brcm_cma=192M@768M
+else
+  HD5x_BRCM_CMA = brcm_cma=440M@328M brcm_cma=192M@768M
+endif
 
 # emmc image
 EMMC_IMAGE_SIZE = 3817472
@@ -192,11 +198,11 @@ flash-image-hd5x-multi: | $(IMAGE_DIR)
 	parted -s $(EMMC_IMAGE) unit KiB mkpart storage ext4 $(STORAGE_PARTITION_OFFSET) 100%
 	dd if=/dev/zero of=$(IMAGE_BUILD_DIR)/$(HD5x_BOOT_IMAGE) bs=$(BLOCK_SIZE) count=$(shell expr $(BOOT_PARTITION_SIZE) \* $(BLOCK_SECTOR))
 	mkfs.msdos -S 512 $(IMAGE_BUILD_DIR)/$(HD5x_BOOT_IMAGE)
-	echo "boot emmcflash0.linuxkernel  'root=/dev/mmcblk0p3 rootsubdir=linuxrootfs1 kernel=/dev/mmcblk0p2 rw rootwait $(BOXMODEL)_4.boxmode=1'" > $(IMAGE_BUILD_DIR)/STARTUP
-	echo "boot emmcflash0.linuxkernel  'root=/dev/mmcblk0p3 rootsubdir=linuxrootfs1 kernel=/dev/mmcblk0p2 rw rootwait $(BOXMODEL)_4.boxmode=1'" > $(IMAGE_BUILD_DIR)/STARTUP_1
-	echo "boot emmcflash0.linuxkernel2 'root=/dev/mmcblk0p7 rootsubdir=linuxrootfs2 kernel=/dev/mmcblk0p4 rw rootwait $(BOXMODEL)_4.boxmode=1'" > $(IMAGE_BUILD_DIR)/STARTUP_2
-	echo "boot emmcflash0.linuxkernel3 'root=/dev/mmcblk0p7 rootsubdir=linuxrootfs3 kernel=/dev/mmcblk0p5 rw rootwait $(BOXMODEL)_4.boxmode=1'" > $(IMAGE_BUILD_DIR)/STARTUP_3
-	echo "boot emmcflash0.linuxkernel4 'root=/dev/mmcblk0p7 rootsubdir=linuxrootfs4 kernel=/dev/mmcblk0p6 rw rootwait $(BOXMODEL)_4.boxmode=1'" > $(IMAGE_BUILD_DIR)/STARTUP_4
+	echo "boot emmcflash0.linuxkernel  '$(HD5x_BRCM_CMA) root=/dev/mmcblk0p3 rootsubdir=linuxrootfs1 kernel=/dev/mmcblk0p2 rw rootwait $(BOXMODEL)_4.boxmode=$(HD5x_BOXMODE)'" > $(IMAGE_BUILD_DIR)/STARTUP
+	echo "boot emmcflash0.linuxkernel  '$(HD5x_BRCM_CMA) root=/dev/mmcblk0p3 rootsubdir=linuxrootfs1 kernel=/dev/mmcblk0p2 rw rootwait $(BOXMODEL)_4.boxmode=$(HD5x_BOXMODE)'" > $(IMAGE_BUILD_DIR)/STARTUP_1
+	echo "boot emmcflash0.linuxkernel2 '$(HD5x_BRCM_CMA) root=/dev/mmcblk0p7 rootsubdir=linuxrootfs2 kernel=/dev/mmcblk0p4 rw rootwait $(BOXMODEL)_4.boxmode=$(HD5x_BOXMODE)'" > $(IMAGE_BUILD_DIR)/STARTUP_2
+	echo "boot emmcflash0.linuxkernel3 '$(HD5x_BRCM_CMA) root=/dev/mmcblk0p7 rootsubdir=linuxrootfs3 kernel=/dev/mmcblk0p5 rw rootwait $(BOXMODEL)_4.boxmode=$(HD5x_BOXMODE)'" > $(IMAGE_BUILD_DIR)/STARTUP_3
+	echo "boot emmcflash0.linuxkernel4 '$(HD5x_BRCM_CMA) root=/dev/mmcblk0p7 rootsubdir=linuxrootfs4 kernel=/dev/mmcblk0p6 rw rootwait $(BOXMODEL)_4.boxmode=$(HD5x_BOXMODE)'" > $(IMAGE_BUILD_DIR)/STARTUP_4
 	mcopy -i $(IMAGE_BUILD_DIR)/$(HD5x_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP ::
 	mcopy -i $(IMAGE_BUILD_DIR)/$(HD5x_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP_1 ::
 	mcopy -i $(IMAGE_BUILD_DIR)/$(HD5x_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP_2 ::
