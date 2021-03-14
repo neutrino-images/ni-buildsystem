@@ -74,7 +74,7 @@ $(TARGET_sysconfdir)/init.d/rc.local:
 	$(UPDATE-RC.D) $(@F) start 99 2 3 4 5 .
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/files-etc/rc.local $(TARGET_sysconfdir)/rc.local
 ifeq ($(PERSISTENT_VAR_PARTITION),yes)
-	$(INSTALL_DATA) -D $(TARGET_FILES)/files-etc/rc.local-var $(TARGET_localstatedir)/etc/rc.local
+	$(INSTALL_EXEC) -D $(TARGET_FILES)/files-etc/rc.local-var $(TARGET_localstatedir)/etc/rc.local
 endif
 
 $(TARGET_sysconfdir)/init.d/resizerootfs:
