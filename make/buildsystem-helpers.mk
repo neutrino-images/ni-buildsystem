@@ -55,7 +55,7 @@ define apply_patches
 	for i in $(1); do \
 		if [ -e $$i -o -e $(PKG_PATCHES_DIR)/$$i ]; then \
 			if [ -d $$i ]; then \
-				for p in $$i/*; do \
+				for p in $$i/*.patch; do \
 					$(call MESSAGE,"Applying $${p#$(PKG_PATCHES_DIR)/}"); \
 					if [ $${p:0:1} == "/" ]; then \
 						patch -p$$l -i $$p; \

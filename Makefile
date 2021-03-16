@@ -188,7 +188,6 @@ include make/buildsystem-clean.mk
 include make/buildsystem-helpers.mk
 include make/buildsystem-prerequisites.mk
 include make/buildsystem-update.mk
-include make/crosstool.mk
 include make/flash-updates.mk
 include make/flash-images.mk
 include make/linux-kernel.mk

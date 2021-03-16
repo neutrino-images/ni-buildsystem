@@ -34,7 +34,7 @@ else ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7))
   KERNEL_SITE = http://downloads.mutant-digital.net
 
   KERNEL_BRANCH = $(empty)
-  KERNEL_DTB = $(BUILD_DIR)/$(KERNEL_OBJ)/arch/$(TARGET_ARCH)/boot/dts/bcm7445-bcm97445svmb.dtb
+  KERNEL_DTB = $(KERNEL_OBJ_DIR)/arch/$(TARGET_ARCH)/boot/dts/bcm7445-bcm97445svmb.dtb
   KERNEL_CONFIG = $(PKG_FILES_DIR)/kernel-hd5x.defconfig
 
   BOOT_PARTITION = 1
@@ -47,7 +47,7 @@ else ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd60))
   KERNEL_SITE = http://source.mynonpublic.com/gfutures
 
   KERNEL_BRANCH = $(empty)
-  KERNEL_DTB = $(BUILD_DIR)/$(KERNEL_OBJ)/arch/$(TARGET_ARCH)/boot/dts/hi3798mv200.dtb
+  KERNEL_DTB = $(KERNEL_OBJ_DIR)/arch/$(TARGET_ARCH)/boot/dts/hi3798mv200.dtb
   KERNEL_CONFIG = $(PKG_FILES_DIR)/kernel-hd6x.defconfig
 
   BOOT_PARTITION = 4
@@ -60,7 +60,7 @@ else ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd61))
   KERNEL_SITE = http://source.mynonpublic.com/gfutures
 
   KERNEL_BRANCH = $(empty)
-  KERNEL_DTB = $(BUILD_DIR)/$(KERNEL_OBJ)/arch/$(TARGET_ARCH)/boot/dts/hi3798mv200.dtb
+  KERNEL_DTB = $(KERNEL_OBJ_DIR)/arch/$(TARGET_ARCH)/boot/dts/hi3798mv200.dtb
   KERNEL_CONFIG = $(PKG_FILES_DIR)/kernel-hd6x.defconfig
 
   BOOT_PARTITION = 4
@@ -190,35 +190,38 @@ endif
 
 KERNEL_PATCH = $($(call UPPERCASE,$(BOXMODEL))_PATCH)
 
-KERNEL_OBJ     = linux-$(KERNEL_VERSION)-obj
+KERNEL_OBJ = linux-$(KERNEL_VERSION)-obj
+KERNEL_OBJ_DIR = $(BUILD_DIR)/$(KERNEL_OBJ)
 KERNEL_MODULES = linux-$(KERNEL_VERSION)-modules
+KERNEL_MODULES_DIR = $(BUILD_DIR)/$(KERNEL_MODULES)
 KERNEL_HEADERS = linux-$(KERNEL_VERSION)-headers
+KERNEL_HEADERS_DIR = $(BUILD_DIR)/$(KERNEL_HEADERS)
 
 KERNEL_CONFIG ?= $(PKG_FILES_DIR)/kernel-$(BOXMODEL).defconfig
 KERNEL_NAME    = NI $(shell echo $(BOXFAMILY) | sed 's/.*/\u&/') Kernel
 
 # -----------------------------------------------------------------------------
 
-KERNEL_modulesdir = $(BUILD_DIR)/$(KERNEL_MODULES)/lib/modules/$(KERNEL_VERSION)
+KERNEL_modulesdir = $(KERNEL_MODULES_DIR)/lib/modules/$(KERNEL_VERSION)
 
 ifeq ($(BOXMODEL),nevis)
-  KERNEL_UIMAGE   = $(BUILD_DIR)/$(KERNEL_OBJ)/arch/$(TARGET_ARCH)/boot/Image
+  KERNEL_UIMAGE   = $(KERNEL_OBJ_DIR)/arch/$(TARGET_ARCH)/boot/Image
 else
-  KERNEL_UIMAGE   = $(BUILD_DIR)/$(KERNEL_OBJ)/arch/$(TARGET_ARCH)/boot/uImage
+  KERNEL_UIMAGE   = $(KERNEL_OBJ_DIR)/arch/$(TARGET_ARCH)/boot/uImage
 endif
-KERNEL_ZIMAGE     = $(BUILD_DIR)/$(KERNEL_OBJ)/arch/$(TARGET_ARCH)/boot/zImage
-KERNEL_ZIMAGE_DTB = $(BUILD_DIR)/$(KERNEL_OBJ)/arch/$(TARGET_ARCH)/boot/zImage_dtb
-KERNEL_VMLINUX    = $(BUILD_DIR)/$(KERNEL_OBJ)/vmlinux
+KERNEL_ZIMAGE     = $(KERNEL_OBJ_DIR)/arch/$(TARGET_ARCH)/boot/zImage
+KERNEL_ZIMAGE_DTB = $(KERNEL_OBJ_DIR)/arch/$(TARGET_ARCH)/boot/zImage_dtb
+KERNEL_VMLINUX    = $(KERNEL_OBJ_DIR)/vmlinux
 
 # -----------------------------------------------------------------------------
 
 KERNEL_MAKE_VARS = \
 	ARCH=$(TARGET_ARCH) \
 	CROSS_COMPILE=$(TARGET_CROSS) \
-	INSTALL_MOD_PATH=$(BUILD_DIR)/$(KERNEL_MODULES) \
-	INSTALL_HDR_PATH=$(BUILD_DIR)/$(KERNEL_HEADERS) \
+	INSTALL_MOD_PATH=$(KERNEL_MODULES_DIR) \
+	INSTALL_HDR_PATH=$(KERNEL_HEADERS_DIR) \
 	LOCALVERSION= \
-	O=$(BUILD_DIR)/$(KERNEL_OBJ)
+	O=$(KERNEL_OBJ_DIR)
 
 # Compatibility variables
 KERNEL_MAKE_VARS += \
@@ -239,3 +242,7 @@ KERNEL_MAKE_TARGETS = $(KERNEL_IMAGE)
 ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 hd60 hd61))
   KERNEL_MAKE_TARGETS += $(notdir $(KERNEL_DTB))
 endif
+
+# -----------------------------------------------------------------------------
+
+KERNEL_TARBALL = $(BUILD_DIR)/linux-$(KERNEL_VERSION).tar

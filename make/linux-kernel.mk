@@ -202,18 +202,17 @@ kernel.do_checkout: $(SOURCE_DIR)/$(NI_LINUX_KERNEL)
 	$(CD) $(SOURCE_DIR)/$(NI_LINUX_KERNEL); \
 		git checkout $(KERNEL_BRANCH)
 
-kernel.do_prepare:
+kernel.do_prepare: | $(DEPS_DIR) $(BUILD_DIR)
 	$(MAKE) kernel.do_prepare_$(if $(filter $(KERNEL_SOURCE),git),git,tar)
 	#
 	$(REMOVE)/$(KERNEL_OBJ)
 	$(REMOVE)/$(KERNEL_MODULES)
-	$(REMOVE)/$(KERNEL_HEADERS)
 	$(MKDIR)/$(KERNEL_OBJ)
 	$(MKDIR)/$(KERNEL_MODULES)
-	$(MKDIR)/$(KERNEL_HEADERS)
-	$(INSTALL_DATA) $(KERNEL_CONFIG) $(BUILD_DIR)/$(KERNEL_OBJ)/.config
+	$(INSTALL_DATA) $(KERNEL_CONFIG) $(KERNEL_OBJ_DIR)/.config
+	$(MAKE) -C $(BUILD_DIR)/$(KERNEL_DIR) $(KERNEL_MAKE_VARS) silentoldconfig
 ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 hd60 hd61))
-	$(INSTALL_DATA) $(PKG_FILES_DIR)/initramfs-subdirboot.cpio.gz $(BUILD_DIR)/$(KERNEL_OBJ)
+	$(INSTALL_DATA) $(PKG_FILES_DIR)/initramfs-subdirboot.cpio.gz $(KERNEL_OBJ_DIR)
 endif
 	$(TOUCH)
 
@@ -232,11 +231,8 @@ kernel.do_prepare_tar: $(DL_DIR)/$(KERNEL_SOURCE)
 		$(call apply_patches,$(addprefix $(PKG_PATCHES_DIR)/,$(KERNEL_PATCH)))
 
 kernel.do_compile: kernel.do_prepare
-	$(CHDIR)/$(KERNEL_DIR); \
-		$(MAKE) $(KERNEL_MAKE_VARS) silentoldconfig; \
-		$(MAKE) $(KERNEL_MAKE_VARS) modules $(KERNEL_MAKE_TARGETS); \
-		$(MAKE) $(KERNEL_MAKE_VARS) modules_install; \
-		$(MAKE) $(KERNEL_MAKE_VARS) headers_install
+	$(MAKE) -C $(BUILD_DIR)/$(KERNEL_DIR) $(KERNEL_MAKE_VARS) modules $(KERNEL_MAKE_TARGETS)
+	$(MAKE) -C $(BUILD_DIR)/$(KERNEL_DIR) $(KERNEL_MAKE_VARS) modules_install
 ifneq ($(KERNEL_DTB),$(empty))
 	cat $(KERNEL_ZIMAGE) $(KERNEL_DTB) > $(KERNEL_ZIMAGE_DTB)
 endif
@@ -272,11 +268,6 @@ endif
 	$(TOUCH)
 
 kernel-armbox: kernel.do_compile | $(IMAGE_DIR)
-#ifneq ($(KERNEL_DTB),$(empty))
-#	$(INSTALL_DATA) $(KERNEL_ZIMAGE_DTB) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL).bin
-#else
-#	$(INSTALL_DATA) $(KERNEL_ZIMAGE) $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL).bin
-#endif
 	$(TOUCH)
 
 kernel-mipsbox: kernel.do_compile | $(IMAGE_DIR)
@@ -358,6 +349,16 @@ ifeq ($(BOXSERIES),hd1)
 	rm $(TARGET_modulesdir)/modules.*
 	mv $(TARGET_modulesdir)/.modules.dep $(TARGET_modulesdir)/modules.dep
 endif
+
+# -----------------------------------------------------------------------------
+
+kernel-headers: $(KERNEL_HEADERS_DIR)
+$(KERNEL_HEADERS_DIR): kernel.do_prepare
+	$(MAKE) -C $(BUILD_DIR)/$(KERNEL_DIR) $(KERNEL_MAKE_VARS) headers_install
+
+kernel-tarball: $(KERNEL_TARBALL)
+$(KERNEL_TARBALL): kernel.do_prepare
+	tar cf $(@) -C $(BUILD_DIR)/$(KERNEL_DIR) .
 
 # -----------------------------------------------------------------------------
 

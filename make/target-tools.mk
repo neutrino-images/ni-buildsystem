@@ -1839,10 +1839,10 @@ DVB_APPS_DIR = dvb-apps.$(DVB_APPS_VERSION)
 DVB_APPS_SOURCE = dvb-apps.$(DVB_APPS_VERSION)
 DVB_APPS_SITE = https://github.com/openpli-arm
 
-DVB_APPS_DEPENDENCIES = kernel libiconv
+DVB_APPS_DEPENDENCIES = kernel-headers libiconv
 
 DVB_APPS_MAKE_OPTS = \
-	KERNEL_HEADERS=$(BUILD_DIR)/$(KERNEL_HEADERS) \
+	KERNEL_HEADERS=$(KERNEL_HEADERS_DIR) \
 	enable_shared=no \
 	PERL5LIB=$(PKG_BUILD_DIR)/util/scan \
 
