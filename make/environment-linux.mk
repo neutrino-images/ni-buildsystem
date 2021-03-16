@@ -247,7 +247,7 @@ endif
 
 define LINUX_RUN_DEPMOD
 	if test -d $(TARGET_modulesdir) && grep -q "CONFIG_MODULES=y" $(KERNEL_OBJ_DIR)/.config; then \
-		PATH=$(PATH):/sbin:/usr/sbin depmod -a -b $(TARGET_DIR) $(KERNEL_VER); \
+		PATH=$(PATH):/sbin:/usr/sbin depmod -a -b $(TARGET_DIR) $(KERNEL_VERSION); \
 	fi
 endef
 

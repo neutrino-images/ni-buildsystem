@@ -299,9 +299,7 @@ kernel-modules-coolstream-hd1: kernel-coolstream
 	done;
 	rm -f $(TARGET_modulesdir)/usb-storage.ko # already builtin
 	$(LINUX_RUN_DEPMOD)
-	mv $(TARGET_modulesdir)/modules.dep $(TARGET_modulesdir)/.modules.dep
-	rm $(TARGET_modulesdir)/modules.*
-	mv $(TARGET_modulesdir)/.modules.dep $(TARGET_modulesdir)/modules.dep
+	find $(TARGET_modulesdir) -type f -name 'modules.*' -not -name 'modules.dep' -print0 | xargs -0 rm --
 	$(TOUCH)
 
 kernel-modules-coolstream-hd2: kernel-coolstream
