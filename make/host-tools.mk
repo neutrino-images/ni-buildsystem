@@ -4,9 +4,9 @@
 # -----------------------------------------------------------------------------
 
 $(HOST_DIR):
-	mkdir -p $(HOST_DIR)
-	mkdir -p $(HOST_DIR)/bin
-	mkdir -p $(HOST_DEPS_DIR)
+	$(INSTALL) -d $(HOST_DIR)
+	$(INSTALL) -d $(HOST_DIR)/bin
+	$(INSTALL) -d $(HOST_DEPS_DIR)
 
 # -----------------------------------------------------------------------------
 

@@ -122,7 +122,7 @@ endif
 flash-image-hd5x: IMAGE_DATE=$(shell cat $(ROOTFS)/.version | grep "^version=" | cut -d= -f2 | cut -c 5-)
 flash-image-hd5x: | $(IMAGE_DIR)
 	rm -rf $(IMAGE_BUILD_DIR)
-	mkdir -p $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)
+	$(INSTALL) -d $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)
 	cp $(KERNEL_ZIMAGE_DTB) $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/kernel.bin
 	$(CD) $(ROOTFS); \
 		tar -cvf $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/rootfs.tar -C $(ROOTFS) . >/dev/null 2>&1; \
@@ -179,7 +179,7 @@ STORAGE_PARTITION_OFFSET = "$(shell expr $(LINUX_SWAP_PARTITION_OFFSET) \+ $(LIN
 
 flash-image-hd5x-multi: | $(IMAGE_DIR)
 	rm -rf $(IMAGE_BUILD_DIR)
-	mkdir -p $(IMAGE_BUILD_DIR)
+	$(INSTALL) -d $(IMAGE_BUILD_DIR)
 	# Create a sparse image block
 	dd if=/dev/zero of=$(IMAGE_BUILD_DIR)/$(HD5x_IMAGE_LINK) seek=$(shell expr $(ROOTFS_PARTITION_SIZE) \* $(BLOCK_SECTOR)) count=0 bs=$(BLOCK_SIZE)
 	mkfs.ext4 -v -F $(IMAGE_BUILD_DIR)/$(HD5x_IMAGE_LINK) -d $(ROOTFS)/..
@@ -214,7 +214,7 @@ flash-image-hd5x-multi: | $(IMAGE_DIR)
 	# Truncate on purpose
 	dd if=$(IMAGE_BUILD_DIR)/$(HD5x_IMAGE_LINK) of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) seek=$(shell expr $(ROOTFS_PARTITION_OFFSET) \* $(BLOCK_SECTOR))
 	# Create final USB-image
-	mkdir -p $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)
+	$(INSTALL) -d $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)
 	cp $(EMMC_IMAGE) $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)
 	cp $(SUPPORT_DIR)/splash-images/ni-splash.bmp $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/splash.bin
 	cp $(KERNEL_ZIMAGE_DTB) $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/kernel.bin
@@ -231,7 +231,7 @@ flash-image-hd5x-multi: | $(IMAGE_DIR)
 flash-image-hd6x: IMAGE_DATE=$(shell cat $(ROOTFS)/.version | grep "^version=" | cut -d= -f2 | cut -c 5-)
 flash-image-hd6x: | $(IMAGE_DIR)
 	rm -rf $(IMAGE_BUILD_DIR)
-	mkdir -p $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)
+	$(INSTALL) -d $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)
 	cp $(KERNEL_UIMAGE) $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/uImage
 	$(CD) $(ROOTFS); \
 		tar -cvf $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/rootfs.tar -C $(ROOTFS) . >/dev/null 2>&1; \
@@ -277,7 +277,7 @@ flash-image-hd6x-multi-recovery: $(DL_DIR)/$(HD6x_PARTITONS_SOURCE)
 flash-image-hd6x-multi-recovery: $(DL_DIR)/$(HD6x_RECOVERY_SOURCE)
 flash-image-hd6x-multi-recovery: | $(IMAGE_DIR)
 	rm -rf $(IMAGE_BUILD_DIR)
-	mkdir -p $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)
+	$(INSTALL) -d $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)
 	unzip -o $(DL_DIR)/$(HD6x_BOOTARGS_SOURCE) -d $(IMAGE_BUILD_DIR)
 	unzip -o $(DL_DIR)/$(HD6x_PARTITONS_SOURCE) -d $(IMAGE_BUILD_DIR)
 	unzip -o $(DL_DIR)/$(HD6x_RECOVERY_SOURCE) -d $(IMAGE_BUILD_DIR)
@@ -339,7 +339,7 @@ flash-image-hd6x-multi-recovery: | $(IMAGE_DIR)
 flash-image-hd6x-single: flash-image-hd6x-multi-recovery
 flash-image-hd6x-single: | $(IMAGE_DIR)
 	rm -rf $(IMAGE_BUILD_DIR)
-	mkdir -p $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)
+	$(INSTALL) -d $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)
 	cp $(KERNEL_UIMAGE) $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/uImage
 	$(CD) $(ROOTFS); \
 		tar -cvf $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/rootfs.tar -C $(ROOTFS) . >/dev/null 2>&1; \
@@ -358,7 +358,7 @@ flash-image-hd6x-single: | $(IMAGE_DIR)
 flash-image-vuplus: IMAGE_DATE=$(shell cat $(ROOTFS)/.version | grep "^version=" | cut -d= -f2 | cut -c 5-)
 flash-image-vuplus: | $(IMAGE_DIR)
 	rm -rf $(IMAGE_BUILD_DIR)
-	mkdir -p $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)
+	$(INSTALL) -d $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)
 	cp $(KERNEL_ZIMAGE) $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/kernel_auto.bin
 	$(CD) $(ROOTFS); \
 		tar -cvf $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/rootfs.tar -C $(ROOTFS) . >/dev/null 2>&1; \
@@ -374,7 +374,7 @@ flash-image-vuplus: | $(IMAGE_DIR)
 flash-image-vuplus-multi: vmlinuz-initrd
 flash-image-vuplus-multi: | $(IMAGE_DIR)
 	rm -rf $(IMAGE_BUILD_DIR)
-	mkdir -p $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)
+	$(INSTALL) -d $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)
 	cp $(SUPPORT_DIR)/splash-images/ni-splash.bmp $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/splash_auto.bin
 	cp $(BUILD_DIR)/$(VMLINUZ_INITRD) $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/initrd_auto.bin
 	echo Dummy for update. > $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/kernel_auto.bin

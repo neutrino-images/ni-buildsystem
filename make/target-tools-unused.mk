@@ -107,7 +107,7 @@ shadow: $(DL_DIR)/$(SHADOW_SOURCE) | $(TARGET_DIR)
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(SED) 's|SHELL=.*|SHELL=/bin/sh|' $(TARGET_sysconfdir)/default/useradd
-	mkdir -p $(TARGET_sysconfdir)/skel
+	$(INSTALL) -d $(TARGET_sysconfdir)/skel
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 

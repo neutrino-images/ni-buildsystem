@@ -175,7 +175,7 @@ endif
 # -----------------------------------------------------------------------------
 
 $(NEUTRINO_BUILD_DIR)/config.status: $(NEUTRINO_DEPENDENCIES)
-	test -d $(NEUTRINO_BUILD_DIR) || mkdir -p $(NEUTRINO_BUILD_DIR)
+	test -d $(NEUTRINO_BUILD_DIR) || $(INSTALL) -d $(NEUTRINO_BUILD_DIR)
 	$(CD) $(SOURCE_DIR)/$(NI_NEUTRINO); \
 		git checkout $(NEUTRINO_BRANCH)
 	$(SOURCE_DIR)/$(NI_NEUTRINO)/autogen.sh
@@ -227,7 +227,7 @@ endif
 # -----------------------------------------------------------------------------
 
 $(LIBSTB_HAL_BUILD_DIR)/config.status: $(LIBSTB_HAL_DEPENDENCIES)
-	test -d $(LIBSTB_HAL_BUILD_DIR) || mkdir -p $(LIBSTB_HAL_BUILD_DIR)
+	test -d $(LIBSTB_HAL_BUILD_DIR) || $(INSTALL) -d $(LIBSTB_HAL_BUILD_DIR)
 	$(SOURCE_DIR)/$(NI_LIBSTB_HAL)/autogen.sh
 	$(CD) $(LIBSTB_HAL_BUILD_DIR); \
 		$(LIBSTB_HAL_CONF_ENV) \

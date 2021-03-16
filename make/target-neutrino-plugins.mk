@@ -93,7 +93,7 @@ endif
 # -----------------------------------------------------------------------------
 
 $(NEUTRINO_PLUGINS_BUILD_DIR)/config.status: $(NEUTRINO_PLUGINS_DEPENDENCIES)
-	test -d $(NEUTRINO_PLUGINS_BUILD_DIR) || mkdir -p $(NEUTRINO_PLUGINS_BUILD_DIR)
+	test -d $(NEUTRINO_PLUGINS_BUILD_DIR) || $(INSTALL) -d $(NEUTRINO_PLUGINS_BUILD_DIR)
 	$(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS)/autogen.sh
 	$(CD) $(NEUTRINO_PLUGINS_BUILD_DIR); \
 		$(NEUTRINO_PLUGINS_CONF_ENV) \
@@ -169,9 +169,9 @@ neutrino-plugin-%: $(NEUTRINO_PLUGINS_BUILD_DIR)/config.status
 
 channellogos: $(SOURCE_DIR)/$(NI_LOGO_STUFF) $(SHARE_ICONS)
 	rm -rf $(SHARE_LOGOS)
-	mkdir -p $(SHARE_LOGOS)
+	$(INSTALL) -d $(SHARE_LOGOS)
 	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI_LOGO_STUFF)/logos/* $(SHARE_LOGOS)
-	mkdir -p $(SHARE_LOGOS)/events
+	$(INSTALL) -d $(SHARE_LOGOS)/events
 	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI_LOGO_STUFF)/logos-events/* $(SHARE_LOGOS)/events
 	$(CD) $(SOURCE_DIR)/$(NI_LOGO_STUFF)/logo-links; \
 		./logo-linker.sh logo-links.db $(SHARE_LOGOS)

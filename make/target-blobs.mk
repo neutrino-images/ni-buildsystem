@@ -144,13 +144,13 @@ shiner-drivers \
 kronos-drivers \
 kronos_v2-drivers \
 coolstream-drivers: $(SOURCE_DIR)/$(NI_DRIVERS_BIN) | $(TARGET_DIR)
-	mkdir -p $(TARGET_libdir)
+	$(INSTALL) -d $(TARGET_libdir)
 	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI_DRIVERS_BIN)/$(DRIVERS_BIN_DIR)/lib/. $(TARGET_libdir)
 	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI_DRIVERS_BIN)/$(DRIVERS_BIN_DIR)/libcoolstream/$(shell echo -n $(FFMPEG_BRANCH) | sed 's,/,-,g')/. $(TARGET_libdir)
 ifeq ($(BOXMODEL),nevis)
 	ln -sf libnxp.so $(TARGET_libdir)/libconexant.so
 endif
-	mkdir -p $(TARGET_modulesdir)
+	$(INSTALL) -d $(TARGET_modulesdir)
 	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI_DRIVERS_BIN)/$(DRIVERS_BIN_DIR)/lib-modules/$(KERNEL_VERSION)/. $(TARGET_modulesdir)
 ifeq ($(BOXMODEL),nevis)
 	ln -sf $(KERNEL_VERSION) $(TARGET_modulesdir)-$(BOXMODEL)
@@ -161,14 +161,14 @@ endif
 hd51-drivers \
 bre2ze4k-drivers \
 h7-drivers: $(DL_DIR)/$(BOXMODEL_DRIVERS_SOURCE) | $(TARGET_DIR)
-	mkdir -p $(TARGET_modulesdir)/extra
+	$(INSTALL) -d $(TARGET_modulesdir)/extra
 	unzip -o $(DL_DIR)/$(BOXMODEL_DRIVERS_SOURCE) -d $(TARGET_modulesdir)/extra
 	$(LINUX_RUN_DEPMOD)
 	$(TOUCH)
 
 hd60-drivers \
 hd61-drivers: $(DL_DIR)/$(BOXMODEL_DRIVERS_SOURCE) | $(TARGET_DIR)
-	mkdir -p $(TARGET_modulesdir)/extra
+	$(INSTALL) -d $(TARGET_modulesdir)/extra
 	unzip -o $(DL_DIR)/$(BOXMODEL_DRIVERS_SOURCE) -d $(TARGET_modulesdir)/extra
 	rm -f $(TARGET_modulesdir)/extra/hi_play.ko
 	mv $(TARGET_modulesdir)/extra/turnoff_power $(TARGET_bindir)
@@ -184,7 +184,7 @@ vuuno4k-drivers \
 vuuno4kse-drivers \
 vuduo-drivers \
 vuplus-drivers: $(DL_DIR)/$(BOXMODEL_DRIVERS_SOURCE) | $(TARGET_DIR)
-	mkdir -p $(TARGET_modulesdir)/extra
+	$(INSTALL) -d $(TARGET_modulesdir)/extra
 	tar -xf $(DL_DIR)/$(BOXMODEL_DRIVERS_SOURCE) -C $(TARGET_modulesdir)/extra
 	$(LINUX_RUN_DEPMOD)
 	$(TOUCH)
@@ -337,7 +337,7 @@ hd60-libs \
 hd61-libs: $(DL_DIR)/$(BOXMODEL_LIBS_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(BOXMODEL_LIBS_DIR)
 	unzip -o $(DL_DIR)/$(BOXMODEL_LIBS_SOURCE) -d $(BUILD_DIR)/$(BOXMODEL_LIBS_DIR)
-	mkdir -p $(TARGET_libdir)/hisilicon
+	$(INSTALL) -d $(TARGET_libdir)/hisilicon
 	$(INSTALL_EXEC) $(BUILD_DIR)/$(BOXMODEL_LIBS_DIR)/hisilicon/* $(TARGET_libdir)/hisilicon
 	$(INSTALL_EXEC) $(BUILD_DIR)/$(BOXMODEL_LIBS_DIR)/ffmpeg/* $(TARGET_libdir)/hisilicon
 	ln -sf /lib/ld-linux-armhf.so.3 $(TARGET_libdir)/hisilicon/ld-linux.so

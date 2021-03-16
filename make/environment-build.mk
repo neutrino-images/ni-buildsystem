@@ -389,7 +389,7 @@ CMAKE = $(TARGET_CMAKE)
 # -----------------------------------------------------------------------------
 
 define meson-cross-config # (dest dir)
-	mkdir -p $(1)
+	$(INSTALL) -d $(1)
 	( \
 		echo "# Note: Buildsystems's and Meson's terminologies differ about the meaning"; \
 		echo "# of 'build', 'host' and 'target':"; \

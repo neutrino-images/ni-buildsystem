@@ -1104,7 +1104,7 @@ vsftpd: $(VSFTPD_DEPENDENCIES) $(DL_DIR)/$(VSFTPD_SOURCE) | $(TARGET_DIR)
 		$(MAKE) clean; \
 		$(MAKE) $(TARGET_CONFIGURE_ENV) LIBS="$($(PKG)_LIBS)"; \
 		$(INSTALL_EXEC) -D vsftpd $(TARGET_sbindir)/vsftpd
-	mkdir -p $(TARGET_datadir)/empty
+	$(INSTALL) -d $(TARGET_datadir)/empty
 	$(INSTALL_DATA) -D $(PKG_FILES_DIR)/vsftpd.conf $(TARGET_sysconfdir)/vsftpd.conf
 	$(INSTALL_DATA) -D $(PKG_FILES_DIR)/vsftpd.chroot_list $(TARGET_sysconfdir)/vsftpd.chroot_list
 	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/vsftpd.init $(TARGET_sysconfdir)/init.d/vsftpd
@@ -1293,7 +1293,7 @@ samba33: $(SAMBA33_DEPENDENCIES) $(DL_DIR)/$(SAMBA33_SOURCE) | $(TARGET_DIR)
 		$(CONFIGURE); \
 		$(MAKE1) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	mkdir -p $(TARGET_localstatedir)/samba/locks
+	$(INSTALL) -d $(TARGET_localstatedir)/samba/locks
 	$(INSTALL_DATA) -D $(PKG_FILES_DIR)/smb3.conf $(TARGET_sysconfdir)/samba/smb.conf
 	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/samba3.init $(TARGET_sysconfdir)/init.d/samba
 	$(UPDATE-RC.D) samba defaults 75 25
@@ -1363,7 +1363,7 @@ samba36: $(SAMBA36_DEPENDENCIES) $(DL_DIR)/$(SAMBA36_SOURCE) | $(TARGET_DIR)
 		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	mkdir -p $(TARGET_localstatedir)/samba/locks
+	$(INSTALL) -d $(TARGET_localstatedir)/samba/locks
 	$(INSTALL_DATA) -D $(PKG_FILES_DIR)/smb3.conf $(TARGET_sysconfdir)/samba/smb.conf
 	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/samba3.init $(TARGET_sysconfdir)/init.d/samba
 	$(UPDATE-RC.D) samba defaults 75 25
@@ -1415,7 +1415,7 @@ dropbear: $(DROPBEAR_DEPENDENCIES) $(DL_DIR)/$(DROPBEAR_SOURCE) | $(TARGET_DIR)
 		echo '#define DEFAULT_PATH "/sbin:/bin:/usr/sbin:/usr/bin:/var/bin"' >> localoptions.h; \
 		$(MAKE) $($(PKG)_MAKE_OPTS) SCPPROGRESS=1; \
 		$(MAKE) $($(PKG)_MAKE_OPTS) install DESTDIR=$(TARGET_DIR)
-	mkdir -p $(TARGET_sysconfdir)/dropbear
+	$(INSTALL) -d $(TARGET_sysconfdir)/dropbear
 	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/dropbear.init $(TARGET_sysconfdir)/init.d/dropbear
 	$(UPDATE-RC.D) dropbear defaults 75 25
 	$(REMOVE)/$(PKG_DIR)
@@ -1572,7 +1572,7 @@ xupnpd: $(XUPNPD_DEPENDENCIES) | $(TARGET_DIR)
 		$(TARGET_CONFIGURE_ENV) \
 		$(MAKE) -C src $($(PKG)_MAKE_OPTS) embedded ; \
 		$(INSTALL_EXEC) -D src/xupnpd $(TARGET_bindir)/xupnpd; \
-		mkdir -p $(TARGET_datadir)/xupnpd/config; \
+		$(INSTALL) -d $(TARGET_datadir)/xupnpd/config; \
 		$(INSTALL_COPY) src/{plugins,profiles,ui,www,*.lua} $(TARGET_datadir)/xupnpd/
 	rm $(TARGET_datadir)/xupnpd/plugins/staff/xupnpd_18plus.lua
 	$(INSTALL_DATA) -D $(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS)/scripts-lua/xupnpd/xupnpd_18plus.lua $(TARGET_datadir)/xupnpd/plugins/

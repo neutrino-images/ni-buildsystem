@@ -66,7 +66,7 @@ download:
 # -----------------------------------------------------------------------------
 
 $(SOURCE_DIR):
-	mkdir -p $(@)
+	$(INSTALL) -d $(@)
 
 $(BUILD_GENERIC_PC):
 	git clone $(NI_PUBLIC)/$(NI_BUILD_GENERIC_PC).git $(BUILD_GENERIC_PC)

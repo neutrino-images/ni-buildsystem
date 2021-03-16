@@ -39,29 +39,29 @@ skeleton: | $(TARGET_DIR)
 # -----------------------------------------------------------------------------
 
 target-dir:
-	mkdir -p $(TARGET_DIR)
-	mkdir -p $(TARGET_bindir)
-	mkdir -p $(TARGET_includedir)
-	mkdir -p $(TARGET_libdir)
-	mkdir -p $(TARGET_sbindir)
-	mkdir -p $(TARGET_datadir)
-	#mkdir -p $(TARGET_prefix)/local/{bin,include,lib,sbin,share}
-	mkdir -p $(TARGET_localstatedir)/bin
-	mkdir -p $(TARGET_localstatedir)/etc/init.d
-	mkdir -p $(TARGET_localstatedir)/keys
-	mkdir -p $(TARGET_localstatedir)/root
+	$(INSTALL) -d $(TARGET_DIR)
+	$(INSTALL) -d $(TARGET_bindir)
+	$(INSTALL) -d $(TARGET_includedir)
+	$(INSTALL) -d $(TARGET_libdir)
+	$(INSTALL) -d $(TARGET_sbindir)
+	$(INSTALL) -d $(TARGET_datadir)
+	#$(INSTALL) -d $(TARGET_prefix)/local/{bin,include,lib,sbin,share}
+	$(INSTALL) -d $(TARGET_localstatedir)/bin
+	$(INSTALL) -d $(TARGET_localstatedir)/etc/init.d
+	$(INSTALL) -d $(TARGET_localstatedir)/keys
+	$(INSTALL) -d $(TARGET_localstatedir)/root
 ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd5x hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
-	mkdir -p $(TARGET_DIR)/boot
+	$(INSTALL) -d $(TARGET_DIR)/boot
 endif
-	mkdir -p $(TARGET_DIR)/dev
-	mkdir -p $(TARGET_DIR)/home
-	mkdir -p $(TARGET_DIR)/media
-	mkdir -p $(TARGET_DIR)/mnt
-	mkdir -p $(TARGET_DIR)/proc
-	mkdir -p $(TARGET_DIR)/srv
-	mkdir -p $(TARGET_DIR)/sys
-	mkdir -p $(TARGET_DIR)/tmp
-	$(foreach dir,$(subst :, ,$(PKG_CONFIG_PATH)),$(shell mkdir -p $(dir)))
+	$(INSTALL) -d $(TARGET_DIR)/dev
+	$(INSTALL) -d $(TARGET_DIR)/home
+	$(INSTALL) -d $(TARGET_DIR)/media
+	$(INSTALL) -d $(TARGET_DIR)/mnt
+	$(INSTALL) -d $(TARGET_DIR)/proc
+	$(INSTALL) -d $(TARGET_DIR)/srv
+	$(INSTALL) -d $(TARGET_DIR)/sys
+	$(INSTALL) -d $(TARGET_DIR)/tmp
+	$(foreach dir,$(subst :, ,$(PKG_CONFIG_PATH)),$(shell $(INSTALL) -d $(dir)))
 	make skeleton
 ifeq ($(PERSISTENT_VAR_PARTITION),yes)
   ifeq ($(IMAGE_NEW),yes)
@@ -85,7 +85,7 @@ $(BUILD_DIR) \
 $(STAGING_DIR) \
 $(IMAGE_DIR) \
 $(UPDATE_DIR):
-	mkdir -p $(@)
+	$(INSTALL) -d $(@)
 
 # -----------------------------------------------------------------------------
 
@@ -111,7 +111,7 @@ ifeq ($(BOXTYPE),$(filter $(BOXTYPE),coolstream))
 var-update: $(TARGET_localstatedir)/update
 
 $(TARGET_localstatedir)/update: | $(TARGET_DIR)
-	mkdir -p $(@)
+	$(INSTALL) -d $(@)
 ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd2))
 	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI_DRIVERS_BIN)/$(DRIVERS_BIN_DIR)/uldr.bin $(@)
   ifeq ($(BOXMODEL),kronos_v2)

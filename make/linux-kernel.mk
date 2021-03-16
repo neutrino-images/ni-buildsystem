@@ -292,9 +292,9 @@ STRIP_MODULES_COOLSTREAM_HD1 += kernel/fs/cifs/cifs.ko
 STRIP_MODULES_COOLSTREAM_HD1 += kernel/fs/fuse/fuse.ko
 
 kernel-modules-coolstream-hd1: kernel-coolstream
-	mkdir -p $(TARGET_modulesdir)
+	$(INSTALL) -d $(TARGET_modulesdir)
 	for module in $(STRIP_MODULES_COOLSTREAM_HD1); do \
-		mkdir -p $(TARGET_modulesdir)/$$(dirname $$module); \
+		$(INSTALL) -d $(TARGET_modulesdir)/$$(dirname $$module); \
 		$(TARGET_OBJCOPY) --strip-unneeded $(KERNEL_modulesdir)/$$module $(TARGET_modulesdir)/$$module; \
 	done;
 	rm -f $(TARGET_modulesdir)/usb-storage.ko # already builtin
@@ -303,7 +303,7 @@ kernel-modules-coolstream-hd1: kernel-coolstream
 	$(TOUCH)
 
 kernel-modules-coolstream-hd2: kernel-coolstream
-	mkdir -p $(TARGET_modulesdir)
+	$(INSTALL) -d $(TARGET_modulesdir)
 	$(INSTALL_COPY) $(KERNEL_modulesdir)/kernel $(TARGET_modulesdir)
 	$(INSTALL_DATA) $(KERNEL_modulesdir)/modules.builtin $(TARGET_modulesdir)
 	$(INSTALL_DATA) $(KERNEL_modulesdir)/modules.order $(TARGET_modulesdir)
@@ -312,7 +312,7 @@ kernel-modules-coolstream-hd2: kernel-coolstream
 	$(TOUCH)
 
 kernel-modules-armbox: kernel-armbox
-	mkdir -p $(TARGET_modulesdir)
+	$(INSTALL) -d $(TARGET_modulesdir)
 	$(INSTALL_COPY) $(KERNEL_modulesdir)/kernel $(TARGET_modulesdir)
 	$(INSTALL_DATA) $(KERNEL_modulesdir)/modules.builtin $(TARGET_modulesdir)
 	$(INSTALL_DATA) $(KERNEL_modulesdir)/modules.order $(TARGET_modulesdir)
@@ -328,7 +328,7 @@ endif
 	$(TOUCH)
 
 kernel-modules-mipsbox: kernel-mipsbox
-	mkdir -p $(TARGET_modulesdir)
+	$(INSTALL) -d $(TARGET_modulesdir)
 	$(INSTALL_COPY) $(KERNEL_modulesdir)/kernel $(TARGET_modulesdir)
 	$(INSTALL_DATA) $(KERNEL_modulesdir)/modules.builtin $(TARGET_modulesdir)
 	$(INSTALL_DATA) $(KERNEL_modulesdir)/modules.order $(TARGET_modulesdir)

@@ -49,23 +49,23 @@ ifeq ($(PERSISTENT_VAR_PARTITION),yes)
 	$(CD) $(TARGET_sysconfdir); \
 		ln -sf /var/etc/hostname hostname
 endif
-	mkdir -p $(TARGET_localstatedir)/tuxbox/config
+	$(INSTALL) -d $(TARGET_localstatedir)/tuxbox/config
 	$(CD) $(TARGET_localstatedir)/tuxbox/config; \
 		ln -sf /var/keys/SoftCam.Key SoftCam.Key
 
 # -----------------------------------------------------------------------------
 
 e2-multiboot: .version | $(TARGET_DIR)
-	mkdir -p $(TARGET_bindir)
+	$(INSTALL) -d $(TARGET_bindir)
 	echo -e "#!/bin/sh\necho Nope!" > $(TARGET_bindir)/enigma2
 	chmod 0755 $(TARGET_bindir)/enigma2
 	#
 	echo -e "NI $(IMAGE_VERSION) \\\n \\\l\n" > $(TARGET_sysconfdir)/issue
 	#
-	mkdir -p $(TARGET_datadir)
+	$(INSTALL) -d $(TARGET_datadir)
 	touch $(TARGET_datadir)/bootlogo.mvi
 	#
-	mkdir -p $(TARGET_localstatedir)/lib/opkg
+	$(INSTALL) -d $(TARGET_localstatedir)/lib/opkg
 	touch $(TARGET_localstatedir)/lib/opkg/status
 	#
 	$(INSTALL_DATA) $(TARGET_DIR)/.version $(TARGET_sysconfdir)/image-version
@@ -89,7 +89,7 @@ rootfs: target-finish $(ROOTFS) rootfs-cleanup rootfs-strip
 # create filesystem for our images
 $(ROOTFS): | $(TARGET_DIR)
 	rm -rf $(ROOTFS)
-	mkdir -p $(dir $(ROOTFS))
+	$(INSTALL) -d $(dir $(ROOTFS))
 	$(INSTALL_COPY) $(TARGET_DIR) $(ROOTFS)
 
 # -----------------------------------------------------------------------------
