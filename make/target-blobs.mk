@@ -3,7 +3,7 @@
 #
 # -----------------------------------------------------------------------------
 
-#BLOBS_DEPENDENCIES = kernel # because of depmod
+#BLOBS_DEPENDENCIES = kernel # because of $(LINUX_RUN_DEPMOD)
 
 blobs: $(BLOBS_DEPENDENCIES)
 	$(MAKE) firmware
@@ -155,7 +155,7 @@ endif
 ifeq ($(BOXMODEL),nevis)
 	ln -sf $(KERNEL_VERSION) $(TARGET_modulesdir)-$(BOXMODEL)
 endif
-	make depmod
+	$(LINUX_RUN_DEPMOD)
 	$(TOUCH)
 
 hd51-drivers \
@@ -163,7 +163,7 @@ bre2ze4k-drivers \
 h7-drivers: $(DL_DIR)/$(BOXMODEL_DRIVERS_SOURCE) | $(TARGET_DIR)
 	mkdir -p $(TARGET_modulesdir)/extra
 	unzip -o $(DL_DIR)/$(BOXMODEL_DRIVERS_SOURCE) -d $(TARGET_modulesdir)/extra
-	make depmod
+	$(LINUX_RUN_DEPMOD)
 	$(TOUCH)
 
 hd60-drivers \
@@ -172,7 +172,7 @@ hd61-drivers: $(DL_DIR)/$(BOXMODEL_DRIVERS_SOURCE) | $(TARGET_DIR)
 	unzip -o $(DL_DIR)/$(BOXMODEL_DRIVERS_SOURCE) -d $(TARGET_modulesdir)/extra
 	rm -f $(TARGET_modulesdir)/extra/hi_play.ko
 	mv $(TARGET_modulesdir)/extra/turnoff_power $(TARGET_bindir)
-	make depmod
+	$(LINUX_RUN_DEPMOD)
 	$(TOUCH)
 
 vusolo4k-drivers \
@@ -186,7 +186,7 @@ vuduo-drivers \
 vuplus-drivers: $(DL_DIR)/$(BOXMODEL_DRIVERS_SOURCE) | $(TARGET_DIR)
 	mkdir -p $(TARGET_modulesdir)/extra
 	tar -xf $(DL_DIR)/$(BOXMODEL_DRIVERS_SOURCE) -C $(TARGET_modulesdir)/extra
-	make depmod
+	$(LINUX_RUN_DEPMOD)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------

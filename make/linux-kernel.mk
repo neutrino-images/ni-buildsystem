@@ -298,7 +298,10 @@ kernel-modules-coolstream-hd1: kernel-coolstream
 		$(TARGET_OBJCOPY) --strip-unneeded $(KERNEL_modulesdir)/$$module $(TARGET_modulesdir)/$$module; \
 	done;
 	rm -f $(TARGET_modulesdir)/usb-storage.ko # already builtin
-	make depmod
+	$(LINUX_RUN_DEPMOD)
+	mv $(TARGET_modulesdir)/modules.dep $(TARGET_modulesdir)/.modules.dep
+	rm $(TARGET_modulesdir)/modules.*
+	mv $(TARGET_modulesdir)/.modules.dep $(TARGET_modulesdir)/modules.dep
 	$(TOUCH)
 
 kernel-modules-coolstream-hd2: kernel-coolstream
@@ -306,7 +309,7 @@ kernel-modules-coolstream-hd2: kernel-coolstream
 	$(INSTALL_COPY) $(KERNEL_modulesdir)/kernel $(TARGET_modulesdir)
 	$(INSTALL_DATA) $(KERNEL_modulesdir)/modules.builtin $(TARGET_modulesdir)
 	$(INSTALL_DATA) $(KERNEL_modulesdir)/modules.order $(TARGET_modulesdir)
-	make depmod
+	$(LINUX_RUN_DEPMOD)
 	make rtl8192eu
 	$(TOUCH)
 
@@ -315,7 +318,7 @@ kernel-modules-armbox: kernel-armbox
 	$(INSTALL_COPY) $(KERNEL_modulesdir)/kernel $(TARGET_modulesdir)
 	$(INSTALL_DATA) $(KERNEL_modulesdir)/modules.builtin $(TARGET_modulesdir)
 	$(INSTALL_DATA) $(KERNEL_modulesdir)/modules.order $(TARGET_modulesdir)
-	make depmod
+	$(LINUX_RUN_DEPMOD)
 ifeq ($(BOXSERIES),hd5x hd6x)
 	make rtl8192eu
 	make rtl8812au
@@ -331,7 +334,7 @@ kernel-modules-mipsbox: kernel-mipsbox
 	$(INSTALL_COPY) $(KERNEL_modulesdir)/kernel $(TARGET_modulesdir)
 	$(INSTALL_DATA) $(KERNEL_modulesdir)/modules.builtin $(TARGET_modulesdir)
 	$(INSTALL_DATA) $(KERNEL_modulesdir)/modules.order $(TARGET_modulesdir)
-	make depmod
+	$(LINUX_RUN_DEPMOD)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -339,16 +342,6 @@ kernel-modules-mipsbox: kernel-mipsbox
 vmlinuz-initrd: $(DL_DIR)/$(VMLINUZ_INITRD_SOURCE)
 	$(UNTAR)/$(VMLINUZ_INITRD_SOURCE)
 	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
-depmod:
-	PATH=$(PATH):/sbin:/usr/sbin depmod -b $(TARGET_DIR) $(KERNEL_VERSION)
-ifeq ($(BOXSERIES),hd1)
-	mv $(TARGET_modulesdir)/modules.dep $(TARGET_modulesdir)/.modules.dep
-	rm $(TARGET_modulesdir)/modules.*
-	mv $(TARGET_modulesdir)/.modules.dep $(TARGET_modulesdir)/modules.dep
-endif
 
 # -----------------------------------------------------------------------------
 

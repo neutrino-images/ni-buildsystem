@@ -15,7 +15,7 @@ rtl8192eu: kernel-$(BOXTYPE) | $(TARGET_DIR)
 	$(CHDIR)/$(RTL8192EU_DIR); \
 		$(MAKE) $(KERNEL_MAKE_VARS); \
 		$(INSTALL_DATA) 8192eu.ko $(TARGET_modulesdir)/kernel/drivers/net/wireless/
-	make depmod
+	$(LINUX_RUN_DEPMOD)
 	$(REMOVE)/$(RTL8192EU_DIR)
 	$(TOUCH)
 
@@ -36,7 +36,7 @@ rtl8812au: kernel-$(BOXTYPE) $(DL_DIR)/$(RTL8812AU_SOURCE) | $(TARGET_DIR)
 		$(APPLY_PATCHES); \
 		$(MAKE) $(KERNEL_MAKE_VARS); \
 		$(INSTALL_DATA) 8812au.ko $(TARGET_modulesdir)/kernel/drivers/net/wireless/
-	make depmod
+	$(LINUX_RUN_DEPMOD)
 	$(REMOVE)/$(RTL8812AU_DIR)
 	$(TOUCH)
 
@@ -57,7 +57,7 @@ rtl8822bu: kernel-$(BOXTYPE) $(DL_DIR)/$(RTL8822BU_SOURCE) | $(TARGET_DIR)
 		$(APPLY_PATCHES); \
 		$(MAKE) $(KERNEL_MAKE_VARS); \
 		$(INSTALL_DATA) 88x2bu.ko $(TARGET_modulesdir)/kernel/drivers/net/wireless/
-	make depmod
+	$(LINUX_RUN_DEPMOD)
 	$(REMOVE)/$(RTL8822BU_DIR)
 	$(TOUCH)
 
@@ -88,6 +88,6 @@ hd6x-mali-drivers: kernel-$(BOXTYPE) hd6x-libgles-headers $(DL_DIR)/$(HD6x_MALI_
 		$(APPLY_PATCHES); \
 		$(MAKE) -C $(KERNEL_OBJ_DIR) $(KERNEL_MAKE_VARS) $(HD6x_MALI_DRIVERS_MAKE_VARS); \
 		$(MAKE) -C $(KERNEL_OBJ_DIR) $(KERNEL_MAKE_VARS) $(HD6x_MALI_DRIVERS_MAKE_VARS) INSTALL_MOD_PATH=$(TARGET_DIR) modules_install
-	make depmod
+	$(LINUX_RUN_DEPMOD)
 	$(REMOVE)/$(HD6x_MALI_DRIVERS_DIR)
 	$(TOUCH)
