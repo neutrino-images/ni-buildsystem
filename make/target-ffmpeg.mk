@@ -9,7 +9,7 @@ FFMPEG_SOURCE = ffmpeg-$(FFMPEG_VERSION).tar.xz
 FFMPEG_SITE = http://www.ffmpeg.org/releases
 
 $(DL_DIR)/$(FFMPEG_SOURCE):
-	$(DOWNLOAD) $(FFMPEG_SITE)/$(FFMPEG_SOURCE)
+	$(download) $(FFMPEG_SITE)/$(FFMPEG_SOURCE)
 
 FFMPEG_DEPENDENCIES = openssl freetype rtmpdump libbluray libass libxml2 alsa-lib
 

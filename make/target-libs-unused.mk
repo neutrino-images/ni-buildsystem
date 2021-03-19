@@ -9,7 +9,7 @@ LIBID3TAG_SOURCE = libid3tag-$(LIBID3TAG_VERSION).tar.gz
 LIBID3TAG_SITE = https://sourceforge.net/projects/mad/files/libid3tag/$(LIBID3TAG_VERSION)
 
 $(DL_DIR)/$(LIBID3TAG_SOURCE):
-	$(DOWNLOAD) $(LIBID3TAG_SITE)/$(LIBID3TAG_SOURCE)
+	$(download) $(LIBID3TAG_SITE)/$(LIBID3TAG_SOURCE)
 
 LIBID3TAG_DEPENDENCIES = zlib
 
@@ -38,7 +38,7 @@ FONTCONFIG_SOURCE = fontconfig-$(FONTCONFIG_VERSION).tar.bz2
 FONTCONFIG_SITE = https://www.freedesktop.org/software/fontconfig/release
 
 $(DL_DIR)/$(FONTCONFIG_SOURCE):
-	$(DOWNLOAD) $(FONTCONFIG_SITE)/$(FONTCONFIG_SOURCE)
+	$(download) $(FONTCONFIG_SITE)/$(FONTCONFIG_SOURCE)
 
 FONTCONFIG_DEPENDENCIES = freetype expat
 
@@ -68,7 +68,7 @@ PIXMAN_SOURCE = pixman-$(PIXMAN_VERSION).tar.gz
 PIXMAN_SITE = https://www.cairographics.org/releases
 
 $(DL_DIR)/$(PIXMAN_SOURCE):
-	$(DOWNLOAD) $(PIXMAN_SITE)/$(PIXMAN_SOURCE)
+	$(download) $(PIXMAN_SITE)/$(PIXMAN_SOURCE)
 
 PIXMAN_DEPENDENCIES = zlib libpng
 
@@ -98,7 +98,7 @@ CAIRO_SOURCE = cairo-$(CAIRO_VERSION).tar.xz
 CAIRO_SITE = https://www.cairographics.org/releases
 
 $(DL_DIR)/$(CAIRO_SOURCE):
-	$(DOWNLOAD) $(CAIRO_SITE)/$(CAIRO_SOURCE)
+	$(download) $(CAIRO_SITE)/$(CAIRO_SOURCE)
 
 CAIRO_DEPENDENCIES = fontconfig glib2 libpng pixman zlib
 
@@ -140,7 +140,7 @@ HARFBUZZ_SOURCE = harfbuzz-$(HARFBUZZ_VERSION).tar.bz2
 HARFBUZZ_SITE = https://www.freedesktop.org/software/harfbuzz/release
 
 $(DL_DIR)/$(HARFBUZZ_SOURCE):
-	$(DOWNLOAD) $(HARFBUZZ_SITE)/$(HARFBUZZ_SOURCE)
+	$(download) $(HARFBUZZ_SITE)/$(HARFBUZZ_SOURCE)
 
 HARFBUZZ_DEPENDENCIES = fontconfig glib2 cairo freetype
 

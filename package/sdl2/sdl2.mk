@@ -10,7 +10,7 @@ SDL2_SOURCE = SDL2-$(SDL2_VERSION).tar.gz
 SDL2_SITE = http://www.libsdl.org/release
 
 $(DL_DIR)/$(SDL2_SOURCE):
-	$(DOWNLOAD) $(SDL2_SITE)/$(SDL2_SOURCE)
+	$(download) $(SDL2_SITE)/$(SDL2_SOURCE)
 
 SDL2_DEPENDENCIES = alsa-lib
 

@@ -14,7 +14,7 @@ BUSYBOX_SOURCE = busybox-$(BUSYBOX_VERSION).tar.bz2
 BUSYBOX_SITE = https://busybox.net/downloads
 
 $(DL_DIR)/$(BUSYBOX_SOURCE):
-	$(DOWNLOAD) $(BUSYBOX_SITE)/$(BUSYBOX_SOURCE)
+	$(download) $(BUSYBOX_SITE)/$(BUSYBOX_SOURCE)
 
 BUSYBOX_DEPENDENCIES = libtirpc
 
@@ -170,7 +170,7 @@ BASH_SOURCE = bash-$(BASH_VERSION).tar.gz
 BASH_SITE = $(GNU_MIRROR)/bash
 
 $(DL_DIR)/$(BASH_SOURCE):
-	$(DOWNLOAD) $(BASH_SITE)/$(BASH_SOURCE)
+	$(download) $(BASH_SITE)/$(BASH_SOURCE)
 
 BASH_CONF_ENV += \
 	bash_cv_getcwd_malloc=yes \
@@ -211,7 +211,7 @@ SYSVINIT_SOURCE = sysvinit-$(SYSVINIT_VERSION).tar.xz
 SYSVINIT_SITE = http://download.savannah.nongnu.org/releases/sysvinit
 
 $(DL_DIR)/$(SYSVINIT_SOURCE):
-	$(DOWNLOAD) $(SYSVINIT_SITE)/$(SYSVINIT_SOURCE)
+	$(download) $(SYSVINIT_SITE)/$(SYSVINIT_SOURCE)
 
 ifeq ($(BOXMODEL),$(filter $(BOXMODEL),vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
   define SYSVINIT_INSTALL_RCS
@@ -256,7 +256,7 @@ COREUTILS_SOURCE = coreutils-$(COREUTILS_VERSION).tar.xz
 COREUTILS_SITE = $(GNU_MIRROR)/coreutils
 
 $(DL_DIR)/$(COREUTILS_SOURCE):
-	$(DOWNLOAD) $(COREUTILS_SITE)/$(COREUTILS_SOURCE)
+	$(download) $(COREUTILS_SITE)/$(COREUTILS_SOURCE)
 
 COREUTILS_AUTORECONF = YES
 
@@ -293,7 +293,7 @@ PROCPS_NG_SOURCE = procps-ng-$(PROCPS_NG_VERSION).tar.xz
 PROCPS_NG_SITE = http://sourceforge.net/projects/procps-ng/files/Production
 
 $(DL_DIR)/$(PROCPS_NG_SOURCE):
-	$(DOWNLOAD) $(PROCPS_NG_SITE)/$(PROCPS_NG_SOURCE)
+	$(download) $(PROCPS_NG_SITE)/$(PROCPS_NG_SOURCE)
 
 PROCPS_NG_DEPENDENCIES = ncurses
 
@@ -334,7 +334,7 @@ MTD_UTILS_SOURCE = mtd-utils-$(MTD_UTILS_VERSION).tar.bz2
 MTD_UTILS_SITE = ftp://ftp.infradead.org/pub/mtd-utils
 
 $(DL_DIR)/$(MTD_UTILS_SOURCE):
-	$(DOWNLOAD) $(MTD_UTILS_SITE)/$(MTD_UTILS_SOURCE)
+	$(download) $(MTD_UTILS_SITE)/$(MTD_UTILS_SOURCE)
 
 MTD_UTILS_DEPENDENCIES =
 
@@ -378,7 +378,7 @@ DOSFSTOOLS_SOURCE = dosfstools-$(DOSFSTOOLS_VERSION).tar.xz
 DOSFSTOOLS_SITE = https://github.com/dosfstools/dosfstools/releases/download/v$(DOSFSTOOLS_VERSION)
 
 $(DL_DIR)/$(DOSFSTOOLS_SOURCE):
-	$(DOWNLOAD) $(DOSFSTOOLS_SITE)/$(DOSFSTOOLS_SOURCE)
+	$(download) $(DOSFSTOOLS_SITE)/$(DOSFSTOOLS_SOURCE)
 
 DOSFSTOOLS_CFLAGS = $(TARGET_CFLAGS) -D_GNU_SOURCE -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -fomit-frame-pointer
 
@@ -403,7 +403,7 @@ NTFS_3G_SOURCE = ntfs-3g_ntfsprogs-$(NTFS_3G_VERSION).tgz
 NTFS_3G_SITE = https://tuxera.com/opensource
 
 $(DL_DIR)/$(NTFS_3G_SOURCE):
-	$(DOWNLOAD) $(NTFS_3G_SITE)/$(NTFS_3G_SOURCE)
+	$(download) $(NTFS_3G_SITE)/$(NTFS_3G_SOURCE)
 
 NTFS_3G_DEPENDENCIES = libfuse
 
@@ -432,7 +432,7 @@ FUSE_EXFAT_SOURCE = fuse-exfat-$(FUSE_EXFAT_VERSION).tar.gz
 FUSE_EXFAT_SITE = https://github.com/relan/exfat/releases/download/v$(FUSE_EXFAT_VERSION)
 
 $(DL_DIR)/$(FUSE_EXFAT_SOURCE):
-	$(DOWNLOAD) $(FUSE_EXFAT_SITE)/$(FUSE_EXFAT_SOURCE)
+	$(download) $(FUSE_EXFAT_SITE)/$(FUSE_EXFAT_SOURCE)
 
 FUSE_EXFAT_DEPENDENCIES = libfuse
 
@@ -456,7 +456,7 @@ EXFAT_UTILS_SOURCE = exfat-utils-$(EXFAT_UTILS_VERSION).tar.gz
 EXFAT_UTILS_SITE = https://github.com/relan/exfat/releases/download/v$(EXFAT_UTILS_VERSION)
 
 $(DL_DIR)/$(EXFAT_UTILS_SOURCE):
-	$(DOWNLOAD) $(EXFAT_UTILS_SITE)/$(EXFAT_UTILS_SOURCE)
+	$(download) $(EXFAT_UTILS_SITE)/$(EXFAT_UTILS_SOURCE)
 
 EXFAT_UTILS_DEPENDENCIES = fuse-exfat
 
@@ -480,7 +480,7 @@ XFSPROGS_SOURCE = xfsprogs-$(XFSPROGS_VERSION).tar.xz
 XFSPROGS_SITE = $(KERNEL_MIRROR)/linux/utils/fs/xfs/xfsprogs
 
 $(DL_DIR)/$(XFSPROGS_SOURCE):
-	$(DOWNLOAD) $(XFSPROGS_SITE)/$(XFSPROGS_SOURCE)
+	$(download) $(XFSPROGS_SITE)/$(XFSPROGS_SOURCE)
 
 XFSPROGS_DEPENDENCIES = util-linux
 
@@ -519,7 +519,7 @@ E2FSPROGS_SOURCE = e2fsprogs-$(E2FSPROGS_VERSION).tar.gz
 E2FSPROGS_SITE = https://sourceforge.net/projects/e2fsprogs/files/e2fsprogs/v$(E2FSPROGS_VERSION)
 
 $(DL_DIR)/$(E2FSPROGS_SOURCE):
-	$(DOWNLOAD) $(E2FSPROGS_SITE)/$(E2FSPROGS_SOURCE)
+	$(download) $(E2FSPROGS_SITE)/$(E2FSPROGS_SOURCE)
 
 #E2FSPROGS_DEPENDENCIES = util-linux
 
@@ -582,7 +582,7 @@ HDPARM_SOURCE = hdparm-$(HDPARM_VERSION).tar.gz
 HDPARM_SITE = https://sourceforge.net/projects/hdparm/files/hdparm
 
 $(DL_DIR)/$(HDPARM_SOURCE):
-	$(DOWNLOAD) $(HDPARM_SITE)/$(HDPARM_SOURCE)
+	$(download) $(HDPARM_SITE)/$(HDPARM_SOURCE)
 
 hdparm: $(DL_DIR)/$(HDPARM_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
@@ -603,7 +603,7 @@ F2FS_TOOLS_SOURCE = f2fs-tools-$(F2FS_TOOLS_VERSION).tar.gz
 F2FS_TOOLS_SITE = https://git.kernel.org/pub/scm/linux/kernel/git/jaegeuk/f2fs-tools.git/snapshot
 
 $(DL_DIR)/$(F2FS_TOOLS_SOURCE):
-	$(DOWNLOAD) $(F2FS_TOOLS_SITE)/$(F2FS_TOOLS_SOURCE)
+	$(download) $(F2FS_TOOLS_SITE)/$(F2FS_TOOLS_SOURCE)
 
 F2FS_TOOLS_DEPENDENCIES = util-linux
 
@@ -631,7 +631,7 @@ UTIL_LINUX_SOURCE = util-linux-$(UTIL_LINUX_VERSION).tar.xz
 UTIL_LINUX_SITE = $(KERNEL_MIRROR)/linux/utils/util-linux/v$(basename $(UTIL_LINUX_VERSION))
 
 $(DL_DIR)/$(UTIL_LINUX_SOURCE):
-	$(DOWNLOAD) $(UTIL_LINUX_SITE)/$(UTIL_LINUX_SOURCE)
+	$(download) $(UTIL_LINUX_SITE)/$(UTIL_LINUX_SOURCE)
 
 UTIL_LINUX_DEPENDENCIES = ncurses zlib
 
@@ -688,7 +688,7 @@ OPENVPN_SOURCE = openvpn-$(OPENVPN_VERSION).tar.xz
 OPENVPN_SITE = http://build.openvpn.net/downloads/releases
 
 $(DL_DIR)/$(OPENVPN_SOURCE):
-	$(DOWNLOAD) $(OPENVPN_SITE)/$(OPENVPN_SOURCE)
+	$(download) $(OPENVPN_SITE)/$(OPENVPN_SOURCE)
 
 OPENVPN_DEPENDENCIES = lzo openssl
 
@@ -721,7 +721,7 @@ OPENSSH_SOURCE = openssh-$(OPENSSH_VERSION).tar.gz
 OPENSSH_SITE = https://artfiles.org/openbsd/OpenSSH/portable
 
 $(DL_DIR)/$(OPENSSH_SOURCE):
-	$(DOWNLOAD) $(OPENSSH_SITE)/$(OPENSSH_SOURCE)
+	$(download) $(OPENSSH_SITE)/$(OPENSSH_SOURCE)
 
 OPENSSH_DEPENDENCIES = openssl zlib
 
@@ -763,7 +763,7 @@ TZDATA_SOURCE = tzdata$(TZDATA_VERSION).tar.gz
 TZDATA_SITE = ftp://ftp.iana.org/tz/releases
 
 $(DL_DIR)/$(TZDATA_SOURCE):
-	$(DOWNLOAD) $(TZDATA_SITE)/$(TZDATA_SOURCE)
+	$(download) $(TZDATA_SITE)/$(TZDATA_SOURCE)
 
 TZDATA_DEPENDENCIES = host-zic
 
@@ -806,7 +806,7 @@ IPERF_SOURCE = iperf-$(IPERF_VERSION)-source.tar.gz
 IPERF_SITE = https://iperf.fr/download/source
 
 $(DL_DIR)/$(IPERF_SOURCE):
-	$(DOWNLOAD) $(IPERF_SITE)/$(IPERF_SOURCE)
+	$(download) $(IPERF_SITE)/$(IPERF_SOURCE)
 
 iperf: $(DL_DIR)/$(IPERF_SOURCE) | $(TARGET_DIR)
 	$(call autotools-package)
@@ -819,7 +819,7 @@ PARTED_SOURCE = parted-$(PARTED_VERSION).tar.xz
 PARTED_SITE = $(GNU_MIRROR)/parted
 
 $(DL_DIR)/$(PARTED_SOURCE):
-	$(DOWNLOAD) $(PARTED_SITE)/$(PARTED_SOURCE)
+	$(download) $(PARTED_SITE)/$(PARTED_SOURCE)
 
 PARTED_DEPENDENCIES = util-linux
 
@@ -850,7 +850,7 @@ HD_IDLE_SOURCE = hd-idle-$(HD_IDLE_VERSION).tgz
 HD_IDLE_SITE = https://sourceforge.net/projects/hd-idle/files
 
 $(DL_DIR)/$(HD_IDLE_SOURCE):
-	$(DOWNLOAD) $(HD_IDLE_SITE)/$(HD_IDLE_SOURCE)
+	$(download) $(HD_IDLE_SITE)/$(HD_IDLE_SOURCE)
 
 hd-idle: $(DL_DIR)/$(HD_IDLE_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
@@ -870,7 +870,7 @@ LESS_SOURCE = less-$(LESS_VERSION).tar.gz
 LESS_SITE = $(GNU_MIRROR)/less
 
 $(DL_DIR)/$(LESS_SOURCE):
-	$(DOWNLOAD) $(LESS_SITE)/$(LESS_SOURCE)
+	$(download) $(LESS_SITE)/$(LESS_SOURCE)
 
 LESS_DEPENDENCIES = ncurses
 
@@ -885,7 +885,7 @@ NTP_SOURCE = ntp-$(NTP_VERSION).tar.gz
 NTP_SITE = https://www.eecis.udel.edu/~ntp/ntp_spool/ntp4/ntp-$(basename $(NTP_VERSION))
 
 $(DL_DIR)/$(NTP_SOURCE):
-	$(DOWNLOAD) $(NTP_SITE)/$(NTP_SOURCE)
+	$(download) $(NTP_SITE)/$(NTP_SOURCE)
 
 NTP_DEPENDENCIES = openssl
 
@@ -917,7 +917,7 @@ DJMOUNT_SOURCE = djmount-$(DJMOUNT_VERSION).tar.gz
 DJMOUNT_SITE = https://sourceforge.net/projects/djmount/files/djmount/$(DJMOUNT_VERSION)
 
 $(DL_DIR)/$(DJMOUNT_SOURCE):
-	$(DOWNLOAD) $(DJMOUNT_SITE)/$(DJMOUNT_SOURCE)
+	$(download) $(DJMOUNT_SITE)/$(DJMOUNT_SOURCE)
 
 DJMOUNT_DEPENDENCIES = libfuse
 
@@ -949,7 +949,7 @@ USHARE_SOURCE = uShare_v$(USHARE_VERSION).tar.gz
 USHARE_SITE = https://github.com/GeeXboX/ushare/archive
 
 $(DL_DIR)/$(USHARE_SOURCE):
-	$(DOWNLOAD) $(USHARE_SITE)/$(USHARE_SOURCE)
+	$(download) $(USHARE_SITE)/$(USHARE_SOURCE)
 
 USHARE_DEPENDENCIES = libupnp
 
@@ -985,7 +985,7 @@ SQLITE_SOURCE = sqlite-autoconf-$(SQLITE_VERSION).tar.gz
 SQLITE_SITE = http://www.sqlite.org/2020
 
 $(DL_DIR)/$(SQLITE_SOURCE):
-	$(DOWNLOAD) $(SQLITE_SITE)/$(SQLITE_SOURCE)
+	$(download) $(SQLITE_SITE)/$(SQLITE_SOURCE)
 
 SQLITE_CONF_OPTS = \
 	--bindir=$(REMOVE_bindir)
@@ -1001,7 +1001,7 @@ MINIDLNA_SOURCE = minidlna-$(MINIDLNA_VERSION).tar.gz
 MINIDLNA_SITE = https://sourceforge.net/projects/minidlna/files/minidlna/$(MINIDLNA_VERSION)
 
 $(DL_DIR)/$(MINIDLNA_SOURCE):
-	$(DOWNLOAD) $(MINIDLNA_SITE)/$(MINIDLNA_SOURCE)
+	$(download) $(MINIDLNA_SITE)/$(MINIDLNA_SOURCE)
 
 MINIDLNA_DEPENDENCIES = zlib sqlite libexif libjpeg-turbo libid3tag libogg libvorbis flac ffmpeg
 
@@ -1036,7 +1036,7 @@ SMARTMONTOOLS_SOURCE = smartmontools-$(SMARTMONTOOLS_VERSION).tar.gz
 SMARTMONTOOLS_SITE = https://sourceforge.net/projects/smartmontools/files/smartmontools/$(SMARTMONTOOLS_VERSION)
 
 $(DL_DIR)/$(SMARTMONTOOLS_SOURCE):
-	$(DOWNLOAD) $(SMARTMONTOOLS_SITE)/$(SMARTMONTOOLS_SOURCE)
+	$(download) $(SMARTMONTOOLS_SITE)/$(SMARTMONTOOLS_SOURCE)
 
 smartmontools: $(DL_DIR)/$(SMARTMONTOOLS_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
@@ -1056,7 +1056,7 @@ INADYN_SOURCE = inadyn-$(INADYN_VERSION).tar.xz
 INADYN_SITE = https://github.com/troglobit/inadyn/releases/download/v$(INADYN_VERSION)
 
 $(DL_DIR)/$(INADYN_SOURCE):
-	$(DOWNLOAD) $(INADYN_SITE)/$(INADYN_SOURCE)
+	$(download) $(INADYN_SITE)/$(INADYN_SOURCE)
 
 INADYN_DEPENDENCIES = openssl confuse libite
 
@@ -1088,7 +1088,7 @@ VSFTPD_SOURCE = vsftpd-$(VSFTPD_VERSION).tar.gz
 VSFTPD_SITE = https://security.appspot.com/downloads
 
 $(DL_DIR)/$(VSFTPD_SOURCE):
-	$(DOWNLOAD) $(VSFTPD_SITE)/$(VSFTPD_SOURCE)
+	$(download) $(VSFTPD_SITE)/$(VSFTPD_SOURCE)
 
 VSFTPD_LIBS += -lcrypt $$($(PKG_CONFIG) --libs libssl libcrypto)
 
@@ -1120,7 +1120,7 @@ NANO_SOURCE = nano-$(NANO_VERSION).tar.gz
 NANO_SITE = $(GNU_MIRROR)/nano
 
 $(DL_DIR)/$(NANO_SOURCE):
-	$(DOWNLOAD) $(NANO_SITE)/$(NANO_SOURCE)
+	$(download) $(NANO_SITE)/$(NANO_SOURCE)
 
 NANO_DEPENDENCIES = ncurses
 
@@ -1155,7 +1155,7 @@ MINICOM_SOURCE = minicom-$(MINICOM_VERSION).tar.gz
 MINICOM_SITE = http://fossies.org/linux/misc
 
 $(DL_DIR)/$(MINICOM_SOURCE):
-	$(DOWNLOAD) $(MINICOM_SITE)/$(MINICOM_SOURCE)
+	$(download) $(MINICOM_SITE)/$(MINICOM_SOURCE)
 
 MINICOM_DEPENDENCIES = ncurses
 
@@ -1181,7 +1181,7 @@ AUTOFS_SOURCE = autofs-$(AUTOFS_VERSION).tar.xz
 AUTOFS_SITE = $(KERNEL_MIRROR)/linux/daemons/autofs/v5
 
 $(DL_DIR)/$(AUTOFS_SOURCE):
-	$(DOWNLOAD) $(AUTOFS_SITE)/$(AUTOFS_SOURCE)
+	$(download) $(AUTOFS_SITE)/$(AUTOFS_SOURCE)
 
 # cd package/autofs/patches
 # wget -N https://mirrors.edge.kernel.org/pub/linux/daemons/autofs/v5/patches-5.1.6/patch_order_5.1.5
@@ -1241,7 +1241,7 @@ SAMBA33_SOURCE = samba-$(SAMBA33_VERSION).tar.gz
 SAMBA33_SITE = https://download.samba.org/pub/samba
 
 $(DL_DIR)/$(SAMBA33_SOURCE):
-	$(DOWNLOAD) $(SAMBA33_SITE)/$(SAMBA33_SOURCE)
+	$(download) $(SAMBA33_SITE)/$(SAMBA33_SOURCE)
 
 SAMBA33_DEPENDENCIES = zlib
 
@@ -1313,7 +1313,7 @@ SAMBA36_SOURCE = samba-$(SAMBA36_VERSION).tar.gz
 SAMBA36_SITE = https://download.samba.org/pub/samba/stable
 
 $(DL_DIR)/$(SAMBA36_SOURCE):
-	$(DOWNLOAD) $(SAMBA36_SITE)/$(SAMBA36_SOURCE)
+	$(download) $(SAMBA36_SITE)/$(SAMBA36_SOURCE)
 
 SAMBA36_DEPENDENCIES = zlib
 
@@ -1383,7 +1383,7 @@ DROPBEAR_SOURCE = dropbear-$(DROPBEAR_VERSION).tar.bz2
 DROPBEAR_SITE = http://matt.ucc.asn.au/dropbear/releases
 
 $(DL_DIR)/$(DROPBEAR_SOURCE):
-	$(DOWNLOAD) $(DROPBEAR_SITE)/$(DROPBEAR_SOURCE)
+	$(download) $(DROPBEAR_SITE)/$(DROPBEAR_SOURCE)
 
 DROPBEAR_DEPENDENCIES = zlib
 
@@ -1429,7 +1429,7 @@ SG3_UTILS_SOURCE = sg3_utils-$(SG3_UTILS_VERSION).tar.xz
 SG3_UTILS_SITE = http://sg.danny.cz/sg/p
 
 $(DL_DIR)/$(SG3_UTILS_SOURCE):
-	$(DOWNLOAD) $(SG3_UTILS_SITE)/$(SG3_UTILS_SOURCE)
+	$(download) $(SG3_UTILS_SITE)/$(SG3_UTILS_SOURCE)
 
 SG3_UTILS_CONF_OPTS = \
 	--bindir=$(bindir).$(@F)
@@ -1454,7 +1454,7 @@ FBSHOT_SOURCE = fbshot-$(FBSHOT_VERSION).tar.gz
 FBSHOT_SITE = http://distro.ibiblio.org/amigolinux/download/Utils/fbshot
 
 $(DL_DIR)/$(FBSHOT_SOURCE):
-	$(DOWNLOAD) $(FBSHOT_SITE)/$(FBSHOT_SOURCE)
+	$(download) $(FBSHOT_SITE)/$(FBSHOT_SOURCE)
 
 FBSHOT_DEPENDENCIES = libpng
 
@@ -1528,7 +1528,7 @@ WPA_SUPPLICANT_SOURCE = wpa_supplicant-$(WPA_SUPPLICANT_VERSION).tar.gz
 WPA_SUPPLICANT_SITE = https://w1.fi/releases
 
 $(DL_DIR)/$(WPA_SUPPLICANT_SOURCE):
-	$(DOWNLOAD) $(WPA_SUPPLICANT_SITE)/$(WPA_SUPPLICANT_SOURCE)
+	$(download) $(WPA_SUPPLICANT_SITE)/$(WPA_SUPPLICANT_SOURCE)
 
 WPA_SUPPLICANT_DEPENDENCIES = openssl
 
@@ -1593,7 +1593,7 @@ NFS_UTILS_SOURCE = nfs-utils-$(NFS_UTILS_VERSION).tar.xz
 NFS_UTILS_SITE = $(KERNEL_MIRROR)/linux/utils/nfs-utils/$(NFS_UTILS_VERSION)
 
 $(DL_DIR)/$(NFS_UTILS_SOURCE):
-	$(DOWNLOAD) $(NFS_UTILS_SITE)/$(NFS_UTILS_SOURCE)
+	$(download) $(NFS_UTILS_SITE)/$(NFS_UTILS_SOURCE)
 
 NFS_UTILS_DEPENDENCIES = rpcbind
 
@@ -1637,7 +1637,7 @@ RPCBIND_SOURCE = rpcbind-$(RPCBIND_VERSION).tar.bz2
 RPCBIND_SITE = https://sourceforge.net/projects/rpcbind/files/rpcbind/$(RPCBIND_VERSION)
 
 $(DL_DIR)/$(RPCBIND_SOURCE):
-	$(DOWNLOAD) $(RPCBIND_SITE)/$(RPCBIND_SOURCE)
+	$(download) $(RPCBIND_SITE)/$(RPCBIND_SOURCE)
 
 RPCBIND_DEPENDENCIES = libtirpc
 
@@ -1687,7 +1687,7 @@ GETTEXT_SOURCE = gettext-$(GETTEXT_VERSION).tar.xz
 GETTEXT_SITE = $(GNU_MIRROR)/gettext
 
 $(DL_DIR)/$(GETTEXT_SOURCE):
-	$(DOWNLOAD) $(GETTEXT_SITE)/$(GETTEXT_SOURCE)
+	$(download) $(GETTEXT_SITE)/$(GETTEXT_SOURCE)
 
 GETTEXT_AUTORECONF = YES
 
@@ -1722,7 +1722,7 @@ MC_SOURCE = mc-$(MC_VERSION).tar.xz
 MC_SITE = ftp.midnight-commander.org
 
 $(DL_DIR)/$(MC_SOURCE):
-	$(DOWNLOAD) $(MC_SITE)/$(MC_SOURCE)
+	$(download) $(MC_SITE)/$(MC_SOURCE)
 
 MC_DEPENDENCIES = glib2 ncurses
 
@@ -1756,7 +1756,7 @@ WGET_SOURCE = wget-$(WGET_VERSION).tar.gz
 WGET_SITE = $(GNU_MIRROR)/wget
 
 $(DL_DIR)/$(WGET_SOURCE):
-	$(DOWNLOAD) $(WGET_SITE)/$(WGET_SOURCE)
+	$(download) $(WGET_SITE)/$(WGET_SOURCE)
 
 WGET_DEPENDENCIES = openssl
 
@@ -1898,7 +1898,7 @@ ETHTOOL_SOURCE = ethtool-$(ETHTOOL_VERSION).tar.xz
 ETHTOOL_SITE = $(KERNEL_MIRROR)/software/network/ethtool
 
 $(DL_DIR)/$(ETHTOOL_SOURCE):
-	$(DOWNLOAD) $(ETHTOOL_SITE)/$(ETHTOOL_SOURCE)
+	$(download) $(ETHTOOL_SITE)/$(ETHTOOL_SOURCE)
 
 ETHTOOL_CONF_OPTS = \
 	--libdir=$(TARGET_libdir) \
@@ -1916,7 +1916,7 @@ GPTFDISK_SOURCE = gptfdisk-$(GPTFDISK_VERSION).tar.gz
 GPTFDISK_SITE = https://sourceforge.net/projects/gptfdisk/files/gptfdisk/$(GPTFDISK_VERSION)
 
 $(DL_DIR)/$(GPTFDISK_SOURCE):
-	$(DOWNLOAD) $(GPTFDISK_SITE)/$(GPTFDISK_SOURCE)
+	$(download) $(GPTFDISK_SITE)/$(GPTFDISK_SOURCE)
 
 GPTFDISK_DEPENDENCIES = popt e2fsprogs ncurses
 
@@ -1943,7 +1943,7 @@ RSYNC_SOURCE = rsync-$(RSYNC_VERSION).tar.gz
 RSYNC_SITE = https://download.samba.org/pub/rsync/src/
 
 $(DL_DIR)/$(RSYNC_SOURCE):
-	$(DOWNLOAD) $(RSYNC_SITE)/$(RSYNC_SOURCE)
+	$(download) $(RSYNC_SITE)/$(RSYNC_SOURCE)
 
 RSYNC_DEPENDENCIES = zlib popt
 
@@ -1965,7 +1965,7 @@ FLAC_SOURCE = flac-$(FLAC_VERSION).tar.xz
 FLAC_SITE = http://downloads.xiph.org/releases/flac
 
 $(DL_DIR)/$(FLAC_SOURCE):
-	$(DOWNLOAD) $(FLAC_SITE)/$(FLAC_SOURCE)
+	$(download) $(FLAC_SITE)/$(FLAC_SOURCE)
 
 FLAC_AUTORECONF = YES
 
@@ -1989,7 +1989,7 @@ CA_BUNDLE_SOURCE = cacert.pem
 CA_BUNDLE_SITE = https://curl.se/ca
 
 $(DL_DIR)/$(CA_BUNDLE_SOURCE):
-	$(DOWNLOAD) $(CA_BUNDLE_SITE)/$(CA_BUNDLE_SOURCE)
+	$(download) $(CA_BUNDLE_SITE)/$(CA_BUNDLE_SOURCE)
 
 CA_BUNDLE_CRT = ca-certificates.crt
 CA_BUNDLE_DIR = /etc/ssl/certs

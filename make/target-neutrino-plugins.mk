@@ -220,7 +220,7 @@ LINKS_SOURCE = links-$(LINKS_VERSION).tar.bz2
 LINKS_SITE = http://links.twibright.com/download
 
 $(DL_DIR)/$(LINKS_SOURCE):
-	$(DOWNLOAD) $(LINKS_SITE)/$(LINKS_SOURCE)
+	$(download) $(LINKS_SITE)/$(LINKS_SOURCE)
 
 LINKS_DEPENDENCIES = libpng libjpeg-turbo openssl
 

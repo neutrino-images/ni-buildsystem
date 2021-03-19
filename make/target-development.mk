@@ -9,7 +9,7 @@ VALGRIND_SOURCE = valgrind-$(VALGRIND_VERSION).tar.bz2
 VALGRIND_SITE = ftp://sourceware.org/pub/valgrind
 
 $(DL_DIR)/$(VALGRIND_SOURCE):
-	$(DOWNLOAD) $(VALGRIND_SITE)/$(VALGRIND_SOURCE)
+	$(download) $(VALGRIND_SITE)/$(VALGRIND_SOURCE)
 
 VALGRIND_PATCH  = valgrind-fix-build-$(TARGET_CPU).patch
 
@@ -40,7 +40,7 @@ STRACE_SOURCE = strace-$(STRACE_VERSION).tar.xz
 STRACE_SITE = https://strace.io/files/$(STRACE_VERSION)
 
 $(DL_DIR)/$(STRACE_SOURCE):
-	$(DOWNLOAD) $(STRACE_SITE)/$(STRACE_SOURCE)
+	$(download) $(STRACE_SITE)/$(STRACE_SOURCE)
 
 strace: $(DL_DIR)/$(STRACE_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(STRACE_DIR)
@@ -61,7 +61,7 @@ GDB_SOURCE = gdb-$(GDB_VERSION).tar.xz
 GDB_SITE = https://sourceware.org/pub/gdb/releases
 
 $(DL_DIR)/$(GDB_SOURCE):
-	$(DOWNLOAD) $(GDB_SITE)/$(GDB_SOURCE)
+	$(download) $(GDB_SITE)/$(GDB_SOURCE)
 
 GDB_DEPENDENCIES = zlib ncurses
 

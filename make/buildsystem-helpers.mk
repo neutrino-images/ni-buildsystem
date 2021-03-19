@@ -4,7 +4,7 @@
 # -----------------------------------------------------------------------------
 
 # download archives into download directory
-DOWNLOAD = wget --no-check-certificate -t3 -T60 -c -P $(DL_DIR)
+download = wget --no-check-certificate -t3 -T60 -c -P $(DL_DIR)
 
 # unpack archives into build directory
 UNTAR = tar -C $(BUILD_DIR) -xf $(DL_DIR)

@@ -10,7 +10,7 @@ USBUTILS_SOURCE = usbutils-$(USBUTILS_VERSION).tar.xz
 USBUTILS_SITE = $(KERNEL_MIRROR)/linux/utils/usb/usbutils
 
 $(DL_DIR)/$(USBUTILS_SOURCE):
-	$(DOWNLOAD) $(USBUTILS_SITE)/$(USBUTILS_SOURCE)
+	$(download) $(USBUTILS_SITE)/$(USBUTILS_SOURCE)
 
 USBUTILS_DEPENDENCIES = libusb-compat
 
@@ -38,7 +38,7 @@ BINUTILS_SOURCE = binutils-$(BINUTILS_VERSION).tar.bz2
 BINUTILS_SITE = $(GNU_MIRROR)/binutils
 
 $(DL_DIR)/$(BINUTILS_SOURCE):
-	$(DOWNLOAD) $(BINUTILS_SITE)/$(BINUTILS_SOURCE)
+	$(download) $(BINUTILS_SITE)/$(BINUTILS_SOURCE)
 
 BINUTILS_CONF_OPTS = \
 	--disable-multilib \
@@ -70,7 +70,7 @@ BASE_PASSWD_SOURCE = base-passwd_$(BASE_PASSWD_VERSION).tar.gz
 BASE_PASSWD_SITE = https://launchpad.net/debian/+archive/primary/+files
 
 $(DL_DIR)/$(BASE_PASSWD_SOURCE):
-	$(DOWNLOAD) $(BASE_PASSWD_SITE)/$(BASE_PASSWD_SOURCE)
+	$(download) $(BASE_PASSWD_SITE)/$(BASE_PASSWD_SOURCE)
 
 base-passwd: $(DL_DIR)/$(BASE_PASSWD_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
@@ -93,7 +93,7 @@ SHADOW_SOURCE = shadow-$(SHADOW_VERSION).tar.xz
 SHADOW_SITE = https://github.com/shadow-maint/shadow/releases/download/$(SHADOW_VERSION)
 
 $(DL_DIR)/$(SHADOW_SOURCE):
-	$(DOWNLOAD) $(SHADOW_SITE)/$(SHADOW_SOURCE)
+	$(download) $(SHADOW_SITE)/$(SHADOW_SOURCE)
 
 SHADOW_CONF_OPTS = \
 	--prefix=$(base_prefix) \
@@ -119,7 +119,7 @@ BZIP2_SOURCE = bzip2-$(BZIP2_VERSION).tar.gz
 BZIP2_SITE = https://sourceware.org/pub/bzip2
 
 $(DL_DIR)/$(BZIP2_SOURCE):
-	$(DOWNLOAD) $(BZIP2_SITE)/$(BZIP2_SOURCE)
+	$(download) $(BZIP2_SITE)/$(BZIP2_SOURCE)
 
 bzip2: $(DL_DIR)/$(BZIP2_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
@@ -168,7 +168,7 @@ IOZONE_SOURCE = iozone$(IOZONE_VERSION).tar
 IOZONE_SITE = http://www.iozone.org/src/current
 
 $(DL_DIR)/$(IOZONE_SOURCE):
-	$(DOWNLOAD) $(IOZONE_SITE)/$(IOZONE_SOURCE)
+	$(download) $(IOZONE_SITE)/$(IOZONE_SOURCE)
 
 iozone: $(DL_DIR)/$(IOZONE_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
@@ -190,7 +190,7 @@ READLINE_SOURCE = readline-$(READLINE_VERSION).tar.gz
 READLINE_SITE = $(GNU_MIRROR)/readline
 
 $(DL_DIR)/$(READLINE_SOURCE):
-	$(DOWNLOAD) $(READLINE_SITE)/$(READLINE_SOURCE)
+	$(download) $(READLINE_SITE)/$(READLINE_SOURCE)
 
 READLINE_CONF_OPTS = \
 	--datarootdir=$(REMOVE_datarootdir)
@@ -213,7 +213,7 @@ LIBZEN_SOURCE = libzen_$(LIBZEN_VERSION).tar.bz2
 LIBZEN_SITE = https://mediaarea.net/download/source/libzen/$(LIBZEN_VERSION)
 
 $(DL_DIR)/$(LIBZEN_SOURCE):
-	$(DOWNLOAD) $(LIBZEN_SITE)/$(LIBZEN_SOURCE)
+	$(download) $(LIBZEN_SITE)/$(LIBZEN_SOURCE)
 
 LIBZEN_DEPENDENCIES = zlib
 
@@ -238,7 +238,7 @@ LIBMEDIAINFO_SOURCE = libmediainfo_$(LIBMEDIAINFO_VERSION).tar.bz2
 LIBMEDIAINFO_SITE = https://mediaarea.net/download/source/libmediainfo/$(LIBMEDIAINFO_VERSION)
 
 $(DL_DIR)/$(LIBMEDIAINFO_SOURCE):
-	$(DOWNLOAD) $(LIBMEDIAINFO_SITE)/$(LIBMEDIAINFO_SOURCE)
+	$(download) $(LIBMEDIAINFO_SITE)/$(LIBMEDIAINFO_SOURCE)
 
 LIBMEDIAINFO_DEPENDENCIES = libzen
 
@@ -263,7 +263,7 @@ MEDIAINFO_SOURCE = mediainfo_$(MEDIAINFO_VERSION).tar.bz2
 MEDIAINFO_SITE = https://mediaarea.net/download/source/mediainfo/$(MEDIAINFO_VERSION)
 
 $(DL_DIR)/$(MEDIAINFO_SOURCE):
-	$(DOWNLOAD) $(MEDIAINFO_SITE)/$(MEDIAINFO_SOURCE)
+	$(download) $(MEDIAINFO_SITE)/$(MEDIAINFO_SOURCE)
 
 MEDIAINFO_DEPENDENCIES = libmediainfo
 

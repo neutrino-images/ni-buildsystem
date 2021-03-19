@@ -26,7 +26,7 @@ GCC_LINARO_SOURCE = gcc-linaro-$(GCC_LINARO_VERSION).tar.xz
 GCC_LINARO_SITE = https://releases.linaro.org/components/toolchain/gcc-linaro/$(GCC_LINARO_VERSION)
 
 $(DL_DIR)/$(GCC_LINARO_SOURCE):
-	$(DOWNLOAD) $(GCC_LINARO_SITE)/$(GCC_LINARO_SOURCE)
+	$(download) $(GCC_LINARO_SITE)/$(GCC_LINARO_SOURCE)
 
 CROSSTOOL_NG_DEPS += $(DL_DIR)/$(GCC_LINARO_SOURCE)
 
