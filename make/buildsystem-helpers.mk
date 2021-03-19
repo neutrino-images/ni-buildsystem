@@ -6,6 +6,53 @@
 # download archives into download directory
 download = wget --no-check-certificate -t3 -T60 -c -P $(DL_DIR)
 
+WGET_DOWNLOAD = wget --no-check-certificate -t3 -T60 -c -P
+
+define DOWNLOAD
+	$(Q)( \
+	if [ "$($(PKG)_VER)" == "git" ]; then \
+	  $(call MESSAGE,"Downloading") ; \
+	  $(GET-GIT-SOURCE) $($(PKG)_SITE)/$($(PKG)_SOURCE) $(DL_DIR)/$($(PKG)_SOURCE); \
+	else \
+	  if [ ! -f $(DL_DIR)/$($(PKG)_SOURCE) ]; then \
+	    $(call MESSAGE,"Downloading") ; \
+	    $(WGET_DOWNLOAD) $(DL_DIR) $($(PKG)_SITE)/$(1); \
+	  fi; \
+	fi; \
+	)
+endef
+
+# -----------------------------------------------------------------------------
+
+# unpack archives into build directory
+define EXTRACT
+	@$(call MESSAGE,"Extracting")
+	$(Q)( \
+	case $($(PKG)_SOURCE) in \
+	  *.tar | *.tar.bz2 | *.tbz | *.tar.gz | *.tgz | *.tar.xz | *.txz) \
+	    tar -xf ${DL_DIR}/$($(PKG)_SOURCE) -C ${1}; \
+	    ;; \
+	  *.zip) \
+	    unzip -o -q ${DL_DIR}/$($(PKG)_SOURCE) -d ${1}; \
+	    ;; \
+	  *.git) \
+	    cp -a -t ${1} $(DL_DIR)/$($(PKG)_SOURCE); \
+	    if test -z $($(PKG)_CHECKOUT); then \
+	      $(call MESSAGE,"use original head"); \
+	    else \
+	      $(call MESSAGE,"git checkout $($(PKG)_CHECKOUT)"); \
+	      $(CD) ${1}/$($(PKG)_DIR); git checkout -q $($(PKG)_CHECKOUT); \
+	    fi; \
+	    ;; \
+	  *) \
+	    $(call MESSAGE,"Cannot extract $($(PKG)_SOURCE)"); \
+	    false ;; \
+	esac \
+	)
+endef
+
+# -----------------------------------------------------------------------------
+
 # unpack archives into build directory
 UNTAR = tar -C $(BUILD_DIR) -xf $(DL_DIR)
 UNZIP = unzip -d $(BUILD_DIR) -o $(DL_DIR)
