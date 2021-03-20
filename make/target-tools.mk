@@ -164,47 +164,6 @@ busybox: $(BUSYBOX_DEPENDENCIES) $(DL_DIR)/$(BUSYBOX_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-BASH_VERSION = 5.0
-BASH_DIR = bash-$(BASH_VERSION)
-BASH_SOURCE = bash-$(BASH_VERSION).tar.gz
-BASH_SITE = $(GNU_MIRROR)/bash
-
-$(DL_DIR)/$(BASH_SOURCE):
-	$(download) $(BASH_SITE)/$(BASH_SOURCE)
-
-BASH_CONF_ENV += \
-	bash_cv_getcwd_malloc=yes \
-	bash_cv_job_control_missing=present \
-	bash_cv_sys_named_pipes=present \
-	bash_cv_func_sigsetjmp=present \
-	bash_cv_printf_a_format=yes
-
-BASH_CONF_OPTS = \
-	--bindir=$(base_bindir) \
-	--datarootdir=$(REMOVE_datarootdir) \
-	--without-bash-malloc
-
-define BASH_ADD_TO_SHELLS
-	grep -qsE '^/bin/bash$$' $(TARGET_sysconfdir)/shells \
-		|| echo "/bin/bash" >> $(TARGET_sysconfdir)/shells
-endef
-
-bash: $(DL_DIR)/$(BASH_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHES); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	-rm $(addprefix $(TARGET_libdir)/bash/, loadables.h Makefile.inc)
-	-rm -f $(addprefix $(TARGET_base_bindir)/, bashbug)
-	$(BASH_ADD_TO_SHELLS)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
 SYSVINIT_VERSION = 2.98
 SYSVINIT_DIR = sysvinit-$(SYSVINIT_VERSION)
 SYSVINIT_SOURCE = sysvinit-$(SYSVINIT_VERSION).tar.xz
@@ -583,41 +542,6 @@ ushare: $(USHARE_DEPENDENCIES) $(DL_DIR)/$(USHARE_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-MINIDLNA_VERSION = 1.3.0
-MINIDLNA_DIR = minidlna-$(MINIDLNA_VERSION)
-MINIDLNA_SOURCE = minidlna-$(MINIDLNA_VERSION).tar.gz
-MINIDLNA_SITE = https://sourceforge.net/projects/minidlna/files/minidlna/$(MINIDLNA_VERSION)
-
-$(DL_DIR)/$(MINIDLNA_SOURCE):
-	$(download) $(MINIDLNA_SITE)/$(MINIDLNA_SOURCE)
-
-MINIDLNA_DEPENDENCIES = zlib sqlite libexif libjpeg-turbo libid3tag libogg libvorbis flac ffmpeg
-
-MINIDLNA_AUTORECONF = YES
-
-MINIDLNA_CONF_OPTS = \
-	--localedir=$(REMOVE_localedir) \
-	--with-log-path=/tmp/minidlna \
-	--disable-static
-
-minidlna: $(MINIDLNA_DEPENDENCIES) $(DL_DIR)/$(MINIDLNA_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(INSTALL_DATA) -D $(PKG_BUILD_DIR)/minidlna.conf $(TARGET_sysconfdir)/minidlna.conf
-	$(SED) 's|^media_dir=.*|media_dir=A,/media/sda1/music\nmedia_dir=V,/media/sda1/movies\nmedia_dir=P,/media/sda1/pictures|' $(TARGET_sysconfdir)/minidlna.conf
-	$(SED) 's|^#user=.*|user=root|' $(TARGET_sysconfdir)/minidlna.conf
-	$(SED) 's|^#friendly_name=.*|friendly_name=$(BOXTYPE)-$(BOXMODEL):ReadyMedia|' $(TARGET_sysconfdir)/minidlna.conf
-	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/minidlnad.init $(TARGET_sysconfdir)/init.d/minidlnad
-	$(UPDATE-RC.D) minidlnad defaults 75 25
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
 SMARTMONTOOLS_VERSION = 7.1
 SMARTMONTOOLS_DIR = smartmontools-$(SMARTMONTOOLS_VERSION)
 SMARTMONTOOLS_SOURCE = smartmontools-$(SMARTMONTOOLS_VERSION).tar.gz
@@ -634,38 +558,6 @@ smartmontools: $(DL_DIR)/$(SMARTMONTOOLS_SOURCE) | $(TARGET_DIR)
 		$(MAKE); \
 		$(INSTALL_EXEC) -D smartctl $(TARGET_sbindir)/smartctl
 	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
-INADYN_VERSION = 2.6
-INADYN_DIR = inadyn-$(INADYN_VERSION)
-INADYN_SOURCE = inadyn-$(INADYN_VERSION).tar.xz
-INADYN_SITE = https://github.com/troglobit/inadyn/releases/download/v$(INADYN_VERSION)
-
-$(DL_DIR)/$(INADYN_SOURCE):
-	$(download) $(INADYN_SITE)/$(INADYN_SOURCE)
-
-INADYN_DEPENDENCIES = openssl confuse libite
-
-INADYN_AUTORECONF = YES
-
-INADYN_CONF_OPTS = \
-	--docdir=$(REMOVE_docdir) \
-	--enable-openssl
-
-inadyn: $(INADYN_DEPENDENCIES) $(DL_DIR)/$(INADYN_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(INADYN_DIR)
-	$(UNTAR)/$(INADYN_SOURCE)
-	$(CHDIR)/$(INADYN_DIR); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(INSTALL_DATA) -D $(PKG_FILES_DIR)/inadyn.conf $(TARGET_localstatedir)/etc/inadyn.conf
-	ln -sf /var/etc/inadyn.conf $(TARGET_sysconfdir)/inadyn.conf
-	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/inadyn.init $(TARGET_sysconfdir)/init.d/inadyn
-	$(UPDATE-RC.D) inadyn defaults 75 25
-	$(REMOVE)/$(INADYN_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -1223,52 +1115,6 @@ ofgwrite: $(SOURCE_DIR)/$(NI_OFGWRITE) | $(TARGET_DIR)
 	$(INSTALL_EXEC) $(BUILD_DIR)/$(NI_OFGWRITE)/ofgwrite $(TARGET_bindir)
 	$(SED) 's|prefix=.*|prefix=$(prefix)|' $(TARGET_bindir)/ofgwrite
 	$(REMOVE)/$(NI_OFGWRITE)
-	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
-AIO_GRAB_VERSION = git
-AIO_GRAB_DIR = aio-grab.$(AIO_GRAB_VERSION)
-AIO_GRAB_SOURCE = aio-grab.$(AIO_GRAB_VERSION)
-AIO_GRAB_SITE = https://github.com/oe-alliance
-
-AIO_GRAB_DEPENDENCIES = zlib libpng libjpeg-turbo
-
-AIO_GRAB_AUTORECONF = YES
-
-AIO_GRAB_CONF_OPTS = \
-	--enable-silent-rules
-
-aio-grab: $(AIO_GRAB_DEPENDENCIES) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(GET_GIT_SOURCE) $(PKG_SITE)/$(PKG_SOURCE) $(DL_DIR)/$(PKG_SOURCE)
-	$(CPDIR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
-DVBSNOOP_VERSION = git
-DVBSNOOP_DIR = dvbsnoop.$(DVBSNOOP_VERSION)
-DVBSNOOP_SOURCE = dvbsnoop.$(DVBSNOOP_VERSION)
-DVBSNOOP_SITE = https://github.com/Duckbox-Developers
-
-DVBSNOOP_CONF-OPTS = \
-	--enable-silent-rules
-
-dvbsnoop: | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(GET_GIT_SOURCE) $(PKG_SITE)/$(PKG_SOURCE) $(DL_DIR)/$(PKG_SOURCE)
-	$(CPDIR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------

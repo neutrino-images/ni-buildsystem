@@ -33,27 +33,6 @@ zlib: $(DL_DIR)/$(ZLIB_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-LIBDVBCSA_VERSION = git
-LIBDVBCSA_DIR = libdvbcsa.$(LIBDVBCSA_VERSION)
-LIBDVBCSA_SOURCE = libdvbcsa.$(LIBDVBCSA_VERSION)
-LIBDVBCSA_SITE = https://code.videolan.org/videolan
-
-LIBDVBCSA_AUTORECONF = YES
-
-libdvbcsa: | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(GET_GIT_SOURCE) $(PKG_SITE)/$(PKG_SOURCE) $(DL_DIR)/$(PKG_SOURCE)
-	$(CPDIR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
 GIFLIB_VERSION = 5.2.1
 GIFLIB_DIR = giflib-$(GIFLIB_VERSION)
 GIFLIB_SOURCE = giflib-$(GIFLIB_VERSION).tar.gz
