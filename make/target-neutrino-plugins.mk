@@ -48,7 +48,6 @@ NEUTRINO_PLUGINS_CONF_OPTS = \
 	--prefix=$(prefix) \
 	--sysconfdir=$(sysconfdir) \
 	--enable-maintainer-mode \
-	--enable-silent-rules \
 	\
 	--with-neutrino-source=$(SOURCE_DIR)/$(NI_NEUTRINO) \
 	--with-neutrino-build=$(NEUTRINO_BUILD_DIR) \

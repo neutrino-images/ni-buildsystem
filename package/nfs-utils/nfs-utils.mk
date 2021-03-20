@@ -18,7 +18,6 @@ NFS_UTILS_CONF_ENV = \
 
 NFS_UTILS_CONF_OPTS = \
 	--docdir=$(REMOVE_docdir) \
-	--enable-maintainer-mode \
 	$(if $(filter $(BOXSERIES),hd1),--disable-ipv6,--enable-ipv6) \
 	--disable-nfsv4 \
 	--disable-nfsv41 \

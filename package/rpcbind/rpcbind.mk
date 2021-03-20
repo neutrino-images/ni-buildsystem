@@ -14,7 +14,6 @@ RPCBIND_DEPENDENCIES = libtirpc
 RPCBIND_AUTORECONF = YES
 
 RPCBIND_CONF_OPTS = \
-	--enable-silent-rules \
 	--with-rpcuser=root \
 	--with-systemdsystemunitdir=no
 

@@ -15,8 +15,6 @@ LIBGCRYPT_CONFIG_SCRIPTS = libgcrypt-config
 
 LIBGCRYPT_CONF_OPTS = \
 	--datarootdir=$(REMOVE_datarootdir) \
-	--enable-maintainer-mode \
-	--enable-silent-rules \
 	--enable-shared \
 	--disable-static \
 	--disable-tests

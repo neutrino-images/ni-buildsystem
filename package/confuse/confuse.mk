@@ -11,7 +11,6 @@ CONFUSE_SITE = https://github.com/martinh/libconfuse/releases/download/v$(CONFUS
 
 CONFUSE_CONF_OPTS = \
 	--docdir=$(REMOVE_docdir) \
-	--enable-silent-rules \
 	--enable-static \
 	--disable-shared
 

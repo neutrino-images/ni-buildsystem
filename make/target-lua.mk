@@ -148,8 +148,7 @@ LUAPOSIX_CONF_OPTS = \
 	--libdir=$(TARGET_libdir)/lua/$(LUA_ABIVERSION) \
 	--datadir=$(TARGET_datadir)/lua/$(LUA_ABIVERSION) \
 	--mandir=$(TARGET_DIR)$(REMOVE_mandir) \
-	--docdir=$(TARGET_DIR)$(REMOVE_docdir) \
-	--enable-silent-rules
+	--docdir=$(TARGET_DIR)$(REMOVE_docdir)
 
 GNULIB_VERSION = 20140202
 GNULIB_SOURCE = gnulib-$(GNULIB_VERSION)-stable.tar.gz

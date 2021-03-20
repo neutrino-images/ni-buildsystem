@@ -96,7 +96,6 @@ NEUTRINO_CONF_OPTS = \
 	--target=$(TARGET) \
 	--prefix=$(prefix) \
 	--enable-maintainer-mode \
-	--enable-silent-rules \
 	\
 	--enable-freesatepg \
 	--enable-fribidi \
@@ -211,7 +210,6 @@ LIBSTB_HAL_CONF_OPTS = \
 	--target=$(TARGET) \
 	--prefix=$(prefix) \
 	--enable-maintainer-mode \
-	--enable-silent-rules \
 	--enable-shared=no \
 	\
 	--with-target=cdk \

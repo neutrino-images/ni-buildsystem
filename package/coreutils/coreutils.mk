@@ -19,7 +19,6 @@ COREUTILS_CONF_OPTS = \
 	--bindir=$(base_bindir).$(@F) \
 	--libexecdir=$(REMOVE_libexecdir) \
 	--datarootdir=$(REMOVE_datarootdir) \
-	--enable-silent-rules \
 	--disable-xattr \
 	--disable-libcap \
 	--disable-acl \

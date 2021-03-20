@@ -16,8 +16,7 @@ LIBFUSE_CONF_OPTS = \
 	--disable-mtab \
 	--with-gnu-ld \
 	--enable-util \
-	--enable-lib \
-	--enable-silent-rules
+	--enable-lib
 
 define LIBFUSE_TARGET_CLEANUP
 	-rm -r $(TARGET_sysconfdir)/udev

@@ -12,8 +12,7 @@ LIBTIRPC_SITE = https://sourceforge.net/projects/libtirpc/files/libtirpc/$(LIBTI
 LIBTIRPC_AUTORECONF = YES
 
 LIBTIRPC_CONF_OPTS = \
-	--disable-gssapi \
-	--enable-silent-rules
+	--disable-gssapi
 
 ifeq ($(BOXSERIES),hd1)
   define LIBTIRPC_DISABLE_IPV6

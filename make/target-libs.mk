@@ -333,7 +333,6 @@ LIBGPG_ERROR_CONFIG_SCRIPTS = gpg-error-config
 
 LIBGPG_ERROR_CONF_OPTS = \
 	--datarootdir=$(REMOVE_datarootdir) \
-	--enable-maintainer-mode \
 	--enable-shared \
 	--disable-doc \
 	--disable-languages \
@@ -370,8 +369,6 @@ $(DL_DIR)/$(LIBAACS_SOURCE):
 LIBAACS_DEPENDENCIES = libgcrypt
 
 LIBAACS_CONF_OPTS = \
-	--enable-maintainer-mode \
-	--enable-silent-rules \
 	--enable-shared \
 	--disable-static
 
@@ -402,8 +399,6 @@ $(DL_DIR)/$(LIBBDPLUS_SOURCE):
 LIBBDPLUS_DEPENDENCIES = libaacs
 
 LIBBDPLUS_CONF_OPTS = \
-	--enable-maintainer-mode \
-	--enable-silent-rules \
 	--enable-shared \
 	--disable-static
 
