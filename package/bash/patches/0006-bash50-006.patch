@@ -1,3 +1,7 @@
+From https://ftp.gnu.org/gnu/bash/bash-5.0-patches/bash50-006
+
+Signed-off-by: Pascal de Bruijn <p.debruijn@unilogic.nl>
+
 			     BASH PATCH REPORT
 			     =================
 
@@ -16,7 +20,7 @@ also defining SYSLOG_SHOPT.
 Patch (apply with `patch -p0'):
 
 *** ../bash-5.0-patched/builtins/shopt.def	2018-10-05 14:49:02.000000000 -0400
---- builtins/shopt.def	2019-01-23 09:55:22.000000000 -0500
+--- b/builtins/shopt.def	2019-01-23 09:55:22.000000000 -0500
 ***************
 *** 123,127 ****
   #endif
@@ -31,7 +35,7 @@ Patch (apply with `patch -p0'):
   extern int syslog_history;
   #endif
 *** ../bash-5.0/patchlevel.h	2016-06-22 14:51:03.000000000 -0400
---- patchlevel.h	2016-10-01 11:01:28.000000000 -0400
+--- b/patchlevel.h	2016-10-01 11:01:28.000000000 -0400
 ***************
 *** 26,30 ****
      looks for to find the patch level (for the sccs version string). */

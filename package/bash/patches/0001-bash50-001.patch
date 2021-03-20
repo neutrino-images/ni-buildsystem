@@ -1,3 +1,7 @@
+From https://ftp.gnu.org/gnu/bash/bash-5.0-patches/bash50-001
+
+Signed-off-by: Pascal de Bruijn <p.debruijn@unilogic.nl>
+
 			     BASH PATCH REPORT
 			     =================
 
@@ -17,7 +21,7 @@ pattern preceding a slash).
 Patch (apply with `patch -p0'):
 
 *** ../bash-5.0/bashline.c	2018-11-27 13:20:16.000000000 -0500
---- bashline.c	2019-01-16 16:06:03.000000000 -0500
+--- b/bashline.c	2019-01-16 16:06:03.000000000 -0500
 ***************
 *** 232,235 ****
 --- 232,236 ----
@@ -128,7 +132,7 @@ Patch (apply with `patch -p0'):
       rl_explicit_arg = 1;	/* XXX - force glob_complete_word to append `*' */
     FREE (t);
 *** ../bash-5.0/lib/glob/glob_loop.c	2018-12-31 13:35:15.000000000 -0500
---- lib/glob/glob_loop.c	2019-01-09 09:44:36.000000000 -0500
+--- b/lib/glob/glob_loop.c	2019-01-09 09:44:36.000000000 -0500
 ***************
 *** 55,59 ****
   
@@ -150,7 +154,7 @@ Patch (apply with `patch -p0'):
   
 --- 60,63 ----
 *** ../bash-5.0/patchlevel.h	2016-06-22 14:51:03.000000000 -0400
---- patchlevel.h	2016-10-01 11:01:28.000000000 -0400
+--- b/patchlevel.h	2016-10-01 11:01:28.000000000 -0400
 ***************
 *** 26,30 ****
      looks for to find the patch level (for the sccs version string). */

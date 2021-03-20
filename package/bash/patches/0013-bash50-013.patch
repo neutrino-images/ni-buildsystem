@@ -1,3 +1,7 @@
+From https://ftp.gnu.org/gnu/bash/bash-5.0-patches/bash50-013
+
+Signed-off-by: Fabrice Fontaine <fontaine.fabrice@gmail.com>
+
 			     BASH PATCH REPORT
 			     =================
 
@@ -16,7 +20,7 @@ by linefeeds.
 Patch (apply with `patch -p0'):
 
 *** ../bash-5.0-patched/lib/readline/histfile.c	2018-06-11 09:14:52.000000000 -0400
---- lib/readline/histfile.c	2019-05-16 15:55:57.000000000 -0400
+--- b/lib/readline/histfile.c	2019-05-16 15:55:57.000000000 -0400
 ***************
 *** 370,376 ****
   
@@ -57,7 +61,7 @@ Patch (apply with `patch -p0'):
   
 
 *** ../bash-5.0/patchlevel.h	2016-06-22 14:51:03.000000000 -0400
---- patchlevel.h	2016-10-01 11:01:28.000000000 -0400
+--- b/patchlevel.h	2016-10-01 11:01:28.000000000 -0400
 ***************
 *** 26,30 ****
      looks for to find the patch level (for the sccs version string). */

@@ -1,3 +1,7 @@
+From https://ftp.gnu.org/gnu/bash/bash-5.0-patches/bash50-009
+
+Signed-off-by: Pascal de Bruijn <p.debruijn@unilogic.nl>
+
 			     BASH PATCH REPORT
 			     =================
 
@@ -16,7 +20,7 @@ the history file when it encounters a zero-length file.
 Patch (apply with `patch -p0'):
 
 *** ../bash-5.0-patched/lib/readline/histfile.c	2018-06-11 09:14:52.000000000 -0400
---- lib/readline/histfile.c	2019-05-16 15:55:57.000000000 -0400
+--- b/lib/readline/histfile.c	2019-05-16 15:55:57.000000000 -0400
 ***************
 *** 306,309 ****
 --- 312,316 ----
@@ -26,7 +30,7 @@ Patch (apply with `patch -p0'):
         return 0;	/* don't waste time if we don't have to */
       }
 *** ../bash-5.0/patchlevel.h	2016-06-22 14:51:03.000000000 -0400
---- patchlevel.h	2016-10-01 11:01:28.000000000 -0400
+--- b/patchlevel.h	2016-10-01 11:01:28.000000000 -0400
 ***************
 *** 26,30 ****
      looks for to find the patch level (for the sccs version string). */

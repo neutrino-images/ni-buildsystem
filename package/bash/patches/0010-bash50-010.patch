@@ -1,3 +1,7 @@
+From https://ftp.gnu.org/gnu/bash/bash-5.0-patches/bash50-010
+
+Signed-off-by: Pascal de Bruijn <p.debruijn@unilogic.nl>
+
 			     BASH PATCH REPORT
 			     =================
 
@@ -46,7 +50,7 @@ local variables. It
 Patch (apply with `patch -p0'):
 
 *** ../bash-5.0-patched/variables.c	2018-12-18 11:07:21.000000000 -0500
---- variables.c	2019-08-22 10:53:44.000000000 -0400
+--- b/variables.c	2019-08-22 10:53:44.000000000 -0400
 ***************
 *** 4461,4467 ****
   
@@ -137,7 +141,7 @@ Patch (apply with `patch -p0'):
     tempvar_list[tvlist_ind] = 0;
   
 *** ../bash-5.0-patched/tests/varenv.right	2018-12-17 15:39:48.000000000 -0500
---- tests/varenv.right	2019-08-22 16:05:25.000000000 -0400
+--- b/tests/varenv.right	2019-08-22 16:05:25.000000000 -0400
 ***************
 *** 147,153 ****
   outside: declare -- var="one"
@@ -156,7 +160,7 @@ Patch (apply with `patch -p0'):
   foo=<unset> environment foo=
   foo=foo environment foo=foo
 *** ../bash-5.0/patchlevel.h	2016-06-22 14:51:03.000000000 -0400
---- patchlevel.h	2016-10-01 11:01:28.000000000 -0400
+--- b/patchlevel.h	2016-10-01 11:01:28.000000000 -0400
 ***************
 *** 26,30 ****
      looks for to find the patch level (for the sccs version string). */

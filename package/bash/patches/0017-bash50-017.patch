@@ -1,3 +1,7 @@
+From https://ftp.gnu.org/gnu/bash/bash-5.0-patches/bash55-017
+
+Signed-off-by: Peter Korsgaard <peter@korsgaard.com>
+
 			     BASH PATCH REPORT
 			     =================
 
@@ -16,8 +20,8 @@ bash50-016 attempted to solve.
 
 Patch (apply with `patch -p0'):
 
-*** ../bash-5.0-patched/subst.c	2019-08-29 11:16:49.000000000 -0400
---- subst.c	2020-04-02 16:24:19.000000000 -0400
+*** bash-5.0-patched/subst.c	2019-08-29 11:16:49.000000000 -0400
+--- b/subst.c	2020-04-02 16:24:19.000000000 -0400
 ***************
 *** 5337,5341 ****
   }
@@ -25,7 +29,7 @@ Patch (apply with `patch -p0'):
 ! char *
   copy_fifo_list (sizep)
        int *sizep;
---- 5337,5341 ----
+--- b/5337,5341 ----
   }
   
 ! void *
@@ -38,7 +42,7 @@ Patch (apply with `patch -p0'):
 !   return (char *)NULL;
   }
   
---- 5343,5347 ----
+--- b/5343,5347 ----
     if (sizep)
       *sizep = 0;
 !   return (void *)NULL;
@@ -52,7 +56,7 @@ Patch (apply with `patch -p0'):
 ! 	    fifo_list[j].proc = fifo_list[i].proc;
   	    j++;
   	  }
---- 5409,5419 ----
+--- b/5409,5419 ----
   	if (fifo_list[i].file)
   	  {
 ! 	    if (i != j)
@@ -74,7 +78,7 @@ Patch (apply with `patch -p0'):
     int i;
   
     if (list == 0)
---- 5431,5439 ----
+--- b/5431,5439 ----
   void
   close_new_fifos (list, lsize)
 !      void *list;
@@ -92,7 +96,7 @@ Patch (apply with `patch -p0'):
 !     if (list[i] == 0 && i < fifo_list_size && fifo_list[i].proc != -1)
         unlink_fifo (i);
   
---- 5443,5448 ----
+--- b/5443,5448 ----
       }
   
 !   for (plist = (char *)list, i = 0; i < lsize; i++)
@@ -110,7 +114,7 @@ Patch (apply with `patch -p0'):
 !   char *ret;
   
     if (nfds == 0 || totfds == 0)
---- 5566,5574 ----
+--- b/5566,5574 ----
   }
   
 ! void *
@@ -132,7 +136,7 @@ Patch (apply with `patch -p0'):
 !   ret = (char *)xmalloc (totfds * sizeof (pid_t));
     return (memcpy (ret, dev_fd_list, totfds * sizeof (pid_t)));
   }
---- 5576,5585 ----
+--- b/5576,5585 ----
         if (sizep)
   	*sizep = 0;
 !       return (void *)NULL;
@@ -153,7 +157,7 @@ Patch (apply with `patch -p0'):
     int i;
   
     if (list == 0)
---- 5654,5662 ----
+--- b/5654,5662 ----
   void
   close_new_fifos (list, lsize)
 !      void *list;
@@ -171,15 +175,15 @@ Patch (apply with `patch -p0'):
 !     if (list[i] == 0 && i < totfds && dev_fd_list[i])
         unlink_fifo (i);
   
---- 5666,5671 ----
+--- b/5666,5671 ----
       }
   
 !   for (plist = (pid_t *)list, i = 0; i < lsize; i++)
 !     if (plist[i] == 0 && i < totfds && dev_fd_list[i])
         unlink_fifo (i);
   
-*** ../bash-5.0-patched/subst.h	2018-10-21 18:46:09.000000000 -0400
---- subst.h	2020-04-02 16:29:28.000000000 -0400
+*** bash-5.0-patched/subst.h	2018-10-21 18:46:09.000000000 -0400
+--- b/subst.h	2020-04-02 16:29:28.000000000 -0400
 ***************
 *** 274,280 ****
   extern void unlink_fifo __P((int));
@@ -189,15 +193,15 @@ Patch (apply with `patch -p0'):
 ! extern void close_new_fifos __P((char *, int));
   
   extern void clear_fifo_list __P((void));
---- 274,279 ----
+--- b/274,279 ----
   extern void unlink_fifo __P((int));
   
 ! extern void *copy_fifo_list __P((int *));
 ! extern void close_new_fifos __P((void *, int));
   
   extern void clear_fifo_list __P((void));
-*** ../bash-5.0-patched/execute_cmd.c	2020-02-06 20:16:48.000000000 -0500
---- execute_cmd.c	2020-04-02 17:00:10.000000000 -0400
+*** bash-5.0-patched/execute_cmd.c	2020-02-06 20:16:48.000000000 -0500
+--- b/execute_cmd.c	2020-04-02 17:00:10.000000000 -0400
 ***************
 *** 565,569 ****
   #if defined (PROCESS_SUBSTITUTION)
@@ -205,7 +209,7 @@ Patch (apply with `patch -p0'):
 !   volatile char *ofifo_list;
   #endif
   
---- 565,569 ----
+--- b/565,569 ----
   #if defined (PROCESS_SUBSTITUTION)
     volatile int ofifo, nfifo, osize, saved_fifo;
 !   volatile void *ofifo_list;
@@ -223,7 +227,7 @@ Patch (apply with `patch -p0'):
 !       add_unwind_protect (xfree, ofifo_list);
         saved_fifo = 1;
       }
---- 751,762 ----
+--- b/751,762 ----
   #  endif
   
 !   /* XXX - also if sourcelevel != 0? */
@@ -262,7 +266,7 @@ Patch (apply with `patch -p0'):
 - #  endif /* HAVE_DEV_FD */
   #endif
   
---- 1102,1109 ----
+--- b/1102,1109 ----
         nfifo = num_fifos ();
         if (nfifo > ofifo)
 ! 	close_new_fifos ((void *)ofifo_list, osize);
@@ -272,8 +276,8 @@ Patch (apply with `patch -p0'):
   #endif
   
 
-*** ../bash-5.0/patchlevel.h	2016-06-22 14:51:03.000000000 -0400
---- patchlevel.h	2016-10-01 11:01:28.000000000 -0400
+*** bash-5.0/patchlevel.h	2016-06-22 14:51:03.000000000 -0400
+--- b/patchlevel.h	2016-10-01 11:01:28.000000000 -0400
 ***************
 *** 26,30 ****
      looks for to find the patch level (for the sccs version string). */
@@ -281,7 +285,7 @@ Patch (apply with `patch -p0'):
 ! #define PATCHLEVEL 16
   
   #endif /* _PATCHLEVEL_H_ */
---- 26,30 ----
+--- b/26,30 ----
      looks for to find the patch level (for the sccs version string). */
   
 ! #define PATCHLEVEL 17

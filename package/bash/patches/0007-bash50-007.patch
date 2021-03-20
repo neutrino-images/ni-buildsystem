@@ -1,3 +1,7 @@
+From https://ftp.gnu.org/gnu/bash/bash-5.0-patches/bash50-007
+
+Signed-off-by: Pascal de Bruijn <p.debruijn@unilogic.nl>
+
 			     BASH PATCH REPORT
 			     =================
 
@@ -17,7 +21,7 @@ the executed process.
 Patch (apply with `patch -p0'):
 
 *** ../bash-5.0-patched/jobs.c	2018-12-06 11:44:34.000000000 -0500
---- jobs.c	2019-04-12 15:15:10.000000000 -0400
+--- b/jobs.c	2019-04-12 15:15:10.000000000 -0400
 ***************
 *** 4838,4850 ****
   {
@@ -46,7 +50,7 @@ Patch (apply with `patch -p0'):
   }
   
 *** ../bash-5.0/patchlevel.h	2016-06-22 14:51:03.000000000 -0400
---- patchlevel.h	2016-10-01 11:01:28.000000000 -0400
+--- b/patchlevel.h	2016-10-01 11:01:28.000000000 -0400
 ***************
 *** 26,30 ****
      looks for to find the patch level (for the sccs version string). */
