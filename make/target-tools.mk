@@ -250,233 +250,6 @@ sysvinit: $(DL_DIR)/$(SYSVINIT_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-COREUTILS_VERSION = 8.30
-COREUTILS_DIR = coreutils-$(COREUTILS_VERSION)
-COREUTILS_SOURCE = coreutils-$(COREUTILS_VERSION).tar.xz
-COREUTILS_SITE = $(GNU_MIRROR)/coreutils
-
-COREUTILS_AUTORECONF = YES
-
-COREUTILS_CONF_OPTS = \
-	--prefix=$(base_prefix) \
-	--exec_prefix=$(base_prefix) \
-	--includedir=$(includedir) \
-	--libdir=$(libdir) \
-	--bindir=$(base_bindir).$(@F) \
-	--libexecdir=$(REMOVE_libexecdir) \
-	--datarootdir=$(REMOVE_datarootdir) \
-	--enable-silent-rules \
-	--disable-xattr \
-	--disable-libcap \
-	--disable-acl \
-	--without-gmp \
-	--without-selinux
-
-COREUTILS_BINARIES = touch
-
-define COREUTILS_INSTALL_BINARIES
-	for bin in $(COREUTILS_BINARIES); do \
-		rm -f $(TARGET_base_bindir)/$$bin; \
-		$(INSTALL_EXEC) -D $(TARGET_base_bindir).$(@F)/$$bin $(TARGET_base_bindir)/$$bin; \
-	done
-	rm -r $(TARGET_base_bindir).$(@F)
-endef
-COREUTILS_TARGET_FINALIZE_HOOKS += COREUTILS_INSTALL_BINARIES
-
-coreutils: | $(TARGET_DIR)
-	$(call autotools-package)
-
-# -----------------------------------------------------------------------------
-
-PROCPS_NG_VERSION = 3.3.16
-PROCPS_NG_DIR = procps-ng-$(PROCPS_NG_VERSION)
-PROCPS_NG_SOURCE = procps-ng-$(PROCPS_NG_VERSION).tar.xz
-PROCPS_NG_SITE = http://sourceforge.net/projects/procps-ng/files/Production
-
-PROCPS_NG_DEPENDENCIES = ncurses
-
-PROCPS_NG_AUTORECONF = YES
-
-PROCPS_NG_CONF_ENV = \
-	ac_cv_func_malloc_0_nonnull=yes \
-	ac_cv_func_realloc_0_nonnull=yes
-
-PROCPS_NG_CONF_OPTS = \
-	--prefix=$(base_prefix) \
-	--exec_prefix=$(base_prefix) \
-	--includedir=$(includedir) \
-	--libdir=$(libdir) \
-	--bindir=$(base_bindir).$(@F) \
-	--docdir=$(REMOVE_docdir) \
-	--without-systemd
-
-PROCPS_NG_BINARIES = ps top
-
-define PROCPS_NG_INSTALL_BINARIES
-	for bin in $(PROCPS_NG_BINARIES); do \
-		rm -f $(TARGET_base_bindir)/$$bin; \
-		$(INSTALL_EXEC) -D $(TARGET_base_bindir).$(@F)/$$bin $(TARGET_base_bindir)/$$bin; \
-	done
-	rm -r $(TARGET_base_bindir).$(@F)
-endef
-PROCPS_NG_TARGET_FINALIZE_HOOKS += PROCPS_NG_INSTALL_BINARIES
-
-define PROCPS_NG_INSTALL_SYSCTL_FILES
-	$(INSTALL_DATA) -D $(PKG_FILES_DIR)/sysctl.conf $(TARGET_sysconfdir)/sysctl.conf
-	$(INSTALL) -d $(TARGET_sysconfdir)/sysctl.d
-	$(INSTALL) -d $(TARGET_localstatedir)/etc/sysctl.d
-	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/sysctl.init $(TARGET_sysconfdir)/init.d/sysctl
-endef
-PROCPS_NG_TARGET_FINALIZE_HOOKS += PROCPS_NG_INSTALL_SYSCTL_FILES
-
-procps-ng: | $(TARGET_DIR)
-	$(call autotools-package)
-
-# -----------------------------------------------------------------------------
-
-MTD_UTILS_VERSION = 2.0.2
-MTD_UTILS_DIR = mtd-utils-$(MTD_UTILS_VERSION)
-MTD_UTILS_SOURCE = mtd-utils-$(MTD_UTILS_VERSION).tar.bz2
-MTD_UTILS_SITE = ftp://ftp.infradead.org/pub/mtd-utils
-
-MTD_UTILS_DEPENDENCIES =
-
-MTD_UTILS_CONF_OPTS = \
-	--prefix=$(base_prefix) \
-	--exec_prefix=$(base_prefix) \
-	--includedir=$(includedir) \
-	--libdir=$(libdir) \
-	--sbindir=$(base_sbindir).$(@F) \
-	--mandir=$(REMOVE_mandir) \
-	--disable-tests \
-	--without-zstd \
-	--without-ubifs \
-	--without-xattr
-
-ifeq ($(BOXSERIES),hd2)
-  MTD_UTILS_DEPENDENCIES += zlib lzo
-  MTD_UTILS_CONF_OPTS += --with-jffs
-else
-  MTD_UTILS_CONF_OPTS += --without-jffs
-endif
-
-MTD_UTILS_SBINARIES = flash_erase flash_eraseall
-ifeq ($(BOXSERIES),hd2)
-  MTD_UTILS_SBINARIES += nanddump nandtest nandwrite mkfs.jffs2
-endif
-
-define MTD_UTILS_INSTALL_BINARIES
-	for sbin in $(MTD_UTILS_SBINARIES); do \
-		rm -f $(TARGET_sbindir)/$$sbin; \
-		$(INSTALL_EXEC) -D $(TARGET_base_sbindir).$(@F)/$$sbin $(TARGET_base_sbindir)/$$sbin; \
-	done
-	rm -r $(TARGET_base_sbindir).$(@F)
-endef
-MTD_UTILS_TARGET_FINALIZE_HOOKS += MTD_UTILS_INSTALL_BINARIES
-
-mtd-utils: | $(TARGET_DIR)
-	$(call autotools-package)
-
-# -----------------------------------------------------------------------------
-
-DOSFSTOOLS_VERSION = 4.1
-DOSFSTOOLS_DIR = dosfstools-$(DOSFSTOOLS_VERSION)
-DOSFSTOOLS_SOURCE = dosfstools-$(DOSFSTOOLS_VERSION).tar.xz
-DOSFSTOOLS_SITE = https://github.com/dosfstools/dosfstools/releases/download/v$(DOSFSTOOLS_VERSION)
-
-DOSFSTOOLS_CFLAGS = $(TARGET_CFLAGS) -D_GNU_SOURCE -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -fomit-frame-pointer
-
-DOSFSTOOLS_AUTORECONF = YES
-
-DOSFSTOOLS_CONF_OPTS = \
-	--prefix=$(base_prefix) \
-	--exec_prefix=$(base_prefix) \
-	--docdir=$(REMOVE_docdir) \
-	--without-udev \
-	--enable-compat-symlinks \
-	CFLAGS="$(DOSFSTOOLS_CFLAGS)"
-
-dosfstools: | $(TARGET_DIR)
-	$(call autotools-package)
-
-# -----------------------------------------------------------------------------
-
-NTFS_3G_VERSION = 2017.3.23
-NTFS_3G_DIR = ntfs-3g_ntfsprogs-$(NTFS_3G_VERSION)
-NTFS_3G_SOURCE = ntfs-3g_ntfsprogs-$(NTFS_3G_VERSION).tgz
-NTFS_3G_SITE = https://tuxera.com/opensource
-
-NTFS_3G_DEPENDENCIES = libfuse
-
-NTFS_3G_CONF_OPTS = \
-	--prefix=$(base_prefix) \
-	--exec_prefix=$(base_prefix) \
-	--includedir=$(includedir) \
-	--libdir=$(libdir) \
-	--docdir=$(REMOVE_docdir) \
-	--disable-ntfsprogs \
-	--disable-ldconfig \
-	--disable-library \
-	--with-fuse=external
-
-define NTFS_3G_TARGET_CLEANUP
-	-rm $(addprefix $(TARGET_base_bindir)/,lowntfs-3g ntfs-3g.probe)
-	-rm $(addprefix $(TARGET_base_sbindir)/,mount.lowntfs-3g)
-endef
-NTFS_3G_TARGET_FINALIZE_HOOKS += NTFS_3G_TARGET_CLEANUP
-
-define NTFS_3G_SYMLINK_MOUNT_NTFS
-	ln -sf $(base_bindir)/ntfs-3g $(TARGET_base_sbindir)/mount.ntfs
-endef
-NTFS_3G_TARGET_FINALIZE_HOOKS += NTFS_3G_SYMLINK_MOUNT_NTFS
-
-ntfs-3g: | $(TARGET_DIR)
-	$(call autotools-package)
-
-# -----------------------------------------------------------------------------
-
-FUSE_EXFAT_VERSION = 1.3.0
-FUSE_EXFAT_DIR = fuse-exfat-$(FUSE_EXFAT_VERSION)
-FUSE_EXFAT_SOURCE = fuse-exfat-$(FUSE_EXFAT_VERSION).tar.gz
-FUSE_EXFAT_SITE = https://github.com/relan/exfat/releases/download/v$(FUSE_EXFAT_VERSION)
-
-FUSE_EXFAT_DEPENDENCIES = libfuse
-
-FUSE_EXFAT_AUTORECONF = YES
-
-FUSE_EXFAT_CONF_OPTS = \
-	--prefix=$(base_prefix) \
-	--exec_prefix=$(base_prefix) \
-	--includedir=$(includedir) \
-	--libdir=$(libdir) \
-	--docdir=$(REMOVE_docdir)
-
-fuse-exfat: | $(TARGET_DIR)
-	$(call autotools-package)
-
-# -----------------------------------------------------------------------------
-
-EXFAT_UTILS_VERSION = 1.3.0
-EXFAT_UTILS_DIR = exfat-utils-$(EXFAT_UTILS_VERSION)
-EXFAT_UTILS_SOURCE = exfat-utils-$(EXFAT_UTILS_VERSION).tar.gz
-EXFAT_UTILS_SITE = https://github.com/relan/exfat/releases/download/v$(EXFAT_UTILS_VERSION)
-
-EXFAT_UTILS_DEPENDENCIES = fuse-exfat
-
-EXFAT_UTILS_AUTORECONF = YES
-
-EXFAT_UTILS_CONF_OPTS = \
-	--prefix=$(base_prefix) \
-	--exec_prefix=$(base_prefix) \
-	--includedir=$(includedir) \
-	--libdir=$(libdir) \
-	--docdir=$(REMOVE_docdir)
-
-exfat-utils: | $(TARGET_DIR)
-	$(call autotools-package)
-
-# -----------------------------------------------------------------------------
-
 XFSPROGS_VERSION = 5.8.0
 XFSPROGS_DIR = xfsprogs-$(XFSPROGS_VERSION)
 XFSPROGS_SOURCE = xfsprogs-$(XFSPROGS_VERSION).tar.xz
@@ -600,117 +373,9 @@ hdparm: $(DL_DIR)/$(HDPARM_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-F2FS_TOOLS_VERSION = 1.14.0
-F2FS_TOOLS_DIR = f2fs-tools-$(F2FS_TOOLS_VERSION)
-F2FS_TOOLS_SOURCE = f2fs-tools-$(F2FS_TOOLS_VERSION).tar.gz
-F2FS_TOOLS_SITE = https://git.kernel.org/pub/scm/linux/kernel/git/jaegeuk/f2fs-tools.git/snapshot
-
-F2FS_TOOLS_DEPENDENCIES = util-linux
-
-F2FS_TOOLS_AUTORECONF = YES
-
-F2FS_TOOLS_CONF_ENV = \
-	ac_cv_file__git=no
-
-F2FS_TOOLS_CONF_OPTS = \
-	--prefix=$(base_prefix) \
-	--exec_prefix=$(base_prefix) \
-	--includedir=$(includedir) \
-	--libdir=$(libdir) \
-	--without-selinux
-
-define F2FS_TOOLS_TARGET_CLEANUP
-	-rm $(addprefix $(TARGET_base_sbindir)/,sg_write_buffer)
-endef
-F2FS_TOOLS_TARGET_FINALIZE_HOOKS += F2FS_TOOLS_TARGET_CLEANUP
-
-f2fs-tools: | $(TARGET_DIR)
-	$(call autotools-package)
-
-# -----------------------------------------------------------------------------
-
-UTIL_LINUX_VERSION = 2.36.2
-UTIL_LINUX_DIR = util-linux-$(UTIL_LINUX_VERSION)
-UTIL_LINUX_SOURCE = util-linux-$(UTIL_LINUX_VERSION).tar.xz
-UTIL_LINUX_SITE = $(KERNEL_MIRROR)/linux/utils/util-linux/v$(basename $(UTIL_LINUX_VERSION))
-
-UTIL_LINUX_DEPENDENCIES = ncurses zlib
-
-UTIL_LINUX_AUTORECONF = YES
-
-UTIL_LINUX_CONF_OPTS = \
-	--includedir=$(includedir) \
-	--libdir=$(libdir) \
-	--runstatedir=$(runstatedir) \
-	--localedir=$(REMOVE_localedir) \
-	--docdir=$(REMOVE_docdir) \
-	--disable-gtk-doc \
-	\
-	--disable-all-programs \
-	\
-	--enable-libfdisk \
-	--enable-libsmartcols \
-	--enable-libuuid \
-	--enable-libblkid \
-	--enable-libmount \
-	\
-	--disable-makeinstall-chown \
-	--disable-makeinstall-setuid \
-	--disable-makeinstall-chown \
-	\
-	--without-audit \
-	--without-cap-ng \
-	--without-btrfs \
-	--without-ncursesw \
-	--without-python \
-	--without-readline \
-	--without-slang \
-	--without-smack \
-	--without-libmagic \
-	--without-systemd \
-	--without-systemdsystemunitdir \
-	--without-tinfo \
-	--without-udev \
-	--without-utempter
-
-util-linux: | $(TARGET_DIR)
-	$(call autotools-package)
-
-# -----------------------------------------------------------------------------
-
 #
 # $(prefix) tools
 #
-# -----------------------------------------------------------------------------
-
-OPENVPN_VERSION = 2.5.0
-OPENVPN_DIR = openvpn-$(OPENVPN_VERSION)
-OPENVPN_SOURCE = openvpn-$(OPENVPN_VERSION).tar.xz
-OPENVPN_SITE = http://build.openvpn.net/downloads/releases
-
-OPENVPN_DEPENDENCIES = lzo openssl
-
-OPENVPN_CONF_ENV = \
-	NETSTAT="/bin/netstat" \
-	IFCONFIG="/sbin/ifconfig" \
-	IPROUTE="/sbin/ip" \
-	ROUTE="/sbin/route"
-
-OPENVPN_CONF_OPTS = \
-	--docdir=$(REMOVE_docdir) \
-	--infodir=$(REMOVE_infodir) \
-	--enable-shared \
-	--disable-static \
-	--enable-small \
-	--enable-management \
-	--disable-debug \
-	--disable-selinux \
-	--disable-plugins \
-	--disable-pkcs11
-
-openvpn: | $(TARGET_DIR)
-	$(call autotools-package)
-
 # -----------------------------------------------------------------------------
 
 OPENSSH_VERSION = 8.4p1
@@ -798,44 +463,6 @@ tzdata: $(TZDATA_DEPENDENCIES) $(DL_DIR)/$(TZDATA_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-IPERF_VERSION = 3.1.3
-IPERF_DIR = iperf-$(IPERF_VERSION)
-IPERF_SOURCE = iperf-$(IPERF_VERSION)-source.tar.gz
-IPERF_SITE = https://iperf.fr/download/source
-
-iperf: | $(TARGET_DIR)
-	$(call autotools-package)
-
-# -----------------------------------------------------------------------------
-
-PARTED_VERSION = 3.2
-PARTED_DIR = parted-$(PARTED_VERSION)
-PARTED_SOURCE = parted-$(PARTED_VERSION).tar.xz
-PARTED_SITE = $(GNU_MIRROR)/parted
-
-PARTED_DEPENDENCIES = util-linux
-
-ifeq ($(BOXTYPE),$(filter $(BOXTYPE),armbox mipsbox))
-  PARTED_DEPENDENCIES += libiconv
-endif
-
-PARTED_AUTORECONF = YES
-
-PARTED_CONF_OPTS = \
-	--infodir=$(REMOVE_infodir) \
-	--enable-shared \
-	--disable-static \
-	--disable-debug \
-	--disable-pc98 \
-	--disable-nls \
-	--disable-device-mapper \
-	--without-readline
-
-parted: | $(TARGET_DIR)
-	$(call autotools-package)
-
-# -----------------------------------------------------------------------------
-
 HD_IDLE_VERSION = 1.05
 HD_IDLE_DIR = hd-idle
 HD_IDLE_SOURCE = hd-idle-$(HD_IDLE_VERSION).tgz
@@ -853,18 +480,6 @@ hd-idle: $(DL_DIR)/$(HD_IDLE_SOURCE) | $(TARGET_DIR)
 		$(INSTALL_EXEC) -D hd-idle $(TARGET_sbindir)/hd-idle
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
-LESS_VERSION = 563
-LESS_DIR = less-$(LESS_VERSION)
-LESS_SOURCE = less-$(LESS_VERSION).tar.gz
-LESS_SITE = $(GNU_MIRROR)/less
-
-LESS_DEPENDENCIES = ncurses
-
-less: | $(TARGET_DIR)
-	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
 
@@ -965,19 +580,6 @@ ushare: $(USHARE_DEPENDENCIES) $(DL_DIR)/$(USHARE_SOURCE) | $(TARGET_DIR)
 	$(UPDATE-RC.D) ushare defaults 75 25
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
-SQLITE_VERSION = 3330000
-SQLITE_DIR = sqlite-autoconf-$(SQLITE_VERSION)
-SQLITE_SOURCE = sqlite-autoconf-$(SQLITE_VERSION).tar.gz
-SQLITE_SITE = http://www.sqlite.org/2020
-
-SQLITE_CONF_OPTS = \
-	--bindir=$(REMOVE_bindir)
-
-sqlite: | $(TARGET_DIR)
-	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
 
@@ -1409,36 +1011,6 @@ dropbear: $(DROPBEAR_DEPENDENCIES) $(DL_DIR)/$(DROPBEAR_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-SG3_UTILS_VERSION = 1.45
-SG3_UTILS_DIR = sg3_utils-$(SG3_UTILS_VERSION)
-SG3_UTILS_SOURCE = sg3_utils-$(SG3_UTILS_VERSION).tar.xz
-SG3_UTILS_SITE = http://sg.danny.cz/sg/p
-
-SG3_UTILS_CONF_OPTS = \
-	--bindir=$(bindir).$(@F)
-
-SG3_UTILS_BINARIES = sg_start
-
-define SG3_UTILS_INSTALL_BINARIES
-	for bin in $(SG3_UTILS_BINARIES); do \
-		rm -f $(TARGET_bindir)/$$bin; \
-		$(INSTALL_EXEC) -D $(TARGET_bindir).$(@F)/$$bin $(TARGET_bindir)/$$bin; \
-	done
-	rm -r $(TARGET_bindir).$(@F)
-endef
-SG3_UTILS_TARGET_FINALIZE_HOOKS += SG3_UTILS_INSTALL_BINARIES
-
-define SG3_UTILS_INSTALL_SDX_INIT
-	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/sdX.init $(TARGET_sysconfdir)/init.d/sdX
-	$(UPDATE-RC.D) sdX stop 97 0 6 .
-endef
-SG3_UTILS_TARGET_FINALIZE_HOOKS += SG3_UTILS_INSTALL_SDX_INIT
-
-sg3_utils: | $(TARGET_DIR)
-	$(call autotools-package)
-
-# -----------------------------------------------------------------------------
-
 FBSHOT_VERSION = 0.3
 FBSHOT_DIR = fbshot-$(FBSHOT_VERSION)
 FBSHOT_SOURCE = fbshot-$(FBSHOT_VERSION).tar.gz
@@ -1578,85 +1150,6 @@ xupnpd: $(XUPNPD_DEPENDENCIES) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-NFS_UTILS_VERSION = 2.2.1
-NFS_UTILS_DIR = nfs-utils-$(NFS_UTILS_VERSION)
-NFS_UTILS_SOURCE = nfs-utils-$(NFS_UTILS_VERSION).tar.xz
-NFS_UTILS_SITE = $(KERNEL_MIRROR)/linux/utils/nfs-utils/$(NFS_UTILS_VERSION)
-
-NFS_UTILS_DEPENDENCIES = rpcbind
-
-NFS_UTILS_AUTORECONF = YES
-
-NFS_UTILS_CONF_ENV = \
-	knfsd_cv_bsd_signals=no
-
-NFS_UTILS_CONF_OPTS = \
-	--docdir=$(REMOVE_docdir) \
-	--enable-maintainer-mode \
-	$(if $(filter $(BOXSERIES),hd1),--disable-ipv6,--enable-ipv6) \
-	--disable-nfsv4 \
-	--disable-nfsv41 \
-	--disable-gss \
-	--disable-uuid \
-	--without-tcp-wrappers \
-	--with-statedir=/var/lib/nfs \
-	--with-rpcgen=internal \
-	--without-systemd
-
-define NFS_UTILS_TARGET_CLEANUP
-	chmod 0755 $(TARGET_base_sbindir)/mount.nfs
-	rm -f $(addprefix $(TARGET_base_sbindir)/,mount.nfs4 osd_login umount.nfs umount.nfs4)
-	rm -f $(addprefix $(TARGET_sbindir)/,mountstats nfsiostat)
-endef
-NFS_UTILS_TARGET_FINALIZE_HOOKS += NFS_UTILS_TARGET_CLEANUP
-
-ifeq ($(PERSISTENT_VAR_PARTITION),yes)
-  define NFS_UTILS_INSTALL_EXPORTS_FILE
-	$(INSTALL_DATA) -D $(PKG_FILES_DIR)/exports-var $(TARGET_localstatedir)/etc/exports
-	ln -sf /var/etc/exports $(TARGET_sysconfdir)/exports
-  endef
-else
-  define NFS_UTILS_INSTALL_EXPORTS_FILE
-	$(INSTALL_DATA) -D $(PKG_FILES_DIR)/exports $(TARGET_sysconfdir)/exports
-  endef
-endif
-NFS_UTILS_TARGET_FINALIZE_HOOKS += NFS_UTILS_INSTALL_EXPORTS_FILE
-
-define NFS_UTILS_INSTALL_NFSD_INIT
-	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/nfsd.init $(TARGET_sysconfdir)/init.d/nfsd
-	$(UPDATE-RC.D) nfsd defaults 75 25
-endef
-NFS_UTILS_TARGET_FINALIZE_HOOKS += NFS_UTILS_INSTALL_NFSD_INIT
-
-nfs-utils: | $(TARGET_DIR)
-	$(call autotools-package)
-
-# -----------------------------------------------------------------------------
-
-RPCBIND_VERSION = 1.2.5
-RPCBIND_DIR = rpcbind-$(RPCBIND_VERSION)
-RPCBIND_SOURCE = rpcbind-$(RPCBIND_VERSION).tar.bz2
-RPCBIND_SITE = https://sourceforge.net/projects/rpcbind/files/rpcbind/$(RPCBIND_VERSION)
-
-RPCBIND_DEPENDENCIES = libtirpc
-
-RPCBIND_AUTORECONF = YES
-
-RPCBIND_CONF_OPTS = \
-	--enable-silent-rules \
-	--with-rpcuser=root \
-	--with-systemdsystemunitdir=no
-
-define RPCBIND_TARGET_CLEANUP
-	-rm $(TARGET_bindir)/rpcgen
-endef
-RPCBIND_TARGET_FINALIZE_HOOKS += RPCBIND_TARGET_CLEANUP
-
-rpcbind: | $(TARGET_DIR)
-	$(call autotools-package)
-
-# -----------------------------------------------------------------------------
-
 STREAMRIPPER_DEPENDENCIES = libvorbisidec libmad glib2
 
 STREAMRIPPER_AUTORECONF = yes
@@ -1716,61 +1209,6 @@ gettext: $(DL_DIR)/$(GETTEXT_SOURCE) | $(TARGET_DIR)
 	$(REWRITE_LIBTOOL)
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
-MC_VERSION = 4.8.25
-MC_DIR = mc-$(MC_VERSION)
-MC_SOURCE = mc-$(MC_VERSION).tar.xz
-MC_SITE = ftp.midnight-commander.org
-
-MC_DEPENDENCIES = glib2 ncurses
-
-MC_AUTORECONF = YES
-
-MC_CONF_OPTS = \
-	--enable-maintainer-mode \
-	--enable-silent-rules \
-	\
-	--disable-charset \
-	--disable-nls \
-	--disable-vfs-extfs \
-	--disable-vfs-fish \
-	--disable-vfs-sfs \
-	--disable-vfs-sftp \
-	--with-screen=ncurses \
-	--without-diff-viewer \
-	--without-gpm-mouse \
-	--without-x
-
-define MC_TARGET_CLEANUP
-	-rm -r $(TARGET_datadir)/mc/examples
-	find $(TARGET_datadir)/mc/skins -type f ! -name default.ini | xargs --no-run-if-empty rm
-endef
-MC_TARGET_FINALIZE_HOOKS += MC_TARGET_CLEANUP
-
-mc: | $(TARGET_DIR)
-	$(call autotools-package)
-
-# -----------------------------------------------------------------------------
-
-WGET_VERSION = 1.20.3
-WGET_DIR = wget-$(WGET_VERSION)
-WGET_SOURCE = wget-$(WGET_VERSION).tar.gz
-WGET_SITE = $(GNU_MIRROR)/wget
-
-WGET_DEPENDENCIES = openssl
-
-WGET_CONF_OPTS = \
-	--datarootdir=$(REMOVE_datarootdir) \
-	--sysconfdir=$(REMOVE_sysconfdir) \
-	--with-gnu-ld \
-	--with-ssl=openssl \
-	--disable-debug \
-	CFLAGS="$(TARGET_CFLAGS) -DOPENSSL_NO_ENGINE"
-
-wget: | $(TARGET_DIR)
-	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
 
@@ -1893,21 +1331,6 @@ minisatip: $(MINISATIP_DEPENDENCIES) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-ETHTOOL_VERSION = 5.10
-ETHTOOL_DIR = ethtool-$(ETHTOOL_VERSION)
-ETHTOOL_SOURCE = ethtool-$(ETHTOOL_VERSION).tar.xz
-ETHTOOL_SITE = $(KERNEL_MIRROR)/software/network/ethtool
-
-ETHTOOL_CONF_OPTS = \
-	--libdir=$(TARGET_libdir) \
-	--disable-pretty-dump \
-	--disable-netlink
-
-ethtool: | $(TARGET_DIR)
-	$(call autotools-package)
-
-# -----------------------------------------------------------------------------
-
 GPTFDISK_VERSION = 1.0.4
 GPTFDISK_DIR = gptfdisk-$(GPTFDISK_VERSION)
 GPTFDISK_SOURCE = gptfdisk-$(GPTFDISK_VERSION).tar.gz
@@ -1932,48 +1355,6 @@ gptfdisk: $(GPTFDISK_DEPENDENCIES) $(DL_DIR)/$(GPTFDISK_SOURCE) | $(TARGET_DIR)
 		done
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
-RSYNC_VERSION = 3.1.3
-RSYNC_DIR = rsync-$(RSYNC_VERSION)
-RSYNC_SOURCE = rsync-$(RSYNC_VERSION).tar.gz
-RSYNC_SITE = https://download.samba.org/pub/rsync/src/
-
-RSYNC_DEPENDENCIES = zlib popt
-
-RSYNC_CONF_OPTS = \
-	--disable-debug \
-	--disable-locale \
-	--disable-acl-support \
-	--with-included-zlib=no \
-	--with-included-popt=no
-
-rsync: | $(TARGET_DIR)
-	$(call autotools-package)
-
-# -----------------------------------------------------------------------------
-
-FLAC_VERSION = 1.3.3
-FLAC_DIR = flac-$(FLAC_VERSION)
-FLAC_SOURCE = flac-$(FLAC_VERSION).tar.xz
-FLAC_SITE = http://downloads.xiph.org/releases/flac
-
-FLAC_AUTORECONF = YES
-
-FLAC_CONF_OPTS = \
-	--bindir=$(REMOVE_bindir) \
-	--datarootdir=$(REMOVE_datarootdir) \
-	--enable-shared \
-	--disable-static \
-	--disable-cpplibs \
-	--disable-xmms-plugin \
-	--disable-altivec \
-	--disable-ogg \
-	--disable-sse
-
-flac: | $(TARGET_DIR)
-	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
 

@@ -33,61 +33,6 @@ zlib: $(DL_DIR)/$(ZLIB_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-LIBFUSE_VERSION = 2.9.9
-LIBFUSE_DIR = fuse-$(LIBFUSE_VERSION)
-LIBFUSE_SOURCE = fuse-$(LIBFUSE_VERSION).tar.gz
-LIBFUSE_SITE = https://github.com/libfuse/libfuse/releases/download/fuse-$(LIBFUSE_VERSION)
-
-LIBFUSE_CONF_OPTS = \
-	--datarootdir=$(REMOVE_datarootdir) \
-	--disable-static \
-	--disable-example \
-	--disable-mtab \
-	--with-gnu-ld \
-	--enable-util \
-	--enable-lib \
-	--enable-silent-rules
-
-define LIBFUSE_TARGET_CLEANUP
-	-rm -r $(TARGET_sysconfdir)/udev
-	-rm $(TARGET_sysconfdir)/init.d/fuse
-endef
-LIBFUSE_TARGET_FINALIZE_HOOKS += LIBFUSE_TARGET_CLEANUP
-
-libfuse: | $(TARGET_DIR)
-	$(call autotools-package)
-
-# -----------------------------------------------------------------------------
-
-LIBUPNP_VERSION = 1.6.25
-LIBUPNP_DIR = libupnp-$(LIBUPNP_VERSION)
-LIBUPNP_SOURCE = libupnp-$(LIBUPNP_VERSION).tar.bz2
-LIBUPNP_SITE = http://sourceforge.net/projects/pupnp/files/pupnp/libUPnP%20$(LIBUPNP_VERSION)
-
-LIBUPNP_CONV_OPTS = \
-	--enable-shared \
-	--disable-static
-
-libupnp: | $(TARGET_DIR)
-	$(call autotools-package)
-	
-# -----------------------------------------------------------------------------
-
-LIBDVBSI_VERSION = 0.3.9
-LIBDVBSI_DIR = libdvbsi++-$(LIBDVBSI_VERSION)
-LIBDVBSI_SOURCE = libdvbsi++-$(LIBDVBSI_VERSION).tar.bz2
-LIBDVBSI_SITE = https://github.com/mtdcr/libdvbsi/releases/download/$(LIBDVBSI_VERSION)
-
-LIBDVBSI_CONV_OPTS = \
-	--enable-silent-rules \
-	--enable-shared \
-	--disable-static
-
-libdvbsi: | $(TARGET_DIR)
-	$(call autotools-package)
-
-# -----------------------------------------------------------------------------
-
 LIBDVBCSA_VERSION = git
 LIBDVBCSA_DIR = libdvbcsa.$(LIBDVBCSA_VERSION)
 LIBDVBCSA_SOURCE = libdvbcsa.$(LIBDVBCSA_VERSION)
@@ -126,69 +71,6 @@ giflib: $(DL_DIR)/$(GIFLIB_SOURCE) | $(TARGET_DIR)
 		$(MAKE) install-include install-lib DESTDIR=$(TARGET_DIR) PREFIX=$(prefix)
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
-LIBCURL_VERSION = 7.74.0
-LIBCURL_DIR = curl-$(LIBCURL_VERSION)
-LIBCURL_SOURCE = curl-$(LIBCURL_VERSION).tar.bz2
-LIBCURL_SITE = https://curl.haxx.se/download
-
-LIBCURL_DEPENDENCIES = zlib openssl rtmpdump ca-bundle
-
-LIBCURL_CONFIG_SCRIPTS = curl-config
-
-LIBCURL_CONF_OPTS = \
-	--datarootdir=$(REMOVE_datarootdir) \
-	$(if $(filter $(BOXSERIES),hd1),--disable-ipv6,--enable-ipv6) \
-	--disable-manual \
-	--disable-file \
-	--disable-rtsp \
-	--disable-dict \
-	--disable-ldap \
-	--disable-curldebug \
-	--disable-static \
-	--disable-imap \
-	--disable-gopher \
-	--disable-pop3 \
-	--disable-smtp \
-	--disable-verbose \
-	--disable-manual \
-	--disable-ntlm-wb \
-	--disable-ares \
-	--without-libidn \
-	--with-ca-bundle=$(CA_BUNDLE_DIR)/$(CA_BUNDLE_CRT) \
-	--with-random=/dev/urandom \
-	--with-ssl=$(TARGET_prefix) \
-	--with-librtmp=$(TARGET_libdir) \
-	--enable-optimize
-
-libcurl: | $(TARGET_DIR)
-	$(call autotools-package)
-
-# -----------------------------------------------------------------------------
-
-LIBPNG_VERSION = 1.6.37
-LIBPNG_DIR = libpng-$(LIBPNG_VERSION)
-LIBPNG_SOURCE = libpng-$(LIBPNG_VERSION).tar.xz
-LIBPNG_SITE = https://sourceforge.net/projects/libpng/files/libpng16/$(LIBPNG_VERSION)
-
-LIBPNG_DEPENDENCIES = zlib
-
-LIBPNG_CONFIG_SCRIPTS = libpng16-config
-
-LIBPNG_CONF_OPTS = \
-	--enable-silent-rules \
-	--disable-static \
-	$(if $(filter $(BOXSERIES),hd5x hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse),--enable-arm-neon,--disable-arm-neon)
-
-define LIBPNG_TARGET_CLEANUP
-	-rm $(addprefix $(TARGET_bindir)/,libpng-config)
-endef
-LIBPNG_TARGET_FINALIZE_HOOKS += LIBPNG_TARGET_CLEANUP
-
-libpng: | $(TARGET_DIR)
-	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
 
@@ -233,28 +115,6 @@ freetype: $(FREETYPE_DEPENDENCIES) $(DL_DIR)/$(FREETYPE_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR) \
 		$(TARGET_datadir)/aclocal
 	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
-LIBJPEG_TURBO_VERSION = 2.0.6
-LIBJPEG_TURBO_DIR = libjpeg-turbo-$(LIBJPEG_TURBO_VERSION)
-LIBJPEG_TURBO_SOURCE = libjpeg-turbo-$(LIBJPEG_TURBO_VERSION).tar.gz
-LIBJPEG_TURBO_SITE = https://sourceforge.net/projects/libjpeg-turbo/files/$(LIBJPEG_TURBO_VERSION)
-
-$(DL_DIR)/$(LIBJPEG_TURBO_SOURCE):
-	$(download) $(LIBJPEG_TURBO_SITE)/$(LIBJPEG_TURBO_SOURCE)
-
-LIBJPEG_TURBO_CONF_OPTS = \
-	-DWITH_SIMD=False \
-	-DWITH_JPEG8=80
-
-define LIBJPEG_TURBO_TARGET_CLEANUP
-	-rm $(addprefix $(TARGET_bindir)/,cjpeg djpeg jpegtran rdjpgcom tjbench wrjpgcom)
-endef
-LIBJPEG_TURBO_TARGET_FINALIZE_HOOKS += LIBJPEG_TURBO_TARGET_CLEANUP
-
-libjpeg-turbo: $(DL_DIR)/$(LIBJPEG_TURBO_SOURCE) | $(TARGET_DIR)
-	$(call cmake-package)
 
 # -----------------------------------------------------------------------------
 
@@ -383,51 +243,6 @@ openthreads: $(SOURCE_DIR)/$(NI_OPENTHREADS) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-LIBUSB_VERSION = 1.0.23
-LIBUSB_DIR = libusb-$(LIBUSB_VERSION)
-LIBUSB_SOURCE = libusb-$(LIBUSB_VERSION).tar.bz2
-LIBUSB_SITE = https://github.com/libusb/libusb/releases/download/v$(LIBUSB_VERSION)
-
-LIBUSB_CONF_OPTS = \
-	--disable-udev
-
-libusb: | $(TARGET_DIR)
-	$(call autotools-package)
-
-# -----------------------------------------------------------------------------
-
-LIBUSB_COMPAT_VERSION = 0.1.7
-LIBUSB_COMPAT_DIR = libusb-compat-$(LIBUSB_COMPAT_VERSION)
-LIBUSB_COMPAT_SOURCE = libusb-compat-$(LIBUSB_COMPAT_VERSION).tar.bz2
-LIBUSB_COMPAT_SITE = https://github.com/libusb/libusb-compat-0.1/releases/download/v$(LIBUSB_COMPAT_VERSION)
-
-LIBUSB_COMPAT_CONFIG_SCRIPTS = libusb-config
-
-LIBUSB_COMPAT_DEPENDENCIES = libusb
-
-libusb-compat: | $(TARGET_DIR)
-	$(call autotools-package)
-
-# -----------------------------------------------------------------------------
-
-LIBGD_VERSION = 2.2.5
-LIBGD_DIR = libgd-$(LIBGD_VERSION)
-LIBGD_SOURCE = libgd-$(LIBGD_VERSION).tar.xz
-LIBGD_SITE = https://github.com/libgd/libgd/releases/download/gd-$(LIBGD_VERSION)
-
-LIBGD_DEPENDENCIES = zlib libpng libjpeg-turbo freetype
-
-LIBGD_CONF_OPTS = \
-	--bindir=$(REMOVE_bindir) \
-	--without-fontconfig \
-	--without-xpm \
-	--without-x
-
-libgd: | $(TARGET_DIR)
-	$(call autotools-package)
-
-# -----------------------------------------------------------------------------
-
 LIBDPF_VERSION = git
 LIBDPF_DIR = dpf-ax.$(LIBDPF_VERSION)
 LIBDPF_SOURCE = dpf-ax.$(LIBDPF_VERSION)
@@ -451,19 +266,6 @@ libdpf: $(LIBDPF_DEPENDENCIES) | $(TARGET_DIR)
 	$(INSTALL_DATA) -D $(PKG_BUILD_DIR)/include/usbuser.h $(TARGET_includedir)/libdpf/usbuser.h
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
-LZO_VERSION = 2.10
-LZO_DIR = lzo-$(LZO_VERSION)
-LZO_SOURCE = lzo-$(LZO_VERSION).tar.gz
-LZO_SITE = https://www.oberhumer.com/opensource/lzo/download
-
-LZO_CONF_OPTS = \
-	--docdir=$(REMOVE_docdir)
-
-lzo: | $(TARGET_DIR)
-	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
 
@@ -493,23 +295,6 @@ libsigc: $(DL_DIR)/$(LIBSIGC_SOURCE) | $(TARGET_DIR)
 	$(REWRITE_LIBTOOL)
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
-EXPAT_VERSION = 2.2.9
-EXPAT_DIR = expat-$(EXPAT_VERSION)
-EXPAT_SOURCE = expat-$(EXPAT_VERSION).tar.bz2
-EXPAT_SITE = https://sourceforge.net/projects/expat/files/expat/$(EXPAT_VERSION)
-
-EXPAT_AUTORECONF = YES
-
-EXPAT_CONF_OPTS = \
-	--docdir=$(REMOVE_docdir) \
-	--without-xmlwf \
-	--without-docbook
-
-expat: | $(TARGET_DIR)
-	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
 
@@ -555,25 +340,6 @@ libbluray: $(LIBBLURAY_DEPENDENCIES) $(DL_DIR)/$(LIBBLURAY_SOURCE) | $(TARGET_DI
 
 # -----------------------------------------------------------------------------
 
-LIBASS_VERSION = 0.14.0
-LIBASS_DIR = libass-$(LIBASS_VERSION)
-LIBASS_SOURCE = libass-$(LIBASS_VERSION).tar.xz
-LIBASS_SITE = https://github.com/libass/libass/releases/download/$(LIBASS_VERSION)
-
-LIBASS_DEPENDENCIES = freetype fribidi
-
-LIBASS_CONF_OPTS = \
-	--disable-static \
-	--disable-test \
-	--disable-fontconfig \
-	--disable-harfbuzz \
-	--disable-require-system-font-provider
-
-libass: | $(TARGET_DIR)
-	$(call autotools-package)
-	
-# -----------------------------------------------------------------------------
-
 LIBGPG_ERROR_VERSION = 1.37
 LIBGPG_ERROR_DIR = libgpg-error-$(LIBGPG_ERROR_VERSION)
 LIBGPG_ERROR_SOURCE = libgpg-error-$(LIBGPG_ERROR_VERSION).tar.bz2
@@ -611,33 +377,6 @@ libgpg-error: $(DL_DIR)/$(LIBGPG_ERROR_SOURCE) | $(TARGET_DIR)
 	$(REWRITE_LIBTOOL)
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
-LIBGCRYPT_VERSION = 1.8.5
-LIBGCRYPT_DIR = libgcrypt-$(LIBGCRYPT_VERSION)
-LIBGCRYPT_SOURCE = libgcrypt-$(LIBGCRYPT_VERSION).tar.gz
-LIBGCRYPT_SITE = ftp://ftp.gnupg.org/gcrypt/libgcrypt
-
-LIBGCRYPT_DEPENDENCIES = libgpg-error
-
-LIBGCRYPT_CONFIG_SCRIPTS = libgcrypt-config
-
-LIBGCRYPT_CONF_OPTS = \
-	--datarootdir=$(REMOVE_datarootdir) \
-	--enable-maintainer-mode \
-	--enable-silent-rules \
-	--enable-shared \
-	--disable-static \
-	--disable-tests
-
-define LIBGCRYPT_TARGET_CLEANUP
-	-rm $(addprefix $(TARGET_bindir)/,dumpsexp hmac256 mpicalc)
-endef
-LIBGCRYPT_TARGET_FINALIZE_HOOKS += LIBGCRYPT_TARGET_CLEANUP
-
-libgcrypt: | $(TARGET_DIR)
-	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
 
@@ -705,93 +444,6 @@ libbdplus: $(LIBBDPLUS_DEPENDENCIES) $(DL_DIR)/$(LIBBDPLUS_SOURCE) | $(TARGET_DI
 
 # -----------------------------------------------------------------------------
 
-LIBXML2_VERSION = 2.9.10
-LIBXML2_DIR = libxml2-$(LIBXML2_VERSION)
-LIBXML2_SOURCE = libxml2-$(LIBXML2_VERSION).tar.gz
-LIBXML2_SITE = http://xmlsoft.org/sources
-
-LIBXML2_CONFIG_SCRIPTS = xml2-config
-
-LIBXML2_CONF_OPTS = \
-	--datarootdir=$(REMOVE_datarootdir) \
-	--enable-shared \
-	--disable-static \
-	--without-python \
-	--without-debug \
-	--without-c14n \
-	--without-legacy \
-	--without-catalog \
-	--without-docbook \
-	--without-mem-debug \
-	--without-lzma \
-	--without-schematron
-
-define LIBXML2_TARGET_CLEANUP
-	-rm -r $(TARGET_libdir)/cmake
-	-rm $(addprefix $(TARGET_libdir)/,xml2Conf.sh)
-endef
-LIBXML2_TARGET_FINALIZE_HOOKS += LIBXML2_TARGET_CLEANUP
-
-libxml2: | $(TARGET_DIR)
-	$(call autotools-package)
-
-# -----------------------------------------------------------------------------
-
-PUGIXML_VERSION = 1.11.1
-PUGIXML_DIR = pugixml-$(PUGIXML_VERSION)
-PUGIXML_SOURCE = pugixml-$(PUGIXML_VERSION).tar.gz
-PUGIXML_SITE = https://github.com/zeux/pugixml/releases/download/v$(PUGIXML_VERSION)
-
-$(DL_DIR)/$(PUGIXML_SOURCE):
-	$(download) $(PUGIXML_SITE)/$(PUGIXML_SOURCE)
-
-pugixml: $(DL_DIR)/$(PUGIXML_SOURCE) | $(TARGET_DIR)
-	$(call cmake-package)
-
-# -----------------------------------------------------------------------------
-
-LIBROXML_VERSION = 3.0.2
-LIBROXML_DIR = libroxml-$(LIBROXML_VERSION)
-LIBROXML_SOURCE = libroxml-$(LIBROXML_VERSION).tar.gz
-LIBROXML_SITE = http://download.libroxml.net/pool/v3.x
-
-LIBROXML_CONF_OPTS = \
-	--disable-roxml
-
-libroxml: | $(TARGET_DIR)
-	$(call autotools-package)
-
-# -----------------------------------------------------------------------------
-
-LIBXSLT_VERSION = 1.1.34
-LIBXSLT_DIR = libxslt-$(LIBXSLT_VERSION)
-LIBXSLT_SOURCE = libxslt-$(LIBXSLT_VERSION).tar.gz
-LIBXSLT_SITE = ftp://xmlsoft.org/libxml2
-
-LIBXSLT_DEPENDENCIES = libxml2
-
-LIBXSLT_CONFIG_SCRIPTS = xslt-config
-
-LIBXSLT_CONF_OPTS = \
-	--datarootdir=$(REMOVE_datarootdir) \
-	--enable-shared \
-	--disable-static \
-	--without-python \
-	--without-crypto \
-	--without-debug \
-	--without-mem-debug
-
-define LIBXSLT_TARGET_CLEANUP
-	-rm -r $(TARGET_libdir)/libxslt-plugins/
-	-rm $(addprefix $(TARGET_libdir)/,xsltConf.sh)
-endef
-LIBXSLT_TARGET_FINALIZE_HOOKS += LIBXSLT_TARGET_CLEANUP
-
-libxslt: | $(TARGET_DIR)
-	$(call autotools-package)
-
-# -----------------------------------------------------------------------------
-
 RTMPDUMP_DEPENDENCIES = zlib openssl
 
 RTMPDUMP_MAKE_ENV = \
@@ -812,99 +464,6 @@ rtmpdump: $(RTMPDUMP_DEPENDENCIES) $(SOURCE_DIR)/$(NI_RTMPDUMP) | $(TARGET_DIR)
 	-rm $(addprefix $(TARGET_sbindir)/,rtmpgw rtmpsrv rtmpsuck)
 	$(REMOVE)/$(NI_RTMPDUMP)
 	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
-LIBTIRPC_VERSION = 1.2.6
-LIBTIRPC_DIR = libtirpc-$(LIBTIRPC_VERSION)
-LIBTIRPC_SOURCE = libtirpc-$(LIBTIRPC_VERSION).tar.bz2
-LIBTIRPC_SITE = https://sourceforge.net/projects/libtirpc/files/libtirpc/$(LIBTIRPC_VERSION)
-
-LIBTIRPC_AUTORECONF = YES
-
-LIBTIRPC_CONF_OPTS = \
-	--disable-gssapi \
-	--enable-silent-rules
-
-ifeq ($(BOXSERIES),hd1)
-  define LIBTIRPC_DISABLE_IPV6
-	$(SED) '/^\(udp\|tcp\)6/ d' $(TARGET_sysconfdir)/netconfig
-  endef
-  LIBTIRPC_TARGET_FINALIZE_HOOKS += LIBTIRPC_DISABLE_IPV6
-endif
-
-libtirpc: | $(TARGET_DIR)
-	$(call autotools-package)
-
-# -----------------------------------------------------------------------------
-
-CONFUSE_VERSION = 3.2.2
-CONFUSE_DIR = confuse-$(CONFUSE_VERSION)
-CONFUSE_SOURCE = confuse-$(CONFUSE_VERSION).tar.xz
-CONFUSE_SITE = https://github.com/martinh/libconfuse/releases/download/v$(CONFUSE_VERSION)
-
-CONFUSE_CONF_OPTS = \
-	--docdir=$(REMOVE_docdir) \
-	--enable-silent-rules \
-	--enable-static \
-	--disable-shared
-
-confuse: | $(TARGET_DIR)
-	$(call autotools-package)
-
-# -----------------------------------------------------------------------------
-
-LIBITE_VERSION = 2.0.2
-LIBITE_DIR = libite-$(LIBITE_VERSION)
-LIBITE_SOURCE = libite-$(LIBITE_VERSION).tar.xz
-LIBITE_SITE = https://github.com/troglobit/libite/releases/download/v$(LIBITE_VERSION)
-
-LIBITE_CONF_OPTS = \
-	--docdir=$(REMOVE_docdir) \
-	--enable-silent-rules \
-	--enable-static \
-	--disable-shared
-
-libite: | $(TARGET_DIR)
-	$(call autotools-package)
-
-# -----------------------------------------------------------------------------
-
-LIBMAD_VERSION = 0.15.1b
-LIBMAD_DIR = libmad-$(LIBMAD_VERSION)
-LIBMAD_SOURCE = libmad-$(LIBMAD_VERSION).tar.gz
-LIBMAD_SITE = https://sourceforge.net/projects/mad/files/libmad/$(LIBMAD_VERSION)
-
-LIBMAD_AUTORECONF = YES
-
-LIBMAD_CONF_OPTS = \
-	--enable-shared=yes \
-	--enable-accuracy \
-	--enable-fpm=arm \
-	--enable-sso
-
-libmad: | $(TARGET_DIR)
-	$(call autotools-package)
-
-# -----------------------------------------------------------------------------
-
-LIBVORBIS_VERSION = 1.3.7
-LIBVORBIS_DIR = libvorbis-$(LIBVORBIS_VERSION)
-LIBVORBIS_SOURCE = libvorbis-$(LIBVORBIS_VERSION).tar.xz
-LIBVORBIS_SITE = https://downloads.xiph.org/releases/vorbis
-
-LIBVORBIS_DEPENDENCIES = libogg
-
-LIBVORBIS_AUTORECONF = YES
-
-LIBVORBIS_CONF_OPTS = \
-	--datarootdir=$(REMOVE_datarootdir) \
-	--disable-docs \
-	--disable-examples \
-	--disable-oggtest
-
-libvorbis: | $(TARGET_DIR)
-	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
 
@@ -931,64 +490,6 @@ libvorbisidec: $(LIBVORBISIDEC_DEPENDENCIES) $(DL_DIR)/$(LIBVORBISIDEC_SOURCE) |
 	$(REWRITE_LIBTOOL)
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
-LIBOGG_VERSION = 1.3.4
-LIBOGG_DIR = libogg-$(LIBOGG_VERSION)
-LIBOGG_SOURCE = libogg-$(LIBOGG_VERSION).tar.gz
-LIBOGG_SITE = http://downloads.xiph.org/releases/ogg
-
-LIBOGG_CONF_OPTS = \
-	--datarootdir=$(REMOVE_datarootdir) \
-	--enable-shared
-
-libogg: | $(TARGET_DIR)
-	$(call autotools-package)
-
-# -----------------------------------------------------------------------------
-
-LIBEXIF_VERSION = 0.6.22
-LIBEXIF_DIR = libexif-$(LIBEXIF_VERSION)
-LIBEXIF_SOURCE = libexif-$(LIBEXIF_VERSION).tar.xz
-LIBEXIF_SITE = https://github.com/libexif/libexif/releases/download/libexif-$(subst .,_,$(LIBEXIF_VERSION))-release
-
-LIBEXIF_CONF_OPTS = \
-	--datarootdir=$(REMOVE_datarootdir) \
-	--with-doc-dir=$(REMOVE_docdir)
-
-libexif: | $(TARGET_DIR)
-	$(call autotools-package)
-
-# -----------------------------------------------------------------------------
-
-FRIBIDI_VERSION = 1.0.10
-FRIBIDI_DIR = fribidi-$(FRIBIDI_VERSION)
-FRIBIDI_SOURCE = fribidi-$(FRIBIDI_VERSION).tar.xz
-FRIBIDI_SITE = https://github.com/fribidi/fribidi/releases/download/v$(FRIBIDI_VERSION)
-
-FRIBIDI_CONF_OPTS = \
-	--disable-debug \
-	--disable-deprecated
-
-fribidi: | $(TARGET_DIR)
-	$(call autotools-package)
-
-# -----------------------------------------------------------------------------
-
-LIBFFI_VERSION = 3.3
-LIBFFI_DIR = libffi-$(LIBFFI_VERSION)
-LIBFFI_SOURCE = libffi-$(LIBFFI_VERSION).tar.gz
-LIBFFI_SITE = https://github.com/libffi/libffi/releases/download/v$(HOST_LIBFFI_VERSION)
-
-LIBFFI_AUTORECONF = YES
-
-LIBFFI_CONF_OPTS = \
-	--datarootdir=$(REMOVE_datarootdir) \
-	$(if $(filter $(BOXSERIES),hd1),--enable-static --disable-shared)
-
-libffi: | $(TARGET_DIR)
-	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
 
@@ -1045,55 +546,6 @@ glib2: $(GLIB2_DEPENDENCIES) $(DL_DIR)/$(GLIB2_SOURCE) | $(TARGET_DIR)
 	$(REWRITE_LIBTOOL)
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
-ALSA_LIB_VERSION = 1.2.4
-ALSA_LIB_DIR = alsa-lib-$(ALSA_LIB_VERSION)
-ALSA_LIB_SOURCE = alsa-lib-$(ALSA_LIB_VERSION).tar.bz2
-ALSA_LIB_SITE = https://www.alsa-project.org/files/pub/lib
-
-ALSA_LIB_AUTORECONF = YES
-
-ALSA_LIB_CONF_OPTS = \
-	--with-alsa-devdir=/dev/snd/ \
-	--with-plugindir=$(libdir)/alsa \
-	--without-debug \
-	--with-debug=no \
-	--with-versioned=no \
-	--enable-symbolic-functions \
-	--disable-aload \
-	--disable-rawmidi \
-	--disable-resmgr \
-	--disable-old-symbols \
-	--disable-alisp \
-	--disable-ucm \
-	--disable-hwdep \
-	--disable-python \
-	--disable-topology
-
-define ALSA_LIB_TARGET_CLEANUP
-	find $(TARGET_datadir)/alsa/cards/ -name '*.conf' ! -name 'aliases.conf' | xargs --no-run-if-empty rm
-	find $(TARGET_datadir)/alsa/pcm/ -name '*.conf' ! -name 'default.conf' ! -name 'dmix.conf' ! -name 'dsnoop.conf' | xargs --no-run-if-empty rm
-	-rm -r $(TARGET_datadir)/aclocal
-endef
-ALSA_LIB_TARGET_FINALIZE_HOOKS += ALSA_LIB_TARGET_CLEANUP
-
-alsa-lib: | $(TARGET_DIR)
-	$(call autotools-package)
-
-# -----------------------------------------------------------------------------
-
-POPT_VERSION = 1.16
-POPT_DIR = popt-$(POPT_VERSION)
-POPT_SOURCE = popt-$(POPT_VERSION).tar.gz
-POPT_SITE = ftp://anduin.linuxfromscratch.org/BLFS/popt
-
-POPT_CONF_OPTS = \
-	--datarootdir=$(REMOVE_datarootdir)
-
-popt: | $(TARGET_DIR)
-	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
 
