@@ -3,21 +3,30 @@
 #
 # -----------------------------------------------------------------------------
 
+# resolve dependencies
+define DEPENDENCIES
+	make $($(PKG)_DEPENDENCIES)
+endef
+
+# -----------------------------------------------------------------------------
+
 # download archives into download directory
 download = wget --no-check-certificate -t3 -T60 -c -P $(DL_DIR)
 
-WGET_DOWNLOAD = wget --no-check-certificate -t3 -T60 -c -P
+GET_ARCHIVE = wget --no-check-certificate -t3 -T60 -c -P
 
 define DOWNLOAD
-	$(call MESSAGE,"Downloading")
 	$(foreach hook,$($(PKG)_PRE_DOWNLOAD_HOOKS),$(call $(hook))$(sep))
 	$(Q)( \
 	if [ "$($(PKG)_VER)" == "git" ]; then \
+	  $(call MESSAGE,"Downloading") ; \
 	  $(GET-GIT-SOURCE) $($(PKG)_SITE)/$($(PKG)_SOURCE) $(DL_DIR)/$($(PKG)_SOURCE); \
 	elif [ "$($(PKG)_VER)" == "svn" ]; then \
+	  $(call MESSAGE,"Downloading") ; \
 	  $(GET-SVN-SOURCE) $($(PKG)_SITE)/$($(PKG)_SOURCE) $(DL_DIR)/$($(PKG)_SOURCE); \
 	elif [ ! -f $(DL_DIR)/$(1) ]; then \
-	    $(WGET_DOWNLOAD) $(DL_DIR) $($(PKG)_SITE)/$(1); \
+	  $(call MESSAGE,"Downloading") ; \
+	  $(GET_ARCHIVE) $(DL_DIR) $($(PKG)_SITE)/$(1); \
 	fi; \
 	)
 	$(foreach hook,$($(PKG)_POST_DOWNLOAD_HOOKS),$(call $(hook))$(sep))
@@ -50,6 +59,25 @@ define EXTRACT # (directory)
 	esac \
 	)
 	$(foreach hook,$($(PKG)_POST_EXTRACT_HOOKS),$(call $(hook))$(sep))
+endef
+
+# -----------------------------------------------------------------------------
+
+# start-up build
+define STARTUP
+	@$(call MESSAGE,"Start-up build")
+	$(REMOVE)/$($(PKG)_DIR)
+endef
+
+# follow-up build
+define FOLLOWUP
+	@$(call MESSAGE,"Follow-up build")
+	$(foreach hook,$($(PKG)_PRE_FOLLOWUP_HOOKS),$(call $(hook))$(sep))
+	$(REWRITE_CONFIG_SCRIPTS)
+	$(REWRITE_LIBTOOL)
+	$(REMOVE)/$($(PKG)_DIR)
+	$(foreach hook,$($(PKG)_POST_FOLLOWUP_HOOKS),$(call $(hook))$(sep))
+	$(TOUCH)
 endef
 
 # -----------------------------------------------------------------------------
@@ -87,6 +115,7 @@ GET-SVN-SOURCE  = support/scripts/get-svn-source.sh
 UPDATE-RC.D     = support/scripts/update-rc.d -r $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
+
 # execute local scripts
 define local-script
 	@if [ -x $(LOCAL_DIR)/scripts/$(1) ]; then \
@@ -159,9 +188,6 @@ REWRITE_CONFIG_RULES = "s,^prefix=.*,prefix='$(TARGET_prefix)',; \
 			s,^exec_prefix=.*,exec_prefix='$(TARGET_exec_prefix)',; \
 			s,^libdir=.*,libdir='$(TARGET_libdir)',; \
 			s,^includedir=.*,includedir='$(TARGET_includedir)',"
-
-# currenty unused
-#REWRITE_CONFIG = $(SED) $(REWRITE_CONFIG_RULES)
 
 define rewrite_config_script # (config-script)
 	mv $(TARGET_bindir)/$(1) $(HOST_DIR)/bin; \
