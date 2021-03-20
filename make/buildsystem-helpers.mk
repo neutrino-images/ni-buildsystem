@@ -19,10 +19,10 @@ download = $(GET_ARCHIVE) $(DL_DIR)
 define DOWNLOAD
 	$(foreach hook,$($(PKG)_PRE_DOWNLOAD_HOOKS),$(call $(hook))$(sep))
 	$(Q)( \
-	if [ "$($(PKG)_VER)" == "git" ]; then \
+	if [ "$($(PKG)_VERSION)" == "git" ]; then \
 	  $(call MESSAGE,"Downloading") ; \
 	  $(GET_GIT_SOURCE) $($(PKG)_SITE)/$($(PKG)_SOURCE) $(DL_DIR)/$($(PKG)_SOURCE); \
-	elif [ "$($(PKG)_VER)" == "svn" ]; then \
+	elif [ "$($(PKG)_VERSION)" == "svn" ]; then \
 	  $(call MESSAGE,"Downloading") ; \
 	  $(GET_SVN_SOURCE) $($(PKG)_SITE)/$($(PKG)_SOURCE) $(DL_DIR)/$($(PKG)_SOURCE); \
 	elif [ ! -f $(DL_DIR)/$(1) ]; then \
