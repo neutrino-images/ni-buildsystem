@@ -11,9 +11,10 @@ endef
 # -----------------------------------------------------------------------------
 
 # download archives into download directory
-download = wget --no-check-certificate -t3 -T60 -c -P $(DL_DIR)
-
 GET_ARCHIVE = wget --no-check-certificate -t3 -T60 -c -P
+
+# for compatibility with "old" infrastructure
+download = $(GET_ARCHIVE) $(DL_DIR)
 
 define DOWNLOAD
 	$(foreach hook,$($(PKG)_PRE_DOWNLOAD_HOOKS),$(call $(hook))$(sep))
@@ -76,6 +77,7 @@ define FOLLOWUP
 	$(REWRITE_CONFIG_SCRIPTS)
 	$(REWRITE_LIBTOOL)
 	$(REMOVE)/$($(PKG)_DIR)
+	$(foreach hook,$($(PKG)_TARGET_FINALIZE_HOOKS),$(call $(hook))$(sep))
 	$(foreach hook,$($(PKG)_POST_FOLLOWUP_HOOKS),$(call $(hook))$(sep))
 	$(TOUCH)
 endef

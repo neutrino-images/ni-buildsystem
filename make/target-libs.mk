@@ -48,10 +48,14 @@ LIBFUSE_CONF_OPTS = \
 	--enable-lib \
 	--enable-silent-rules
 
-libfuse: | $(TARGET_DIR)
-	$(call autotools-package)
+define LIBFUSE_TARGET_CLEANUP
 	-rm -r $(TARGET_sysconfdir)/udev
 	-rm $(TARGET_sysconfdir)/init.d/fuse
+endef
+LIBFUSE_TARGET_FINALIZE_HOOKS += LIBFUSE_TARGET_CLEANUP
+
+libfuse: | $(TARGET_DIR)
+	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
 
@@ -178,9 +182,13 @@ LIBPNG_CONF_OPTS = \
 	--disable-static \
 	$(if $(filter $(BOXSERIES),hd5x hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse),--enable-arm-neon,--disable-arm-neon)
 
+define LIBPNG_TARGET_CLEANUP
+	-rm $(addprefix $(TARGET_bindir)/,libpng-config)
+endef
+LIBPNG_TARGET_FINALIZE_HOOKS += LIBPNG_TARGET_CLEANUP
+
 libpng: | $(TARGET_DIR)
 	$(call autotools-package)
-	-rm $(addprefix $(TARGET_bindir)/,libpng-config)
 
 # -----------------------------------------------------------------------------
 
@@ -240,9 +248,13 @@ LIBJPEG_TURBO_CONF_OPTS = \
 	-DWITH_SIMD=False \
 	-DWITH_JPEG8=80
 
+define LIBJPEG_TURBO_TARGET_CLEANUP
+	-rm $(addprefix $(TARGET_bindir)/,cjpeg djpeg jpegtran rdjpgcom tjbench wrjpgcom)
+endef
+LIBJPEG_TURBO_TARGET_FINALIZE_HOOKS += LIBJPEG_TURBO_TARGET_CLEANUP
+
 libjpeg-turbo: $(DL_DIR)/$(LIBJPEG_TURBO_SOURCE) | $(TARGET_DIR)
 	$(call cmake-package)
-	-rm $(addprefix $(TARGET_bindir)/,cjpeg djpeg jpegtran rdjpgcom tjbench wrjpgcom)
 
 # -----------------------------------------------------------------------------
 
@@ -619,9 +631,13 @@ LIBGCRYPT_CONF_OPTS = \
 	--disable-static \
 	--disable-tests
 
+define LIBGCRYPT_TARGET_CLEANUP
+	-rm $(addprefix $(TARGET_bindir)/,dumpsexp hmac256 mpicalc)
+endef
+LIBGCRYPT_TARGET_FINALIZE_HOOKS += LIBGCRYPT_TARGET_CLEANUP
+
 libgcrypt: | $(TARGET_DIR)
 	$(call autotools-package)
-	-rm $(addprefix $(TARGET_bindir)/,dumpsexp hmac256 mpicalc)
 
 # -----------------------------------------------------------------------------
 
@@ -710,10 +726,14 @@ LIBXML2_CONF_OPTS = \
 	--without-lzma \
 	--without-schematron
 
-libxml2: | $(TARGET_DIR)
-	$(call autotools-package)
+define LIBXML2_TARGET_CLEANUP
 	-rm -r $(TARGET_libdir)/cmake
 	-rm $(addprefix $(TARGET_libdir)/,xml2Conf.sh)
+endef
+LIBXML2_TARGET_FINALIZE_HOOKS += LIBXML2_TARGET_CLEANUP
+
+libxml2: | $(TARGET_DIR)
+	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
 
@@ -761,10 +781,14 @@ LIBXSLT_CONF_OPTS = \
 	--without-debug \
 	--without-mem-debug
 
-libxslt: | $(TARGET_DIR)
-	$(call autotools-package)
+define LIBXSLT_TARGET_CLEANUP
 	-rm -r $(TARGET_libdir)/libxslt-plugins/
 	-rm $(addprefix $(TARGET_libdir)/,xsltConf.sh)
+endef
+LIBXSLT_TARGET_FINALIZE_HOOKS += LIBXSLT_TARGET_CLEANUP
+
+libxslt: | $(TARGET_DIR)
+	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
 
@@ -802,11 +826,15 @@ LIBTIRPC_CONF_OPTS = \
 	--disable-gssapi \
 	--enable-silent-rules
 
+ifeq ($(BOXSERIES),hd1)
+  define LIBTIRPC_DISABLE_IPV6
+	$(SED) '/^\(udp\|tcp\)6/ d' $(TARGET_sysconfdir)/netconfig
+  endef
+  LIBTIRPC_TARGET_FINALIZE_HOOKS += LIBTIRPC_DISABLE_IPV6
+endif
+
 libtirpc: | $(TARGET_DIR)
 	$(call autotools-package)
-ifeq ($(BOXSERIES),hd1)
-	$(SED) '/^\(udp\|tcp\)6/ d' $(TARGET_sysconfdir)/netconfig
-endif
 
 # -----------------------------------------------------------------------------
 
@@ -1044,11 +1072,15 @@ ALSA_LIB_CONF_OPTS = \
 	--disable-python \
 	--disable-topology
 
-alsa-lib: | $(TARGET_DIR)
-	$(call autotools-package)
+define ALSA_LIB_TARGET_CLEANUP
 	find $(TARGET_datadir)/alsa/cards/ -name '*.conf' ! -name 'aliases.conf' | xargs --no-run-if-empty rm
 	find $(TARGET_datadir)/alsa/pcm/ -name '*.conf' ! -name 'default.conf' ! -name 'dmix.conf' ! -name 'dsnoop.conf' | xargs --no-run-if-empty rm
 	-rm -r $(TARGET_datadir)/aclocal
+endef
+ALSA_LIB_TARGET_FINALIZE_HOOKS += ALSA_LIB_TARGET_CLEANUP
+
+alsa-lib: | $(TARGET_DIR)
+	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
 

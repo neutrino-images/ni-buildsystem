@@ -274,13 +274,17 @@ COREUTILS_CONF_OPTS = \
 
 COREUTILS_BINARIES = touch
 
-coreutils: | $(TARGET_DIR)
-	$(call autotools-package)
-	for bin in $($(PKG)_BINARIES); do \
+define COREUTILS_INSTALL_BINARIES
+	for bin in $(COREUTILS_BINARIES); do \
 		rm -f $(TARGET_base_bindir)/$$bin; \
 		$(INSTALL_EXEC) -D $(TARGET_base_bindir).$(@F)/$$bin $(TARGET_base_bindir)/$$bin; \
 	done
 	rm -r $(TARGET_base_bindir).$(@F)
+endef
+COREUTILS_TARGET_FINALIZE_HOOKS += COREUTILS_INSTALL_BINARIES
+
+coreutils: | $(TARGET_DIR)
+	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
 
@@ -308,17 +312,25 @@ PROCPS_NG_CONF_OPTS = \
 
 PROCPS_NG_BINARIES = ps top
 
-procps-ng: | $(TARGET_DIR)
-	$(call autotools-package)
-	$(INSTALL_DATA) -D $(PKG_FILES_DIR)/sysctl.conf $(TARGET_sysconfdir)/sysctl.conf
-	$(INSTALL) -d $(TARGET_sysconfdir)/sysctl.d
-	$(INSTALL) -d $(TARGET_localstatedir)/etc/sysctl.d
-	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/sysctl.init $(TARGET_sysconfdir)/init.d/sysctl
-	for bin in $($(PKG)_BINARIES); do \
+define PROCPS_NG_INSTALL_BINARIES
+	for bin in $(PROCPS_NG_BINARIES); do \
 		rm -f $(TARGET_base_bindir)/$$bin; \
 		$(INSTALL_EXEC) -D $(TARGET_base_bindir).$(@F)/$$bin $(TARGET_base_bindir)/$$bin; \
 	done
 	rm -r $(TARGET_base_bindir).$(@F)
+endef
+PROCPS_NG_TARGET_FINALIZE_HOOKS += PROCPS_NG_INSTALL_BINARIES
+
+define PROCPS_NG_INSTALL_SYSCTL_FILES
+	$(INSTALL_DATA) -D $(PKG_FILES_DIR)/sysctl.conf $(TARGET_sysconfdir)/sysctl.conf
+	$(INSTALL) -d $(TARGET_sysconfdir)/sysctl.d
+	$(INSTALL) -d $(TARGET_localstatedir)/etc/sysctl.d
+	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/sysctl.init $(TARGET_sysconfdir)/init.d/sysctl
+endef
+PROCPS_NG_TARGET_FINALIZE_HOOKS += PROCPS_NG_INSTALL_SYSCTL_FILES
+
+procps-ng: | $(TARGET_DIR)
+	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
 
@@ -353,13 +365,17 @@ ifeq ($(BOXSERIES),hd2)
   MTD_UTILS_SBINARIES += nanddump nandtest nandwrite mkfs.jffs2
 endif
 
-mtd-utils: | $(TARGET_DIR)
-	$(call autotools-package)
-	for sbin in $($(PKG)_SBINARIES); do \
+define MTD_UTILS_INSTALL_BINARIES
+	for sbin in $(MTD_UTILS_SBINARIES); do \
 		rm -f $(TARGET_sbindir)/$$sbin; \
 		$(INSTALL_EXEC) -D $(TARGET_base_sbindir).$(@F)/$$sbin $(TARGET_base_sbindir)/$$sbin; \
 	done
 	rm -r $(TARGET_base_sbindir).$(@F)
+endef
+MTD_UTILS_TARGET_FINALIZE_HOOKS += MTD_UTILS_INSTALL_BINARIES
+
+mtd-utils: | $(TARGET_DIR)
+	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
 
@@ -403,11 +419,19 @@ NTFS_3G_CONF_OPTS = \
 	--disable-library \
 	--with-fuse=external
 
-ntfs-3g: | $(TARGET_DIR)
-	$(call autotools-package)
+define NTFS_3G_TARGET_CLEANUP
 	-rm $(addprefix $(TARGET_base_bindir)/,lowntfs-3g ntfs-3g.probe)
 	-rm $(addprefix $(TARGET_base_sbindir)/,mount.lowntfs-3g)
+endef
+NTFS_3G_TARGET_FINALIZE_HOOKS += NTFS_3G_TARGET_CLEANUP
+
+define NTFS_3G_SYMLINK_MOUNT_NTFS
 	ln -sf $(base_bindir)/ntfs-3g $(TARGET_base_sbindir)/mount.ntfs
+endef
+NTFS_3G_TARGET_FINALIZE_HOOKS += NTFS_3G_SYMLINK_MOUNT_NTFS
+
+ntfs-3g: | $(TARGET_DIR)
+	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
 
@@ -595,9 +619,13 @@ F2FS_TOOLS_CONF_OPTS = \
 	--libdir=$(libdir) \
 	--without-selinux
 
+define F2FS_TOOLS_TARGET_CLEANUP
+	-rm $(addprefix $(TARGET_base_sbindir)/,sg_write_buffer)
+endef
+F2FS_TOOLS_TARGET_FINALIZE_HOOKS += F2FS_TOOLS_TARGET_CLEANUP
+
 f2fs-tools: | $(TARGET_DIR)
 	$(call autotools-package)
-	-rm $(addprefix $(TARGET_base_sbindir)/,sg_write_buffer)
 
 # -----------------------------------------------------------------------------
 
@@ -1391,15 +1419,23 @@ SG3_UTILS_CONF_OPTS = \
 
 SG3_UTILS_BINARIES = sg_start
 
-sg3_utils: | $(TARGET_DIR)
-	$(call autotools-package)
-	for bin in $($(PKG)_BINARIES); do \
+define SG3_UTILS_INSTALL_BINARIES
+	for bin in $(SG3_UTILS_BINARIES); do \
 		rm -f $(TARGET_bindir)/$$bin; \
 		$(INSTALL_EXEC) -D $(TARGET_bindir).$(@F)/$$bin $(TARGET_bindir)/$$bin; \
 	done
 	rm -r $(TARGET_bindir).$(@F)
+endef
+SG3_UTILS_TARGET_FINALIZE_HOOKS += SG3_UTILS_INSTALL_BINARIES
+
+define SG3_UTILS_INSTALL_SDX_INIT
 	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/sdX.init $(TARGET_sysconfdir)/init.d/sdX
 	$(UPDATE-RC.D) sdX stop 97 0 6 .
+endef
+SG3_UTILS_TARGET_FINALIZE_HOOKS += SG3_UTILS_INSTALL_SDX_INIT
+
+sg3_utils: | $(TARGET_DIR)
+	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
 
@@ -1567,19 +1603,33 @@ NFS_UTILS_CONF_OPTS = \
 	--with-rpcgen=internal \
 	--without-systemd
 
-nfs-utils: | $(TARGET_DIR)
-	$(call autotools-package)
+define NFS_UTILS_TARGET_CLEANUP
 	chmod 0755 $(TARGET_base_sbindir)/mount.nfs
 	rm -f $(addprefix $(TARGET_base_sbindir)/,mount.nfs4 osd_login umount.nfs umount.nfs4)
 	rm -f $(addprefix $(TARGET_sbindir)/,mountstats nfsiostat)
-  ifeq ($(PERSISTENT_VAR_PARTITION),yes)
+endef
+NFS_UTILS_TARGET_FINALIZE_HOOKS += NFS_UTILS_TARGET_CLEANUP
+
+ifeq ($(PERSISTENT_VAR_PARTITION),yes)
+  define NFS_UTILS_INSTALL_EXPORTS_FILE
 	$(INSTALL_DATA) -D $(PKG_FILES_DIR)/exports-var $(TARGET_localstatedir)/etc/exports
 	ln -sf /var/etc/exports $(TARGET_sysconfdir)/exports
-  else
+  endef
+else
+  define NFS_UTILS_INSTALL_EXPORTS_FILE
 	$(INSTALL_DATA) -D $(PKG_FILES_DIR)/exports $(TARGET_sysconfdir)/exports
-  endif
+  endef
+endif
+NFS_UTILS_TARGET_FINALIZE_HOOKS += NFS_UTILS_INSTALL_EXPORTS_FILE
+
+define NFS_UTILS_INSTALL_NFSD_INIT
 	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/nfsd.init $(TARGET_sysconfdir)/init.d/nfsd
 	$(UPDATE-RC.D) nfsd defaults 75 25
+endef
+NFS_UTILS_TARGET_FINALIZE_HOOKS += NFS_UTILS_INSTALL_NFSD_INIT
+
+nfs-utils: | $(TARGET_DIR)
+	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
 
@@ -1597,9 +1647,13 @@ RPCBIND_CONF_OPTS = \
 	--with-rpcuser=root \
 	--with-systemdsystemunitdir=no
 
+define RPCBIND_TARGET_CLEANUP
+	-rm $(TARGET_bindir)/rpcgen
+endef
+RPCBIND_TARGET_FINALIZE_HOOKS += RPCBIND_TARGET_CLEANUP
+
 rpcbind: | $(TARGET_DIR)
 	$(call autotools-package)
-	rm -rf $(TARGET_bindir)/rpcgen
 
 # -----------------------------------------------------------------------------
 
@@ -1689,10 +1743,14 @@ MC_CONF_OPTS = \
 	--without-gpm-mouse \
 	--without-x
 
+define MC_TARGET_CLEANUP
+	-rm -r $(TARGET_datadir)/mc/examples
+	find $(TARGET_datadir)/mc/skins -type f ! -name default.ini | xargs --no-run-if-empty rm
+endef
+MC_TARGET_FINALIZE_HOOKS += MC_TARGET_CLEANUP
+
 mc: | $(TARGET_DIR)
 	$(call autotools-package)
-	rm -rf $(TARGET_datadir)/mc/examples
-	find $(TARGET_datadir)/mc/skins -type f ! -name default.ini | xargs --no-run-if-empty rm
 
 # -----------------------------------------------------------------------------
 
