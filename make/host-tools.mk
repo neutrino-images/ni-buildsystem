@@ -67,13 +67,13 @@ $(PKG_CONFIG): $(PKG_CONFIG_DEPENDENCIES) | $(HOST_DIR)
 
 # -----------------------------------------------------------------------------
 
-HOST_MTD_UTILS_VERSION = $(MTD_UTILS_VERSION)
+HOST_MTD_UTILS_VERSION = 2.0.2
 HOST_MTD_UTILS_DIR = mtd-utils-$(HOST_MTD_UTILS_VERSION)
 HOST_MTD_UTILS_SOURCE = mtd-utils-$(HOST_MTD_UTILS_VERSION).tar.bz2
 HOST_MTD_UTILS_SITE = ftp://ftp.infradead.org/pub/mtd-utils
 
-#$(DL_DIR)/$(HOST_MTD_UTILS_SOURCE):
-#	$(download) $(HOST_MTD_UTILS_SITE)/$(HOST_MTD_UTILS_SOURCE)
+$(DL_DIR)/$(HOST_MTD_UTILS_SOURCE):
+	$(download) $(HOST_MTD_UTILS_SITE)/$(HOST_MTD_UTILS_SOURCE)
 
 HOST_MTD_UTILS_CONF_ENV = \
 	ZLIB_CFLAGS=" " \
@@ -144,13 +144,13 @@ host-zic: $(DL_DIR)/$(HOST_ZIC_SOURCE) | $(HOST_DIR)
 
 # -----------------------------------------------------------------------------
 
-HOST_PARTED_VERSION = $(PARTED_VERSION)
+HOST_PARTED_VERSION = 3.3
 HOST_PARTED_DIR = parted-$(HOST_PARTED_VERSION)
 HOST_PARTED_SOURCE = parted-$(HOST_PARTED_VERSION).tar.xz
 HOST_PARTED_SITE = $(GNU_MIRROR)/parted
 
-#$(DL_DIR)/$(HOST_PARTED_SOURCE):
-#	$(download) $(HOST_PARTED_SITE)/$(HOST_PARTED_SOURCE)
+$(DL_DIR)/$(HOST_PARTED_SOURCE):
+	$(download) $(HOST_PARTED_SITE)/$(HOST_PARTED_SOURCE)
 
 HOST_PARTED_AUTORECONF = YES
 
@@ -173,13 +173,13 @@ host-parted: $(DL_DIR)/$(HOST_PARTED_SOURCE) | $(HOST_DIR)
 
 # -----------------------------------------------------------------------------
 
-HOST_DOSFSTOOLS_VERSION = $(DOSFSTOOLS_VERSION)
+HOST_DOSFSTOOLS_VERSION = 4.1
 HOST_DOSFSTOOLS_DIR = dosfstools-$(HOST_DOSFSTOOLS_VERSION)
 HOST_DOSFSTOOLS_SOURCE = dosfstools-$(HOST_DOSFSTOOLS_VERSION).tar.xz
 HOST_DOSFSTOOLS_SITE = https://github.com/dosfstools/dosfstools/releases/download/v$(HOST_DOSFSTOOLS_VERSION)
 
-#$(DL_DIR)/$(HOST_DOSFSTOOLS_SOURCE):
-#	$(download) $(HOST_DOSFSTOOLS_SITE)/$(HOST_DOSFSTOOLS_SOURCE)
+$(DL_DIR)/$(HOST_DOSFSTOOLS_SOURCE):
+	$(download) $(HOST_DOSFSTOOLS_SITE)/$(HOST_DOSFSTOOLS_SOURCE)
 
 HOST_DOSFSTOOLS_CONF_OPTS = \
 	--without-udev
