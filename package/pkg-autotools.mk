@@ -5,15 +5,14 @@
 ################################################################################
 
 define autotools-package
-	$(REMOVE)/$($(PKG)_DIR)
-	$(UNTAR)/$($(PKG)_SOURCE)
+	$(call DEPENDENCIES)
+	$(call DOWNLOAD,$($(PKG)_SOURCE))
+	$(call STARTUP)
+	$(call EXTRACT,$(BUILD_DIR))
 	$(CHDIR)/$($(PKG)_DIR); \
 		$(APPLY_PATCHES); \
 		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_CONFIG_SCRIPTS)
-	$(REWRITE_LIBTOOL)
-	$(REMOVE)/$($(PKG)_DIR)
-	$(TOUCH)
+	$(call FOLLOWUP)
 endef

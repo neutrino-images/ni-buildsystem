@@ -201,7 +201,7 @@ NEUTRINO_MEDIATHEK_SITE = https://github.com/neutrino-mediathek
 
 neutrino-mediathek: $(SHARE_PLUGINS) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
-	$(GET-GIT-SOURCE) $(PKG_SITE)/$(PKG_SOURCE) $(DL_DIR)/$(PKG_SOURCE)
+	$(GET_GIT_SOURCE) $(PKG_SITE)/$(PKG_SOURCE) $(DL_DIR)/$(PKG_SOURCE)
 	$(CPDIR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
 		$(INSTALL_COPY) plugins/* $(SHARE_PLUGINS)/; \

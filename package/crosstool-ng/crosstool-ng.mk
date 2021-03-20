@@ -40,7 +40,7 @@ ifeq ($(wildcard $(CROSS_DIR)/build.log.bz2),)
 
 crosstool-ng: $(CROSSTOOL_NG_DEPS) | $(BUILD_DIR)
 	$(REMOVE)/$($(PKG)_DIR)
-	$(GET-GIT-SOURCE) $($(PKG)_SITE)/$($(PKG)_SOURCE) $(DL_DIR)/$($(PKG)_SOURCE)
+	$(GET_GIT_SOURCE) $($(PKG)_SITE)/$($(PKG)_SOURCE) $(DL_DIR)/$($(PKG)_SOURCE)
 	$(CPDIR)/$($(PKG)_SOURCE)
 ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd1 hd2))
 	$(CHDIR)/$($(PKG)_DIR); \

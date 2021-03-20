@@ -38,9 +38,6 @@ LIBFUSE_DIR = fuse-$(LIBFUSE_VERSION)
 LIBFUSE_SOURCE = fuse-$(LIBFUSE_VERSION).tar.gz
 LIBFUSE_SITE = https://github.com/libfuse/libfuse/releases/download/fuse-$(LIBFUSE_VERSION)
 
-$(DL_DIR)/$(LIBFUSE_SOURCE):
-	$(download) $(LIBFUSE_SITE)/$(LIBFUSE_SOURCE)
-
 LIBFUSE_CONF_OPTS = \
 	--datarootdir=$(REMOVE_datarootdir) \
 	--disable-static \
@@ -51,7 +48,7 @@ LIBFUSE_CONF_OPTS = \
 	--enable-lib \
 	--enable-silent-rules
 
-libfuse: $(DL_DIR)/$(LIBFUSE_SOURCE) | $(TARGET_DIR)
+libfuse: | $(TARGET_DIR)
 	$(call autotools-package)
 	-rm -r $(TARGET_sysconfdir)/udev
 	-rm $(TARGET_sysconfdir)/init.d/fuse
@@ -63,14 +60,11 @@ LIBUPNP_DIR = libupnp-$(LIBUPNP_VERSION)
 LIBUPNP_SOURCE = libupnp-$(LIBUPNP_VERSION).tar.bz2
 LIBUPNP_SITE = http://sourceforge.net/projects/pupnp/files/pupnp/libUPnP%20$(LIBUPNP_VERSION)
 
-$(DL_DIR)/$(LIBUPNP_SOURCE):
-	$(download) $(LIBUPNP_SITE)/$(LIBUPNP_SOURCE)
-
 LIBUPNP_CONV_OPTS = \
 	--enable-shared \
 	--disable-static
 
-libupnp: $(DL_DIR)/$(LIBUPNP_SOURCE) | $(TARGET_DIR)
+libupnp: | $(TARGET_DIR)
 	$(call autotools-package)
 	
 # -----------------------------------------------------------------------------
@@ -80,15 +74,12 @@ LIBDVBSI_DIR = libdvbsi++-$(LIBDVBSI_VERSION)
 LIBDVBSI_SOURCE = libdvbsi++-$(LIBDVBSI_VERSION).tar.bz2
 LIBDVBSI_SITE = https://github.com/mtdcr/libdvbsi/releases/download/$(LIBDVBSI_VERSION)
 
-$(DL_DIR)/$(LIBDVBSI_SOURCE):
-	$(download) $(LIBDVBSI_SITE)/$(LIBDVBSI_SOURCE)
-
 LIBDVBSI_CONV_OPTS = \
 	--enable-silent-rules \
 	--enable-shared \
 	--disable-static
 
-libdvbsi: $(DL_DIR)/$(LIBDVBSI_SOURCE) | $(TARGET_DIR)
+libdvbsi: | $(TARGET_DIR)
 	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
@@ -102,7 +93,7 @@ LIBDVBCSA_AUTORECONF = YES
 
 libdvbcsa: | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
-	$(GET-GIT-SOURCE) $(PKG_SITE)/$(PKG_SOURCE) $(DL_DIR)/$(PKG_SOURCE)
+	$(GET_GIT_SOURCE) $(PKG_SITE)/$(PKG_SOURCE) $(DL_DIR)/$(PKG_SOURCE)
 	$(CPDIR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
 		$(CONFIGURE); \
@@ -139,9 +130,6 @@ LIBCURL_DIR = curl-$(LIBCURL_VERSION)
 LIBCURL_SOURCE = curl-$(LIBCURL_VERSION).tar.bz2
 LIBCURL_SITE = https://curl.haxx.se/download
 
-$(DL_DIR)/$(LIBCURL_SOURCE):
-	$(download) $(LIBCURL_SITE)/$(LIBCURL_SOURCE)
-
 LIBCURL_DEPENDENCIES = zlib openssl rtmpdump ca-bundle
 
 LIBCURL_CONFIG_SCRIPTS = curl-config
@@ -171,7 +159,7 @@ LIBCURL_CONF_OPTS = \
 	--with-librtmp=$(TARGET_libdir) \
 	--enable-optimize
 
-libcurl: $(LIBCURL_DEPENDENCIES) $(DL_DIR)/$(LIBCURL_SOURCE) | $(TARGET_DIR)
+libcurl: | $(TARGET_DIR)
 	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
@@ -180,9 +168,6 @@ LIBPNG_VERSION = 1.6.37
 LIBPNG_DIR = libpng-$(LIBPNG_VERSION)
 LIBPNG_SOURCE = libpng-$(LIBPNG_VERSION).tar.xz
 LIBPNG_SITE = https://sourceforge.net/projects/libpng/files/libpng16/$(LIBPNG_VERSION)
-
-$(DL_DIR)/$(LIBPNG_SOURCE):
-	$(download) $(LIBPNG_SITE)/$(LIBPNG_SOURCE)
 
 LIBPNG_DEPENDENCIES = zlib
 
@@ -193,7 +178,7 @@ LIBPNG_CONF_OPTS = \
 	--disable-static \
 	$(if $(filter $(BOXSERIES),hd5x hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse),--enable-arm-neon,--disable-arm-neon)
 
-libpng: $(LIBPNG_DEPENDENCIES) $(DL_DIR)/$(LIBPNG_SOURCE) | $(TARGET_DIR)
+libpng: | $(TARGET_DIR)
 	$(call autotools-package)
 	-rm $(addprefix $(TARGET_bindir)/,libpng-config)
 
@@ -391,13 +376,10 @@ LIBUSB_DIR = libusb-$(LIBUSB_VERSION)
 LIBUSB_SOURCE = libusb-$(LIBUSB_VERSION).tar.bz2
 LIBUSB_SITE = https://github.com/libusb/libusb/releases/download/v$(LIBUSB_VERSION)
 
-$(DL_DIR)/$(LIBUSB_SOURCE):
-	$(download) $(LIBUSB_SITE)/$(LIBUSB_SOURCE)
-
 LIBUSB_CONF_OPTS = \
 	--disable-udev
 
-libusb: $(DL_DIR)/$(LIBUSB_SOURCE) | $(TARGET_DIR)
+libusb: | $(TARGET_DIR)
 	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
@@ -407,14 +389,11 @@ LIBUSB_COMPAT_DIR = libusb-compat-$(LIBUSB_COMPAT_VERSION)
 LIBUSB_COMPAT_SOURCE = libusb-compat-$(LIBUSB_COMPAT_VERSION).tar.bz2
 LIBUSB_COMPAT_SITE = https://github.com/libusb/libusb-compat-0.1/releases/download/v$(LIBUSB_COMPAT_VERSION)
 
-$(DL_DIR)/$(LIBUSB_COMPAT_SOURCE):
-	$(download) $(LIBUSB_COMPAT_SITE)/$(LIBUSB_COMPAT_SOURCE)
-
 LIBUSB_COMPAT_CONFIG_SCRIPTS = libusb-config
 
 LIBUSB_COMPAT_DEPENDENCIES = libusb
 
-libusb-compat: $(LIBUSB_COMPAT_DEPENDENCIES) $(DL_DIR)/$(LIBUSB_COMPAT_SOURCE) | $(TARGET_DIR)
+libusb-compat: | $(TARGET_DIR)
 	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
@@ -424,9 +403,6 @@ LIBGD_DIR = libgd-$(LIBGD_VERSION)
 LIBGD_SOURCE = libgd-$(LIBGD_VERSION).tar.xz
 LIBGD_SITE = https://github.com/libgd/libgd/releases/download/gd-$(LIBGD_VERSION)
 
-$(DL_DIR)/$(LIBGD_SOURCE):
-	$(download) $(LIBGD_SITE)/$(LIBGD_SOURCE)
-
 LIBGD_DEPENDENCIES = zlib libpng libjpeg-turbo freetype
 
 LIBGD_CONF_OPTS = \
@@ -435,7 +411,7 @@ LIBGD_CONF_OPTS = \
 	--without-xpm \
 	--without-x
 
-libgd: $(LIBGD_DEPENDENCIES) $(DL_DIR)/$(LIBGD_SOURCE) | $(TARGET_DIR)
+libgd: | $(TARGET_DIR)
 	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
@@ -452,7 +428,7 @@ LIBDPF_MAKE_OPTS = \
 
 libdpf: $(LIBDPF_DEPENDENCIES) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
-	$(GET-GIT-SOURCE) $(PKG_SITE)/$(PKG_SOURCE) $(DL_DIR)/$(PKG_SOURCE)
+	$(GET_GIT_SOURCE) $(PKG_SITE)/$(PKG_SOURCE) $(DL_DIR)/$(PKG_SOURCE)
 	$(CPDIR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
 		$(APPLY_PATCHES); \
@@ -471,13 +447,10 @@ LZO_DIR = lzo-$(LZO_VERSION)
 LZO_SOURCE = lzo-$(LZO_VERSION).tar.gz
 LZO_SITE = https://www.oberhumer.com/opensource/lzo/download
 
-$(DL_DIR)/$(LZO_SOURCE):
-	$(download) $(LZO_SITE)/$(LZO_SOURCE)
-
 LZO_CONF_OPTS = \
 	--docdir=$(REMOVE_docdir)
 
-lzo: $(DL_DIR)/$(LZO_SOURCE) | $(TARGET_DIR)
+lzo: | $(TARGET_DIR)
 	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
@@ -516,9 +489,6 @@ EXPAT_DIR = expat-$(EXPAT_VERSION)
 EXPAT_SOURCE = expat-$(EXPAT_VERSION).tar.bz2
 EXPAT_SITE = https://sourceforge.net/projects/expat/files/expat/$(EXPAT_VERSION)
 
-$(DL_DIR)/$(EXPAT_SOURCE):
-	$(download) $(EXPAT_SITE)/$(EXPAT_SOURCE)
-
 EXPAT_AUTORECONF = YES
 
 EXPAT_CONF_OPTS = \
@@ -526,7 +496,7 @@ EXPAT_CONF_OPTS = \
 	--without-xmlwf \
 	--without-docbook
 
-expat: $(DL_DIR)/$(EXPAT_SOURCE) | $(TARGET_DIR)
+expat: | $(TARGET_DIR)
 	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
@@ -578,9 +548,6 @@ LIBASS_DIR = libass-$(LIBASS_VERSION)
 LIBASS_SOURCE = libass-$(LIBASS_VERSION).tar.xz
 LIBASS_SITE = https://github.com/libass/libass/releases/download/$(LIBASS_VERSION)
 
-$(DL_DIR)/$(LIBASS_SOURCE):
-	$(download) $(LIBASS_SITE)/$(LIBASS_SOURCE)
-
 LIBASS_DEPENDENCIES = freetype fribidi
 
 LIBASS_CONF_OPTS = \
@@ -590,7 +557,7 @@ LIBASS_CONF_OPTS = \
 	--disable-harfbuzz \
 	--disable-require-system-font-provider
 
-libass: $(LIBASS_DEPENDENCIES) $(DL_DIR)/$(LIBASS_SOURCE) | $(TARGET_DIR)
+libass: | $(TARGET_DIR)
 	$(call autotools-package)
 	
 # -----------------------------------------------------------------------------
@@ -640,9 +607,6 @@ LIBGCRYPT_DIR = libgcrypt-$(LIBGCRYPT_VERSION)
 LIBGCRYPT_SOURCE = libgcrypt-$(LIBGCRYPT_VERSION).tar.gz
 LIBGCRYPT_SITE = ftp://ftp.gnupg.org/gcrypt/libgcrypt
 
-$(DL_DIR)/$(LIBGCRYPT_SOURCE):
-	$(download) $(LIBGCRYPT_SITE)/$(LIBGCRYPT_SOURCE)
-
 LIBGCRYPT_DEPENDENCIES = libgpg-error
 
 LIBGCRYPT_CONFIG_SCRIPTS = libgcrypt-config
@@ -655,7 +619,7 @@ LIBGCRYPT_CONF_OPTS = \
 	--disable-static \
 	--disable-tests
 
-libgcrypt: $(LIBGCRYPT_DEPENDENCIES) $(DL_DIR)/$(LIBGCRYPT_SOURCE) | $(TARGET_DIR)
+libgcrypt: | $(TARGET_DIR)
 	$(call autotools-package)
 	-rm $(addprefix $(TARGET_bindir)/,dumpsexp hmac256 mpicalc)
 
@@ -730,9 +694,6 @@ LIBXML2_DIR = libxml2-$(LIBXML2_VERSION)
 LIBXML2_SOURCE = libxml2-$(LIBXML2_VERSION).tar.gz
 LIBXML2_SITE = http://xmlsoft.org/sources
 
-$(DL_DIR)/$(LIBXML2_SOURCE):
-	$(download) $(LIBXML2_SITE)/$(LIBXML2_SOURCE)
-
 LIBXML2_CONFIG_SCRIPTS = xml2-config
 
 LIBXML2_CONF_OPTS = \
@@ -749,7 +710,7 @@ LIBXML2_CONF_OPTS = \
 	--without-lzma \
 	--without-schematron
 
-libxml2: $(DL_DIR)/$(LIBXML2_SOURCE) | $(TARGET_DIR)
+libxml2: | $(TARGET_DIR)
 	$(call autotools-package)
 	-rm -r $(TARGET_libdir)/cmake
 	-rm $(addprefix $(TARGET_libdir)/,xml2Conf.sh)
@@ -774,13 +735,10 @@ LIBROXML_DIR = libroxml-$(LIBROXML_VERSION)
 LIBROXML_SOURCE = libroxml-$(LIBROXML_VERSION).tar.gz
 LIBROXML_SITE = http://download.libroxml.net/pool/v3.x
 
-$(DL_DIR)/$(LIBROXML_SOURCE):
-	$(download) $(LIBROXML_SITE)/$(LIBROXML_SOURCE)
-
 LIBROXML_CONF_OPTS = \
 	--disable-roxml
 
-libroxml: $(DL_DIR)/$(LIBROXML_SOURCE) | $(TARGET_DIR)
+libroxml: | $(TARGET_DIR)
 	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
@@ -789,9 +747,6 @@ LIBXSLT_VERSION = 1.1.34
 LIBXSLT_DIR = libxslt-$(LIBXSLT_VERSION)
 LIBXSLT_SOURCE = libxslt-$(LIBXSLT_VERSION).tar.gz
 LIBXSLT_SITE = ftp://xmlsoft.org/libxml2
-
-$(DL_DIR)/$(LIBXSLT_SOURCE):
-	$(download) $(LIBXSLT_SITE)/$(LIBXSLT_SOURCE)
 
 LIBXSLT_DEPENDENCIES = libxml2
 
@@ -806,7 +761,7 @@ LIBXSLT_CONF_OPTS = \
 	--without-debug \
 	--without-mem-debug
 
-libxslt: $(LIBXSLT_DEPENDENCIES) $(DL_DIR)/$(LIBXSLT_SOURCE) | $(TARGET_DIR)
+libxslt: | $(TARGET_DIR)
 	$(call autotools-package)
 	-rm -r $(TARGET_libdir)/libxslt-plugins/
 	-rm $(addprefix $(TARGET_libdir)/,xsltConf.sh)
@@ -841,16 +796,13 @@ LIBTIRPC_DIR = libtirpc-$(LIBTIRPC_VERSION)
 LIBTIRPC_SOURCE = libtirpc-$(LIBTIRPC_VERSION).tar.bz2
 LIBTIRPC_SITE = https://sourceforge.net/projects/libtirpc/files/libtirpc/$(LIBTIRPC_VERSION)
 
-$(DL_DIR)/$(LIBTIRPC_SOURCE):
-	$(download) $(LIBTIRPC_SITE)/$(LIBTIRPC_SOURCE)
-
 LIBTIRPC_AUTORECONF = YES
 
 LIBTIRPC_CONF_OPTS = \
 	--disable-gssapi \
 	--enable-silent-rules
 
-libtirpc: $(DL_DIR)/$(LIBTIRPC_SOURCE) | $(TARGET_DIR)
+libtirpc: | $(TARGET_DIR)
 	$(call autotools-package)
 ifeq ($(BOXSERIES),hd1)
 	$(SED) '/^\(udp\|tcp\)6/ d' $(TARGET_sysconfdir)/netconfig
@@ -863,16 +815,13 @@ CONFUSE_DIR = confuse-$(CONFUSE_VERSION)
 CONFUSE_SOURCE = confuse-$(CONFUSE_VERSION).tar.xz
 CONFUSE_SITE = https://github.com/martinh/libconfuse/releases/download/v$(CONFUSE_VERSION)
 
-$(DL_DIR)/$(CONFUSE_SOURCE):
-	$(download) $(CONFUSE_SITE)/$(CONFUSE_SOURCE)
-
 CONFUSE_CONF_OPTS = \
 	--docdir=$(REMOVE_docdir) \
 	--enable-silent-rules \
 	--enable-static \
 	--disable-shared
 
-confuse: $(DL_DIR)/$(CONFUSE_SOURCE) | $(TARGET_DIR)
+confuse: | $(TARGET_DIR)
 	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
@@ -882,16 +831,13 @@ LIBITE_DIR = libite-$(LIBITE_VERSION)
 LIBITE_SOURCE = libite-$(LIBITE_VERSION).tar.xz
 LIBITE_SITE = https://github.com/troglobit/libite/releases/download/v$(LIBITE_VERSION)
 
-$(DL_DIR)/$(LIBITE_SOURCE):
-	$(download) $(LIBITE_SITE)/$(LIBITE_SOURCE)
-
 LIBITE_CONF_OPTS = \
 	--docdir=$(REMOVE_docdir) \
 	--enable-silent-rules \
 	--enable-static \
 	--disable-shared
 
-libite: $(DL_DIR)/$(LIBITE_SOURCE) | $(TARGET_DIR)
+libite: | $(TARGET_DIR)
 	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
@@ -901,9 +847,6 @@ LIBMAD_DIR = libmad-$(LIBMAD_VERSION)
 LIBMAD_SOURCE = libmad-$(LIBMAD_VERSION).tar.gz
 LIBMAD_SITE = https://sourceforge.net/projects/mad/files/libmad/$(LIBMAD_VERSION)
 
-$(DL_DIR)/$(LIBMAD_SOURCE):
-	$(download) $(LIBMAD_SITE)/$(LIBMAD_SOURCE)
-
 LIBMAD_AUTORECONF = YES
 
 LIBMAD_CONF_OPTS = \
@@ -912,7 +855,7 @@ LIBMAD_CONF_OPTS = \
 	--enable-fpm=arm \
 	--enable-sso
 
-libmad: $(DL_DIR)/$(LIBMAD_SOURCE) | $(TARGET_DIR)
+libmad: | $(TARGET_DIR)
 	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
@@ -921,9 +864,6 @@ LIBVORBIS_VERSION = 1.3.7
 LIBVORBIS_DIR = libvorbis-$(LIBVORBIS_VERSION)
 LIBVORBIS_SOURCE = libvorbis-$(LIBVORBIS_VERSION).tar.xz
 LIBVORBIS_SITE = https://downloads.xiph.org/releases/vorbis
-
-$(DL_DIR)/$(LIBVORBIS_SOURCE):
-	$(download) $(LIBVORBIS_SITE)/$(LIBVORBIS_SOURCE)
 
 LIBVORBIS_DEPENDENCIES = libogg
 
@@ -935,7 +875,7 @@ LIBVORBIS_CONF_OPTS = \
 	--disable-examples \
 	--disable-oggtest
 
-libvorbis: $(LIBVORBIS_DEPENDENCIES) $(DL_DIR)/$(LIBVORBIS_SOURCE) | $(TARGET_DIR)
+libvorbis: | $(TARGET_DIR)
 	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
@@ -971,14 +911,11 @@ LIBOGG_DIR = libogg-$(LIBOGG_VERSION)
 LIBOGG_SOURCE = libogg-$(LIBOGG_VERSION).tar.gz
 LIBOGG_SITE = http://downloads.xiph.org/releases/ogg
 
-$(DL_DIR)/$(LIBOGG_SOURCE):
-	$(download) $(LIBOGG_SITE)/$(LIBOGG_SOURCE)
-
 LIBOGG_CONF_OPTS = \
 	--datarootdir=$(REMOVE_datarootdir) \
 	--enable-shared
 
-libogg: $(DL_DIR)/$(LIBOGG_SOURCE) | $(TARGET_DIR)
+libogg: | $(TARGET_DIR)
 	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
@@ -988,14 +925,11 @@ LIBEXIF_DIR = libexif-$(LIBEXIF_VERSION)
 LIBEXIF_SOURCE = libexif-$(LIBEXIF_VERSION).tar.xz
 LIBEXIF_SITE = https://github.com/libexif/libexif/releases/download/libexif-$(subst .,_,$(LIBEXIF_VERSION))-release
 
-$(DL_DIR)/$(LIBEXIF_SOURCE):
-	$(download) $(LIBEXIF_SITE)/$(LIBEXIF_SOURCE)
-
 LIBEXIF_CONF_OPTS = \
 	--datarootdir=$(REMOVE_datarootdir) \
 	--with-doc-dir=$(REMOVE_docdir)
 
-libexif: $(DL_DIR)/$(LIBEXIF_SOURCE) | $(TARGET_DIR)
+libexif: | $(TARGET_DIR)
 	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
@@ -1005,14 +939,11 @@ FRIBIDI_DIR = fribidi-$(FRIBIDI_VERSION)
 FRIBIDI_SOURCE = fribidi-$(FRIBIDI_VERSION).tar.xz
 FRIBIDI_SITE = https://github.com/fribidi/fribidi/releases/download/v$(FRIBIDI_VERSION)
 
-$(DL_DIR)/$(FRIBIDI_SOURCE):
-	$(download) $(FRIBIDI_SITE)/$(FRIBIDI_SOURCE)
-
 FRIBIDI_CONF_OPTS = \
 	--disable-debug \
 	--disable-deprecated
 
-fribidi: $(DL_DIR)/$(FRIBIDI_SOURCE) | $(TARGET_DIR)
+fribidi: | $(TARGET_DIR)
 	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
@@ -1022,16 +953,13 @@ LIBFFI_DIR = libffi-$(LIBFFI_VERSION)
 LIBFFI_SOURCE = libffi-$(LIBFFI_VERSION).tar.gz
 LIBFFI_SITE = https://github.com/libffi/libffi/releases/download/v$(HOST_LIBFFI_VERSION)
 
-$(DL_DIR)/$(LIBFFI_SOURCE):
-	$(download) $(LIBFFI_SITE)/$(LIBFFI_SOURCE)
-
 LIBFFI_AUTORECONF = YES
 
 LIBFFI_CONF_OPTS = \
 	--datarootdir=$(REMOVE_datarootdir) \
 	$(if $(filter $(BOXSERIES),hd1),--enable-static --disable-shared)
 
-libffi: $(DL_DIR)/$(LIBFFI_SOURCE) | $(TARGET_DIR)
+libffi: | $(TARGET_DIR)
 	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
@@ -1097,9 +1025,6 @@ ALSA_LIB_DIR = alsa-lib-$(ALSA_LIB_VERSION)
 ALSA_LIB_SOURCE = alsa-lib-$(ALSA_LIB_VERSION).tar.bz2
 ALSA_LIB_SITE = https://www.alsa-project.org/files/pub/lib
 
-$(DL_DIR)/$(ALSA_LIB_SOURCE):
-	$(download) $(ALSA_LIB_SITE)/$(ALSA_LIB_SOURCE)
-
 ALSA_LIB_AUTORECONF = YES
 
 ALSA_LIB_CONF_OPTS = \
@@ -1119,7 +1044,7 @@ ALSA_LIB_CONF_OPTS = \
 	--disable-python \
 	--disable-topology
 
-alsa-lib: $(DL_DIR)/$(ALSA_LIB_SOURCE)
+alsa-lib: | $(TARGET_DIR)
 	$(call autotools-package)
 	find $(TARGET_datadir)/alsa/cards/ -name '*.conf' ! -name 'aliases.conf' | xargs --no-run-if-empty rm
 	find $(TARGET_datadir)/alsa/pcm/ -name '*.conf' ! -name 'default.conf' ! -name 'dmix.conf' ! -name 'dsnoop.conf' | xargs --no-run-if-empty rm
@@ -1132,13 +1057,10 @@ POPT_DIR = popt-$(POPT_VERSION)
 POPT_SOURCE = popt-$(POPT_VERSION).tar.gz
 POPT_SITE = ftp://anduin.linuxfromscratch.org/BLFS/popt
 
-$(DL_DIR)/$(POPT_SOURCE):
-	$(download) $(POPT_SITE)/$(POPT_SOURCE)
-
 POPT_CONF_OPTS = \
 	--datarootdir=$(REMOVE_datarootdir)
 
-popt: $(DL_DIR)/$(POPT_SOURCE) | $(TARGET_DIR)
+popt: | $(TARGET_DIR)
 	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
@@ -1190,7 +1112,7 @@ GRAPHLCD_BASE_DEPENDENCIES = freetype libiconv libusb
 
 graphlcd-base: $(GRAPHLCD_BASE_DEPENDENCIES) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
-	$(GET-GIT-SOURCE) $(PKG_SITE)/$(PKG_SOURCE) $(DL_DIR)/$(PKG_SOURCE)
+	$(GET_GIT_SOURCE) $(PKG_SITE)/$(PKG_SOURCE) $(DL_DIR)/$(PKG_SOURCE)
 	$(CPDIR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
 		$(call apply_patches,$(addprefix $(PKG_PATCHES_DIR)/,$(PKG_PATCH))); \
