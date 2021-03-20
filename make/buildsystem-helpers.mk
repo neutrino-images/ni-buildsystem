@@ -20,10 +20,10 @@ define DOWNLOAD
 	$(Q)( \
 	if [ "$($(PKG)_VER)" == "git" ]; then \
 	  $(call MESSAGE,"Downloading") ; \
-	  $(GET-GIT-SOURCE) $($(PKG)_SITE)/$($(PKG)_SOURCE) $(DL_DIR)/$($(PKG)_SOURCE); \
+	  $(GET_GIT_SOURCE) $($(PKG)_SITE)/$($(PKG)_SOURCE) $(DL_DIR)/$($(PKG)_SOURCE); \
 	elif [ "$($(PKG)_VER)" == "svn" ]; then \
 	  $(call MESSAGE,"Downloading") ; \
-	  $(GET-SVN-SOURCE) $($(PKG)_SITE)/$($(PKG)_SOURCE) $(DL_DIR)/$($(PKG)_SOURCE); \
+	  $(GET_SVN_SOURCE) $($(PKG)_SITE)/$($(PKG)_SOURCE) $(DL_DIR)/$($(PKG)_SOURCE); \
 	elif [ ! -f $(DL_DIR)/$(1) ]; then \
 	  $(call MESSAGE,"Downloading") ; \
 	  $(GET_ARCHIVE) $(DL_DIR) $($(PKG)_SITE)/$(1); \
@@ -109,9 +109,9 @@ CPDIR = cp -a -t $(BUILD_DIR) $(DL_DIR)
 TOUCH = @touch $(if $(findstring host-,$(@)),$(HOST_DEPS_DIR),$(DEPS_DIR))/$(@)
 SED   = $(shell which sed || type -p sed) -i -e
 
-GET-GIT-ARCHIVE = support/scripts/get-git-archive.sh
-GET-GIT-SOURCE  = support/scripts/get-git-source.sh
-GET-SVN-SOURCE  = support/scripts/get-svn-source.sh
+GET_GIT_ARCHIVE = support/scripts/get-git-archive.sh
+GET_GIT_SOURCE  = support/scripts/get-git-source.sh
+GET_SVN_SOURCE  = support/scripts/get-svn-source.sh
 UPDATE-RC.D     = support/scripts/update-rc.d -r $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
