@@ -542,27 +542,6 @@ ushare: $(USHARE_DEPENDENCIES) $(DL_DIR)/$(USHARE_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-SMARTMONTOOLS_VERSION = 7.1
-SMARTMONTOOLS_DIR = smartmontools-$(SMARTMONTOOLS_VERSION)
-SMARTMONTOOLS_SOURCE = smartmontools-$(SMARTMONTOOLS_VERSION).tar.gz
-SMARTMONTOOLS_SITE = https://sourceforge.net/projects/smartmontools/files/smartmontools/$(SMARTMONTOOLS_VERSION)
-
-$(DL_DIR)/$(SMARTMONTOOLS_SOURCE):
-	$(download) $(SMARTMONTOOLS_SITE)/$(SMARTMONTOOLS_SOURCE)
-
-smartmontools: $(DL_DIR)/$(SMARTMONTOOLS_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHES); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(INSTALL_EXEC) -D smartctl $(TARGET_sbindir)/smartctl
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
 VSFTPD_VERSION = 3.0.3
 VSFTPD_DIR = vsftpd-$(VSFTPD_VERSION)
 VSFTPD_SOURCE = vsftpd-$(VSFTPD_VERSION).tar.gz
@@ -625,32 +604,6 @@ nano: $(NANO_DEPENDENCIES) $(DL_DIR)/$(NANO_SOURCE) | $(TARGET_DIR)
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(INSTALL) -d $(TARGET_sysconfdir)/profile.d
 	echo "export EDITOR=nano" > $(TARGET_sysconfdir)/profile.d/editor.sh
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
-MINICOM_VERSION = 2.7.1
-MINICOM_DIR = minicom-$(MINICOM_VERSION)
-MINICOM_SOURCE = minicom-$(MINICOM_VERSION).tar.gz
-MINICOM_SITE = http://fossies.org/linux/misc
-
-$(DL_DIR)/$(MINICOM_SOURCE):
-	$(download) $(MINICOM_SITE)/$(MINICOM_SOURCE)
-
-MINICOM_DEPENDENCIES = ncurses
-
-MINICOM_CONF_OPTS = \
-	--disable-nls
-
-minicom: $(MINICOM_DEPENDENCIES) $(DL_DIR)/$(MINICOM_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHES); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(INSTALL_EXEC) src/minicom $(TARGET_bindir)
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
