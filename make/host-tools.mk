@@ -67,37 +67,6 @@ $(PKG_CONFIG): $(PKG_CONFIG_DEPENDENCIES) | $(HOST_DIR)
 
 # -----------------------------------------------------------------------------
 
-HOST_MTD_UTILS_VERSION = 2.0.2
-HOST_MTD_UTILS_DIR = mtd-utils-$(HOST_MTD_UTILS_VERSION)
-HOST_MTD_UTILS_SOURCE = mtd-utils-$(HOST_MTD_UTILS_VERSION).tar.bz2
-HOST_MTD_UTILS_SITE = ftp://ftp.infradead.org/pub/mtd-utils
-
-$(DL_DIR)/$(HOST_MTD_UTILS_SOURCE):
-	$(download) $(HOST_MTD_UTILS_SITE)/$(HOST_MTD_UTILS_SOURCE)
-
-HOST_MTD_UTILS_CONF_ENV = \
-	ZLIB_CFLAGS=" " \
-	ZLIB_LIBS="-lz" \
-	UUID_CFLAGS=" " \
-	UUID_LIBS="-luuid"
-
-HOST_MTD_UTILS_CONF_OPTS = \
-	--without-ubifs \
-	--without-xattr \
-	--disable-tests
-
-host-mtd-utils: $(DL_DIR)/$(HOST_MTD_UTILS_SOURCE) | $(HOST_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(HOST_CONFIGURE);\
-		$(MAKE); \
-		$(MAKE) install
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
 HOST_U_BOOT_VERSION = 2018.09
 HOST_U_BOOT_DIR = u-boot-$(HOST_U_BOOT_VERSION)
 HOST_U_BOOT_SOURCE = u-boot-$(HOST_U_BOOT_VERSION).tar.bz2
@@ -139,61 +108,6 @@ host-zic: $(DL_DIR)/$(HOST_ZIC_SOURCE) | $(HOST_DIR)
 		$(APPLY_PATCHES); \
 		$(MAKE) zic
 	$(INSTALL_EXEC) -D $(PKG_BUILD_DIR)/zic $(HOST_ZIC)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
-HOST_PARTED_VERSION = 3.2
-HOST_PARTED_DIR = parted-$(HOST_PARTED_VERSION)
-HOST_PARTED_SOURCE = parted-$(HOST_PARTED_VERSION).tar.xz
-HOST_PARTED_SITE = $(GNU_MIRROR)/parted
-
-$(DL_DIR)/$(HOST_PARTED_SOURCE):
-	$(download) $(HOST_PARTED_SITE)/$(HOST_PARTED_SOURCE)
-
-HOST_PARTED_AUTORECONF = YES
-
-HOST_PARTED_CONF_OPTS = \
-	--enable-static \
-	--disable-shared \
-	--disable-device-mapper \
-	--without-readline
-
-host-parted: $(DL_DIR)/$(HOST_PARTED_SOURCE) | $(HOST_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHES); \
-		$(HOST_CONFIGURE);\
-		$(MAKE); \
-		$(MAKE) install
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
-HOST_DOSFSTOOLS_VERSION = 4.1
-HOST_DOSFSTOOLS_DIR = dosfstools-$(HOST_DOSFSTOOLS_VERSION)
-HOST_DOSFSTOOLS_SOURCE = dosfstools-$(HOST_DOSFSTOOLS_VERSION).tar.xz
-HOST_DOSFSTOOLS_SITE = https://github.com/dosfstools/dosfstools/releases/download/v$(HOST_DOSFSTOOLS_VERSION)
-
-$(DL_DIR)/$(HOST_DOSFSTOOLS_SOURCE):
-	$(download) $(HOST_DOSFSTOOLS_SITE)/$(HOST_DOSFSTOOLS_SOURCE)
-
-HOST_DOSFSTOOLS_CONF_OPTS = \
-	--without-udev
-
-host-dosfstools: $(DL_DIR)/$(HOST_DOSFSTOOLS_SOURCE) | $(HOST_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(HOST_CONFIGURE);\
-		$(MAKE); \
-		$(MAKE) install
-	ln -sf mkfs.fat $(HOST_DIR)/sbin/mkfs.vfat
-	ln -sf mkfs.fat $(HOST_DIR)/sbin/mkfs.msdos
-	ln -sf mkfs.fat $(HOST_DIR)/sbin/mkdosfs
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 

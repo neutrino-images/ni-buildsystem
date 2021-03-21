@@ -46,3 +46,24 @@ MTD_UTILS_TARGET_FINALIZE_HOOKS += MTD_UTILS_INSTALL_BINARIES
 
 mtd-utils: | $(TARGET_DIR)
 	$(call autotools-package)
+
+# -----------------------------------------------------------------------------
+
+HOST_MTD_UTILS_VERSION = $(MTD_UTILS_VERSION)
+HOST_MTD_UTILS_DIR = $(MTD_UTILS_DIR)
+HOST_MTD_UTILS_SOURCE = $(MTD_UTILS_SOURCE)
+HOST_MTD_UTILS_SITE = $(MTD_UTILS_SITE)
+
+HOST_MTD_UTILS_CONF_ENV = \
+	ZLIB_CFLAGS=" " \
+	ZLIB_LIBS="-lz" \
+	UUID_CFLAGS=" " \
+	UUID_LIBS="-luuid"
+
+HOST_MTD_UTILS_CONF_OPTS = \
+	--without-ubifs \
+	--without-xattr \
+	--disable-tests
+
+host-mtd-utils: | $(HOST_DIR)
+	$(call host-autotools-package)
