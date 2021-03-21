@@ -27,7 +27,7 @@ lua: $(LUA_DEPENDENCIES) $(DL_DIR)/$(LUA_SOURCE) | $(TARGET_DIR)
 			; \
 		$(MAKE) install INSTALL_TOP=$(TARGET_prefix) INSTALL_MAN=$(TARGET_DIR)$(REMOVE_man1dir); \
 		$(MAKE) pc INSTALL_TOP=$(TARGET_prefix) > $(TARGET_libdir)/pkgconfig/lua.pc
-	rm -rf $(TARGET_bindir)/luac
+	$(TARGET_RM) $(TARGET_bindir)/luac
 	$(REMOVE)/$(LUA_DIR)
 	$(TOUCH)
 

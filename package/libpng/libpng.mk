@@ -18,7 +18,7 @@ LIBPNG_CONF_OPTS = \
 	$(if $(filter $(BOXSERIES),hd5x hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse),--enable-arm-neon,--disable-arm-neon)
 
 define LIBPNG_TARGET_CLEANUP
-	-rm $(addprefix $(TARGET_bindir)/,libpng-config)
+	$(TARGET_RM) $(addprefix $(TARGET_bindir)/,libpng-config)
 endef
 LIBPNG_TARGET_FINALIZE_HOOKS += LIBPNG_TARGET_CLEANUP
 

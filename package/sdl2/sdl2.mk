@@ -34,6 +34,10 @@ SDL2_CONF_OPTS += \
 	--enable-video-opengles \
 	--without-x
 
+define SDL2_TARGET_CLEANUP
+	$(TARGET_RM) $(TARGET_libdir)/cmake
+endef
+SDL2_TARGET_FINALIZE_HOOKS += SDL2_TARGET_CLEANUP
+
 sdl2: | $(TARGET_DIR)
 	$(call autotools-package)
-	-rm -r $(TARGET_libdir)/cmake

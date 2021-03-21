@@ -17,7 +17,7 @@ LIBJPEG_TURBO_CONF_OPTS = \
 	-DWITH_JPEG8=80
 
 define LIBJPEG_TURBO_TARGET_CLEANUP
-	-rm $(addprefix $(TARGET_bindir)/,cjpeg djpeg jpegtran rdjpgcom tjbench wrjpgcom)
+	$(TARGET_RM) $(addprefix $(TARGET_bindir)/,cjpeg djpeg jpegtran rdjpgcom tjbench wrjpgcom)
 endef
 LIBJPEG_TURBO_TARGET_FINALIZE_HOOKS += LIBJPEG_TURBO_TARGET_CLEANUP
 

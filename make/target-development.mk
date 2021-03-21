@@ -27,8 +27,8 @@ valgrind: $(DL_DIR)/$(VALGRIND_SOURCE) | $(TARGET_DIR)
 		$(CONFIGURE); \
 		$(MAKE); \
 		make install DESTDIR=$(TARGET_DIR)
-	-rm $(addprefix $(TARGET_libdir)/valgrind/,*.a *.xml)
-	-rm $(addprefix $(TARGET_bindir)/,cg_* callgrind_* ms_print)
+	$(TARGET_RM) $(addprefix $(TARGET_libdir)/valgrind/,*.a *.xml)
+	$(TARGET_RM) $(addprefix $(TARGET_bindir)/,cg_* callgrind_* ms_print)
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
@@ -49,7 +49,7 @@ strace: $(DL_DIR)/$(STRACE_SOURCE) | $(TARGET_DIR)
 		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	-rm $(addprefix $(TARGET_bindir)/,strace-graph strace-log-merge)
+	$(TARGET_RM) $(addprefix $(TARGET_bindir)/,strace-graph strace-log-merge)
 	$(REMOVE)/$(STRACE_DIR)
 	$(TOUCH)
 
@@ -87,7 +87,7 @@ gdb: $(GDB_DEPENDENCIES) $(DL_DIR)/$(GDB_SOURCE) | $(TARGET_DIR)
 		$(CONFIGURE); \
 		$(MAKE) all-gdb; \
 		$(MAKE) install-gdb DESTDIR=$(TARGET_DIR)
-	-rm $(addprefix $(TARGET_datadir)/,system-gdbinit)
+	$(TARGET_RM) $(addprefix $(TARGET_datadir)/,system-gdbinit)
 	find $(TARGET_datadir)/gdb/syscalls -type f -not -name 'arm-linux.xml' -not -name 'gdb-syscalls.dtd' -print0 | xargs -0 rm --
 	$(REMOVE)/$(GDB_DIR)
 	$(TOUCH)

@@ -19,8 +19,8 @@ LIBFUSE_CONF_OPTS = \
 	--enable-lib
 
 define LIBFUSE_TARGET_CLEANUP
-	-rm -r $(TARGET_sysconfdir)/udev
-	-rm $(TARGET_sysconfdir)/init.d/fuse
+	$(TARGET_RM) $(TARGET_sysconfdir)/udev
+	$(TARGET_RM) $(TARGET_sysconfdir)/init.d/fuse
 endef
 LIBFUSE_TARGET_FINALIZE_HOOKS += LIBFUSE_TARGET_CLEANUP
 

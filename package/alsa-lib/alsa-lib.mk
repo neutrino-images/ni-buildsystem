@@ -29,9 +29,9 @@ ALSA_LIB_CONF_OPTS = \
 	--disable-topology
 
 define ALSA_LIB_TARGET_CLEANUP
-	find $(TARGET_datadir)/alsa/cards/ -name '*.conf' ! -name 'aliases.conf' | xargs --no-run-if-empty rm
-	find $(TARGET_datadir)/alsa/pcm/ -name '*.conf' ! -name 'default.conf' ! -name 'dmix.conf' ! -name 'dsnoop.conf' | xargs --no-run-if-empty rm
-	-rm -r $(TARGET_datadir)/aclocal
+	find $(TARGET_datadir)/alsa/cards/ -name '*.conf' ! -name 'aliases.conf' | xargs --no-run-if-empty $(TARGET_RM)
+	find $(TARGET_datadir)/alsa/pcm/ -name '*.conf' ! -name 'default.conf' ! -name 'dmix.conf' ! -name 'dsnoop.conf' | xargs --no-run-if-empty $(TARGET_RM)
+	$(TARGET_RM) $(TARGET_datadir)/aclocal
 endef
 ALSA_LIB_TARGET_FINALIZE_HOOKS += ALSA_LIB_TARGET_CLEANUP
 

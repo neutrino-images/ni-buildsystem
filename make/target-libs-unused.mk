@@ -123,11 +123,11 @@ cairo: $(CAIRO_DEPENDENCIES) $(DL_DIR)/$(CAIRO_SOURCE) | $(TARGET_DIR)
 		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	rm -rf $(TARGET_bindir)/cairo-sphinx
-	rm -rf $(TARGET_libdir)/cairo/cairo-fdr*
-	rm -rf $(TARGET_libdir)/cairo/cairo-sphinx*
-	rm -rf $(TARGET_libdir)/cairo/.debug/cairo-fdr*
-	rm -rf $(TARGET_libdir)/cairo/.debug/cairo-sphinx*
+	$(TARGET_RM) $(TARGET_bindir)/cairo-sphinx
+	$(TARGET_RM) $(TARGET_libdir)/cairo/cairo-fdr*
+	$(TARGET_RM) $(TARGET_libdir)/cairo/cairo-sphinx*
+	$(TARGET_RM) $(TARGET_libdir)/cairo/.debug/cairo-fdr*
+	$(TARGET_RM) $(TARGET_libdir)/cairo/.debug/cairo-sphinx*
 	$(REWRITE_LIBTOOL)
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)

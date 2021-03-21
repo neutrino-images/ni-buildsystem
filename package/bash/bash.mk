@@ -22,8 +22,8 @@ BASH_CONF_OPTS = \
 	--without-bash-malloc
 
 define BASH_TARGET_CLEANUP
-	-rm $(addprefix $(TARGET_libdir)/bash/, loadables.h Makefile.inc)
-	-rm -f $(addprefix $(TARGET_base_bindir)/, bashbug)
+	$(TARGET_RM) $(addprefix $(TARGET_libdir)/bash/, loadables.h Makefile.inc)
+	$(TARGET_RM) $(addprefix $(TARGET_base_bindir)/, bashbug)
 endef
 BASH_TARGET_FINALIZE_HOOKS += BASH_TARGET_CLEANUP
 

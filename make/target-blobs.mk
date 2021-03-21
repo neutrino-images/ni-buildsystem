@@ -170,7 +170,7 @@ hd60-drivers \
 hd61-drivers: $(DL_DIR)/$(BOXMODEL_DRIVERS_SOURCE) | $(TARGET_DIR)
 	$(INSTALL) -d $(TARGET_modulesdir)/extra
 	unzip -o $(DL_DIR)/$(BOXMODEL_DRIVERS_SOURCE) -d $(TARGET_modulesdir)/extra
-	rm -f $(TARGET_modulesdir)/extra/hi_play.ko
+	$(TARGET_RM) $(TARGET_modulesdir)/extra/hi_play.ko
 	mv $(TARGET_modulesdir)/extra/turnoff_power $(TARGET_bindir)
 	$(LINUX_RUN_DEPMOD)
 	$(TOUCH)

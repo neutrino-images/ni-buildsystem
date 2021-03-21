@@ -147,12 +147,12 @@ openssl: $(DL_DIR)/$(OPENSSL_SOURCE) | $(TARGET_DIR)
 		$(MAKE) depend; \
 		$(MAKE); \
 		$(MAKE) install_sw INSTALL_PREFIX=$(TARGET_DIR)
-	rm -rf $(TARGET_libdir)/engines
-	rm -f $(TARGET_bindir)/c_rehash
-	rm -f $(TARGET_sysconfdir)/ssl/misc/{CA.pl,tsget}
+	$(TARGET_RM) $(TARGET_libdir)/engines
+	$(TARGET_RM) $(TARGET_bindir)/c_rehash
+	$(TARGET_RM) $(TARGET_sysconfdir)/ssl/misc/{CA.pl,tsget}
 ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd1 hd2))
-	rm -f $(TARGET_bindir)/openssl
-	rm -f $(TARGET_sysconfdir)/ssl/misc/{CA.*,c_*}
+	$(TARGET_RM) $(TARGET_bindir)/openssl
+	$(TARGET_RM) $(TARGET_sysconfdir)/ssl/misc/{CA.*,c_*}
 endif
 	chmod 0755 $(TARGET_libdir)/lib{crypto,ssl}.so.*
 	for version in 0.9.7 0.9.8 1.0.2; do \
@@ -197,8 +197,8 @@ ncurses: $(DL_DIR)/$(NCURSES_SOURCE) | $(TARGET_DIR)
 		$(CONFIGURE); \
 		$(MAKE) libs; \
 		$(MAKE) install.libs DESTDIR=$(TARGET_DIR)
-	-rm $(addprefix $(TARGET_libdir)/,libform* libmenu* libpanel*)
-	-rm $(addprefix $(TARGET_libdir)/pkgconfig/,form.pc menu.pc panel.pc)
+	$(TARGET_RM) $(addprefix $(TARGET_libdir)/,libform* libmenu* libpanel*)
+	$(TARGET_RM) $(addprefix $(TARGET_libdir)/pkgconfig/,form.pc menu.pc panel.pc)
 	$(REWRITE_CONFIG_SCRIPTS)
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
@@ -350,7 +350,7 @@ libgpg-error: $(DL_DIR)/$(LIBGPG_ERROR_SOURCE) | $(TARGET_DIR)
 		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	-rm $(addprefix $(TARGET_bindir)/,gpg-error gpgrt-config)
+	$(TARGET_RM) $(addprefix $(TARGET_bindir)/,gpg-error gpgrt-config)
 	$(REWRITE_CONFIG_SCRIPTS)
 	$(REWRITE_LIBTOOL)
 	$(REMOVE)/$(PKG_DIR)
@@ -435,7 +435,7 @@ rtmpdump: $(RTMPDUMP_DEPENDENCIES) $(SOURCE_DIR)/$(NI_RTMPDUMP) | $(TARGET_DIR)
 	$(CHDIR)/$(NI_RTMPDUMP); \
 		$($(PKG)_MAKE_ENV) $(MAKE) $($(PKG)_MAKE_OPTS); \
 		$($(PKG)_MAKE_ENV) $(MAKE) $($(PKG)_MAKE_OPTS) install DESTDIR=$(TARGET_DIR)
-	-rm $(addprefix $(TARGET_sbindir)/,rtmpgw rtmpsrv rtmpsuck)
+	$(TARGET_RM) $(addprefix $(TARGET_sbindir)/,rtmpgw rtmpsrv rtmpsuck)
 	$(REMOVE)/$(NI_RTMPDUMP)
 	$(TOUCH)
 
@@ -577,6 +577,6 @@ graphlcd-base: $(GRAPHLCD_BASE_DEPENDENCIES) | $(TARGET_DIR)
 		$(TARGET_CONFIGURE_ENV) \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR) PREFIX=$(prefix)
-	-rm -r $(TARGET_sysconfdir)/udev
+	$(TARGET_RM) $(TARGET_sysconfdir)/udev
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)

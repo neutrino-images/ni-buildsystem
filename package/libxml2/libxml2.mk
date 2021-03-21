@@ -26,8 +26,7 @@ LIBXML2_CONF_OPTS = \
 	--without-schematron
 
 define LIBXML2_TARGET_CLEANUP
-	-rm -r $(TARGET_libdir)/cmake
-	-rm $(addprefix $(TARGET_libdir)/,xml2Conf.sh)
+	$(TARGET_RM) $(addprefix $(TARGET_libdir)/,cmake xml2Conf.sh)
 endef
 LIBXML2_TARGET_FINALIZE_HOOKS += LIBXML2_TARGET_CLEANUP
 

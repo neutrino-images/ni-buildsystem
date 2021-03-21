@@ -23,8 +23,8 @@ NTFS_3G_CONF_OPTS = \
 	--with-fuse=external
 
 define NTFS_3G_TARGET_CLEANUP
-	-rm $(addprefix $(TARGET_base_bindir)/,lowntfs-3g ntfs-3g.probe)
-	-rm $(addprefix $(TARGET_base_sbindir)/,mount.lowntfs-3g)
+	$(TARGET_RM) $(addprefix $(TARGET_base_bindir)/,lowntfs-3g ntfs-3g.probe)
+	$(TARGET_RM) $(addprefix $(TARGET_base_sbindir)/,mount.lowntfs-3g)
 endef
 NTFS_3G_TARGET_FINALIZE_HOOKS += NTFS_3G_TARGET_CLEANUP
 

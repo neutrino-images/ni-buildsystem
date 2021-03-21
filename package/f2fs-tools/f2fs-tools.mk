@@ -24,7 +24,7 @@ F2FS_TOOLS_CONF_OPTS = \
 	--without-selinux
 
 define F2FS_TOOLS_TARGET_CLEANUP
-	-rm $(addprefix $(TARGET_base_sbindir)/,sg_write_buffer)
+	$(TARGET_RM) $(addprefix $(TARGET_base_sbindir)/,sg_write_buffer)
 endef
 F2FS_TOOLS_TARGET_FINALIZE_HOOKS += F2FS_TOOLS_TARGET_CLEANUP
 

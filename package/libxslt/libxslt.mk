@@ -23,8 +23,7 @@ LIBXSLT_CONF_OPTS = \
 	--without-mem-debug
 
 define LIBXSLT_TARGET_CLEANUP
-	-rm -r $(TARGET_libdir)/libxslt-plugins/
-	-rm $(addprefix $(TARGET_libdir)/,xsltConf.sh)
+	$(TARGET_RM) $(addprefix $(TARGET_libdir)/,libxslt-plugins xsltConf.sh)
 endef
 LIBXSLT_TARGET_FINALIZE_HOOKS += LIBXSLT_TARGET_CLEANUP
 

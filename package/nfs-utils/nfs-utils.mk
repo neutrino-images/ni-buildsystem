@@ -30,8 +30,8 @@ NFS_UTILS_CONF_OPTS = \
 
 define NFS_UTILS_TARGET_CLEANUP
 	chmod 0755 $(TARGET_base_sbindir)/mount.nfs
-	rm -f $(addprefix $(TARGET_base_sbindir)/,mount.nfs4 osd_login umount.nfs umount.nfs4)
-	rm -f $(addprefix $(TARGET_sbindir)/,mountstats nfsiostat)
+	$(TARGET_RM) $(addprefix $(TARGET_base_sbindir)/,mount.nfs4 osd_login umount.nfs umount.nfs4)
+	$(TARGET_RM) $(addprefix $(TARGET_sbindir)/,mountstats nfsiostat)
 endef
 NFS_UTILS_TARGET_FINALIZE_HOOKS += NFS_UTILS_TARGET_CLEANUP
 

@@ -201,8 +201,8 @@ sysvinit: $(DL_DIR)/$(SYSVINIT_SOURCE) | $(TARGET_DIR)
 		$(TARGET_CONFIGURE_ENV) \
 		$(MAKE) -C src SULOGINLIBS=-lcrypt; \
 		$(MAKE) install ROOT=$(TARGET_DIR) MANDIR=$(REMOVE_mandir)
-	-rm $(addprefix $(TARGET_base_sbindir)/,bootlogd fstab-decode logsave telinit)
-	-rm $(addprefix $(TARGET_bindir)/,last lastb mesg readbootlog utmpdump wall)
+	$(TARGET_RM) $(addprefix $(TARGET_base_sbindir)/,bootlogd fstab-decode logsave telinit)
+	$(TARGET_RM) $(addprefix $(TARGET_bindir)/,last lastb mesg readbootlog utmpdump wall)
 	$($(PKG)_INSTALL_FILES)
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
@@ -241,7 +241,7 @@ xfsprogs: $(XFSPROGS_DEPENDENCIES) $(DL_DIR)/$(XFSPROGS_SOURCE) | $(TARGET_DIR)
 		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DIST_ROOT=$(TARGET_DIR)
-	-rm -r $(addprefix $(TARGET_libdir)/,xfsprogs)
+	$(TARGET_RM) $(addprefix $(TARGET_libdir)/,xfsprogs)
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
@@ -303,9 +303,9 @@ e2fsprogs: $(E2FSPROGS_DEPENDENCIES) $(DL_DIR)/$(E2FSPROGS_SOURCE) | $(TARGET_DI
 		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE1) install install-libs DESTDIR=$(TARGET_DIR)
-	-rm $(addprefix $(TARGET_base_sbindir)/,dumpe2fs e2mmpstatus e2undo logsave)
-	-rm $(addprefix $(TARGET_bindir)/,chattr compile_et lsattr mk_cmds uuidgen)
-	-rm $(addprefix $(TARGET_sbindir)/,e2freefrag e4crypt filefrag)
+	$(TARGET_RM) $(addprefix $(TARGET_base_sbindir)/,dumpe2fs e2mmpstatus e2undo logsave)
+	$(TARGET_RM) $(addprefix $(TARGET_bindir)/,chattr compile_et lsattr mk_cmds uuidgen)
+	$(TARGET_RM) $(addprefix $(TARGET_sbindir)/,e2freefrag e4crypt filefrag)
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
@@ -467,9 +467,9 @@ ntp: $(NTP_DEPENDENCIES) $(DL_DIR)/$(NTP_SOURCE) | $(TARGET_DIR)
 		$(APPLY_PATCHES); \
 		$(CONFIGURE); \
 		$(MAKE); \
-		$(INSTALL_EXEC) -D ntpdate/ntpdate $(TARGET_sbindir)/ntpdate
+		$(MAKE) install DESTDIR=$(TARGET_DIR)/ntp
 	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/ntpdate.init $(TARGET_sysconfdir)/init.d/ntpdate
-	$(REMOVE)/$(PKG_DIR)
+	#$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------
@@ -554,6 +554,7 @@ smartmontools: $(DL_DIR)/$(SMARTMONTOOLS_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
+		$(APPLY_PATCHES); \
 		$(CONFIGURE); \
 		$(MAKE); \
 		$(INSTALL_EXEC) -D smartctl $(TARGET_sbindir)/smartctl
@@ -777,11 +778,7 @@ samba33: $(SAMBA33_DEPENDENCIES) $(DL_DIR)/$(SAMBA33_SOURCE) | $(TARGET_DIR)
 	$(INSTALL_DATA) -D $(PKG_FILES_DIR)/smb3.conf $(TARGET_sysconfdir)/samba/smb.conf
 	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/samba3.init $(TARGET_sysconfdir)/init.d/samba
 	$(UPDATE-RC.D) samba defaults 75 25
-	rm -rf $(TARGET_bindir)/testparm
-	rm -rf $(TARGET_bindir)/findsmb
-	rm -rf $(TARGET_bindir)/smbtar
-	rm -rf $(TARGET_bindir)/smbclient
-	rm -rf $(TARGET_bindir)/smbpasswd
+	$(TARGET_RM) $(addprefix $(TARGET_bindir)/,testparm findsmb smbtar smbclient smbpasswd)
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
@@ -847,11 +844,7 @@ samba36: $(SAMBA36_DEPENDENCIES) $(DL_DIR)/$(SAMBA36_SOURCE) | $(TARGET_DIR)
 	$(INSTALL_DATA) -D $(PKG_FILES_DIR)/smb3.conf $(TARGET_sysconfdir)/samba/smb.conf
 	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/samba3.init $(TARGET_sysconfdir)/init.d/samba
 	$(UPDATE-RC.D) samba defaults 75 25
-	rm -rf $(TARGET_bindir)/testparm
-	rm -rf $(TARGET_bindir)/findsmb
-	rm -rf $(TARGET_bindir)/smbtar
-	rm -rf $(TARGET_bindir)/smbclient
-	rm -rf $(TARGET_bindir)/smbpasswd
+	$(TARGET_RM) $(addprefix $(TARGET_bindir)/,testparm findsmb smbtar smbclient smbpasswd)
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
@@ -1029,7 +1022,7 @@ xupnpd: $(XUPNPD_DEPENDENCIES) | $(TARGET_DIR)
 		$(INSTALL_EXEC) -D src/xupnpd $(TARGET_bindir)/xupnpd; \
 		$(INSTALL) -d $(TARGET_datadir)/xupnpd/config; \
 		$(INSTALL_COPY) src/{plugins,profiles,ui,www,*.lua} $(TARGET_datadir)/xupnpd/
-	rm $(TARGET_datadir)/xupnpd/plugins/staff/xupnpd_18plus.lua
+	$(TARGET_RM) $(TARGET_datadir)/xupnpd/plugins/staff/xupnpd_18plus.lua
 	$(INSTALL_DATA) -D $(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS)/scripts-lua/xupnpd/xupnpd_18plus.lua $(TARGET_datadir)/xupnpd/plugins/
 	$(INSTALL_DATA) -D $(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS)/scripts-lua/xupnpd/xupnpd_cczwei.lua $(TARGET_datadir)/xupnpd/plugins/
 	$(INSTALL_DATA) -D $(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS)/scripts-lua/xupnpd/xupnpd_neutrino.lua $(TARGET_datadir)/xupnpd/plugins/

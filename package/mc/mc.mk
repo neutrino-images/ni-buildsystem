@@ -26,8 +26,8 @@ MC_CONF_OPTS = \
 	--without-x
 
 define MC_TARGET_CLEANUP
-	-rm -r $(TARGET_datadir)/mc/examples
-	find $(TARGET_datadir)/mc/skins -type f ! -name default.ini | xargs --no-run-if-empty rm
+	$(TARGET_RM) $(TARGET_datadir)/mc/examples
+	find $(TARGET_datadir)/mc/skins -type f ! -name default.ini | xargs --no-run-if-empty $(TARGET_RM)
 endef
 MC_TARGET_FINALIZE_HOOKS += MC_TARGET_CLEANUP
 
