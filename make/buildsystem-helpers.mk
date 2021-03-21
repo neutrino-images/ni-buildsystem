@@ -71,7 +71,16 @@ define STARTUP
 endef
 
 # follow-up build
-define FOLLOWUP
+define HOST_FOLLOWUP
+	@$(call MESSAGE,"Follow-up build")
+	$(foreach hook,$($(PKG)_PRE_FOLLOWUP_HOOKS),$(call $(hook))$(sep))
+	$(REMOVE)/$($(PKG)_DIR)
+	$(foreach hook,$($(PKG)_HOST_FINALIZE_HOOKS),$(call $(hook))$(sep))
+	$(foreach hook,$($(PKG)_POST_FOLLOWUP_HOOKS),$(call $(hook))$(sep))
+	$(TOUCH)
+endef
+
+define TARGET_FOLLOWUP
 	@$(call MESSAGE,"Follow-up build")
 	$(foreach hook,$($(PKG)_PRE_FOLLOWUP_HOOKS),$(call $(hook))$(sep))
 	$(REWRITE_CONFIG_SCRIPTS)
