@@ -144,7 +144,7 @@ host-zic: $(DL_DIR)/$(HOST_ZIC_SOURCE) | $(HOST_DIR)
 
 # -----------------------------------------------------------------------------
 
-HOST_PARTED_VERSION = 3.3
+HOST_PARTED_VERSION = 3.2
 HOST_PARTED_DIR = parted-$(HOST_PARTED_VERSION)
 HOST_PARTED_SOURCE = parted-$(HOST_PARTED_VERSION).tar.xz
 HOST_PARTED_SITE = $(GNU_MIRROR)/parted
