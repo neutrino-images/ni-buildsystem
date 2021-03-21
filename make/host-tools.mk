@@ -26,44 +26,10 @@ host-tools: $(BUILD_DIR) $(HOST_DIR) \
 
 # -----------------------------------------------------------------------------
 
-pkg-config-preqs:
-	@PATH=$(subst $(HOST_DIR)/bin:$(HOST_DIR)/sbin:,,$(PATH)); \
-	if ! pkg-config --exists glib-2.0; then \
-		echo "pkg-config and glib2-devel packages are needed for building cross-pkg-config."; false; \
-	fi
-
-# -----------------------------------------------------------------------------
-
-HOST_PKG_CONFIG = $(HOST_DIR)/bin/pkg-config
-
-# -----------------------------------------------------------------------------
-
-HOST_PKGCONF_VERSION = 1.7.3
-HOST_PKGCONF_DIR = pkgconf-$(HOST_PKGCONF_VERSION)
-HOST_PKGCONF_SOURCE = pkgconf-$(HOST_PKGCONF_VERSION).tar.gz
-HOST_PKGCONF_SITE = https://distfiles.dereferenced.org/pkgconf
-
-$(DL_DIR)/$(HOST_PKGCONF_SOURCE):
-	$(download) $(HOST_PKGCONF_SITE)/$(HOST_PKGCONF_SOURCE)
-
-host-pkgconf: $(DL_DIR)/$(HOST_PKGCONF_SOURCE) | $(HOST_DIR) pkg-config-preqs
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHES); \
-		$(HOST_CONFIGURE);\
-		$(MAKE); \
-		$(MAKE) install
-	$(INSTALL_EXEC) $(PKG_FILES_DIR)/pkg-config.in $(HOST_PKG_CONFIG)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
 PKG_CONFIG_DEPENDENCIES = host-pkgconf
 
 $(PKG_CONFIG): $(PKG_CONFIG_DEPENDENCIES) | $(HOST_DIR)
-	ln -sf pkg-config $(@)
+	ln -sf $(HOST_PKG_CONFIG) $(@)
 
 # -----------------------------------------------------------------------------
 
