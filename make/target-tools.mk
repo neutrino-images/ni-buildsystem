@@ -442,38 +442,6 @@ hd-idle: $(DL_DIR)/$(HD_IDLE_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-NTP_VERSION = 4.2.8p15
-NTP_DIR = ntp-$(NTP_VERSION)
-NTP_SOURCE = ntp-$(NTP_VERSION).tar.gz
-NTP_SITE = https://www.eecis.udel.edu/~ntp/ntp_spool/ntp4/ntp-$(basename $(NTP_VERSION))
-
-$(DL_DIR)/$(NTP_SOURCE):
-	$(download) $(NTP_SITE)/$(NTP_SOURCE)
-
-NTP_DEPENDENCIES = openssl
-
-NTP_CONF_OPTS = \
-	--docdir=$(REMOVE_docdir) \
-	--disable-debugging \
-	--with-shared \
-	--with-crypto \
-	--with-yielding-select=yes \
-	--without-ntpsnmpd
-
-ntp: $(NTP_DEPENDENCIES) $(DL_DIR)/$(NTP_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHES); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)/ntp
-	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/ntpdate.init $(TARGET_sysconfdir)/init.d/ntpdate
-	#$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
 DJMOUNT_VERSION = 0.71
 DJMOUNT_DIR = djmount-$(DJMOUNT_VERSION)
 DJMOUNT_SOURCE = djmount-$(DJMOUNT_VERSION).tar.gz
