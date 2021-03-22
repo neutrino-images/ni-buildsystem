@@ -21,5 +21,5 @@ cd ${TARGET_DIR}
 for r in $@; do
 	r=${r//${TARGET_DIR}\//}
 	mkdir -p $(dirname ${REMOVE_DIR}/${r})
-	mv -v ${r} ${REMOVE_DIR}/${r}
+	mv -v ${r} ${REMOVE_DIR}/${r} || true
 done
