@@ -18,7 +18,7 @@ RPCBIND_CONF_OPTS = \
 	--with-systemdsystemunitdir=no
 
 define RPCBIND_TARGET_CLEANUP
-	$(TARGET_RM) $(TARGET_bindir)/rpcgen
+	$(TARGET_RM) $(TARGET_bindir)/rpcinfo
 endef
 RPCBIND_TARGET_FINALIZE_HOOKS += RPCBIND_TARGET_CLEANUP
 
