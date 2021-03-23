@@ -47,7 +47,7 @@ define EXTRACT # (directory)
 	  *.zip) \
 	    unzip -o -q ${DL_DIR}/$($(PKG)_SOURCE) -d $(1); \
 	    ;; \
-	  *.git) \
+	  *.git | *.svn) \
 	    cp -a -t $(1) $(DL_DIR)/$($(PKG)_SOURCE); \
 	    if test $($(PKG)_CHECKOUT); then \
 	      $(call MESSAGE,"git checkout $($(PKG)_CHECKOUT)"); \
@@ -139,6 +139,9 @@ endef
 
 # apply patch sets
 define apply_patches
+	@$(call MESSAGE,"Patching")
+	$(foreach hook,$($(PKG)_PRE_PATCH_HOOKS),$(call $(hook))$(sep))
+	$(Q)( \
 	l=$(strip $(2)); test -z $$l && l=1; \
 	for i in $(1); do \
 		if [ -e $$i -o -e $(PKG_PATCHES_DIR)/$$i ]; then \
@@ -160,7 +163,9 @@ define apply_patches
 				fi; \
 			fi; \
 		fi; \
-	done
+	done; \
+	)
+	$(foreach hook,$($(PKG)_POST_PATCH_HOOKS),$(call $(hook))$(sep))
 endef
 
 # apply patch sets automatically

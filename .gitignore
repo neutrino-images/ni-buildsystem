@@ -9,6 +9,7 @@
 /host
 /internal
 /local
+/package/oscam*
 /root
 /source
 /staging
