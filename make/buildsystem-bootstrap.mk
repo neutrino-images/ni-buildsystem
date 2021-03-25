@@ -103,6 +103,8 @@ ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd5x hd6x vusolo4k vuduo4k vuduo4kse vu
 	$(CD) $(TARGET_base_libdir); \
 		ln -sf ld-2.27.so ld-linux.so.3
 endif
+	$(CD) $(TARGET_libdir); \
+		ln -sf ../../lib/libgcc_s.so.1 libgcc_s.so.1
 
 # -----------------------------------------------------------------------------
 
