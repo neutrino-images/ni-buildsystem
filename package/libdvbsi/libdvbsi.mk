@@ -9,7 +9,7 @@ LIBDVBSI_DIR = libdvbsi++-$(LIBDVBSI_VERSION)
 LIBDVBSI_SOURCE = libdvbsi++-$(LIBDVBSI_VERSION).tar.bz2
 LIBDVBSI_SITE = https://github.com/mtdcr/libdvbsi/releases/download/$(LIBDVBSI_VERSION)
 
-LIBDVBSI_CONV_OPTS = \
+LIBDVBSI_CONF_OPTS = \
 	--enable-shared \
 	--disable-static
 
