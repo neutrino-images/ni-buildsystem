@@ -111,12 +111,12 @@ else ifeq ($(TARGET_ARCH),mips)
   OPENSSL_TARGET_ARCH = linux-generic32
 endif
 
-OPENSSL_CONV_OPTS = \
+OPENSSL_CONF_OPTS = \
 	--cross-compile-prefix=$(TARGET_CROSS) \
 	--prefix=$(prefix) \
 	--openssldir=$(sysconfdir)/ssl
 
-OPENSSL_CONV_OPTS += \
+OPENSSL_CONF_OPTS += \
 	$(OPENSSL_TARGET_ARCH) \
 	shared \
 	threads \
@@ -128,7 +128,7 @@ OPENSSL_CONV_OPTS += \
 	no-fuzz-afl \
 	no-fuzz-libfuzzer
 
-OPENSSL_CONV_OPTS += \
+OPENSSL_CONF_OPTS += \
 	-DTERMIOS -fomit-frame-pointer \
 	-DOPENSSL_SMALL_FOOTPRINT \
 	$(TARGET_CFLAGS) \
@@ -140,7 +140,7 @@ openssl: $(DL_DIR)/$(OPENSSL_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(PKG_DIR); \
 		$(APPLY_PATCHES); \
 		./Configure \
-			$($(PKG)_CONV_OPTS); \
+			$($(PKG)_CONF_OPTS); \
 		$(SED) 's| build_tests||' Makefile; \
 		$(SED) 's|^MANDIR=.*|MANDIR=$(REMOVE_mandir)|' Makefile; \
 		$(SED) 's|^HTMLDIR=.*|HTMLDIR=$(REMOVE_htmldir)|' Makefile; \
