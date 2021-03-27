@@ -45,7 +45,7 @@ crosstool-ng: $(CROSSTOOL_NG_DEPS) | $(BUILD_DIR)
 ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd1 hd2))
 	$(CHDIR)/$($(PKG)_DIR); \
 		git checkout 1dbb06f2; \
-		$(APPLY_PATCHSET)
+		$(APPLY_PATCHES)
   ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd2))
 	$(INSTALL_COPY) $(PKG_PATCHES_DIR)/gcc/* $(PKG_BUILD_DIR)/patches/gcc/linaro-6.3-2017.02
   endif

@@ -138,7 +138,7 @@ endef
 # -----------------------------------------------------------------------------
 
 # apply patch sets
-define apply_patchset
+define apply_patches
 	l=$(strip $(2)); test -z $$l && l=1; \
 	for i in $(1); do \
 		if [ -e $$i -o -e $(PKG_PATCHES_DIR)/$$i ]; then \
@@ -164,7 +164,7 @@ define apply_patchset
 endef
 
 # apply patch sets automatically
-APPLY_PATCHSET = $(call apply_patchset,$(PKG_PATCHES_DIR))
+APPLY_PATCHES = $(call apply_patches,$(PKG_PATCHES_DIR))
 
 # -----------------------------------------------------------------------------
 

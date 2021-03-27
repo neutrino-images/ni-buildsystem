@@ -18,7 +18,7 @@ usbutils: $(USBUTILS_DEPENDENCIES) $(DL_DIR)/$(USBUTILS_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHSET); \
+		$(APPLY_PATCHES); \
 		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
@@ -76,7 +76,7 @@ base-passwd: $(DL_DIR)/$(BASE_PASSWD_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHSET); \
+		$(APPLY_PATCHES); \
 		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
@@ -125,7 +125,7 @@ bzip2: $(DL_DIR)/$(BZIP2_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHSET); \
+		$(APPLY_PATCHES); \
 		mv Makefile-libbz2_so Makefile; \
 		$(TARGET_CONFIGURE_ENV) \
 		$(MAKE); \

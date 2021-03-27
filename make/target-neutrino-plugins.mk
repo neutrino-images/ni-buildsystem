@@ -259,7 +259,7 @@ links: $(LINKS_DEPENDENCIES) $(DL_DIR)/$(LINKS_SOURCE) $(SHARE_PLUGINS) | $(TARG
 		echo "german" >> index.txt; \
 		./gen-intl
 	$(CHDIR)/$(LINKS_DIR); \
-		$(call apply_patchset,$(LINKS_PATCH)); \
+		$(call apply_patches,$(LINKS_PATCH)); \
 		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)

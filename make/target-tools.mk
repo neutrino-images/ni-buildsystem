@@ -151,7 +151,7 @@ busybox: $(BUSYBOX_DEPENDENCIES) $(DL_DIR)/$(BUSYBOX_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHSET); \
+		$(APPLY_PATCHES); \
 	$($(PKG)_INSTALL_CONFIG)
 	$($(PKG)_MODIFY_CONFIG)
 	$(CHDIR)/$(PKG_DIR); \
@@ -197,7 +197,7 @@ sysvinit: $(DL_DIR)/$(SYSVINIT_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHSET); \
+		$(APPLY_PATCHES); \
 		$(TARGET_CONFIGURE_ENV) \
 		$(MAKE) -C src SULOGINLIBS=-lcrypt; \
 		$(MAKE) install ROOT=$(TARGET_DIR) MANDIR=$(REMOVE_mandir)
@@ -237,7 +237,7 @@ xfsprogs: $(XFSPROGS_DEPENDENCIES) $(DL_DIR)/$(XFSPROGS_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHSET); \
+		$(APPLY_PATCHES); \
 		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DIST_ROOT=$(TARGET_DIR)
@@ -323,7 +323,7 @@ hdparm: $(DL_DIR)/$(HDPARM_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHSET); \
+		$(APPLY_PATCHES); \
 		$(TARGET_CONFIGURE_ENV) \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR) mandir=$(REMOVE_mandir)
@@ -462,7 +462,7 @@ djmount: $(DJMOUNT_DEPENDENCIES) $(DL_DIR)/$(DJMOUNT_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHSET); \
+		$(APPLY_PATCHES); \
 		touch libupnp/config.aux/config.rpath; \
 		$(CONFIGURE); \
 		$(MAKE1); \
@@ -496,7 +496,7 @@ ushare: $(USHARE_DEPENDENCIES) $(DL_DIR)/$(USHARE_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHSET); \
+		$(APPLY_PATCHES); \
 		$(TARGET_CONFIGURE_ENV) ./configure $($(PKG)_CONF_OPTS); \
 		ln -sf ../config.h src/; \
 		$(MAKE); \
@@ -526,7 +526,7 @@ vsftpd: $(VSFTPD_DEPENDENCIES) $(DL_DIR)/$(VSFTPD_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHSET); \
+		$(APPLY_PATCHES); \
 		$(SED) 's/.*VSF_BUILD_PAM/#undef VSF_BUILD_PAM/' builddefs.h; \
 		$(SED) 's/.*VSF_BUILD_SSL/#define VSF_BUILD_SSL/' builddefs.h; \
 		$(MAKE) clean; \
@@ -620,7 +620,7 @@ autofs: $(AUTOFS_DEPENDENCIES) $(DL_DIR)/$(AUTOFS_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHSET); \
+		$(APPLY_PATCHES); \
 		$(SED) "s|nfs/nfs.h|linux/nfs.h|" include/rpc_subs.h; \
 		$(CONFIGURE); \
 		$(MAKE) $($(PKG)_MAKE_OPTS) DONTSTRIP=1; \
@@ -689,7 +689,7 @@ samba33: $(SAMBA33_DEPENDENCIES) $(DL_DIR)/$(SAMBA33_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHSET); \
+		$(APPLY_PATCHES); \
 	$(CHDIR)/$(PKG_DIR)/source; \
 		./autogen.sh; \
 		$(CONFIGURE); \
@@ -755,7 +755,7 @@ samba36: $(SAMBA36_DEPENDENCIES) $(DL_DIR)/$(SAMBA36_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHSET); \
+		$(APPLY_PATCHES); \
 	$(CHDIR)/$(PKG_DIR)/source3; \
 		./autogen.sh; \
 		$(CONFIGURE); \
@@ -831,7 +831,7 @@ fbshot: $(FBSHOT_DEPENDENCIES) $(DL_DIR)/$(FBSHOT_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHSET); \
+		$(APPLY_PATCHES); \
 		$(SED) 's|	gcc |	$(TARGET_CC) $(TARGET_CFLAGS) $(TARGET_LDFLAGS) |' Makefile; \
 		$(SED) '/strip fbshot/d' Makefile; \
 		$(MAKE); \
@@ -937,7 +937,7 @@ xupnpd: $(XUPNPD_DEPENDENCIES) | $(TARGET_DIR)
 	$(CPDIR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
 		git checkout $($(PKG)_CHECKOUT); \
-		$(APPLY_PATCHSET); \
+		$(APPLY_PATCHES); \
 		$(TARGET_CONFIGURE_ENV) \
 		$(MAKE) -C src $($(PKG)_MAKE_OPTS) embedded ; \
 		$(INSTALL_EXEC) -D src/xupnpd $(TARGET_bindir)/xupnpd; \
@@ -1050,7 +1050,7 @@ dvb-apps: $(DVB_APPS_DEPENDENCIES) | $(TARGET_DIR)
 	$(GET_GIT_SOURCE) $(PKG_SITE)/$(PKG_SOURCE) $(DL_DIR)/$(PKG_SOURCE)
 	$(CPDIR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHSET); \
+		$(APPLY_PATCHES); \
 		$(TARGET_CONFIGURE_ENV) LDLIBS="-liconv" \
 		$(MAKE) $($(PKG)_MAKE_OPTS); \
 		$(MAKE) $($(PKG)_MAKE_OPTS) install DESTDIR=$(TARGET_DIR)
@@ -1107,7 +1107,7 @@ gptfdisk: $(GPTFDISK_DEPENDENCIES) $(DL_DIR)/$(GPTFDISK_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHSET); \
+		$(APPLY_PATCHES); \
 		$(TARGET_CONFIGURE_ENV) \
 		$(MAKE) $($(PKG)_SBINARIES); \
 		for sbin in $($(PKG)_SBINARIES); do \

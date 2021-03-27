@@ -355,7 +355,7 @@ ffmpeg: $(FFMPEG_DEPENDENCIES) $(DL_DIR)/$(FFMPEG_SOURCE) | $(TARGET_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 ifneq ($($(PKG)_UNPATCHED),yes)
 	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHSET)
+		$(APPLY_PATCHES)
 endif
 	$(CHDIR)/$(PKG_DIR); \
 		./configure $($(PKG)_CONF_OPTS); \

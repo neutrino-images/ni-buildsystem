@@ -23,7 +23,7 @@ valgrind: $(DL_DIR)/$(VALGRIND_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
-		$(call apply_patchset,$(PKG_PATCH)); \
+		$(call apply_patches,$(PKG_PATCH)); \
 		$(CONFIGURE); \
 		$(MAKE); \
 		make install DESTDIR=$(TARGET_DIR)
