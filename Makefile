@@ -31,10 +31,29 @@ export CDPATH :=
 # determinism and reproducibility with top-level parallel build.
 .NOTPARALLEL:
 
+# To put more focus on warnings, be less verbose as default
+# Use 'make V=1' to see the full commands
+ifeq ("$(origin V)", "command line")
+  KBUILD_VERBOSE = $(V)
+endif
+ifndef KBUILD_VERBOSE
+  KBUILD_VERBOSE = 0
+endif
+
+ifeq ($(KBUILD_VERBOSE),1)
+  Q =
+ifndef VERBOSE
+  VERBOSE = 1
+endif
+export VERBOSE
+else
+  Q = @
+endif
+
 # kconfig uses CONFIG_SHELL
 CONFIG_SHELL := $(SHELL)
 
-export SHELL CONFIG_SHELL
+export SHELL CONFIG_SHELL Q KBUILD_VERBOSE
 
 # -----------------------------------------------------------------------------
 

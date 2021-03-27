@@ -180,13 +180,16 @@ REWRITE_LIBTOOL_RULES = "s,^libdir=.*,libdir='$(1)',; \
 REWRITE_LIBTOOL_TAG = rewritten=1
 
 define rewrite_libtool # (libdir)
+	@#$(call MESSAGE,"Fixing libtool files in $(subst $(TARGET_DIR)/,,$(1))")
+	$(Q)( \
 	for la in $$(find $(1) -name "*.la" -type f); do \
 		if ! grep -q "$(REWRITE_LIBTOOL_TAG)" $${la}; then \
 			$(call MESSAGE,"Rewriting $${la#$(TARGET_DIR)/}"); \
 			$(SED) $(REWRITE_LIBTOOL_RULES) $${la}; \
 			echo -e "\n# Adapted to buildsystem\n$(REWRITE_LIBTOOL_TAG)" >> $${la}; \
 		fi; \
-	done
+	done; \
+	)
 endef
 
 # rewrite libtool libraries automatically
@@ -202,9 +205,11 @@ REWRITE_CONFIG_RULES = "s,^prefix=.*,prefix='$(TARGET_prefix)',; \
 			s,^includedir=.*,includedir='$(TARGET_includedir)',"
 
 define rewrite_config_script # (config-script)
+	$(Q)( \
 	mv $(TARGET_bindir)/$(1) $(HOST_DIR)/bin; \
 	$(call MESSAGE,"Rewriting $(1)"); \
-	$(SED) $(REWRITE_CONFIG_RULES) $(HOST_DIR)/bin/$(1)
+	$(SED) $(REWRITE_CONFIG_RULES) $(HOST_DIR)/bin/$(1); \
+	)
 endef
 
 # rewrite config scripts automatically
