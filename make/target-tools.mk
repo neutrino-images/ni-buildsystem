@@ -264,6 +264,8 @@ E2FSPROGS_AUTORECONF = YES
 
 E2FSPROGS_CONF_OPTS = \
 	--with-root-prefix="$(base_prefix)" \
+	--libdir=$(libdir) \
+	--includedir=$(includedir) \
 	--datarootdir=$(REMOVE_datarootdir) \
 	--disable-backtrace \
 	--disable-blkid-debug \
@@ -928,28 +930,39 @@ XUPNPD_DEPENDENCIES = lua openssl
 XUPNPD_MAKE_OPTS = \
 	TARGET=$(TARGET) LUAFLAGS="$(TARGET_LDFLAGS) -I$(TARGET_includedir)"
 
-xupnpd: $(XUPNPD_DEPENDENCIES) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(GET_GIT_SOURCE) $(PKG_SITE)/$(PKG_SOURCE) $(DL_DIR)/$(PKG_SOURCE)
-	$(CPDIR)/$(PKG_SOURCE)
-	$(call APPLY_PATCHES,$(PKG_PATCHES_DIR))
-	$(CHDIR)/$(PKG_DIR); \
-		git checkout $($(PKG)_CHECKOUT); \
-		$(TARGET_CONFIGURE_ENV) \
-		$(MAKE) -C src $($(PKG)_MAKE_OPTS) embedded ; \
-		$(INSTALL_EXEC) -D src/xupnpd $(TARGET_bindir)/xupnpd; \
-		$(INSTALL) -d $(TARGET_datadir)/xupnpd/config; \
-		$(INSTALL_COPY) src/{plugins,profiles,ui,www,*.lua} $(TARGET_datadir)/xupnpd/
+define XUPNPD_TARGET_CLEANUP
 	$(TARGET_RM) $(TARGET_datadir)/xupnpd/plugins/staff/xupnpd_18plus.lua
+endef
+XUPNPD_TARGET_FINALIZE_HOOKS += XUPNPD_TARGET_CLEANUP
+
+define XUPNPD_INSTALL_PLUGINS
 	$(INSTALL_DATA) -D $(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS)/scripts-lua/xupnpd/xupnpd_18plus.lua $(TARGET_datadir)/xupnpd/plugins/
 	$(INSTALL_DATA) -D $(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS)/scripts-lua/xupnpd/xupnpd_cczwei.lua $(TARGET_datadir)/xupnpd/plugins/
 	$(INSTALL_DATA) -D $(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS)/scripts-lua/xupnpd/xupnpd_neutrino.lua $(TARGET_datadir)/xupnpd/plugins/
 	$(INSTALL_DATA) -D $(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS)/scripts-lua/xupnpd/xupnpd_vimeo.lua $(TARGET_datadir)/xupnpd/plugins/
 	$(INSTALL_DATA) -D $(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS)/scripts-lua/xupnpd/xupnpd_youtube.lua $(TARGET_datadir)/xupnpd/plugins/
+endef
+XUPNPD_TARGET_FINALIZE_HOOKS += XUPNPD_INSTALL_PLUGINS
+
+define XUPNPD_INSTALL_SKEL
 	$(INSTALL_COPY) $(PKG_FILES_DIR)-skel/* $(TARGET_DIR)/
 	$(UPDATE-RC.D) xupnpd defaults 75 25
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
+endef
+XUPNPD_TARGET_FINALIZE_HOOKS += XUPNPD_INSTALL_SKEL
+
+xupnpd: $(XUPNPD_DEPENDENCIES) | $(TARGET_DIR)
+	$(call DEPENDENCIES)
+	$(call DOWNLOAD,$($(PKG)_SOURCE))
+	$(call STARTUP)
+	$(call EXTRACT,$(BUILD_DIR))
+	$(call APPLY_PATCHES,$(PKG_PATCHES_DIR))
+	$(CHDIR)/$(PKG_DIR); \
+		$(TARGET_CONFIGURE_ENV) \
+		$(MAKE) -C src $($(PKG)_MAKE_OPTS) embedded
+	$(INSTALL_EXEC) -D $(PKG_BUILD_DIR)/src/xupnpd $(TARGET_bindir)/xupnpd
+	$(INSTALL) -d $(TARGET_datadir)/xupnpd/config
+	$(INSTALL_COPY) $(PKG_BUILD_DIR)/src/{plugins,profiles,ui,www,*.lua} $(TARGET_datadir)/xupnpd/
+	$(call TARGET_FOLLOWUP)
 
 # -----------------------------------------------------------------------------
 

@@ -219,7 +219,6 @@ include make/target-ffmpeg$(if $(filter $(BOXTYPE),coolstream),-coolstream).mk
 include make/target-files.mk
 include make/target-libs.mk
 include make/target-libs-static.mk
-include make/target-libs-unused.mk
 include make/target-lua.mk
 include make/target-rootfs.mk
 include make/target-scripts.mk
