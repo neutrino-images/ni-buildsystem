@@ -10,7 +10,7 @@ define cmake-package
 	$(call STARTUP)
 	$(call EXTRACT,$(BUILD_DIR))
 	$(CHDIR)/$($(PKG)_DIR); \
-		$(APPLY_PATCHES); \
+		$(APPLY_PATCHSET); \
 		$(TARGET_CMAKE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
@@ -24,7 +24,7 @@ define host-cmake-package
 	$(call STARTUP)
 	$(call EXTRACT,$(BUILD_DIR))
 	$(CHDIR)/$($(PKG)_DIR); \
-		$(APPLY_PATCHES); \
+		$(APPLY_PATCHSET); \
 		$(HOST_CMAKE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)

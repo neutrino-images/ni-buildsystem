@@ -228,7 +228,7 @@ kernel.do_prepare_tar: $(DL_DIR)/$(KERNEL_SOURCE)
 	$(REMOVE)/$(KERNEL_DIR)
 	$(UNTAR)/$(KERNEL_SOURCE)
 	$(CHDIR)/$(KERNEL_DIR); \
-		$(call apply_patches,$(addprefix $(PKG_PATCHES_DIR)/,$(KERNEL_PATCH)))
+		$(call apply_patchset,$(addprefix $(PKG_PATCHES_DIR)/,$(KERNEL_PATCH)))
 
 kernel.do_compile: kernel.do_prepare
 	$(MAKE) -C $(BUILD_DIR)/$(KERNEL_DIR) $(KERNEL_MAKE_VARS) modules $(KERNEL_MAKE_TARGETS)

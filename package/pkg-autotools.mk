@@ -10,7 +10,7 @@ define autotools-package
 	$(call STARTUP)
 	$(call EXTRACT,$(BUILD_DIR))
 	$(CHDIR)/$($(PKG)_DIR); \
-		$(APPLY_PATCHES); \
+		$(APPLY_PATCHSET); \
 		$(TARGET_CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
@@ -23,7 +23,7 @@ define host-autotools-package
 	$(call STARTUP)
 	$(call EXTRACT,$(BUILD_DIR))
 	$(CHDIR)/$($(PKG)_DIR); \
-		$(APPLY_PATCHES); \
+		$(APPLY_PATCHSET); \
 		$(HOST_CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install
