@@ -17,8 +17,8 @@ USBUTILS_DEPENDENCIES = libusb-compat
 usbutils: $(USBUTILS_DEPENDENCIES) $(DL_DIR)/$(USBUTILS_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
+	$(call APPLY_PATCHES,$(PKG_PATCHES_DIR))
 	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHES); \
 		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
@@ -75,8 +75,8 @@ $(DL_DIR)/$(BASE_PASSWD_SOURCE):
 base-passwd: $(DL_DIR)/$(BASE_PASSWD_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
+	$(call APPLY_PATCHES,$(PKG_PATCHES_DIR))
 	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHES); \
 		$(CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
@@ -124,8 +124,8 @@ $(DL_DIR)/$(BZIP2_SOURCE):
 bzip2: $(DL_DIR)/$(BZIP2_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
+	$(call APPLY_PATCHES,$(PKG_PATCHES_DIR))
 	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHES); \
 		mv Makefile-libbz2_so Makefile; \
 		$(TARGET_CONFIGURE_ENV) \
 		$(MAKE); \

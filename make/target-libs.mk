@@ -22,8 +22,8 @@ ZLIB_CONF_OPTS = \
 zlib: $(DL_DIR)/$(ZLIB_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
+	$(call APPLY_PATCHES,$(PKG_PATCHES_DIR))
 	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHES); \
 		$(TARGET_CONFIGURE_ENV) \
 		./configure $($(PKG)_CONF_OPTS); \
 		$(MAKE); \
@@ -77,8 +77,8 @@ FREETYPE_CONF_OPTS = \
 freetype: $(FREETYPE_DEPENDENCIES) $(DL_DIR)/$(FREETYPE_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
+	$(call APPLY_PATCHES,$(PKG_PATCHES_DIR))
 	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHES); \
 		$(SED) '/^FONT_MODULES += \(type1\|cid\|pfr\|type42\|pcf\|bdf\|winfonts\|cff\)/d' modules.cfg
 	$(CHDIR)/$(PKG_DIR)/builds/unix; \
 		libtoolize --force --copy; \
@@ -137,8 +137,8 @@ OPENSSL_CONF_OPTS += \
 openssl: $(DL_DIR)/$(OPENSSL_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
+	$(call APPLY_PATCHES,$(PKG_PATCHES_DIR))
 	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHES); \
 		./Configure \
 			$($(PKG)_CONF_OPTS); \
 		$(SED) 's| build_tests||' Makefile; \
@@ -192,8 +192,8 @@ NCURSES_CONF_OPTS = \
 ncurses: $(DL_DIR)/$(NCURSES_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
+	$(call APPLY_PATCHES,$(PKG_PATCHES_DIR))
 	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHES); \
 		$(CONFIGURE); \
 		$(MAKE) libs; \
 		$(MAKE) install.libs DESTDIR=$(TARGET_DIR)
@@ -236,8 +236,8 @@ libdpf: $(LIBDPF_DEPENDENCIES) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(GET_GIT_SOURCE) $(PKG_SITE)/$(PKG_SOURCE) $(DL_DIR)/$(PKG_SOURCE)
 	$(CPDIR)/$(PKG_SOURCE)
+	$(call APPLY_PATCHES,$(PKG_PATCHES_DIR))
 	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHES); \
 		$(MAKE1) -C dpflib libdpf.a $($(PKG)_MAKE_OPTS)
 	$(INSTALL_DATA) -D $(PKG_BUILD_DIR)/dpflib/libdpf.a $(TARGET_libdir)/libdpf.a
 	$(INSTALL_DATA) -D $(PKG_BUILD_DIR)/dpflib/dpf.h $(TARGET_includedir)/libdpf/libdpf.h
@@ -307,8 +307,8 @@ LIBBLURAY_CONF_OPTS = \
 libbluray: $(LIBBLURAY_DEPENDENCIES) $(DL_DIR)/$(LIBBLURAY_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
+	$(call APPLY_PATCHES,$(PKG_PATCHES_DIR))
 	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHES); \
 		./bootstrap; \
 		$(CONFIGURE); \
 		$(MAKE); \
@@ -505,8 +505,8 @@ endif
 glib2: $(GLIB2_DEPENDENCIES) $(DL_DIR)/$(GLIB2_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
+	$(call APPLY_PATCHES,$(PKG_PATCHES_DIR))
 	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHES); \
 		echo "ac_cv_type_long_long=yes"		 > arm-linux.cache; \
 		echo "glib_cv_stack_grows=no"		>> arm-linux.cache; \
 		echo "glib_cv_uscore=no"		>> arm-linux.cache; \
@@ -572,8 +572,8 @@ graphlcd-base: $(GRAPHLCD_BASE_DEPENDENCIES) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(GET_GIT_SOURCE) $(PKG_SITE)/$(PKG_SOURCE) $(DL_DIR)/$(PKG_SOURCE)
 	$(CPDIR)/$(PKG_SOURCE)
+	$(call APPLY_PATCHES,$(PKG_PATCH))
 	$(CHDIR)/$(PKG_DIR); \
-		$(call apply_patches,$(addprefix $(PKG_PATCHES_DIR)/,$(PKG_PATCH))); \
 		$(TARGET_CONFIGURE_ENV) \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR) PREFIX=$(prefix)

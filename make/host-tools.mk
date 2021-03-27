@@ -70,8 +70,9 @@ host-zic: $(DL_DIR)/$(HOST_ZIC_SOURCE) | $(HOST_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(MKDIR)/$(PKG_DIR)
 	$(CHDIR)/$(PKG_DIR); \
-		tar -xf $(DL_DIR)/$(PKG_SOURCE); \
-		$(APPLY_PATCHES); \
+		tar -xf $(DL_DIR)/$(PKG_SOURCE)
+	$(call APPLY_PATCHES,$(PKG_PATCHES_DIR))
+	$(CHDIR)/$(PKG_DIR); \
 		$(MAKE) zic
 	$(INSTALL_EXEC) -D $(PKG_BUILD_DIR)/zic $(HOST_ZIC)
 	$(REMOVE)/$(PKG_DIR)
@@ -138,8 +139,8 @@ HOST_MESON = $(HOST_DIR)/bin/meson
 host-meson: $(HOST_MESON_DEPENDENCIES) $(DL_DIR)/$(HOST_MESON_SOURCE) | $(HOST_DIR)
 	$(REMOVE)/$(HOST_MESON_DIR)
 	$(UNTAR)/$(HOST_MESON_SOURCE)
+	$(call APPLY_PATCHES,$(PKG_PATCHES_DIR))
 	$(CHDIR)/$(HOST_MESON_DIR); \
-		$(APPLY_PATCHES); \
 		$(HOST_PYTHON_BUILD); \
 		$(HOST_PYTHON_INSTALL)
 	$(REMOVE)/$(HOST_MESON_DIR)
@@ -160,8 +161,8 @@ HOST_NINJA = $(HOST_DIR)/bin/ninja
 host-ninja: $(DL_DIR)/$(HOST_NINJA_SOURCE) | $(HOST_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
+	$(call APPLY_PATCHES,$(PKG_PATCHES_DIR))
 	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHES); \
 		$(HOST_CMAKE); \
 		$(MAKE)
 	$(INSTALL_EXEC) -D $(PKG_BUILD_DIR)/ninja $(HOST_NINJA)
@@ -226,8 +227,8 @@ HOST_PYTHON3_CONF_OPTS = \
 host-python3: $(HOST_PYTHON3_DEPENDENCIES) $(DL_DIR)/$(HOST_PYTHON3_SOURCE) | $(HOST_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
+	#$(call APPLY_PATCHES,$(PKG_PATCHES_DIR))
 	$(CHDIR)/$(PKG_DIR); \
-		#$(APPLY_PATCHES); \
 		autoconf; \
 		$(HOST_CONFIGURE);\
 		$(MAKE); \
@@ -250,8 +251,8 @@ HOST_PYTHON3_SETUPTOOLS_DEPENDENCIES = host-python3
 host-python3-setuptools: $(HOST_PYTHON3_SETUPTOOLS_DEPENDENCIES) $(DL_DIR)/$(HOST_PYTHON3_SETUPTOOLS_SOURCE) | $(HOST_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNZIP)/$(PKG_SOURCE)
+	$(call APPLY_PATCHES,$(PKG_PATCHES_DIR))
 	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHES); \
 		$(HOST_PYTHON_BUILD); \
 		$(HOST_PYTHON_INSTALL)
 	$(REMOVE)/$(PKG_DIR)
@@ -270,8 +271,8 @@ HOST_LIBFFI_SITE = https://github.com/libffi/libffi/releases/download/v$(HOST_LI
 host-libffi: $(DL_DIR)/$(HOST_LIBFFI_SOURCE) | $(HOST_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
+	$(call APPLY_PATCHES,$(PKG_PATCHES_DIR))
 	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHES); \
 		$(HOST_CONFIGURE);\
 		$(MAKE); \
 		$(MAKE) install
@@ -296,8 +297,8 @@ HOST_LUA = $(HOST_DIR)/bin/lua
 host-lua: $(DL_DIR)/$(HOST_LUA_SOURCE) | $(HOST_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
+	$(call APPLY_PATCHES,$(PKG_PATCH))
 	$(CHDIR)/$(PKG_DIR); \
-		$(call apply_patches,$(addprefix $(PKG_PATCHES_DIR)/,$(PKG_PATCH))); \
 		$(MAKE) linux; \
 		$(MAKE) install INSTALL_TOP=$(HOST_DIR) INSTALL_MAN=$(HOST_DIR)/share/man/man1
 	$(REMOVE)/$(PKG_DIR)
@@ -336,8 +337,8 @@ HOST_LUAROCKS = $(HOST_DIR)/bin/luarocks
 host-luarocks: $(HOST_LUAROCKS_DEPENDENCIES) $(DL_DIR)/$(HOST_LUAROCKS_SOURCE) | $(HOST_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
+	$(call APPLY_PATCHES,$(PKG_PATCHES_DIR))
 	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHES); \
 		$(HOST_CONFIGURE);\
 		$(MAKE); \
 		$(MAKE) install

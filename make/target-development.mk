@@ -22,8 +22,8 @@ VALGRIND_CONF_OPTS = \
 valgrind: $(DL_DIR)/$(VALGRIND_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
+	$(call APPLY_PATCHES,$(PKG_PATCH))
 	$(CHDIR)/$(PKG_DIR); \
-		$(call apply_patches,$(PKG_PATCH)); \
 		$(CONFIGURE); \
 		$(MAKE); \
 		make install DESTDIR=$(TARGET_DIR)

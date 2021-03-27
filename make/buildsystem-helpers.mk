@@ -64,6 +64,32 @@ endef
 
 # -----------------------------------------------------------------------------
 
+# apply single patches or patch sets
+define APPLY_PATCHES # (patches or directory)
+	@$(call MESSAGE,"Patching")
+	$(foreach hook,$($(PKG)_PRE_PATCH_HOOKS),$(call $(hook))$(sep))
+	$(Q)( \
+	$(CHDIR)/$($(PKG)_DIR); \
+	for i in $(1); do \
+		if [ "$$i" == "$(PKG_PATCHES_DIR)" -a ! -d $$i ]; then \
+			continue; \
+		fi; \
+		if [ -d $$i ]; then \
+			for p in $$i/*.patch; do \
+				$(call MESSAGE,"Applying $${p#$(PKG_PATCHES_DIR)/} (*)"); \
+				patch -p1 -i $$p; \
+			done; \
+		else \
+			$(call MESSAGE,"Applying $${i#$(PKG_PATCHES_DIR)/}"); \
+			patch -p1 -i $(PKG_PATCHES_DIR)/$$i; \
+		fi; \
+	done; \
+	)
+	$(foreach hook,$($(PKG)_POST_PATCH_HOOKS),$(call $(hook))$(sep))
+endef
+
+# -----------------------------------------------------------------------------
+
 # start-up build
 define STARTUP
 	@$(call MESSAGE,"Start-up build")
@@ -134,42 +160,6 @@ define local-script
 		$(LOCAL_DIR)/scripts/$(1) $(2) $(TARGET_DIR) $(BUILD_DIR); \
 	fi
 endef
-
-# -----------------------------------------------------------------------------
-
-# apply patch sets
-define apply_patches
-	@$(call MESSAGE,"Patching")
-	$(foreach hook,$($(PKG)_PRE_PATCH_HOOKS),$(call $(hook))$(sep))
-	$(Q)( \
-	l=$(strip $(2)); test -z $$l && l=1; \
-	for i in $(1); do \
-		if [ -e $$i -o -e $(PKG_PATCHES_DIR)/$$i ]; then \
-			if [ -d $$i ]; then \
-				for p in $$i/*.patch; do \
-					$(call MESSAGE,"Applying $${p#$(PKG_PATCHES_DIR)/}"); \
-					if [ $${p:0:1} == "/" ]; then \
-						patch -p$$l -i $$p; \
-					else \
-						patch -p$$l -i $(PKG_PATCHES_DIR)/$$p; \
-					fi; \
-				done; \
-			else \
-				$(call MESSAGE,"Applying $${i#$(PKG_PATCHES_DIR)/}"); \
-				if [ $${i:0:1} == "/" ]; then \
-					patch -p$$l -i $$i; \
-				else \
-					patch -p$$l -i $(PKG_PATCHES_DIR)/$$i; \
-				fi; \
-			fi; \
-		fi; \
-	done; \
-	)
-	$(foreach hook,$($(PKG)_POST_PATCH_HOOKS),$(call $(hook))$(sep))
-endef
-
-# apply patch sets automatically
-APPLY_PATCHES = $(call apply_patches,$(PKG_PATCHES_DIR))
 
 # -----------------------------------------------------------------------------
 

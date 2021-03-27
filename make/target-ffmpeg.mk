@@ -354,8 +354,7 @@ ffmpeg: $(FFMPEG_DEPENDENCIES) $(DL_DIR)/$(FFMPEG_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 ifneq ($($(PKG)_UNPATCHED),yes)
-	$(CHDIR)/$(PKG_DIR); \
-		$(APPLY_PATCHES)
+	$(call APPLY_PATCHES,$(PKG_PATCHES_DIR))
 endif
 	$(CHDIR)/$(PKG_DIR); \
 		./configure $($(PKG)_CONF_OPTS); \

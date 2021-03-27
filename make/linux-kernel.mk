@@ -204,7 +204,6 @@ kernel.do_checkout: $(SOURCE_DIR)/$(NI_LINUX_KERNEL)
 
 kernel.do_prepare: | $(DEPS_DIR) $(BUILD_DIR)
 	$(MAKE) kernel.do_prepare_$(if $(filter $(KERNEL_SOURCE),git),git,tar)
-	#
 	$(REMOVE)/$(KERNEL_OBJ)
 	$(REMOVE)/$(KERNEL_MODULES)
 	$(MKDIR)/$(KERNEL_OBJ)
@@ -227,8 +226,7 @@ kernel.do_prepare_git:
 kernel.do_prepare_tar: $(DL_DIR)/$(KERNEL_SOURCE)
 	$(REMOVE)/$(KERNEL_DIR)
 	$(UNTAR)/$(KERNEL_SOURCE)
-	$(CHDIR)/$(KERNEL_DIR); \
-		$(call apply_patches,$(addprefix $(PKG_PATCHES_DIR)/,$(KERNEL_PATCH)))
+	$(call APPLY_PATCHES,$(KERNEL_PATCH))
 
 kernel.do_compile: kernel.do_prepare
 	$(MAKE) -C $(BUILD_DIR)/$(KERNEL_DIR) $(KERNEL_MAKE_VARS) modules $(KERNEL_MAKE_TARGETS)
