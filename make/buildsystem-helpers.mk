@@ -101,7 +101,7 @@ UNZIP = unzip -d $(BUILD_DIR) -o $(DL_DIR)
 REMOVE = rm -rf $(BUILD_DIR)
 
 # build helper variables
-INSTALL      = install
+INSTALL      = $(shell which install || type -p install || echo install)
 INSTALL_DATA = $(INSTALL) -m 0644
 INSTALL_EXEC = $(INSTALL) -m 0755
 INSTALL_COPY = cp -a
@@ -118,7 +118,7 @@ CHDIR = $(CD) $(BUILD_DIR)
 MKDIR = $(INSTALL) -d $(BUILD_DIR)
 CPDIR = cp -a -t $(BUILD_DIR) $(DL_DIR)
 TOUCH = @touch $(if $(findstring host-,$(@)),$(HOST_DEPS_DIR),$(DEPS_DIR))/$(@)
-SED   = $(shell which sed || type -p sed) -i -e
+SED   = $(shell which sed || type -p sed || echo sed) -i -e
 
 GET_GIT_ARCHIVE = support/scripts/get-git-archive.sh
 GET_GIT_SOURCE  = support/scripts/get-git-source.sh
