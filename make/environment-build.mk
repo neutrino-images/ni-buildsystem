@@ -148,7 +148,8 @@ TARGET_CPPFLAGS = $(TARGET_CFLAGS)
 TARGET_CXXFLAGS = $(TARGET_CFLAGS)
 TARGET_LDFLAGS  = $(CORTEX_STRINGS_LDFLAG) $(TARGET_EXTRA_LDFLAGS)
 TARGET_LDFLAGS += -L$(TARGET_base_libdir) -L$(TARGET_libdir)
-TARGET_LDFLAGS += -Wl,-rpath,$(TARGET_libdir) -Wl,-rpath-link,$(TARGET_libdir)
+TARGET_LDFLAGS += -Wl,-rpath,$(TARGET_base_libdir),-rpath,$(TARGET_libdir)
+TARGET_LDFLAGS += -Wl,-rpath-link,$(TARGET_base_libdir),-rpath-link,$(TARGET_libdir)
 TARGET_LDFLAGS += -Wl,-O1
 
 TARGET_CROSS    = $(TARGET)-
