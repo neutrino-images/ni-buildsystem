@@ -171,29 +171,6 @@ host-ninja: $(DL_DIR)/$(HOST_NINJA_SOURCE) | $(HOST_DIR)
 
 # -----------------------------------------------------------------------------
 
-HOST_EXPAT_VERSION = $(EXPAT_VERSION)
-HOST_EXPAT_DIR = expat-$(EXPAT_VERSION)
-HOST_EXPAT_SOURCE = expat-$(EXPAT_VERSION).tar.bz2
-HOST_EXPAT_SITE = https://sourceforge.net/projects/expat/files/expat/$(EXPAT_VERSION)
-
-#$(DL_DIR)/$(HOST_EXPAT_SOURCE):
-#	$(download) $(HOST_EXPAT_SITE)/$(EXPAT_SOURCE)
-
-HOST_EXPAT_CONF_OPTS = \
-	--without-docbook
-
-host-expat: $(DL_DIR)/$(HOST_EXPAT_SOURCE) | $(HOST_DIR)
-	$(REMOVE)/$(HOST_EXPAT_DIR)
-	$(UNTAR)/$(HOST_EXPAT_SOURCE)
-	$(CHDIR)/$(HOST_EXPAT_DIR); \
-		$(HOST_CONFIGURE);\
-		$(MAKE); \
-		$(MAKE) install
-	$(REMOVE)/$(HOST_EXPAT_DIR)
-	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
 HOST_PYTHON3_VERSION = 3.9.0
 HOST_PYTHON3_DIR = Python-$(HOST_PYTHON3_VERSION)
 HOST_PYTHON3_SOURCE = Python-$(HOST_PYTHON3_VERSION).tar.xz
@@ -255,27 +232,6 @@ host-python3-setuptools: $(HOST_PYTHON3_SETUPTOOLS_DEPENDENCIES) $(DL_DIR)/$(HOS
 	$(CHDIR)/$(PKG_DIR); \
 		$(HOST_PYTHON_BUILD); \
 		$(HOST_PYTHON_INSTALL)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
-HOST_LIBFFI_VERSION = $(LIBFFI_VERSION)
-HOST_LIBFFI_DIR = libffi-$(HOST_LIBFFI_VERSION)
-HOST_LIBFFI_SOURCE = libffi-$(HOST_LIBFFI_VERSION).tar.gz
-HOST_LIBFFI_SITE = https://github.com/libffi/libffi/releases/download/v$(HOST_LIBFFI_VERSION)
-
-#$(DL_DIR)/$(HOST_LIBFFI_SOURCE):
-#	$(download) $(HOST_LIBFFI_SITE)/$(HOST_LIBFFI_SOURCE)
-
-host-libffi: $(DL_DIR)/$(HOST_LIBFFI_SOURCE) | $(HOST_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(call APPLY_PATCHES,$(PKG_PATCHES_DIR))
-	$(CHDIR)/$(PKG_DIR); \
-		$(HOST_CONFIGURE);\
-		$(MAKE); \
-		$(MAKE) install
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
