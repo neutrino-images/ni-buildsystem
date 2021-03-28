@@ -1110,7 +1110,7 @@ minisatip: $(MINISATIP_DEPENDENCIES) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-GPTFDISK_VERSION = 1.0.4
+GPTFDISK_VERSION = 1.0.7
 GPTFDISK_DIR = gptfdisk-$(GPTFDISK_VERSION)
 GPTFDISK_SOURCE = gptfdisk-$(GPTFDISK_VERSION).tar.gz
 GPTFDISK_SITE = https://sourceforge.net/projects/gptfdisk/files/gptfdisk/$(GPTFDISK_VERSION)
