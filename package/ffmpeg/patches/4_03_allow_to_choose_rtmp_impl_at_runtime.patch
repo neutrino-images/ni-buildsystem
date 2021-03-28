@@ -1,6 +1,6 @@
 --- a/configure
 +++ b/configure
-@@ -3411,10 +3411,8 @@ xv_outdev_deps="xlib"
+@@ -3411,10 +3411,8 @@
  # protocols
  async_protocol_deps="threads"
  bluray_protocol_deps="libbluray"
@@ -11,7 +11,7 @@
  ffrtmphttp_protocol_select="http_protocol"
  ftp_protocol_select="tcp_protocol"
  gopher_protocol_select="network"
-@@ -3427,20 +3425,18 @@ https_protocol_suggest="zlib"
+@@ -3427,20 +3425,18 @@
  icecast_protocol_select="http_protocol"
  mmsh_protocol_select="http_protocol"
  mmst_protocol_select="network"
@@ -46,7 +46,7 @@
  sctp_protocol_deps="struct_sctp_event_subscribe struct_msghdr_msg_flags"
 --- a/libavformat/Makefile
 +++ b/libavformat/Makefile
-@@ -609,12 +609,12 @@ OBJS-$(CONFIG_MMSH_PROTOCOL)             += mmsh.o mms.o asf.o
+@@ -609,12 +609,12 @@
  OBJS-$(CONFIG_MMST_PROTOCOL)             += mmst.o mms.o asf.o
  OBJS-$(CONFIG_PIPE_PROTOCOL)             += file.o
  OBJS-$(CONFIG_PROMPEG_PROTOCOL)          += prompeg.o
@@ -67,7 +67,7 @@
  OBJS-$(CONFIG_SRTP_PROTOCOL)             += srtpproto.o srtp.o
 --- a/libavformat/protocols.c
 +++ b/libavformat/protocols.c
-@@ -44,12 +44,12 @@ extern const URLProtocol ff_mmst_protocol;
+@@ -44,12 +44,12 @@
  extern const URLProtocol ff_md5_protocol;
  extern const URLProtocol ff_pipe_protocol;
  extern const URLProtocol ff_prompeg_protocol;
