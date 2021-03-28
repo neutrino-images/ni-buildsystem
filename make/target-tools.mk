@@ -163,7 +163,7 @@ busybox: $(BUSYBOX_DEPENDENCIES) $(DL_DIR)/$(BUSYBOX_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-SYSVINIT_VERSION = 2.98
+SYSVINIT_VERSION = 2.99
 SYSVINIT_DIR = sysvinit-$(SYSVINIT_VERSION)
 SYSVINIT_SOURCE = sysvinit-$(SYSVINIT_VERSION).tar.xz
 SYSVINIT_SITE = http://download.savannah.nongnu.org/releases/sysvinit
