@@ -1,0 +1,135 @@
+autofs-5.1.7 - fix inconsistent locking in umount_subtree_mounts()
+
+From: Ian Kent <raven@themaw.net>
+
+Some map entry cache locking inconsistencies have crept in.
+
+In umount_subtree_mounts() the cache write lock should be held when
+deleting multi-mount cache entries.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG          |    1 +
+ daemon/automount.c |   42 ++++++++++++++++++++++++++++++------------
+ lib/mounts.c       |    8 --------
+ 3 files changed, 31 insertions(+), 20 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index 1dded118..64e619ec 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -15,6 +15,7 @@
+ - eliminate clean_stale_multi_triggers().
+ - simplify mount_subtree() mount check.
+ - fix mnts_get_expire_list() expire list construction.
++- fix inconsistent locking in umount_subtree_mounts().
+ 
+ 25/01/2021 autofs-5.1.7
+ - make bind mounts propagation slave by default.
+diff --git a/daemon/automount.c b/daemon/automount.c
+index 7fa92877..93bd8556 100644
+--- a/daemon/automount.c
++++ b/daemon/automount.c
+@@ -527,8 +527,11 @@ static int umount_subtree_mounts(struct autofs_point *ap, const char *path, unsi
+ 	struct mapent_cache *mc;
+ 	struct mapent *me;
+ 	unsigned int is_mm_root = 0;
++	int cur_state;
+ 	int left;
+ 
++	pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, &cur_state);
++
+ 	me = lookup_source_mapent(ap, path, LKP_DISTINCT);
+ 	if (!me) {
+ 		char *ind_key;
+@@ -548,11 +551,11 @@ static int umount_subtree_mounts(struct autofs_point *ap, const char *path, unsi
+ 	left = 0;
+ 
+ 	if (me && me->multi) {
+-		char root[PATH_MAX];
++		char root[PATH_MAX + 1];
++		char key[PATH_MAX + 1];
++		struct mapent *tmp;
++		int status;
+ 		char *base;
+-		int cur_state;
+-
+-		pthread_cleanup_push(cache_lock_cleanup, mc);
+ 
+ 		if (!strchr(me->multi->key, '/'))
+ 			/* Indirect multi-mount root */
+@@ -567,25 +570,40 @@ static int umount_subtree_mounts(struct autofs_point *ap, const char *path, unsi
+ 		else
+ 			base = me->key + strlen(root);
+ 
+-		pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, &cur_state);
+-		/* Lock the closest parent nesting point for umount */
+-		cache_multi_writelock(me->parent);
+-		if (umount_multi_triggers(ap, me, root, base)) {
++		left = umount_multi_triggers(ap, me, root, base);
++		if (left) {
+ 			warn(ap->logopt,
+ 			     "some offset mounts still present under %s", path);
++		}
++
++		strcpy(key, me->key);
++
++		cache_unlock(mc);
++		cache_writelock(mc);
++		tmp = cache_lookup_distinct(mc, key);
++		/* mapent went away while we waited? */
++		if (tmp != me) {
++			cache_unlock(mc);
++			pthread_setcancelstate(cur_state, NULL);
++			return 0;
++		}
++
++		if (!left && is_mm_root) {
++			status = cache_delete_offset_list(mc, me->key);
++			if (status != CHE_OK)
++				warn(ap->logopt, "couldn't delete offset list");
+ 			left++;
+ 		}
+-		cache_multi_unlock(me->parent);
++
+ 		if (ap->entry->maps &&
+ 		    (ap->entry->maps->flags & MAP_FLAG_FORMAT_AMD))
+ 			cache_pop_mapent(me);
+-		pthread_setcancelstate(cur_state, NULL);
+-		pthread_cleanup_pop(0);
+ 	}
+-
+ 	if (me)
+ 		cache_unlock(mc);
+ 
++	pthread_setcancelstate(cur_state, NULL);
++
+ 	if (left || is_autofs_fs)
+ 		return left;
+ 
+diff --git a/lib/mounts.c b/lib/mounts.c
+index 87813b16..5ebfe5fd 100644
+--- a/lib/mounts.c
++++ b/lib/mounts.c
+@@ -2736,9 +2736,6 @@ int umount_multi_triggers(struct autofs_point *ap, struct mapent *me, char *root
+ 	left = do_umount_multi_triggers(ap, me, root, base);
+ 
+ 	if (!left && me->multi == me) {
+-		struct mapent_cache *mc = me->mc;
+-		int status;
+-
+ 		/*
+ 		 * Special case.
+ 		 * If we can't umount the root container then we can't
+@@ -2756,11 +2753,6 @@ int umount_multi_triggers(struct autofs_point *ap, struct mapent *me, char *root
+ 			}
+ 		}
+ 
+-		/* We're done - clean out the offsets */
+-		status = cache_delete_offset_list(mc, me->key);
+-		if (status != CHE_OK)
+-			warn(ap->logopt, "couldn't delete offset list");
+-
+ 	       /* check for mounted mount entry and remove it if found */
+                mnts_remove_mount(root, MNTS_MOUNTED);
+ 	}

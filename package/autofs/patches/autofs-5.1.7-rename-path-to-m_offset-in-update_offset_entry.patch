@@ -1,0 +1,159 @@
+autofs-5.1.7 - rename path to m_offset in update_offset_entry()
+
+From: Ian Kent <raven@themaw.net>
+
+Rename local variable from path to m_offset in update_offset_entry() to
+make the meaning of this variable clear.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG           |    1 +
+ modules/parse_sun.c |   46 +++++++++++++++++++++++-----------------------
+ 2 files changed, 24 insertions(+), 23 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index e822efec..0e9ca94f 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -25,6 +25,7 @@
+ - don't add offset mounts to mounted mounts table.
+ - reduce umount EBUSY check delay.
+ - cleanup cache_delete() a little.
++- rename path to m_offset in update_offset_entry().
+ 
+ 25/01/2021 autofs-5.1.7
+ - make bind mounts propagation slave by default.
+diff --git a/modules/parse_sun.c b/modules/parse_sun.c
+index a6630a76..34d4441e 100644
+--- a/modules/parse_sun.c
++++ b/modules/parse_sun.c
+@@ -796,36 +796,36 @@ static int
+ update_offset_entry(struct autofs_point *ap,
+ 		    struct mapent_cache *mc, const char *name,
+ 		    const char *m_root, int m_root_len,
+-		    const char *path, const char *myoptions,
++		    const char *m_offset, const char *myoptions,
+ 		    const char *loc, time_t age)
+ {
+ 	char m_key[PATH_MAX + 1];
+ 	char m_mapent[MAPENT_MAX_LEN + 1];
+-	int p_len, m_key_len, m_options_len, m_mapent_len;
++	int o_len, m_key_len, m_options_len, m_mapent_len;
+ 	int ret;
+ 
+ 	memset(m_mapent, 0, MAPENT_MAX_LEN + 1);
+ 
+ 	/* Internal hosts map may have loc == NULL */
+-	if (!*path) {
++	if (!*m_offset) {
+ 		error(ap->logopt,
+-		      MODPREFIX "syntax error in offset %s -> %s", path, loc);
++		      MODPREFIX "syntax error in offset %s -> %s", m_offset, loc);
+ 		return CHE_FAIL;
+ 	}
+ 
+-	p_len = strlen(path);
++	o_len = strlen(m_offset);
+ 	/* Trailing '/' causes us pain */
+-	if (p_len > 1) {
+-		while (p_len > 1 && path[p_len - 1] == '/')
+-			p_len--;
++	if (o_len > 1) {
++		while (o_len > 1 && m_offset[o_len - 1] == '/')
++			o_len--;
+ 	}
+-	m_key_len = m_root_len + p_len;
++	m_key_len = m_root_len + o_len;
+ 	if (m_key_len > PATH_MAX) {
+ 		error(ap->logopt, MODPREFIX "multi mount key too long");
+ 		return CHE_FAIL;
+ 	}
+ 	strcpy(m_key, m_root);
+-	strncat(m_key, path, p_len);
++	strncat(m_key, m_offset, o_len);
+ 	m_key[m_key_len] = '\0';
+ 
+ 	m_options_len = 0;
+@@ -860,15 +860,15 @@ update_offset_entry(struct autofs_point *ap,
+ 
+ 	if (ret == CHE_DUPLICATE) {
+ 		warn(ap->logopt, MODPREFIX
+-		     "syntax error or duplicate offset %s -> %s", path, loc);
++		     "syntax error or duplicate offset %s -> %s", m_offset, loc);
+ 		ret = CHE_OK;
+ 	} else if (ret == CHE_FAIL)
+ 		debug(ap->logopt, MODPREFIX
+-		      "failed to update multi-mount offset %s -> %s", path, m_mapent);
++		      "failed to update multi-mount offset %s -> %s", m_offset, m_mapent);
+ 	else {
+ 		ret = CHE_OK;
+ 		debug(ap->logopt, MODPREFIX
+-		      "updated multi-mount offset %s -> %s", path, m_mapent);
++		      "updated multi-mount offset %s -> %s", m_offset, m_mapent);
+ 	}
+ 
+ 	return ret;
+@@ -1538,22 +1538,22 @@ dont_expand:
+ 
+ 		/* It's a multi-mount; deal with it */
+ 		do {
+-			char *path, *myoptions, *loc;
++			char *m_offset, *myoptions, *loc;
+ 			int status;
+ 
+ 			if ((*p == '"' && *(p + 1) != '/') || (*p != '"' && *p != '/')) {
+ 				l = 0;
+-				path = dequote("/", 1, ap->logopt);
++				m_offset = dequote("/", 1, ap->logopt);
+ 				debug(ap->logopt,
+-				      MODPREFIX "dequote(\"/\") -> %s", path);
++				      MODPREFIX "dequote(\"/\") -> %s", m_offset);
+ 			} else {
+ 				l = span_space(p, mapent_len - (p - pmapent));
+-				path = sanitize_path(p, l, LKP_MULTI, ap->logopt);
++				m_offset = sanitize_path(p, l, LKP_MULTI, ap->logopt);
+ 				debug(ap->logopt, MODPREFIX
+-				      "dequote(\"%.*s\") -> %s", l, p, path);
++				      "dequote(\"%.*s\") -> %s", l, p, m_offset);
+ 			}
+ 
+-			if (!path) {
++			if (!m_offset) {
+ 				warn(ap->logopt, MODPREFIX "null path or out of memory");
+ 				cache_writelock(mc);
+ 				cache_delete_offset_list(mc, name);
+@@ -1575,7 +1575,7 @@ dont_expand:
+ 				cache_writelock(mc);
+ 				cache_delete_offset_list(mc, name);
+ 				cache_unlock(mc);
+-				free(path);
++				free(m_offset);
+ 				free(options);
+ 				free(pmapent);
+ 				pthread_setcancelstate(cur_state, NULL);
+@@ -1587,14 +1587,14 @@ dont_expand:
+ 
+ 			status = update_offset_entry(ap, mc,
+ 						     name, m_root, m_root_len,
+-						     path, myoptions, loc, age);
++						     m_offset, myoptions, loc, age);
+ 
+ 			if (status != CHE_OK) {
+ 				warn(ap->logopt, MODPREFIX "error adding multi-mount");
+ 				cache_writelock(mc);
+ 				cache_delete_offset_list(mc, name);
+ 				cache_unlock(mc);
+-				free(path);
++				free(m_offset);
+ 				free(options);
+ 				free(pmapent);
+ 				free(myoptions);
+@@ -1606,7 +1606,7 @@ dont_expand:
+ 
+ 			if (loc)
+ 				free(loc);
+-			free(path);
++			free(m_offset);
+ 			free(myoptions);
+ 		} while (*p == '/' || (*p == '"' && *(p + 1) == '/'));
+ 

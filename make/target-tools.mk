@@ -578,7 +578,7 @@ nano: $(NANO_DEPENDENCIES) $(DL_DIR)/$(NANO_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-AUTOFS_VERSION = 5.1.6
+AUTOFS_VERSION = 5.1.7
 AUTOFS_DIR = autofs-$(AUTOFS_VERSION)
 AUTOFS_SOURCE = autofs-$(AUTOFS_VERSION).tar.xz
 AUTOFS_SITE = $(KERNEL_MIRROR)/linux/daemons/autofs/v5
@@ -587,45 +587,54 @@ $(DL_DIR)/$(AUTOFS_SOURCE):
 	$(download) $(AUTOFS_SITE)/$(AUTOFS_SOURCE)
 
 # cd package/autofs/patches
-# wget -N https://mirrors.edge.kernel.org/pub/linux/daemons/autofs/v5/patches-5.1.6/patch_order_5.1.5
-# for p in $(cat patch_order_5.1.5); do test -f $p || wget https://mirrors.edge.kernel.org/pub/linux/daemons/autofs/v5/patches-5.1.6/$p; done
+# wget -N https://mirrors.edge.kernel.org/pub/linux/daemons/autofs/v5/patches-5.1.8/patch_order_5.1.7
+# for p in $(cat patch_order_5.1.7); do test -f $p || wget https://mirrors.edge.kernel.org/pub/linux/daemons/autofs/v5/patches-5.1.8/$p; done
+
+AUTOFS_PATCH  = 0000-force-STRIP-to-emtpy.patch
+AUTOFS_PATCH += $(shell cat $(PKG_PATCHES_DIR)/patch_order_$(AUTOFS_VERSION))
 
 AUTOFS_DEPENDENCIES = libtirpc
 
 AUTOFS_AUTORECONF = YES
 
 AUTOFS_CONF_ENV = \
-	ac_cv_linux_procfs=yes \
+	ac_cv_path_E2FSCK=/sbin/fsck \
+	ac_cv_path_E3FSCK=no \
+	ac_cv_path_E4FSCK=no \
 	ac_cv_path_KRB5_CONFIG=no \
 	ac_cv_path_MODPROBE=/sbin/modprobe \
-	ac_cv_path_RANLIB=$(TARGET_RANLIB) \
+	ac_cv_path_MOUNT=/bin/mount \
+	ac_cv_path_MOUNT_NFS=/sbin/mount.nfs \
+	ac_cv_path_UMOUNT=/bin/umount \
+	ac_cv_linux_procfs=yes
 
 AUTOFS_CONF_OPTS = \
 	--datarootdir=$(REMOVE_datarootdir) \
-	--enable-ignore-busy \
 	--disable-mount-locking \
+	--enable-ignore-busy \
 	--without-openldap \
 	--without-sasl \
-	--with-path=$(PATH) \
-	--with-libtirpc \
+	--with-path="$(PATH)" \
 	--with-hesiod=no \
+	--with-libtirpc \
 	--with-confdir=/etc \
 	--with-mapdir=/etc \
 	--with-fifodir=/var/run \
 	--with-flagdir=/var/run
 
-AUTOFS_MAKE_OPTS = \
-	SUBDIRS="lib daemon modules"
+AUTOFS_MAKE_ENV = \
+	DONTSTRIP=1
 
 autofs: $(AUTOFS_DEPENDENCIES) $(DL_DIR)/$(AUTOFS_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
-	$(call APPLY_PATCHES,$(PKG_PATCHES_DIR))
+	$(call APPLY_PATCHES,$($(PKG)_PATCH))
 	$(CHDIR)/$(PKG_DIR); \
 		$(SED) "s|nfs/nfs.h|linux/nfs.h|" include/rpc_subs.h; \
 		$(CONFIGURE); \
-		$(MAKE) $($(PKG)_MAKE_OPTS) DONTSTRIP=1; \
-		$(MAKE) $($(PKG)_MAKE_OPTS) install DESTDIR=$(TARGET_DIR)
+		$($(PKG)_MAKE_ENV) \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(INSTALL_COPY) $(PKG_FILES_DIR)-skel/* $(TARGET_DIR)/
 	$(UPDATE-RC.D) autofs defaults 75 25
 	$(REMOVE)/$(PKG_DIR)

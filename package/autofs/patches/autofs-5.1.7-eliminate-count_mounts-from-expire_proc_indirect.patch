@@ -1,0 +1,140 @@
+autofs-5.1.7 - eliminate count_mounts() from expire_proc_indirect()
+
+From: Ian Kent <raven@themaw.net>
+
+The count_mounts() function traverses the directory tree under a given
+automount in order to count the number of mounts.
+
+If there are many directories (such as when there is a very large
+number of offset trigger mounts) this can take a long time.
+
+Eliminate the call in expire_proc_indirect() by changing the expire
+ioctl function to better use the expire return from the kernel.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG           |    1 +
+ daemon/direct.c     |    4 ++--
+ daemon/indirect.c   |   10 +++++-----
+ lib/dev-ioctl-lib.c |   21 +++++++++++++--------
+ 4 files changed, 21 insertions(+), 15 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index c5619d2e..0b78eb62 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -20,6 +20,7 @@
+ - pass mapent_cache to update_offset_entry().
+ - fix inconsistent locking in parse_mount().
+ - remove unused mount offset list lock functions.
++- eliminate count_mounts() from expire_proc_indirect().
+ 
+ 25/01/2021 autofs-5.1.7
+ - make bind mounts propagation slave by default.
+diff --git a/daemon/direct.c b/daemon/direct.c
+index c41c680f..311a98ba 100644
+--- a/daemon/direct.c
++++ b/daemon/direct.c
+@@ -884,7 +884,7 @@ cont:
+ 			ioctlfd = me->ioctlfd;
+ 
+ 			ret = ops->expire(ap->logopt, ioctlfd, mnt->mp, how);
+-			if (ret) {
++			if (ret == 1) {
+ 				left++;
+ 				pthread_setcancelstate(cur_state, NULL);
+ 				continue;
+@@ -910,7 +910,7 @@ cont:
+ 
+ 		pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, &cur_state);
+ 		ret = ops->expire(ap->logopt, ioctlfd, mnt->mp, how);
+-		if (ret)
++		if (ret == 1)
+ 			left++;
+ 		pthread_setcancelstate(cur_state, NULL);
+ 	}
+diff --git a/daemon/indirect.c b/daemon/indirect.c
+index 65cfe4e3..b259ebdc 100644
+--- a/daemon/indirect.c
++++ b/daemon/indirect.c
+@@ -358,7 +358,6 @@ void *expire_proc_indirect(void *arg)
+ 	struct expire_args ec;
+ 	unsigned int how;
+ 	int offsets, submnts, count;
+-	int retries;
+ 	int ioctlfd, cur_state;
+ 	int status, ret, left;
+ 
+@@ -496,7 +495,7 @@ void *expire_proc_indirect(void *arg)
+ 
+ 		pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, &cur_state);
+ 		ret = ops->expire(ap->logopt, ioctlfd, mnt->mp, how);
+-		if (ret)
++		if (ret == 1)
+ 			left++;
+ 		pthread_setcancelstate(cur_state, NULL);
+ 	}
+@@ -507,10 +506,11 @@ void *expire_proc_indirect(void *arg)
+ 	 * so we need to umount or unlink them here.
+ 	 */
+ 	pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, &cur_state);
+-	retries = (count_mounts(ap, ap->path, ap->dev) + 1);
+-	while (retries--) {
++	while (1) {
+ 		ret = ops->expire(ap->logopt, ap->ioctlfd, ap->path, how);
+-		if (ret)
++		if (ret != 0 && errno == EAGAIN)
++			break;
++		if (ret == 1)
+ 			left++;
+ 	}
+ 	pthread_setcancelstate(cur_state, NULL);
+diff --git a/lib/dev-ioctl-lib.c b/lib/dev-ioctl-lib.c
+index 7040c3da..e7a1b42a 100644
+--- a/lib/dev-ioctl-lib.c
++++ b/lib/dev-ioctl-lib.c
+@@ -650,6 +650,7 @@ static int expire(unsigned int logopt,
+ {
+ 	int ret, retries = EXPIRE_RETRIES;
+ 	unsigned int may_umount;
++	int save_errno = 0;
+ 
+ 	while (retries--) {
+ 		struct timespec tm = {0, 100000000};
+@@ -657,9 +658,11 @@ static int expire(unsigned int logopt,
+ 		/* Ggenerate expire message for the mount. */
+ 		ret = ioctl(fd, cmd, arg);
+ 		if (ret == -1) {
++			save_errno = errno;
++
+ 			/* Mount has gone away */
+ 			if (errno == EBADF || errno == EINVAL)
+-				return 0;
++				break;
+ 
+ 			/*
+ 			 * Other than EAGAIN is an expire error so continue.
+@@ -673,14 +676,16 @@ static int expire(unsigned int logopt,
+ 		nanosleep(&tm, NULL);
+ 	}
+ 
+-	may_umount = 0;
+-	if (ctl.ops->askumount(logopt, ioctlfd, &may_umount))
+-		return -1;
+-
+-	if (!may_umount)
+-		return 1;
++	if (!ret || save_errno == EAGAIN) {
++		may_umount = 0;
++		if (!ctl.ops->askumount(logopt, ioctlfd, &may_umount)) {
++			if (!may_umount)
++				ret = 1;
++		}
++	}
++	errno = save_errno;
+ 
+-	return 0;
++	return ret;
+ }
+ 
+ static int dev_ioctl_expire(unsigned int logopt,

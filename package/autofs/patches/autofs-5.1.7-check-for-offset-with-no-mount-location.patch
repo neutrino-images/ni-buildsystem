@@ -1,0 +1,50 @@
+autofs-5.1.7 - check for offset with no mount location
+
+From: Ian Kent <raven@themaw.net>
+
+Offsets need to have a mount location, check for it.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG           |    1 +
+ modules/parse_sun.c |   15 ++++++++++++++-
+ 2 files changed, 15 insertions(+), 1 deletion(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index a9209755..42914160 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -47,6 +47,7 @@
+ - pass root length to mount_fullpath().
+ - remove unused function master_submount_list_empty().
+ - move amd mounts removal into lib/mounts.c.
++- check for offset with no mount location.
+ 
+ 25/01/2021 autofs-5.1.7
+ - make bind mounts propagation slave by default.
+diff --git a/modules/parse_sun.c b/modules/parse_sun.c
+index b1c2611c..a81d4028 100644
+--- a/modules/parse_sun.c
++++ b/modules/parse_sun.c
+@@ -801,7 +801,20 @@ update_offset_entry(struct autofs_point *ap,
+ 
+ 	memset(m_mapent, 0, MAPENT_MAX_LEN + 1);
+ 
+-	/* Internal hosts map may have loc == NULL */
++	if (!loc || !*loc) {
++		const char *type = ap->entry->maps->type;
++
++		/* If it's not the internal hosts map it must have a
++		 * mount location.
++		 */
++		if (!type || strcmp(type, "hosts")) {
++			error(ap->logopt,
++			      MODPREFIX "syntax error in offset %s -> %s",
++			      m_offset, loc);
++			return CHE_FAIL;
++		}
++	}
++
+ 	if (!*m_offset) {
+ 		error(ap->logopt,
+ 		      MODPREFIX "syntax error in offset %s -> %s", m_offset, loc);

@@ -1,0 +1,118 @@
+autofs-5.1.7 - move amd mounts removal into lib/mounts.c
+
+From: Ian Kent <raven@themaw.net>
+
+Move the amd mounts removal from master_free_autofs_point() into
+lib/mounts.c along with the rest of the amd mount handling.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG        |    1 +
+ daemon/master.c  |   12 +-----------
+ include/mounts.h |    1 +
+ lib/mounts.c     |   28 ++++++++++++++++++++++++----
+ 4 files changed, 27 insertions(+), 15 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index 002da042..a9209755 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -46,6 +46,7 @@
+ - use mount_fullpath() in one spot in parse_mount().
+ - pass root length to mount_fullpath().
+ - remove unused function master_submount_list_empty().
++- move amd mounts removal into lib/mounts.c.
+ 
+ 25/01/2021 autofs-5.1.7
+ - make bind mounts propagation slave by default.
+diff --git a/daemon/master.c b/daemon/master.c
+index af9cd79f..b288e070 100644
+--- a/daemon/master.c
++++ b/daemon/master.c
+@@ -143,22 +143,12 @@ int master_add_autofs_point(struct master_mapent *entry, unsigned logopt,
+ 
+ void master_free_autofs_point(struct autofs_point *ap)
+ {
+-	struct list_head *p, *head;
+ 	int status;
+ 
+ 	if (!ap)
+ 		return;
+ 
+-	mounts_mutex_lock(ap);
+-	head = &ap->amdmounts;
+-	p = head->next;
+-	while (p != head) {
+-		struct mnt_list *mnt = list_entry(p, struct mnt_list, amdmount);
+-		p = p->next;
+-		ext_mount_remove(mnt->ext_mp);
+-		mnts_remove_amdmount(mnt->mp);
+-	}
+-	mounts_mutex_unlock(ap);
++	mnts_remove_amdmounts(ap);
+ 
+ 	status = pthread_mutex_destroy(&ap->mounts_mutex);
+ 	if (status)
+diff --git a/include/mounts.h b/include/mounts.h
+index d7980976..1b376b3d 100644
+--- a/include/mounts.h
++++ b/include/mounts.h
+@@ -161,6 +161,7 @@ void mnts_remove_submount(const char *mp);
+ struct mnt_list *mnts_find_amdmount(const char *path);
+ struct mnt_list *mnts_add_amdmount(struct autofs_point *ap, struct amd_entry *entry);
+ void mnts_remove_amdmount(const char *mp);
++void mnts_remove_amdmounts(struct autofs_point *ap);
+ struct mnt_list *mnts_add_mount(struct autofs_point *ap, const char *name, unsigned int flags);
+ void mnts_remove_mount(const char *mp, unsigned int flags);
+ struct mnt_list *get_mnt_list(const char *path, int include);
+diff --git a/lib/mounts.c b/lib/mounts.c
+index 6b8e4c92..c8a7bf00 100644
+--- a/lib/mounts.c
++++ b/lib/mounts.c
+@@ -1144,14 +1144,13 @@ fail:
+ 	return NULL;
+ }
+ 
+-void mnts_remove_amdmount(const char *mp)
++static void __mnts_remove_amdmount(const char *mp)
+ {
+ 	struct mnt_list *this;
+ 
+-	mnts_hash_mutex_lock();
+ 	this = mnts_lookup(mp);
+ 	if (!(this && this->flags & MNTS_AMD_MOUNT))
+-		goto done;
++		return;
+ 	this->flags &= ~MNTS_AMD_MOUNT;
+ 	list_del_init(&this->amdmount);
+ 	if (this->ext_mp) {
+@@ -1172,7 +1171,28 @@ void mnts_remove_amdmount(const char *mp)
+ 	}
+ 	this->amd_cache_opts = 0;
+ 	__mnts_put_mount(this);
+-done:
++}
++
++void mnts_remove_amdmount(const char *mp)
++{
++	mnts_hash_mutex_lock();
++	__mnts_remove_amdmount(mp);
++	mnts_hash_mutex_unlock();
++}
++
++void mnts_remove_amdmounts(struct autofs_point *ap)
++{
++	struct list_head *head, *p;
++
++	mnts_hash_mutex_lock();
++	head = &ap->amdmounts;
++	p = head->next;
++	while (p != head) {
++		struct mnt_list *mnt = list_entry(p, struct mnt_list, amdmount);
++		p = p->next;
++		ext_mount_remove(mnt->ext_mp);
++		__mnts_remove_amdmount(mnt->mp);
++	}
+ 	mnts_hash_mutex_unlock();
+ }
+ 

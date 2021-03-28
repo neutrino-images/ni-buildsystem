@@ -1,0 +1,197 @@
+autofs-5.1.7 - rename tree implementation functions
+
+From: Ian Kent <raven@themaw.net>
+
+Rename the tree struct and functions to make them consistent.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG    |    1 +
+ lib/mounts.c |   80 +++++++++++++++++++++++++++++-----------------------------
+ 2 files changed, 41 insertions(+), 40 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index 2a07bd45..1bf20699 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -27,6 +27,7 @@
+ - cleanup cache_delete() a little.
+ - rename path to m_offset in update_offset_entry().
+ - don't pass root to do_mount_autofs_offset().
++- rename tree implementation functions.
+ 
+ 25/01/2021 autofs-5.1.7
+ - make bind mounts propagation slave by default.
+diff --git a/lib/mounts.c b/lib/mounts.c
+index 289500da..f5b905a6 100644
+--- a/lib/mounts.c
++++ b/lib/mounts.c
+@@ -1225,30 +1225,30 @@ done:
+ 	return has_mounted_mounts;
+ }
+ 
+-struct node {
++struct tree_node {
+ 	struct mnt_list *mnt;
+-	struct node *left;
+-	struct node *right;
++	struct tree_node *left;
++	struct tree_node *right;
+ };
+ 
+-static struct node *new(struct mnt_list *mnt)
++static struct tree_node *tree_new(struct mnt_list *mnt)
+ {
+-	struct node *n;
++	struct tree_node *n;
+ 
+-	n = malloc(sizeof(struct node));
++	n = malloc(sizeof(struct tree_node));
+ 	if (!n)
+ 		return NULL;
+-	memset(n, 0, sizeof(struct node));
++	memset(n, 0, sizeof(struct tree_node));
+ 	n->mnt = mnt;
+ 
+ 	return n;
+ }
+ 
+-static struct node *tree_root(struct mnt_list *mnt)
++static struct tree_node *tree_root(struct mnt_list *mnt)
+ {
+-	struct node *n;
++	struct tree_node *n;
+ 
+-	n = new(mnt);
++	n = tree_new(mnt);
+ 	if (!n) {
+ 		error(LOGOPT_ANY, "failed to allcate tree root");
+ 		return NULL;
+@@ -1257,37 +1257,37 @@ static struct node *tree_root(struct mnt_list *mnt)
+ 	return n;
+ }
+ 
+-static struct node *add_left(struct node *this, struct mnt_list *mnt)
++static struct tree_node *tree_add_left(struct tree_node *n, struct mnt_list *mnt)
+ {
+-	struct node *n;
++	struct tree_node *new;
+ 
+-	n = new(mnt);
+-	if (!n) {
++	new = tree_new(mnt);
++	if (!new) {
+ 		error(LOGOPT_ANY, "failed to allcate tree node");
+ 		return NULL;
+ 	}
+-	this->left = n;
++	n->left = new;
+ 
+ 	return n;
+ }
+ 
+-static struct node *add_right(struct node *this, struct mnt_list *mnt)
++static struct tree_node *tree_add_right(struct tree_node *n, struct mnt_list *mnt)
+ {
+-	struct node *n;
++	struct tree_node *new;
+ 
+-	n = new(mnt);
+-	if (!n) {
++	new = tree_new(mnt);
++	if (!new) {
+ 		error(LOGOPT_ANY, "failed to allcate tree node");
+ 		return NULL;
+ 	}
+-	this->right = n;
++	n->right = new;
+ 
+ 	return n;
+ }
+ 
+-static struct node *add_node(struct node *root, struct mnt_list *mnt)
++static struct tree_node *tree_add_node(struct tree_node *root, struct mnt_list *mnt)
+ {
+-	struct node *p, *q;
++	struct tree_node *p, *q;
+ 	unsigned int mp_len;
+ 
+ 	mp_len = strlen(mnt->mp);
+@@ -1307,43 +1307,43 @@ static struct node *add_node(struct node *root, struct mnt_list *mnt)
+ 		error(LOGOPT_ANY, "duplicate entry in mounts list");
+ 	else {
+ 		if (mp_len < strlen(p->mnt->mp))
+-			return add_left(p, mnt);
++			return tree_add_left(p, mnt);
+ 		else
+-			return add_right(p, mnt);
++			return tree_add_right(p, mnt);
+ 	}
+ 
+ 	return NULL;
+ }
+ 
+-static void tree_free(struct node *tree)
++static void tree_free(struct tree_node *root)
+ {
+-	if (tree->right)
+-		tree_free(tree->right);
+-	if (tree->left)
+-		tree_free(tree->left);
+-	free(tree);
++	if (root->right)
++		tree_free(root->right);
++	if (root->left)
++		tree_free(root->left);
++	free(root);
+ }
+ 
+-static void traverse(struct node *node, struct list_head *mnts)
++static void tree_traverse(struct tree_node *n, struct list_head *mnts)
+ {
+-	if (node->right)
+-		traverse(node->right, mnts);
+-	list_add_tail(&node->mnt->expire, mnts);
+-	if (node->left)
+-		traverse(node->left, mnts);
++	if (n->right)
++		tree_traverse(n->right, mnts);
++	list_add_tail(&n->mnt->expire, mnts);
++	if (n->left)
++		tree_traverse(n->left, mnts);
+ }
+ 
+ void mnts_get_expire_list(struct list_head *mnts, struct autofs_point *ap)
+ {
+ 	struct mnt_list *mnt;
+-	struct node *tree = NULL;
++	struct tree_node *tree = NULL;
+ 
+ 	mnts_hash_mutex_lock();
+ 	if (list_empty(&ap->mounts))
+ 		goto done;
+ 
+ 	list_for_each_entry(mnt, &ap->mounts, mount) {
+-		struct node *n;
++		struct tree_node *n;
+ 
+ 		if (!(mnt->flags & MNTS_MOUNTED))
+ 			continue;
+@@ -1359,7 +1359,7 @@ void mnts_get_expire_list(struct list_head *mnts, struct autofs_point *ap)
+ 			continue;
+ 		}
+ 
+-		n = add_node(tree, mnt);
++		n = tree_add_node(tree, mnt);
+ 		if (!n) {
+ 			error(LOGOPT_ANY, "failed to add expire tree node");
+ 			tree_free(tree);
+@@ -1367,7 +1367,7 @@ void mnts_get_expire_list(struct list_head *mnts, struct autofs_point *ap)
+ 		}
+ 	}
+ 
+-	traverse(tree, mnts);
++	tree_traverse(tree, mnts);
+ 	tree_free(tree);
+ done:
+ 	mnts_hash_mutex_unlock();

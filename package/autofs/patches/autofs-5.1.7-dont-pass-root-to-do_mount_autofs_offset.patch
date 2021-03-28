@@ -1,0 +1,64 @@
+autofs-5.1.7 - don't pass root to do_mount_autofs_offset()
+
+From: Ian Kent <raven@themaw.net>
+
+The root parameter of do_mount_autofs_offset() is used only in a
+debug log message. It doesn't really add any value to debugging
+so remove it.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG    |    1 +
+ lib/mounts.c |    9 ++++-----
+ 2 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index 0e9ca94f..2a07bd45 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -26,6 +26,7 @@
+ - reduce umount EBUSY check delay.
+ - cleanup cache_delete() a little.
+ - rename path to m_offset in update_offset_entry().
++- don't pass root to do_mount_autofs_offset().
+ 
+ 25/01/2021 autofs-5.1.7
+ - make bind mounts propagation slave by default.
+diff --git a/lib/mounts.c b/lib/mounts.c
+index 25ae2e1d..289500da 100644
+--- a/lib/mounts.c
++++ b/lib/mounts.c
+@@ -2453,13 +2453,12 @@ out:
+ 	return rv;
+ }
+ 
+-static int do_mount_autofs_offset(struct autofs_point *ap,
+-				  struct mapent *oe, const char *root)
++static int do_mount_autofs_offset(struct autofs_point *ap, struct mapent *oe)
+ {
+ 	int mounted = 0;
+ 	int ret;
+ 
+-	debug(ap->logopt, "mount offset %s at %s", oe->key, root);
++	debug(ap->logopt, "mount offset %s", oe->key);
+ 
+ 	ret = mount_autofs_offset(ap, oe);
+ 	if (ret >= MOUNT_OFFSET_OK)
+@@ -2651,7 +2650,7 @@ static int do_umount_offset(struct autofs_point *ap,
+ 		 */
+ 		ret = rmdir_path_offset(ap, oe);
+ 		if (ret == -1 && !stat(oe->key, &st)) {
+-			ret = do_mount_autofs_offset(ap, oe, root);
++			ret = do_mount_autofs_offset(ap, oe);
+ 			if (ret)
+ 				left++;
+ 			/* But we did origianlly create this */
+@@ -2697,7 +2696,7 @@ int mount_multi_triggers(struct autofs_point *ap, struct mapent *me,
+ 			goto cont;
+ 		}
+ 
+-		mounted += do_mount_autofs_offset(ap, oe, root);
++		mounted += do_mount_autofs_offset(ap, oe);
+ 
+ 		/*
+ 		 * If re-constructing a multi-mount it's necessary to walk

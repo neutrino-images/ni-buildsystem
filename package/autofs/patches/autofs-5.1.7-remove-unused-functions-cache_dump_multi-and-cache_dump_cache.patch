@@ -1,0 +1,63 @@
+autofs-5.1.7 - remove unused functions cache_dump_multi() and cache_dump_cache()
+
+From: Ian Kent <raven@themaw.net>
+
+Remove debugging functions cache_dump_multi() and cache_dump_cache()
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG   |    1 +
+ lib/cache.c |   28 ----------------------------
+ 2 files changed, 1 insertion(+), 28 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index 3ba748d7..60924b3f 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -29,6 +29,7 @@
+ - don't pass root to do_mount_autofs_offset().
+ - rename tree implementation functions.
+ - add some multi-mount macros.
++- remove unused functions cache_dump_multi() and cache_dump_cache().
+ 
+ 25/01/2021 autofs-5.1.7
+ - make bind mounts propagation slave by default.
+diff --git a/lib/cache.c b/lib/cache.c
+index 1d9f5cc7..629c4d0a 100644
+--- a/lib/cache.c
++++ b/lib/cache.c
+@@ -24,34 +24,6 @@
+ 
+ #include "automount.h"
+ 
+-void cache_dump_multi(struct list_head *list)
+-{
+-	struct list_head *p;
+-	struct mapent *me;
+-
+-	list_for_each(p, list) {
+-		me = list_entry(p, struct mapent, multi_list);
+-		logmsg("key=%s", me->key);
+-	}
+-}
+-
+-void cache_dump_cache(struct mapent_cache *mc)
+-{
+-	struct mapent *me;
+-	unsigned int i;
+-
+-	for (i = 0; i < mc->size; i++) {
+-		me = mc->hash[i];
+-		if (me == NULL)
+-			continue;
+-		while (me) {
+-			logmsg("me->key=%s me->multi=%p dev=%ld ino=%ld",
+-				me->key, me->multi, me->dev, me->ino);
+-			me = me->next;
+-		}
+-	}
+-}
+-
+ void cache_readlock(struct mapent_cache *mc)
+ {
+ 	int status;

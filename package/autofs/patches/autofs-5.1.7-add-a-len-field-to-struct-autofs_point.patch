@@ -1,0 +1,136 @@
+autofs-5.1.7 - add a len field to struct autofs_point
+
+From: Ian Kent <raven@themaw.net>
+
+Add a path length field to struct autofs_point since the path length
+is needed at various times avoiding additional strlen() calls.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG           |    1 +
+ daemon/lookup.c     |    2 +-
+ daemon/master.c     |    1 +
+ include/automount.h |    1 +
+ lib/mounts.c        |    6 +++---
+ modules/parse_amd.c |    4 ++--
+ modules/parse_sun.c |    4 ++--
+ 7 files changed, 11 insertions(+), 8 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index 60924b3f..0dae6761 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -30,6 +30,7 @@
+ - rename tree implementation functions.
+ - add some multi-mount macros.
+ - remove unused functions cache_dump_multi() and cache_dump_cache().
++- add a len field to struct autofs_point.
+ 
+ 25/01/2021 autofs-5.1.7
+ - make bind mounts propagation slave by default.
+diff --git a/daemon/lookup.c b/daemon/lookup.c
+index 8c9a82b5..5116b927 100644
+--- a/daemon/lookup.c
++++ b/daemon/lookup.c
+@@ -843,7 +843,7 @@ static int lookup_amd_instance(struct autofs_point *ap,
+ 		return NSS_STATUS_UNKNOWN;
+ 	}
+ 
+-	m_key = malloc(strlen(ap->path) + strlen(MM_ROOT(me)->key) + 2);
++	m_key = malloc(ap->len + strlen(MM_ROOT(me)->key) + 2);
+ 	if (!m_key) {
+ 		error(ap->logopt,
+ 		     "failed to allocate storage for search key");
+diff --git a/daemon/master.c b/daemon/master.c
+index da527a61..022fb9dd 100644
+--- a/daemon/master.c
++++ b/daemon/master.c
+@@ -86,6 +86,7 @@ int master_add_autofs_point(struct master_mapent *entry, unsigned logopt,
+ 		free(ap);
+ 		return 0;
+ 	}
++	ap->len = strlen(ap->path);
+ 	ap->pref = NULL;
+ 
+ 	ap->entry = entry;
+diff --git a/include/automount.h b/include/automount.h
+index e917515b..34485859 100644
+--- a/include/automount.h
++++ b/include/automount.h
+@@ -548,6 +548,7 @@ struct kernel_mod_version {
+ struct autofs_point {
+ 	pthread_t thid;
+ 	char *path;			/* Mount point name */
++	size_t len;			/* Length of mount point name */
+ 	mode_t mode;			/* Mount point mode */
+ 	char *pref;			/* amd prefix */
+ 	int pipefd;			/* File descriptor for pipe */
+diff --git a/lib/mounts.c b/lib/mounts.c
+index f6f20fc0..b478ecb4 100644
+--- a/lib/mounts.c
++++ b/lib/mounts.c
+@@ -1158,7 +1158,7 @@ struct mnt_list *mnts_add_mount(struct autofs_point *ap,
+ 		if (!mp)
+ 			goto fail;
+ 	} else {
+-		int len = strlen(ap->path) + strlen(name) + 2;
++		int len = ap->len + strlen(name) + 2;
+ 
+ 		mp = malloc(len);
+ 		if (!mp)
+@@ -2495,9 +2495,9 @@ static int rmdir_path_offset(struct autofs_point *ap, struct mapent *oe)
+ 	dir = strdup(oe->key);
+ 
+ 	if (ap->flags & MOUNT_FLAG_GHOST)
+-		split = strlen(ap->path) + strlen(MM_ROOT(oe)->key) + 1;
++		split = ap->len + strlen(MM_ROOT(oe)->key) + 1;
+ 	else
+-		split = strlen(ap->path);
++		split = ap->len;
+ 
+ 	dir[split] = '\0';
+ 	path = &dir[split + 1];
+diff --git a/modules/parse_amd.c b/modules/parse_amd.c
+index d3e8a450..5a9079d6 100644
+--- a/modules/parse_amd.c
++++ b/modules/parse_amd.c
+@@ -147,7 +147,7 @@ static struct substvar *add_lookup_vars(struct autofs_point *ap,
+ 	struct mapent *me;
+ 	int len;
+ 
+-	len = strlen(ap->path) + 1 + key_len + 1;
++	len = ap->len + 1 + key_len + 1;
+ 	if (len > PATH_MAX) {
+ 		error(ap->logopt, MODPREFIX
+ 		      "error: lookup key is greater than PATH_MAX");
+@@ -1319,7 +1319,7 @@ static int do_host_mount(struct autofs_point *ap, const char *name,
+ 		char *target;
+ 		size_t len;
+ 
+-		len = strlen(ap->path) + strlen(entry->rhost) + 2;
++		len = ap->len + strlen(entry->rhost) + 2;
+ 		target = malloc(len);
+ 		if (!target) {
+ 			warn(ap->logopt, MODPREFIX
+diff --git a/modules/parse_sun.c b/modules/parse_sun.c
+index b11c6693..b1f64ca0 100644
+--- a/modules/parse_sun.c
++++ b/modules/parse_sun.c
+@@ -1154,7 +1154,7 @@ static int mount_subtree(struct autofs_point *ap, struct mapent_cache *mc,
+ 		mm_root = mm_key;
+ 		start = strlen(mm_key);
+ 	} else {
+-		start = strlen(ap->path) + strlen(mm_key) + 1;
++		start = ap->len + strlen(mm_key) + 1;
+ 		mm_root = alloca(start + 3);
+ 		strcpy(mm_root, ap->path);
+ 		strcat(mm_root, "/");
+@@ -1477,7 +1477,7 @@ dont_expand:
+ 			}
+ 			strcpy(m_root, name);
+ 		} else {
+-			m_root_len = strlen(ap->path) + name_len + 1;
++			m_root_len = ap->len + name_len + 1;
+ 			m_root = alloca(m_root_len + 1);
+ 			if (!m_root) {
+ 				char *estr = strerror_r(errno, buf, MAX_ERR_BUF);

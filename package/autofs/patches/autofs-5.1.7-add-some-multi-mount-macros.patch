@@ -1,0 +1,552 @@
+autofs-5.1.7 - add some multi-mount macros
+
+From: Ian Kent <raven@themaw.net>
+
+Add convienience macros IS_MM() to check is a mapent is part of a
+multi-mount, IS_MM_ROOT() to check if a mapent is the root of a
+multi-mount tree and MM_ROOT() to return the multi-mount root mapent.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG                |    1 +
+ daemon/automount.c       |   14 +++++++-------
+ daemon/direct.c          |    6 +++---
+ daemon/lookup.c          |   10 +++++-----
+ include/automount.h      |    5 +++++
+ lib/cache.c              |   30 +++++++++++++++---------------
+ lib/mounts.c             |   14 +++++++-------
+ modules/lookup_file.c    |    4 ++--
+ modules/lookup_hosts.c   |    4 ++--
+ modules/lookup_ldap.c    |    4 ++--
+ modules/lookup_nisplus.c |    4 ++--
+ modules/lookup_program.c |    4 ++--
+ modules/lookup_sss.c     |    4 ++--
+ modules/lookup_yp.c      |    4 ++--
+ modules/parse_sun.c      |   12 ++++++------
+ 15 files changed, 63 insertions(+), 57 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index 1bf20699..3ba748d7 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -28,6 +28,7 @@
+ - rename path to m_offset in update_offset_entry().
+ - don't pass root to do_mount_autofs_offset().
+ - rename tree implementation functions.
++- add some multi-mount macros.
+ 
+ 25/01/2021 autofs-5.1.7
+ - make bind mounts propagation slave by default.
+diff --git a/daemon/automount.c b/daemon/automount.c
+index 62530b6b..f4608fc9 100644
+--- a/daemon/automount.c
++++ b/daemon/automount.c
+@@ -545,27 +545,27 @@ static int umount_subtree_mounts(struct autofs_point *ap, const char *path, unsi
+ 
+ 	if (me) {
+ 		mc = me->mc;
+-		is_mm_root = (me->multi == me);
++		is_mm_root = IS_MM_ROOT(me);
+ 	}
+ 
+ 	left = 0;
+ 
+-	if (me && me->multi) {
++	if (me && IS_MM(me)) {
+ 		char root[PATH_MAX + 1];
+ 		char key[PATH_MAX + 1];
+ 		struct mapent *tmp;
+ 		int status;
+ 		char *base;
+ 
+-		if (!strchr(me->multi->key, '/'))
++		if (!strchr(MM_ROOT(me)->key, '/'))
+ 			/* Indirect multi-mount root */
+ 			/* sprintf okay - if it's mounted, it's
+ 			 * PATH_MAX or less bytes */
+-			sprintf(root, "%s/%s", ap->path, me->multi->key);
++			sprintf(root, "%s/%s", ap->path, MM_ROOT(me)->key);
+ 		else
+-			strcpy(root, me->multi->key);
++			strcpy(root, MM_ROOT(me)->key);
+ 
+-		if (is_mm_root)
++		if (IS_MM_ROOT(me))
+ 			base = NULL;
+ 		else
+ 			base = me->key + strlen(root);
+@@ -588,7 +588,7 @@ static int umount_subtree_mounts(struct autofs_point *ap, const char *path, unsi
+ 			return 0;
+ 		}
+ 
+-		if (!left && is_mm_root) {
++		if (!left && IS_MM_ROOT(me)) {
+ 			status = cache_delete_offset_list(mc, me->key);
+ 			if (status != CHE_OK) {
+ 				warn(ap->logopt, "couldn't delete offset list");
+diff --git a/daemon/direct.c b/daemon/direct.c
+index 5c1146a7..3f4f5704 100644
+--- a/daemon/direct.c
++++ b/daemon/direct.c
+@@ -686,7 +686,7 @@ int mount_autofs_offset(struct autofs_point *ap, struct mapent *me)
+ 			 * a mount that has been automatically mounted by
+ 			 * the kernel NFS client.
+ 			 */
+-			if (me->multi != me &&
++			if (!IS_MM_ROOT(me) &&
+ 			    is_mounted(me->key, MNTS_REAL))
+ 				return MOUNT_OFFSET_IGNORE;
+ 
+@@ -1220,11 +1220,11 @@ static void *do_mount_direct(void *arg)
+ 			 * for direct mount multi-mounts with no real mount at
+ 			 * their base so they will be expired.
+ 			 */
+-			if (close_fd && me == me->multi)
++			if (close_fd && IS_MM_ROOT(me))
+ 				close_fd = 0;
+ 			if (!close_fd)
+ 				me->ioctlfd = mt.ioctlfd;
+-			if (me->multi && me->multi != me)
++			if (IS_MM(me) && !IS_MM_ROOT(me))
+ 				flags |= MNTS_OFFSET;
+ 		}
+ 		ops->send_ready(ap->logopt, mt.ioctlfd, mt.wait_queue_token);
+diff --git a/daemon/lookup.c b/daemon/lookup.c
+index 2fea0c0b..8c9a82b5 100644
+--- a/daemon/lookup.c
++++ b/daemon/lookup.c
+@@ -748,7 +748,7 @@ int lookup_ghost(struct autofs_point *ap, const char *root)
+ 					goto next;
+ 
+ 				/* It's a busy multi-mount - leave till next time */
+-				if (list_empty(&me->multi_list))
++				if (IS_MM(me))
+ 					error(ap->logopt,
+ 					      "invalid key %s", me->key);
+ 				goto next;
+@@ -838,12 +838,12 @@ static int lookup_amd_instance(struct autofs_point *ap,
+ 	char *m_key;
+ 
+ 	me = cache_lookup_distinct(map->mc, name);
+-	if (!me || !me->multi) {
++	if (!me || !IS_MM(me)) {
+ 		error(ap->logopt, "expected multi mount entry not found");
+ 		return NSS_STATUS_UNKNOWN;
+ 	}
+ 
+-	m_key = malloc(strlen(ap->path) + strlen(me->multi->key) + 2);
++	m_key = malloc(strlen(ap->path) + strlen(MM_ROOT(me)->key) + 2);
+ 	if (!m_key) {
+ 		error(ap->logopt,
+ 		     "failed to allocate storage for search key");
+@@ -852,7 +852,7 @@ static int lookup_amd_instance(struct autofs_point *ap,
+ 
+ 	strcpy(m_key, ap->path);
+ 	strcat(m_key, "/");
+-	strcat(m_key, me->multi->key);
++	strcat(m_key, MM_ROOT(me)->key);
+ 
+ 	mnt = mnts_find_amdmount(m_key);
+ 	free(m_key);
+@@ -1355,7 +1355,7 @@ void lookup_prune_one_cache(struct autofs_point *ap, struct mapent_cache *mc, ti
+ 			 * created on demand and managed by expire and don't
+ 			 * prune the multi-map owner map entry.
+ 			 */
+-			if (*me->key == '/' || me->multi == me) {
++			if (*me->key == '/' || IS_MM_ROOT(me)) {
+ 				me = cache_enumerate(mc, me);
+ 				continue;
+ 			}
+diff --git a/include/automount.h b/include/automount.h
+index fa6f5d63..e917515b 100644
+--- a/include/automount.h
++++ b/include/automount.h
+@@ -183,6 +183,11 @@ struct mapent {
+ 	ino_t ino;
+ };
+ 
++#define IS_MM(me)	(me->multi)
++#define IS_MM_ROOT(me)	(me->multi == me)
++#define MM_ROOT(me)	(me->multi)
++#define MM_PARENT(me)	(me->parent)
++
+ void cache_lock_cleanup(void *arg);
+ void cache_readlock(struct mapent_cache *mc);
+ void cache_writelock(struct mapent_cache *mc);
+diff --git a/lib/cache.c b/lib/cache.c
+index a90bbb1d..1d9f5cc7 100644
+--- a/lib/cache.c
++++ b/lib/cache.c
+@@ -374,7 +374,7 @@ struct mapent *cache_lookup_first(struct mapent_cache *mc)
+ 
+ 		while (me) {
+ 			/* Multi mount entries are not primary */
+-			if (me->multi && me->multi != me) {
++			if (IS_MM(me) && !IS_MM_ROOT(me)) {
+ 				me = me->next;
+ 				continue;
+ 			}
+@@ -397,7 +397,7 @@ struct mapent *cache_lookup_next(struct mapent_cache *mc, struct mapent *me)
+ 	this = me->next;
+ 	while (this) {
+ 		/* Multi mount entries are not primary */
+-		if (this->multi && this->multi != this) {
++		if (IS_MM(this) && !IS_MM_ROOT(this)) {
+ 			this = this->next;
+ 			continue;
+ 		}
+@@ -413,7 +413,7 @@ struct mapent *cache_lookup_next(struct mapent_cache *mc, struct mapent *me)
+ 
+ 			while (this) {
+ 				/* Multi mount entries are not primary */
+-				if (this->multi && this->multi != this) {
++				if (IS_MM(this) && !IS_MM_ROOT(this)) {
+ 					this = this->next;
+ 					continue;
+ 				}
+@@ -435,7 +435,7 @@ struct mapent *cache_lookup_key_next(struct mapent *me)
+ 	next = me->next;
+ 	while (next) {
+ 		/* Multi mount entries are not primary */
+-		if (me->multi && me->multi != me)
++		if (IS_MM(me) && !IS_MM_ROOT(me))
+ 			continue;
+ 		if (!strcmp(me->key, next->key))
+ 			return next;
+@@ -706,7 +706,7 @@ int cache_update_offset(struct mapent_cache *mc, const char *mkey, const char *k
+ 	me = cache_lookup_distinct(mc, key);
+ 	if (me) {
+ 		cache_add_ordered_offset(me, &owner->multi_list);
+-		me->multi = owner;
++		MM_ROOT(me) = owner;
+ 		goto done;
+ 	}
+ 	ret = CHE_FAIL;
+@@ -814,14 +814,14 @@ int cache_set_offset_parent(struct mapent_cache *mc, const char *offset)
+ 	this = cache_lookup_distinct(mc, offset);
+ 	if (!this)
+ 		return 0;
+-	if (!this->multi)
++	if (!IS_MM(this))
+ 		return 0;
+ 
+ 	parent = get_offset_parent(mc, offset);
+ 	if (parent)
+ 		this->parent = parent;
+ 	else
+-		this->parent = this->multi;
++		this->parent = MM_ROOT(this);
+ 
+ 	return 1;
+ }
+@@ -879,7 +879,7 @@ int cache_delete_offset(struct mapent_cache *mc, const char *key)
+ 		return CHE_FAIL;
+ 
+ 	if (strcmp(key, me->key) == 0) {
+-		if (me->multi && me->multi == me)
++		if (IS_MM(me) && IS_MM_ROOT(me))
+ 			return CHE_FAIL;
+ 		mc->hash[hashval] = me->next;
+ 		goto delete;
+@@ -889,7 +889,7 @@ int cache_delete_offset(struct mapent_cache *mc, const char *key)
+ 		pred = me;
+ 		me = me->next;
+ 		if (strcmp(key, me->key) == 0) {
+-			if (me->multi && me->multi == me)
++			if (IS_MM(me) && IS_MM_ROOT(me))
+ 				return CHE_FAIL;
+ 			pred->next = me->next;
+ 			goto delete;
+@@ -927,7 +927,7 @@ int cache_delete(struct mapent_cache *mc, const char *key)
+ 		me = me->next;
+ 		if (strcmp(key, me->key) == 0) {
+ 			struct stack *s = me->stack;
+-			if (me->multi && !list_empty(&me->multi_list)) {
++			if (IS_MM(me)) {
+ 				ret = CHE_FAIL;
+ 				goto done;
+ 			}
+@@ -956,7 +956,7 @@ int cache_delete(struct mapent_cache *mc, const char *key)
+ 
+ 	if (strcmp(key, me->key) == 0) {
+ 		struct stack *s = me->stack;
+-		if (me->multi && !list_empty(&me->multi_list)) {
++		if (IS_MM(me)) {
+ 			ret = CHE_FAIL;
+ 			goto done;
+ 		}
+@@ -995,7 +995,7 @@ int cache_delete_offset_list(struct mapent_cache *mc, const char *key)
+ 		return CHE_FAIL;
+ 
+ 	/* Not offset list owner */
+-	if (me->multi != me)
++	if (!IS_MM_ROOT(me))
+ 		return CHE_FAIL;
+ 
+ 	head = &me->multi_list;
+@@ -1016,13 +1016,13 @@ int cache_delete_offset_list(struct mapent_cache *mc, const char *key)
+ 		this = list_entry(next, struct mapent, multi_list);
+ 		next = next->next;
+ 		list_del_init(&this->multi_list);
+-		this->multi = NULL;
++		MM_ROOT(this) = NULL;
+ 		debug(logopt, "deleting offset key %s", this->key);
+ 		status = cache_delete(mc, this->key);
+ 		if (status == CHE_FAIL) {
+ 			warn(logopt,
+ 			     "failed to delete offset %s", this->key);
+-			this->multi = me;
++			MM_ROOT(this) = me;
+ 			/* TODO: add list back in */
+ 			remain++;
+ 		}
+@@ -1030,7 +1030,7 @@ int cache_delete_offset_list(struct mapent_cache *mc, const char *key)
+ 
+ 	if (!remain) {
+ 		list_del_init(&me->multi_list);
+-		me->multi = NULL;
++		MM_ROOT(me) = NULL;
+ 	}
+ 
+ 	if (remain)
+diff --git a/lib/mounts.c b/lib/mounts.c
+index f5b905a6..f6f20fc0 100644
+--- a/lib/mounts.c
++++ b/lib/mounts.c
+@@ -2163,7 +2163,7 @@ int try_remount(struct autofs_point *ap, struct mapent *me, unsigned int type)
+ 	} else {
+ 		me->flags &= ~MOUNT_FLAG_DIR_CREATED;
+ 		if (type == t_offset) {
+-			if (!is_mounted(me->parent->key, MNTS_REAL))
++			if (!is_mounted(MM_PARENT(me)->key, MNTS_REAL))
+ 				me->flags |= MOUNT_FLAG_DIR_CREATED;
+ 		}
+ 	}
+@@ -2310,7 +2310,7 @@ void set_indirect_mount_tree_catatonic(struct autofs_point *ap)
+ 				goto next;
+ 
+ 			/* Only need to set offset mounts catatonic */
+-			if (me->multi && me->multi == me)
++			if (IS_MM(me) && IS_MM_ROOT(me))
+ 				set_multi_mount_tree_catatonic(ap, me);
+ next:
+ 			me = cache_enumerate(mc, me);
+@@ -2330,7 +2330,7 @@ next:
+ void set_direct_mount_tree_catatonic(struct autofs_point *ap, struct mapent *me)
+ {
+ 	/* Set offset mounts catatonic for this mapent */
+-	if (me->multi && me->multi == me)
++	if (IS_MM(me) && IS_MM_ROOT(me))
+ 		set_multi_mount_tree_catatonic(ap, me);
+ 	set_mount_catatonic(ap, me, me->ioctlfd);
+ }
+@@ -2490,12 +2490,12 @@ static int rmdir_path_offset(struct autofs_point *ap, struct mapent *oe)
+ 	int ret;
+ 
+ 	if (ap->type == LKP_DIRECT)
+-		return rmdir_path(ap, oe->key, oe->multi->dev);
++		return rmdir_path(ap, oe->key, MM_ROOT(oe)->dev);
+ 
+ 	dir = strdup(oe->key);
+ 
+ 	if (ap->flags & MOUNT_FLAG_GHOST)
+-		split = strlen(ap->path) + strlen(oe->multi->key) + 1;
++		split = strlen(ap->path) + strlen(MM_ROOT(oe)->key) + 1;
+ 	else
+ 		split = strlen(ap->path);
+ 
+@@ -2690,7 +2690,7 @@ int mount_multi_triggers(struct autofs_point *ap, struct mapent *me,
+ 		oe = cache_lookup_distinct(me->mc, key);
+ 		if (!oe || !oe->mapent)
+ 			goto cont;
+-		if (oe->age != me->multi->age) {
++		if (oe->age != MM_ROOT(me)->age) {
+ 			/* Best effort */
+ 			do_umount_offset(ap, oe, root, start);
+ 			goto cont;
+@@ -2724,7 +2724,7 @@ int umount_multi_triggers(struct autofs_point *ap, struct mapent *me, char *root
+ 
+ 	left = do_umount_multi_triggers(ap, me, root, start, base);
+ 
+-	if (!left && me->multi == me) {
++	if (!left && IS_MM_ROOT(me)) {
+ 		/*
+ 		 * Special case.
+ 		 * If we can't umount the root container then we can't
+diff --git a/modules/lookup_file.c b/modules/lookup_file.c
+index f46a04f0..6afc5587 100644
+--- a/modules/lookup_file.c
++++ b/modules/lookup_file.c
+@@ -1199,8 +1199,8 @@ int lookup_mount(struct autofs_point *ap, const char *name, int name_len, void *
+ 
+ 		cache_readlock(mc);
+ 		me = cache_lookup_distinct(mc, key);
+-		if (me && me->multi)
+-			lkp_key = strdup(me->multi->key);
++		if (me && IS_MM(me))
++			lkp_key = strdup(MM_ROOT(me)->key);
+ 		else if (!ap->pref)
+ 			lkp_key = strdup(key);
+ 		else {
+diff --git a/modules/lookup_hosts.c b/modules/lookup_hosts.c
+index c1ebb7f6..7e101ddb 100644
+--- a/modules/lookup_hosts.c
++++ b/modules/lookup_hosts.c
+@@ -177,7 +177,7 @@ static void update_hosts_mounts(struct autofs_point *ap,
+ 	me = cache_lookup_first(mc);
+ 	while (me) {
+ 		/* Hosts map entry not yet expanded or already expired */
+-		if (!me->multi)
++		if (!IS_MM(me))
+ 			goto next;
+ 
+ 		debug(ap->logopt, MODPREFIX "get list of exports for %s", me->key);
+@@ -200,7 +200,7 @@ next:
+ 		 * Hosts map entry not yet expanded, already expired
+ 		 * or not the base of the tree
+ 		 */
+-		if (!me->multi || me->multi != me)
++		if (!IS_MM(me) || !IS_MM_ROOT(me))
+ 			goto cont;
+ 
+ 		debug(ap->logopt, MODPREFIX
+diff --git a/modules/lookup_ldap.c b/modules/lookup_ldap.c
+index 3624dd86..3e43fc01 100644
+--- a/modules/lookup_ldap.c
++++ b/modules/lookup_ldap.c
+@@ -3700,8 +3700,8 @@ int lookup_mount(struct autofs_point *ap, const char *name, int name_len, void *
+ 	if (ap->type == LKP_INDIRECT && *key != '/') {
+ 		cache_readlock(mc);
+ 		me = cache_lookup_distinct(mc, key);
+-		if (me && me->multi)
+-			lkp_key = strdup(me->multi->key);
++		if (me && IS_MM(me))
++			lkp_key = strdup(MM_ROOT(me)->key);
+ 		else if (!ap->pref)
+ 			lkp_key = strdup(key);
+ 		else {
+diff --git a/modules/lookup_nisplus.c b/modules/lookup_nisplus.c
+index cbd03cdb..6e9a85d1 100644
+--- a/modules/lookup_nisplus.c
++++ b/modules/lookup_nisplus.c
+@@ -722,8 +722,8 @@ int lookup_mount(struct autofs_point *ap, const char *name, int name_len, void *
+ 	if (ap->type == LKP_INDIRECT && *key != '/') {
+ 		cache_readlock(mc);
+ 		me = cache_lookup_distinct(mc, key);
+-		if (me && me->multi)
+-			lkp_key = strdup(me->multi->key);
++		if (me && IS_MM(me))
++			lkp_key = strdup(MM_ROOT(me)->key);
+ 		else if (!ap->pref)
+ 			lkp_key = strdup(key);
+ 		else {
+diff --git a/modules/lookup_program.c b/modules/lookup_program.c
+index ca209488..70f27545 100644
+--- a/modules/lookup_program.c
++++ b/modules/lookup_program.c
+@@ -646,7 +646,7 @@ int lookup_mount(struct autofs_point *ap, const char *name, int name_len, void *
+ 				 name_len, ent, ctxt->parse->context);
+ 			goto out_free;
+ 		} else {
+-			if (me->multi && me->multi != me) {
++			if (IS_MM(me) && !IS_MM_ROOT(me)) {
+ 				cache_unlock(mc);
+ 				warn(ap->logopt, MODPREFIX
+ 				     "unexpected lookup for active multi-mount"
+@@ -657,7 +657,7 @@ int lookup_mount(struct autofs_point *ap, const char *name, int name_len, void *
+ 			cache_writelock(mc);
+ 			me = cache_lookup_distinct(mc, name);
+ 			if (me) {
+-				if (me->multi)
++				if (IS_MM(me))
+ 					cache_delete_offset_list(mc, name);
+ 				cache_delete(mc, name);
+ 			}
+diff --git a/modules/lookup_sss.c b/modules/lookup_sss.c
+index ccd605af..ad834626 100644
+--- a/modules/lookup_sss.c
++++ b/modules/lookup_sss.c
+@@ -1055,8 +1055,8 @@ int lookup_mount(struct autofs_point *ap, const char *name, int name_len, void *
+ 
+ 		cache_readlock(mc);
+ 		me = cache_lookup_distinct(mc, key);
+-		if (me && me->multi)
+-			lkp_key = strdup(me->multi->key);
++		if (me && IS_MM(me))
++			lkp_key = strdup(MM_ROOT(me)->key);
+ 		else
+ 			lkp_key = strdup(key);
+ 		cache_unlock(mc);
+diff --git a/modules/lookup_yp.c b/modules/lookup_yp.c
+index 38f75497..8bccb72f 100644
+--- a/modules/lookup_yp.c
++++ b/modules/lookup_yp.c
+@@ -826,8 +826,8 @@ int lookup_mount(struct autofs_point *ap, const char *name, int name_len, void *
+         if (ap->type == LKP_INDIRECT && *key != '/') {
+ 		cache_readlock(mc);
+ 		me = cache_lookup_distinct(mc, key);
+-		if (me && me->multi)
+-			lkp_key = strdup(me->multi->key);
++		if (me && IS_MM(me))
++			lkp_key = strdup(MM_ROOT(me)->key);
+ 		else if (!ap->pref)
+ 			lkp_key = strdup(key);
+ 		else {
+diff --git a/modules/parse_sun.c b/modules/parse_sun.c
+index 34d4441e..b11c6693 100644
+--- a/modules/parse_sun.c
++++ b/modules/parse_sun.c
+@@ -1148,7 +1148,7 @@ static int mount_subtree(struct autofs_point *ap, struct mapent_cache *mc,
+ 
+ 	rv = 0;
+ 
+-	mm_key = me->multi->key;
++	mm_key = MM_ROOT(me)->key;
+ 
+ 	if (*mm_key == '/') {
+ 		mm_root = mm_key;
+@@ -1162,7 +1162,7 @@ static int mount_subtree(struct autofs_point *ap, struct mapent_cache *mc,
+ 	}
+ 	mm_root_len = strlen(mm_root);
+ 
+-	if (me == me->multi) {
++	if (IS_MM_ROOT(me)) {
+ 		char key[PATH_MAX + 1];
+ 
+ 		if (mm_root_len + 1 > PATH_MAX) {
+@@ -1179,7 +1179,7 @@ static int mount_subtree(struct autofs_point *ap, struct mapent_cache *mc,
+ 
+ 		/* Mount root offset if it exists */
+ 		ro = cache_lookup_distinct(me->mc, key);
+-		if (ro && ro->age == me->multi->age) {
++		if (ro && ro->age == MM_ROOT(me)->age) {
+ 			char *myoptions, *ro_loc;
+ 			int namelen = name ? strlen(name) : 0;
+ 			int ro_len;
+@@ -1350,7 +1350,7 @@ int parse_mount(struct autofs_point *ap, const char *name,
+ 	if (*name == '/') {
+ 		cache_readlock(mc);
+ 		me = cache_lookup_distinct(mc, name);
+-		if (me && me->multi && me->multi != me) {
++		if (me && IS_MM(me) && !IS_MM_ROOT(me)) {
+ 			cache_unlock(mc);
+ 			mapent_len = strlen(mapent) + 1;
+ 			pmapent = malloc(mapent_len + 1);
+@@ -1505,7 +1505,7 @@ dont_expand:
+ 		}
+ 
+ 		/* So we know we're the multi-mount root */
+-		if (!me->multi)
++		if (!IS_MM(me))
+ 			me->multi = me;
+ 		else {
+ 			/*
+@@ -1630,7 +1630,7 @@ dont_expand:
+ 		 */
+ 		cache_readlock(mc);
+ 		if (*name == '/' &&
+-		   (me = cache_lookup_distinct(mc, name)) && me->multi) {
++		   (me = cache_lookup_distinct(mc, name)) && IS_MM(me)) {
+ 			cache_unlock(mc);
+ 			loc = strdup(p);
+ 			if (!loc) {

@@ -1,0 +1,182 @@
+autofs-5.1.7 - remove redundant variables from mount_autofs_offset()
+
+From: Ian Kent <raven@themaw.net>
+
+The path to be mounted is the key in the passed in mapent.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG           |    1 +
+ daemon/direct.c     |   42 +++++++++++++++++++-----------------------
+ include/automount.h |    2 +-
+ lib/mounts.c        |    2 +-
+ 4 files changed, 22 insertions(+), 25 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index c4ebb52f..45be4783 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -9,6 +9,7 @@
+ - fix is mounted check on non existent path.
+ - simplify cache_get_parent().
+ - set offset parent in update_offset_entry().
++- remove redundant variables from mount_autofs_offset().
+ 
+ 25/01/2021 autofs-5.1.7
+ - make bind mounts propagation slave by default.
+diff --git a/daemon/direct.c b/daemon/direct.c
+index 9fe4903a..c41c680f 100644
+--- a/daemon/direct.c
++++ b/daemon/direct.c
+@@ -611,7 +611,7 @@ force_umount:
+ 	return rv;
+ }
+ 
+-int mount_autofs_offset(struct autofs_point *ap, struct mapent *me, const char *root, const char *offset)
++int mount_autofs_offset(struct autofs_point *ap, struct mapent *me)
+ {
+ 	const char *str_offset = mount_type_str(t_offset);
+ 	struct ioctl_ops *ops = get_ioctl_ops();
+@@ -623,7 +623,6 @@ int mount_autofs_offset(struct autofs_point *ap, struct mapent *me, const char *
+ 	const char *hosts_map_name = "-hosts";
+ 	const char *map_name = hosts_map_name;
+ 	const char *type;
+-	char mountpoint[PATH_MAX];
+ 	struct mnt_list *mnt;
+ 
+ 	if (ops->version && ap->flags & MOUNT_FLAG_REMOUNT) {
+@@ -681,11 +680,8 @@ int mount_autofs_offset(struct autofs_point *ap, struct mapent *me, const char *
+ 			return MOUNT_OFFSET_OK;
+ 	}
+ 
+-	strcpy(mountpoint, root);
+-	strcat(mountpoint, offset);
+-
+ 	/* In case the directory doesn't exist, try to mkdir it */
+-	if (mkdir_path(mountpoint, mp_mode) < 0) {
++	if (mkdir_path(me->key, mp_mode) < 0) {
+ 		if (errno == EEXIST) {
+ 			/*
+ 			 * If the mount point directory is a real mount
+@@ -694,7 +690,7 @@ int mount_autofs_offset(struct autofs_point *ap, struct mapent *me, const char *
+ 			 * the kernel NFS client.
+ 			 */
+ 			if (me->multi != me &&
+-			    is_mounted(mountpoint, MNTS_REAL))
++			    is_mounted(me->key, MNTS_REAL))
+ 				return MOUNT_OFFSET_IGNORE;
+ 
+ 			/* 
+@@ -714,13 +710,13 @@ int mount_autofs_offset(struct autofs_point *ap, struct mapent *me, const char *
+ 			char *estr = strerror_r(errno, buf, MAX_ERR_BUF);
+ 			debug(ap->logopt,
+ 			     "can't create mount directory: %s, %s",
+-			     mountpoint, estr);
++			     me->key, estr);
+ 			return MOUNT_OFFSET_FAIL;
+ 		} else {
+ 			char *estr = strerror_r(errno, buf, MAX_ERR_BUF);
+ 			crit(ap->logopt,
+ 			     "failed to create mount directory: %s, %s",
+-			     mountpoint, estr);
++			     me->key, estr);
+ 			return MOUNT_OFFSET_FAIL;
+ 		}
+ 	} else {
+@@ -730,56 +726,56 @@ int mount_autofs_offset(struct autofs_point *ap, struct mapent *me, const char *
+ 
+ 	debug(ap->logopt,
+ 	      "calling mount -t autofs " SLOPPY " -o %s automount %s",
+-	      mp->options, mountpoint);
++	      mp->options, me->key);
+ 
+ 	type = ap->entry->maps->type;
+ 	if (!type || strcmp(ap->entry->maps->type, "hosts"))
+ 		map_name = me->mc->map->argv[0];
+ 
+-	ret = mount(map_name, mountpoint, "autofs", MS_MGC_VAL, mp->options);
++	ret = mount(map_name, me->key, "autofs", MS_MGC_VAL, mp->options);
+ 	if (ret) {
+ 		crit(ap->logopt,
+ 		     "failed to mount offset trigger %s at %s",
+-		     me->key, mountpoint);
++		     me->key, me->key);
+ 		goto out_err;
+ 	}
+ 
+-	ret = stat(mountpoint, &st);
++	ret = stat(me->key, &st);
+ 	if (ret == -1) {
+ 		error(ap->logopt,
+-		     "failed to stat direct mount trigger %s", mountpoint);
++		     "failed to stat direct mount trigger %s", me->key);
+ 		goto out_umount;
+ 	}
+ 
+-	ops->open(ap->logopt, &ioctlfd, st.st_dev, mountpoint);
++	ops->open(ap->logopt, &ioctlfd, st.st_dev, me->key);
+ 	if (ioctlfd < 0) {
+-		crit(ap->logopt, "failed to create ioctl fd for %s", mountpoint);
++		crit(ap->logopt, "failed to create ioctl fd for %s", me->key);
+ 		goto out_umount;
+ 	}
+ 
+ 	ops->timeout(ap->logopt, ioctlfd, timeout);
+ 	cache_set_ino_index(me->mc, me->key, st.st_dev, st.st_ino);
+ 	if (ap->logopt & LOGOPT_DEBUG)
+-		notify_mount_result(ap, mountpoint, timeout, str_offset);
++		notify_mount_result(ap, me->key, timeout, str_offset);
+ 	else
+ 		notify_mount_result(ap, me->key, timeout, str_offset);
+ 	ops->close(ap->logopt, ioctlfd);
+ 
+-	mnt = mnts_add_mount(ap, mountpoint, MNTS_OFFSET);
++	mnt = mnts_add_mount(ap, me->key, MNTS_OFFSET);
+ 	if (!mnt)
+ 		error(ap->logopt,
+ 		      "failed to add offset mount %s to mounted list",
+-		      mountpoint);
++		      me->key);
+ 
+-	debug(ap->logopt, "mounted trigger %s at %s", me->key, mountpoint);
++	debug(ap->logopt, "mounted trigger %s", me->key);
+ 
+ 	return MOUNT_OFFSET_OK;
+ 
+ out_umount:
+-	umount(mountpoint);
++	umount(me->key);
+ out_err:
+-	if (stat(mountpoint, &st) == 0 && me->flags & MOUNT_FLAG_DIR_CREATED)
+-		 rmdir_path(ap, mountpoint, st.st_dev);
++	if (stat(me->key, &st) == 0 && me->flags & MOUNT_FLAG_DIR_CREATED)
++		 rmdir_path(ap, me->key, st.st_dev);
+ 
+ 	return MOUNT_OFFSET_FAIL;
+ }
+diff --git a/include/automount.h b/include/automount.h
+index 730be19a..09d84f05 100644
+--- a/include/automount.h
++++ b/include/automount.h
+@@ -596,7 +596,7 @@ int expire_offsets_direct(struct autofs_point *ap, struct mapent *me, int now);
+ int mount_autofs_indirect(struct autofs_point *ap, const char *root);
+ int do_mount_autofs_direct(struct autofs_point *ap, struct mapent *me, time_t timeout);
+ int mount_autofs_direct(struct autofs_point *ap);
+-int mount_autofs_offset(struct autofs_point *ap, struct mapent *me, const char *root, const char *offset);
++int mount_autofs_offset(struct autofs_point *ap, struct mapent *me);
+ void submount_signal_parent(struct autofs_point *ap, unsigned int success);
+ void close_mount_fds(struct autofs_point *ap);
+ int umount_autofs_indirect(struct autofs_point *ap, const char *root);
+diff --git a/lib/mounts.c b/lib/mounts.c
+index fe931b20..12d22023 100644
+--- a/lib/mounts.c
++++ b/lib/mounts.c
+@@ -2481,7 +2481,7 @@ static int do_mount_autofs_offset(struct autofs_point *ap,
+ 
+ 	debug(ap->logopt, "mount offset %s at %s", oe->key, root);
+ 
+-	ret = mount_autofs_offset(ap, oe, root, offset);
++	ret = mount_autofs_offset(ap, oe);
+ 	if (ret >= MOUNT_OFFSET_OK)
+ 		mounted++;
+ 	else {

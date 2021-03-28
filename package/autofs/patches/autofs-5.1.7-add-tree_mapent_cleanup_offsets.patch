@@ -1,0 +1,94 @@
+autofs-5.1.7 - add tree_mapent_cleanup_offsets()
+
+From: Ian Kent <raven@themaw.net>
+
+Add function tree_mapent_cleanup_offsets() to the mapent tree handling
+implementation.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG        |    1 +
+ include/mounts.h |    1 +
+ lib/mounts.c     |   45 +++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 47 insertions(+)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index e2fd532c..89d4cfa0 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -37,6 +37,7 @@
+ - add tree_mapent_delete_offsets().
+ - add tree_mapent_traverse_subtree().
+ - fix mount_fullpath().
++- add tree_mapent_cleanup_offsets().
+ 
+ 25/01/2021 autofs-5.1.7
+ - make bind mounts propagation slave by default.
+diff --git a/include/mounts.h b/include/mounts.h
+index b5a1193b..5441ee0e 100644
+--- a/include/mounts.h
++++ b/include/mounts.h
+@@ -171,6 +171,7 @@ void mnts_set_mounted_mount(struct autofs_point *ap, const char *name, unsigned
+ struct tree_node *tree_mapent_root(struct mapent *me);
+ int tree_mapent_add_node(struct mapent_cache *mc, const char *base, const char *key);
+ int tree_mapent_delete_offsets(struct mapent_cache *mc, const char *key);
++void tree_mapent_cleanup_offsets(struct mapent *oe);
+ int unlink_mount_tree(struct autofs_point *ap, const char *mp);
+ void free_mnt_list(struct mnt_list *list);
+ int is_mounted(const char *mp, unsigned int type);
+diff --git a/lib/mounts.c b/lib/mounts.c
+index 497c28c9..ba573b9a 100644
+--- a/lib/mounts.c
++++ b/lib/mounts.c
+@@ -1647,6 +1647,51 @@ int tree_mapent_delete_offsets(struct mapent_cache *mc, const char *key)
+ 	return 1;
+ }
+ 
++static void tree_mapent_umount_mount(struct autofs_point *ap, const char *mp)
++{
++	if (is_mounted(mp, MNTS_ALL)) {
++		if (umount(mp)) {
++			error(ap->logopt, "error recovering from mount fail");
++			error(ap->logopt, "cannot umount %s", mp);
++		}
++	}
++}
++
++static int tree_mapent_cleanup_offsets_work(struct tree_node *n, void *ptr)
++{
++	struct mapent *oe = MAPENT(n);
++	struct traverse_subtree_context *ctxt = ptr;
++
++	tree_mapent_umount_mount(ctxt->ap, oe->key);
++
++	return 1;
++}
++
++void tree_mapent_cleanup_offsets(struct mapent *oe)
++{
++	struct tree_node *base = MAPENT_NODE(oe);
++	struct traverse_subtree_context ctxt = {
++		.ap = oe->mc->ap,
++		.base = base,
++		.strict = 0,
++	};
++	struct autofs_point *ap = oe->mc->ap;
++
++	tree_mapent_traverse_subtree(base, tree_mapent_cleanup_offsets_work, &ctxt);
++
++	/* Cleanup base mount after offsets have been cleaned up */
++	if (*oe->key == '/')
++		tree_mapent_umount_mount(ap, oe->key);
++	else {
++		char mp[PATH_MAX + 1];
++
++		if (!mount_fullpath(mp, PATH_MAX, ap->path, oe->key))
++			error(ap->logopt, "mount path is too long");
++		else
++			tree_mapent_umount_mount(ap, mp);
++	}
++}
++
+ /* From glibc decode_name() */
+ /* Since the values in a line are separated by spaces, a name cannot
+  * contain a space.  Therefore some programs encode spaces in names

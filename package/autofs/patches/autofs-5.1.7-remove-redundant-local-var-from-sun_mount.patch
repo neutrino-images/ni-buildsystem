@@ -1,0 +1,74 @@
+autofs-5.1.7 - remove redundant local var from sun_mount()
+
+From: Ian Kent <raven@themaw.net>
+
+The local variable mountpoint in sun_mount() is set directly from a
+passed in parameter and never changed and the source isn't changed
+either, so use the variable directly.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG           |    1 +
+ modules/parse_sun.c |   13 ++++---------
+ 2 files changed, 5 insertions(+), 9 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index 76fccf70..444ade5b 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -42,6 +42,7 @@
+ - add mount and umount offsets functions.
+ - switch to use tree implementation for offsets.
+ - remove obsolete functions.
++- remove redundant local var from sun_mount().
+ 
+ 25/01/2021 autofs-5.1.7
+ - make bind mounts propagation slave by default.
+diff --git a/modules/parse_sun.c b/modules/parse_sun.c
+index ef74eda9..437869b5 100644
+--- a/modules/parse_sun.c
++++ b/modules/parse_sun.c
+@@ -530,7 +530,6 @@ static int sun_mount(struct autofs_point *ap, const char *root,
+ 	int nonstrict = 1;
+ 	int use_weight_only = ap->flags & MOUNT_FLAG_USE_WEIGHT_ONLY;
+ 	int rv, cur_state;
+-	char *mountpoint;
+ 	char *what;
+ 	char *type;
+ 
+@@ -624,9 +623,6 @@ static int sun_mount(struct autofs_point *ap, const char *root,
+ 		}
+ 	}
+ 
+-	mountpoint = alloca(namelen + 1);
+-	sprintf(mountpoint, "%.*s", namelen, name);
+-
+ 	type = ap->entry->maps->type;
+ 	if (type && !strcmp(type, "hosts")) {
+ 		if (options && *options != '\0') {
+@@ -698,9 +694,9 @@ static int sun_mount(struct autofs_point *ap, const char *root,
+ 		debug(ap->logopt, MODPREFIX
+ 		      "mounting root %s, mountpoint %s, "
+ 		      "what %s, fstype %s, options %s",
+-		      root, mountpoint, what, fstype, options);
++		      root, name, what, fstype, options);
+ 
+-		rv = mount_nfs->mount_mount(ap, root, mountpoint, strlen(mountpoint),
++		rv = mount_nfs->mount_mount(ap, root, name, namelen,
+ 					    what, fstype, options, mount_nfs->context);
+ 	} else {
+ 		if (!loclen)
+@@ -720,11 +716,10 @@ static int sun_mount(struct autofs_point *ap, const char *root,
+ 		debug(ap->logopt, MODPREFIX
+ 		      "mounting root %s, mountpoint %s, "
+ 		      "what %s, fstype %s, options %s",
+-		      root, mountpoint, what, fstype, options);
++		      root, name, what, fstype, options);
+ 
+ 		/* Generic mount routine */
+-		rv = do_mount(ap, root, mountpoint, strlen(mountpoint), what, fstype,
+-			      options);
++		rv = do_mount(ap, root, name, namelen, what, fstype, options);
+ 	}
+ 	pthread_setcancelstate(cur_state, NULL);
+ 

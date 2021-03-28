@@ -1,0 +1,179 @@
+autofs-5.1.7 - remove unused mount offset list lock functions
+
+From: Ian Kent <raven@themaw.net>
+
+When fixing the locking in parse_mount() it was evident that there was
+no real benefit of having an additional lock for the offset list so its
+use was eliminated.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG           |    1 +
+ include/automount.h |    4 ---
+ lib/cache.c         |   70 +--------------------------------------------------
+ 3 files changed, 3 insertions(+), 72 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index d25b19c8..c5619d2e 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -19,6 +19,7 @@
+ - fix return from umount_subtree_mounts() on offset list delete.
+ - pass mapent_cache to update_offset_entry().
+ - fix inconsistent locking in parse_mount().
++- remove unused mount offset list lock functions.
+ 
+ 25/01/2021 autofs-5.1.7
+ - make bind mounts propagation slave by default.
+diff --git a/include/automount.h b/include/automount.h
+index 09d84f05..69445b92 100644
+--- a/include/automount.h
++++ b/include/automount.h
+@@ -162,7 +162,6 @@ struct stack {
+ struct mapent {
+ 	struct mapent *next;
+ 	struct list_head ino_index;
+-	pthread_rwlock_t multi_rwlock;
+ 	struct list_head multi_list;
+ 	struct mapent_cache *mc;
+ 	struct map_source *source;
+@@ -212,9 +211,6 @@ int cache_set_offset_parent(struct mapent_cache *mc, const char *offset);
+ int cache_update(struct mapent_cache *mc, struct map_source *ms, const char *key, const char *mapent, time_t age);
+ int cache_delete(struct mapent_cache *mc, const char *key);
+ int cache_delete_offset(struct mapent_cache *mc, const char *key);
+-void cache_multi_readlock(struct mapent *me);
+-void cache_multi_writelock(struct mapent *me);
+-void cache_multi_unlock(struct mapent *me);
+ int cache_delete_offset_list(struct mapent_cache *mc, const char *key);
+ void cache_release(struct map_source *map);
+ void cache_clean_null_cache(struct mapent_cache *mc);
+diff --git a/lib/cache.c b/lib/cache.c
+index ce9e9bd2..03d0499a 100644
+--- a/lib/cache.c
++++ b/lib/cache.c
+@@ -108,58 +108,6 @@ void cache_lock_cleanup(void *arg)
+ 	return;
+ }
+ 
+-void cache_multi_readlock(struct mapent *me)
+-{
+-	int status;
+-
+-	if (!me)
+-		return;
+-
+-	status = pthread_rwlock_rdlock(&me->multi_rwlock);
+-	if (status) {
+-		logmsg("mapent cache multi mutex lock failed");
+-		fatal(status);
+-	}
+-	return;
+-}
+-
+-void cache_multi_writelock(struct mapent *me)
+-{
+-	int status;
+-
+-	if (!me)
+-		return;
+-
+-	status = pthread_rwlock_wrlock(&me->multi_rwlock);
+-	if (status) {
+-		logmsg("mapent cache multi mutex lock failed");
+-		fatal(status);
+-	}
+-	return;
+-}
+-
+-void cache_multi_unlock(struct mapent *me)
+-{
+-	int status;
+-
+-	if (!me)
+-		return;
+-
+-	status = pthread_rwlock_unlock(&me->multi_rwlock);
+-	if (status) {
+-		logmsg("mapent cache multi mutex unlock failed");
+-		fatal(status);
+-	}
+-	return;
+-}
+-
+-void cache_multi_lock_cleanup(void *arg)
+-{
+-	struct mapent *me = (struct mapent *) arg;
+-	cache_multi_unlock(me);
+-	return;
+-}
+-
+ static inline void ino_index_lock(struct mapent_cache *mc)
+ {
+ 	int status = pthread_mutex_lock(&mc->ino_index_mutex);
+@@ -626,7 +574,6 @@ int cache_add(struct mapent_cache *mc, struct map_source *ms, const char *key, c
+ 	struct mapent *me, *existing = NULL;
+ 	char *pkey, *pent;
+ 	u_int32_t hashval = hash(key, mc->size);
+-	int status;
+ 
+ 	me = (struct mapent *) malloc(sizeof(struct mapent));
+ 	if (!me)
+@@ -665,10 +612,6 @@ int cache_add(struct mapent_cache *mc, struct map_source *ms, const char *key, c
+ 	me->ino = (ino_t) -1;
+ 	me->flags = 0;
+ 
+-	status = pthread_rwlock_init(&me->multi_rwlock, NULL);
+-	if (status)
+-		fatal(status);
+-
+ 	/* 
+ 	 * We need to add to the end if values exist in order to
+ 	 * preserve the order in which the map was read on lookup.
+@@ -924,7 +867,7 @@ int cache_update(struct mapent_cache *mc, struct map_source *ms, const char *key
+ 	return ret;
+ }
+ 
+-/* cache_multi_lock of the multi mount owner must be held by caller */
++/* cache write lock of the multi mount owner must be held by caller */
+ int cache_delete_offset(struct mapent_cache *mc, const char *key)
+ {
+ 	u_int32_t hashval = hash(key, mc->size);
+@@ -956,9 +899,6 @@ int cache_delete_offset(struct mapent_cache *mc, const char *key)
+ 	return CHE_FAIL;
+ 
+ delete:
+-	status = pthread_rwlock_destroy(&me->multi_rwlock);
+-	if (status)
+-		fatal(status);
+ 	list_del(&me->multi_list);
+ 	ino_index_lock(mc);
+ 	list_del(&me->ino_index);
+@@ -976,7 +916,7 @@ int cache_delete(struct mapent_cache *mc, const char *key)
+ {
+ 	struct mapent *me = NULL, *pred;
+ 	u_int32_t hashval = hash(key, mc->size);
+-	int status, ret = CHE_OK;
++	int ret = CHE_OK;
+ 	char this[PATH_MAX];
+ 
+ 	strcpy(this, key);
+@@ -997,9 +937,6 @@ int cache_delete(struct mapent_cache *mc, const char *key)
+ 				goto done;
+ 			}
+ 			pred->next = me->next;
+-			status = pthread_rwlock_destroy(&me->multi_rwlock);
+-			if (status)
+-				fatal(status);
+ 			ino_index_lock(mc);
+ 			list_del(&me->ino_index);
+ 			ino_index_unlock(mc);
+@@ -1029,9 +966,6 @@ int cache_delete(struct mapent_cache *mc, const char *key)
+ 			goto done;
+ 		}
+ 		mc->hash[hashval] = me->next;
+-		status = pthread_rwlock_destroy(&me->multi_rwlock);
+-		if (status)
+-			fatal(status);
+ 		ino_index_lock(mc);
+ 		list_del(&me->ino_index);
+ 		ino_index_unlock(mc);

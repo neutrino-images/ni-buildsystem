@@ -1,0 +1,74 @@
+autofs-5.1.7 - use mount_fullpath() in one spot in parse_mount()
+
+From: Ian Kent <raven@themaw.net>
+
+mount_fullpath() is meant to be used for this type of path construction
+so use it.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG           |    1 +
+ modules/parse_sun.c |   34 ++++++++--------------------------
+ 2 files changed, 9 insertions(+), 26 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index 444ade5b..8494f0dc 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -43,6 +43,7 @@
+ - switch to use tree implementation for offsets.
+ - remove obsolete functions.
+ - remove redundant local var from sun_mount().
++- use mount_fullpath() in one spot in parse_mount().
+ 
+ 25/01/2021 autofs-5.1.7
+ - make bind mounts propagation slave by default.
+diff --git a/modules/parse_sun.c b/modules/parse_sun.c
+index 437869b5..d3fc6c7f 100644
+--- a/modules/parse_sun.c
++++ b/modules/parse_sun.c
+@@ -1354,36 +1354,18 @@ dont_expand:
+ 	debug(ap->logopt, MODPREFIX "gathered options: %s", options);
+ 
+ 	if (check_is_multi(p)) {
+-		char *m_root = NULL;
++		char m_root[PATH_MAX + 1];
+ 		int m_root_len;
+ 		time_t age;
+ 		int l;
+ 
+-		/* If name starts with "/" it's a direct mount */
+-		if (*name == '/') {
+-			m_root_len = name_len;
+-			m_root = alloca(m_root_len + 1);
+-			if (!m_root) {
+-				char *estr = strerror_r(errno, buf, MAX_ERR_BUF);
+-				free(options);
+-				free(pmapent);
+-				logerr(MODPREFIX "alloca: %s", estr);
+-				return 1;
+-			}
+-			strcpy(m_root, name);
+-		} else {
+-			m_root_len = ap->len + name_len + 1;
+-			m_root = alloca(m_root_len + 1);
+-			if (!m_root) {
+-				char *estr = strerror_r(errno, buf, MAX_ERR_BUF);
+-				free(options);
+-				free(pmapent);
+-				logerr(MODPREFIX "alloca: %s", estr);
+-				return 1;
+-			}
+-			strcpy(m_root, ap->path);
+-			strcat(m_root, "/");
+-			strcat(m_root, name);
++		m_root_len = mount_fullpath(m_root, PATH_MAX, ap->path, name);
++		if (!m_root_len) {
++			error(ap->logopt,
++			      MODPREFIX "multi-mount root path too long");
++			free(options);
++			free(pmapent);
++			return 1;
+ 		}
+ 
+ 		pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, &cur_state);
