@@ -247,7 +247,7 @@ xfsprogs: $(XFSPROGS_DEPENDENCIES) $(DL_DIR)/$(XFSPROGS_SOURCE) | $(TARGET_DIR)
 # -----------------------------------------------------------------------------
 
 # for coolstream: formatting ext4 failes with newer versions then 1.43.8
-E2FSPROGS_VERSION = $(if $(filter $(BOXTYPE),coolstream),1.43.8,1.45.6)
+E2FSPROGS_VERSION = $(if $(filter $(BOXTYPE),coolstream),1.43.8,1.45.7)
 E2FSPROGS_DIR = e2fsprogs-$(E2FSPROGS_VERSION)
 E2FSPROGS_SOURCE = e2fsprogs-$(E2FSPROGS_VERSION).tar.gz
 E2FSPROGS_SITE = https://sourceforge.net/projects/e2fsprogs/files/e2fsprogs/v$(E2FSPROGS_VERSION)
