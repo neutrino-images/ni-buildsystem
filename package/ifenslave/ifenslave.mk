@@ -14,4 +14,4 @@ ifenslave: | $(TARGET_DIR)
 	$(call STARTUP)
 	$(call EXTRACT,$(BUILD_DIR))
 	$(INSTALL_EXEC) -D $(PKG_BUILD_DIR)/ifenslave $(TARGET_base_sbindir)/ifenslave
-	$(call FOLLOWUP)
+	$(call TARGET_FOLLOWUP)
