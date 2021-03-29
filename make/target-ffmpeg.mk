@@ -11,7 +11,7 @@ FFMPEG_SITE = http://www.ffmpeg.org/releases
 $(DL_DIR)/$(FFMPEG_SOURCE):
 	$(download) $(FFMPEG_SITE)/$(FFMPEG_SOURCE)
 
-FFMPEG_DEPENDENCIES = openssl zlib bzip2 freetype rtmpdump libass libxml2 alsa-lib
+FFMPEG_DEPENDENCIES = openssl zlib bzip2 freetype rtmpdump libbluray libass libxml2 alsa-lib
 
 FFMPEG_UNPATCHED := no
 
