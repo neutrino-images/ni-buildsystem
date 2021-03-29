@@ -338,7 +338,7 @@ hdparm: $(DL_DIR)/$(HDPARM_SOURCE) | $(TARGET_DIR)
 #
 # -----------------------------------------------------------------------------
 
-OPENSSH_VERSION = 8.4p1
+OPENSSH_VERSION = 8.5p1
 OPENSSH_DIR = openssh-$(OPENSSH_VERSION)
 OPENSSH_SOURCE = openssh-$(OPENSSH_VERSION).tar.gz
 OPENSSH_SITE = https://artfiles.org/openbsd/OpenSSH/portable
