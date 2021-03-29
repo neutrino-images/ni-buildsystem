@@ -319,45 +319,6 @@ libbluray: $(LIBBLURAY_DEPENDENCIES) $(DL_DIR)/$(LIBBLURAY_SOURCE) | $(TARGET_DI
 
 # -----------------------------------------------------------------------------
 
-LIBGPG_ERROR_VERSION = 1.37
-LIBGPG_ERROR_DIR = libgpg-error-$(LIBGPG_ERROR_VERSION)
-LIBGPG_ERROR_SOURCE = libgpg-error-$(LIBGPG_ERROR_VERSION).tar.bz2
-LIBGPG_ERROR_SITE = ftp://ftp.gnupg.org/gcrypt/libgpg-error
-
-$(DL_DIR)/$(LIBGPG_ERROR_SOURCE):
-	$(download) $(LIBGPG_ERROR_SITE)/$(LIBGPG_ERROR_SOURCE)
-
-LIBGPG_ERROR_AUTORECONF = YES
-
-LIBGPG_ERROR_CONFIG_SCRIPTS = gpg-error-config
-
-LIBGPG_ERROR_CONF_OPTS = \
-	--datarootdir=$(REMOVE_datarootdir) \
-	--enable-shared \
-	--disable-doc \
-	--disable-languages \
-	--disable-static \
-	--disable-tests
-
-libgpg-error: $(DL_DIR)/$(LIBGPG_ERROR_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		pushd src/syscfg; \
-			ln -s lock-obj-pub.arm-unknown-linux-gnueabi.h lock-obj-pub.$(TARGET).h; \
-			ln -s lock-obj-pub.arm-unknown-linux-gnueabi.h lock-obj-pub.linux-uclibcgnueabi.h; \
-		popd; \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(TARGET_RM) $(addprefix $(TARGET_bindir)/,gpg-error gpgrt-config)
-	$(REWRITE_CONFIG_SCRIPTS)
-	$(REWRITE_LIBTOOL)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
 LIBAACS_VERSION = 0.9.0
 LIBAACS_DIR = libaacs-$(LIBAACS_VERSION)
 LIBAACS_SOURCE = libaacs-$(LIBAACS_VERSION).tar.bz2
