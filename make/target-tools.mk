@@ -255,12 +255,12 @@ E2FSPROGS_SITE = https://sourceforge.net/projects/e2fsprogs/files/e2fsprogs/v$(E
 $(DL_DIR)/$(E2FSPROGS_SOURCE):
 	$(download) $(E2FSPROGS_SITE)/$(E2FSPROGS_SOURCE)
 
-#E2FSPROGS_DEPENDENCIES = util-linux
+E2FSPROGS_DEPENDENCIES = util-linux
 
 E2FSPROGS_AUTORECONF = YES
 
-#E2FSPROGS_CONF_ENV = \
-#	ac_cv_path_LDCONFIG=true
+E2FSPROGS_CONF_ENV = \
+	ac_cv_path_LDCONFIG=true
 
 E2FSPROGS_CONF_OPTS = \
 	--with-root-prefix="$(base_prefix)" \
@@ -282,20 +282,18 @@ E2FSPROGS_CONF_OPTS = \
 	--disable-rpath \
 	--disable-tdb \
 	--disable-testio-debug \
+	--disable-libblkid \
+	--disable-libuuid \
 	--disable-uuidd \
 	--enable-elf-shlibs \
 	--enable-fsck \
+	--enable-symlink-build \
 	--enable-symlink-install \
 	--enable-verbose-makecmds \
-	--enable-symlink-build \
+	--without-libintl-prefix \
+	--without-libiconv-prefix \
 	--with-gnu-ld \
 	--with-crond-dir=no
-
-#	--disable-libblkid \
-#	--disable-libuuid \
- 
-#	--without-libintl-prefix \
-#	--without-libiconv-prefix \
 
 e2fsprogs: $(E2FSPROGS_DEPENDENCIES) $(DL_DIR)/$(E2FSPROGS_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
