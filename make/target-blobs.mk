@@ -216,8 +216,8 @@ HD61_LIBGLES_DIR = $(empty)
 HD61_LIBGLES_SOURCE = hd61-mali-$(HD61_LIBGLES_VERSION).zip
 HD61_LIBGLES_SITE = http://downloads.mutant-digital.net/hd61
 
-HD6x_LIBGLES_HEADERS_SOURCE = libgles-mali-utgard-headers.zip
-HD6x_LIBGLES_HEADERS_SITE = https://github.com/HD-Digital/meta-gfutures/raw/release-6.2/recipes-bsp/mali/files
+HD6X_LIBGLES_HEADERS_SOURCE = libgles-mali-utgard-headers.zip
+HD6X_LIBGLES_HEADERS_SITE = https://github.com/HD-Digital/meta-gfutures/raw/release-6.2/recipes-bsp/mali/files
 
 VUSOLO4K_LIBGLES_VERSION = $(VUSOLO4K_DRIVERS_VERSION)
 VUSOLO4K_LIBGLES_DIR = libgles-vusolo4k
@@ -274,11 +274,11 @@ h7-libgles: $(DL_DIR)/$(BOXMODEL_LIBGLES_SOURCE) | $(TARGET_DIR)
 	ln -sf libv3ddriver.so $(TARGET_libdir)/libGLESv2.so
 	$(TOUCH)
 
-$(DL_DIR)/$(HD6x_LIBGLES_HEADERS_SOURCE):
-	$(download) $(HD6x_LIBGLES_HEADERS_SITE)/$(HD6x_LIBGLES_HEADERS_SOURCE)
+$(DL_DIR)/$(HD6X_LIBGLES_HEADERS_SOURCE):
+	$(download) $(HD6X_LIBGLES_HEADERS_SITE)/$(HD6X_LIBGLES_HEADERS_SOURCE)
 
-hd6x-libgles-headers: $(DL_DIR)/$(HD6x_LIBGLES_HEADERS_SOURCE) | $(TARGET_DIR)
-	unzip -o $(DL_DIR)/$(HD6x_LIBGLES_HEADERS_SOURCE) -d $(TARGET_includedir)
+hd6x-libgles-headers: $(DL_DIR)/$(HD6X_LIBGLES_HEADERS_SOURCE) | $(TARGET_DIR)
+	unzip -o $(DL_DIR)/$(HD6X_LIBGLES_HEADERS_SOURCE) -d $(TARGET_includedir)
 	$(TOUCH)
 
 hd60-libgles \

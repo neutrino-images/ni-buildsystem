@@ -136,19 +136,19 @@ flash-image-hd5x: | $(IMAGE_DIR)
 # -----------------------------------------------------------------------------
 
 # hd51, bre2ze4k, h7
-HD5x_IMAGE_NAME = disk
-HD5x_BOOT_IMAGE = boot.img
-HD5x_IMAGE_LINK = $(HD5x_IMAGE_NAME).ext4
-HD5x_BOXMODE ?= 12
-ifeq ($(HD5x_BOXMODE),12)
-  HD5x_BRCM_CMA = brcm_cma=520M@248M brcm_cma=192M@768M
+HD5X_IMAGE_NAME = disk
+HD5X_BOOT_IMAGE = boot.img
+HD5X_IMAGE_LINK = $(HD5X_IMAGE_NAME).ext4
+HD5X_BOXMODE ?= 12
+ifeq ($(HD5X_BOXMODE),12)
+  HD5X_BRCM_CMA = brcm_cma=520M@248M brcm_cma=192M@768M
 else
-  HD5x_BRCM_CMA = brcm_cma=440M@328M brcm_cma=192M@768M
+  HD5X_BRCM_CMA = brcm_cma=440M@328M brcm_cma=192M@768M
 endif
 
 # emmc image
 EMMC_IMAGE_SIZE = 3817472
-EMMC_IMAGE = $(IMAGE_BUILD_DIR)/$(HD5x_IMAGE_NAME).img
+EMMC_IMAGE = $(IMAGE_BUILD_DIR)/$(HD5X_IMAGE_NAME).img
 
 BLOCK_SIZE = 512
 BLOCK_SECTOR = 2
@@ -181,10 +181,10 @@ flash-image-hd5x-multi: | $(IMAGE_DIR)
 	rm -rf $(IMAGE_BUILD_DIR)
 	$(INSTALL) -d $(IMAGE_BUILD_DIR)
 	# Create a sparse image block
-	dd if=/dev/zero of=$(IMAGE_BUILD_DIR)/$(HD5x_IMAGE_LINK) seek=$(shell expr $(ROOTFS_PARTITION_SIZE) \* $(BLOCK_SECTOR)) count=0 bs=$(BLOCK_SIZE)
-	mkfs.ext4 -v -F $(IMAGE_BUILD_DIR)/$(HD5x_IMAGE_LINK) -d $(ROOTFS)/..
+	dd if=/dev/zero of=$(IMAGE_BUILD_DIR)/$(HD5X_IMAGE_LINK) seek=$(shell expr $(ROOTFS_PARTITION_SIZE) \* $(BLOCK_SECTOR)) count=0 bs=$(BLOCK_SIZE)
+	mkfs.ext4 -v -F $(IMAGE_BUILD_DIR)/$(HD5X_IMAGE_LINK) -d $(ROOTFS)/..
 	# Error codes 0-3 indicate successfull operation of fsck (no errors or errors corrected)
-	fsck.ext4 -pvfD $(IMAGE_BUILD_DIR)/$(HD5x_IMAGE_LINK) || [ $? -le 3 ]
+	fsck.ext4 -pvfD $(IMAGE_BUILD_DIR)/$(HD5X_IMAGE_LINK) || [ $? -le 3 ]
 	dd if=/dev/zero of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) count=0 seek=$(shell expr $(EMMC_IMAGE_SIZE) \* $(BLOCK_SECTOR))
 	parted -s $(EMMC_IMAGE) mklabel gpt
 	parted -s $(EMMC_IMAGE) unit KiB mkpart boot fat16 $(IMAGE_ROOTFS_ALIGNMENT) $(shell expr $(IMAGE_ROOTFS_ALIGNMENT) \+ $(BOOT_PARTITION_SIZE))
@@ -196,23 +196,23 @@ flash-image-hd5x-multi: | $(IMAGE_DIR)
 	parted -s $(EMMC_IMAGE) unit KiB mkpart userdata ext4 $(MULTI_ROOTFS_PARTITION_OFFSET) $(shell expr $(MULTI_ROOTFS_PARTITION_OFFSET) \+ $(MULTI_ROOTFS_PARTITION_SIZE))
 	parted -s $(EMMC_IMAGE) unit KiB mkpart swap linux-swap $(LINUX_SWAP_PARTITION_OFFSET) $(shell expr $(LINUX_SWAP_PARTITION_OFFSET) \+ $(LINUX_SWAP_PARTITION_SIZE))
 	parted -s $(EMMC_IMAGE) unit KiB mkpart storage ext4 $(STORAGE_PARTITION_OFFSET) 100%
-	dd if=/dev/zero of=$(IMAGE_BUILD_DIR)/$(HD5x_BOOT_IMAGE) bs=$(BLOCK_SIZE) count=$(shell expr $(BOOT_PARTITION_SIZE) \* $(BLOCK_SECTOR))
-	mkfs.msdos -S 512 $(IMAGE_BUILD_DIR)/$(HD5x_BOOT_IMAGE)
-	echo "boot emmcflash0.linuxkernel  '$(HD5x_BRCM_CMA) root=/dev/mmcblk0p3 rootsubdir=linuxrootfs1 kernel=/dev/mmcblk0p2 rw rootwait $(BOXMODEL)_4.boxmode=$(HD5x_BOXMODE)'" > $(IMAGE_BUILD_DIR)/STARTUP
-	echo "boot emmcflash0.linuxkernel  '$(HD5x_BRCM_CMA) root=/dev/mmcblk0p3 rootsubdir=linuxrootfs1 kernel=/dev/mmcblk0p2 rw rootwait $(BOXMODEL)_4.boxmode=$(HD5x_BOXMODE)'" > $(IMAGE_BUILD_DIR)/STARTUP_1
-	echo "boot emmcflash0.linuxkernel2 '$(HD5x_BRCM_CMA) root=/dev/mmcblk0p7 rootsubdir=linuxrootfs2 kernel=/dev/mmcblk0p4 rw rootwait $(BOXMODEL)_4.boxmode=$(HD5x_BOXMODE)'" > $(IMAGE_BUILD_DIR)/STARTUP_2
-	echo "boot emmcflash0.linuxkernel3 '$(HD5x_BRCM_CMA) root=/dev/mmcblk0p7 rootsubdir=linuxrootfs3 kernel=/dev/mmcblk0p5 rw rootwait $(BOXMODEL)_4.boxmode=$(HD5x_BOXMODE)'" > $(IMAGE_BUILD_DIR)/STARTUP_3
-	echo "boot emmcflash0.linuxkernel4 '$(HD5x_BRCM_CMA) root=/dev/mmcblk0p7 rootsubdir=linuxrootfs4 kernel=/dev/mmcblk0p6 rw rootwait $(BOXMODEL)_4.boxmode=$(HD5x_BOXMODE)'" > $(IMAGE_BUILD_DIR)/STARTUP_4
-	mcopy -i $(IMAGE_BUILD_DIR)/$(HD5x_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP ::
-	mcopy -i $(IMAGE_BUILD_DIR)/$(HD5x_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP_1 ::
-	mcopy -i $(IMAGE_BUILD_DIR)/$(HD5x_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP_2 ::
-	mcopy -i $(IMAGE_BUILD_DIR)/$(HD5x_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP_3 ::
-	mcopy -i $(IMAGE_BUILD_DIR)/$(HD5x_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP_4 ::
-	dd conv=notrunc if=$(IMAGE_BUILD_DIR)/$(HD5x_BOOT_IMAGE) of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) seek=$(shell expr $(IMAGE_ROOTFS_ALIGNMENT) \* $(BLOCK_SECTOR))
+	dd if=/dev/zero of=$(IMAGE_BUILD_DIR)/$(HD5X_BOOT_IMAGE) bs=$(BLOCK_SIZE) count=$(shell expr $(BOOT_PARTITION_SIZE) \* $(BLOCK_SECTOR))
+	mkfs.msdos -S 512 $(IMAGE_BUILD_DIR)/$(HD5X_BOOT_IMAGE)
+	echo "boot emmcflash0.linuxkernel  '$(HD5X_BRCM_CMA) root=/dev/mmcblk0p3 rootsubdir=linuxrootfs1 kernel=/dev/mmcblk0p2 rw rootwait $(BOXMODEL)_4.boxmode=$(HD5X_BOXMODE)'" > $(IMAGE_BUILD_DIR)/STARTUP
+	echo "boot emmcflash0.linuxkernel  '$(HD5X_BRCM_CMA) root=/dev/mmcblk0p3 rootsubdir=linuxrootfs1 kernel=/dev/mmcblk0p2 rw rootwait $(BOXMODEL)_4.boxmode=$(HD5X_BOXMODE)'" > $(IMAGE_BUILD_DIR)/STARTUP_1
+	echo "boot emmcflash0.linuxkernel2 '$(HD5X_BRCM_CMA) root=/dev/mmcblk0p7 rootsubdir=linuxrootfs2 kernel=/dev/mmcblk0p4 rw rootwait $(BOXMODEL)_4.boxmode=$(HD5X_BOXMODE)'" > $(IMAGE_BUILD_DIR)/STARTUP_2
+	echo "boot emmcflash0.linuxkernel3 '$(HD5X_BRCM_CMA) root=/dev/mmcblk0p7 rootsubdir=linuxrootfs3 kernel=/dev/mmcblk0p5 rw rootwait $(BOXMODEL)_4.boxmode=$(HD5X_BOXMODE)'" > $(IMAGE_BUILD_DIR)/STARTUP_3
+	echo "boot emmcflash0.linuxkernel4 '$(HD5X_BRCM_CMA) root=/dev/mmcblk0p7 rootsubdir=linuxrootfs4 kernel=/dev/mmcblk0p6 rw rootwait $(BOXMODEL)_4.boxmode=$(HD5X_BOXMODE)'" > $(IMAGE_BUILD_DIR)/STARTUP_4
+	mcopy -i $(IMAGE_BUILD_DIR)/$(HD5X_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP ::
+	mcopy -i $(IMAGE_BUILD_DIR)/$(HD5X_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP_1 ::
+	mcopy -i $(IMAGE_BUILD_DIR)/$(HD5X_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP_2 ::
+	mcopy -i $(IMAGE_BUILD_DIR)/$(HD5X_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP_3 ::
+	mcopy -i $(IMAGE_BUILD_DIR)/$(HD5X_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP_4 ::
+	dd conv=notrunc if=$(IMAGE_BUILD_DIR)/$(HD5X_BOOT_IMAGE) of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) seek=$(shell expr $(IMAGE_ROOTFS_ALIGNMENT) \* $(BLOCK_SECTOR))
 	dd conv=notrunc if=$(KERNEL_ZIMAGE_DTB) of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) seek=$(shell expr $(KERNEL_PARTITION_OFFSET) \* $(BLOCK_SECTOR))
-	resize2fs $(IMAGE_BUILD_DIR)/$(HD5x_IMAGE_LINK) $(ROOTFS_PARTITION_SIZE)k
+	resize2fs $(IMAGE_BUILD_DIR)/$(HD5X_IMAGE_LINK) $(ROOTFS_PARTITION_SIZE)k
 	# Truncate on purpose
-	dd if=$(IMAGE_BUILD_DIR)/$(HD5x_IMAGE_LINK) of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) seek=$(shell expr $(ROOTFS_PARTITION_OFFSET) \* $(BLOCK_SECTOR))
+	dd if=$(IMAGE_BUILD_DIR)/$(HD5X_IMAGE_LINK) of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) seek=$(shell expr $(ROOTFS_PARTITION_OFFSET) \* $(BLOCK_SECTOR))
 	# Create final USB-image
 	$(INSTALL) -d $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)
 	cp $(EMMC_IMAGE) $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)
@@ -245,46 +245,46 @@ flash-image-hd6x: | $(IMAGE_DIR)
 # -----------------------------------------------------------------------------
 
 # hd60, hd61
-HD6x_IMAGE_NAME = disk
-HD6x_BOOT_IMAGE = bootoptions.img
-HD6x_IMAGE_LINK = $(HD6x_IMAGE_NAME).ext4
+HD6X_IMAGE_NAME = disk
+HD6X_BOOT_IMAGE = bootoptions.img
+HD6X_IMAGE_LINK = $(HD6X_IMAGE_NAME).ext4
 
 # partition offsets/sizes
-HD6x_BOOTOPTIONS_PARTITION_SIZE = 32768
-HD6x_IMAGE_ROOTFS_SIZE = 1024M
+HD6X_BOOTOPTIONS_PARTITION_SIZE = 32768
+HD6X_IMAGE_ROOTFS_SIZE = 1024M
 
-HD6x_BOOTARGS_DATE = 20200504
-HD6x_BOOTARGS_SOURCE = $(BOXMODEL)-bootargs-$(HD6x_BOOTARGS_DATE).zip
-HD6x_PARTITONS_DATE = 20200319
-HD6x_PARTITONS_SOURCE = $(BOXMODEL)-partitions-$(HD6x_PARTITONS_DATE).zip
-HD6x_RECOVERY_DATE = 20200424
-HD6x_RECOVERY_SOURCE = $(BOXMODEL)-recovery-$(HD6x_RECOVERY_DATE).zip
+HD6X_BOOTARGS_DATE = 20200504
+HD6X_BOOTARGS_SOURCE = $(BOXMODEL)-bootargs-$(HD6X_BOOTARGS_DATE).zip
+HD6X_PARTITONS_DATE = 20200319
+HD6X_PARTITONS_SOURCE = $(BOXMODEL)-partitions-$(HD6X_PARTITONS_DATE).zip
+HD6X_RECOVERY_DATE = 20200424
+HD6X_RECOVERY_SOURCE = $(BOXMODEL)-recovery-$(HD6X_RECOVERY_DATE).zip
 
-HD6x_MULTI_DISK_VERSION = 1.0
-HD6x_MULTI_DISK_SITE = http://downloads.mutant-digital.net/$(BOXMODEL)
+HD6X_MULTI_DISK_VERSION = 1.0
+HD6X_MULTI_DISK_SITE = http://downloads.mutant-digital.net/$(BOXMODEL)
 
-$(DL_DIR)/$(HD6x_BOOTARGS_SOURCE):
-	$(download) $(HD6x_MULTI_DISK_SITE)/$(HD6x_BOOTARGS_SOURCE)
+$(DL_DIR)/$(HD6X_BOOTARGS_SOURCE):
+	$(download) $(HD6X_MULTI_DISK_SITE)/$(HD6X_BOOTARGS_SOURCE)
 
-$(DL_DIR)/$(HD6x_PARTITONS_SOURCE):
-	$(download) $(HD6x_MULTI_DISK_SITE)/$(HD6x_PARTITONS_SOURCE)
+$(DL_DIR)/$(HD6X_PARTITONS_SOURCE):
+	$(download) $(HD6X_MULTI_DISK_SITE)/$(HD6X_PARTITONS_SOURCE)
 
-$(DL_DIR)/$(HD6x_RECOVERY_SOURCE):
-	$(download) $(HD6x_MULTI_DISK_SITE)/$(HD6x_RECOVERY_SOURCE)
+$(DL_DIR)/$(HD6X_RECOVERY_SOURCE):
+	$(download) $(HD6X_MULTI_DISK_SITE)/$(HD6X_RECOVERY_SOURCE)
 
-flash-image-hd6x-multi-recovery: $(DL_DIR)/$(HD6x_BOOTARGS_SOURCE)
-flash-image-hd6x-multi-recovery: $(DL_DIR)/$(HD6x_PARTITONS_SOURCE)
-flash-image-hd6x-multi-recovery: $(DL_DIR)/$(HD6x_RECOVERY_SOURCE)
+flash-image-hd6x-multi-recovery: $(DL_DIR)/$(HD6X_BOOTARGS_SOURCE)
+flash-image-hd6x-multi-recovery: $(DL_DIR)/$(HD6X_PARTITONS_SOURCE)
+flash-image-hd6x-multi-recovery: $(DL_DIR)/$(HD6X_RECOVERY_SOURCE)
 flash-image-hd6x-multi-recovery: | $(IMAGE_DIR)
 	rm -rf $(IMAGE_BUILD_DIR)
 	$(INSTALL) -d $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)
-	unzip -o $(DL_DIR)/$(HD6x_BOOTARGS_SOURCE) -d $(IMAGE_BUILD_DIR)
-	unzip -o $(DL_DIR)/$(HD6x_PARTITONS_SOURCE) -d $(IMAGE_BUILD_DIR)
-	unzip -o $(DL_DIR)/$(HD6x_RECOVERY_SOURCE) -d $(IMAGE_BUILD_DIR)
+	unzip -o $(DL_DIR)/$(HD6X_BOOTARGS_SOURCE) -d $(IMAGE_BUILD_DIR)
+	unzip -o $(DL_DIR)/$(HD6X_PARTITONS_SOURCE) -d $(IMAGE_BUILD_DIR)
+	unzip -o $(DL_DIR)/$(HD6X_RECOVERY_SOURCE) -d $(IMAGE_BUILD_DIR)
 	$(INSTALL_EXEC) $(IMAGE_BUILD_DIR)/bootargs-8gb.bin $(ROOTFS)$(datadir)/bootargs.bin
 	$(INSTALL_EXEC) $(IMAGE_BUILD_DIR)/fastboot.bin $(ROOTFS)$(datadir)/fastboot.bin
-	dd if=/dev/zero of=$(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(HD6x_BOOT_IMAGE) bs=1024 count=$(HD6x_BOOTOPTIONS_PARTITION_SIZE)
-	mkfs.msdos -S 512 $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(HD6x_BOOT_IMAGE)
+	dd if=/dev/zero of=$(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(HD6X_BOOT_IMAGE) bs=1024 count=$(HD6X_BOOTOPTIONS_PARTITION_SIZE)
+	mkfs.msdos -S 512 $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(HD6X_BOOT_IMAGE)
 	echo "bootcmd=setenv bootargs \$$(bootargs) \$$(bootargs_common); mmc read 0 0x1000000 0x3BD000 0x8000; bootm 0x1000000; run bootcmd_fallback" > $(IMAGE_BUILD_DIR)/STARTUP
 	echo "bootargs=root=/dev/mmcblk0p23 rootsubdir=linuxrootfs1 rootfstype=ext4 kernel=/dev/mmcblk0p19" >> $(IMAGE_BUILD_DIR)/STARTUP
 	echo "bootcmd=setenv vfd_msg andr;setenv bootargs \$$(bootargs) \$$(bootargs_common); run bootcmd_android; run bootcmd_fallback" > $(IMAGE_BUILD_DIR)/STARTUP_ANDROID
@@ -302,15 +302,15 @@ flash-image-hd6x-multi-recovery: | $(IMAGE_DIR)
 	echo "bootcmd=setenv bootargs \$$(bootargs_common); mmc read 0 0x1000000 0x1000 0x9000; bootm 0x1000000" > $(IMAGE_BUILD_DIR)/STARTUP_RECOVERY
 	echo "bootcmd=setenv bootargs \$$(bootargs_common); mmc read 0 0x1000000 0x1000 0x9000; bootm 0x1000000" > $(IMAGE_BUILD_DIR)/STARTUP_ONCE
 	$(INSTALL_DATA) -D $(PACKAGE_DIR)/bootmenu/files/$(BOXMODEL)/bootmenu.conf $(IMAGE_BUILD_DIR)/bootmenu.conf
-	mcopy -i $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(HD6x_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP ::
-	mcopy -i $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(HD6x_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP_ANDROID ::
-	mcopy -i $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(HD6x_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP_ANDROID_DISABLE_LINUXSE ::
-	mcopy -i $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(HD6x_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP_LINUX_1 ::
-	mcopy -i $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(HD6x_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP_LINUX_2 ::
-	mcopy -i $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(HD6x_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP_LINUX_3 ::
-	mcopy -i $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(HD6x_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP_LINUX_4 ::
-	mcopy -i $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(HD6x_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP_RECOVERY ::
-	mcopy -i $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(HD6x_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/bootmenu.conf ::
+	mcopy -i $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(HD6X_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP ::
+	mcopy -i $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(HD6X_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP_ANDROID ::
+	mcopy -i $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(HD6X_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP_ANDROID_DISABLE_LINUXSE ::
+	mcopy -i $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(HD6X_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP_LINUX_1 ::
+	mcopy -i $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(HD6X_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP_LINUX_2 ::
+	mcopy -i $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(HD6X_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP_LINUX_3 ::
+	mcopy -i $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(HD6X_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP_LINUX_4 ::
+	mcopy -i $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(HD6X_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP_RECOVERY ::
+	mcopy -i $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(HD6X_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/bootmenu.conf ::
 	mv $(IMAGE_BUILD_DIR)/bootargs-8gb.bin $(IMAGE_BUILD_DIR)/bootargs.bin
 	mv $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/bootargs-8gb.bin $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/bootargs.bin
 	mv $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/pq_param.bin $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/pqparam.bin
@@ -319,7 +319,7 @@ flash-image-hd6x-multi-recovery: | $(IMAGE_DIR)
 	rm -rf $(IMAGE_BUILD_DIR)/*.conf
 	rm -rf $(IMAGE_BUILD_DIR)/*.txt
 	rm -rf $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/*.txt
-	rm -rf $(IMAGE_BUILD_DIR)/$(HD6x_IMAGE_LINK)
+	rm -rf $(IMAGE_BUILD_DIR)/$(HD6X_IMAGE_LINK)
 	cp $(SUPPORT_DIR)/splash-images/ni-splash-$(BOXSERIES).img $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/logo.img
 	echo $(IMAGE_NAME)_recovery > $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/recoveryversion
 	echo "***** ACHTUNG *****" >$(IMAGE_BUILD_DIR)/recovery_$(BOXMODEL)_lies.mich
