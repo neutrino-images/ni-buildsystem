@@ -189,7 +189,7 @@ all:
 	@echo "'make all' is not a valid target."
 
 # target for testing only. not useful otherwise
-everything: $(shell sed -n 's/^\$$.D.\/\(.*\):.*/\1/p' make/*.mk)
+everything: $(shell find package/*/*.mk -type f | cut -d'/' -f2 | sort | uniq)
 
 # -----------------------------------------------------------------------------
 
