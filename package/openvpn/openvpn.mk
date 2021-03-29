@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-OPENVPN_VERSION = 2.5.0
+OPENVPN_VERSION = 2.5.1
 OPENVPN_DIR = openvpn-$(OPENVPN_VERSION)
 OPENVPN_SOURCE = openvpn-$(OPENVPN_VERSION).tar.xz
 OPENVPN_SITE = http://build.openvpn.net/downloads/releases
