@@ -43,5 +43,5 @@ define HOST_DOSFSTOOLS_SYMLINKING
 endef
 HOST_DOSFSTOOLS_HOST_FINALIZE_HOOKS += HOST_DOSFSTOOLS_SYMLINKING
 
-host-dosfstools: $(DL_DIR)/$(HOST_DOSFSTOOLS_SOURCE) | $(HOST_DIR)
+host-dosfstools: | $(HOST_DIR)
 	$(call host-autotools-package)
