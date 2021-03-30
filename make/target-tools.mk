@@ -208,44 +208,6 @@ sysvinit: $(DL_DIR)/$(SYSVINIT_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-XFSPROGS_VERSION = 5.8.0
-XFSPROGS_DIR = xfsprogs-$(XFSPROGS_VERSION)
-XFSPROGS_SOURCE = xfsprogs-$(XFSPROGS_VERSION).tar.xz
-XFSPROGS_SITE = $(KERNEL_MIRROR)/linux/utils/fs/xfs/xfsprogs
-
-$(DL_DIR)/$(XFSPROGS_SOURCE):
-	$(download) $(XFSPROGS_SITE)/$(XFSPROGS_SOURCE)
-
-XFSPROGS_DEPENDENCIES = util-linux
-
-XFSPROGS_CONF_ENV = \
-	ac_cv_header_aio_h=yes \
-	ac_cv_lib_rt_lio_listio=yes \
-	PLATFORM="linux"
-
-XFSPROGS_CONF_OPTS = \
-	--datarootdir=$(REMOVE_datarootdir) \
-	--enable-lib64=no \
-	--enable-gettext=no \
-	--disable-libicu \
-	INSTALL_USER=root \
-	INSTALL_GROUP=root \
-	--enable-static
-
-xfsprogs: $(XFSPROGS_DEPENDENCIES) $(DL_DIR)/$(XFSPROGS_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(call APPLY_PATCHES,$(PKG_PATCHES_DIR))
-	$(CHDIR)/$(PKG_DIR); \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DIST_ROOT=$(TARGET_DIR)
-	$(TARGET_RM) $(addprefix $(TARGET_libdir)/,xfsprogs)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
 # for coolstream: formatting ext4 failes with newer versions then 1.43.8
 E2FSPROGS_VERSION = $(if $(filter $(BOXTYPE),coolstream),1.43.8,1.45.7)
 E2FSPROGS_DIR = e2fsprogs-$(E2FSPROGS_VERSION)
