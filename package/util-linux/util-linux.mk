@@ -11,27 +11,95 @@ UTIL_LINUX_SITE = $(KERNEL_MIRROR)/linux/utils/util-linux/v$(basename $(UTIL_LIN
 
 UTIL_LINUX_DEPENDENCIES = ncurses zlib
 
-UTIL_LINUX_AUTORECONF = YES
+#UTIL_LINUX_AUTORECONF = YES
+
+define UTIL_LINUX_TARGET_CLEANUP
+	$(TARGET_RM) $(addprefix $(TARGET_base_bindir)/,dmesg findmnt lsblk)
+	$(TARGET_RM) $(addprefix $(TARGET_base_sbindir)/,blkzone blockdev cfdisk chcpu ctrlaltdel fdisk findfs fsck fsfreeze fstrim mkfs mkswap sfdisk swaplabel swapoff swapon)
+	$(TARGET_RM) $(addprefix $(TARGET_bindir)/,choom col colcrt colrm column fincore flock getopt hexdump ipcmk irqtop isosize linux32 linux64 look lscpu lsipc lslocks lsns mcookie namei prlimit renice rev script scriptlive scriptreplay setarch setsid uname26 uuidgen uuidparse whereis)
+	$(TARGET_RM) $(addprefix $(TARGET_sbindir)/,ldattach readprofile rtcwake uuidd)
+	$(TARGET_RM) $(addprefix $(TARGET_datadir)/bash-completion/completions/,blkzone blockdev cfdisk chcpu col colcrt colrm column ctrlaltdel dmesg fdisk fincore findfs findmnt flock fsck fsfreeze fstrim getopt hexdump ipcmk irqtop isosize ldattach look lsblk lscpu lsipc lslocks lsns mcookie mkfs mkswap namei prlimit readprofile renice rev rtcwake script scriptlive scriptreplay setarch setsid sfdisk swaplabel swapoff swapon uuidd uuidgen uuidparse whereis)
+endef
+UTIL_LINUX_TARGET_FINALIZE_HOOKS += UTIL_LINUX_TARGET_CLEANUP
+
+#	--runstatedir=$(runstatedir) \
 
 UTIL_LINUX_CONF_OPTS = \
 	--includedir=$(includedir) \
 	--libdir=$(libdir) \
-	--runstatedir=$(runstatedir) \
 	--localedir=$(REMOVE_localedir) \
 	--docdir=$(REMOVE_docdir) \
 	--disable-gtk-doc \
 	\
-	--disable-all-programs \
+	--disable-agetty \
+	--disable-bfs \
+	--disable-cal \
+	--disable-chfn-chsh \
+	--disable-chmem \
+	--disable-cramfs \
+	--disable-eject \
+	--disable-fallocate \
+	--disable-fdformat \
+	--disable-fsck \
+	--disable-hardlink \
+	--disable-hwclock \
+	--disable-ipcrm \
+	--disable-ipcs \
+	--disable-kill \
+	--disable-last \
+	--disable-line \
+	--disable-logger \
+	--disable-login \
+	--disable-login-chown-vcs \
+	--disable-login-stat-mail \
+	--disable-losetup \
+	--disable-lsirq \
+	--disable-lslogins \
+	--disable-lsmem \
+	--disable-mesg \
+	--disable-minix \
+	--disable-more \
+	--disable-mount \
+	--disable-mountpoint \
+	--disable-newgrp \
+	--disable-nls \
+	--disable-nologin \
+	--disable-nsenter \
+	--disable-partx \
+	--disable-pg \
+	--disable-pg-bell \
+	--disable-pivot_root \
+	--disable-pylibmount \
+	--disable-raw \
+	--disable-rename \
+	--disable-rfkill \
+	--disable-runuser \
+	--disable-schedutils \
+	--disable-setpriv \
+	--disable-setterm \
+	--disable-su \
+	--disable-sulogin \
+	--disable-switch_root \
+	--disable-tunelp \
+	--disable-ul \
+	--disable-unshare \
+	--disable-use-tty-group \
+	--disable-utmpdump \
+	--disable-vipw \
+	--disable-wall \
+	--disable-wdctl \
+	--disable-wipefs \
+	--disable-write \
+	--disable-zramctl \
+	\
+	--disable-makeinstall-chown \
+	--disable-makeinstall-setuid \
 	\
 	--enable-libfdisk \
 	--enable-libsmartcols \
 	--enable-libuuid \
 	--enable-libblkid \
 	--enable-libmount \
-	\
-	--disable-makeinstall-chown \
-	--disable-makeinstall-setuid \
-	--disable-makeinstall-chown \
 	\
 	--without-audit \
 	--without-cap-ng \
