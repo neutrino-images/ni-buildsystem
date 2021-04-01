@@ -47,10 +47,6 @@ endef
 
 ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd2 hd5x hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo))
 
-  define BUSYBOX_SET_BLKDISCARD
-	$(call KCONFIG_ENABLE_OPT,CONFIG_BLKDISCARD,$(BUSYBOX_BUILD_CONFIG))
-  endef
-
   define BUSYBOX_SET_IPV6
 	$(call KCONFIG_ENABLE_OPT,CONFIG_FEATURE_IPV6,$(BUSYBOX_BUILD_CONFIG))
 	$(call KCONFIG_ENABLE_OPT,CONFIG_FEATURE_IFUPDOWN_IPV6,$(BUSYBOX_BUILD_CONFIG))
@@ -99,7 +95,6 @@ ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd2 hd5x hd6x vusolo4k vuduo4k vuduo4ks
 endif
 
 define BUSYBOX_MODIFY_CONFIG
-	$(BUSYBOX_SET_BLKDISCARD)
 	$(BUSYBOX_SET_IPV6)
 	$(BUSYBOX_SET_SWAP)
 	$(BUSYBOX_SET_HEXDUMP)
