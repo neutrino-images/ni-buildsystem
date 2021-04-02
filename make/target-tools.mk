@@ -212,6 +212,7 @@ E2FSPROGS_SITE = https://sourceforge.net/projects/e2fsprogs/files/e2fsprogs/v$(E
 $(DL_DIR)/$(E2FSPROGS_SOURCE):
 	$(download) $(E2FSPROGS_SITE)/$(E2FSPROGS_SOURCE)
 
+# Use libblkid and libuuid from util-linux
 E2FSPROGS_DEPENDENCIES = util-linux
 
 E2FSPROGS_AUTORECONF = YES
@@ -225,7 +226,6 @@ E2FSPROGS_CONF_OPTS = \
 	--includedir=$(includedir) \
 	--datarootdir=$(REMOVE_datarootdir) \
 	--disable-backtrace \
-	--disable-blkid-debug \
 	--disable-bmap-stats \
 	--disable-debugfs \
 	--disable-defrag \
