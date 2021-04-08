@@ -95,6 +95,7 @@ NEUTRINO_CONF_OPTS = \
 	--host=$(TARGET) \
 	--target=$(TARGET) \
 	--prefix=$(prefix) \
+	$(if $(findstring 1,$(KBUILD_VERBOSE)),--disable-silent-rules,--enable-silent-rules) \
 	--enable-maintainer-mode \
 	\
 	--enable-freesatepg \
@@ -209,6 +210,7 @@ LIBSTB_HAL_CONF_OPTS = \
 	--host=$(TARGET) \
 	--target=$(TARGET) \
 	--prefix=$(prefix) \
+	$(if $(findstring 1,$(KBUILD_VERBOSE)),--disable-silent-rules,--enable-silent-rules) \
 	--enable-maintainer-mode \
 	--enable-shared=no \
 	\

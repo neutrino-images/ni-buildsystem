@@ -47,6 +47,7 @@ NEUTRINO_PLUGINS_CONF_OPTS = \
 	--target=$(TARGET) \
 	--prefix=$(prefix) \
 	--sysconfdir=$(sysconfdir) \
+	$(if $(findstring 1,$(KBUILD_VERBOSE)),--disable-silent-rules,--enable-silent-rules) \
 	--enable-maintainer-mode \
 	\
 	--with-neutrino-source=$(SOURCE_DIR)/$(NI_NEUTRINO) \
