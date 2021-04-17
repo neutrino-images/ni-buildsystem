@@ -41,6 +41,7 @@ for i in $BLOCKS; do
 				SUBDIRBOOT=1
 				break
 			fi
+			break
 		fi
 	fi
 done
@@ -68,6 +69,7 @@ case "$ACTION" in
 		fi
 
 		if [ "$PARTNAME" == "swap" ]; then
+			LOGINFO "[$ACTION] /dev/$MDEV is a swap partition"
 			mkswap /dev/$MDEV
 			swapon /dev/$MDEV
 			exit 0
