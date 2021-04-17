@@ -10,6 +10,8 @@
 
 if [ ! -f "/.resize-linuxrootfs" ] && [ -e "/dev/block/by-name/linuxrootfs" ]
   then
+    echo "Fix GPT, Do not unplug power!..."
+    parted /dev/mmcblk0 print ok fix
     echo "Resizing linuxrootfs partition, Do not unplug power!..."
     resize2fs /dev/block/by-name/linuxrootfs
     touch "/.resize-linuxrootfs"
