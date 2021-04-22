@@ -181,8 +181,11 @@ NCURSES_CONF_OPTS = \
 	--with-shared \
 	--with-fallbacks='linux vt100 xterm' \
 	--disable-big-core \
+	--disable-db-install \
+	--with-progs \
+	--without-termlib \
+	--without-ticlib \
 	--without-manpages \
-	--without-progs \
 	--without-tests \
 	--without-debug \
 	--without-ada \
@@ -195,8 +198,9 @@ ncurses: $(DL_DIR)/$(NCURSES_SOURCE) | $(TARGET_DIR)
 	$(call APPLY_PATCHES,$(PKG_PATCHES_DIR))
 	$(CHDIR)/$(PKG_DIR); \
 		$(CONFIGURE); \
-		$(MAKE) libs; \
-		$(MAKE) install.libs DESTDIR=$(TARGET_DIR)
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(TARGET_RM) $(addprefix $(TARGET_bindir)/,captoinfo clear infocmp infotocap reset tabs tic toe)
 	$(TARGET_RM) $(addprefix $(TARGET_libdir)/,libform* libmenu* libpanel*)
 	$(TARGET_RM) $(addprefix $(TARGET_libdir)/pkgconfig/,form.pc menu.pc panel.pc)
 	$(REWRITE_CONFIG_SCRIPTS)
