@@ -8,11 +8,11 @@ NEUTRINO_INST_DIR ?= $(TARGET_DIR)
 NEUTRINO_OBJ       = $(NI_NEUTRINO)-obj
 NEUTRINO_BUILD_DIR = $(BUILD_DIR)/$(NEUTRINO_OBJ)
 
-ifeq ($(BOXTYPE),coolstream)
-  NEUTRINO_BRANCH = ni/$(BOXTYPE)
-else
+#ifeq ($(BOXTYPE),coolstream)
+#  NEUTRINO_BRANCH = ni/$(BOXTYPE)
+#else
   NEUTRINO_BRANCH ?= master
-endif
+#endif
 
 LIBSTB_HAL_OBJ       = $(NI_LIBSTB_HAL)-obj
 LIBSTB_HAL_BUILD_DIR = $(BUILD_DIR)/$(LIBSTB_HAL_OBJ)
