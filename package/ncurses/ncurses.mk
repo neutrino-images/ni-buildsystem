@@ -19,6 +19,7 @@ NCURSES_CONF_OPTS = \
 	--with-fallbacks='linux vt100 xterm' \
 	--disable-big-core \
 	--disable-db-install \
+	--disable-stripping \
 	--with-progs \
 	--without-termlib \
 	--without-ticlib \
