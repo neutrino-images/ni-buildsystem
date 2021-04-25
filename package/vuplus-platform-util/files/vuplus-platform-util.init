@@ -35,6 +35,10 @@ case "$1" in
 			/usr/bin/initfb $(sed -n 's/osd_resolution=//p' /var/tuxbox/config/neutrino.conf)
 		fi
 
+		if [ ! -e /dev/ciplus_ca0 ]; then
+			ln -s /dev/dvb/adapter0/ca3 /dev/ciplus_ca0
+		fi
+
 		echo "."
 		;;
 	stop)
