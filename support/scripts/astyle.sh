@@ -21,17 +21,22 @@ for file in $@; do
 		--style=allman \
 		--formatted -v \
 		\
-		--indent=force-tab=8 \
+		--convert-tabs \
+		--indent=tab \
 		--indent-classes \
 		--indent-preproc-define \
 		--indent-switches \
+		--indent-after-parens \
 		--max-instatement-indent=80 \
 		--lineend=linux \
 		\
 		--unpad-paren \
 		\
 		--pad-oper \
+		--pad-comma \
 		--pad-header \
+		--pad-param-type \
+		--attach-return-type-decl \
 		\
 		--align-pointer=name \
 		\
