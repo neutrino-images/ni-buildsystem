@@ -41,7 +41,7 @@ if ($revision == 1) // libstb-hal
 		$boxseries = "hd5x";
 		$boxmodel = "bre2ze4k";
 	}
-	elseif ($boxname == "zgemma h7c/s")
+	elseif ($boxname == "zgemma h7")
 	{
 		$boxtype_sc = "arm";
 		$boxseries = "hd5x";

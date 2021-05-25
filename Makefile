@@ -86,7 +86,7 @@ config.local: $(eval BOXMODEL=hd51)
 	@echo "  12)  AX/Mutant HD60"
 	@echo "  13)  AX/Mutant HD61"
 	@echo "  21)  WWIO BRE2ZE4K"
-	@echo "  31)  Air Digital Zgemma H7S/C"
+	@echo "  31)  Air Digital Zgemma H7"
 	@echo "  41)  VU+ Solo 4k"
 	@echo "  42)  VU+ Duo 4k"
 	@echo "  43)  VU+ Duo 4k SE"

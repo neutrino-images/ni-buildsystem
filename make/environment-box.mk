@@ -226,7 +226,7 @@ else ifeq ($(BOXMODEL),hd51)
 else ifeq ($(BOXMODEL),bre2ze4k)
   BOXNAME = "WWIO BRE2ZE4K"
 else ifeq ($(BOXMODEL),h7)
-  BOXNAME = "Air Digital Zgemma H7S/C"
+  BOXNAME = "Air Digital Zgemma H7"
 else ifeq ($(BOXMODEL),hd60)
   BOXNAME = "AX/Mut@nt HD60"
 else ifeq ($(BOXMODEL),hd61)
