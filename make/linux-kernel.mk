@@ -20,7 +20,7 @@ GFUTURES_4_10_PATCH = \
 	gfutures/4_10_reserve_dvb_adapter_0.patch \
 	gfutures/4_10_t230c2.patch
 
-# arm hd60/hd61
+# arm hd60/hd61/multiboxse
 GFUTURES_4_4_PATCH = \
 	gfutures/4_4_0001-remote.patch \
 	gfutures/4_4_0002-log2-give-up-on-gcc-constant-optimizations.patch \
@@ -154,6 +154,9 @@ HD60_PATCH = \
 HD61_PATCH = \
 	$(GFUTURES_4_4_PATCH)
 
+MULTIBOXSE_PATCH = \
+	$(GFUTURES_4_4_PATCH)
+
 VUSOLO4K_PATCH = \
 	$(VUPLUS_3_14_PATCH) \
 	vuplus/3_14_linux_rpmb_not_alloc.patch \
@@ -210,7 +213,7 @@ kernel.do_prepare: | $(DEPS_DIR) $(BUILD_DIR)
 	$(MKDIR)/$(KERNEL_MODULES)
 	$(INSTALL_DATA) $(KERNEL_CONFIG) $(KERNEL_OBJ_DIR)/.config
 	$(MAKE) -C $(BUILD_DIR)/$(KERNEL_DIR) $(KERNEL_MAKE_VARS) silentoldconfig
-ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 hd60 hd61))
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 hd60 hd61 multiboxse))
 	$(INSTALL_DATA) $(PKG_FILES_DIR)/initramfs-subdirboot.cpio.gz $(KERNEL_OBJ_DIR)
 endif
 	$(TOUCH)

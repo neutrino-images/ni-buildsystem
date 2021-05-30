@@ -65,6 +65,19 @@ else ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd61))
 
   BOOT_PARTITION = 4
 
+else ifeq ($(BOXMODEL),$(filter $(BOXMODEL),multiboxse))
+  KERNEL_VERSION = 4.4.35
+  KERNEL_DATE = 20200219
+  KERNEL_DIR = linux-$(KERNEL_VERSION)
+  KERNEL_SOURCE = linux-$(KERNEL_VERSION)-$(KERNEL_DATE)-arm.tar.gz
+  KERNEL_SITE = http://source.mynonpublic.com/maxytec
+
+  KERNEL_BRANCH = $(empty)
+  KERNEL_DTB = $(KERNEL_OBJ_DIR)/arch/$(TARGET_ARCH)/boot/dts/hi3798mv200.dtb
+  KERNEL_CONFIG = $(PKG_FILES_DIR)/kernel-hd6x.defconfig
+
+  BOOT_PARTITION = 4
+
 else ifeq ($(BOXMODEL),vusolo4k)
   KERNEL_VERSION = 3.14.28-1.8
   KERNEL_DIR = linux
@@ -230,7 +243,7 @@ KERNEL_MAKE_VARS += \
 
 ifeq ($(BOXMODEL),$(filter $(BOXMODEL),vuduo))
   KERNEL_IMAGE = vmlinux
-else ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd60 hd61))
+else ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd60 hd61 multiboxse))
   KERNEL_IMAGE = uImage
 else
   KERNEL_IMAGE = zImage
@@ -239,7 +252,7 @@ endif
 KERNEL_MAKE_TARGETS = $(KERNEL_IMAGE)
 
 # build also the kernel-dtb for arm-hd5x and arm-hd6x
-ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 hd60 hd61))
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 hd60 hd61 multiboxse))
   KERNEL_MAKE_TARGETS += $(notdir $(KERNEL_DTB))
 endif
 

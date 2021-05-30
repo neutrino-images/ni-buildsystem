@@ -8,9 +8,9 @@
 blobs: $(BLOBS_DEPENDENCIES)
 	$(MAKE) firmware
 	$(MAKE) $(BOXMODEL)-drivers
-ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 hd60 hd61 vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 hd60 hd61 multiboxse vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
 	$(MAKE) $(BOXMODEL)-libgles
-  ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd60 hd61))
+  ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd60 hd61 multiboxse))
 	$(MAKE) $(BOXMODEL)-libs
   endif
 endif
@@ -66,6 +66,10 @@ HD60_DRIVERS_SITE = http://source.mynonpublic.com/gfutures
 HD61_DRIVERS_VERSION = 20200731
 HD61_DRIVERS_SOURCE = hd61-drivers-$(KERNEL_VERSION)-$(HD61_DRIVERS_VERSION).zip
 HD61_DRIVERS_SITE = http://source.mynonpublic.com/gfutures
+
+MULTIBOXSE_DRIVERS_VERSION = 20201204
+MULTIBOXSE_DRIVERS_SOURCE = multiboxse-drivers-$(KERNEL_VERSION)-$(MULTIBOXSE_DRIVERS_VERSION).zip
+MULTIBOXSE_DRIVERS_SITE = http://source.mynonpublic.com/maxytec
 
 ifeq ($(VUPLUS_DRIVERS_LATEST),yes)
 VUSOLO4K_DRIVERS_VERSION = 20190424
@@ -170,7 +174,8 @@ h7-drivers: $(DL_DIR)/$(BOXMODEL_DRIVERS_SOURCE) | $(TARGET_DIR)
 	$(TOUCH)
 
 hd60-drivers \
-hd61-drivers: $(DL_DIR)/$(BOXMODEL_DRIVERS_SOURCE) | $(TARGET_DIR)
+hd61-drivers \
+multiboxse-drivers: $(DL_DIR)/$(BOXMODEL_DRIVERS_SOURCE) | $(TARGET_DIR)
 	$(INSTALL) -d $(TARGET_modulesdir)/extra
 	unzip -o $(DL_DIR)/$(BOXMODEL_DRIVERS_SOURCE) -d $(TARGET_modulesdir)/extra
 	$(TARGET_RM) $(TARGET_modulesdir)/extra/hi_play.ko
@@ -218,6 +223,11 @@ HD61_LIBGLES_VERSION = 20181201
 HD61_LIBGLES_DIR = $(empty)
 HD61_LIBGLES_SOURCE = hd61-mali-$(HD61_LIBGLES_VERSION).zip
 HD61_LIBGLES_SITE = http://downloads.mutant-digital.net/hd61
+
+MULTIBOXSE_LIBGLES_VERSION = 20190104
+MULTIBOXSE_LIBGLES_DIR = $(empty)
+MULTIBOXSE_LIBGLES_SOURCE = maxytec-mali-3798mv200-$(MULTIBOXSE_LIBGLES_VERSION).zip
+MULTIBOXSE_LIBGLES_SITE = http://source.mynonpublic.com/maxytec
 
 HD6X_LIBGLES_HEADERS_SOURCE = libgles-mali-utgard-headers.zip
 HD6X_LIBGLES_HEADERS_SITE = https://github.com/HD-Digital/meta-gfutures/raw/release-6.2/recipes-bsp/mali/files
@@ -285,7 +295,8 @@ hd6x-libgles-headers: $(DL_DIR)/$(HD6X_LIBGLES_HEADERS_SOURCE) | $(TARGET_DIR)
 	$(TOUCH)
 
 hd60-libgles \
-hd61-libgles: $(DL_DIR)/$(BOXMODEL_LIBGLES_SOURCE) | $(TARGET_DIR)
+hd61-libgles \
+multiboxse-libgles: $(DL_DIR)/$(BOXMODEL_LIBGLES_SOURCE) | $(TARGET_DIR)
 	unzip -o $(DL_DIR)/$(BOXMODEL_LIBGLES_SOURCE) -d $(TARGET_libdir)
 	$(CD) $(TARGET_libdir); \
 		ln -sf libMali.so libmali.so; \
@@ -324,6 +335,11 @@ HD61_LIBS_DIR = hiplay
 HD61_LIBS_SOURCE = gfutures-libs-3798mv200-$(HD61_LIBS_VERSION).zip
 HD61_LIBS_SITE = http://source.mynonpublic.com/gfutures
 
+MULTIBOXSE_LIBS_VERSION = 20200622
+MULTIBOXSE_LIBS_DIR = hiplay
+MULTIBOXSE_LIBS_SOURCE = maxytec-libs-3798mv200-$(MULTIBOXSE_LIBS_VERSION).zip
+MULTIBOXSE_LIBS_SITE = http://source.mynonpublic.com/maxytec
+
 # -----------------------------------------------------------------------------
 
 BOXMODEL_LIBS_VERSION = $($(call UPPERCASE,$(BOXMODEL))_LIBS_VERSION)
@@ -337,7 +353,8 @@ $(DL_DIR)/$(BOXMODEL_LIBS_SOURCE):
 endif
 
 hd60-libs \
-hd61-libs: $(DL_DIR)/$(BOXMODEL_LIBS_SOURCE) | $(TARGET_DIR)
+hd61-libs \
+multiboxse-libs: $(DL_DIR)/$(BOXMODEL_LIBS_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(BOXMODEL_LIBS_DIR)
 	unzip -o $(DL_DIR)/$(BOXMODEL_LIBS_SOURCE) -d $(BUILD_DIR)/$(BOXMODEL_LIBS_DIR)
 	$(INSTALL) -d $(TARGET_libdir)/hisilicon

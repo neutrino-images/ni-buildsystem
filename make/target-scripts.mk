@@ -59,12 +59,12 @@ $(TARGET_sysconfdir)/init.d/hostname:
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/hostname.init $(@)
 
 $(TARGET_sysconfdir)/init.d/partitions-by-name:
-ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 hd60 hd61))
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 hd60 hd61 multiboxse))
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/partitions-by-name.init $(@)
 endif
 
 $(TARGET_sysconfdir)/init.d/proc:
-ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 hd60 hd61 vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo))
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 hd60 hd61 multiboxse vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo))
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/proc.init $(@)
 	$(UPDATE-RC.D) $(@F) start 90 S .
 endif
@@ -78,7 +78,7 @@ ifeq ($(PERSISTENT_VAR_PARTITION),yes)
 endif
 
 $(TARGET_sysconfdir)/init.d/resizerootfs:
-ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 hd60 hd61))
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 hd60 hd61 multiboxse))
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/resizerootfs.init $(@)
 endif
 
@@ -86,19 +86,19 @@ $(TARGET_sysconfdir)/init.d/sys_update.sh:
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/sys_update.sh $(@)
 
 $(TARGET_sysconfdir)/init.d/sendsigs:
-ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd60 hd61))
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd60 hd61 multiboxse))
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/sendsigs.init $(@)
 	$(UPDATE-RC.D) $(@F) start 85 0 .
 endif
 
 $(TARGET_sysconfdir)/init.d/umountfs:
-ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd60 hd61))
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd60 hd61 multiboxse))
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/umountfs.init $(@)
 	$(UPDATE-RC.D) $(@F) start 86 0 .
 endif
 
 $(TARGET_sysconfdir)/init.d/suspend:
-ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd60 hd61))
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd60 hd61 multiboxse))
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/suspend.init $(@)
 	$(UPDATE-RC.D) $(@F) start 89 0 .
 endif

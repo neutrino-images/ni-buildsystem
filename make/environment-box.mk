@@ -15,13 +15,21 @@
 
 # - Armbox --------------------------------------------------------------------
 
-# BOXTYPE             armbox ---- + -- + ------ + ----- + ------- + -------- + ------ + ----- +
-#                    /            |     \        \       \         \          \        \       \
-# BOXSERIES         hd5x        hd6x    vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse
-#                    |            |        |        |          |      |          |         |      |
-# BOXFAMILY       bcm7251s     hi3798m  bcm7376  bcm7278       bcm7444s       bcm72604     bcm7252s
-#                /   |    \     |   |      |        |          |      |          |         |      |
-# BOXMODEL   hd51 bre2ze4k h7 hd60 hd61 vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse
+# BOXTYPE             armbox ----- +
+#                    /             |
+# BOXSERIES         hd5x         hd6x
+#                    |             |
+# BOXFAMILY       bcm7251s      hi3798m
+#                /   |    \    /   |   \
+# BOXMODEL   hd51 bre2ze4k h7 hd60 hd61 multiboxse
+
+# BOXTYPE         armbox + ------ + ---- + -------- + ------- + ---- +
+#                /       |         \      \          \         \      \
+# BOXSERIES  vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse
+#               |        |          |      |          |         |      |
+# BOXFAMILY  bcm7376  bcm7278       bcm7444s       bcm72604     bcm7252s
+#               |        |          |      |          |         |      |
+# BOXMODEL   vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse
 
 # - Mipsbox --------------------------------------------------------------------
 
@@ -157,7 +165,7 @@ else ifneq ($(BOXMODEL),)
     BOXTYPE = armbox
     BOXSERIES = hd5x
     BOXFAMILY = bcm7251s
-  else ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd60 hd61))
+  else ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd60 hd61 multiboxse))
     BOXTYPE = armbox
     BOXSERIES = hd6x
     BOXFAMILY = hi3798m
@@ -231,6 +239,8 @@ else ifeq ($(BOXMODEL),hd60)
   BOXNAME = "AX/Mut@nt HD60"
 else ifeq ($(BOXMODEL),hd61)
   BOXNAME = "AX/Mut@nt HD61"
+else ifeq ($(BOXMODEL),multiboxse)
+  BOXNAME = "Maxytec Multibox SE 4K"
 else ifeq ($(BOXMODEL),vusolo4k)
   BOXNAME = "VU+ Solo 4K"
 else ifeq ($(BOXMODEL),vuduo4k)
@@ -251,7 +261,7 @@ endif
 
 BOXMODELS  = nevis apollo shiner kronos kronos_v2
 BOXMODELS += hd51 bre2ze4k h7
-BOXMODELS += hd60 hd61
+BOXMODELS += hd60 hd61 multiboxse
 BOXMODELS += vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse
 BOXMODELS += vuduo
 

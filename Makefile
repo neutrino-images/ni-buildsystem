@@ -85,6 +85,7 @@ config.local: $(eval BOXMODEL=hd51)
 	@echo "  11)  AX/Mutant HD51"
 	@echo "  12)  AX/Mutant HD60"
 	@echo "  13)  AX/Mutant HD61"
+	@echo "  14)  Maxytec Multibox SE 4K"
 	@echo "  21)  WWIO BRE2ZE4K"
 	@echo "  31)  Air Digital Zgemma H7"
 	@echo "  41)  VU+ Solo 4k"
@@ -107,6 +108,7 @@ config.local: $(eval BOXMODEL=hd51)
 		11)	boxmodel=hd51;; \
 		12)	boxmodel=hd60;; \
 		13)	boxmodel=hd61;; \
+		13)	boxmodel=multiboxse;; \
 		21)	boxmodel=bre2ze4k;; \
 		31)	boxmodel=h7;; \
 		41)	boxmodel=vusolo4k;; \

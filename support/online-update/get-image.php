@@ -13,7 +13,7 @@ $debug = false;
 $mmc = false;
 $recovery = false;
 
-if ($boxmodel == "hd60-mmc" || $boxmodel == "hd61-mmc")
+if ($boxmodel == "hd60-mmc" || $boxmodel == "hd61-mmc" || $boxmodel == "multiboxse-mmc")
 {
 	$boxtype = "armbox";
 
@@ -21,6 +21,8 @@ if ($boxmodel == "hd60-mmc" || $boxmodel == "hd61-mmc")
 		$boxmodel = "hd60";
 	elseif ($boxmodel == "hd61-mmc")
 		$boxmodel = "hd61";
+	elseif ($boxmodel == "multiboxse-mmc")
+		$boxmodel = "multiboxse";
 
 	$mmc = true;
 }
@@ -72,7 +74,7 @@ elseif ($boxtype == "armbox" || $boxtype == "arm")
 	$boxtype_sc = "arm";
 	if ($mmc || $recovery)
 	{
-		if ($boxmodel == "hd60" || $boxmodel == "hd61")
+		if ($boxmodel == "hd60" || $boxmodel == "hd61" || $boxmodel == "multiboxse")
 		{
 			if ($mmc)
 				$add_str = "_single_mmc";
