@@ -6,6 +6,10 @@
 . /etc/init.d/globals
 
 configfile() {
+	if [ ! -e /tmp/lcd/layout ]; then
+		mkdir -p /tmp/lcd
+		echo Pearl_standard > /tmp/lcd/layout
+	fi
 	read layout < /tmp/lcd/layout
 	test ${layout##*_} = user && CONF_DIR=/var/etc || CONF_DIR=/etc
 
