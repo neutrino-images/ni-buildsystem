@@ -71,6 +71,14 @@ load_module()
 	fi
 }
 
+display_msg()
+{
+	msg="$*"
+	if [ -e /dev/dbox/oled0 ]; then
+		echo "${msg}" > /dev/dbox/oled0
+	fi
+}
+
 get_setting()
 {
 	test -e $NEUTRINO_CONF && grep "^${1}=" $NEUTRINO_CONF | cut -d'=' -f2

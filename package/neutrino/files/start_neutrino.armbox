@@ -1,6 +1,7 @@
 #!/bin/sh
 
 . /etc/init.d/globals
+. /etc/init.d/functions
 
 # Neutrino's exit codes
 ERROR=-1
@@ -20,12 +21,12 @@ do_cleanup() {
 }
 
 do_shutdown() {
-	echo "Shutdown ..." > /dev/dbox/oled0
+	display_msg "Shutdown ..."
 	poweroff
 }
 
 do_reboot() {
-	echo "Reboot ..." > /dev/dbox/oled0
+	display_msg "Reboot ..."
 	reboot
 }
 
@@ -52,7 +53,7 @@ while true; do
 		break
 	fi
 
-	echo "Neutrino: $RET" > /dev/dbox/oled0
+	display_msg "Neutrino: $RET"
 
 	# report errors on external display
 	if [ -e /tmp/.lcd-* ]; then
