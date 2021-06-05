@@ -71,6 +71,20 @@ load_module()
 	fi
 }
 
+get_boxmodel()
+{
+	if [ -e /proc/stb/info/vumodel ]; then
+		model=$(cat /proc/stb/info/vumodel)
+	elif [ -e /proc/stb/info/model ]; then
+		model=$(cat /proc/stb/info/model)
+	elif [ -e /etc/model ]; then
+		model=$(cat /etc/model)
+	else
+		model="unknown"
+	fi
+	printf ${model}
+}
+
 display_msg()
 {
 	msg="$*"

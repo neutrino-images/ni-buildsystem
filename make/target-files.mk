@@ -10,6 +10,7 @@ files-etc: \
 	$(TARGET_sysconfdir)/group \
 	$(TARGET_sysconfdir)/hosts \
 	$(TARGET_sysconfdir)/issue.net \
+	$(TARGET_sysconfdir)/model \
 	$(TARGET_sysconfdir)/nsswitch.conf \
 	$(TARGET_sysconfdir)/passwd \
 	$(TARGET_sysconfdir)/profile \
@@ -39,6 +40,9 @@ $(TARGET_sysconfdir)/hosts:
 
 $(TARGET_sysconfdir)/issue.net:
 	$(INSTALL_DATA) -D $(TARGET_FILES)/files-etc/issue.net $(@)
+
+$(TARGET_sysconfdir)/model:
+	echo $(BOXMODEL) > $(@)
 
 $(TARGET_sysconfdir)/nsswitch.conf:
 	$(INSTALL_DATA) -D $(TARGET_FILES)/files-etc/nsswitch.conf $(@)
