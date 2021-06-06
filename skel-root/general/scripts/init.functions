@@ -88,9 +88,19 @@ get_boxmodel()
 display_msg()
 {
 	msg="$*"
-	if [ -e /dev/dbox/oled0 ]; then
-		echo "${msg}" > /dev/dbox/oled0
-	fi
+	case "$(get_boxmodel)" in
+		nevis|apollo|shiner|kronos|kronos_v2)
+			dt -t "${msg}"
+		;;
+		hd51|bre2ze4k|h7|hd60|hd61|multiboxse)
+			if [ -e /dev/dbox/oled0 ]; then
+				echo "${msg}" > /dev/dbox/oled0
+			fi
+		;;
+		solo4k|duo4k|duo4kse|ultimo4k|zero4k|uno4k|uno4kse)
+			oled -tc "${msg}"
+		;;
+	esac
 }
 
 get_setting()

@@ -1,6 +1,7 @@
 #!/bin/sh
 
 . /etc/init.d/globals
+. /etc/init.d/functions
 
 # Neutrino's exit codes
 ERROR=-1
@@ -9,7 +10,14 @@ SHUTDOWN=1
 REBOOT=2
 
 # if neutrino crashes, just restart it or reboot the box?
-REBOOT_ON_ERROR=true
+case "$(get_boxmodel)" in
+	nevis|apollo|shiner|kronos|kronos_v2)
+		REBOOT_ON_ERROR=true
+	;;
+	*)
+		REBOOT_ON_ERROR=false
+	;;
+esac
 
 do_cleanup() {
 	# remove files created by neutrino
@@ -17,12 +25,12 @@ do_cleanup() {
 }
 
 do_shutdown() {
-	dt -t"SHUTDOWN"
+	display_msg "N: SHUTDOWN"
 	poweroff
 }
 
 do_reboot() {
-	dt -t"REBOOT"
+	display_msg "N: REBOOT"
 	reboot
 }
 
@@ -49,10 +57,10 @@ while true; do
 		break
 	fi
 
-	dt -t"NEUTRINO: $RET"
+	display_msg "NEUTRINO: $RET"
 
 	# report errors on external display
-	if [ -e /tmp/.lcd-* ]; then
+	if [ -e /tmp/.lcd-* -a -e /tmp/lcd ]; then
 		echo "0"		> /tmp/lcd/mode_logo
 		echo "Neutrino"		> /tmp/lcd/service
 		echo "Error: $RET"	> /tmp/lcd/event
@@ -64,5 +72,5 @@ while true; do
 		break
 	fi
 
-	LOGINFO "Restarting neutrino after exit code $RET"
+	LOGINFO "Restarting Neutrino after exit code $RET"
 done
