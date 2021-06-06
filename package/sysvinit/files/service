@@ -15,6 +15,12 @@ usage() {
 	exit 1
 }
 
+get_services() {
+	for i in /etc/init.d/[^SK]* /var/etc/init.d/[^SK]*; do
+		echo "${i##*/}"
+	done | sort -u | grep -v '^\(functions\|globals\|rc\|rcK\|rcS\|start_neutrino\|\[\^SK\]\*\)$'
+}
+
 test -z "$ACTION" && usage;
 
 for i in /etc/init.d/$SERVICE /var/etc/init.d/$SERVICE; do
@@ -26,9 +32,6 @@ for i in /etc/init.d/$SERVICE /var/etc/init.d/$SERVICE; do
 done
 
 echo "$SERVICE not found in /etc/init.d/ and /var/etc/init.d/"
-SERVICES=$(for i in /etc/init.d/[^SK]* /var/etc/init.d/[^SK]*; do
-		echo "${i##*/}";
-	done | sort -u | grep -v '^\(functions\|globals\|rc\|rcK\|rcS\|start_neutrino\|\[\^SK\]\*\)$')
 echo "available services:"
-echo $SERVICES | xargs -n 1 echo "	"
+echo $(get_services) | xargs -n 1 echo "	"
 exit 1
