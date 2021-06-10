@@ -21,8 +21,7 @@ for file in $@; do
 		--style=allman \
 		--formatted -v \
 		\
-		--convert-tabs \
-		--indent=tab \
+		--indent=force-tab=8 \
 		--indent-classes \
 		--indent-preproc-define \
 		--indent-switches \
