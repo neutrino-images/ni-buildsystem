@@ -92,8 +92,8 @@ case "$ACTION" in
 			LOGWARN "        $OUT1"
 			rmdir $MOUNTPOINT
 		fi
-		if [ -x /bin/mdev_helper ]; then
-			/bin/mdev_helper
+		if which mdev_helper > /dev/null; then
+			mdev_helper
 		fi
 		;;
 	remove)
@@ -110,8 +110,8 @@ case "$ACTION" in
 		else
 			LOGWARN "umount $MOUNTBASE/$MDEV failed with $RET"
 		fi
-		if [ -x /bin/mdev_helper ]; then
-			/bin/mdev_helper
+		if which mdev_helper > /dev/null; then
+			mdev_helper
 		fi
 		;;
 esac
