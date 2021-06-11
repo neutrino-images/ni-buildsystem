@@ -36,11 +36,10 @@ doStop() {
 		for CHILD in $CHILDS; do
 			kill -KILL $CHILD
 		done
-		sleep 5
 
 		# terminate main process
-		kill -TERM $PID > /dev/null 2>&1 &
-		sleep 5
+		kill -TERM $PID
+		sleep 2
 	fi
 }
 
