@@ -1,6 +1,6 @@
 #!/bin/sh
 
-[ -x /usr/bin/lcd4linux ]		|| exit 1
+[ -x /usr/bin/lcd4linux ]	|| exit 1
 [ -e /tmp/.lcd-* ]		|| exit 1
 
 . /etc/init.d/globals
@@ -44,7 +44,7 @@ doStop() {
 }
 
 doOff() {
-	echo "LCD::backlight(0)" | /bin/lcd4linux -i > /dev/null 2>&1
+	echo "LCD::backlight(0)" | /usr/bin/lcd4linux -i > /dev/null 2>&1
 }
 
 case "$1" in
