@@ -11,23 +11,33 @@ if [ -z "$1" -o "$1" == "--help" ]; then
 	exit 0
 fi
 
+if test -d root; then
+	exist_root=true
+else
+	exist_root=false
+fi
+
 logfile=$(mktemp makelog.XXXXXX)
 trap "rm -f $logfile" EXIT
 
 params="$*"
 
-pushd root
-test -d .git || git init
-git add .
-git commit -a -m"- before $params"
-popd
+if $exist_root; then
+	pushd root
+	test -d .git || git init
+	git add .
+	git commit -a -m"- before $params"
+	popd
+fi
 
 time make $params 2>&1 | tee $logfile
 
-pushd root
-git add .
-git commit -a -m"- after $params"
-popd
+if $exist_root; then
+	pushd root
+	git add .
+	git commit -a -m"- after $params"
+	popd
+fi
 
 mkdir -p build_tmp
 echo -e "\nmake $*:\n" >> build_tmp/make_${params// /_}.log
