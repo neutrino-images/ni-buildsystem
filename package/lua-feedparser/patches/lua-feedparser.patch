@@ -2,10 +2,10 @@ commit 782e2925d376d4d78382faa4ef477c72de3d8848
 Author: Jacek Jendrzej <overx300@gmail.com>
 Date:   Fri Jun 14 08:45:41 2019 +0200
 
-    - fix missing pictures; fix empty titles
+    - fix missing pictures; fix empty titles; add 'media:group' tag
 
 diff --git a/feedparser.lua b/feedparser.lua
-index 2d66b8c..b3887ce 100644
+index 2d66b8c..0f55c22 100644
 --- a/feedparser.lua
 +++ b/feedparser.lua
 @@ -73,7 +73,17 @@ local function parse_entries(entries_el, format_str, base)
@@ -27,7 +27,34 @@ index 2d66b8c..b3887ce 100644
  				--TODO: content_detail
  			
  			--published
-@@ -317,7 +327,7 @@ local function parse_rss(root, base_uri)
+@@ -111,10 +121,23 @@ local function parse_entries(entries_el, format_str, base)
+ 				}
+ 				local author_url = (el:getChild('url') or blanky):getText()
+ 				if author_url and author_url ~= "" then entry.author_detail.href=resolve(author_url, rebase(el:getChild('url'), el_base)) end		
+-			
+-			elseif tag=='category' or tag=='dc:subject' then 
++			elseif format_str =='atom' and tag=='media:group' then
++				local el_thumb = el:getChild('media:thumbnail')
++				if el_thumb then
++					local img = el_thumb:getAttr('url')
++						tinsert(entry.enclosures, {
++							url=img,
++							length=0,
++							type="image/jpeg"
++						})
++				end
++				if not entry.summary then
++					entry.summary=el:getText()
++				end
++			elseif tag=='category' then
++				entry.category = (el:getChild('term') or el):getText()
++			elseif tag=='dc:subject' then
+ 				--todo
+-			
+ 			elseif tag=='source' then
+ 				--todo
+ 			end
+@@ -317,7 +340,7 @@ local function parse_rss(root, base_uri)
  		--image
  		elseif tag=='image' or tag=='rdf:image' then
  			feed.image={
