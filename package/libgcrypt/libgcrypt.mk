@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-LIBGCRYPT_VERSION = 1.8.5
+LIBGCRYPT_VERSION = 1.8.8
 LIBGCRYPT_DIR = libgcrypt-$(LIBGCRYPT_VERSION)
 LIBGCRYPT_SOURCE = libgcrypt-$(LIBGCRYPT_VERSION).tar.gz
 LIBGCRYPT_SITE = ftp://ftp.gnupg.org/gcrypt/libgcrypt
