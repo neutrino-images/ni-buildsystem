@@ -13,7 +13,7 @@ GITREV=$(shell git rev-list $(GITTAG)..HEAD --count)
 # *Must* be a one-digit number
 IMAGE_VERSION_MAJOR = 4
 # *Must* be a two-digit number
-IMAGE_VERSION_MINOR = 00
+IMAGE_VERSION_MINOR = 10
 IMAGE_VERSION_MICRO = $(GITREV)
 
 IMAGE_VERSION = $(IMAGE_VERSION_MAJOR).$(IMAGE_VERSION_MINOR).$(IMAGE_VERSION_MICRO)
