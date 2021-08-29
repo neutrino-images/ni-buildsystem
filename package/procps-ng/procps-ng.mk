@@ -26,6 +26,12 @@ PROCPS_NG_CONF_OPTS = \
 	--docdir=$(REMOVE_docdir) \
 	--without-systemd
 
+# Allows unicode characters to show in 'watch'
+ifeq ($(BS_PACKAGE_NCURSES_WCHAR),y)
+  PROCPS_NG_CONF_OPTS += \
+	--enable-watch8bit
+endif
+
 PROCPS_NG_BINARIES = ps top
 
 define PROCPS_NG_INSTALL_BINARIES

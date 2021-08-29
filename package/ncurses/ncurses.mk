@@ -9,7 +9,11 @@ NCURSES_DIR = ncurses-$(NCURSES_VERSION)
 NCURSES_SOURCE = ncurses-$(NCURSES_VERSION).tar.gz
 NCURSES_SITE = $(GNU_MIRROR)/ncurses
 
-NCURSES_CONFIG_SCRIPTS = ncurses6-config
+ifeq ($(BS_PACKAGE_NCURSES_WCHAR),y)
+NCURSES_LIB_SUFFIX = w
+endif
+
+NCURSES_CONFIG_SCRIPTS = ncurses$(NCURSES_LIB_SUFFIX)6-config
 
 NCURSES_CONF_OPTS = \
 	--enable-pc-files \
@@ -30,10 +34,43 @@ NCURSES_CONF_OPTS = \
 	--without-profile \
 	--without-cxx-binding
 
+ifeq ($(NCURSES_LIB_SUFFIX),w)
+
+NCURSES_CONF_OPTS += --enable-widec
+NCURSES_CONF_OPTS += --enable-ext-colors
+
+NCURSES_LIBS = ncurses menu panel form
+
+define NCURSES_LINK_LIBS_STATIC
+	$(foreach lib,$(NCURSES_LIBS:%=lib%), \
+		ln -sf $(lib)$(NCURSES_LIB_SUFFIX).a $(TARGET_libdir)/$(lib).a
+	)
+	ln -sf libncurses$(NCURSES_LIB_SUFFIX).a $(TARGET_libdir)/libcurses.a
+endef
+
+define NCURSES_LINK_LIBS_SHARED
+	$(foreach lib,$(NCURSES_LIBS:%=lib%), \
+		ln -sf $(lib)$(NCURSES_LIB_SUFFIX).so $(TARGET_libdir)/$(lib).so
+	)
+	ln -sf libncurses$(NCURSES_LIB_SUFFIX).so $(TARGET_libdir)/libcurses.so
+endef
+
+define NCURSES_LINK_PC
+	$(foreach pc,$(NCURSES_LIBS), \
+		ln -sf $(pc)$(NCURSES_LIB_SUFFIX).pc $(TARGET_libdir)/pkgconfig/$(pc).pc
+	)
+endef
+
+NCURSES_TARGET_FINALIZE_HOOKS += NCURSES_LINK_LIBS_STATIC
+NCURSES_TARGET_FINALIZE_HOOKS += NCURSES_LINK_LIBS_SHARED
+NCURSES_TARGET_FINALIZE_HOOKS += NCURSES_LINK_PC
+
+endif # NCURSES_LIB_SUFFIX
+
 define NCURSES_TARGET_CLEANUP
 	$(TARGET_RM) $(addprefix $(TARGET_bindir)/,captoinfo clear infocmp infotocap reset tabs tic toe)
 	$(TARGET_RM) $(addprefix $(TARGET_libdir)/,libform* libmenu* libpanel*)
-	$(TARGET_RM) $(addprefix $(TARGET_libdir)/pkgconfig/,form.pc menu.pc panel.pc)
+	$(TARGET_RM) $(addprefix $(TARGET_libdir)/pkgconfig/,form*.pc menu*.pc panel*.pc)
 endef
 NCURSES_TARGET_FINALIZE_HOOKS += NCURSES_TARGET_CLEANUP
 

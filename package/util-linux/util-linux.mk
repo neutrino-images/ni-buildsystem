@@ -104,7 +104,6 @@ UTIL_LINUX_CONF_OPTS = \
 	--without-audit \
 	--without-cap-ng \
 	--without-btrfs \
-	--without-ncursesw \
 	--without-python \
 	--without-readline \
 	--without-slang \
@@ -115,6 +114,20 @@ UTIL_LINUX_CONF_OPTS = \
 	--without-tinfo \
 	--without-udev \
 	--without-utempter
+
+ifeq ($(BS_PACKAGE_NCURSES_WCHAR),y)
+  UTIL_LINUX_CONF_ENV += \
+	NCURSESW6_CONFIG=$(HOST_DIR)/bin/$(NCURSES_CONFIG_SCRIPTS)
+  UTIL_LINUX_CONF_OPTS += \
+	--with-ncursesw
+else
+  UTIL_LINUX_CONF_ENV += \
+	NCURSES6_CONFIG=$(HOST_DIR)/bin/$(NCURSES_CONFIG_SCRIPTS)
+  UTIL_LINUX_CONF_OPTS += \
+	--without-ncursesw \
+	--with-ncurses \
+	--disable-widechar
+endif
 
 util-linux: | $(TARGET_DIR)
 	$(call autotools-package)
