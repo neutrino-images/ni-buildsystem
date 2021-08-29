@@ -498,7 +498,7 @@ vsftpd: $(VSFTPD_DEPENDENCIES) $(DL_DIR)/$(VSFTPD_SOURCE) | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-NANO_VERSION = 5.4
+NANO_VERSION = 5.8
 NANO_DIR = nano-$(NANO_VERSION)
 NANO_SOURCE = nano-$(NANO_VERSION).tar.gz
 NANO_SITE = $(GNU_MIRROR)/nano
