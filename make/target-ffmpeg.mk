@@ -307,8 +307,7 @@ FFMPEG_CONF_OPTS = \
 	--enable-swresample \
 	--enable-hardcoded-tables
 
-BS_PACKAGE_FFMPEG_FFPLAY = no
-ifeq ($(BS_PACKAGE_FFMPEG_FFPLAY),yes)
+ifeq ($(BS_PACKAGE_FFMPEG_FFPLAY),y)
   FFMPEG_DEPENDENCIES += sdl2
   FFMPEG_CONF_OPTS += --enable-ffplay
   FFMPEG_CONF_ENV += SDL_CONFIG=$(HOST_DIR)/bin/sdl2-config

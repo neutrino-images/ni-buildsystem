@@ -187,6 +187,7 @@ PKG_CONFIG_SYSROOT_DIR=$(TARGET_DIR)
 # -----------------------------------------------------------------------------
 
 include package/pkg-utils.mk
+include package/pkg-configuration.mk
 
 # -----------------------------------------------------------------------------
 

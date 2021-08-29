@@ -59,11 +59,11 @@ MAINTAINER = $(shell whoami)
 # -----------------------------------------------------------------------------
 
 # Neutrino API keys
-#NEUTRINO_OMDB_API_KEY =
-#NEUTRINO_SHOUTCAST_DEV_KEY =
-#NEUTRINO_TMDB_DEV_KEY =
-#NEUTRINO_YOUTUBE_DEV_KEY =
-#NEUTRINO_WEATHER_DEV_KEY =
+#BS_PACKAGE_NEUTRINO_OMDB_API_KEY =
+#BS_PACKAGE_NEUTRINO_SHOUTCAST_DEV_KEY =
+#BS_PACKAGE_NEUTRINO_TMDB_DEV_KEY =
+#BS_PACKAGE_NEUTRINO_YOUTUBE_DEV_KEY =
+#BS_PACKAGE_NEUTRINO_WEATHER_DEV_KEY =
 
 # -----------------------------------------------------------------------------
 

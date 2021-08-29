@@ -67,14 +67,6 @@ NEUTRINO_LDFLAGS += -lcrypto -ldl -lz
 
 # -----------------------------------------------------------------------------
 
-NEUTRINO_OMDB_API_KEY ?= 20711f9e
-NEUTRINO_SHOUTCAST_DEV_KEY ?= fa1669MuiRPorUBw
-NEUTRINO_TMDB_DEV_KEY ?= 7270f1b571c4ecbb5b204ddb7f8939b1
-NEUTRINO_YOUTUBE_DEV_KEY ?= AIzaSyBLdZe7M3rpNMZqSj-3IEvjbb2hATWJIdM
-NEUTRINO_WEATHER_DEV_KEY ?=
-
-# -----------------------------------------------------------------------------
-
 NEUTRINO_CONF_ENV = \
 	$(TARGET_MAKE_OPTS) \
 	\
@@ -105,11 +97,11 @@ NEUTRINO_CONF_OPTS = \
 	--enable-mdev \
 	--enable-pugixml \
 	\
-	--with-omdb-api-key="$(NEUTRINO_OMDB_API_KEY)" \
-	--with-shoutcast-dev-key="$(NEUTRINO_SHOUTCAST_DEV_KEY)" \
-	--with-tmdb-dev-key="$(NEUTRINO_TMDB_DEV_KEY)" \
-	--with-youtube-dev-key="$(NEUTRINO_YOUTUBE_DEV_KEY)" \
-	--with-weather-dev-key="$(NEUTRINO_WEATHER_DEV_KEY)" \
+	--with-omdb-api-key="$(BS_PACKAGE_NEUTRINO_OMDB_API_KEY)" \
+	--with-shoutcast-dev-key="$(BS_PACKAGE_NEUTRINO_SHOUTCAST_DEV_KEY)" \
+	--with-tmdb-dev-key="$(BS_PACKAGE_NEUTRINO_TMDB_DEV_KEY)" \
+	--with-youtube-dev-key="$(BS_PACKAGE_NEUTRINO_YOUTUBE_DEV_KEY)" \
+	--with-weather-dev-key="$(BS_PACKAGE_NEUTRINO_WEATHER_DEV_KEY)" \
 	\
 	--with-target=cdk \
 	--with-targetprefix=$(prefix) \
@@ -156,10 +148,7 @@ endif
 NEUTRINO_DEPENDENCIES += lcd4linux
 NEUTRINO_CONF_OPTS += --enable-lcd4linux
 
-# enable ffmpeg audio decoder in neutrino
-NEUTRINO_AUDIODEC = ffmpeg
-
-ifeq ($(NEUTRINO_AUDIODEC),ffmpeg)
+ifeq ($(BS_PACKAGE_NEUTRINO_AUDIODEC_FFMPEG),y)
   NEUTRINO_CONF_OPTS += --enable-ffmpegdec
 else
   NEUTRINO_DEPENDENCIES += libid3tag
