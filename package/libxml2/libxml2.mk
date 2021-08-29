@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-LIBXML2_VERSION = 2.9.10
+LIBXML2_VERSION = 2.9.12
 LIBXML2_DIR = libxml2-$(LIBXML2_VERSION)
 LIBXML2_SOURCE = libxml2-$(LIBXML2_VERSION).tar.gz
 LIBXML2_SITE = http://xmlsoft.org/sources
