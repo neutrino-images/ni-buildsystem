@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-LIBGD_VERSION = 2.2.5
+LIBGD_VERSION = 2.3.0
 LIBGD_DIR = libgd-$(LIBGD_VERSION)
 LIBGD_SOURCE = libgd-$(LIBGD_VERSION).tar.xz
 LIBGD_SITE = https://github.com/libgd/libgd/releases/download/gd-$(LIBGD_VERSION)
