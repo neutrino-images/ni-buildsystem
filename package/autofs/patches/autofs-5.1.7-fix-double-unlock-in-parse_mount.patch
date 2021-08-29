@@ -1,0 +1,37 @@
+autofs-5.1.7 - fix double unlock in parse_mount()
+
+From: Ian Kent <raven@themaw.net>
+
+Coverity: double_unlock: "cache_unlock" unlocks "mc->rwlock" while it
+	  is unlocked.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG           |    1 +
+ modules/parse_sun.c |    1 -
+ 2 files changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index 2e3b9fd7..224f58d6 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -54,6 +54,7 @@
+ - remove redundant if check.
+ - fix possible memory leak in master_parse().
+ - fix possible memory leak in mnts_add_amdmount().
++- fix double unlock in parse_mount().
+ 
+ 25/01/2021 autofs-5.1.7
+ - make bind mounts propagation slave by default.
+diff --git a/modules/parse_sun.c b/modules/parse_sun.c
+index a81d4028..05f53fc2 100644
+--- a/modules/parse_sun.c
++++ b/modules/parse_sun.c
+@@ -1526,7 +1526,6 @@ dont_expand:
+ 			if (!loc) {
+ 				free(options);
+ 				free(pmapent);
+-				cache_unlock(mc);
+ 				warn(ap->logopt, MODPREFIX "out of memory");
+ 				return 1;
+ 			}

@@ -1,0 +1,90 @@
+autofs-5.1.7 - eliminate redundant cache lookup in tree_mapent_add_node()
+
+From: Ian Kent <raven@themaw.net>
+
+Since we need to create the offset tree after adding the offset entries
+to the mapent cache (from a list.h list) there's no need to lookup the
+mapent in tree_mapent_add_node() and validate it. Just use it directly
+when calling tree_mapent_add_node() and avoid a cache lookup on every
+node addition.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG           |    1 +
+ include/mounts.h    |    2 +-
+ lib/mounts.c        |   13 ++-----------
+ modules/parse_sun.c |    2 +-
+ 4 files changed, 5 insertions(+), 13 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index 5a767360..81b6ce6a 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -73,6 +73,7 @@
+ - fix amd hosts mount expire.
+ - fix offset entries order.
+ - use mapent tree root for tree_mapent_add_node().
++- eliminate redundant cache lookup in tree_mapent_add_node().
+ 
+ 25/01/2021 autofs-5.1.7
+ - make bind mounts propagation slave by default.
+diff --git a/include/mounts.h b/include/mounts.h
+index f7768ce5..5a7a0b89 100644
+--- a/include/mounts.h
++++ b/include/mounts.h
+@@ -170,7 +170,7 @@ void mnts_get_expire_list(struct list_head *mnts, struct autofs_point *ap);
+ void mnts_put_expire_list(struct list_head *mnts);
+ void mnts_set_mounted_mount(struct autofs_point *ap, const char *name, unsigned int flags);
+ struct tree_node *tree_mapent_root(struct mapent *me);
+-int tree_mapent_add_node(struct mapent_cache *mc, struct tree_node *root, const char *key);
++int tree_mapent_add_node(struct mapent_cache *mc, struct tree_node *root, struct mapent *me);
+ int tree_mapent_delete_offsets(struct mapent_cache *mc, const char *key);
+ void tree_mapent_cleanup_offsets(struct mapent *oe);
+ int tree_mapent_mount_offsets(struct mapent *oe, int nonstrict);
+diff --git a/lib/mounts.c b/lib/mounts.c
+index 9ec547ea..6b24a6c2 100644
+--- a/lib/mounts.c
++++ b/lib/mounts.c
+@@ -1519,19 +1519,10 @@ static void tree_mapent_free(struct tree_node *n)
+ }
+ 
+ int tree_mapent_add_node(struct mapent_cache *mc,
+-			 struct tree_node *root, const char *key)
++			 struct tree_node *root, struct mapent *me)
+ {
+-	unsigned int logopt = mc->ap->logopt;
+ 	struct tree_node *n;
+ 	struct mapent *parent;
+-	struct mapent *me;
+-
+-	me = cache_lookup_distinct(mc, key);
+-	if (!me) {
+-		error(logopt,
+-		     "failed to find key %s of multi-mount", key);
+-		return 0;
+-	}
+ 
+ 	n = tree_add_node(root, me);
+ 	if (!n)
+@@ -1540,7 +1531,7 @@ int tree_mapent_add_node(struct mapent_cache *mc,
+ 	MAPENT_SET_ROOT(me, root)
+ 
+ 	/* Set the subtree parent */
+-	parent = cache_get_offset_parent(mc, key);
++	parent = cache_get_offset_parent(mc, me->key);
+ 	if (!parent)
+ 		MAPENT_SET_PARENT(me, root)
+ 	else
+diff --git a/modules/parse_sun.c b/modules/parse_sun.c
+index c75bcc8e..12844a30 100644
+--- a/modules/parse_sun.c
++++ b/modules/parse_sun.c
+@@ -1546,7 +1546,7 @@ dont_expand:
+ 			return 1;
+ 		}
+ 		list_for_each_entry_safe(oe, tmp, &offsets, work) {
+-			if (!tree_mapent_add_node(mc, MAPENT_ROOT(me), oe->key))
++			if (!tree_mapent_add_node(mc, MAPENT_ROOT(me), oe))
+ 				error(ap->logopt, "failed to add offset %s to tree", oe->key);
+ 			list_del_init(&oe->work);
+ 		}

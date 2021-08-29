@@ -1,0 +1,52 @@
+autofs-5.1.7 - fix amd hosts mount expire
+
+From: Ian Kent <raven@themaw.net>
+
+When swicthing to use the mnt_list to track mounts for expire, if the
+amd hosts map entry name is for the host short name, the amd mount
+entry for the short name gets removed. This causes a subsequent mounts
+for host exports to fail.
+
+What should happen is the short name amd entry not be removed and a
+mounted mount entry for the symlinked FQDN mount added so it expires.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG           |    1 +
+ modules/parse_amd.c |    9 +++++----
+ 2 files changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index 698cc27a..94eb6a2c 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -70,6 +70,7 @@
+ - fix dandling symlink creation if nis support is not available.
+ - dont use AUTOFS_DEV_IOCTL_CLOSEMOUNT.
+ - fix lookup_prune_one_cache() refactoring change.
++- fix amd hosts mount expire.
+ 
+ 25/01/2021 autofs-5.1.7
+ - make bind mounts propagation slave by default.
+diff --git a/modules/parse_amd.c b/modules/parse_amd.c
+index 64c1ce63..163174cd 100644
+--- a/modules/parse_amd.c
++++ b/modules/parse_amd.c
+@@ -2341,12 +2341,13 @@ int parse_mount(struct autofs_point *ap, const char *name,
+ 		if (!rv) {
+ 			/*
+ 			 * If entry->path doesn't match the mnt->mp then
+-			 * the mount point path has changed and a new
+-			 * mnt_list entry added for it, so remove the
+-			 * original.
++			 * it's a "host" map and the mount point path is
++			 * different to the lookup name. Add a new mnt_list
++			 * entry so that both the symlinked name and the
++			 * mount expire.
+ 			 */
+ 			if (strcmp(this->path, mnt->mp))
+-				mnts_remove_amdmount(this->path);
++				mnts_add_mount(ap, this->rhost, MNTS_INDIRECT|MNTS_MOUNTED);
+ 			break;
+ 		}
+ 		/* Not mounted, remove the mnt_list entry from amdmount list */

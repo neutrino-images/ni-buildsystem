@@ -1,0 +1,44 @@
+autofs-5.1.7 - cater for empty mounts list in mnts_get_expire_list()
+
+From: Ian Kent <raven@themaw.net>
+
+Coverity: var_deref_model: Passing null pointer "tree" to
+	  "tree_traverse_inorder", which dereferences it.
+
+This obviously can't happen but deal with it anyway to quiet Coverity.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG    |    1 +
+ lib/mounts.c |    6 ++++--
+ 2 files changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index b79aebc8..b1b28888 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -64,6 +64,7 @@
+ - fix missing lock release in mount_subtree().
+ - fix double free in parse_mapent().
+ - refactor lookup_prune_one_cache() a bit.
++- cater for empty mounts list in mnts_get_expire_list().
+ 
+ 25/01/2021 autofs-5.1.7
+ - make bind mounts propagation slave by default.
+diff --git a/lib/mounts.c b/lib/mounts.c
+index 883e3743..3996eb5e 100644
+--- a/lib/mounts.c
++++ b/lib/mounts.c
+@@ -1445,8 +1445,10 @@ void mnts_get_expire_list(struct list_head *mnts, struct autofs_point *ap)
+ 		}
+ 	}
+ 
+-	tree_traverse_inorder(tree, tree_mnt_expire_list_work, mnts);
+-	tree_free(tree);
++	if (tree) {
++		tree_traverse_inorder(tree, tree_mnt_expire_list_work, mnts);
++		tree_free(tree);
++	}
+ done:
+ 	mnts_hash_mutex_unlock();
+ }

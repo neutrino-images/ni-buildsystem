@@ -1,0 +1,42 @@
+autofs-5.1.7 - add missing free in handle_mounts()
+
+From: Ian Kent <raven@themaw.net>
+
+Coverity: error[doubleFree]: Memory pointed to by 'root' is freed twice
+
+No it's not, but root isn't freed before the fatal call which crashes
+automount so add a free() before the fatal() call.
+
+It appears Coverity doesn't recognise pthread_exit() as an exit condition.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG          |    1 +
+ daemon/automount.c |    2 ++
+ 2 files changed, 3 insertions(+)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index 9c3ede45..62a918a9 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -50,6 +50,7 @@
+ - check for offset with no mount location.
+ - remove mounts_mutex.
+ - remove unused variable from get_exports().
++- add missing free in handle_mounts().
+ 
+ 25/01/2021 autofs-5.1.7
+ - make bind mounts propagation slave by default.
+diff --git a/daemon/automount.c b/daemon/automount.c
+index 28c4d1ee..48472d5f 100644
+--- a/daemon/automount.c
++++ b/daemon/automount.c
+@@ -1922,6 +1922,8 @@ void *handle_mounts(void *arg)
+ 	status = pthread_mutex_lock(&suc->mutex);
+ 	if (status) {
+ 		logerr("failed to lock startup condition mutex!");
++		if (root)
++			free(root);
+ 		fatal(status);
+ 	}
+ 

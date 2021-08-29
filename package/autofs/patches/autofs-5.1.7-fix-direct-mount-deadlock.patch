@@ -1,0 +1,135 @@
+autofs-5.1.7 - fix direct mount deadlock
+
+From: Ian Kent <raven@themaw.net>
+
+When umounting direct mounts at exit or when umounting mounts no
+longer in the map on re-load a deadlock can occur.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG       |    1 +
+ daemon/direct.c |   22 +++++++++++++++++++++-
+ daemon/state.c  |   14 +++++++++-----
+ 3 files changed, 31 insertions(+), 6 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index 9e341e06..b29d2ed8 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -75,6 +75,7 @@
+ - use mapent tree root for tree_mapent_add_node().
+ - eliminate redundant cache lookup in tree_mapent_add_node().
+ - fix hosts map offset order.
++- fix direct mount deadlock.
+ 
+ 25/01/2021 autofs-5.1.7
+ - make bind mounts propagation slave by default.
+diff --git a/daemon/direct.c b/daemon/direct.c
+index 3bd714e6..d37dd676 100644
+--- a/daemon/direct.c
++++ b/daemon/direct.c
+@@ -84,11 +84,27 @@ static void mnts_cleanup(void *arg)
+ int do_umount_autofs_direct(struct autofs_point *ap, struct mapent *me)
+ {
+ 	struct ioctl_ops *ops = get_ioctl_ops();
++	struct mapent_cache *mc = me->mc;
+ 	char buf[MAX_ERR_BUF];
+ 	int ioctlfd = -1, rv, left, retries;
++	char key[PATH_MAX + 1];
++	struct mapent *tmp;
+ 	int opened = 0;
+ 
+-	left = umount_multi(ap, me->key, 0);
++	if (me->len > PATH_MAX) {
++		error(ap->logopt, "path too long");
++		return 1;
++	}
++	strcpy(key, me->key);
++
++	cache_unlock(mc);
++	left = umount_multi(ap, key, 0);
++	cache_readlock(mc);
++	tmp = cache_lookup_distinct(mc, key);
++	if (tmp != me) {
++		error(ap->logopt, "key %s no longer in mapent cache", key);
++		return -1;
++	}
+ 	if (left) {
+ 		warn(ap->logopt, "could not unmount %d dirs under %s",
+ 		     left, me->key);
+@@ -213,6 +229,7 @@ int umount_autofs_direct(struct autofs_point *ap)
+ 		mc = map->mc;
+ 		pthread_cleanup_push(cache_lock_cleanup, mc);
+ 		cache_readlock(mc);
++restart:
+ 		me = cache_enumerate(mc, NULL);
+ 		while (me) {
+ 			int error;
+@@ -230,6 +247,9 @@ int umount_autofs_direct(struct autofs_point *ap)
+ 			 * failed umount.
+ 			 */
+ 			error = do_umount_autofs_direct(ap, me);
++			/* cache became invalid, restart */
++			if (error == -1)
++				goto restart;
+ 			if (!error)
+ 				goto done;
+ 
+diff --git a/daemon/state.c b/daemon/state.c
+index 091210a5..5156bb21 100644
+--- a/daemon/state.c
++++ b/daemon/state.c
+@@ -324,11 +324,12 @@ static void do_readmap_cleanup(void *arg)
+ 	return;
+ }
+ 
+-static void do_readmap_mount(struct autofs_point *ap,
++static int do_readmap_mount(struct autofs_point *ap,
+ 			     struct map_source *map, struct mapent *me, time_t now)
+ {
+ 	struct mapent_cache *nc;
+ 	struct mapent *ne, *nested, *valid;
++	int ret = 0;
+ 
+ 	nc = ap->entry->master->nc;
+ 
+@@ -387,7 +388,7 @@ static void do_readmap_mount(struct autofs_point *ap,
+ 				cache_unlock(vmc);
+ 				error(ap->logopt,
+ 				     "failed to find expected existing valid map entry");
+-				return;
++				return ret;
+ 			}
+ 			/* Take over the mount if there is one */
+ 			valid->ioctlfd = me->ioctlfd;
+@@ -406,14 +407,14 @@ static void do_readmap_mount(struct autofs_point *ap,
+ 					ap->exp_runfreq = runfreq;
+ 			}
+ 		} else if (!is_mounted(me->key, MNTS_REAL))
+-			do_umount_autofs_direct(ap, me);
++			ret = do_umount_autofs_direct(ap, me);
+ 		else
+ 			debug(ap->logopt,
+ 			      "%s is mounted", me->key);
+ 	} else
+ 		do_mount_autofs_direct(ap, me, get_exp_timeout(ap, map));
+ 
+-	return;
++	return ret;
+ }
+ 
+ static void *do_readmap(void *arg)
+@@ -480,9 +481,12 @@ static void *do_readmap(void *arg)
+ 			mc = map->mc;
+ 			pthread_cleanup_push(cache_lock_cleanup, mc);
+ 			cache_readlock(mc);
++restart:
+ 			me = cache_enumerate(mc, NULL);
+ 			while (me) {
+-				do_readmap_mount(ap, map, me, now);
++				int ret = do_readmap_mount(ap, map, me, now);
++				if (ret == -1)
++					goto restart;
+ 				me = cache_enumerate(mc, me);
+ 			}
+ 			lookup_prune_one_cache(ap, map->mc, now);

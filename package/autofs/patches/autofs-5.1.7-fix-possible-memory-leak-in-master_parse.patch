@@ -1,0 +1,38 @@
+autofs-5.1.7 - fix possible memory leak in master_parse()
+
+From: Ian Kent <raven@themaw.net>
+
+Coverity: Overwriting "path" in "path = master_strdup(yyvsp[-1].strtype)"
+	  leaks the storage that "path" points to.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG             |    1 +
+ daemon/master_parse.y |    2 ++
+ 2 files changed, 3 insertions(+)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index 2186cbe3..b797f6dc 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -52,6 +52,7 @@
+ - remove unused variable from get_exports().
+ - add missing free in handle_mounts().
+ - remove redundant if check.
++- fix possible memory leak in master_parse().
+ 
+ 25/01/2021 autofs-5.1.7
+ - make bind mounts propagation slave by default.
+diff --git a/daemon/master_parse.y b/daemon/master_parse.y
+index 08e44b57..7480c36a 100644
+--- a/daemon/master_parse.y
++++ b/daemon/master_parse.y
+@@ -155,6 +155,8 @@ file: {
+ line:
+ 	| PATH mapspec
+ 	{
++		if (path)
++			free(path);
+ 		path = master_strdup($1);
+ 		if (!path) {
+ 			local_free_vars();

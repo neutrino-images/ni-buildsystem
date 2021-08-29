@@ -1,0 +1,300 @@
+autofs-5.1.7 - fix hosts map offset order
+
+From: Ian Kent <raven@themaw.net>
+
+Map entry offset paths need to be in shortest to longest order but
+exports from a server could come in any order. If there are a large
+number of exports this can result in a lot of overhead when adding
+the offset to the ordered list used to mount the offset during parsing
+since the path length of exports can vary a lot.
+
+So leverage the tree implemention to sort the export offsets into
+shortest to longest order as we go when constructing the mapent from
+the exports list.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG              |    1 +
+ include/automount.h    |    2 +
+ include/mounts.h       |    8 ++++++
+ include/rpc_subs.h     |    3 ++
+ lib/mounts.c           |   57 ++++++++++++++++++++++++++++++++++++++--
+ modules/lookup_hosts.c |   69 ++++++++++++++++++++++++++++++++++++++----------
+ 6 files changed, 123 insertions(+), 17 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index 81b6ce6a..9e341e06 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -74,6 +74,7 @@
+ - fix offset entries order.
+ - use mapent tree root for tree_mapent_add_node().
+ - eliminate redundant cache lookup in tree_mapent_add_node().
++- fix hosts map offset order.
+ 
+ 25/01/2021 autofs-5.1.7
+ - make bind mounts propagation slave by default.
+diff --git a/include/automount.h b/include/automount.h
+index d279744d..947ed16d 100644
+--- a/include/automount.h
++++ b/include/automount.h
+@@ -31,9 +31,9 @@
+ #include "master.h"
+ #include "macros.h"
+ #include "log.h"
++#include "mounts.h"
+ #include "rpc_subs.h"
+ #include "parse_subs.h"
+-#include "mounts.h"
+ #include "dev-ioctl-lib.h"
+ #include "parse_amd.h"
+ 
+diff --git a/include/mounts.h b/include/mounts.h
+index 5a7a0b89..ddb7e4c5 100644
+--- a/include/mounts.h
++++ b/include/mounts.h
+@@ -52,6 +52,7 @@ extern const unsigned int t_direct;
+ extern const unsigned int t_offset;
+ 
+ struct mnt_list;
++struct exportinfo;
+ struct mapent;
+ 
+ struct tree_ops;
+@@ -66,6 +67,9 @@ struct tree_node {
+ #define MNT_LIST(n)		(container_of(n, struct mnt_list, node))
+ #define MNT_LIST_NODE(ptr)	((struct tree_node *) &((struct mnt_list *) ptr)->node)
+ 
++#define EXPORTINFO(n)		(container_of(n, struct exportinfo, node))
++#define EXPORT_NODE(ptr)	((struct tree_node *) &((struct exportinfo *) ptr)->node)
++
+ #define MAPENT(n)		(container_of(n, struct mapent, node))
+ #define MAPENT_NODE(p)		((struct tree_node *) &((struct mapent *) p)->node)
+ #define MAPENT_ROOT(p)		((struct tree_node *) ((struct mapent *) p)->mm_root)
+@@ -166,9 +170,13 @@ struct mnt_list *mnts_add_mount(struct autofs_point *ap, const char *name, unsig
+ void mnts_remove_mount(const char *mp, unsigned int flags);
+ struct mnt_list *get_mnt_list(const char *path, int include);
+ unsigned int mnts_has_mounted_mounts(struct autofs_point *ap);
++int tree_traverse_inorder(struct tree_node *n, tree_work_fn_t work, void *ptr);
++void tree_free(struct tree_node *root);
+ void mnts_get_expire_list(struct list_head *mnts, struct autofs_point *ap);
+ void mnts_put_expire_list(struct list_head *mnts);
+ void mnts_set_mounted_mount(struct autofs_point *ap, const char *name, unsigned int flags);
++struct tree_node *tree_host_root(struct exportinfo *exp);
++struct tree_node *tree_host_add_node(struct tree_node *root, struct exportinfo *exp);
+ struct tree_node *tree_mapent_root(struct mapent *me);
+ int tree_mapent_add_node(struct mapent_cache *mc, struct tree_node *root, struct mapent *me);
+ int tree_mapent_delete_offsets(struct mapent_cache *mc, const char *key);
+diff --git a/include/rpc_subs.h b/include/rpc_subs.h
+index 080f19d9..debf2df0 100644
+--- a/include/rpc_subs.h
++++ b/include/rpc_subs.h
+@@ -23,6 +23,8 @@
+ #include <linux/nfs2.h>
+ #include <linux/nfs3.h>
+ 
++#include "automount.h"
++
+ #define NFS4_VERSION		4
+ 
+ /* rpc helper subs */
+@@ -57,6 +59,7 @@ struct exportinfo {
+ 	char *dir;
+ 	struct hostinfo *hosts;
+ 	struct exportinfo *next;
++	struct tree_node node;
+ };
+ 
+ struct conn_info {
+diff --git a/lib/mounts.c b/lib/mounts.c
+index 6b24a6c2..5a4602e3 100644
+--- a/lib/mounts.c
++++ b/lib/mounts.c
+@@ -79,6 +79,17 @@ static struct tree_ops mnt_ops = {
+ };
+ static struct tree_ops *tree_mnt_ops = &mnt_ops;
+ 
++static struct tree_node *tree_host_new(void *ptr);
++static int tree_host_cmp(struct tree_node *n, void *ptr);
++static void tree_host_free(struct tree_node *n);
++
++static struct tree_ops host_ops = {
++	.new = tree_host_new,
++	.cmp = tree_host_cmp,
++	.free = tree_host_free,
++};
++static struct tree_ops *tree_host_ops = &host_ops;
++
+ static struct tree_node *tree_mapent_new(void *ptr);
+ static int tree_mapent_cmp(struct tree_node *n, void *ptr);
+ static void tree_mapent_free(struct tree_node *n);
+@@ -1341,7 +1352,7 @@ static struct tree_node *tree_add_node(struct tree_node *root, void *ptr)
+ 	return NULL;
+ }
+ 
+-static void tree_free(struct tree_node *root)
++void tree_free(struct tree_node *root)
+ {
+ 	struct tree_ops *ops = root->ops;
+ 
+@@ -1352,7 +1363,7 @@ static void tree_free(struct tree_node *root)
+ 	ops->free(root);
+ }
+ 
+-static int tree_traverse_inorder(struct tree_node *n, tree_work_fn_t work, void *ptr)
++int tree_traverse_inorder(struct tree_node *n, tree_work_fn_t work, void *ptr)
+ {
+ 	int ret;
+ 
+@@ -1479,6 +1490,48 @@ void mnts_put_expire_list(struct list_head *mnts)
+ 	mnts_hash_mutex_unlock();
+ }
+ 
++struct tree_node *tree_host_root(struct exportinfo *exp)
++{
++	return tree_root(tree_host_ops, exp);
++}
++
++static struct tree_node *tree_host_new(void *ptr)
++{
++	struct tree_node *n = EXPORT_NODE(ptr);
++
++	n->ops = tree_host_ops;
++	n->left = NULL;
++	n->right = NULL;
++
++	return n;
++}
++
++static int tree_host_cmp(struct tree_node *n, void *ptr)
++{
++	struct exportinfo *n_exp = EXPORTINFO(n);
++	size_t n_exp_len = strlen(n_exp->dir);
++	struct exportinfo *exp = ptr;
++	size_t exp_len = strlen(exp->dir);
++	int eq;
++
++	eq = strcmp(exp->dir, n_exp->dir);
++	if (!eq)
++		return 0;
++	return (exp_len < n_exp_len) ? -1 : 1;
++}
++
++static void tree_host_free(struct tree_node *n)
++{
++	n->ops = NULL;
++	n->left = NULL;
++	n->right = NULL;
++}
++
++struct tree_node *tree_host_add_node(struct tree_node *root, struct exportinfo *exp)
++{
++	return tree_add_node(root, exp);
++}
++
+ struct tree_node *tree_mapent_root(struct mapent *me)
+ {
+ 	return tree_root(tree_mapent_ops, me);
+diff --git a/modules/lookup_hosts.c b/modules/lookup_hosts.c
+index 24edf00c..26c224f6 100644
+--- a/modules/lookup_hosts.c
++++ b/modules/lookup_hosts.c
+@@ -84,14 +84,38 @@ int lookup_read_master(struct master *master, time_t age, void *context)
+ 	return NSS_STATUS_UNKNOWN;
+ }
+ 
++struct work_info {
++	char *mapent;
++	const char *host;
++	int pos;
++};
++
++static int tree_host_work(struct tree_node *n, void *ptr)
++{
++	struct exportinfo *exp = EXPORTINFO(n);
++	struct work_info *wi = ptr;
++	int len;
++
++	if (!wi->pos)
++		len = sprintf(wi->mapent, "\"%s\" \"%s:%s\"",
++				exp->dir, wi->host, exp->dir);
++	else
++		len = sprintf(wi->mapent + wi->pos, " \"%s\" \"%s:%s\"",
++				exp->dir, wi->host, exp->dir);
++	wi->pos += len;
++
++	return 1;
++}
++
+ static char *get_exports(struct autofs_point *ap, const char *host)
+ {
+ 	char buf[MAX_ERR_BUF];
+ 	char *mapent;
+ 	struct exportinfo *exp, *this;
++	struct tree_node *tree = NULL;
++	struct work_info wi;
+ 	size_t hostlen = strlen(host);
+ 	size_t mapent_len;
+-	int len, pos;
+ 
+ 	debug(ap->logopt, MODPREFIX "fetchng export list for %s", host);
+ 
+@@ -100,7 +124,28 @@ static char *get_exports(struct autofs_point *ap, const char *host)
+ 	this = exp;
+ 	mapent_len = 0;
+ 	while (this) {
++		struct tree_node *n;
++
+ 		mapent_len += hostlen + 2*(strlen(this->dir) + 2) + 3;
++
++		if (!tree) {
++			tree = tree_host_root(this);
++			if (!tree) {
++				error(ap->logopt, "failed to create exports tree root");
++				rpc_exports_free(exp);
++				return NULL;
++			}
++			goto next;
++		}
++
++		n = tree_host_add_node(tree, this);
++		if (!n) {
++			error(ap->logopt, "failed to add exports tree node");
++			tree_free(tree);
++			rpc_exports_free(exp);
++			return NULL;
++		}
++next:
+ 		this = this->next;
+ 	}
+ 
+@@ -115,20 +160,16 @@ static char *get_exports(struct autofs_point *ap, const char *host)
+ 	}
+ 	*mapent = 0;
+ 
+-	pos = 0;
+-	this = exp;
+-	if (this) {
+-		len = sprintf(mapent, "\"%s\" \"%s:%s\"",
+-				this->dir, host, this->dir);
+-		pos += len;
+-		this = this->next;
+-	}
++	wi.mapent = mapent;
++	wi.host = host;
++	wi.pos = 0;
+ 
+-	while (this) {
+-		len = sprintf(mapent + pos, " \"%s\" \"%s:%s\"",
+-				this->dir, host, this->dir);
+-		pos += len;
+-		this = this->next;
++	if (!tree) {
++		free(mapent);
++		mapent = NULL;
++	} else {
++		tree_traverse_inorder(tree, tree_host_work, &wi);
++		tree_free(tree);
+ 	}
+ 	rpc_exports_free(exp);
+ 

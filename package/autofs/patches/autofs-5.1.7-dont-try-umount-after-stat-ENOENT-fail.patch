@@ -1,0 +1,45 @@
+autofs-5.1.7 - dont try umount after stat() ENOENT fail
+
+From: Ian Kent <raven@themaw.net>
+
+Coverity: Calling function "umount" that uses "me->key" after a check
+	  function. This can cause a time-of-check, time-of-use race
+	  condition.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG       |    1 +
+ daemon/direct.c |    6 +++++-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index 7add6c55..c7bc0c39 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -57,6 +57,7 @@
+ - fix double unlock in parse_mount().
+ - add length check in umount_subtree_mounts().
+ - fix flags check in umount_multi().
++- dont try umount after stat() ENOENT fail.
+ 
+ 25/01/2021 autofs-5.1.7
+ - make bind mounts propagation slave by default.
+diff --git a/daemon/direct.c b/daemon/direct.c
+index a33f9f91..3bd714e6 100644
+--- a/daemon/direct.c
++++ b/daemon/direct.c
+@@ -739,9 +739,13 @@ int mount_autofs_offset(struct autofs_point *ap, struct mapent *me)
+ 
+ 	ret = stat(me->key, &st);
+ 	if (ret == -1) {
++		int save_errno = errno;
++
+ 		error(ap->logopt,
+ 		     "failed to stat direct mount trigger %s", me->key);
+-		goto out_umount;
++		if (save_errno != ENOENT)
++			goto out_umount;
++		goto out_err;
+ 	}
+ 
+ 	ops->open(ap->logopt, &ioctlfd, st.st_dev, me->key);

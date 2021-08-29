@@ -1,0 +1,58 @@
+autofs-5.1.7 - fix possible memory leak in mnts_add_amdmount()
+
+From: Ian Kent <raven@themaw.net>
+
+Coverity: leaked_storage: Variable "ext_mp" going out of scope leaks
+	  the storage it points to.
+
+Same applies to the other duped fields destined for the mnt_list struct.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG    |    1 +
+ lib/mounts.c |   20 ++++++++++----------
+ 2 files changed, 11 insertions(+), 10 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index b797f6dc..2e3b9fd7 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -53,6 +53,7 @@
+ - add missing free in handle_mounts().
+ - remove redundant if check.
+ - fix possible memory leak in master_parse().
++- fix possible memory leak in mnts_add_amdmount().
+ 
+ 25/01/2021 autofs-5.1.7
+ - make bind mounts propagation slave by default.
+diff --git a/lib/mounts.c b/lib/mounts.c
+index c8a7bf00..ef69cec1 100644
+--- a/lib/mounts.c
++++ b/lib/mounts.c
+@@ -1119,16 +1119,16 @@ struct mnt_list *mnts_add_amdmount(struct autofs_point *ap, struct amd_entry *en
+ 
+ 	mnts_hash_mutex_lock();
+ 	this = mnts_get_mount(entry->path);
+-	if (this) {
+-		this->ext_mp = ext_mp;
+-		this->amd_pref = pref;
+-		this->amd_type = type;
+-		this->amd_opts = opts;
+-		this->amd_cache_opts = entry->cache_opts;
+-		this->flags |= MNTS_AMD_MOUNT;
+-		if (list_empty(&this->amdmount))
+-			list_add_tail(&this->amdmount, &ap->amdmounts);
+-	}
++	if (!this)
++		goto fail;
++	this->ext_mp = ext_mp;
++	this->amd_pref = pref;
++	this->amd_type = type;
++	this->amd_opts = opts;
++	this->amd_cache_opts = entry->cache_opts;
++	this->flags |= MNTS_AMD_MOUNT;
++	if (list_empty(&this->amdmount))
++		list_add_tail(&this->amdmount, &ap->amdmounts);
+ 	mnts_hash_mutex_unlock();
+ 
+ 	return this;

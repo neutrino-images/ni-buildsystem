@@ -1,0 +1,36 @@
+autofs-5.1.7 - fix missing lock release in mount_subtree()
+
+From: Ian Kent <raven@themaw.net>
+
+Covarity: missing_unlock: Returning without unlocking "mc->rwlock".
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG           |    1 +
+ modules/parse_sun.c |    1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index 1d56c96f..ff3d88eb 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -61,6 +61,7 @@
+ - remove redundant assignment in master_add_amd_mount_section_mounts().
+ - fix dead code in mnts_add_mount().
+ - fix arg not used in error print.
++- fix missing lock release in mount_subtree().
+ 
+ 25/01/2021 autofs-5.1.7
+ - make bind mounts propagation slave by default.
+diff --git a/modules/parse_sun.c b/modules/parse_sun.c
+index 05f53fc2..5d15f892 100644
+--- a/modules/parse_sun.c
++++ b/modules/parse_sun.c
+@@ -1105,6 +1105,7 @@ static int mount_subtree(struct autofs_point *ap, struct mapent_cache *mc,
+ 		len = mount_fullpath(key, PATH_MAX, ap->path, ap->len, me->key);
+ 		if (!len) {
+ 			warn(ap->logopt, "path loo long");
++			cache_unlock(mc);
+ 			return 1;
+ 		}
+ 		key[len] = '/';
