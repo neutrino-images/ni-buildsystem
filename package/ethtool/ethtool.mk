@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-ETHTOOL_VERSION = 5.10
+ETHTOOL_VERSION = 5.13
 ETHTOOL_DIR = ethtool-$(ETHTOOL_VERSION)
 ETHTOOL_SOURCE = ethtool-$(ETHTOOL_VERSION).tar.xz
 ETHTOOL_SITE = $(KERNEL_MIRROR)/software/network/ethtool
