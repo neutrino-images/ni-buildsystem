@@ -1,6 +1,6 @@
 --- a/jdhuff.c
 +++ b/jdhuff.c
-@@ -829,3 +829,35 @@
+@@ -823,3 +823,35 @@
      entropy->dc_derived_tbls[i] = entropy->ac_derived_tbls[i] = NULL;
    }
  }

@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-LIBJPEG_TURBO_VERSION = 2.0.6
+LIBJPEG_TURBO_VERSION = 2.1.0
 LIBJPEG_TURBO_DIR = libjpeg-turbo-$(LIBJPEG_TURBO_VERSION)
 LIBJPEG_TURBO_SOURCE = libjpeg-turbo-$(LIBJPEG_TURBO_VERSION).tar.gz
 LIBJPEG_TURBO_SITE = https://sourceforge.net/projects/libjpeg-turbo/files/$(LIBJPEG_TURBO_VERSION)
