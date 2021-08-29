@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-UTIL_LINUX_VERSION = 2.36.2
+UTIL_LINUX_VERSION = $(if $(filter $(BOXSERIES),hd1),2.36.2,2.37.2)
 UTIL_LINUX_DIR = util-linux-$(UTIL_LINUX_VERSION)
 UTIL_LINUX_SOURCE = util-linux-$(UTIL_LINUX_VERSION).tar.xz
 UTIL_LINUX_SITE = $(KERNEL_MIRROR)/linux/utils/util-linux/v$(basename $(UTIL_LINUX_VERSION))
