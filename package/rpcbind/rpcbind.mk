@@ -11,8 +11,6 @@ RPCBIND_SITE = https://sourceforge.net/projects/rpcbind/files/rpcbind/$(RPCBIND_
 
 RPCBIND_DEPENDENCIES = libtirpc
 
-RPCBIND_AUTORECONF = YES
-
 RPCBIND_CONF_OPTS = \
 	--with-rpcuser=root \
 	--with-systemdsystemunitdir=no
