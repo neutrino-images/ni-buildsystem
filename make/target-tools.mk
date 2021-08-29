@@ -204,7 +204,7 @@ sysvinit: $(DL_DIR)/$(SYSVINIT_SOURCE) | $(TARGET_DIR)
 # -----------------------------------------------------------------------------
 
 # for coolstream: formatting ext4 failes with newer versions then 1.43.8
-E2FSPROGS_VERSION = $(if $(filter $(BOXTYPE),coolstream),1.43.8,1.45.7)
+E2FSPROGS_VERSION = $(if $(filter $(BOXTYPE),coolstream),1.43.8,1.46.4)
 E2FSPROGS_DIR = e2fsprogs-$(E2FSPROGS_VERSION)
 E2FSPROGS_SOURCE = e2fsprogs-$(E2FSPROGS_VERSION).tar.gz
 E2FSPROGS_SITE = https://sourceforge.net/projects/e2fsprogs/files/e2fsprogs/v$(E2FSPROGS_VERSION)
@@ -215,7 +215,7 @@ $(DL_DIR)/$(E2FSPROGS_SOURCE):
 # Use libblkid and libuuid from util-linux
 E2FSPROGS_DEPENDENCIES = util-linux
 
-E2FSPROGS_AUTORECONF = YES
+#E2FSPROGS_AUTORECONF = YES
 
 E2FSPROGS_CONF_ENV = \
 	ac_cv_path_LDCONFIG=true
