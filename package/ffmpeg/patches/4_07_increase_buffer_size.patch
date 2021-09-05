@@ -9,7 +9,7 @@
  
  /**
   * Do seeks within this distance ahead of the current buffer by skipping
-@@ -556,15 +556,15 @@
+@@ -548,15 +548,15 @@
      }
  
      /* make buffer smaller in case it ended up large after probing */

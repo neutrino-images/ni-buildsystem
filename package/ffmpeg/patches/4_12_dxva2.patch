@@ -1,6 +1,6 @@
 --- a/libavcodec/dxva2.c
 +++ b/libavcodec/dxva2.c
-@@ -777,16 +777,18 @@
+@@ -771,16 +771,18 @@
  #if CONFIG_D3D11VA
      if (avctx->pix_fmt == AV_PIX_FMT_D3D11)
          return (intptr_t)frame->data[1];
@@ -42,7 +42,7 @@
                                      &ctx_pic->qm, sizeof(ctx_pic->qm),
 --- a/libavcodec/h264_slice.c
 +++ b/libavcodec/h264_slice.c
-@@ -942,6 +942,7 @@
+@@ -928,6 +928,7 @@
  
      h->first_field           = 0;
      h->prev_interlaced_frame = 1;
@@ -52,7 +52,7 @@
      ret = ff_h264_alloc_tables(h);
 --- a/libavcodec/h264dec.c
 +++ b/libavcodec/h264dec.c
-@@ -442,6 +442,7 @@
+@@ -467,6 +467,7 @@
  
      h->next_outputed_poc = INT_MIN;
      h->prev_interlaced_frame = 1;
@@ -62,7 +62,7 @@
      h->poc.prev_frame_num = -1;
 --- a/libavcodec/h264dec.h
 +++ b/libavcodec/h264dec.h
-@@ -540,6 +540,8 @@
+@@ -539,6 +539,8 @@
       * slices) anymore */
      int setup_finished;
  
@@ -71,6 +71,20 @@
      int cur_chroma_format_idc;
      int cur_bit_depth_luma;
      int16_t slice_row[MAX_SLICES]; ///< to detect when MAX_SLICES is too low
+--- a/libavcodec/vaapi_h264.c
++++ b/libavcodec/vaapi_h264.c
+@@ -314,6 +314,11 @@
+     H264SliceContext *sl = &h->slice_ctx[0];
+     int ret;
+ 
++    if (pic->nb_slices == 0) {
++        ret = AVERROR_INVALIDDATA;
++        goto finish;
++    }
++
+     ret = ff_vaapi_decode_issue(avctx, pic);
+     if (ret < 0)
+         goto finish;
 --- a/libavformat/bintext.c
 +++ b/libavformat/bintext.c
 @@ -149,7 +149,7 @@

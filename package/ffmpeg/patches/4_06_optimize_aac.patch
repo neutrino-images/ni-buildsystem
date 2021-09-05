@@ -1,6 +1,6 @@
 --- a/libavcodec/aacdec_template.c
 +++ b/libavcodec/aacdec_template.c
-@@ -2583,7 +2583,7 @@
+@@ -2485,7 +2485,7 @@
   * @param   decode  1 if tool is used normally, 0 if tool is used in LTP.
   * @param   coef    spectral coefficients
   */
@@ -11,7 +11,7 @@
      const int mmm = FFMIN(ics->tns_max_bands, ics->max_sfb);
 --- a/libavcodec/aacps.c
 +++ b/libavcodec/aacps.c
-@@ -396,7 +396,7 @@
+@@ -659,7 +659,7 @@
      par[ 1] = AAC_HALF_SUM(par[ 0], par[ 1]);
  }
  
@@ -22,7 +22,7 @@
      LOCAL_ALIGNED_16(INTFLOAT, transient_gain, [34], [PS_QMF_TIME_SLOTS]);
 --- a/libavcodec/fft_template.c
 +++ b/libavcodec/fft_template.c
-@@ -546,7 +546,7 @@
+@@ -562,7 +562,7 @@
      pass(z,FFT_NAME(ff_cos_##n),n4/2);\
  }
  
@@ -31,7 +31,7 @@
  {
      FFTDouble t1, t2, t3, t4, t5, t6, t7, t8;
  
-@@ -560,7 +560,7 @@
+@@ -576,7 +576,7 @@
      BF(z[2].im, z[0].im, t2, t5);
  }
  

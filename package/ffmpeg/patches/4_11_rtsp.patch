@@ -1,15 +1,16 @@
 --- a/libavformat/rtsp.c
 +++ b/libavformat/rtsp.c
-@@ -2380,6 +2380,8 @@ static int sdp_read_header(AVFormatContext *s)
+@@ -2338,7 +2338,9 @@
+     RTSPStream *rtsp_st;
      int size, i, err;
      char *content;
-     char url[MAX_URL_SIZE];
 +    const char *p, *sp="", *sources="", *sp2, *sources2;
+     char url[1024];
 +    char sources_buf[1024];
  
      if (!ff_network_init())
          return AVERROR(EIO);
-@@ -2408,6 +2410,16 @@ static int sdp_read_header(AVFormatContext *s)
+@@ -2364,6 +2366,16 @@
      av_freep(&content);
      if (err) goto fail;
  
@@ -26,7 +27,7 @@
      /* open each RTP stream */
      for (i = 0; i < rt->nb_rtsp_streams; i++) {
          char namebuf[50];
-@@ -2425,12 +2437,22 @@ static int sdp_read_header(AVFormatContext *s)
+@@ -2381,12 +2393,22 @@
                  av_dict_free(&opts);
                  goto fail;
              }
