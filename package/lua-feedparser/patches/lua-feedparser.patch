@@ -1,13 +1,16 @@
-commit 782e2925d376d4d78382faa4ef477c72de3d8848
-Author: Jacek Jendrzej <overx300@gmail.com>
-Date:   Fri Jun 14 08:45:41 2019 +0200
-
-    - fix missing pictures; fix empty titles; add 'media:group' tag
-
 diff --git a/feedparser.lua b/feedparser.lua
-index 2d66b8c..0f55c22 100644
+index 2d66b8c..93d1c65 100644
 --- a/feedparser.lua
 +++ b/feedparser.lua
+@@ -9,7 +9,7 @@ local pairs, ipairs = pairs, ipairs
+ -- see http://feedparser.org for details about the Universal Feed Parser
+ local feedparser= {
+ 	_DESCRIPTION = "RSS and Atom feed parser",
+-	_VERSION = "feedparser 0.71"
++	_VERSION = "feedparser 0.71b patched"
+ }
+ 
+ local blanky = XMLElement.new() --useful in a whole bunch of places
 @@ -73,7 +73,17 @@ local function parse_entries(entries_el, format_str, base)
  			--content
  			elseif	(format_str=='atom' and tag=='content') or 
@@ -27,7 +30,7 @@ index 2d66b8c..0f55c22 100644
  				--TODO: content_detail
  			
  			--published
-@@ -111,10 +121,23 @@ local function parse_entries(entries_el, format_str, base)
+@@ -111,10 +121,30 @@ local function parse_entries(entries_el, format_str, base)
  				}
  				local author_url = (el:getChild('url') or blanky):getText()
  				if author_url and author_url ~= "" then entry.author_detail.href=resolve(author_url, rebase(el:getChild('url'), el_base)) end		
@@ -46,6 +49,13 @@ index 2d66b8c..0f55c22 100644
 +				if not entry.summary then
 +					entry.summary=el:getText()
 +				end
++			elseif format_str =='rss' and tag=='websiteUrl' then
++				if el then
++					local txt = el:getText()
++					if txt then
++						tinsert(entry.links, {websiteUrl = txt})
++					end
++				end
 +			elseif tag=='category' then
 +				entry.category = (el:getChild('term') or el):getText()
 +			elseif tag=='dc:subject' then
@@ -54,7 +64,7 @@ index 2d66b8c..0f55c22 100644
  			elseif tag=='source' then
  				--todo
  			end
-@@ -317,7 +340,7 @@ local function parse_rss(root, base_uri)
+@@ -317,7 +347,7 @@ local function parse_rss(root, base_uri)
  		--image
  		elseif tag=='image' or tag=='rdf:image' then
  			feed.image={
@@ -63,3 +73,10 @@ index 2d66b8c..0f55c22 100644
  				link=(el:getChild('link') or blanky):getText(),
  				width=(el:getChild('width') or blanky):getText(),
  				height=(el:getChild('height') or blanky):getText()
+@@ -366,4 +396,4 @@ if _VERSION:sub(-3) < "5.3" then
+ end
+ 
+ 
+-return feedparser
+\ No newline at end of file
++return feedparser
