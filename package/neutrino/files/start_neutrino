@@ -8,6 +8,7 @@ ERROR=-1
 NORMAL=0
 SHUTDOWN=1
 REBOOT=2
+RESTART=3
 
 # if neutrino crashes, just restart it or reboot the box?
 case "$(get_boxmodel)" in
@@ -34,6 +35,10 @@ do_reboot() {
 	reboot
 }
 
+do_restart() {
+	display_msg "N: RESTART"
+}
+
 while true; do
 	do_cleanup
 
@@ -55,6 +60,9 @@ while true; do
 		do_cleanup
 		do_reboot
 		break
+	elif [ $RET -eq $RESTART ]; then
+		do_restart
+		continue
 	fi
 
 	display_msg "NEUTRINO: $RET"
