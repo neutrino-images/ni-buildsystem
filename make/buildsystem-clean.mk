@@ -46,7 +46,9 @@ all-clean: rebuild-clean staging-clean host-clean static-base-clean
 
 clean: rebuild-clean bootstrap
 
-clean-all: update-all staging-clean clean
+distclean: staging-clean clean
+
+clean-all: update-all distclean
 
 %-clean:
 	-find $(if $(findstring host-,$(@)),$(HOST_DEPS_DIR),$(DEPS_DIR)) -name $(subst -clean,,$(@)) -delete
