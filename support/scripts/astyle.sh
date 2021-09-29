@@ -37,6 +37,10 @@ for file in $@; do
 		--pad-param-type \
 		--attach-return-type-decl \
 		\
+		--break-one-line-headers \
+		--keep-one-line-blocks \
+		--keep-one-line-statements \
+		\
 		--align-pointer=name \
 		\
 		$file
