@@ -135,6 +135,8 @@ else
   NEUTRINO_DEPENDENCIES += graphlcd-base
   NEUTRINO_CONF_OPTS += --enable-graphlcd
 
+  NEUTRINO_CONF_OPTS += --enable-hbbtv
+
   ifeq ($(BOXTYPE),armbox)
     #NEUTRINO_CONF_OPTS += --disable-arm-acc
   endif
