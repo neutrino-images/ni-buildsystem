@@ -17,31 +17,33 @@ type astyle >/dev/null 2>&1 || { echo >&2 "Astyle required, but it's not install
 
 for file in $@; do
 	astyle \
-		--suffix=none \
 		--style=allman \
-		--formatted -v \
 		\
 		--indent=force-tab=8 \
+		\
 		--indent-classes \
-		--indent-preproc-define \
 		--indent-switches \
 		--indent-after-parens \
+		--indent-preproc-define \
 		--max-instatement-indent=80 \
-		--lineend=linux \
-		\
-		--unpad-paren \
 		\
 		--pad-oper \
 		--pad-comma \
 		--pad-header \
-		--pad-param-type \
-		--attach-return-type-decl \
+		--unpad-paren \
+		--align-pointer=name \
 		\
 		--break-one-line-headers \
+		--attach-return-type-decl \
 		--keep-one-line-blocks \
 		--keep-one-line-statements \
 		\
-		--align-pointer=name \
+		--pad-param-type \
+		\
+		--suffix=none \
+		--verbose \
+		--formatted \
+		--lineend=linux \
 		\
 		$file
 done
