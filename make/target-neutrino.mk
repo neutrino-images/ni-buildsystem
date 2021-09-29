@@ -95,6 +95,7 @@ NEUTRINO_CONF_OPTS = \
 	--enable-giflib \
 	--enable-lua \
 	--enable-mdev \
+	--enable-pip \
 	--enable-pugixml \
 	\
 	--with-omdb-api-key="$(BS_PACKAGE_NEUTRINO_OMDB_API_KEY)" \
@@ -113,8 +114,6 @@ else
   NEUTRINO_CONF_OPTS += --with-boxmodel=$(BOXMODEL)
 endif
 
-NEUTRINO_CONF_OPTS += --enable-pip
-
 ifeq ($(BOXTYPE),coolstream)
   NEUTRINO_DEPENDENCIES += coolstream-drivers
   ifeq ($(HAS_LIBCOOLSTREAM),yes)
@@ -126,6 +125,8 @@ ifeq ($(BOXTYPE),coolstream)
     endif
   endif
 
+  NEUTRINO_CONF_OPTS += --disable-aitscan
+
 else
   NEUTRINO_DEPENDENCIES += libstb-hal
   NEUTRINO_CONF_OPTS += \
@@ -134,8 +135,6 @@ else
 
   NEUTRINO_DEPENDENCIES += graphlcd-base
   NEUTRINO_CONF_OPTS += --enable-graphlcd
-
-  NEUTRINO_CONF_OPTS += --enable-hbbtv
 
   ifeq ($(BOXTYPE),armbox)
     #NEUTRINO_CONF_OPTS += --disable-arm-acc
