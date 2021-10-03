@@ -4,10 +4,10 @@
 #
 ################################################################################
 
-MINICOM_VERSION = 2.7.1
+MINICOM_VERSION = 2.8
 MINICOM_DIR = minicom-$(MINICOM_VERSION)
 MINICOM_SOURCE = minicom-$(MINICOM_VERSION).tar.gz
-MINICOM_SITE = http://fossies.org/linux/misc
+MINICOM_SITE = https://salsa.debian.org/minicom-team/minicom/-/archive/$(MINICOM_VERSION)
 
 $(DL_DIR)/$(MINICOM_SOURCE):
 	$(download) $(MINICOM_SITE)/$(MINICOM_SOURCE)
