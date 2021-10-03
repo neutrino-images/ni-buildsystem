@@ -46,7 +46,7 @@ ifeq ($(BOXSERIES),hd2)
 endif
 
 ifeq ($(DEBUG),yes)
-  NEUTRINO_CFLAGS += -ggdb3 -rdynamic -I$(TARGET_includedir)
+  NEUTRINO_CFLAGS += -ggdb3 -rdynamic -I$(TARGET_includedir) $(CXX11_ABI)
 else
   NEUTRINO_CFLAGS += $(TARGET_CFLAGS)
 endif
