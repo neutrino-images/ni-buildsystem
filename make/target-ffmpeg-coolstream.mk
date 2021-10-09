@@ -169,7 +169,7 @@ ffmpeg: $(FFMPEG_DEPENDENCIES) | $(TARGET_DIR)
 	$(REMOVE)/$(NI_FFMPEG)
 	$(CD) $(SOURCE_DIR)/$(NI_FFMPEG); \
 		git checkout $(FFMPEG_BRANCH)
-	tar -C $(SOURCE_DIR) -cp $(NI_FFMPEG) --exclude-vcs | tar -C $(BUILD_DIR) -x
+	tar -C $(SOURCE_DIR) --exclude-vcs -cp $(NI_FFMPEG) | tar -C $(BUILD_DIR) -x
 	$(CHDIR)/$(NI_FFMPEG); \
 		./configure $($(PKG)_CONF_OPTS); \
 		$(MAKE); \

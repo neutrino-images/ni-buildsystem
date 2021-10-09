@@ -222,7 +222,7 @@ kernel.do_prepare_git:
 	$(MAKE) kernel.do_checkout
 	#
 	$(REMOVE)/$(KERNEL_DIR)
-	tar -C $(SOURCE_DIR) -cp $(NI_LINUX_KERNEL) --exclude-vcs | tar -C $(BUILD_DIR) -x
+	tar -C $(SOURCE_DIR) --exclude-vcs -cp $(NI_LINUX_KERNEL) | tar -C $(BUILD_DIR) -x
 	$(CD) $(BUILD_DIR); \
 		mv $(NI_LINUX_KERNEL) $(KERNEL_DIR)
 
