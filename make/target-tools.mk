@@ -953,7 +953,7 @@ STREAMRIPPER_CONF_OPTS = \
 
 streamripper: $(STREAMRIPPER_DEPENDENCIES) | $(TARGET_DIR)
 	$(REMOVE)/$(NI_STREAMRIPPER)
-	tar -C $(SOURCE_DIR) -cp $(NI_STREAMRIPPER) | tar -C $(BUILD_DIR) -x
+	tar -C $(SOURCE_DIR) -cp $(NI_STREAMRIPPER) --exclude-vcs | tar -C $(BUILD_DIR) -x
 	$(CHDIR)/$(NI_STREAMRIPPER); \
 		$(CONFIGURE); \
 		$(MAKE); \
@@ -1001,7 +1001,7 @@ gettext: $(DL_DIR)/$(GETTEXT_SOURCE) | $(TARGET_DIR)
 
 ofgwrite: $(SOURCE_DIR)/$(NI_OFGWRITE) | $(TARGET_DIR)
 	$(REMOVE)/$(NI_OFGWRITE)
-	tar -C $(SOURCE_DIR) -cp $(NI_OFGWRITE) | tar -C $(BUILD_DIR) -x
+	tar -C $(SOURCE_DIR) -cp $(NI_OFGWRITE) --exclude-vcs | tar -C $(BUILD_DIR) -x
 	$(CHDIR)/$(NI_OFGWRITE); \
 		$(TARGET_CONFIGURE_ENV) \
 		$(MAKE)

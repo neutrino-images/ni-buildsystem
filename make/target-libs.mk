@@ -171,7 +171,7 @@ OPENTHREADS_CONF_OPTS = \
 
 openthreads: $(SOURCE_DIR)/$(NI_OPENTHREADS) | $(TARGET_DIR)
 	$(REMOVE)/$(NI_OPENTHREADS)
-	tar -C $(SOURCE_DIR) -cp $(NI_OPENTHREADS) | tar -C $(BUILD_DIR) -x
+	tar -C $(SOURCE_DIR) -cp $(NI_OPENTHREADS) --exclude-vcs | tar -C $(BUILD_DIR) -x
 	$(CHDIR)/$(NI_OPENTHREADS)/; \
 		$(CMAKE); \
 		$(MAKE); \
@@ -351,7 +351,7 @@ RTMPDUMP_MAKE_OPTS = \
 
 rtmpdump: $(RTMPDUMP_DEPENDENCIES) $(SOURCE_DIR)/$(NI_RTMPDUMP) | $(TARGET_DIR)
 	$(REMOVE)/$(NI_RTMPDUMP)
-	tar -C $(SOURCE_DIR) -cp $(NI_RTMPDUMP) | tar -C $(BUILD_DIR) -x
+	tar -C $(SOURCE_DIR) -cp $(NI_RTMPDUMP) --exclude-vcs | tar -C $(BUILD_DIR) -x
 	$(CHDIR)/$(NI_RTMPDUMP); \
 		$($(PKG)_MAKE_ENV) $(MAKE) $($(PKG)_MAKE_OPTS); \
 		$($(PKG)_MAKE_ENV) $(MAKE) $($(PKG)_MAKE_OPTS) install DESTDIR=$(TARGET_DIR)
