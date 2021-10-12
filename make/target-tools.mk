@@ -373,6 +373,8 @@ tzdata: $(TZDATA_DEPENDENCIES) $(DL_DIR)/$(TZDATA_SOURCE) | $(TARGET_DIR)
 	ln -sf $(ETC_LOCALTIME) $(TARGET_sysconfdir)/localtime
   endif
 	echo "$(TZDATA_LOCALTIME)" > $(TARGET_sysconfdir)/timezone
+	$(INSTALL) -d $(TARGET_sysconfdir)/profile.d
+	echo "export TZ=\$$(cat $(sysconfdir)/timezone)" > $(TARGET_sysconfdir)/profile.d/tz.sh
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
 
