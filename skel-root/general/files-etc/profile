@@ -7,6 +7,9 @@ if [ -d "/usr/local/bin" ]; then
 	PATH="/usr/local/bin:$PATH"
 fi
 
+# add neutrino's luaplugindir to PATH
+PATH=$PATH:/usr/share/tuxbox/neutrino/luaplugins
+
 if [ -z "$PS1" ]; then
 	if [ "`id -u`" -eq 0 ]; then
 		PS1='[\h] \w \# '
