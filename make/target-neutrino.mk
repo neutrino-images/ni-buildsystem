@@ -144,8 +144,6 @@ else
   endif
   #NEUTRINO_CONF_OPTS += --enable-dynamicdemux
 
-  NEUTRINO_CONF_OPTS += --disable-aitscan
-
 endif
 
 NEUTRINO_DEPENDENCIES += lcd4linux
