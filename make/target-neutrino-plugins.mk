@@ -22,7 +22,8 @@ NEUTRINO_PLUGINS_BUILD_DIR = $(BUILD_DIR)/$(NEUTRINO_PLUGINS_OBJ)
 
 # -----------------------------------------------------------------------------
 
-NEUTRINO_PLUGINS_DEPENDENCIES = ffmpeg
+NEUTRINO_PLUGINS_DEPENDENCIES =
+NEUTRINO_PLUGINS_DEPENDENCIES += ffmpeg
 NEUTRINO_PLUGINS_DEPENDENCIES += libcurl
 NEUTRINO_PLUGINS_DEPENDENCIES += libpng
 NEUTRINO_PLUGINS_DEPENDENCIES += libjpeg-turbo
@@ -102,7 +103,7 @@ $(NEUTRINO_PLUGINS_BUILD_DIR)/config.status: $(NEUTRINO_PLUGINS_DEPENDENCIES)
 
 # -----------------------------------------------------------------------------
 
-NEUTRINO_PLUGINS_INIT_SCRIPTS_DEFAULTS  =
+NEUTRINO_PLUGINS_INIT_SCRIPTS_DEFAULTS =
 NEUTRINO_PLUGINS_INIT_SCRIPTS_DEFAULTS += emmrd
 NEUTRINO_PLUGINS_INIT_SCRIPTS_DEFAULTS += fritzcallmonitor
 NEUTRINO_PLUGINS_INIT_SCRIPTS_DEFAULTS += openvpn
@@ -126,9 +127,10 @@ define NEUTRINO_PLUGINS_RUNLEVEL_LINKS_INSTALL
 endef
 
 define NEUTRINO_PLUGINS_RUNLEVEL_LINKS_UNINSTALL
-	for link in $(NEUTRINO_PLUGINS_INIT_SCRIPTS); do \
-		find $(TARGET_sysconfdir) -type l -name [SK]??$$link -print0 | \
-			xargs --no-run-if-empty -0 rm -f; \
+	for script in $(NEUTRINO_PLUGINS_INIT_SCRIPTS); do \
+		if [ -x $(TARGET_DIR)/etc/init.d/$$script ]; then \
+			$(REMOVE-RC.D) $$script remove; \
+		fi; \
 	done
 endef
 
