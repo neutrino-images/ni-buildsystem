@@ -145,8 +145,8 @@ neutrino-plugins: neutrino $(NEUTRINO_PLUGINS_BUILD_DIR)/config.status
 # -----------------------------------------------------------------------------
 
 neutrino-plugins-uninstall:
-	-make -C $(NEUTRINO_PLUGINS_BUILD_DIR) uninstall DESTDIR=$(TARGET_DIR)
 	$(NEUTRINO_PLUGINS_RUNLEVEL_LINKS_UNINSTALL)
+	-make -C $(NEUTRINO_PLUGINS_BUILD_DIR) uninstall DESTDIR=$(TARGET_DIR)
 
 neutrino-plugins-distclean:
 	-make -C $(NEUTRINO_PLUGINS_BUILD_DIR) distclean
