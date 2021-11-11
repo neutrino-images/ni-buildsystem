@@ -68,6 +68,7 @@ NEUTRINO_PLUGINS_CONF_OPTS += \
 	--disable-logoupdater \
 	--disable-logoview \
 	--disable-mountpointmanagement \
+	--disable-filmon \
 	--disable-stbup
 
 ifeq ($(BOXTYPE),coolstream)
