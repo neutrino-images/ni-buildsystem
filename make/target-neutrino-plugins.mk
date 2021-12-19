@@ -74,6 +74,7 @@ NEUTRINO_PLUGINS_CONF_OPTS += \
 ifeq ($(BOXTYPE),coolstream)
   ifeq ($(BOXSERIES),hd1)
     NEUTRINO_PLUGINS_CONF_OPTS += \
+	--disable-plutotv \
 	--disable-spiegel_tv_doc \
 	--disable-tierwelt_tv
   endif
