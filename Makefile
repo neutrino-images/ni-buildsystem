@@ -196,6 +196,9 @@ everything: $(shell find package/*/*.mk -type f | cut -d'/' -f2 | sort | uniq)
 # -----------------------------------------------------------------------------
 
 -include config.local
+
+include package/Makefile.in
+
 include make/environment-box.mk
 include make/environment-linux.mk
 include make/environment-build.mk

@@ -8,24 +8,6 @@ export LD_LIBRARY_PATH
 
 # -----------------------------------------------------------------------------
 
-ifndef MAKE
-MAKE := make
-endif
-ifndef HOSTMAKE
-HOSTMAKE = $(MAKE)
-endif
-HOSTMAKE := $(shell which $(HOSTMAKE) || type -p $(HOSTMAKE) || echo make)
-
-PARALLEL_JOBS := $(shell echo \
-	$$((1 + `getconf _NPROCESSORS_ONLN 2>/dev/null || echo 1`)))
-
-MAKE1 := $(HOSTMAKE) -j1
-override MAKE = $(HOSTMAKE) \
-	$(if $(findstring j,$(filter-out --%,$(MAKEFLAGS))),,-j$(PARALLEL_JOBS))
-
-MAKEFLAGS += --no-print-directory
-#MAKEFLAGS += --silent
-
 TARGET_VENDOR = NI-Buildsystem
 
 TARGET_OS = linux
@@ -439,10 +421,6 @@ NINJA = \
 
 NINJA_INSTALL = DESTDIR=$(TARGET_DIR) \
 	$(HOST_NINJA) -C $(PKG_BUILD_DIR)/build install
-
-# -----------------------------------------------------------------------------
-
-include package/Makefile
 
 # -----------------------------------------------------------------------------
 
