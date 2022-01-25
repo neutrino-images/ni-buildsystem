@@ -9,4 +9,7 @@ SPF-105P, SPF-107H, SPF-107H-v2, SPF-1000P
 800x600
 1024x600
 320x240
+jetzt
+später
+
 
