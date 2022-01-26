@@ -16,6 +16,9 @@ configfile() {
 	chmod 600 ${CONF_DIR}/lcd4linux.conf
 	chown 0:0 ${CONF_DIR}/lcd4linux.conf
 
+	cp ${CONF_DIR}/lcd4linux.conf /tmp/lcd4image.conf
+	sed -i "s|^	driver.*|	driver	'Image'\n	format	'PNG'\n	pixel	'1+0'\n	gap	'0x0'|g" /tmp/lcd4image.conf
+
 	printf "${CONF_DIR}/lcd4linux.conf"
 }
 
@@ -23,13 +26,15 @@ doStart() {
 	( # do always run in background
 		while [ ! -e /tmp/.lcd4linux ]; do sleep 2; done
 		/usr/bin/lcd4linux -f $(configfile)
+		/usr/bin/lcd4linux -f /tmp/lcd4image.conf -p /var/run/lcd4image.pid -o /tmp/lcd4linux.png
 	) &
 }
 
 doStop() {
-	if [ -e /var/run/lcd4linux.pid ]; then
+	for PIDFILE in /var/run/lcd4image.pid /var/run/lcd4linux.pid; do
+	if [ -e $PIDFILE ]; then
 		# read pid from pidfile
-		read PID < /var/run/lcd4linux.pid
+		read PID < $PIDFILE
 
 		# kill child processes
 		CHILDS=$(ps -o pid --ppid $PID --no-heading)
@@ -41,6 +46,7 @@ doStop() {
 		kill -TERM $PID
 		sleep 2
 	fi
+	done
 }
 
 doOff() {
