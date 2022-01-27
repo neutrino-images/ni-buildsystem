@@ -1,11 +1,13 @@
 #!/bin/sh
 
-[ -x /usr/bin/lcd4linux ]	|| exit 1
-[ -e /tmp/.lcd-* ]		|| exit 1
+lcd4linux=$(which lcd4linux || type -p lcd4linux)
+
+[ -n $lcd4linux ] || exit 1
+[ -e /tmp/.lcd-* ] || exit 1
 
 . /etc/init.d/globals
 
-configfile() {
+lcd4linux_conf() {
 	if [ ! -e /tmp/lcd/layout ]; then
 		mkdir -p /tmp/lcd
 		echo Pearl_standard > /tmp/lcd/layout
@@ -16,22 +18,31 @@ configfile() {
 	chmod 600 ${CONF_DIR}/lcd4linux.conf
 	chown 0:0 ${CONF_DIR}/lcd4linux.conf
 
-	cp ${CONF_DIR}/lcd4linux.conf /tmp/lcd4image.conf
-	sed -i "s|^	driver.*|	driver	'Image'\n	format	'PNG'\n	pixel	'1+0'\n	gap	'0x0'|g" /tmp/lcd4image.conf
-
 	printf "${CONF_DIR}/lcd4linux.conf"
 }
+lcd4linux_pid=/var/run/lcd4linux.pid
+
+lcd4image_conf=/tmp/lcd4image.conf
+lcd4image_pid=/var/run/lcd4image.pid
 
 doStart() {
 	( # do always run in background
 		while [ ! -e /tmp/.lcd4linux ]; do sleep 2; done
-		/usr/bin/lcd4linux -f $(configfile)
-		/usr/bin/lcd4linux -f /tmp/lcd4image.conf -p /var/run/lcd4image.pid -o /tmp/lcd4linux.png
+
+		lcd4linux_conf=$(lcd4linux_conf)
+		$lcd4linux -f $lcd4linux_conf -p $lcd4linux_pid
+
+		if [ true ]; then
+			cp $lcd4linux_conf $lcd4image_conf
+			sed -i "s|^	driver.*|	driver	'Image'\n	format	'PNG'\n	pixel	'1+0'\n	gap	'0x0'|g" $lcd4image_conf
+
+			$lcd4linux -f $lcd4image_conf -p $lcd4image_pid -o /tmp/lcd4linux.png
+		fi
 	) &
 }
 
 doStop() {
-	for PIDFILE in /var/run/lcd4image.pid /var/run/lcd4linux.pid; do
+	for PIDFILE in $lcd4image_pid $lcd4linux_pid; do
 	if [ -e $PIDFILE ]; then
 		# read pid from pidfile
 		read PID < $PIDFILE
@@ -50,7 +61,7 @@ doStop() {
 }
 
 doOff() {
-	echo "LCD::backlight(0)" | /usr/bin/lcd4linux -i > /dev/null 2>&1
+	echo "LCD::backlight(0)" | $lcd4linux -i > /dev/null 2>&1
 }
 
 case "$1" in
