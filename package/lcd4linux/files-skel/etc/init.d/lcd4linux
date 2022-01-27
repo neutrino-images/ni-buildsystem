@@ -5,6 +5,7 @@ lcd4linux=$(which lcd4linux || type -p lcd4linux)
 [ -n $lcd4linux ] || exit 1
 [ -e /tmp/.lcd-* ] || exit 1
 
+. /etc/init.d/functions
 . /etc/init.d/globals
 
 lcd4linux_conf() {
@@ -24,6 +25,7 @@ lcd4linux_pid=/var/run/lcd4linux.pid
 
 lcd4image_conf=/tmp/lcd4image.conf
 lcd4image_pid=/var/run/lcd4image.pid
+lcd4linux_png=/tmp/lcd4linux.png
 
 doStart() {
 	( # do always run in background
@@ -32,11 +34,11 @@ doStart() {
 		lcd4linux_conf=$(lcd4linux_conf)
 		$lcd4linux -f $lcd4linux_conf -p $lcd4linux_pid
 
-		if [ true ]; then
+		if [ "$(get_setting lcd4l_screenshots)" == "1" ]; then
 			cp $lcd4linux_conf $lcd4image_conf
 			sed -i "s|^	driver.*|	driver	'Image'\n	format	'PNG'\n	pixel	'1+0'\n	gap	'0x0'|g" $lcd4image_conf
 
-			$lcd4linux -f $lcd4image_conf -p $lcd4image_pid -o /tmp/lcd4linux.png
+			$lcd4linux -f $lcd4image_conf -p $lcd4image_pid -o $lcd4linux_png
 		fi
 	) &
 }
@@ -58,6 +60,7 @@ doStop() {
 		sleep 2
 	fi
 	done
+	rm -f $lcd4image_conf $lcd4linux_png
 }
 
 doOff() {
