@@ -41,9 +41,9 @@
  select.o session.o smb.o string.o suffix.o svg.o svgalib.o terminal.o \
 -tiff.o types.o url.o view.o view_gr.o vms.o x.o xbm.o
 +tiff.o types.o url.o view.o view_gr.o vms.o x.o xbm.o rcmouse.o rc.o rcinput.o
+ @ATHEOS_GR_TRUE@links_DEPENDENCIES =  atheos.o
  @JAVASCRIPT_TRUE@links_DEPENDENCIES =  builtin.o context.o ipret.o \
  @JAVASCRIPT_TRUE@javascr.o javascript.o md5.o md5hl.o ns.o pomocny.o \
- @JAVASCRIPT_TRUE@regexp.o
 --- a/bfu.c
 +++ b/bfu.c
 @@ -1544,7 +1544,7 @@
@@ -68,7 +68,7 @@
  #if SIZEOF_UNSIGNED_LONG >= 8 || defined(__x86_64__) || defined(__aarch64__)
 --- a/configure
 +++ b/configure
-@@ -8578,7 +8578,7 @@
+@@ -8582,7 +8582,7 @@
  fi
  done
  
@@ -79,7 +79,7 @@
  EOF
 --- a/configure.in
 +++ b/configure.in
-@@ -1069,7 +1069,7 @@
+@@ -1073,7 +1073,7 @@
  
  if test "$disable_fb" != yes; then
  	AC_CHECK_HEADERS(linux/fb.h linux/kd.h linux/vt.h sys/mman.h)
@@ -90,7 +90,7 @@
  	fi
 --- a/default.c
 +++ b/default.c
-@@ -761,7 +761,7 @@
+@@ -769,7 +769,7 @@
  		home = NULL;
  	}
  #endif
@@ -99,7 +99,7 @@
  #ifdef WIN
  /* When we run in Cygwin without Cygwin environment, it reports home "/".
     Unfortunatelly, it can't write anything to that directory */
-@@ -812,7 +812,7 @@
+@@ -820,7 +820,7 @@
  #elif defined(OPENVMS) || defined(HAIKU)
  		add_to_strn(&home_links, cast_uchar "links");
  #else
@@ -108,7 +108,7 @@
  #endif
  	}
  	EINTRLOOP(rs, stat(cast_const_char home_links, &st));
-@@ -2086,7 +2086,7 @@
+@@ -2103,7 +2103,7 @@
  	if (links_home) mem_free(links_home);
  }
  
@@ -119,7 +119,7 @@
  unsigned char ggr_mode[MAX_STR_LEN] = "";
 --- a/dither.c
 +++ b/dither.c
-@@ -347,7 +347,7 @@
+@@ -351,7 +351,7 @@
  	outp[0]=bt>>16;\
  	outp[1]=gt>>16;\
  	outp[2]=rt>>16;\
@@ -128,7 +128,7 @@
  	outp+=4;
  DITHER_TEMPLATE(dither_196, 0)
  ROUND_TEMPLATE(round_196, 0)
-@@ -494,7 +494,7 @@
+@@ -498,7 +498,7 @@
  	((unsigned char *)&ret)[0]=(unsigned char)rgb;
  	((unsigned char *)&ret)[1]=rgb>>8;
  	((unsigned char *)&ret)[2]=rgb>>16;
@@ -313,7 +313,7 @@
  }
  
  static unsigned char *fb_init_driver(unsigned char *param, unsigned char *ignore)
-@@ -1349,6 +1420,16 @@
+@@ -1351,6 +1422,16 @@
  	} else {
  		border_bottom = border_top;
  	}
@@ -330,7 +330,7 @@
  	if (*param) goto bad_p;
  
  	EINTRLOOP(rs, fstat(TTY, &st));
-@@ -1384,6 +1465,17 @@
+@@ -1386,6 +1467,17 @@
  		e = stracpy(cast_uchar "Cannot get FB FSCREENINFO.\n");
  		goto fail4;
  	}
@@ -348,7 +348,7 @@
  
  #if 0
  	{
-@@ -1472,7 +1564,9 @@
+@@ -1474,7 +1566,9 @@
  	fb_mem_size = fi.smem_len;
  
  	init_virtual_devices(&fb_driver, NUMBER_OF_DEVICES);
@@ -358,7 +358,7 @@
  
  	/* Mikulas: nechodi to na sparcu */
  	if (fb_mem_size < (unsigned)((border_top + fb_ysize + border_bottom) * fb_linesize)) {
-@@ -1523,6 +1617,10 @@
+@@ -1525,6 +1619,10 @@
  		e = stracpy(cast_uchar "Cannot mmap graphics memory.\n");
  		goto fail5;
  	}
@@ -369,7 +369,7 @@
  	fb_vmem = fb_mem + border_left * fb_pixelsize + border_top * fb_linesize;
  	fb_driver.depth = fb_pixelsize & 7;
  	fb_driver.depth |= (fb_bits_pp & 31) << 3;
-@@ -1640,7 +1738,9 @@
+@@ -1643,7 +1741,9 @@
  	EINTRLOOP(rs, munmap(fb_mem, fb_mapped_size));
  	shutdown_virtual_devices();
  	fb_switch_shutdown();
@@ -379,7 +379,7 @@
  	if(fb_driver_param) mem_free(fb_driver_param);
  	/* show cursor */
  	fb_show_cursor();
-@@ -1748,6 +1848,27 @@
+@@ -1756,6 +1856,27 @@
  	dest->skip = (ssize_t)dest->x * fb_pixelsize;
  	dest->flags = 0;
  	return 0;
@@ -407,7 +407,7 @@
  }
  
  static void fb_register_bitmap(struct bitmap *bmp)
-@@ -2070,7 +2191,9 @@
+@@ -2078,7 +2199,9 @@
  	unhandle_fb_mouse();
  	fb_old_vd = current_virtual_device;
  	current_virtual_device=NULL;
@@ -417,7 +417,7 @@
  	if (have_cmap && fb_active) set_palette(&old_palette);
  	EINTRLOOP(rs, fsync(fb_handle));
  	fb_switch_shutdown();
-@@ -2085,7 +2208,9 @@
+@@ -2095,7 +2218,9 @@
  	unsigned char *e;
  	if (current_virtual_device) return 0;
  	if (dev != fb_block_dev) return -2;
@@ -516,7 +516,7 @@
 +
 --- a/menu.c
 +++ b/menu.c
-@@ -3743,16 +3743,16 @@
+@@ -3915,16 +3915,16 @@
  
  #ifdef G
  static_const struct menu_item file_menu111[] = {
@@ -538,7 +538,7 @@
  };
  
  static_const struct menu_item file_menu21[] = {
-@@ -3852,6 +3852,7 @@
+@@ -4024,6 +4024,7 @@
  	/*cast_uchar "", cast_uchar "", M_BAR, NULL, NULL, 0, 0,
  	TEXT_(T_OS_SHELL), cast_uchar "", TEXT_(T_HK_OS_SHELL), menu_shell, NULL, 0, 0,*/
  	x = 1;
@@ -546,7 +546,7 @@
  	if (!anonymous && can_open_os_shell(term->environment)) {
  		e->text = TEXT_(T_OS_SHELL);
  		e->rtext = cast_uchar "";
-@@ -3863,6 +3864,7 @@
+@@ -4035,6 +4036,7 @@
  		e++;
  		x = 0;
  	}
@@ -554,7 +554,7 @@
  	if (can_resize_window(term)) {
  		e->text = TEXT_(T_RESIZE_TERMINAL);
  		e->rtext = cast_uchar "";
-@@ -3886,15 +3888,15 @@
+@@ -4058,15 +4060,15 @@
  static void (* const set_frame_ptr)(struct session *ses, struct f_data_c *f, int a) = set_frame;
  
  static_const struct menu_item view_menu[] = {
@@ -1261,7 +1261,7 @@
  
  #ifdef USE_LIBEVENT
  #if defined(evtimer_set) && !defined(timeout_set)
-@@ -649,8 +650,12 @@
+@@ -655,8 +656,12 @@
  		return;
  	}
  #endif
@@ -1276,7 +1276,7 @@
  		FD_CLR(fd, &w_read);
  		FD_CLR(fd, &x_read);
  	}
-@@ -937,9 +942,14 @@
+@@ -943,9 +948,14 @@
  }
  
  int terminate_loop = 0;
@@ -1291,7 +1291,7 @@
  #if !defined(USE_LIBEVENT) || !defined(USE_POLL)
  	restrict_fds();
  #endif
-@@ -995,6 +1005,15 @@
+@@ -1001,6 +1011,15 @@
  		nopr();
  	} else
  #endif
