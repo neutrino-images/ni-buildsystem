@@ -20,7 +20,6 @@ FFMPEG_CONF_OPTS = \
 	--disable-podpages \
 	--disable-txtpages \
 	\
-	--disable-ffmpeg \
 	--disable-ffplay \
 	--disable-ffprobe \
 	--disable-ffserver \
@@ -150,6 +149,9 @@ else
 endif
 
 ifeq ($(BOXSERIES),hd1)
+  FFMPEG_CONF_OPTS += \
+	--disable-ffmpeg
+
   FFMPEG_CONF_OPTS += \
 	--enable-small \
 	--cpu=armv6 \
