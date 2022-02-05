@@ -136,8 +136,8 @@ matze-192-130:
 	# we should try to keep this array table up-to-date ;-)
 	#
 	DIR[0]="#directory"	; DESC[0]="#description"		; DATE[0]="#date"	 ; \
-	DIR[1]="matze-192"	; DESC[1]="matze-Settings 19.2"		; DATE[1]="20.12.2020"	 ; \
-	DIR[2]="matze-192-130"	; DESC[2]="matze-Settings 19.2, 13.0"	; DATE[2]="20.12.2020"	 ; \
+	DIR[1]="matze-192"	; DESC[1]="matze-Settings 19.2"		; DATE[1]="05.12.2021"	 ; \
+	DIR[2]="matze-192-130"	; DESC[2]="matze-Settings 19.2, 13.0"	; DATE[2]="05.12.2021"	 ; \
 	#; \
 	i=0; \
 	for dir in $${DIR[*]}; do \
