@@ -111,7 +111,23 @@ FFMPEG_CONF_OPTS = \
 		--enable-demuxer=wav \
 	\
 	--disable-muxers \
+		--enable-muxer=apng \
+		--enable-muxer=flac \
+		--enable-muxer=h261 \
+		--enable-muxer=h263 \
+		--enable-muxer=h264 \
+		--enable-muxer=hevc \
+		--enable-muxer=image2 \
+		--enable-muxer=image2pipe \
+		--enable-muxer=m4v \
+		--enable-muxer=matroska \
+		--enable-muxer=mjpeg \
+		--enable-muxer=mp3 \
+		--enable-muxer=mp4 \
+		--enable-muxer=mpeg1video \
+		--enable-muxer=mpeg2video \
 		--enable-muxer=mpegts \
+		--enable-muxer=ogg \
 	\
 	--disable-filters \
 	\
