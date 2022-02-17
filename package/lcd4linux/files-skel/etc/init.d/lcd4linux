@@ -3,7 +3,6 @@
 lcd4linux=$(which lcd4linux || type -p lcd4linux)
 
 [ -n $lcd4linux ] || exit 1
-[ -e /tmp/.lcd-* ] || exit 1
 
 . /etc/init.d/functions
 . /etc/init.d/globals
@@ -29,10 +28,17 @@ lcd4linux_png=/tmp/lcd4linux.png
 
 doStart() {
 	( # do always run in background
-		while [ ! -e /tmp/.lcd4linux ]; do sleep 2; done
+		# /tmp/.lcd4linux gets created by neutrino when lcd4l-Thread is ready
+		while [ ! -e /tmp/.lcd4linux ]; do
+			sleep 1;
+		done
 
 		lcd4linux_conf=$(lcd4linux_conf)
-		$lcd4linux -f $lcd4linux_conf -p $lcd4linux_pid
+
+		# /tmp/.lcd-* gets created by extdisplay script when a display was found
+		if [ -e /tmp/.lcd-* ]; then
+			$lcd4linux -f $lcd4linux_conf -p $lcd4linux_pid
+		fi
 
 		if [ "$(get_setting lcd4l_screenshots)" == "1" ]; then
 			cp $lcd4linux_conf $lcd4image_conf
