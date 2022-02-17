@@ -216,19 +216,12 @@ include make/flash-updates.mk
 include make/flash-images.mk
 include make/linux-kernel.mk
 include make/linux-drivers.mk
-include make/target-neutrino.mk
-include make/target-neutrino-plugins.mk
 include make/target-blobs.mk
-include make/target-development.mk
 include make/target-ffmpeg$(if $(filter $(BOXTYPE),coolstream),-coolstream).mk
 include make/target-files.mk
-include make/target-libs.mk
 include make/target-libs-static.mk
-include make/target-lua.mk
 include make/target-rootfs.mk
 include make/target-scripts.mk
-include make/target-tools.mk
-include make/target-tools-unused.mk
 include make/host-tools.mk
 
 include $(sort $(wildcard package/*/*.mk))

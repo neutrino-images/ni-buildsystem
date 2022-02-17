@@ -29,7 +29,10 @@ ni-image:
 	$(MAKE) kernel
 	$(MAKE) blobs
 	$(MAKE) neutrino
-	make plugins
+	$(MAKE) neutrino-plugins
+	$(MAKE) neutrino-mediathek
+	$(MAKE) doscam-webif-skin
+	$(MAKE) logo-addon
 	make fbshot
 	$(MAKE) tzdata
 	$(MAKE) smartmontools
@@ -58,6 +61,7 @@ ni-image:
 	$(MAKE) wget
 	#$(MAKE) streamripper
 ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd2 hd5x hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo))
+	$(MAKE) channellogos
 	$(MAKE) jq
 	$(MAKE) less
 	$(MAKE) parted
@@ -66,6 +70,7 @@ ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd2 hd5x hd6x vusolo4k vuduo4k vuduo4ks
 	$(MAKE) ethtool
 	$(MAKE) f2fs-tools
   ifneq ($(BOXMODEL),kronos_v2)
+	$(MAKE) links
 	$(MAKE) bash
 	$(MAKE) iperf
 	$(MAKE) minicom
