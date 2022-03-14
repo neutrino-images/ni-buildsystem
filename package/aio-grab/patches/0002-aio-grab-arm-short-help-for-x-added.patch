@@ -1,0 +1,24 @@
+From 09d1f6257c14278475f02c6132dc59fee2a1ca1d Mon Sep 17 00:00:00 2001
+From: BPanther <bpanther_ts@hotmail.com>
+Date: Sun, 17 Oct 2021 15:33:43 +0200
+Subject: [PATCH 2/2] aio-grab-arm: short help for -x added
+
+---
+ main.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/main.c b/main.c
+index 18c8c37..de9af12 100644
+--- a/main.c
++++ b/main.c
+@@ -663,6 +663,7 @@ int main(int argc, char **argv)
+ 					"-p produce png files instead of bmp\n"
+ 					"-q Quiet mode, don't output debug messages\n"
+ 					"-s write to stdout instead of a file\n"
++					"-x (count) additional PIP count (count 1-3)\n"
+ 					"-h this help screen\n\n"
+ 					"If no command is given the complete picture will be grabbed.\n"
+ 					"If no filename is given /tmp/screenshot.[bmp/jpg/png] will be used.\n");
+-- 
+2.20.1
+
