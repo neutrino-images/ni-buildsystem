@@ -1,0 +1,25 @@
+#!/bin/sh
+
+. /etc/init.d/functions
+. /etc/init.d/globals
+
+case $1 in
+	start)
+		if grep -q "root=mtd:root1" /proc/cmdline; then
+			LOGINFO "mounting root0 to /mnt/root0 ..."
+			mkdir -p /mnt/root0
+			mount -t jffs2 /dev/mtdblock0 /mnt/root0
+		elif grep -q "root=mtd:root0" /proc/cmdline; then
+			LOGINFO "mounting root1 to /mnt/root1 ..."
+			mkdir -p /mnt/root1
+			mount -t jffs2 /dev/mtdblock2 /mnt/root1
+		fi
+	;;
+	stop)
+		umount /mnt/root0
+		umount /mnt/root1
+	;;
+	*)
+		echo "[$BASENAME] Usage: $0 {start|stop}"
+	;;
+esac

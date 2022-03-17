@@ -25,6 +25,7 @@ init-scripts: \
 	\
 	$(TARGET_sysconfdir)/init.d/stb_update.sh \
 	\
+	$(TARGET_sysconfdir)/init.d/rootx-mount \
 	$(TARGET_sysconfdir)/init.d/var_mount.sh \
 	$(TARGET_sysconfdir)/init.d/var_update.sh
 
@@ -110,6 +111,12 @@ $(TARGET_sysconfdir)/init.d/user-initscripts:
 $(TARGET_sysconfdir)/init.d/stb_update.sh:
 ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd1 hd2))
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/stb_update_$(BOXSERIES).sh $(@)
+endif
+
+$(TARGET_sysconfdir)/init.d/rootx-mount:
+ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd2))
+	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/rootx-mount.init $(@)
+	$(UPDATE-RC.D) $(@F) defaults 01 98
 endif
 
 $(TARGET_sysconfdir)/init.d/var_mount.sh:
