@@ -22,7 +22,6 @@ endif
 libtirpc: | $(TARGET_DIR)
 	$(call autotools-package)
 
-
 # -----------------------------------------------------------------------------
 
 HOST_LIBTIRPC_VERSION = $(LIBTIRPC_VERSION)

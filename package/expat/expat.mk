@@ -21,7 +21,6 @@ define EXPAT_TARGET_CLEANUP
 endef
 EXPAT_TARGET_FINALIZE_HOOKS += EXPAT_TARGET_CLEANUP
 
-
 expat: | $(TARGET_DIR)
 	$(call autotools-package)
 
