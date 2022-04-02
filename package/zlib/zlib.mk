@@ -31,3 +31,34 @@ zlib: $(DL_DIR)/$(ZLIB_SOURCE) | $(TARGET_DIR)
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
+HOST_ZLIB_VERSION = $(ZLIB_VERSION)
+HOST_ZLIB_DIR = $(ZLIB_DIR)
+HOST_ZLIB_SOURCE = $(ZLIB_SOURCE)
+HOST_ZLIB_SITE = $(ZLIB_SITE)
+
+#$(DL_DIR)/$(HOST_ZLIB_SOURCE):
+#	$(download) $(HOST_ZLIB_SITE)/$(HOST_ZLIB_SOURCE)
+
+#HOST_ZLIB_CONF_ENV = \
+#	libdir=$(HOST_DIR)/lib \
+#	includedir=$(HOST_DIR)/include
+
+HOST_ZLIB_CONF_OPTS = \
+	--prefix="" \
+	--shared \
+	--uname=Linux
+
+host-zlib: $(DL_DIR)/$(HOST_ZLIB_SOURCE) | $(HOST_DIR)
+	$(REMOVE)/$(PKG_DIR)
+	$(UNTAR)/$(PKG_SOURCE)
+	$(call APPLY_PATCHES,$(PKG_PATCHES_DIR))
+	$(CHDIR)/$(PKG_DIR); \
+		$(HOST_CONFIGURE_ENV) \
+		./configure $($(PKG)_CONF_OPTS); \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(HOST_DIR)
+	$(REMOVE)/$(PKG_DIR)
+	$(TOUCH)
