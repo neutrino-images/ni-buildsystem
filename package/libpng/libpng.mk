@@ -24,3 +24,15 @@ LIBPNG_TARGET_FINALIZE_HOOKS += LIBPNG_TARGET_CLEANUP
 
 libpng: | $(TARGET_DIR)
 	$(call autotools-package)
+
+# -----------------------------------------------------------------------------
+
+HOST_LIBPNG_VERSION = $(LIBPNG_VERSION)
+HOST_LIBPNG_DIR = $(LIBPNG_DIR)
+HOST_LIBPNG_SOURCE = $(LIBPNG_SOURCE)
+HOST_LIBPNG_SITE = $(LIBPNG_SITE)
+
+HOST_LIBPNG_DEPENDENCIES = host-zlib
+
+host-libpng: | $(HOST_DIR)
+	$(call host-autotools-package)
