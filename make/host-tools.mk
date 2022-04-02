@@ -20,6 +20,7 @@ host-tools: $(BUILD_DIR) $(HOST_DIR) \
 	host-dosfstools \
 	host-mtools \
 	host-e2fsprogs \
+	host-qrencode \
 	host-lua \
 	host-luarocks \
 	host-ccache
