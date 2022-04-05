@@ -18,5 +18,7 @@ HOST_QRENCODE_SITE = $(QRENCODE_SITE)
 
 HOST_QRENCODE_DEPENDENCIES = host-libpng
 
+HOST_QRENCODE = $(HOST_DIR)/bin/qrencode
+
 host-qrencode: | $(HOST_DIR)
 	$(call host-autotools-package)
