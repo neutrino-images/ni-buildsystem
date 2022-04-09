@@ -15,7 +15,6 @@ init-scripts: \
 	$(TARGET_sysconfdir)/init.d/hostname \
 	$(TARGET_sysconfdir)/init.d/partitions-by-name \
 	$(TARGET_sysconfdir)/init.d/proc \
-	$(TARGET_sysconfdir)/init.d/rc.local \
 	$(TARGET_sysconfdir)/init.d/resizerootfs \
 	$(TARGET_sysconfdir)/init.d/sys_update.sh \
 	$(TARGET_sysconfdir)/init.d/sendsigs \
@@ -68,14 +67,6 @@ $(TARGET_sysconfdir)/init.d/proc:
 ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 hd60 hd61 multiboxse vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo))
 	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/proc.init $(@)
 	$(UPDATE-RC.D) $(@F) start 90 S .
-endif
-
-$(TARGET_sysconfdir)/init.d/rc.local:
-	$(INSTALL_EXEC) -D $(TARGET_FILES)/scripts/rc.local.init $(@)
-	$(UPDATE-RC.D) $(@F) start 99 2 3 4 5 .
-	$(INSTALL_EXEC) -D $(TARGET_FILES)/files-etc/rc.local $(TARGET_sysconfdir)/rc.local
-ifeq ($(PERSISTENT_VAR_PARTITION),yes)
-	$(INSTALL_EXEC) -D $(TARGET_FILES)/files-etc/rc.local-var $(TARGET_localstatedir)/etc/rc.local
 endif
 
 $(TARGET_sysconfdir)/init.d/resizerootfs:
