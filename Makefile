@@ -221,7 +221,6 @@ include make/target-ffmpeg$(if $(filter $(BOXTYPE),coolstream),-coolstream).mk
 include make/target-files.mk
 include make/target-libs-static.mk
 include make/target-rootfs.mk
-include make/target-scripts.mk
 include make/host-tools.mk
 
 include $(sort $(wildcard package/*/*.mk))
