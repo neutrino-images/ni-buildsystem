@@ -139,7 +139,7 @@ $(SOURCE_DIR)/$(NI_RTMPDUMP):
 		git clone $(NI_PUBLIC)/$(@F).git
 ifeq ($(NI_ADMIN),true)
 	$(CD) $(@); \
-		git remote add upstream git://git.ffmpeg.org/rtmpdump; \
+		git remote add upstream https://git.ffmpeg.org/rtmpdump; \
 		git fetch --all
 endif
 
