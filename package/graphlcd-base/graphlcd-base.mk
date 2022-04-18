@@ -7,7 +7,7 @@
 GRAPHLCD_BASE_VERSION = git
 GRAPHLCD_BASE_DIR = graphlcd-base.$(GRAPHLCD_BASE_VERSION)
 GRAPHLCD_BASE_SOURCE = graphlcd-base.$(GRAPHLCD_BASE_VERSION)
-GRAPHLCD_BASE_SITE = git://projects.vdr-developer.org
+GRAPHLCD_BASE_SITE = https://projects.vdr-developer.org/git/
 
 GRAPHLCD_BASE_PATCH  = graphlcd.patch
 GRAPHLCD_BASE_PATCH += 0003-strip-graphlcd-conf.patch
