@@ -36,14 +36,14 @@ TOOLCHECK += find-yacc
 
 find-%:
 	@TOOL=$(patsubst find-%,%,$(@)); type -p $$TOOL >/dev/null || \
-		{ $(call MESSAGE_RED,"Warning",": required tool $$TOOL missing."); false; }
+		{ $(call WARNING,"Warning",": required tool $$TOOL missing."); false; }
 
 bashcheck:
 	@test "$(subst /bin/,,$(shell readlink /bin/sh))" == "bash" || \
-		{ $(call MESSAGE_RED,"Warning",": /bin/sh is not linked to bash"); false; }
+		{ $(call WARNING,"Warning",": /bin/sh is not linked to bash"); false; }
 
 toolcheck: bashcheck $(TOOLCHECK)
-	@$(call MESSAGE_GREEN,"All required tools seem to be installed.")
+	@$(call SUCCESS,"All required tools seem to be installed.")
 
 # -----------------------------------------------------------------------------
 

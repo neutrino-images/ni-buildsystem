@@ -40,7 +40,7 @@ ccache-clean:
 rebuild-clean: host-bin-config-clean target-clean deps-clean build-clean checkout-branches
 
 all-clean: rebuild-clean staging-clean host-clean static-base-clean
-	@$(call MESSAGE_RED,"Any other key then CTRL-C will now remove CROSS_BASE")
+	@$(call WARNING,"Any other key then CTRL-C will now remove CROSS_BASE")
 	@read
 	make cross-base-clean
 
