@@ -75,9 +75,11 @@ define APPLY_PATCHES # (patches or directory)
 			continue; \
 		fi; \
 		if [ -d $$i ]; then \
-			for p in $$i/*.patch; do \
-				$(call MESSAGE,"Applying $${p#$(PKG_PATCHES_DIR)/} (*)"); \
-				patch -p1 -i $$p; \
+			for p in $$i/*.patch $$i/*.patch-$(TARGET_CPU) $$i/*.patch-$(TARGET_ARCH); do \
+				if [ -e $$p ]; then \
+					$(call MESSAGE,"Applying $${p#$(PKG_PATCHES_DIR)/} (*)"); \
+					patch -p1 -i $$p; \
+				fi; \
 			done; \
 		else \
 			$(call MESSAGE,"Applying $${i#$(PKG_PATCHES_DIR)/}"); \
