@@ -9,9 +9,7 @@ LIBSTB_HAL_BUILD_DIR = $(BUILD_DIR)/$(LIBSTB_HAL_OBJ)
 
 # -----------------------------------------------------------------------------
 
-LIBSTB_HAL_DEPENDENCIES =
-LIBSTB_HAL_DEPENDENCIES += ffmpeg
-LIBSTB_HAL_DEPENDENCIES += openthreads
+LIBSTB_HAL_DEPENDENCIES = ffmpeg openthreads
 
 # -----------------------------------------------------------------------------
 

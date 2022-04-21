@@ -9,18 +9,8 @@ NEUTRINO_PLUGINS_BUILD_DIR = $(BUILD_DIR)/$(NEUTRINO_PLUGINS_OBJ)
 
 # -----------------------------------------------------------------------------
 
-NEUTRINO_PLUGINS_DEPENDENCIES =
-NEUTRINO_PLUGINS_DEPENDENCIES += ffmpeg
-NEUTRINO_PLUGINS_DEPENDENCIES += libcurl
-NEUTRINO_PLUGINS_DEPENDENCIES += libpng
-NEUTRINO_PLUGINS_DEPENDENCIES += libjpeg-turbo
-NEUTRINO_PLUGINS_DEPENDENCIES += giflib
-NEUTRINO_PLUGINS_DEPENDENCIES += freetype
-NEUTRINO_PLUGINS_DEPENDENCIES += lua-curl
-NEUTRINO_PLUGINS_DEPENDENCIES += lua-feedparser
-NEUTRINO_PLUGINS_DEPENDENCIES += luaexpat
-NEUTRINO_PLUGINS_DEPENDENCIES += luajson
-NEUTRINO_PLUGINS_DEPENDENCIES += luaposix
+NEUTRINO_PLUGINS_DEPENDENCIES = ffmpeg libcurl libpng libjpeg-turbo giflib \
+	freetype lua-curl lua-feedparser luaexpat luajson luaposix
 
 # -----------------------------------------------------------------------------
 
