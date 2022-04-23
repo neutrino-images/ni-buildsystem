@@ -45,7 +45,10 @@ ifneq ($(DEBUG),yes)
 	find $(UPDATE_INST_DIR)$(bindir) -type f ! -name *.sh -print0 | xargs -0 $(TARGET_STRIP) || true
 endif
 	$(MAKE) u-update-bin \
-			UPDATE_MD5FILE=$(UPDATE_MD5FILE_BOXSERIES)
+			UPDATE_DATE=$(shell date +%Y%m%d%H%M) \
+			UPDATE_MD5FILE=$(UPDATE_MD5FILE_BOXSERIES) \
+			UPDATE_NAME=$(UPDATE_PREFIX)-$(UPDATE_SUFFIX) \
+			UPDATE_DESC="Neutrino [$(BOXTYPE_SC)][$(BOXSERIES)] Update \(simple\)"
 
 # -----------------------------------------------------------------------------
 
@@ -63,7 +66,10 @@ ifeq ($(PERSISTENT_VAR_PARTITION),yes)
 	mv $(UPDATE_INST_DIR)/var $(UPDATE_INST_DIR)/var_init
 endif
 	$(MAKE) u-update-bin \
-			UPDATE_MD5FILE=$(UPDATE_MD5FILE_BOXSERIES)
+			UPDATE_DATE=$(shell date +%Y%m%d%H%M) \
+			UPDATE_MD5FILE=$(UPDATE_MD5FILE_BOXSERIES) \
+			UPDATE_NAME=$(UPDATE_PREFIX)-$(UPDATE_SUFFIX)-full \
+			UPDATE_DESC="Neutrino [$(BOXTYPE_SC)][$(BOXSERIES)] Update \(full\)"
 
 # -----------------------------------------------------------------------------
 
