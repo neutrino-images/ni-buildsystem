@@ -37,12 +37,12 @@ u-neutrino: neutrino-clean
 	echo "killall start_neutrino neutrino; sleep 5"	>> $(PREINSTALL_SH)
 	echo "sync; reboot"				>> $(POSTINSTALL_SH)
 	$(MAKE) neutrino
-	$(INSTALL_EXEC) -D $(TARGET_sysconfdir)/init.d/start_neutrino $(UPDATE_INST_DIR)/etc/init.d/start_neutrino
-	$(INSTALL_EXEC) -D $(TARGET_bindir)/neutrino $(UPDATE_INST_DIR)/bin/neutrino
-	$(INSTALL_DATA) -D $(TARGET_datadir)/tuxbox/neutrino/locale/deutsch.locale $(UPDATE_INST_DIR)/share/tuxbox/neutrino/locale/deutsch.locale
-	$(INSTALL_DATA) -D $(TARGET_datadir)/tuxbox/neutrino/locale/english.locale $(UPDATE_INST_DIR)/share/tuxbox/neutrino/locale/english.locale
+	$(INSTALL_EXEC) -D $(TARGET_sysconfdir)/init.d/start_neutrino $(UPDATE_INST_DIR)$(sysconfdir)/init.d/start_neutrino
+	$(INSTALL_EXEC) -D $(TARGET_bindir)/neutrino $(UPDATE_INST_DIR)$(bindir)/neutrino
+	$(INSTALL_DATA) -D $(TARGET_datadir)/tuxbox/neutrino/locale/deutsch.locale $(UPDATE_INST_DIR)$(datadir)/tuxbox/neutrino/locale/deutsch.locale
+	$(INSTALL_DATA) -D $(TARGET_datadir)/tuxbox/neutrino/locale/english.locale $(UPDATE_INST_DIR)$(datadir)/tuxbox/neutrino/locale/english.locale
 ifneq ($(DEBUG),yes)
-	find $(UPDATE_INST_DIR)/bin -type f ! -name *.sh -print0 | xargs -0 $(TARGET_STRIP) || true
+	find $(UPDATE_INST_DIR)$(bindir) -type f ! -name *.sh -print0 | xargs -0 $(TARGET_STRIP) || true
 endif
 	$(MAKE) u-update-bin \
 			UPDATE_MD5FILE=$(UPDATE_MD5FILE_BOXSERIES)
@@ -54,9 +54,9 @@ u-neutrino-full: neutrino-clean
 	echo "killall start_neutrino neutrino; sleep 5"	>> $(PREINSTALL_SH)
 	echo "sync; reboot"				>> $(POSTINSTALL_SH)
 	$(MAKE) neutrino NEUTRINO_INST_DIR=$(UPDATE_INST_DIR)
-	$(INSTALL_EXEC) -D $(TARGET_sysconfdir)/init.d/start_neutrino $(UPDATE_INST_DIR)/etc/init.d/start_neutrino
+	$(INSTALL_EXEC) -D $(TARGET_sysconfdir)/init.d/start_neutrino $(UPDATE_INST_DIR)$(sysconfdir)/init.d/start_neutrino
 ifneq ($(DEBUG),yes)
-	find $(UPDATE_INST_DIR)/bin -type f ! -name *.sh -print0 | xargs -0 $(TARGET_STRIP) || true
+	find $(UPDATE_INST_DIR)$(bindir) -type f ! -name *.sh -print0 | xargs -0 $(TARGET_STRIP) || true
 endif
 ifeq ($(PERSISTENT_VAR_PARTITION),yes)
 	# avoid overrides in user's var-partition
