@@ -193,6 +193,14 @@ VUDUO_PATCH = \
 
 # -----------------------------------------------------------------------------
 
+# Older versions break on gcc 10+ because of redefined symbols
+define LINUX_FIX_YYLLOC
+	$(Q)grep -Z -l -r -E '^YYLTYPE yylloc;$$' $(BUILD_DIR)/$(KERNEL_DIR) \
+		| xargs -0 -r $(SED) 's/^YYLTYPE yylloc;/extern YYLTYPE yylloc;/g'
+endef
+
+# -----------------------------------------------------------------------------
+
 $(DL_DIR)/$(KERNEL_SOURCE):
 	$(download) $(KERNEL_SITE)/$(KERNEL_SOURCE)
 
@@ -200,12 +208,6 @@ $(DL_DIR)/$(VMLINUZ_INITRD_SOURCE):
 	$(download) $(VMLINUZ_INITRD_SITE)/$(VMLINUZ_INITRD_SOURCE)
 
 # -----------------------------------------------------------------------------
-
-# Older versions break on gcc 10+ because of redefined symbols
-define LINUX_DROP_YYLLOC
-	$(Q)grep -Z -l -r -E '^YYLTYPE yylloc;$$' $(BUILD_DIR)/$(KERNEL_DIR) \
-	| xargs -0 -r $(SED) '/^YYLTYPE yylloc;$$/d'
-endef
 
 kernel.do_checkout: $(SOURCE_DIR)/$(NI_LINUX_KERNEL)
 	$(CD) $(SOURCE_DIR)/$(NI_LINUX_KERNEL); \
@@ -236,7 +238,7 @@ kernel.do_prepare_tar: $(DL_DIR)/$(KERNEL_SOURCE)
 	$(REMOVE)/$(KERNEL_DIR)
 	$(UNTAR)/$(KERNEL_SOURCE)
 	$(call APPLY_PATCHES,$(KERNEL_PATCH))
-	$(LINUX_DROP_YYLLOC)
+	$(LINUX_FIX_YYLLOC)
 
 kernel.do_compile: kernel.do_prepare
 	$(MAKE) -C $(BUILD_DIR)/$(KERNEL_DIR) $(KERNEL_MAKE_VARS) modules $(KERNEL_MAKE_TARGETS)
