@@ -193,11 +193,13 @@ VUDUO_PATCH = \
 
 # -----------------------------------------------------------------------------
 
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 hd60 hd61 multiboxse))
 # Older versions break on gcc 10+ because of redefined symbols
 define LINUX_FIX_YYLLOC
 	$(Q)grep -Z -l -r -E '^YYLTYPE yylloc;$$' $(BUILD_DIR)/$(KERNEL_DIR) \
 		| xargs -0 -r $(SED) 's/^YYLTYPE yylloc;/extern YYLTYPE yylloc;/g'
 endef
+endif
 
 # -----------------------------------------------------------------------------
 
