@@ -258,7 +258,7 @@ changelogs:
 
 done:
 	$(call draw_line);
-	@$(call MESSAGE_GREEN,"Done")
+	@$(call SUCCESS,"Done")
 	$(call draw_line);
 
 # -----------------------------------------------------------------------------

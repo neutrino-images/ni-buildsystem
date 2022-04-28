@@ -181,7 +181,7 @@ endif
 ifneq ($(DEBUG),yes)
 	$(TARGET_STRIP) $(TARGET_bindir)/neutrino
 endif
-	make done
+	@make done
 
 # -----------------------------------------------------------------------------
 
