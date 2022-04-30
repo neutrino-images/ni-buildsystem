@@ -11,9 +11,11 @@ MINISATIP_SITE = https://github.com/catalinii
 
 MINISATIP_DEPENDENCIES = libdvbcsa openssl dvb-apps
 
+MINISATIP_CONF_ENV = \
+	CFLAGS+=" -ldl"
+
 MINISATIP_CONF_OPTS = \
 	--enable-static \
-	--enable-enigma \
 	--disable-netcv
 
 minisatip: $(MINISATIP_DEPENDENCIES) | $(TARGET_DIR)
