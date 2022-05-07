@@ -64,6 +64,15 @@ endef
 
 # -----------------------------------------------------------------------------
 
+PATCHES = \
+	*.patch \
+	*.patch-$(TARGET_CPU) \
+	*.patch-$(TARGET_ARCH) \
+	*.patch-$(BOXTYPE) \
+	*.patch-$(BOXSERIES) \
+	*.patch-$(BOXFAMILY) \
+	*.patch-$(BOXMODEL)
+
 # apply single patches or patch sets
 define APPLY_PATCHES # (patches or directory)
 	@$(call MESSAGE,"Patching")
@@ -75,7 +84,7 @@ define APPLY_PATCHES # (patches or directory)
 			continue; \
 		fi; \
 		if [ -d $$i ]; then \
-			for p in $$i/*.patch $$i/*.patch-$(TARGET_CPU) $$i/*.patch-$(TARGET_ARCH); do \
+			for p in $(addprefix $$i/,$(PATCHES)); do \
 				if [ -e $$p ]; then \
 					$(call MESSAGE,"Applying $${p#$(PKG_PATCHES_DIR)/} (*)"); \
 					patch -p1 -i $$p; \

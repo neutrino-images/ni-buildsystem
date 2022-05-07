@@ -98,8 +98,6 @@ CROSS_BASE    = $(BASE_DIR)/cross
 CROSS_DIR    ?= $(CROSS_BASE)/$(TARGET_ARCH)-$(TARGET_OS)-$(KERNEL_VERSION)
 STATIC_BASE   = $(BASE_DIR)/static
 STATIC_DIR    = $(STATIC_BASE)/$(TARGET_ARCH)-$(TARGET_OS)-$(KERNEL_VERSION)
-CONFIGS       = $(BASE_DIR)/configs
-PATCHES       = $(BASE_DIR)/patches
 SKEL_ROOT     = $(BASE_DIR)/skel-root/$(BOXSERIES)
 ifeq ($(BOXMODEL),$(filter $(BOXMODEL),vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
   SKEL_ROOT   = $(BASE_DIR)/skel-root/vuplus
