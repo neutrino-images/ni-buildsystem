@@ -247,6 +247,18 @@ endef
 
 # -----------------------------------------------------------------------------
 
+get-cc-version \
+get-gcc-version:
+	$(Q)$(TARGET_CC) --version
+
+get-cpp-version:
+	$(Q)$(TARGET_CPP) --version
+
+get-cxx-version:
+	$(Q)$(TARGET_CXX) --version
+
+# -----------------------------------------------------------------------------
+
 # Create reversed changelog using git log --reverse.
 # Remove duplicated commits and re-reverse the changelog using awk.
 # This keeps the original commit and removes all picked duplicates.
