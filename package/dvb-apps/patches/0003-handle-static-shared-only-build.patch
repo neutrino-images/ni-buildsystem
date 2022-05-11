@@ -15,11 +15,11 @@ diff --git a/Make.rules b/Make.rules
 index 3410d7b..d274e16 100644
 --- a/Make.rules
 +++ b/Make.rules
-@@ -10,7 +10,13 @@
+@@ -9,7 +9,13 @@ ifneq ($(lib_name),)
+ CFLAGS_LIB ?= -fPIC
  CFLAGS += $(CFLAGS_LIB)
  
- #libraries = $(lib_name).so $(lib_name).a
--libraries =  $(lib_name).a
+-libraries = $(lib_name).so $(lib_name).a
 +ifneq ($(enable_static),no)
 +libraries += $(lib_name).a
 +endif
@@ -30,7 +30,7 @@ index 3410d7b..d274e16 100644
  
  .PHONY: library
  
-@@ -24,7 +30,7 @@
+@@ -23,7 +29,7 @@ prerequisites = $(subst .o,.d,$(objects)) $(addsuffix .d,$(binaries))
  
  .PHONY: clean install
  
