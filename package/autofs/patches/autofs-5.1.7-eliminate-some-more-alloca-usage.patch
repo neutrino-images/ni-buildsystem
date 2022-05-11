@@ -1,0 +1,216 @@
+autofs-5.1.7 - eliminate some more alloca usage
+
+From: Ian Kent <raven@themaw.net>
+
+Quite a bit of the alloca(3) usage has been eliminated over time.
+Use malloc(3) for some more cases that might need to allocate a largish
+amount of storage.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG                |    1 +
+ modules/lookup_program.c |   11 ++++++++++-
+ modules/lookup_yp.c      |   22 +++++++++++++++++++---
+ modules/parse_sun.c      |   18 ++++++++++++++----
+ modules/replicated.c     |   19 ++++++-------------
+ 5 files changed, 50 insertions(+), 21 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index 8d050552..2b7cfaa0 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -79,6 +79,7 @@
+ - add missing description of null map option.
+ - fix nonstrict offset mount fail handling.
+ - fix concat_options() error handling.
++- eliminate some more alloca usage.
+ 
+ 25/01/2021 autofs-5.1.7
+ - make bind mounts propagation slave by default.
+diff --git a/modules/lookup_program.c b/modules/lookup_program.c
+index 6cab52c8..028580e5 100644
+--- a/modules/lookup_program.c
++++ b/modules/lookup_program.c
+@@ -636,7 +636,14 @@ int lookup_mount(struct autofs_point *ap, const char *name, int name_len, void *
+ 			char *ent = NULL;
+ 
+ 			if (me->mapent) {
+-				ent = alloca(strlen(me->mapent) + 1);
++				ent = malloc(strlen(me->mapent) + 1);
++				if (!ent) {
++					char buf[MAX_ERR_BUF];
++					char *estr = strerror_r(errno, buf, MAX_ERR_BUF);
++					error(ap->logopt, MODPREFIX "malloc: %s", estr);
++					cache_unlock(mc);
++					goto out_free;
++				}
+ 				strcpy(ent, me->mapent);
+ 			}
+ 			cache_unlock(mc);
+@@ -644,6 +651,8 @@ int lookup_mount(struct autofs_point *ap, const char *name, int name_len, void *
+ 			ap->entry->current = source;
+ 			ret = ctxt->parse->parse_mount(ap, name,
+ 				 name_len, ent, ctxt->parse->context);
++			if (ent)
++				free(ent);
+ 			goto out_free;
+ 		} else {
+ 			if (IS_MM(me) && !IS_MM_ROOT(me)) {
+diff --git a/modules/lookup_yp.c b/modules/lookup_yp.c
+index 8bccb72f..d2a4b5a5 100644
+--- a/modules/lookup_yp.c
++++ b/modules/lookup_yp.c
+@@ -254,7 +254,7 @@ int yp_all_master_callback(int status, char *ypkey, int ypkeylen,
+ 
+ 	len = ypkeylen + 1 + vallen + 2;
+ 
+-	buffer = alloca(len);
++	buffer = malloc(len);
+ 	if (!buffer) {
+ 		error(logopt, MODPREFIX "could not malloc parse buffer");
+ 		return 0;
+@@ -267,6 +267,8 @@ int yp_all_master_callback(int status, char *ypkey, int ypkeylen,
+ 
+ 	master_parse_entry(buffer, timeout, logging, age);
+ 
++	free(buffer);
++
+ 	return 0;
+ }
+ 
+@@ -368,7 +370,12 @@ int yp_all_callback(int status, char *ypkey, int ypkeylen,
+ 		return 0;
+ 	}
+ 
+-	mapent = alloca(vallen + 1);
++	mapent = malloc(vallen + 1);
++	if (!mapent) {
++		error(logopt, MODPREFIX "could not malloc mapent buffer");
++		free(key);
++		return 0;
++	}
+ 	strncpy(mapent, val, vallen);
+ 	*(mapent + vallen) = '\0';
+ 
+@@ -377,6 +384,7 @@ int yp_all_callback(int status, char *ypkey, int ypkeylen,
+ 	cache_unlock(mc);
+ 
+ 	free(key);
++	free(mapent);
+ 
+ 	if (ret == CHE_FAIL)
+ 		return -1;
+@@ -904,7 +912,14 @@ int lookup_mount(struct autofs_point *ap, const char *name, int name_len, void *
+ 		}
+ 		if (me && (me->source == source || *me->key == '/')) {
+ 			mapent_len = strlen(me->mapent);
+-			mapent = alloca(mapent_len + 1);
++			mapent = malloc(mapent_len + 1);
++			if (!mapent) {
++				char *estr = strerror_r(errno, buf, MAX_ERR_BUF);
++				error(ap->logopt, MODPREFIX "malloc: %s", estr);
++				cache_unlock(mc);
++				free(lkp_key);
++				return NSS_STATUS_TRYAGAIN;
++			}
+ 			strcpy(mapent, me->mapent);
+ 		}
+ 	}
+@@ -929,6 +944,7 @@ int lookup_mount(struct autofs_point *ap, const char *name, int name_len, void *
+ 
+ 	ret = ctxt->parse->parse_mount(ap, key, key_len,
+ 				       mapent, ctxt->parse->context);
++	free(mapent);
+ 	if (ret) {
+ 		/* Don't update negative cache when re-connecting */
+ 		if (ap->flags & MOUNT_FLAG_REMOUNT)
+diff --git a/modules/parse_sun.c b/modules/parse_sun.c
+index 9190165d..d9ac0c94 100644
+--- a/modules/parse_sun.c
++++ b/modules/parse_sun.c
+@@ -668,9 +668,16 @@ static int sun_mount(struct autofs_point *ap, const char *root,
+ 		}
+ 	}
+ 
++	what = malloc(loclen + 1);
++	if (!what) {
++		char buf[MAX_ERR_BUF];
++		char *estr = strerror_r(errno, buf, MAX_ERR_BUF);
++		error(ap->logopt, MODPREFIX "malloc: %s", estr);
++		return 1;
++	}
++
+ 	pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, &cur_state);
+ 	if (!strcmp(fstype, "nfs") || !strcmp(fstype, "nfs4")) {
+-		what = alloca(loclen + 1);
+ 		memcpy(what, loc, loclen);
+ 		what[loclen] = '\0';
+ 
+@@ -706,10 +713,10 @@ static int sun_mount(struct autofs_point *ap, const char *root,
+ 		rv = mount_nfs->mount_mount(ap, root, name, namelen,
+ 					    what, fstype, options, mount_nfs->context);
+ 	} else {
+-		if (!loclen)
++		if (!loclen) {
++			free(what);
+ 			what = NULL;
+-		else {
+-			what = alloca(loclen + 1);
++		} else {
+ 			if (*loc == ':') {
+ 				loclen--;
+ 				memcpy(what, loc + 1, loclen);
+@@ -728,6 +735,9 @@ static int sun_mount(struct autofs_point *ap, const char *root,
+ 		/* Generic mount routine */
+ 		rv = do_mount(ap, root, name, namelen, what, fstype, options);
+ 	}
++	if (what)
++		free(what);
++
+ 	pthread_setcancelstate(cur_state, NULL);
+ 
+ 	if (nonstrict && rv)
+diff --git a/modules/replicated.c b/modules/replicated.c
+index 03d4ba1e..ffaf519f 100644
+--- a/modules/replicated.c
++++ b/modules/replicated.c
+@@ -1041,25 +1041,18 @@ done:
+ 	return ret;
+ }
+ 
+-static int add_path(struct host *hosts, const char *path, int len)
++static int add_path(struct host *hosts, const char *path)
+ {
+ 	struct host *this;
+-	char *tmp, *tmp2;
+-
+-	tmp = alloca(len + 1);
+-	if (!tmp)
+-		return 0;
+-
+-	strncpy(tmp, path, len);
+-	tmp[len] = '\0';
++	char *tmp;
+ 
+ 	this = hosts;
+ 	while (this) {
+ 		if (!this->path) {
+-			tmp2 = strdup(tmp);
+-			if (!tmp2)
++			tmp = strdup(path);
++			if (!tmp)
+ 				return 0;
+-			this->path = tmp2;
++			this->path = tmp;
+ 		}
+ 		this = this->next;
+ 	}
+@@ -1188,7 +1181,7 @@ int parse_location(unsigned logopt, struct host **hosts,
+ 						}
+ 					}
+ 
+-					if (!add_path(*hosts, path, strlen(path))) {
++					if (!add_path(*hosts, path)) {
+ 						free_host_list(hosts);
+ 						free(str);
+ 						return 0;

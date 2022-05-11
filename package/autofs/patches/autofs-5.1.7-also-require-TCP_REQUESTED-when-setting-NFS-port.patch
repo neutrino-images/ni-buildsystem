@@ -1,0 +1,38 @@
+autofs-5.1.7 - also require TCP_REQUESTED when setting NFS port
+
+From: Ian Kent <raven@themaw.net>
+
+Set the NFS service port to the default (2049) only if tcp protocol is
+being used and not alternate port has been given.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG            |    1 +
+ modules/replicated.c |    2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index 5d2c2c88..fd5b800a 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -91,6 +91,7 @@
+ - add buffer length checks to autofs mount_mount().
+ - make NFS version check flags consistent.
+ - refactor get_nfs_info().
++- also require TCP_REQUESTED when setting NFS port.
+ 
+ 25/01/2021 autofs-5.1.7
+ - make bind mounts propagation slave by default.
+diff --git a/modules/replicated.c b/modules/replicated.c
+index e03c9d25..09075dd0 100644
+--- a/modules/replicated.c
++++ b/modules/replicated.c
+@@ -291,7 +291,7 @@ static unsigned int get_nfs_info(unsigned logopt, struct host *host,
+ 
+ 	rpc_info->proto = proto;
+ 	if (port < 0) {
+-		if (version & NFS4_REQUESTED)
++		if ((version & NFS4_REQUESTED) && (version & TCP_REQUESTED))
+ 			rpc_info->port = NFS_PORT;
+ 		else
+ 			port = 0;

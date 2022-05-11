@@ -1,0 +1,108 @@
+autofs-5.1.7 - add buffer length checks to autofs mount_mount()
+
+From: Ian Kent <raven@themaw.net>
+
+
+---
+ CHANGELOG              |    1 +
+ modules/mount_autofs.c |   59 +++++++++++++++++++++++++++++++++---------------
+ 2 files changed, 41 insertions(+), 19 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index 6ab4813d..17926916 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -88,6 +88,7 @@
+ - add some buffer length checks to master map parser.
+ - add buffer length check to rmdir_path().
+ - eliminate buffer usage from handle_mounts_cleanup().
++- add buffer length checks to autofs mount_mount().
+ 
+ 25/01/2021 autofs-5.1.7
+ - make bind mounts propagation slave by default.
+diff --git a/modules/mount_autofs.c b/modules/mount_autofs.c
+index 0bcbb343..b2233573 100644
+--- a/modules/mount_autofs.c
++++ b/modules/mount_autofs.c
+@@ -50,8 +50,8 @@ int mount_mount(struct autofs_point *ap, const char *root, const char *name,
+ {
+ 	struct startup_cond suc;
+ 	pthread_t thid;
+-	char realpath[PATH_MAX];
+-	char mountpoint[PATH_MAX];
++	char realpath[PATH_MAX + 1];
++	char mountpoint[PATH_MAX + 1];
+ 	const char **argv;
+ 	int argc, status;
+ 	int nobind = ap->flags & MOUNT_FLAG_NOBIND;
+@@ -68,32 +68,53 @@ int mount_mount(struct autofs_point *ap, const char *root, const char *name,
+ 	struct mnt_list *mnt;
+ 	char buf[MAX_ERR_BUF];
+ 	char *options, *p;
+-	int len, ret;
++	int err, ret;
+ 	int hosts = 0;
+ 
+ 	/* Root offset of multi-mount */
+-	len = strlen(root);
+-	if (root[len - 1] == '/') {
+-		strcpy(realpath, ap->path);
+-		strcat(realpath, "/");
+-		strcat(realpath, name);
+-		len--;
+-		strncpy(mountpoint, root, len);
+-		mountpoint[len] = '\0';
++	if (root[strlen(root) - 1] == '/') {
++		err = snprintf(realpath, PATH_MAX + 1, "%s/%s", ap->path, name);
++		if (err > PATH_MAX) {
++			error(ap->logopt, MODPREFIX "string too long for realpath");
++			return 1;
++		}
++		err = snprintf(mountpoint, PATH_MAX + 1, "%s", root);
++		if (err > PATH_MAX) {
++			error(ap->logopt, MODPREFIX "string too long for mountpoint");
++			return 1;
++		}
++		mountpoint[err - 1] = 0;
+ 	} else if (*name == '/') {
+ 		if (ap->flags & MOUNT_FLAG_REMOUNT) {
+-			strcpy(mountpoint, name);
+-			strcpy(realpath, name);
++			err = snprintf(mountpoint, PATH_MAX + 1, "%s", name);
++			if (err > PATH_MAX) {
++				error(ap->logopt, MODPREFIX "string too long for mountpoint");
++				return 1;
++			}
++			err = snprintf(realpath, PATH_MAX + 1, "%s", name);
++			if (err > PATH_MAX) {
++				error(ap->logopt, MODPREFIX "string too long for realpath");
++				return 1;
++			}
+ 		} else {
+-			strcpy(mountpoint, root);
+-			strcpy(realpath, name);
++			err = snprintf(mountpoint, PATH_MAX + 1, "%s", root);
++			if (err > PATH_MAX) {
++				error(ap->logopt, MODPREFIX "string too long for mountpoint");
++				return 1;
++			}
++			err = snprintf(realpath, PATH_MAX + 1, "%s", name);
++			if (err > PATH_MAX) {
++				error(ap->logopt, MODPREFIX "string too long for realpath");
++				return 1;
++			}
+ 		}
+ 	} else {
+-		strcpy(mountpoint, root);
+-		strcat(mountpoint, "/");
++		err = snprintf(mountpoint, PATH_MAX + 1, "%s/%s", root, name);
++		if (err > PATH_MAX) {
++			error(ap->logopt, MODPREFIX "string too long for mountpoint");
++			return 1;
++		}
+ 		strcpy(realpath, mountpoint);
+-		strcat(mountpoint, name);
+-		strcat(realpath, name);
+ 	}
+ 
+ 	options = NULL;

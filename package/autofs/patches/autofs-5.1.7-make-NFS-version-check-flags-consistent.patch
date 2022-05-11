@@ -1,0 +1,69 @@
+autofs-5.1.7 - make NFS version check flags consistent
+
+From: Ian Kent <raven@themaw.net>
+
+Several of the NFS connection macros have the same value so that they
+can be used as internal code documentation of what is being done.
+
+Adjust the protocol macro naming to be consistent in a few places.
+
+Also make sure the correct flags are set for the function they indicate.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG           |    1 +
+ modules/mount_nfs.c |   16 +++++++++-------
+ 2 files changed, 10 insertions(+), 7 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index 17926916..c27973bb 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -89,6 +89,7 @@
+ - add buffer length check to rmdir_path().
+ - eliminate buffer usage from handle_mounts_cleanup().
+ - add buffer length checks to autofs mount_mount().
++- make NFS version check flags consistent.
+ 
+ 25/01/2021 autofs-5.1.7
+ - make bind mounts propagation slave by default.
+diff --git a/modules/mount_nfs.c b/modules/mount_nfs.c
+index 0314a78f..0ab87dcf 100644
+--- a/modules/mount_nfs.c
++++ b/modules/mount_nfs.c
+@@ -178,18 +178,20 @@ int mount_mount(struct autofs_point *ap, const char *root, const char *name, int
+ 						port = 0;
+ 				} else if (_strncmp("proto=udp", cp, o_len) == 0 ||
+ 					   _strncmp("udp", cp, o_len) == 0) {
+-					vers &= ~TCP_SUPPORTED;
++					vers &= ~TCP_REQUESTED;
++					vers |= UDP_REQUESTED;
+ 				} else if (_strncmp("proto=udp6", cp, o_len) == 0 ||
+ 					   _strncmp("udp6", cp, o_len) == 0) {
+-					vers &= ~TCP_SUPPORTED;
+-					vers |= UDP6_REQUESTED;
++					vers &= ~(TCP_REQUESTED|TCP6_REQUESTED);
++					vers |= (UDP_REQUESTED|UDP6_REQUESTED);
+ 				} else if (_strncmp("proto=tcp", cp, o_len) == 0 ||
+ 					   _strncmp("tcp", cp, o_len) == 0) {
+-					vers &= ~UDP_SUPPORTED;
++					vers &= ~UDP_REQUESTED;
++					vers |= TCP_REQUESTED;
+ 				} else if (_strncmp("proto=tcp6", cp, o_len) == 0 ||
+ 					   _strncmp("tcp6", cp, o_len) == 0) {
+-					vers &= ~UDP_SUPPORTED;
+-					vers |= TCP6_REQUESTED;
++					vers &= ~(UDP_REQUESTED|UDP6_REQUESTED);
++					vers |= TCP_REQUESTED|TCP6_REQUESTED;
+ 				}
+ 				/* Check for options that also make sense
+ 				   with bind mounts */
+@@ -246,7 +248,7 @@ int mount_mount(struct autofs_point *ap, const char *root, const char *name, int
+ 	    mount_default_proto == 4 &&
+ 	    (vers & NFS_VERS_MASK) != 0 &&
+ 	    (vers & NFS4_VERS_MASK) != 0 &&
+-	    !(vers & UDP6_REQUESTED)) {
++	    !(vers & (UDP_REQUESTED|UDP6_REQUESTED))) {
+ 		unsigned int v4_probe_ok = 0;
+ 		struct host *tmp = new_host(hosts->name, 0,
+ 					    hosts->addr, hosts->addr_len,

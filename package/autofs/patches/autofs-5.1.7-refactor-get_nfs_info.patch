@@ -1,0 +1,206 @@
+autofs-5.1.7 - refactor get_nfs_info()
+
+From: Ian Kent <raven@themaw.net>
+
+Make getting a portmap client and getting a service port from portmap
+helper functions and simplify the return handling.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG            |    1 
+ modules/replicated.c |  135 ++++++++++++++++++++++++++++----------------------
+ 2 files changed, 76 insertions(+), 60 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index c27973bb..5d2c2c88 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -90,6 +90,7 @@
+ - eliminate buffer usage from handle_mounts_cleanup().
+ - add buffer length checks to autofs mount_mount().
+ - make NFS version check flags consistent.
++- refactor get_nfs_info().
+ 
+ 25/01/2021 autofs-5.1.7
+ - make bind mounts propagation slave by default.
+diff --git a/modules/replicated.c b/modules/replicated.c
+index ffaf519f..e03c9d25 100644
+--- a/modules/replicated.c
++++ b/modules/replicated.c
+@@ -223,6 +223,49 @@ void free_host_list(struct host **list)
+ 	*list = NULL;
+ }
+ 
++static unsigned int get_portmap_client(unsigned logopt,
++			struct conn_info *pm_info, struct host *host,
++			int proto)
++{
++	unsigned int status;
++
++	/* On success client is stored in pm_info->client */
++	status = rpc_portmap_getclient(pm_info,
++			host->name, host->addr, host->addr_len,
++			proto, RPC_CLOSE_DEFAULT);
++	if (status == -EHOSTUNREACH)
++		debug(logopt,
++		      "host not reachable getting portmap client");
++	else if (status)
++		debug(logopt, "error 0x%d getting portmap client");
++
++	return status;
++}
++
++static unsigned int get_portmap_port(unsigned logopt,
++		struct conn_info *pm_info, struct pmap *parms,
++		unsigned long vers, unsigned int version,
++		short unsigned int *port)
++{
++	unsigned int status;
++	short unsigned int nfs_port;
++
++	parms->pm_vers = vers;
++	status = rpc_portmap_getport(pm_info, parms, &nfs_port);
++	if (status == -EHOSTUNREACH || status == -ETIMEDOUT) {
++		debug(logopt,
++		      "host not reachable or timed out getting service port");
++	} else if (status < 0) {
++		if (!(version & NFS_VERS_MASK))
++			debug(logopt, "error 0x%d getting service port");
++	}
++
++	if (!status)
++		*port = nfs_port;
++
++	return status;
++}
++
+ static unsigned int get_nfs_info(unsigned logopt, struct host *host,
+ 			 struct conn_info *pm_info, struct conn_info *rpc_info,
+ 			 int proto, unsigned int version, int port)
+@@ -263,33 +306,20 @@ static unsigned int get_nfs_info(unsigned logopt, struct host *host,
+ 		goto v3_ver;
+ 
+ 	if (!port) {
+-		status = rpc_portmap_getclient(pm_info,
+-				host->name, host->addr, host->addr_len,
+-				proto, RPC_CLOSE_DEFAULT);
+-		if (status == -EHOSTUNREACH) {
+-			debug(logopt,
+-			      "host not reachable getting portmap client");
+-			supported = status;
+-			goto done_ver;
+-		} else if (status) {
+-			debug(logopt, "error 0x%d getting portmap client");
++		status = get_portmap_client(logopt, pm_info, host, proto);
++		if (status) {
++			if (status == -EHOSTUNREACH)
++				supported = status;
+ 			goto done_ver;
+ 		}
+-		parms.pm_vers = NFS4_VERSION;
+-		status = rpc_portmap_getport(pm_info, &parms, &rpc_info->port);
+-		if (status == -EHOSTUNREACH || status == -ETIMEDOUT) {
+-			debug(logopt,
+-			      "host not reachable or timed out getting service port");
+-			supported = status;
+-			goto done_ver;
+-		} else if (status < 0) {
+-			if (version & NFS_VERS_MASK)
++		status = get_portmap_port(logopt, pm_info, &parms,
++				NFS4_VERSION, version, &rpc_info->port);
++		if (status) {
++			if (status == -EHOSTUNREACH || status == -ETIMEDOUT)
++				supported = status;
++			if (status < 0 && version & NFS_VERS_MASK)
+ 				goto v3_ver; /* MOUNT_NFS_DEFAULT_PROTOCOL=4 */
+-			else {
+-				debug(logopt,
+-				      "error 0x%d getting service port");
+-				goto done_ver;
+-			}
++			goto done_ver;
+ 		}
+ 	}
+ 
+@@ -334,31 +364,22 @@ v3_ver:
+ 		goto v2_ver;
+ 
+ 	if (!port && !pm_info->client) {
+-		status = rpc_portmap_getclient(pm_info,
+-				host->name, host->addr, host->addr_len,
+-				proto, RPC_CLOSE_DEFAULT);
+-		if (status == -EHOSTUNREACH) {
+-			debug(logopt,
+-			      "host not reachable getting portmap client");
+-			supported = status;
+-			goto done_ver;
+-		} else if (status) {
+-			debug(logopt,
+-			      "error 0x%d getting getting portmap client");
++		status = get_portmap_client(logopt, pm_info, host, proto);
++		if (status) {
++			if (status == -EHOSTUNREACH)
++				supported = status;
+ 			goto done_ver;
+ 		}
+ 	}
+ 
+ 	if (!port) {
+-		parms.pm_vers = NFS3_VERSION;
+-		status = rpc_portmap_getport(pm_info, &parms, &rpc_info->port);
+-		if (status == -EHOSTUNREACH || status == -ETIMEDOUT) {
+-			debug(logopt,
+-			      "host not reachable or timed out getting service port");
+-			supported = status;
++		status = get_portmap_port(logopt, pm_info, &parms,
++				NFS3_VERSION, version, &rpc_info->port);
++		if (status) {
++			if (status == -EHOSTUNREACH || status == -ETIMEDOUT)
++				supported = status;
+ 			goto done_ver;
+-		} else if (status < 0)
+-			goto v2_ver;
++		}
+ 	}
+ 
+ 	if (rpc_info->proto == IPPROTO_UDP)
+@@ -399,28 +420,22 @@ v2_ver:
+ 		goto done_ver;
+ 
+ 	if (!port && !pm_info->client) {
+-		status = rpc_portmap_getclient(pm_info,
+-				host->name, host->addr, host->addr_len,
+-				proto, RPC_CLOSE_DEFAULT);
+-		if (status == -EHOSTUNREACH) {
+-			debug(logopt,
+-			      "host not reachable getting portmap client");
+-			supported = status;
+-			goto done_ver;
+-		} else if (status)
++		status = get_portmap_client(logopt, pm_info, host, proto);
++		if (status) {
++			if (status == -EHOSTUNREACH)
++				supported = status;
+ 			goto done_ver;
++		}
+ 	}
+ 
+ 	if (!port) {
+-		parms.pm_vers = NFS2_VERSION;
+-		status = rpc_portmap_getport(pm_info, &parms, &rpc_info->port);
+-		if (status == -EHOSTUNREACH || status == -ETIMEDOUT) {
+-			debug(logopt,
+-			      "host not reachable or timed out getting service port");
+-			supported = status;
+-			goto done_ver;
+-		} else if (status < 0)
++		status = get_portmap_port(logopt, pm_info, &parms,
++				NFS2_VERSION, version, &rpc_info->port);
++		if (status) {
++			if (status == -EHOSTUNREACH || status == -ETIMEDOUT)
++				supported = status;
+ 			goto done_ver;
++		}
+ 	}
+ 
+ 	if (rpc_info->proto == IPPROTO_UDP)
