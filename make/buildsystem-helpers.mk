@@ -22,6 +22,9 @@ define DOWNLOAD
 	if [ "$($(PKG)_VERSION)" == "git" ]; then \
 	  $(call MESSAGE,"Downloading") ; \
 	  $(GET_GIT_SOURCE) $($(PKG)_SITE)/$($(PKG)_SOURCE) $(DL_DIR)/$($(PKG)_SOURCE); \
+	elif [ "$($(PKG)_VERSION)" == "hg" ]; then \
+	  $(call MESSAGE,"Downloading") ; \
+	  $(GET_HG_SOURCE) $($(PKG)_SITE)/$($(PKG)_SOURCE) $(DL_DIR)/$($(PKG)_SOURCE); \
 	elif [ "$($(PKG)_VERSION)" == "svn" ]; then \
 	  $(call MESSAGE,"Downloading") ; \
 	  $(GET_SVN_SOURCE) $($(PKG)_SITE)/$($(PKG)_SOURCE) $(DL_DIR)/$($(PKG)_SOURCE); \
@@ -40,18 +43,32 @@ define EXTRACT # (directory)
 	@$(call MESSAGE,"Extracting")
 	$(foreach hook,$($(PKG)_PRE_EXTRACT_HOOKS),$(call $(hook))$(sep))
 	$(Q)( \
-	case $($(PKG)_SOURCE) in \
+	case $($(PKG)_VERSION).$($(PKG)_SOURCE) in \
 	  *.tar | *.tar.bz2 | *.tbz | *.tar.gz | *.tgz | *.tar.xz | *.txz) \
 	    tar -xf ${DL_DIR}/$($(PKG)_SOURCE) -C $(1); \
 	    ;; \
 	  *.zip) \
 	    unzip -o -q ${DL_DIR}/$($(PKG)_SOURCE) -d $(1); \
 	    ;; \
-	  *.git | *.svn) \
+	  *.git | git.*) \
 	    cp -a -t $(1) $(DL_DIR)/$($(PKG)_SOURCE); \
 	    if test $($(PKG)_CHECKOUT); then \
 	      $(call MESSAGE,"git checkout $($(PKG)_CHECKOUT)"); \
 	      $(CD) $(1)/$($(PKG)_DIR); git checkout $($(PKG)_CHECKOUT); \
+	    fi; \
+	    ;; \
+	  *.hg | hg.*) \
+	    cp -a -t $(1) $(DL_DIR)/$($(PKG)_SOURCE); \
+	    if test $($(PKG)_CHECKOUT); then \
+	      $(call MESSAGE,"hg checkout $($(PKG)_CHECKOUT)"); \
+	      $(CD) $(1)/$($(PKG)_DIR); hg checkout $($(PKG)_CHECKOUT); \
+	    fi; \
+	    ;; \
+	  *.svn | svn.*) \
+	    cp -a -t $(1) $(DL_DIR)/$($(PKG)_SOURCE); \
+	    if test $($(PKG)_CHECKOUT); then \
+	      $(call MESSAGE,"svn checkout $($(PKG)_CHECKOUT)"); \
+	      $(CD) $(1)/$($(PKG)_DIR); svn checkout $($(PKG)_CHECKOUT); \
 	    fi; \
 	    ;; \
 	  *) \
@@ -159,6 +176,7 @@ SED   = $(shell which sed || type -p sed || echo sed) -i -e
 
 GET_GIT_ARCHIVE = support/scripts/get-git-archive.sh
 GET_GIT_SOURCE  = support/scripts/get-git-source.sh
+GET_HG_SOURCE   = support/scripts/get-hg-source.sh
 GET_SVN_SOURCE  = support/scripts/get-svn-source.sh
 UPDATE-RC.D     = support/scripts/update-rc.d -r $(TARGET_DIR)
 REMOVE-RC.D     = support/scripts/update-rc.d -f -r $(TARGET_DIR)
