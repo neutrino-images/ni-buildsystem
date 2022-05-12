@@ -2,7 +2,7 @@
 #
 # clone or pull an existing hg repository
 #
-# (C) 2019 vanhofen
+# (C) 2022 vanhofen
 # License: WTFPLv2
 #
 # parameters:
