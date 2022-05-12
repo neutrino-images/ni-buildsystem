@@ -9,7 +9,7 @@ MINISATIP_DIR = minisatip.$(MINISATIP_VERSION)
 MINISATIP_SOURCE = minisatip.$(MINISATIP_VERSION)
 MINISATIP_SITE = https://github.com/catalinii
 
-MINISATIP_DEPENDENCIES = libdvbcsa openssl dvb-apps
+MINISATIP_DEPENDENCIES = libdvbcsa openssl
 
 MINISATIP_CONF_ENV = \
 	CFLAGS+=" -ldl"
