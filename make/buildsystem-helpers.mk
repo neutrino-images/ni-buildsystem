@@ -5,7 +5,8 @@
 
 # resolve dependencies
 define DEPENDENCIES
-	make $($(PKG)_DEPENDENCIES)
+	@$(call MESSAGE,"Resolving dependencies")
+	$(foreach dependency,$($(PKG)_DEPENDENCIES),$(MAKE) $(dependency)$(sep))
 endef
 
 # -----------------------------------------------------------------------------
