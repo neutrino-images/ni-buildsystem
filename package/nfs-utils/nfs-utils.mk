@@ -4,12 +4,12 @@
 #
 ################################################################################
 
-NFS_UTILS_VERSION = 2.2.1
+NFS_UTILS_VERSION = 2.6.1
 NFS_UTILS_DIR = nfs-utils-$(NFS_UTILS_VERSION)
 NFS_UTILS_SOURCE = nfs-utils-$(NFS_UTILS_VERSION).tar.xz
 NFS_UTILS_SITE = $(KERNEL_MIRROR)/linux/utils/nfs-utils/$(NFS_UTILS_VERSION)
 
-NFS_UTILS_DEPENDENCIES = rpcbind
+NFS_UTILS_DEPENDENCIES = libtirpc rpcbind e2fsprogs
 
 NFS_UTILS_AUTORECONF = YES
 
@@ -19,14 +19,19 @@ NFS_UTILS_CONF_ENV = \
 NFS_UTILS_CONF_OPTS = \
 	--docdir=$(REMOVE_docdir) \
 	$(if $(filter $(BOXSERIES),hd1),--disable-ipv6,--enable-ipv6) \
+	--disable-gss \
+	--disable-svcgss \
+	--disable-caps \
+	--disable-nfsdcltrack \
 	--disable-nfsv4 \
 	--disable-nfsv41 \
-	--disable-gss \
-	--disable-uuid \
+	--enable-mount \
+	--enable-libmount-mount \
 	--without-tcp-wrappers \
-	--with-statedir=/var/lib/nfs \
-	--with-rpcgen=internal \
-	--without-systemd
+	--without-systemd \
+	--with-statduser=rpcuser \
+	--with-statdpath=/var/lib/nfs/statd \
+	--with-statedir=/var/lib/nfs
 
 define NFS_UTILS_TARGET_CLEANUP
 	chmod 0755 $(TARGET_base_sbindir)/mount.nfs
