@@ -6,7 +6,7 @@
 
 STREAMRIPPER_DEPENDENCIES = libvorbisidec libmad glib2
 
-STREAMRIPPER_AUTORECONF = yes
+STREAMRIPPER_AUTORECONF = YES
 
 STREAMRIPPER_CONF_OPTS = \
 	--includedir=$(TARGET_includedir) \
