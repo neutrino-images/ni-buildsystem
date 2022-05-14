@@ -1,0 +1,13 @@
+diff --git a/configure b/configure
+index dc66574..fc4f24f 100755
+--- a/configure
++++ b/configure
+@@ -306,7 +306,7 @@ extralibs=""
+ installstrip="-s"
+ cross_compile="no"
+ INSTALL="/usr/bin/install -c"
+-VERSION="1.1a"
++VERSION="1.2"
+ system_name=`uname -s 2>&1`
+ 
+ #################################################

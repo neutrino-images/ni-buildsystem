@@ -1,6 +1,6 @@
 --- a/configure
 +++ b/configure
-@@ -659,8 +659,8 @@ check_lib langinfo.h nl_langinfo "" && add_cflags -DHAVE_LANGINFO_CODESET
+@@ -626,8 +626,8 @@ check_lib langinfo.h nl_langinfo "" && add_cflags -DHAVE_LANGINFO_CODESET
  #################################################
  #   check for iconv (optional)
  #################################################
