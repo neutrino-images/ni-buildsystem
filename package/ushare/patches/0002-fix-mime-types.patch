@@ -1,0 +1,28 @@
+--- a/src/mime.c
++++ b/src/mime.c
+@@ -54,6 +54,7 @@
+   { "mpeg2", UPNP_VIDEO, "http-get:*:video/mpeg2:"},
+   { "m4v",   UPNP_VIDEO, "http-get:*:video/mp4:"},
+   { "m4p",   UPNP_VIDEO, "http-get:*:video/mp4:"},
++  { "mp4",   UPNP_VIDEO, "http-get:*:video/mp4:"},
+   { "mp4ps", UPNP_VIDEO, "http-get:*:video/x-nerodigital-ps:"},
+   { "ts",    UPNP_VIDEO, "http-get:*:video/mpeg2:"},
+   { "ogm",   UPNP_VIDEO, "http-get:*:video/mpeg:"},
+@@ -80,7 +81,6 @@
+   { "mp1",  UPNP_AUDIO, "http-get:*:audio/mp1:"},
+   { "mp2",  UPNP_AUDIO, "http-get:*:audio/mp2:"},
+   { "mp3",  UPNP_AUDIO, "http-get:*:audio/mpeg:"},
+-  { "mp4",  UPNP_AUDIO, "http-get:*:audio/mp4:"},
+   { "m4a",  UPNP_AUDIO, "http-get:*:audio/mp4:"},
+   { "ogg",  UPNP_AUDIO, "http-get:*:audio/x-ogg:"},
+   { "wav",  UPNP_AUDIO, "http-get:*:audio/wav:"},
+@@ -145,7 +145,8 @@
+   if (!mime)
+     return NULL;
+ 
+-  sprintf (protocol, mime->mime_protocol);
++  //sprintf (protocol, mime->mime_protocol);
++  strcpy (protocol, mime->mime_protocol);
+   strcat (protocol, "*");
+   return strdup (protocol);
+ }

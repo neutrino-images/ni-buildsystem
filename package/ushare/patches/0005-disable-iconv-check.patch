@@ -1,0 +1,13 @@
+--- a/configure
++++ b/configure
+@@ -659,8 +659,8 @@ check_lib langinfo.h nl_langinfo "" && add_cflags -DHAVE_LANGINFO_CODESET
+ #################################################
+ #   check for iconv (optional)
+ #################################################
+-echolog "Checking for iconv ..."
+-check_lib iconv.h iconv "" && add_cflags -DHAVE_ICONV
++#echolog "Checking for iconv ..."
++#check_lib iconv.h iconv "" && add_cflags -DHAVE_ICONV
+ 
+ #################################################
+ #   check for libupnp and friends (mandatory)
