@@ -52,6 +52,4 @@ ushare: | $(TARGET_DIR)
 		$(TARGET_MAKE_ENV) \
 		$(MAKE) $($(PKG)_MAKE_OPTS); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-
-w:
 	$(call TARGET_FOLLOWUP)
