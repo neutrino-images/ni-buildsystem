@@ -17,17 +17,17 @@ INADYN_CONF_OPTS = \
 	--docdir=$(REMOVE_docdir) \
 	--enable-openssl
 
-define INADYN_INSTALL_NFSD_CONF
+define INADYN_INSTALL_INADYN_CONF
 	$(INSTALL_DATA) -D $(PKG_FILES_DIR)/inadyn.conf $(TARGET_localstatedir)/etc/inadyn.conf
 	ln -sf /var/etc/inadyn.conf $(TARGET_sysconfdir)/inadyn.conf
 endef
-INADYN_TARGET_FINALIZE_HOOKS += INADYN_INSTALL_NFSD_CONF
+INADYN_TARGET_FINALIZE_HOOKS += INADYN_INSTALL_INADYN_CONF
 
-define INADYN_INSTALL_NFSD_INIT
+define INADYN_INSTALL_INADYN_INIT
 	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/inadyn.init $(TARGET_sysconfdir)/init.d/inadyn
 	$(UPDATE-RC.D) inadyn defaults 75 25
 endef
-INADYN_TARGET_FINALIZE_HOOKS += INADYN_INSTALL_NFSD_INIT
+INADYN_TARGET_FINALIZE_HOOKS += INADYN_INSTALL_INADYN_INIT
 
 inadyn: | $(TARGET_DIR)
 	$(call autotools-package)
