@@ -3,6 +3,14 @@
 #
 # -----------------------------------------------------------------------------
 
+# start-up build
+define STARTUP
+	@$(call MESSAGE,"Start-up build")
+	$(REMOVE)/$($(PKG)_DIR)
+endef
+
+# -----------------------------------------------------------------------------
+
 # resolve dependencies
 define DEPENDENCIES
 	@$(call MESSAGE,"Resolving dependencies")
@@ -119,11 +127,16 @@ endef
 
 # -----------------------------------------------------------------------------
 
-# start-up build
-define STARTUP
-	@$(call MESSAGE,"Start-up build")
-	$(REMOVE)/$($(PKG)_DIR)
+# prepare for build
+define PREPARE
+	$(call STARTUP)
+	$(call DEPENDENCIES)
+	$(call DOWNLOAD,$($(PKG)_SOURCE))
+	$(call EXTRACT,$(BUILD_DIR))
+	$(call APPLY_PATCHES,$(PKG_PATCHES_DIR))
 endef
+
+# -----------------------------------------------------------------------------
 
 # follow-up build
 define HOST_FOLLOWUP

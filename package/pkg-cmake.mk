@@ -5,11 +5,7 @@
 ################################################################################
 
 define cmake-package
-	$(call DEPENDENCIES)
-	$(call DOWNLOAD,$($(PKG)_SOURCE))
-	$(call STARTUP)
-	$(call EXTRACT,$(BUILD_DIR))
-	$(call APPLY_PATCHES,$(PKG_PATCHES_DIR))
+	$(call PREPARE)
 	$(CHDIR)/$($(PKG)_DIR); \
 		$(TARGET_CMAKE); \
 		$(MAKE); \
@@ -19,11 +15,7 @@ define cmake-package
 endef
 
 define host-cmake-package
-	$(call DEPENDENCIES)
-	$(call DOWNLOAD,$($(PKG)_SOURCE))
-	$(call STARTUP)
-	$(call EXTRACT,$(BUILD_DIR))
-	$(call APPLY_PATCHES,$(PKG_PATCHES_DIR))
+	$(call PREPARE)
 	$(CHDIR)/$($(PKG)_DIR); \
 		$(HOST_CMAKE); \
 		$(MAKE); \

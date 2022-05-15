@@ -5,11 +5,7 @@
 ################################################################################
 
 define autotools-package
-	$(call DEPENDENCIES)
-	$(call DOWNLOAD,$($(PKG)_SOURCE))
-	$(call STARTUP)
-	$(call EXTRACT,$(BUILD_DIR))
-	$(call APPLY_PATCHES,$(PKG_PATCHES_DIR))
+	$(call PREPARE)
 	$(CHDIR)/$($(PKG)_DIR); \
 		$(TARGET_CONFIGURE); \
 		$(MAKE); \
@@ -18,11 +14,7 @@ define autotools-package
 endef
 
 define host-autotools-package
-	$(call DEPENDENCIES)
-	$(call DOWNLOAD,$($(PKG)_SOURCE))
-	$(call STARTUP)
-	$(call EXTRACT,$(BUILD_DIR))
-	$(call APPLY_PATCHES,$(PKG_PATCHES_DIR))
+	$(call PREPARE)
 	$(CHDIR)/$($(PKG)_DIR); \
 		$(HOST_CONFIGURE); \
 		$(MAKE); \
