@@ -46,7 +46,7 @@ ni-image:
 	$(MAKE) exfat-utils
 	$(MAKE) dosfstools
 	$(MAKE) mtd-utils
-	make djmount
+	#make djmount
 	$(MAKE) ushare
 	$(MAKE) xupnpd
 	make inadyn
