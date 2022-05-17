@@ -90,7 +90,7 @@ CROSSTOOL_NG_CLEANUP_HOOKS += CROSSTOOL_NG_CLEANUP_COMMON
 
 # -----------------------------------------------------------------------------
 
-crosstool-ng.do_prepare: | $(BUILD_DIR)
+crosstool-ng.do_prepare: | $(DEPS_DIR) $(BUILD_DIR)
 	$(call PREPARE)
 	$(CHDIR)/$($(PKG)_DIR); \
 		unset $($(PKG)_UNSET); \
