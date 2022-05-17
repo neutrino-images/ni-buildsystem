@@ -7,72 +7,126 @@
 CROSSTOOL_NG_VERSION = git
 CROSSTOOL_NG_DIR = crosstool-ng.$(CROSSTOOL_NG_VERSION)
 CROSSTOOL_NG_SOURCE = crosstool-ng.$(CROSSTOOL_NG_VERSION)
-CROSSTOOL_NG_SITE = https://github.com/neutrino-images
+CROSSTOOL_NG_SITE = https://github.com/crosstool-ng
 
-CROSSTOOL_NG_DEPS = kernel-tarball
+CROSSTOOL_NG_DEPS = kernel-tarball kernel-headers
 
-CROSSTOOL_NG_CONFIG = $(PACKAGE_DIR)/crosstool-ng/files/ct-ng-$(BOXTYPE).config
-ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd1 hd2))
-  CROSSTOOL_NG_CONFIG = $(PACKAGE_DIR)/crosstool-ng/files/ct-ng-$(BOXTYPE)-$(BOXSERIES).config
-endif
+CROSSTOOL_NG_CHECKOUT = tags/crosstool-ng-1.25.0
 
-# crosstool-ng for hd2 depends on gcc-linaro and uses uclibc
-ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd2))
+CROSSTOOL_NG_CONFIG = $(PKG_FILES_DIR)/crosstool-ng-$(BOXTYPE).config
 
-CROSSTOOL_NG_PATCH = 0001-bash-version.patch
+CROSSTOOL_NG_UNSET = \
+	CONFIG_SITE \
+	CPATH \
+	CPLUS_INCLUDE_PATH \
+	C_INCLUDE_PATH \
+	INCLUDE \
+	LD_LIBRARY_PATH \
+	LIBRARY_PATH \
+	PKG_CONFIG_PATH
+
+CROSSTOOL_NG_EXPORT = \
+	BS_LOCAL_TARBALLS_DIR=$(DL_DIR) \
+	BS_PREFIX_DIR=$(CROSS_DIR) \
+	BS_LINUX_CUSTOM_LOCATION=$(BUILD_DIR)/$(KERNEL_DIR)
+
+# begin coolstream
+ifeq ($(BOXTYPE),coolstream)
+
+CROSSTOOL_NG_CHECKOUT = 1dbb06f2
+
+CROSSTOOL_NG_CONFIG = $(PKG_FILES_DIR)/crosstool-ng-$(BOXTYPE)-$(BOXSERIES).config
+
+CROSSTOOL_NG_EXPORT += \
+	LD_LIBRARY_PATH= \
+	BS_KERNEL_VERSION=$(KERNEL_VERSION) \
+	BS_KERNEL_LOCATION=$(KERNEL_TARBALL) \
+	BS_KERNEL_HEADERS=$(KERNEL_HEADERS_DIR) \
+
+# crosstool-ng for cst hd1 uses external gcc-linaro 4.9-2017.01
+ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd1))
 
 GCC_LINARO_VERSION = 4.9-2017.01
 GCC_LINARO_SOURCE = gcc-linaro-$(GCC_LINARO_VERSION).tar.xz
 GCC_LINARO_SITE = https://releases.linaro.org/components/toolchain/gcc-linaro/$(GCC_LINARO_VERSION)
 
-$(DL_DIR)/$(GCC_LINARO_SOURCE):
-	$(download) $(GCC_LINARO_SITE)/$(GCC_LINARO_SOURCE)
-
-CROSSTOOL_NG_DEPS += $(DL_DIR)/$(GCC_LINARO_SOURCE)
-
-UCLIBC_VERSION = 1.0.24
-
-CROSSTOOL_NG_DEPS += kernel-headers
+define CROSSTOOL_NG_DOWNLOAD_LINARO_4_9
+	$(GET_ARCHIVE) $(DL_DIR) $(GCC_LINARO_SITE)/$(GCC_LINARO_SOURCE)
+endef
+CROSSTOOL_NG_POST_DOWNLOAD_HOOKS += CROSSTOOL_NG_DOWNLOAD_LINARO_4_9
 
 endif
+
+# crosstool-ng for cst hd2 uses uclibc-ng 1.0.24
+ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd2))
+
+UCLIBC_NG_VERSION = 1.0.24
+
+CROSSTOOL_NG_EXPORT += \
+	BS_LIBC_UCLIBC_CONFIG_FILE=$(PKG_FILES_DIR)/uclibc-ng-$(UCLIBC_NG_VERSION).config
+
+define CROSSTOOL_NG_INSTALL_PATCHES
+	$(INSTALL_COPY) $(PKG_PATCHES_DIR)/gcc/* $(PKG_BUILD_DIR)/patches/gcc/linaro-6.3-2017.02
+endef
+CROSSTOOL_NG_POST_PATCH_HOOKS += CROSSTOOL_NG_INSTALL_PATCHES
+
+endif
+
+define CROSSTOOL_NG_CLEANUP_COOLSTREAM
+	test -e $(CROSS_DIR)/$(TARGET)/lib && \
+		mv $(CROSS_DIR)/$(TARGET)/lib $(CROSS_DIR)/$(TARGET)/lib.x
+endef
+CROSSTOOL_NG_CLEANUP_HOOKS += CROSSTOOL_NG_CLEANUP_COOLSTREAM
+
+endif
+# end coolstream
+
+define CROSSTOOL_NG_CLEANUP_COMMON
+	test -e $(CROSS_DIR)/$(TARGET)/lib || \
+		ln -sf sys-root/lib $(CROSS_DIR)/$(TARGET)/
+	rm -f $(CROSS_DIR)/$(TARGET)/sys-root/lib/libstdc++.so.6.0.*-gdb.py
+endef
+CROSSTOOL_NG_CLEANUP_HOOKS += CROSSTOOL_NG_CLEANUP_COMMON
+
+# -----------------------------------------------------------------------------
+
+crosstool-ng.do_prepare: | $(BUILD_DIR)
+	$(call PREPARE)
+	$(CHDIR)/$($(PKG)_DIR); \
+		unset $($(PKG)_UNSET); \
+		export $($(PKG)_EXPORT); \
+		$(INSTALL_DATA) $(CROSSTOOL_NG_CONFIG) .config; \
+		$(SED) "s|^CT_PARALLEL_JOBS=.*|CT_PARALLEL_JOBS=$(PARALLEL_JOBS)|" .config; \
+		test -f ./configure || ./bootstrap; \
+		./configure --enable-local; \
+		MAKELEVEL=0 make
+	$(TOUCH)
+
+crosstool-ng.do_compile: crosstool-ng.do_prepare
+	$(CHDIR)/$($(PKG)_DIR); \
+		unset $($(PKG)_UNSET); \
+		export $($(PKG)_EXPORT); \
+		./ct-ng oldconfig; \
+		./ct-ng build
+	$(TOUCH)
+
+# -----------------------------------------------------------------------------
+
+# upgradeconfig doesn't work for coolstream; crosstool-ng 1dbb06f2 is too old
+
+crosstool-ng.menuconfig \
+crosstool-ng.upgradeconfig: crosstool-ng.do_prepare
+	$(CHDIR)/$($(PKG)_DIR); \
+		unset $($(PKG)_UNSET); \
+		export $($(PKG)_EXPORT); \
+		./ct-ng $(subst crosstool-ng.,,$(@))
+
+# -----------------------------------------------------------------------------
 
 ifeq ($(wildcard $(CROSS_DIR)/build.log.bz2),)
 
-crosstool-ng: $(CROSSTOOL_NG_DEPS) | $(BUILD_DIR)
-	$(REMOVE)/$($(PKG)_DIR)
-	$(GET_GIT_SOURCE) $($(PKG)_SITE)/$($(PKG)_SOURCE) $(DL_DIR)/$($(PKG)_SOURCE)
-	$(CPDIR)/$($(PKG)_SOURCE)
-ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd1 hd2))
-	$(CHDIR)/$($(PKG)_DIR); \
-		git checkout 1dbb06f2
-	$(call APPLY_PATCHES,$(PKG_PATCHES_DIR))
-  ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd2))
-	$(INSTALL_COPY) $(PKG_PATCHES_DIR)/gcc/* $(PKG_BUILD_DIR)/patches/gcc/linaro-6.3-2017.02
-  endif
-endif
-	$(CHDIR)/$($(PKG)_DIR); \
-		unset CONFIG_SITE LIBRARY_PATH CPATH C_INCLUDE_PATH PKG_CONFIG_PATH CPLUS_INCLUDE_PATH INCLUDE; \
-		$(INSTALL_DATA) $(CROSSTOOL_NG_CONFIG) .config; \
-		$(SED) "s|^CT_PARALLEL_JOBS=.*|CT_PARALLEL_JOBS=$(PARALLEL_JOBS)|" .config; \
-		export BS_LOCAL_TARBALLS_DIR=$(DL_DIR); \
-		export BS_PREFIX_DIR=$(CROSS_DIR); \
-		export BS_KERNEL_VERSION=$(KERNEL_VERSION); \
-		export BS_KERNEL_LOCATION=$(KERNEL_TARBALL); \
-		export BS_KERNEL_HEADERS=$(KERNEL_HEADERS_DIR); \
-		export BS_LIBC_UCLIBC_CONFIG_FILE=$(PACKAGE_DIR)/crosstool-ng/files/ct-ng-uClibc-$(UCLIBC_VERSION).config; \
-		export LD_LIBRARY_PATH=; \
-		test -f ./configure || ./bootstrap; \
-		./configure --enable-local; \
-		MAKELEVEL=0 make; \
-		chmod 0755 ct-ng; \
-		./ct-ng oldconfig; \
-		./ct-ng build
-ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd1 hd2))
-	test -e $(CROSS_DIR)/$(TARGET)/lib && mv $(CROSS_DIR)/$(TARGET)/lib $(CROSS_DIR)/$(TARGET)/lib.x
-endif
-	test -e $(CROSS_DIR)/$(TARGET)/lib || ln -sf sys-root/lib $(CROSS_DIR)/$(TARGET)/
-	rm -f $(CROSS_DIR)/$(TARGET)/sys-root/lib/libstdc++.so.6.0.*-gdb.py
-	$(REMOVE)/$($(PKG)_DIR)
+crosstool-ng: crosstool-ng.do_compile
+	$(foreach hook,$($(PKG)_CLEANUP_HOOKS),$(call $(hook))$(sep))
 
 else
 
