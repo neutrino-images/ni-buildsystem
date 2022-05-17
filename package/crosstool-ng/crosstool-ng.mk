@@ -9,7 +9,7 @@ CROSSTOOL_NG_DIR = crosstool-ng.$(CROSSTOOL_NG_VERSION)
 CROSSTOOL_NG_SOURCE = crosstool-ng.$(CROSSTOOL_NG_VERSION)
 CROSSTOOL_NG_SITE = https://github.com/crosstool-ng
 
-CROSSTOOL_NG_DEPS = kernel-tarball kernel-headers
+CROSSTOOL_NG_DEPENDENCIES = kernel-tarball kernel-headers
 
 CROSSTOOL_NG_CHECKOUT = tags/crosstool-ng-1.25.0
 
