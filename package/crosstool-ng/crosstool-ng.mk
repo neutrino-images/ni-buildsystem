@@ -14,6 +14,7 @@ CROSSTOOL_NG_DEPENDENCIES = kernel-tarball kernel-headers
 CROSSTOOL_NG_CHECKOUT = tags/crosstool-ng-1.25.0
 
 CROSSTOOL_NG_CONFIG = $(PKG_FILES_DIR)/crosstool-ng-$(BOXTYPE).config
+CROSSTOOL_NG_BUILD_CONFIG = $(PKG_BUILD_DIR)/.config
 
 CROSSTOOL_NG_UNSET = \
 	CONFIG_SITE \
@@ -88,6 +89,18 @@ define CROSSTOOL_NG_CLEANUP_COMMON
 endef
 CROSSTOOL_NG_CLEANUP_HOOKS += CROSSTOOL_NG_CLEANUP_COMMON
 
+define CROSSTOOL_NG_INSTALL_CONFIG
+	$(INSTALL_DATA) $(CROSSTOOL_NG_CONFIG) $(CROSSTOOL_NG_BUILD_CONFIG)
+	$(SED) "s|^CT_PARALLEL_JOBS=.*|CT_PARALLEL_JOBS=$(PARALLEL_JOBS)|" $(CROSSTOOL_NG_BUILD_CONFIG)
+endef
+CROSSTOOL_NG_POST_PATCH_HOOKS += CROSSTOOL_NG_INSTALL_CONFIG
+
+define CROSSTOOL_NG_DISTRIBUTE_CONFIG
+	$(INSTALL_DATA) $(CROSSTOOL_NG_BUILD_CONFIG) $(CROSSTOOL_NG_CONFIG)
+	$(SED) "s|^CT_PARALLEL_JOBS=.*|CT_PARALLEL_JOBS=0|" $(CROSSTOOL_NG_CONFIG)
+	@$(call MESSAGE,"Commit your changes in $(CROSSTOOL_NG_CONFIG)")
+endef
+
 # -----------------------------------------------------------------------------
 
 crosstool-ng.do_prepare: | $(DEPS_DIR) $(BUILD_DIR)
@@ -95,8 +108,6 @@ crosstool-ng.do_prepare: | $(DEPS_DIR) $(BUILD_DIR)
 	$(CHDIR)/$($(PKG)_DIR); \
 		unset $($(PKG)_UNSET); \
 		export $($(PKG)_EXPORT); \
-		$(INSTALL_DATA) $(CROSSTOOL_NG_CONFIG) .config; \
-		$(SED) "s|^CT_PARALLEL_JOBS=.*|CT_PARALLEL_JOBS=$(PARALLEL_JOBS)|" .config; \
 		test -f ./configure || ./bootstrap; \
 		./configure --enable-local; \
 		MAKELEVEL=0 make
@@ -120,6 +131,7 @@ crosstool-ng.upgradeconfig: crosstool-ng.do_prepare
 		unset $($(PKG)_UNSET); \
 		export $($(PKG)_EXPORT); \
 		./ct-ng $(subst crosstool-ng.,,$(@))
+	$(CROSSTOOL_NG_DISTRIBUTE_CONFIG)
 
 # -----------------------------------------------------------------------------
 
