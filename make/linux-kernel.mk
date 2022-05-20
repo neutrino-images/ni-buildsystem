@@ -22,10 +22,22 @@ GFUTURES_4_10_PATCH = \
 
 # arm hd60/hd61/multiboxse
 GFUTURES_4_4_PATCH = \
-	gfutures/4_4_0001-remote.patch \
-	gfutures/4_4_0002-log2-give-up-on-gcc-constant-optimizations.patch \
-	gfutures/4_4_0003-dont-mark-register-as-const.patch \
-	gfutures/4_4_ieee80211-increase-scan-result-expire-time.patch
+	gfutures/0001-remote.patch \
+	gfutures/0002-log2-give-up-on-gcc-constant-optimizations.patch \
+	gfutures/0003-dont-mark-register-as-const.patch \
+	gfutures/0004-linux-fix-buffer-size-warning-error.patch \
+	gfutures/0005-xbox-one-tuner-4.4.patch \
+	gfutures/0006-dvb-media-tda18250-support-for-new-silicon-tuner.patch \
+	gfutures/0007-dvb-mn88472-staging.patch \
+	gfutures/0008-HauppaugeWinTV-dualHD.patch \
+	gfutures/0009-dib7000-linux_4.4.179.patch \
+	gfutures/0010-dvb-usb-linux_4.4.179.patch \
+	gfutures/0011-wifi-linux_4.4.183.patch \
+	gfutures/0012-move-default-dialect-to-SMB3.patch \
+	gfutures/0013-modules_mark__inittest__exittest_as__maybe_unused.patch \
+	gfutures/0014-includelinuxmodule_h_copy__init__exit_attrs_to_initcleanup_module.patch \
+	gfutures/0015-Backport_minimal_compiler_attributes_h_to_support_GCC_9.patch \
+	gfutures/0016-mn88472_reset_stream_ID_reg_if_no_PLP_given.patch
 
 # arm vuduo
 VUPLUS_3_9_PATCH = \
