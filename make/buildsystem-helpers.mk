@@ -90,33 +90,36 @@ endef
 
 # -----------------------------------------------------------------------------
 
-PATCH_BASE_DIRS = $(PKG_PATCHES_DIR)
-
-PATCH_BASE_FILES = \
-	\*.patch \
-	\*.patch-$(TARGET_CPU) \
-	\*.patch-$(TARGET_ARCH) \
-	\*.patch-$(BOXTYPE) \
-	\*.patch-$(BOXSERIES) \
-	\*.patch-$(BOXFAMILY) \
-	\*.patch-$(BOXMODEL)
-
-APPLY_PATCH = support/scripts/apply-patches.sh $(if $(QUIET),-s)
+PATCHES = \
+	*.patch \
+	*.patch-$(TARGET_CPU) \
+	*.patch-$(TARGET_ARCH) \
+	*.patch-$(BOXTYPE) \
+	*.patch-$(BOXSERIES) \
+	*.patch-$(BOXFAMILY) \
+	*.patch-$(BOXMODEL)
 
 # apply single patches or patch sets
 define APPLY_PATCHES # (patches or directory)
 	@$(call MESSAGE,"Patching")
 	$(foreach hook,$($(PKG)_PRE_PATCH_HOOKS),$(call $(hook))$(sep))
-	$(foreach p,$($(PKG)_PATCH),$(APPLY_PATCH) $(PKG_BUILD_DIR) $(DL_DIR) $(notdir $(p))$(sep))
 	$(Q)( \
-	for P in $(PATCH_BASE_DIRS); do \
-	  if test -d $${P}; then \
-	    if test -d $${P}/$($(PKG)_VERSION); then \
-	      $(APPLY_PATCH) $(PKG_BUILD_DIR) $${P}/$($(PKG)_VERSION) $(PATCH_BASE_FILES) || exit 1; \
-	    else \
-	      $(APPLY_PATCH) $(PKG_BUILD_DIR) $${P} $(PATCH_BASE_FILES) || exit 1; \
-	    fi; \
-	  fi; \
+	$(CHDIR)/$($(PKG)_DIR); \
+	for i in $(1); do \
+		if [ "$$i" == "$(PKG_PATCHES_DIR)" -a ! -d $$i ]; then \
+			continue; \
+		fi; \
+		if [ -d $$i ]; then \
+			for p in $(addprefix $$i/,$(PATCHES)); do \
+				if [ -e $$p ]; then \
+					$(call MESSAGE,"Applying $${p#$(PKG_PATCHES_DIR)/} (*)"); \
+					patch -p1 -i $$p; \
+				fi; \
+			done; \
+		else \
+			$(call MESSAGE,"Applying $${i#$(PKG_PATCHES_DIR)/}"); \
+			patch -p1 -i $(PKG_PATCHES_DIR)/$$i; \
+		fi; \
 	done; \
 	)
 	$(foreach hook,$($(PKG)_POST_PATCH_HOOKS),$(call $(hook))$(sep))
