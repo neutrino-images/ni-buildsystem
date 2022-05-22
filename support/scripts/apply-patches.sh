@@ -98,8 +98,8 @@ function apply_patch {
         esac
     fi
     if [ -z "$silent" ] ; then
-        echo ""
-        echo "Applying $patch using ${type}: "
+        #echo ""
+        echo -e "\033[40;0;97mApplying $patch\033[0m using ${type}: "
     fi
     if [ ! -e "${path}/$patch" ] ; then
         echo "Error: missing patch file ${path}/$patch"
