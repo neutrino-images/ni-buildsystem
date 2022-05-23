@@ -10,7 +10,7 @@ define cmake-package
 		$(TARGET_CMAKE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	@rm -rf $(TARGET_libdir)/cmake
+	$(TARGET_RM) $(TARGET_libdir)/cmake
 	$(call TARGET_FOLLOWUP)
 endef
 
