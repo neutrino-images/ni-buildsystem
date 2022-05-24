@@ -14,9 +14,10 @@ export runlevel prevlevel
 
 SHOWINFO "start"
 
+mount -t proc proc /proc
+
 # init system
 SHOWINFO "creating and mounting system directories ..."
-mount -t proc proc /proc
 mount -t sysfs sys /sys
 mount -t tmpfs tmp /tmp
 mount -t tmpfs media /media
@@ -80,7 +81,7 @@ service syslogd start
 service sysctl start
 
 LOGINFO "init frontpanel ..."
-insmod cs_frontpanel.ko
+load_module cs_frontpanel.ko
 
 # update kernel
 if [ -x /etc/init.d/stb_update.sh ]; then
@@ -98,55 +99,55 @@ service mdev start
 # initialize hardware
 LOGINFO "init hardware ..."
 dt -t"INIT HARDWARE"
-insmod cnxt_kal.ko
-insmod cnxt_base.ko init=1
+load_module cnxt_kal.ko
+load_module cnxt_base.ko init=1
 
 if [ -e /var/etc/.scart_osd_fix ]; then
-	insmod cnxt_fb.ko cnxtfb_standalone=1 cnxtfb_width=720 cnxtfb_height=576	#PAL
+	load_module cnxt_fb.ko cnxtfb_standalone=1 cnxtfb_width=720 cnxtfb_height=576	#PAL
 elif [ -e /var/etc/.scart_osd_fix_wide ]; then
-	insmod cnxt_fb.ko cnxtfb_standalone=1 cnxtfb_width=1024 cnxtfb_height=576	#PAL widescreen
+	load_module cnxt_fb.ko cnxtfb_standalone=1 cnxtfb_width=1024 cnxtfb_height=576	#PAL widescreen
 else
-	insmod cnxt_fb.ko cnxtfb_standalone=1 cnxtfb_width=1280 cnxtfb_height=720	#HDTV
+	load_module cnxt_fb.ko cnxtfb_standalone=1 cnxtfb_width=1280 cnxtfb_height=720	#HDTV
 fi
 
-insmod cnxt_lnx.ko
-insmod cnxt_alsa.ko
+load_module cnxt_lnx.ko
+load_module cnxt_alsa.ko
 
 if [ -e /var/etc/.hddpower ]; then
-	insmod cs_control.ko hdd_power=1
+	load_module cs_control.ko hdd_power=1
 else
-	insmod cs_control.ko
+	load_module cs_control.ko
 fi
 
-insmod cnxt_i2c.ko
-insmod cnxt_sata_drv.ko
+load_module cnxt_i2c.ko
+load_module cnxt_sata_drv.ko
 
 LOGINFO "init drivers ..."
 dt -t"INIT DRIVERS"
 
-insmod 8712u.ko
-insmod 8192cu.ko
-insmod rt2870sta.ko
+load_module 8712u.ko
+load_module 8192cu.ko
+load_module rt2870sta.ko
 
 # fire up network/wlan
 service network start
 service ntpdate start
 
 # load rest of modules
-insmod cifs.ko
-insmod fuse.ko
-insmod usbserial.ko
-insmod ftdi_sio.ko
-insmod tun.ko
-insmod pl2303.ko
-insmod stv6110.ko verbose=0
-insmod stv090x.ko verbose=0
-insmod tda10023.ko
-insmod avl2108.ko
-insmod max2112.ko
-insmod cs_frontend_prop.ko
-insmod dvb-core.ko
-insmod cs_frontend.ko
+load_module cifs.ko
+load_module fuse.ko
+load_module usbserial.ko
+load_module ftdi_sio.ko
+load_module tun.ko
+load_module pl2303.ko
+load_module stv6110.ko verbose=0
+load_module stv090x.ko verbose=0
+load_module tda10023.ko
+load_module avl2108.ko
+load_module max2112.ko
+load_module cs_frontend_prop.ko
+load_module dvb-core.ko
+load_module cs_frontend.ko
 
 # say hi to everyone
 dt -ls01
