@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-F2FS_TOOLS_VERSION = 1.14.0
+F2FS_TOOLS_VERSION = 1.15.0
 F2FS_TOOLS_DIR = f2fs-tools-$(F2FS_TOOLS_VERSION)
 F2FS_TOOLS_SOURCE = f2fs-tools-$(F2FS_TOOLS_VERSION).tar.gz
 F2FS_TOOLS_SITE = https://git.kernel.org/pub/scm/linux/kernel/git/jaegeuk/f2fs-tools.git/snapshot
