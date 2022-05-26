@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-FLAC_VERSION = 1.3.3
+FLAC_VERSION = 1.3.4
 FLAC_DIR = flac-$(FLAC_VERSION)
 FLAC_SOURCE = flac-$(FLAC_VERSION).tar.xz
 FLAC_SITE = http://downloads.xiph.org/releases/flac
