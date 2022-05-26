@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-DROPBEAR_VERSION = 2019.78
+DROPBEAR_VERSION = 2022.82
 DROPBEAR_DIR = dropbear-$(DROPBEAR_VERSION)
 DROPBEAR_SOURCE = dropbear-$(DROPBEAR_VERSION).tar.bz2
 DROPBEAR_SITE = http://matt.ucc.asn.au/dropbear/releases
@@ -16,7 +16,6 @@ DROPBEAR_DEPENDENCIES = zlib
 
 DROPBEAR_CONF_OPTS = \
 	--disable-lastlog \
-	--disable-pututxline \
 	--disable-wtmp \
 	--disable-wtmpx \
 	--disable-loginfunc \
