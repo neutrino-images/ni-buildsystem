@@ -2,7 +2,7 @@ diff --git a/fftools/ffmpeg.c b/fftools/ffmpeg.c
 index 46bb014..00268c6 100644
 --- a/fftools/ffmpeg.c
 +++ b/fftools/ffmpeg.c
-@@ -4516,7 +4516,7 @@ static int process_input(int file_index)
+@@ -4521,7 +4521,7 @@ static int process_input(int file_index)
      if ((ist->dec_ctx->codec_type == AVMEDIA_TYPE_VIDEO ||
           ist->dec_ctx->codec_type == AVMEDIA_TYPE_AUDIO) &&
          pkt_dts != AV_NOPTS_VALUE && ist->next_dts == AV_NOPTS_VALUE && !copy_ts
@@ -11,7 +11,7 @@ index 46bb014..00268c6 100644
          int64_t delta   = pkt_dts - ifile->last_ts;
          if (delta < -1LL*dts_delta_threshold*AV_TIME_BASE ||
              delta >  1LL*dts_delta_threshold*AV_TIME_BASE){
-@@ -4554,7 +4554,7 @@ static int process_input(int file_index)
+@@ -4559,7 +4559,7 @@ static int process_input(int file_index)
      if ((ist->dec_ctx->codec_type == AVMEDIA_TYPE_VIDEO ||
           ist->dec_ctx->codec_type == AVMEDIA_TYPE_AUDIO) &&
           pkt_dts != AV_NOPTS_VALUE && ist->next_dts != AV_NOPTS_VALUE &&
@@ -20,7 +20,7 @@ index 46bb014..00268c6 100644
          int64_t delta   = pkt_dts - ist->next_dts;
          if (is->iformat->flags & AVFMT_TS_DISCONT) {
              if (delta < -1LL*dts_delta_threshold*AV_TIME_BASE ||
-@@ -4592,6 +4592,43 @@ static int process_input(int file_index)
+@@ -4597,6 +4597,43 @@ static int process_input(int file_index)
      if (pkt->dts != AV_NOPTS_VALUE)
          ifile->last_ts = av_rescale_q(pkt->dts, ist->st->time_base, AV_TIME_BASE_Q);
  
