@@ -4,13 +4,13 @@
 #
 ################################################################################
 
-BINUTILS_VERSION = 2.35
+BINUTILS_VERSION = 2.38
 BINUTILS_DIR = binutils-$(BINUTILS_VERSION)
 BINUTILS_SOURCE = binutils-$(BINUTILS_VERSION).tar.bz2
 BINUTILS_SITE = $(GNU_MIRROR)/binutils
 
 BINUTILS_CONF_OPTS = \
-	--bindir=$(base_bindir).$(@F) \
+	--bindir=$(bindir).$(@F) \
 	--datarootdir=$(REMOVE_datarootdir) \
 	--libdir=$(REMOVE_libdir) \
 	--includedir=$(REMOVE_includedir) \
@@ -25,10 +25,11 @@ BINUTILS_BINARIES = objdump objcopy
 
 define BINUTILS_INSTALL_BINARIES
 	$(foreach binary,$($(PKG)_BINARIES),\
-		$(INSTALL_EXEC) $(TARGET_base_bindir).$(@F)/$(binary) $(TARGET_bindir)/; \
-		rm -f $(TARGET_base_bindir).$(@F)/$(binary)$(sep) \
+		rm -f $(TARGET_bindir)/$(binary); \
+		$(INSTALL_EXEC) -D $(TARGET_bindir).$(@F)/$(binary) $(TARGET_bindir)/$(binary); \
+		rm -f $(TARGET_bindir).$(@F)/$(binary)$(sep) \
 	)
-	$(TARGET_RM) $(TARGET_base_bindir).$(@F)
+	$(TARGET_RM) $(TARGET_bindir).$(@F)
 endef
 BINUTILS_TARGET_FINALIZE_HOOKS += BINUTILS_INSTALL_BINARIES
 
