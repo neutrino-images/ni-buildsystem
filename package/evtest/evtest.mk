@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-EVTEST_VERSION = 1.34
+EVTEST_VERSION = 1.35
 EVTEST_DIR = evtest-evtest-$(EVTEST_VERSION)
 EVTEST_SOURCE = evtest-evtest-$(EVTEST_VERSION).tar.gz
 EVTEST_SITE = https://gitlab.freedesktop.org/libevdev/evtest/-/archive/evtest-$(EVTEST_VERSION)
