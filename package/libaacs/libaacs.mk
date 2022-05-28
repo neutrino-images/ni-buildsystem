@@ -4,30 +4,34 @@
 #
 ################################################################################
 
-LIBAACS_VERSION = 0.9.0
+LIBAACS_VERSION = 0.11.1
 LIBAACS_DIR = libaacs-$(LIBAACS_VERSION)
 LIBAACS_SOURCE = libaacs-$(LIBAACS_VERSION).tar.bz2
 LIBAACS_SITE = ftp://ftp.videolan.org/pub/videolan/libaacs/$(LIBAACS_VERSION)
 
-$(DL_DIR)/$(LIBAACS_SOURCE):
-	$(download) $(LIBAACS_SITE)/$(LIBAACS_SOURCE)
-
 LIBAACS_DEPENDENCIES = libgcrypt
 
 LIBAACS_CONF_OPTS = \
+	--disable-werror \
+	--disable-extra-warnings \
+	--disable-optimizations \
+	--disable-examples \
+	--disable-debug \
+	--with-gnu-ld \
 	--enable-shared \
 	--disable-static
 
-libaacs: $(LIBAACS_DEPENDENCIES) $(DL_DIR)/$(LIBAACS_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		./bootstrap; \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL)
+define LIBAACS_BOOTSTRAP
+	$(CHDIR)/$($(PKG)_DIR); \
+		./bootstrap
+endef
+LIBAACS_POST_PATCH_HOOKS += LIBAACS_BOOTSTRAP
+
+define LIBAACS_INSTALL_FILES
 	$(INSTALL) -d $(TARGET_DIR)/.cache/aacs/vuk
 	$(INSTALL_DATA) -D $(PKG_FILES_DIR)/KEYDB.cfg $(TARGET_DIR)/.config/aacs/KEYDB.cfg
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
+endef
+LIBAACS_TARGET_FINALIZE_HOOKS += LIBAACS_INSTALL_FILES
+
+libaacs: | $(TARGET_DIR)
+	$(call autotools-package)
