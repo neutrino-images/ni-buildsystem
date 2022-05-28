@@ -29,11 +29,11 @@ NANO_CONF_OPTS = \
 	--without-slang \
 	--with-wordbounds
 
-define NANO_INSTALL_EDITOR_SH
+define NANO_INSTALL_PROFILE_D_SCRIPT
 	$(INSTALL) -d $(TARGET_sysconfdir)/profile.d
 	echo "export EDITOR=nano" > $(TARGET_sysconfdir)/profile.d/editor.sh
 endef
-NANO_PRE_FOLLOWUP_HOOKS += NANO_INSTALL_EDITOR_SH
+NANO_TARGET_FINALIZE_HOOKS += NANO_INSTALL_PROFILE_D_SCRIPT
 
 nano: | $(TARGET_DIR)
 	$(call PREPARE)
