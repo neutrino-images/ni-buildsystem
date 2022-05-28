@@ -9,9 +9,6 @@ DROPBEAR_DIR = dropbear-$(DROPBEAR_VERSION)
 DROPBEAR_SOURCE = dropbear-$(DROPBEAR_VERSION).tar.bz2
 DROPBEAR_SITE = http://matt.ucc.asn.au/dropbear/releases
 
-$(DL_DIR)/$(DROPBEAR_SOURCE):
-	$(download) $(DROPBEAR_SITE)/$(DROPBEAR_SOURCE)
-
 DROPBEAR_DEPENDENCIES = zlib
 
 DROPBEAR_CONF_OPTS = \
@@ -26,10 +23,16 @@ DROPBEAR_CONF_OPTS = \
 DROPBEAR_MAKE_OPTS = \
 	PROGRAMS="dropbear dbclient dropbearkey scp"
 
-dropbear: $(DROPBEAR_DEPENDENCIES) $(DL_DIR)/$(DROPBEAR_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
+define DROPBEAR_INSTALL_INIT_SCRIPT
+	$(INSTALL) -d $(TARGET_sysconfdir)/dropbear
+	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/dropbear.init $(TARGET_sysconfdir)/init.d/dropbear
+	$(UPDATE-RC.D) dropbear defaults 75 25
+endef
+DROPBEAR_TARGET_FINALIZE_HOOKS += DROPBEAR_INSTALL_INIT_SCRIPT
+
+dropbear: | $(TARGET_DIR)
+	$(call PREPARE)
+	$(CHDIR)/$($(PKG)_DIR); \
 		$(CONFIGURE); \
 		# Ensure that dropbear doesn't use crypt() when it's not available; \
 		echo '#if !HAVE_CRYPT'				>> localoptions.h; \
@@ -41,8 +44,4 @@ dropbear: $(DROPBEAR_DEPENDENCIES) $(DL_DIR)/$(DROPBEAR_SOURCE) | $(TARGET_DIR)
 		echo '#define DEFAULT_PATH "/sbin:/bin:/usr/sbin:/usr/bin:/var/bin"' >> localoptions.h; \
 		$(MAKE) $($(PKG)_MAKE_OPTS) SCPPROGRESS=1; \
 		$(MAKE) $($(PKG)_MAKE_OPTS) install DESTDIR=$(TARGET_DIR)
-	$(INSTALL) -d $(TARGET_sysconfdir)/dropbear
-	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/dropbear.init $(TARGET_sysconfdir)/init.d/dropbear
-	$(UPDATE-RC.D) dropbear defaults 75 25
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
+	$(call TARGET_FOLLOWUP)
