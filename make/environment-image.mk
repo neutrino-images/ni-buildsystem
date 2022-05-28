@@ -13,7 +13,7 @@ GITREV=$(shell git rev-list $(GITTAG)..HEAD --count)
 # *Must* be a one-digit number
 IMAGE_VERSION_MAJOR = 4
 # *Must* be a two-digit number
-IMAGE_VERSION_MINOR = 11
+IMAGE_VERSION_MINOR = 20
 IMAGE_VERSION_MICRO = $(GITREV)
 IMAGE_VERSION_DOY = $(shell date +%j)
 
