@@ -25,16 +25,17 @@ LCD4LINUX_CONF_OPTS = \
 	--with-drivers='$(LCD4LINUX_DRIVERS)' \
 	--with-plugins='all,!dbus,!mpris_dbus,!asterisk,!isdn,!pop3,!ppp,!seti,!huawei,!imon,!kvv,!sample,!w1retap,!wireless,!xmms,!gps,!mpd,!mysql,!qnaplog,!iconv' \
 
-lcd4linux: $(LCD4LINUX_DEPENDENCIES) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(GET_GIT_SOURCE) $(PKG_SITE)/$(PKG_SOURCE) $(DL_DIR)/$(PKG_SOURCE)
-	$(CPDIR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
+define LCD4LINUX_INSTALL_SKEL
+	$(INSTALL_COPY) $(PKG_FILES_DIR)-skel/* $(TARGET_DIR)/
+endef
+LCD4LINUX_TARGET_FINALIZE_HOOKS += LCD4LINUX_INSTALL_SKEL
+
+lcd4linux: | $(TARGET_DIR)
+	$(call PREPARE)
+	$(CHDIR)/$($(PKG)_DIR); \
 		./bootstrap; \
 		$(CONFIGURE); \
 		$(MAKE) vcs_version; \
 		$(MAKE); \
 		$(MAKE) install
-	$(INSTALL_COPY) $(PKG_FILES_DIR)-skel/* $(TARGET_DIR)/
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
+	$(call TARGET_FOLLOWUP)
