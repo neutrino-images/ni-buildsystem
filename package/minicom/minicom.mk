@@ -9,9 +9,6 @@ MINICOM_DIR = minicom-$(MINICOM_VERSION)
 MINICOM_SOURCE = minicom-$(MINICOM_VERSION).tar.gz
 MINICOM_SITE = https://salsa.debian.org/minicom-team/minicom/-/archive/$(MINICOM_VERSION)
 
-$(DL_DIR)/$(MINICOM_SOURCE):
-	$(download) $(MINICOM_SITE)/$(MINICOM_SOURCE)
-
 MINICOM_DEPENDENCIES = ncurses
 
 MINICOM_CONF_OPTS = \
