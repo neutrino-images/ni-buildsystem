@@ -4,13 +4,10 @@
 #
 ################################################################################
 
-NANO_VERSION = 5.8
+NANO_VERSION = 6.3
 NANO_DIR = nano-$(NANO_VERSION)
 NANO_SOURCE = nano-$(NANO_VERSION).tar.gz
 NANO_SITE = $(GNU_MIRROR)/nano
-
-$(DL_DIR)/$(NANO_SOURCE):
-	$(download) $(NANO_SITE)/$(NANO_SOURCE)
 
 NANO_DEPENDENCIES = ncurses
 
@@ -32,14 +29,16 @@ NANO_CONF_OPTS = \
 	--without-slang \
 	--with-wordbounds
 
-nano: $(NANO_DEPENDENCIES) $(DL_DIR)/$(NANO_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
+define NANO_INSTALL_EDITOR_SH
+	$(INSTALL) -d $(TARGET_sysconfdir)/profile.d
+	echo "export EDITOR=nano" > $(TARGET_sysconfdir)/profile.d/editor.sh
+endef
+NANO_PRE_FOLLOWUP_HOOKS += NANO_INSTALL_EDITOR_SH
+
+nano: | $(TARGET_DIR)
+	$(call PREPARE)
+	$(CHDIR)/$($(PKG)_DIR); \
 		$(CONFIGURE); \
 		$(NANO_MAKE_ENV) $(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(INSTALL) -d $(TARGET_sysconfdir)/profile.d
-	echo "export EDITOR=nano" > $(TARGET_sysconfdir)/profile.d/editor.sh
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
+	$(call TARGET_FOLLOWUP)
