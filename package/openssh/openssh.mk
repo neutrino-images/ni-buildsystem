@@ -4,13 +4,10 @@
 #
 ################################################################################
 
-OPENSSH_VERSION = 8.6p1
+OPENSSH_VERSION = 9.0p1
 OPENSSH_DIR = openssh-$(OPENSSH_VERSION)
 OPENSSH_SOURCE = openssh-$(OPENSSH_VERSION).tar.gz
 OPENSSH_SITE = https://artfiles.org/openbsd/OpenSSH/portable
-
-$(DL_DIR)/$(OPENSSH_SOURCE):
-	$(download) $(OPENSSH_SITE)/$(OPENSSH_SOURCE)
 
 OPENSSH_DEPENDENCIES = openssl zlib
 
@@ -34,12 +31,5 @@ OPENSSH_CONF_OPTS = \
 	--disable-pututline \
 	--disable-pututxline
 
-openssh: $(OPENSSH_DEPENDENCIES) $(DL_DIR)/$(OPENSSH_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$($(PKG)_CONF_ENV) ./configure $(TARGET_CONFIGURE_OPTS); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
+openssh: | $(TARGET_DIR)
+	$(call autotools-package)
