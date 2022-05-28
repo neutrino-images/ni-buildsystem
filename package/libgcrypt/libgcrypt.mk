@@ -4,10 +4,10 @@
 #
 ################################################################################
 
-LIBGCRYPT_VERSION = 1.8.8
+LIBGCRYPT_VERSION = 1.10.1
 LIBGCRYPT_DIR = libgcrypt-$(LIBGCRYPT_VERSION)
 LIBGCRYPT_SOURCE = libgcrypt-$(LIBGCRYPT_VERSION).tar.gz
-LIBGCRYPT_SITE = ftp://ftp.gnupg.org/gcrypt/libgcrypt
+LIBGCRYPT_SITE = https://gnupg.org/ftp/gcrypt/libgcrypt
 
 LIBGCRYPT_DEPENDENCIES = libgpg-error
 
