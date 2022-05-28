@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-WGET_VERSION = 1.20.3
+WGET_VERSION = 1.21.3
 WGET_DIR = wget-$(WGET_VERSION)
 WGET_SOURCE = wget-$(WGET_VERSION).tar.gz
 WGET_SITE = $(GNU_MIRROR)/wget
