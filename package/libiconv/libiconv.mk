@@ -18,6 +18,9 @@ LIBICONV_CONF_OPTS = \
 	--disable-shared \
 	--enable-relocatable
 
+# Don't build the preloadable library, as we don't need it (it's only
+# for LD_PRELOAD to replace glibc's iconv, but we never build libiconv
+# when glibc is used). And it causes problems for static only builds.
 define LIBICONV_DISABLE_PRELOAD
 	$(SED) '/preload/d' $(PKG_BUILD_DIR)/Makefile.in
 endef
