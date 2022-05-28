@@ -7,7 +7,7 @@
 UTIL_LINUX_VERSION = $(if $(filter $(BOXSERIES),hd1),2.36.2,2.38)
 UTIL_LINUX_DIR = util-linux-$(UTIL_LINUX_VERSION)
 UTIL_LINUX_SOURCE = util-linux-$(UTIL_LINUX_VERSION).tar.xz
-ifeq ($(filter $(BOXSERIES),hd1))
+ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd1))
 UTIL_LINUX_SITE = $(KERNEL_MIRROR)/linux/utils/util-linux/v$(basename $(UTIL_LINUX_VERSION))
 else
 UTIL_LINUX_SITE = $(KERNEL_MIRROR)/linux/utils/util-linux/v$(UTIL_LINUX_VERSION)
