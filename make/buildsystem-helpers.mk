@@ -28,7 +28,10 @@ download = $(GET_ARCHIVE) $(DL_DIR)
 define DOWNLOAD
 	$(foreach hook,$($(PKG)_PRE_DOWNLOAD_HOOKS),$(call $(hook))$(sep))
 	$(Q)( \
-	if [ "$($(PKG)_VERSION)" == "git" ]; then \
+	if [ "$($(PKG)_VERSION)" == "ni-git" ]; then \
+	  $(call MESSAGE,"Downloading") ; \
+	  $(GET_GIT_SOURCE) $($(PKG)_SITE)/$($(PKG)_SOURCE) $(SOURCE_DIR)/$($(PKG)_SOURCE); \
+	elif [ "$($(PKG)_VERSION)" == "git" ]; then \
 	  $(call MESSAGE,"Downloading") ; \
 	  $(GET_GIT_SOURCE) $($(PKG)_SITE)/$($(PKG)_SOURCE) $(DL_DIR)/$($(PKG)_SOURCE); \
 	elif [ "$($(PKG)_VERSION)" == "hg" ]; then \
@@ -58,6 +61,13 @@ define EXTRACT # (directory)
 	    ;; \
 	  *.zip) \
 	    unzip -o -q ${DL_DIR}/$($(PKG)_SOURCE) -d $(1); \
+	    ;; \
+	  ni-git.*) \
+	    cp -a -t $(1) $(SOURCE_DIR)/$($(PKG)_SOURCE); \
+	    if test $($(PKG)_CHECKOUT); then \
+	      $(call MESSAGE,"git checkout $($(PKG)_CHECKOUT)"); \
+	      $(CD) $(1)/$($(PKG)_DIR); git checkout $($(PKG)_CHECKOUT); \
+	    fi; \
 	    ;; \
 	  *.git | git.*) \
 	    cp -a -t $(1) $(DL_DIR)/$($(PKG)_SOURCE); \
