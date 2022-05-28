@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-SG3_UTILS_VERSION = 1.45
+SG3_UTILS_VERSION = 1.47
 SG3_UTILS_DIR = sg3_utils-$(SG3_UTILS_VERSION)
 SG3_UTILS_SOURCE = sg3_utils-$(SG3_UTILS_VERSION).tar.xz
 SG3_UTILS_SITE = http://sg.danny.cz/sg/p
@@ -15,11 +15,12 @@ SG3_UTILS_CONF_OPTS = \
 SG3_UTILS_BINARIES = sg_start
 
 define SG3_UTILS_INSTALL_BINARIES
-	for bin in $(SG3_UTILS_BINARIES); do \
-		rm -f $(TARGET_bindir)/$$bin; \
-		$(INSTALL_EXEC) -D $(TARGET_bindir).$(@F)/$$bin $(TARGET_bindir)/$$bin; \
-	done
-	rm -r $(TARGET_bindir).$(@F)
+	$(foreach binary,$($(PKG)_BINARIES),\
+		rm -f $(TARGET_bindir)/$(binary); \
+		$(INSTALL_EXEC) -D $(TARGET_bindir).$(@F)/$(binary) $(TARGET_bindir)/$(binary); \
+		rm -f $(TARGET_bindir).$(@F)/$(binary)$(sep) \
+	)
+	$(TARGET_RM) $(TARGET_bindir).$(@F)
 endef
 SG3_UTILS_TARGET_FINALIZE_HOOKS += SG3_UTILS_INSTALL_BINARIES
 
