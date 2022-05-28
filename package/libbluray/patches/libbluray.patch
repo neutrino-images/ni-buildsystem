@@ -1,34 +1,3 @@
-diff --git a/src/file/dir_win32.c b/src/file/dir_win32.c
-index 2690658..6eb6c04 100644
---- a/src/file/dir_win32.c
-+++ b/src/file/dir_win32.c
-@@ -86,8 +86,8 @@ static BD_DIR_H *_dir_open_win32(const char* dirname)
- 
-     dir->internal = priv;
- 
--    wchar_t wfilespec[MAX_PATH];
--    if (MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, filespec, -1, wfilespec, MAX_PATH))
-+    wchar_t wfilespec[4096];
-+    if (MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, filespec, -1, wfilespec, 4096))
-         priv->handle = _wfindfirst(wfilespec, &priv->info);
-     else
-         priv->handle = -1;
-diff --git a/src/file/file_win32.c b/src/file/file_win32.c
-index 5eb52d7..ed8fcec 100644
---- a/src/file/file_win32.c
-+++ b/src/file/file_win32.c
-@@ -97,9 +97,9 @@ static BD_FILE_H *_file_open(const char* filename, const char *mode)
- {
-     BD_FILE_H *file;
-     FILE *fp;
--    wchar_t wfilename[MAX_PATH], wmode[8];
-+    wchar_t wfilename[4096], wmode[8];
- 
--    if (!MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, filename, -1, wfilename, MAX_PATH) ||
-+    if (!MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, filename, -1, wfilename, 4096) ||
-         !MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, mode, -1, wmode, 8)) {
- 
-         BD_DEBUG(DBG_FILE, "Error opening file %s\n", filename);
 diff --git a/src/libbluray/bluray.c b/src/libbluray/bluray.c
 index 1aedf2c..e519650 100644
 --- a/src/libbluray/bluray.c
@@ -94,18 +63,3 @@ index ae9f412..8ce6ddd 100644
   *  Seek to a chapter. First chapter is 0
   *
   * @param bd  BLURAY object
-diff --git a/src/libbluray/decoders/m2ts_filter.c b/src/libbluray/decoders/m2ts_filter.c
-index 6b146dc..1b9ac3b 100644
---- a/src/libbluray/decoders/m2ts_filter.c
-+++ b/src/libbluray/decoders/m2ts_filter.c
-@@ -36,8 +36,8 @@
- #include <stdio.h>
- #endif
- 
--#define M2TS_TRACE(...) BD_DEBUG(DBG_STREAM,__VA_ARGS__)
--//#define M2TS_TRACE(...) do {} while(0)
-+//#define M2TS_TRACE(...) BD_DEBUG(DBG_STREAM,__VA_ARGS__)
-+#define M2TS_TRACE(...) do {} while(0)
- 
- /*
-  *

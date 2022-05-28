@@ -4,13 +4,10 @@
 #
 ################################################################################
 
-LIBBLURAY_VERSION = 0.9.3
+LIBBLURAY_VERSION = 1.3.1
 LIBBLURAY_DIR = libbluray-$(LIBBLURAY_VERSION)
 LIBBLURAY_SOURCE = libbluray-$(LIBBLURAY_VERSION).tar.bz2
-LIBBLURAY_SITE = ftp.videolan.org/pub/videolan/libbluray/$(LIBBLURAY_VERSION)
-
-$(DL_DIR)/$(LIBBLURAY_SOURCE):
-	$(download) $(LIBBLURAY_SITE)/$(LIBBLURAY_SOURCE)
+LIBBLURAY_SITE = http://download.videolan.org/pub/videolan/libbluray/$(LIBBLURAY_VERSION)
 
 LIBBLURAY_DEPENDENCIES = freetype
 ifeq ($(BOXSERIES),hd2)
@@ -21,25 +18,17 @@ LIBBLURAY_CONF_OPTS = \
 	--enable-shared \
 	--disable-static \
 	--disable-extra-warnings \
-	--disable-doxygen-doc \
-	--disable-doxygen-dot \
-	--disable-doxygen-html \
-	--disable-doxygen-ps \
-	--disable-doxygen-pdf \
 	--disable-examples \
-	--disable-bdjava \
+	--disable-bdjava-jar \
+	--with-freetype \
 	--without-libxml2 \
 	--without-fontconfig
 
-libbluray: $(LIBBLURAY_DEPENDENCIES) $(DL_DIR)/$(LIBBLURAY_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(call APPLY_PATCHES,$(PKG_PATCHES_DIR))
-	$(CHDIR)/$(PKG_DIR); \
-		./bootstrap; \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
+define LIBBLURAY_BOOTSTRAP
+	$(CHDIR)/$($(PKG)_DIR); \
+		./bootstrap
+endef
+LIBBLURAY_POST_PATCH_HOOKS += LIBBLURAY_BOOTSTRAP
+
+libbluray: | $(TARGET_DIR)
+	$(call autotools-package)
