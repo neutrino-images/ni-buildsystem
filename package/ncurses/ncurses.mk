@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-NCURSES_VERSION = 6.1
+NCURSES_VERSION = 6.3
 NCURSES_DIR = ncurses-$(NCURSES_VERSION)
 NCURSES_SOURCE = ncurses-$(NCURSES_VERSION).tar.gz
 NCURSES_SITE = $(GNU_MIRROR)/ncurses
