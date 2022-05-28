@@ -4,13 +4,10 @@
 #
 ################################################################################
 
-TZDATA_VERSION = 2020f
+TZDATA_VERSION = 2022a
 TZDATA_DIR = tzdata$(TZDATA_VERSION)
 TZDATA_SOURCE = tzdata$(TZDATA_VERSION).tar.gz
-TZDATA_SITE = ftp://ftp.iana.org/tz/releases
-
-$(DL_DIR)/$(TZDATA_SOURCE):
-	$(download) $(TZDATA_SITE)/$(TZDATA_SOURCE)
+TZDATA_SITE = https://data.iana.org/time-zones/releases
 
 TZDATA_DEPENDENCIES = host-zic
 
@@ -22,11 +19,38 @@ TZDATA_LOCALTIME = CET
 
 ETC_LOCALTIME = $(if $(filter $(PERSISTENT_VAR_PARTITION),yes),/var/etc/localtime,/etc/localtime)
 
-tzdata: $(TZDATA_DEPENDENCIES) $(DL_DIR)/$(TZDATA_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(MKDIR)/$(PKG_DIR)
-	$(CHDIR)/$(PKG_DIR); \
-		tar -xf $(DL_DIR)/$(PKG_SOURCE); \
+define TZDATA_INSTALL_ETC_LOCALTIME
+	ln -sf $(datadir)/zoneinfo/$(TZDATA_LOCALTIME) $(TARGET_DIR)$(ETC_LOCALTIME)
+endef
+TZDATA_TARGET_FINALIZE_HOOKS += TZDATA_INSTALL_ETC_LOCALTIME
+
+ifeq ($(PERSISTENT_VAR_PARTITION),yes)
+define TZDATA_INSTALL_ETC_LOCALTIME_LINK
+	ln -sf $(ETC_LOCALTIME) $(TARGET_sysconfdir)/localtime
+endef
+TZDATA_TARGET_FINALIZE_HOOKS += TZDATA_INSTALL_ETC_LOCALTIME_LINK
+endif
+
+define TZDATA_INSTALL_TIMEZONE_FILES
+	$(INSTALL_DATA) -D $(PKG_FILES_DIR)/timezone.xml $(TARGET_sysconfdir)/timezone.xml
+	echo "$(TZDATA_LOCALTIME)" > $(TARGET_sysconfdir)/timezone
+endef
+TZDATA_TARGET_FINALIZE_HOOKS += TZDATA_INSTALL_TIMEZONE_FILES
+
+define TZDATA_INSTALL_TZ_SH
+	$(INSTALL) -d $(TARGET_sysconfdir)/profile.d
+	echo "export TZ=\$$(cat $(sysconfdir)/timezone)" > $(TARGET_sysconfdir)/profile.d/tz.sh
+endef
+TZDATA_TARGET_FINALIZE_HOOKS += TZDATA_INSTALL_TZ_SH
+
+tzdata: | $(TARGET_DIR)
+	$(call STARTUP)
+	$(call DEPENDENCIES)
+	$(call DOWNLOAD,$($(PKG)_SOURCE))
+	$(MKDIR)/$($(PKG)_DIR)
+	$(call EXTRACT,$(PKG_BUILD_DIR))
+	$(call APPLY_PATCHES,$(PKG_PATCHES_DIR))
+	$(CHDIR)/$($(PKG)_DIR); \
 		unset ${!LC_*}; LANG=POSIX; LC_ALL=POSIX; export LANG LC_ALL; \
 		$(HOST_ZIC) -b fat -d zoneinfo.tmp $(TZDATA_ZONELIST); \
 		sed -n '/zone=/{s/.*zone="\(.*\)".*$$/\1/; p}' $(PKG_FILES_DIR)/timezone.xml | sort -u | \
@@ -35,14 +59,5 @@ tzdata: $(TZDATA_DEPENDENCIES) $(DL_DIR)/$(TZDATA_SOURCE) | $(TARGET_DIR)
 			while read y; do \
 				test -e $$y && $(INSTALL_DATA) -D $$y $(TARGET_datadir)/zoneinfo/$$x; \
 			done; \
-		done; \
-	$(INSTALL_DATA) -D $(PKG_FILES_DIR)/timezone.xml $(TARGET_sysconfdir)/timezone.xml
-	ln -sf $(datadir)/zoneinfo/$(TZDATA_LOCALTIME) $(TARGET_DIR)$(ETC_LOCALTIME)
-  ifeq ($(PERSISTENT_VAR_PARTITION),yes)
-	ln -sf $(ETC_LOCALTIME) $(TARGET_sysconfdir)/localtime
-  endif
-	echo "$(TZDATA_LOCALTIME)" > $(TARGET_sysconfdir)/timezone
-	$(INSTALL) -d $(TARGET_sysconfdir)/profile.d
-	echo "export TZ=\$$(cat $(sysconfdir)/timezone)" > $(TARGET_sysconfdir)/profile.d/tz.sh
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
+		done
+	$(call TARGET_FOLLOWUP)
