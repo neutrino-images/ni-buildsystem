@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-LESS_VERSION = 563
+LESS_VERSION = 590
 LESS_DIR = less-$(LESS_VERSION)
 LESS_SOURCE = less-$(LESS_VERSION).tar.gz
 LESS_SITE = $(GNU_MIRROR)/less
