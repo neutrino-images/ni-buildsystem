@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-MTD_UTILS_VERSION = 2.0.2
+MTD_UTILS_VERSION = 2.1.2
 MTD_UTILS_DIR = mtd-utils-$(MTD_UTILS_VERSION)
 MTD_UTILS_SOURCE = mtd-utils-$(MTD_UTILS_VERSION).tar.bz2
 MTD_UTILS_SITE = ftp://ftp.infradead.org/pub/mtd-utils
