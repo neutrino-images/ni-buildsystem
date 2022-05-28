@@ -16,6 +16,17 @@ XUPNPD_DEPENDENCIES = lua openssl
 XUPNPD_MAKE_OPTS = \
 	TARGET=$(TARGET) LUAFLAGS="$(TARGET_LDFLAGS) -I$(TARGET_includedir)"
 
+define XUPNPD_INSTALL_BINARY
+	$(INSTALL_EXEC) -D $(PKG_BUILD_DIR)/src/xupnpd $(TARGET_bindir)/xupnpd
+endef
+XUPNPD_PRE_FOLLOWUP_HOOKS += XUPNPD_INSTALL_BINARY
+
+define XUPNPD_INSTALL_DATA
+	$(INSTALL) -d $(TARGET_datadir)/xupnpd/config
+	$(INSTALL_COPY) $(PKG_BUILD_DIR)/src/{plugins,profiles,ui,www,*.lua} $(TARGET_datadir)/xupnpd/
+endef
+XUPNPD_PRE_FOLLOWUP_HOOKS += XUPNPD_INSTALL_DATA
+
 define XUPNPD_TARGET_CLEANUP
 	$(TARGET_RM) $(TARGET_datadir)/xupnpd/plugins/staff/xupnpd_18plus.lua
 endef
@@ -36,16 +47,9 @@ define XUPNPD_INSTALL_SKEL
 endef
 XUPNPD_TARGET_FINALIZE_HOOKS += XUPNPD_INSTALL_SKEL
 
-xupnpd: $(XUPNPD_DEPENDENCIES) | $(TARGET_DIR)
-	$(call DEPENDENCIES)
-	$(call DOWNLOAD,$($(PKG)_SOURCE))
-	$(call STARTUP)
-	$(call EXTRACT,$(BUILD_DIR))
-	$(call APPLY_PATCHES,$(PKG_PATCHES_DIR))
-	$(CHDIR)/$(PKG_DIR); \
+xupnpd: | $(TARGET_DIR)
+	$(call PREPARE)
+	$(CHDIR)/$($(PKG)_DIR); \
 		$(TARGET_CONFIGURE_ENV) \
 		$(MAKE) -C src $($(PKG)_MAKE_OPTS) embedded
-	$(INSTALL_EXEC) -D $(PKG_BUILD_DIR)/src/xupnpd $(TARGET_bindir)/xupnpd
-	$(INSTALL) -d $(TARGET_datadir)/xupnpd/config
-	$(INSTALL_COPY) $(PKG_BUILD_DIR)/src/{plugins,profiles,ui,www,*.lua} $(TARGET_datadir)/xupnpd/
 	$(call TARGET_FOLLOWUP)
