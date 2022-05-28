@@ -4,13 +4,10 @@
 #
 ################################################################################
 
-OPENSSL_VERSION = 1.0.2u
+OPENSSL_VERSION = 1.1.1o
 OPENSSL_DIR = openssl-$(OPENSSL_VERSION)
 OPENSSL_SOURCE = openssl-$(OPENSSL_VERSION).tar.gz
 OPENSSL_SITE = https://www.openssl.org/source
-
-$(DL_DIR)/$(OPENSSL_SOURCE):
-	$(download) $(OPENSSL_SITE)/$(OPENSSL_SOURCE)
 
 ifeq ($(TARGET_ARCH),arm)
   OPENSSL_TARGET_ARCH = linux-armv4
@@ -30,7 +27,6 @@ OPENSSL_CONF_OPTS += \
 	no-hw \
 	no-engine \
 	no-sse2 \
-	no-perlasm \
 	no-tests \
 	no-fuzz-afl \
 	no-fuzz-libfuzzer
@@ -41,30 +37,41 @@ OPENSSL_CONF_OPTS += \
 	$(TARGET_CFLAGS) \
 	$(TARGET_LDFLAGS) \
 
-openssl: $(DL_DIR)/$(OPENSSL_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(call APPLY_PATCHES,$(PKG_PATCHES_DIR))
-	$(CHDIR)/$(PKG_DIR); \
-		./Configure \
-			$($(PKG)_CONF_OPTS); \
+define OPENSSL_TARGET_CLEANUP
+	$(TARGET_RM) $(TARGET_libdir)/engines-1.1
+	$(TARGET_RM) $(TARGET_bindir)/c_rehash
+	$(TARGET_RM) $(TARGET_sysconfdir)/ssl/ct_log_list.cnf*
+	$(TARGET_RM) $(TARGET_sysconfdir)/ssl/misc/{CA.pl,tsget*}
+	$(TARGET_RM) $(TARGET_sysconfdir)/ssl/openssl.cnf.dist
+endef
+OPENSSL_TARGET_FINALIZE_HOOKS += OPENSSL_TARGET_CLEANUP
+
+ifeq ($(BOXTYPE),coolstream)
+define OPENSSL_TARGET_CLEANUP_COOLSTREAM
+	$(TARGET_RM) $(TARGET_sysconfdir)/ssl/misc/{CA.*,c_*}
+	$(TARGET_RM) $(TARGET_sysconfdir)/ssl/openssl.cnf
+	$(TARGET_RM) $(TARGET_bindir)/openssl
+endef
+OPENSSL_TARGET_FINALIZE_HOOKS += OPENSSL_TARGET_CLEANUP_COOLSTREAM
+endif
+
+OPENSSL_COMPATIBILITY_VERSIONS = 0.9.7 0.9.8 1.0.0 1.0.2 1.1.0
+define OPENSSL_COMPATIBILITY_LINKS
+	$(foreach v,$(OPENSSL_COMPATIBILITY_VERSIONS),\
+		ln -sf libcrypto.so.1.1 $(TARGET_libdir)/libcrypto.so.$(v)$(sep))
+	$(foreach v,$(OPENSSL_COMPATIBILITY_VERSIONS),\
+		ln -sf libssl.so.1.1 $(TARGET_libdir)/libssl.so.$(v)$(sep))
+endef
+OPENSSL_TARGET_FINALIZE_HOOKS += OPENSSL_COMPATIBILITY_LINKS
+
+openssl: | $(TARGET_DIR)
+	$(call PREPARE)
+	$(CHDIR)/$($(PKG)_DIR); \
+		./Configure $($(PKG)_CONF_OPTS); \
 		$(SED) 's| build_tests||' Makefile; \
 		$(SED) 's|^MANDIR=.*|MANDIR=$(REMOVE_mandir)|' Makefile; \
 		$(SED) 's|^HTMLDIR=.*|HTMLDIR=$(REMOVE_htmldir)|' Makefile; \
 		$(MAKE) depend; \
 		$(MAKE); \
-		$(MAKE) install_sw INSTALL_PREFIX=$(TARGET_DIR)
-	$(TARGET_RM) $(TARGET_libdir)/engines
-	$(TARGET_RM) $(TARGET_bindir)/c_rehash
-	$(TARGET_RM) $(TARGET_sysconfdir)/ssl/misc/{CA.pl,tsget}
-ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd1 hd2))
-	$(TARGET_RM) $(TARGET_bindir)/openssl
-	$(TARGET_RM) $(TARGET_sysconfdir)/ssl/misc/{CA.*,c_*}
-endif
-	chmod 0755 $(TARGET_libdir)/lib{crypto,ssl}.so.*
-	for version in 0.9.7 0.9.8 1.0.2; do \
-		ln -sf libcrypto.so.1.0.0 $(TARGET_libdir)/libcrypto.so.$$version; \
-		ln -sf libssl.so.1.0.0 $(TARGET_libdir)/libssl.so.$$version; \
-	done
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
+		$(MAKE) install_sw install_ssldirs DESTDIR=$(TARGET_DIR)
+	$(call TARGET_FOLLOWUP)
