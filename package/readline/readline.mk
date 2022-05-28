@@ -4,10 +4,12 @@
 #
 ################################################################################
 
-READLINE_VERSION = 8.1
+READLINE_VERSION = 8.1.2
 READLINE_DIR = readline-$(READLINE_VERSION)
 READLINE_SOURCE = readline-$(READLINE_VERSION).tar.gz
 READLINE_SITE = $(GNU_MIRROR)/readline
+
+READLINE_DEPENDENCIES = ncurses
 
 READLINE_CONF_ENV = \
 	bash_cv_func_sigsetjmp=yes \
@@ -15,7 +17,13 @@ READLINE_CONF_ENV = \
 
 READLINE_CONF_OPTS = \
 	--datarootdir=$(REMOVE_datarootdir) \
+	--disable-bracketed-paste-default \
 	--disable-install-examples
+
+define READLINE_INSTALL_INPUTRC
+	$(INSTALL_DATA) -D $(PKG_FILES_DIR)/inputrc $(TARGET_sysconfdir)/inputrc
+endef
+READLINE_TARGET_FINALIZE_HOOKS += READLINE_INSTALL_INPUTRC
 
 readline: | $(TARGET_DIR)
 	$(call autotools-package)
