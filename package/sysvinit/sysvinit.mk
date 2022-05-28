@@ -4,13 +4,10 @@
 #
 ################################################################################
 
-SYSVINIT_VERSION = 3.00
+SYSVINIT_VERSION = 3.04
 SYSVINIT_DIR = sysvinit-$(SYSVINIT_VERSION)
 SYSVINIT_SOURCE = sysvinit-$(SYSVINIT_VERSION).tar.xz
 SYSVINIT_SITE = http://download.savannah.nongnu.org/releases/sysvinit
-
-$(DL_DIR)/$(SYSVINIT_SOURCE):
-	$(download) $(SYSVINIT_SITE)/$(SYSVINIT_SOURCE)
 
 ifeq ($(BOXMODEL),$(filter $(BOXMODEL),vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
   define SYSVINIT_INSTALL_RCS
@@ -31,19 +28,24 @@ define SYSVINIT_INSTALL_FILES
 	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/rcK $(TARGET_sysconfdir)/init.d/rcK
 	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/service $(TARGET_sbindir)/service
 	$(INSTALL_EXEC) -D support/scripts/update-rc.d $(TARGET_sbindir)/update-rc.d
+endef
+SYSVINIT_TARGET_FINALIZE_HOOKS += SYSVINIT_INSTALL_FILES
+
+define SYSVINIT_MAKE_RC_LOCAL_SCRIPTS
 	$(MAKE) rc_local-scripts
 endef
+SYSVINIT_TARGET_FINALIZE_HOOKS += SYSVINIT_MAKE_RC_LOCAL_SCRIPTS
 
-sysvinit: $(DL_DIR)/$(SYSVINIT_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(call APPLY_PATCHES,$(PKG_PATCHES_DIR))
-	$(CHDIR)/$(PKG_DIR); \
+define SYSVINIT_TARGET_CLEANUP
+	$(TARGET_RM) $(addprefix $(TARGET_base_sbindir)/,bootlogd fstab-decode logsave telinit)
+	$(TARGET_RM) $(addprefix $(TARGET_bindir)/,last lastb mesg readbootlog utmpdump wall)
+endef
+SYSVINIT_TARGET_FINALIZE_HOOKS += SYSVINIT_TARGET_CLEANUP
+
+sysvinit: | $(TARGET_DIR)
+	$(call PREPARE)
+	$(CHDIR)/$($(PKG)_DIR); \
 		$(TARGET_CONFIGURE_ENV) \
 		$(MAKE) -C src SULOGINLIBS=-lcrypt; \
 		$(MAKE) install ROOT=$(TARGET_DIR) MANDIR=$(REMOVE_mandir)
-	$(TARGET_RM) $(addprefix $(TARGET_base_sbindir)/,bootlogd fstab-decode logsave telinit)
-	$(TARGET_RM) $(addprefix $(TARGET_bindir)/,last lastb mesg readbootlog utmpdump wall)
-	$($(PKG)_INSTALL_FILES)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
+	$(call TARGET_FOLLOWUP)
