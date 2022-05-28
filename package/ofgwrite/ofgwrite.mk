@@ -4,15 +4,22 @@
 #
 ################################################################################
 
-ofgwrite: $(SOURCE_DIR)/$(NI_OFGWRITE) | $(TARGET_DIR)
-	$(REMOVE)/$(NI_OFGWRITE)
-	tar -C $(SOURCE_DIR) --exclude-vcs -cp $(NI_OFGWRITE) | tar -C $(BUILD_DIR) -x
-	$(CHDIR)/$(NI_OFGWRITE); \
+OFGWRITE_VERSION = ni-git
+OFGWRITE_DIR = $(NI_OFGWRITE)
+OFGWRITE_SOURCE = $(NI_OFGWRITE)
+OFGWRITE_SITE = https://github.com/neutrino-images
+
+define OFGWRITE_INSTALL_BINARIES
+	$(INSTALL_EXEC) $(PKG_BUILD_DIR)/ofgwrite_bin $(TARGET_bindir)
+	$(INSTALL_EXEC) $(PKG_BUILD_DIR)/ofgwrite_caller $(TARGET_bindir)
+	$(INSTALL_EXEC) $(PKG_BUILD_DIR)/ofgwrite $(TARGET_bindir)
+	$(SED) 's|prefix=.*|prefix=$(prefix)|' $(TARGET_bindir)/ofgwrite
+endef
+OFGWRITE_PRE_FOLLOWUP_HOOKS += OFGWRITE_INSTALL_BINARIES
+
+ofgwrite: | $(TARGET_DIR)
+	$(call PREPARE)
+	$(CHDIR)/$($(PKG)_DIR); \
 		$(TARGET_CONFIGURE_ENV) \
 		$(MAKE)
-	$(INSTALL_EXEC) $(BUILD_DIR)/$(NI_OFGWRITE)/ofgwrite_bin $(TARGET_bindir)
-	$(INSTALL_EXEC) $(BUILD_DIR)/$(NI_OFGWRITE)/ofgwrite_caller $(TARGET_bindir)
-	$(INSTALL_EXEC) $(BUILD_DIR)/$(NI_OFGWRITE)/ofgwrite $(TARGET_bindir)
-	$(SED) 's|prefix=.*|prefix=$(prefix)|' $(TARGET_bindir)/ofgwrite
-	$(REMOVE)/$(NI_OFGWRITE)
-	$(TOUCH)
+	$(call TARGET_FOLLOWUP)
