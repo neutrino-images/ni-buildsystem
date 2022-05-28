@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-SDL2_VERSION = 2.0.14
+SDL2_VERSION = 2.0.22
 SDL2_DIR = SDL2-$(SDL2_VERSION)
 SDL2_SOURCE = SDL2-$(SDL2_VERSION).tar.gz
 SDL2_SITE = http://www.libsdl.org/release
