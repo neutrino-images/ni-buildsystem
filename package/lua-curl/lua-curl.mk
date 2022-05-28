@@ -20,12 +20,9 @@ LUA_CURL_MAKE_OPTS = \
 	LUA_CMOD=$(libdir)/lua/$(LUA_ABIVERSION) \
 	LUA_LMOD=$(datadir)/lua/$(LUA_ABIVERSION)
 
-lua-curl: $(LUA_CURL_DEPENDENCIES) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(GET_GIT_SOURCE) $(PKG_SITE) $(DL_DIR)/$(PKG_SOURCE)
-	$(CPDIR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
+lua-curl: | $(TARGET_DIR)
+	$(call PREPARE)
+	$(CHDIR)/$($(PKG)_DIR); \
 		$($(PKG)_MAKE_ENV) $(MAKE) $($(PKG)_MAKE_OPTS); \
 		$($(PKG)_MAKE_ENV) $(MAKE) $($(PKG)_MAKE_OPTS) install DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
+	$(call TARGET_FOLLOWUP)
