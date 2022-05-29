@@ -11,6 +11,8 @@ POPT_SITE = http://ftp.rpm.org/popt/releases/popt-1.x
 
 POPT_DEPENDENCIES = libiconv
 
+POPT_AUTORECONF = YES
+
 POPT_CONF_ENV = \
 	ac_cv_va_copy=yes \
 	am_cv_lib_iconv=yes
