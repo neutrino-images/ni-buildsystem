@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-NCURSES_VERSION = 6.3
+NCURSES_VERSION = 6.1
 NCURSES_DIR = ncurses-$(NCURSES_VERSION)
 NCURSES_SOURCE = ncurses-$(NCURSES_VERSION).tar.gz
 NCURSES_SITE = $(GNU_MIRROR)/ncurses
@@ -25,6 +25,9 @@ NCURSES_CONF_OPTS = \
 	--disable-db-install \
 	--disable-stripping \
 	--with-progs \
+	--without-cxx \
+	--without-cxx-binding \
+	--without-ada \
 	--without-termlib \
 	--without-ticlib \
 	--without-manpages \
