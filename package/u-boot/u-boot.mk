@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-HOST_U_BOOT_VERSION = 2022.01
+HOST_U_BOOT_VERSION = 2021.04
 HOST_U_BOOT_DIR = u-boot-$(HOST_U_BOOT_VERSION)
 HOST_U_BOOT_SOURCE = u-boot-$(HOST_U_BOOT_VERSION).tar.bz2
 HOST_U_BOOT_SITE = ftp://ftp.denx.de/pub/u-boot
