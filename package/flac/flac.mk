@@ -7,7 +7,7 @@
 FLAC_VERSION = 1.3.4
 FLAC_DIR = flac-$(FLAC_VERSION)
 FLAC_SOURCE = flac-$(FLAC_VERSION).tar.xz
-FLAC_SITE = http://downloads.xiph.org/releases/flac
+FLAC_SITE = https://ftp.osuosl.org/pub/xiph/releases/flac
 
 FLAC_AUTORECONF = YES
 
