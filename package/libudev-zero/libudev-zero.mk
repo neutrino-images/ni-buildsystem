@@ -15,6 +15,7 @@ LIBUDEV_ZERO_MAKE_OPTS = \
 libudev-zero: | $(TARGET_DIR)
 	$(call PREPARE)
 	$(CHDIR)/$($(PKG)_DIR); \
+		$(TARGET_CONFIGURE_ENV) \
 		$(MAKE) $($(PKG)_MAKE_OPTS); \
 		$(MAKE) $($(PKG)_MAKE_OPTS) install DESTDIR=$(TARGET_DIR)
 	$(call TARGET_FOLLOWUP)
