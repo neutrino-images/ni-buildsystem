@@ -4,10 +4,17 @@
 #
 ################################################################################
 
-HOST_ZIC_VERSION = 2022a
-HOST_ZIC_DIR = tzcode$(HOST_ZIC_VERSION)
-HOST_ZIC_SOURCE = tzcode$(HOST_ZIC_VERSION).tar.gz
-HOST_ZIC_SITE = https://data.iana.org/time-zones/releases
+ZIC_VERSION = 2022a
+ZIC_DIR = tzcode$(ZIC_VERSION)
+ZIC_SOURCE = tzcode$(ZIC_VERSION).tar.gz
+ZIC_SITE = https://data.iana.org/time-zones/releases
+
+# ------------------------------------------------------------------------------
+
+HOST_ZIC_VERSION = $(ZIC_VERSION)
+HOST_ZIC_DIR = $(ZIC_DIR)
+HOST_ZIC_SOURCE = $(ZIC_SOURCE)
+HOST_ZIC_SITE = $(ZIC_SITE)
 
 HOST_ZIC = $(HOST_DIR)/sbin/zic
 
