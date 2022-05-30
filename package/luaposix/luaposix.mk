@@ -9,10 +9,7 @@ LUAPOSIX_DIR = luaposix-$(LUAPOSIX_VERSION)
 LUAPOSIX_SOURCE = luaposix-$(LUAPOSIX_VERSION).tar.gz
 LUAPOSIX_SITE = https://github.com/luaposix/luaposix/archive
 
-$(DL_DIR)/$(LUAPOSIX_SOURCE):
-	$(download) $(LUAPOSIX_SITE)/v$(LUAPOSIX_VERSION).tar.gz -O $(@)
-
-LUAPOSIX_DEPENDENCIES = $(HOST_LUA) lua luaexpat
+LUAPOSIX_DEPENDENCIES = $(HOST_LUA) lua luaexpat gnulib slingshot
 
 LUAPOSIX_AUTORECONF = YES
 
@@ -25,30 +22,21 @@ LUAPOSIX_CONF_OPTS = \
 	--mandir=$(TARGET_DIR)$(REMOVE_mandir) \
 	--docdir=$(TARGET_DIR)$(REMOVE_docdir)
 
-GNULIB_VERSION = 20140202
-GNULIB_SOURCE = gnulib-$(GNULIB_VERSION)-stable.tar.gz
-GNULIB_SITE = http://erislabs.net/ianb/projects/gnulib
+define LUAPOSIX_UNPACK_GNULIB
+	tar -C $(PKG_BUILD_DIR)/gnulib --strip=1 -xf $(DL_DIR)/$(GNULIB_SOURCE)
+endef
+LUAPOSIX_POST_PATCH_HOOKS += LUAPOSIX_UNPACK_GNULIB
 
-$(DL_DIR)/$(GNULIB_SOURCE):
-	$(download) $(GNULIB_SITE)/$(GNULIB_SOURCE)
+define LUAPOSIX_UNPACK_SLINGSHOT
+	tar -C $(PKG_BUILD_DIR)/slingshot --strip=1 -xf $(DL_DIR)/$(SLINGSHOT_SOURCE)
+endef
+LUAPOSIX_POST_PATCH_HOOKS += LUAPOSIX_UNPACK_SLINGSHOT
 
-SLINGSHOT_VERSION = 6
-SLINGSHOT_SOURCE = slingshot-$(SLINGSHOT_VERSION).tar.gz
-SLINGSHOT_SITE = https://github.com/gvvaughan/slingshot/archive
+define LUAPOSIX_BOOTSTRAP
+	$(CHDIR)/$($(PKG)_DIR); \
+		./bootstrap
+endef
+LUAPOSIX_POST_PATCH_HOOKS += LUAPOSIX_BOOTSTRAP
 
-$(DL_DIR)/$(SLINGSHOT_SOURCE):
-	$(download) $(SLINGSHOT_SITE)/v$(SLINGSHOT_VERSION).tar.gz -O $(@)
-
-luaposix: $(LUAPOSIX_DEPENDENCIES) $(DL_DIR)/$(SLINGSHOT_SOURCE) $(DL_DIR)/$(GNULIB_SOURCE) $(DL_DIR)/$(LUAPOSIX_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(call APPLY_PATCHES,$(PKG_PATCHES_DIR))
-	$(CHDIR)/$(PKG_DIR); \
-		tar -C gnulib --strip=1 -xf $(DL_DIR)/$(GNULIB_SOURCE); \
-		tar -C slingshot --strip=1 -xf $(DL_DIR)/$(SLINGSHOT_SOURCE); \
-		./bootstrap; \
-		$(CONFIGURE); \
-		$(MAKE); \
-		$(MAKE) install
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
+luaposix: | $(TARGET_DIR)
+	$(call autotools-package)
