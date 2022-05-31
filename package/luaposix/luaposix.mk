@@ -39,4 +39,9 @@ endef
 LUAPOSIX_POST_PATCH_HOOKS += LUAPOSIX_BOOTSTRAP
 
 luaposix: | $(TARGET_DIR)
-	$(call autotools-package)
+	$(call PREPARE)
+	$(CHDIR)/$($(PKG)_DIR); \
+		$(TARGET_CONFIGURE); \
+		$(MAKE); \
+		$(MAKE) install
+	$(call TARGET_FOLLOWUP)
