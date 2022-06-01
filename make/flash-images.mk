@@ -60,8 +60,8 @@ ifeq ($(BOXMODEL),$(filter $(BOXMODEL),nevis kronos kronos_v2))
 	make flash-image-coolstream ERASE_SIZE=0x20000
 endif
 ifeq ($(BOXMODEL),$(filter $(BOXMODEL),apollo shiner))
-	make flash-image-coolstream ERASE_SIZE=0x40000 IMAGE_SUFFIX=$(BOXTYPE_SC)-apollo
-	make flash-image-coolstream ERASE_SIZE=0x20000 IMAGE_SUFFIX=$(BOXTYPE_SC)-shiner
+	make flash-image-coolstream ERASE_SIZE=0x40000 IMAGE_SUFFIX=$(BOXTYPE_SC)-apollo BOXNAME="Tank"
+	make flash-image-coolstream ERASE_SIZE=0x20000 IMAGE_SUFFIX=$(BOXTYPE_SC)-shiner BOXNAME="Trinity"
 endif
 ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7))
 	make flash-image-hd5x
