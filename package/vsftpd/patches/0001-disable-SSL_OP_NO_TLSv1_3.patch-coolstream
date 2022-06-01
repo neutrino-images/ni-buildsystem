@@ -1,0 +1,13 @@
+diff --git a/ssl.c b/ssl.c
+index 6e042aa..c7cfe8f 100644
+--- a/ssl.c
++++ b/ssl.c
+@@ -95,7 +95,7 @@ ssl_init(struct vsf_session* p_sess)
+     }
+     if (!tunable_tlsv1_3)
+     {
+-      options |= SSL_OP_NO_TLSv1_3;
++      //options |= SSL_OP_NO_TLSv1_3;
+     }
+     SSL_CTX_set_options(p_ctx, options);
+     if (tunable_rsa_cert_file)
