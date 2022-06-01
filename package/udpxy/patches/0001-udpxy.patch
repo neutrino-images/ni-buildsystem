@@ -1,0 +1,63 @@
+--- a/chipmunk/netop.c
++++ b/chipmunk/netop.c
+@@ -53,16 +53,24 @@
+ 
+     extern const char IPv4_ALL[];
+ 
+-    assert( (port > 0) && sockfd && ipaddr );
++    int socktype = 0;
++    socklen_t socktypelen = sizeof(socktype);
++    int inetd = !getsockopt(0, SOL_SOCKET, SO_TYPE, &socktype, &socktypelen) && socktype == SOCK_STREAM;
++
++    assert( (!inetd || port > 0) && sockfd && ipaddr );
+     (void)IPv4_ALL;
+     TRACE( (void)tmfprintf( g_flog, "Setting up listener for [%s:%d]\n",
+                 ipaddr[0] ? ipaddr : IPv4_ALL, port) );
+ 
+     rc = ERR_INTERNAL;
+     do {
++	if (inetd)
++		lsock = 0;
++	else
+         lsock = socket( AF_INET, SOCK_STREAM, 0 );
+         if( -1 == lsock ) break;
+ 
++	if (!inetd) {
+         (void) memset( &servaddr, 0, sizeof(servaddr) );
+         servaddr.sin_family = AF_INET;
+         servaddr.sin_port = htons( (short)port );
+@@ -87,6 +95,7 @@
+                     __func__);
+             break;
+         }
++	}
+ 
+         #define NONBLOCK 1
+         rc = set_nblock (lsock, NONBLOCK);
+@@ -102,8 +111,10 @@
+             break;
+         }
+ 
++	if (!inetd) {
+         rc = bind( lsock, (struct sockaddr*)&servaddr, sizeof(servaddr) );
+         if( 0 != rc ) break;
++	}
+ 
+         rc = listen (lsock, (bklog > 0 ? bklog : 1));
+         if( 0 != rc ) break;
+--- a/chipmunk/udpxy.c
++++ b/chipmunk/udpxy.c
+@@ -1391,7 +1391,12 @@
+     openlog( g_udpxy_app, LOG_CONS | LOG_PID, LOG_LOCAL0 );
+ 
+     do {
+-        if( (argc < 2) || (port <= 0) || (rc != 0) ) {
++	int socktype = 0;
++	socklen_t socktypelen = sizeof(socktype);
++	int inetd = !getsockopt(0, SOL_SOCKET, SO_TYPE, &socktype, &socktypelen) && socktype == SOCK_STREAM;
++	if (inetd)
++		no_daemon = 1;
++        if( !inetd && ((argc < 2) || (port <= 0) || (rc != 0)) ) {
+             usage( argv[0], stderr );
+             rc = ERR_PARAM; break;
+         }

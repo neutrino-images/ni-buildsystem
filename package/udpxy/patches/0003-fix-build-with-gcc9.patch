@@ -1,0 +1,13 @@
+diff --git a/chipmunk/rparse.c b/chipmunk/rparse.c
+index 8cbdda5..560e50d 100644
+--- a/chipmunk/rparse.c
++++ b/chipmunk/rparse.c
+@@ -175,7 +175,7 @@ parse_udprelay( const char*  opt, size_t optlen,
+ 
+     assert( opt && s_addr && s_addrlen && addr && addrlen && port );
+ 
+-    (void) strncpy( s, opt, MAX_OPTLEN );
++    (void) snprintf(s, MAX_OPTLEN, "%s", opt);
+     s[ MAX_OPTLEN - 1 ] = '\0';
+ 
+     do {

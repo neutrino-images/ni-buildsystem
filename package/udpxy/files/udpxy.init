@@ -1,0 +1,20 @@
+#!/bin/sh
+
+. /etc/init.d/globals
+
+case $1 in
+	start)
+		if [ -e /var/etc/.udpxy ]; then
+			udpxy -p 4022
+		fi
+	;;
+	stop)
+		if [ -e /var/etc/.udpxy ]; then
+			trap "" INT
+			kill -INT $(pidof udpxy)
+		fi
+	;;
+	*)
+		echo "[$BASENAME] Usage: $0 {start|stop}"
+	;;
+esac
