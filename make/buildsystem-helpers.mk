@@ -120,7 +120,11 @@ define APPLY_PATCHES # (patches or directory)
 			continue; \
 		fi; \
 		if [ -d $$i ]; then \
-			for p in $(addprefix $$i/,$(PATCHES)); do \
+			v=; \
+			if [ -d $$i/$($(PKG)_VERSION) ]; then \
+				v="$($(PKG)_VERSION)/"; \
+			fi; \
+			for p in $(addprefix $$i/$$v,$(PATCHES)); do \
 				if [ -e $$p ]; then \
 					$(call MESSAGE,"Applying $${p#$(PKG_PATCHES_DIR)/} (*)"); \
 					patch -p1 -i $$p; \
