@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-OPENSSL_VERSION = 1.1.1o
+OPENSSL_VERSION = $(if $(filter $(BOXTYPE),coolstream),1.0.2u,1.1.1o)
 OPENSSL_DIR = openssl-$(OPENSSL_VERSION)
 OPENSSL_SOURCE = openssl-$(OPENSSL_VERSION).tar.gz
 OPENSSL_SITE = https://www.openssl.org/source
@@ -31,6 +31,11 @@ OPENSSL_CONF_OPTS += \
 	no-fuzz-afl \
 	no-fuzz-libfuzzer
 
+ifeq ($(BOXTYPE),coolstream)
+OPENSSL_CONF_OPTS += \
+	no-perlasm
+endif
+
 OPENSSL_CONF_OPTS += \
 	-DTERMIOS -fomit-frame-pointer \
 	-DOPENSSL_SMALL_FOOTPRINT \
@@ -55,14 +60,26 @@ endef
 OPENSSL_TARGET_FINALIZE_HOOKS += OPENSSL_TARGET_CLEANUP_COOLSTREAM
 endif
 
+ifeq ($(BOXTYPE),coolstream)
+OPENSSL_SO_ENDING = 1.0.0
+OPENSSL_COMPATIBILITY_VERSIONS = 0.9.7 0.9.8 1.0.2
+else
+OPENSSL_SO_ENDING = 1.1
 OPENSSL_COMPATIBILITY_VERSIONS = 0.9.7 0.9.8 1.0.0 1.0.2 1.1.0
+endif
 define OPENSSL_COMPATIBILITY_LINKS
 	$(foreach v,$(OPENSSL_COMPATIBILITY_VERSIONS),\
-		ln -sf libcrypto.so.1.1 $(TARGET_libdir)/libcrypto.so.$(v)$(sep))
+		ln -sf libcrypto.so.$(OPENSSL_SO_ENDING) $(TARGET_libdir)/libcrypto.so.$(v)$(sep))
 	$(foreach v,$(OPENSSL_COMPATIBILITY_VERSIONS),\
-		ln -sf libssl.so.1.1 $(TARGET_libdir)/libssl.so.$(v)$(sep))
+		ln -sf libssl.so.$(OPENSSL_SO_ENDING) $(TARGET_libdir)/libssl.so.$(v)$(sep))
 endef
 OPENSSL_TARGET_FINALIZE_HOOKS += OPENSSL_COMPATIBILITY_LINKS
+
+ifeq ($(BOXTYPE),coolstream)
+OPENSSL_MAKE_INSTALL_OPTS = INSTALL_PREFIX=$(TARGET_DIR)
+else
+OPENSSL_MAKE_INSTALL_OPTS = install_ssldirs DESTDIR=$(TARGET_DIR)
+endif
 
 openssl: | $(TARGET_DIR)
 	$(call PREPARE)
@@ -73,5 +90,5 @@ openssl: | $(TARGET_DIR)
 		$(SED) 's|^HTMLDIR=.*|HTMLDIR=$(REMOVE_htmldir)|' Makefile; \
 		$(MAKE) depend; \
 		$(MAKE); \
-		$(MAKE) install_sw install_ssldirs DESTDIR=$(TARGET_DIR)
+		$(MAKE) install_sw $($(PKG)_MAKE_INSTALL_OPTS)
 	$(call TARGET_FOLLOWUP)
