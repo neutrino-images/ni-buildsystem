@@ -1,0 +1,33 @@
+diff --git a/src/sg_dd.c b/src/sg_dd.c
+index 9d05c93..aa9323b 100644
+--- a/src/sg_dd.c
++++ b/src/sg_dd.c
+@@ -60,9 +60,6 @@
+ #ifdef HAVE_CONFIG_H
+ #include "config.h"
+ #endif
+-#ifdef HAVE_GETRANDOM
+-#include <sys/random.h>         /* for getrandom() system call */
+-#endif
+ #include "sg_lib.h"
+ #include "sg_cmds_basic.h"
+ #include "sg_cmds_extra.h"
+@@ -2114,18 +2111,7 @@ main(int argc, char * argv[])
+     } else if (iflag.random) {
+         ccp = "<random>";
+         cc2p = "random";
+-#ifdef HAVE_GETRANDOM
+-        {
+-            ssize_t ssz = getrandom(&seed, sizeof(seed), GRND_NONBLOCK);
+-
+-            if (ssz < (ssize_t)sizeof(seed)) {
+-                pr2serr("getrandom() failed, ret=%d\n", (int)ssz);
+-                seed = (long)time(NULL);
+-            }
+-        }
+-#else
+         seed = (long)time(NULL);    /* use seconds since epoch as proxy */
+-#endif
+         if (verbose > 1)
+             pr2serr("seed=%ld\n", seed);
+ #ifdef HAVE_SRAND48_R
