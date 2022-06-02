@@ -26,7 +26,7 @@ djmount: $(DJMOUNT_DEPENDENCIES) $(DL_DIR)/$(DJMOUNT_SOURCE) | $(TARGET_DIR)
 	$(call APPLY_PATCHES,$(PKG_PATCHES_DIR))
 	$(CHDIR)/$(PKG_DIR); \
 		touch libupnp/config.aux/config.rpath; \
-		$(CONFIGURE); \
+		$(TARGET_CONFIGURE); \
 		$(MAKE1); \
 		$(MAKE1) install DESTDIR=$(TARGET_DIR)
 	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/djmount.init $(TARGET_sysconfdir)/init.d/djmount

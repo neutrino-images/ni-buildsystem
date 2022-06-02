@@ -58,7 +58,7 @@ samba33: $(SAMBA33_DEPENDENCIES) $(DL_DIR)/$(SAMBA33_SOURCE) | $(TARGET_DIR)
 	$(call APPLY_PATCHES,$(PKG_PATCHES_DIR))
 	$(CHDIR)/$(PKG_DIR)/source; \
 		./autogen.sh; \
-		$(CONFIGURE); \
+		$(TARGET_CONFIGURE); \
 		$(MAKE1) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(INSTALL) -d $(TARGET_localstatedir)/samba/locks

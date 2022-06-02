@@ -34,7 +34,7 @@ lcd4linux: | $(TARGET_DIR)
 	$(call PREPARE)
 	$(CHDIR)/$($(PKG)_DIR); \
 		./bootstrap; \
-		$(CONFIGURE); \
+		$(TARGET_CONFIGURE); \
 		$(MAKE) vcs_version; \
 		$(MAKE); \
 		$(MAKE) install

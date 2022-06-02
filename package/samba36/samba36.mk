@@ -56,7 +56,7 @@ samba36: $(SAMBA36_DEPENDENCIES) $(DL_DIR)/$(SAMBA36_SOURCE) | $(TARGET_DIR)
 	$(call APPLY_PATCHES,$(PKG_PATCHES_DIR))
 	$(CHDIR)/$(PKG_DIR)/source3; \
 		./autogen.sh; \
-		$(CONFIGURE); \
+		$(TARGET_CONFIGURE); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(INSTALL) -d $(TARGET_localstatedir)/samba/locks

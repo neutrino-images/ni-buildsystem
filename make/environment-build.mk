@@ -287,8 +287,6 @@ TARGET_CONFIGURE = \
 	CONFIG_SITE=/dev/null \
 	$(TARGET_CONFIGURE_ENV) ./configure $(TARGET_CONFIGURE_OPTS)
 
-CONFIGURE = $(TARGET_CONFIGURE)
-
 # -----------------------------------------------------------------------------
 
 HOST_CMAKE_ENV = \

@@ -30,7 +30,7 @@ gettext: $(DL_DIR)/$(GETTEXT_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(CHDIR)/$(PKG_DIR); \
-		$(CONFIGURE); \
+		$(TARGET_CONFIGURE); \
 		$(MAKE) -C gettext-runtime; \
 		$(MAKE) -C gettext-runtime install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL)

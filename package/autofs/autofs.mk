@@ -57,7 +57,7 @@ autofs: $(AUTOFS_DEPENDENCIES) $(DL_DIR)/$(AUTOFS_SOURCE) | $(TARGET_DIR)
 	$(call APPLY_PATCHES,$($(PKG)_PATCH))
 	$(CHDIR)/$(PKG_DIR); \
 		$(SED) "s|nfs/nfs.h|linux/nfs.h|" include/rpc_subs.h; \
-		$(CONFIGURE); \
+		$(TARGET_CONFIGURE); \
 		$($(PKG)_MAKE_ENV) \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
