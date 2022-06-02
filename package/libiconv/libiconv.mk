@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-LIBICONV_VERSION = 1.15
+LIBICONV_VERSION = 1.17
 LIBICONV_DIR = libiconv-$(LIBICONV_VERSION)
 LIBICONV_SOURCE = libiconv-$(LIBICONV_VERSION).tar.gz
 LIBICONV_SITE = $(GNU_MIRROR)/libiconv
