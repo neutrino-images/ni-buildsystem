@@ -3,27 +3,6 @@
 #
 # -----------------------------------------------------------------------------
 
-RTL8822BU_VERSION = 1.0.0.9-20180511a
-RTL8822BU_DIR = rtl8822bu
-RTL8822BU_SOURCE = rtl8822bu-driver-$(RTL8822BU_VERSION).zip
-RTL8822BU_SITE = http://source.mynonpublic.com
-
-$(DL_DIR)/$(RTL8822BU_SOURCE):
-	$(download) $(RTL8822BU_SITE)/$(RTL8822BU_SOURCE)
-
-rtl8822bu: kernel-$(BOXTYPE) $(DL_DIR)/$(RTL8822BU_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(RTL8822BU_DIR)
-	$(UNZIP)/$(RTL8822BU_SOURCE)
-	$(call APPLY_PATCHES,$(PKG_PATCHES_DIR))
-	$(CHDIR)/$(RTL8822BU_DIR); \
-		$(MAKE) $(KERNEL_MAKE_VARS); \
-		$(INSTALL_DATA) 88x2bu.ko $(TARGET_modulesdir)/kernel/drivers/net/wireless/
-	$(LINUX_RUN_DEPMOD)
-	$(REMOVE)/$(RTL8822BU_DIR)
-	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
 HD6X_MALI_DRIVERS_VERSION = DX910-SW-99002-r7p0-00rel0
 HD6X_MALI_DRIVERS_DIR = $(HD6X_MALI_DRIVERS_VERSION)
 HD6X_MALI_DRIVERS_SOURCE = $(HD6X_MALI_DRIVERS_VERSION).tgz
