@@ -3,27 +3,6 @@
 #
 # -----------------------------------------------------------------------------
 
-RTL8192EU_VERSION = git
-RTL8192EU_DIR = rtl8192eu-linux-driver.$(RTL8192EU_VERSION)
-RTL8192EU_SOURCE = rtl8192eu-linux-driver.$(RTL8192EU_VERSION)
-RTL8192EU_SITE = https://github.com/mange/$(RTL8192EU_SOURCE)
-
-RTL8192EU_CHECKOUT = 60aa279428024ea78dcffe2c181ffee3cc1495f5
-
-rtl8192eu: kernel-$(BOXTYPE) | $(TARGET_DIR)
-	$(REMOVE)/$(RTL8192EU_DIR)
-	$(GET_GIT_SOURCE) $(RTL8192EU_SITE) $(DL_DIR)/$(RTL8192EU_SOURCE)
-	$(CPDIR)/$(RTL8192EU_SOURCE)
-	$(CHDIR)/$(RTL8192EU_DIR); \
-		git checkout $(RTL8192EU_CHECKOUT); \
-		$(MAKE) $(KERNEL_MAKE_VARS); \
-		$(INSTALL_DATA) 8192eu.ko $(TARGET_modulesdir)/kernel/drivers/net/wireless/
-	$(LINUX_RUN_DEPMOD)
-	$(REMOVE)/$(RTL8192EU_DIR)
-	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
 RTL8812AU_VERSION = 4.3.14
 RTL8812AU_DIR = rtl8812AU-driver-$(RTL8812AU_VERSION)
 RTL8812AU_SOURCE = rtl8812AU-driver-$(RTL8812AU_VERSION).zip
