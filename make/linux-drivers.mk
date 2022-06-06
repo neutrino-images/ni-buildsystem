@@ -3,27 +3,6 @@
 #
 # -----------------------------------------------------------------------------
 
-RTL8812AU_VERSION = 4.3.14
-RTL8812AU_DIR = rtl8812AU-driver-$(RTL8812AU_VERSION)
-RTL8812AU_SOURCE = rtl8812AU-driver-$(RTL8812AU_VERSION).zip
-RTL8812AU_SITE = http://source.mynonpublic.com
-
-$(DL_DIR)/$(RTL8812AU_SOURCE):
-	$(download) $(RTL8812AU_SITE)/$(RTL8812AU_SOURCE)
-
-rtl8812au: kernel-$(BOXTYPE) $(DL_DIR)/$(RTL8812AU_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(RTL8812AU_DIR)
-	$(UNZIP)/$(RTL8812AU_SOURCE)
-	$(call APPLY_PATCHES,$(PKG_PATCHES_DIR))
-	$(CHDIR)/$(RTL8812AU_DIR); \
-		$(MAKE) $(KERNEL_MAKE_VARS); \
-		$(INSTALL_DATA) 8812au.ko $(TARGET_modulesdir)/kernel/drivers/net/wireless/
-	$(LINUX_RUN_DEPMOD)
-	$(REMOVE)/$(RTL8812AU_DIR)
-	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
 RTL8822BU_VERSION = 1.0.0.9-20180511a
 RTL8822BU_DIR = rtl8822bu
 RTL8822BU_SOURCE = rtl8822bu-driver-$(RTL8822BU_VERSION).zip
