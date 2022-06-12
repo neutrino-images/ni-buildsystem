@@ -4,15 +4,22 @@
 #
 ################################################################################
 
-WPA_SUPPLICANT_VERSION = 2.10
+WPA_SUPPLICANT_VERSION = $(if $(filter $(BOXTYPE),coolstream),0.7.3,2.10)
 WPA_SUPPLICANT_DIR = wpa_supplicant-$(WPA_SUPPLICANT_VERSION)
 WPA_SUPPLICANT_SOURCE = wpa_supplicant-$(WPA_SUPPLICANT_VERSION).tar.gz
 WPA_SUPPLICANT_SITE = https://w1.fi/releases
 
-WPA_SUPPLICANT_DEPENDENCIES = openssl libnl
+WPA_SUPPLICANT_DEPENDENCIES = openssl
+
+ifeq ($(BOXTYPE),coolstream)
+WPA_SUPPLICANT_CONFIG = $(PKG_FILES_DIR)/wpa_supplicant.config-$(WPA_SUPPLICANT_VERSION)
+else
+WPA_SUPPLICANT_CONFIG = $(PKG_FILES_DIR)/wpa_supplicant.config
+WPA_SUPPLICANT_DEPENDENCIES += libnl
+endif
 
 define WPA_SUPPLICANT_INSTALL_CONFIG
-	$(INSTALL_DATA) $(PKG_FILES_DIR)/wpa_supplicant.config $(PKG_BUILD_DIR)/wpa_supplicant/.config
+	$(INSTALL_DATA) $(WPA_SUPPLICANT_CONFIG) $(PKG_BUILD_DIR)/wpa_supplicant/.config
 endef
 WPA_SUPPLICANT_POST_PATCH_HOOKS += WPA_SUPPLICANT_INSTALL_CONFIG
 
