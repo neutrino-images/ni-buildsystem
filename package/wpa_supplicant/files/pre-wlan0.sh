@@ -5,6 +5,7 @@
 SHOWINFO "Starting wlan0"
 
 ifconfig eth0 down
+sleep 2
 
 /usr/sbin/wpa_cli terminate
 sleep 2
