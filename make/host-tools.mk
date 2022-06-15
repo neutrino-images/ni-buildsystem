@@ -58,29 +58,6 @@ host-meson: $(HOST_MESON_DEPENDENCIES) $(DL_DIR)/$(HOST_MESON_SOURCE) | $(HOST_D
 
 # -----------------------------------------------------------------------------
 
-HOST_NINJA_VERSION = 1.10.2
-HOST_NINJA_DIR = ninja-$(HOST_NINJA_VERSION)
-HOST_NINJA_SOURCE = ninja-$(HOST_NINJA_VERSION).tar.gz
-HOST_NINJA_SITE = $(call github,ninja-build,ninja,v$(HOST_NINJA_VERSION))
-
-$(DL_DIR)/$(HOST_NINJA_SOURCE):
-	$(download) $(HOST_NINJA_SITE)/$(HOST_NINJA_SOURCE)
-
-HOST_NINJA = $(HOST_DIR)/bin/ninja
-
-host-ninja: $(DL_DIR)/$(HOST_NINJA_SOURCE) | $(HOST_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(call APPLY_PATCHES,$(PKG_PATCHES_DIR))
-	$(CHDIR)/$(PKG_DIR); \
-		$(HOST_CMAKE); \
-		$(MAKE)
-	$(INSTALL_EXEC) -D $(PKG_BUILD_DIR)/ninja $(HOST_NINJA)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
 HOST_PYTHON3_VERSION = 3.9.0
 HOST_PYTHON3_DIR = Python-$(HOST_PYTHON3_VERSION)
 HOST_PYTHON3_SOURCE = Python-$(HOST_PYTHON3_VERSION).tar.xz
