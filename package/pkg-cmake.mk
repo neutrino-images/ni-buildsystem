@@ -19,6 +19,6 @@ define host-cmake-package
 	$(CHDIR)/$($(PKG)_DIR); \
 		$(HOST_CMAKE); \
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
+		$(MAKE) install
 	$(call HOST_FOLLOWUP)
 endef
