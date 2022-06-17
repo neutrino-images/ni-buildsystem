@@ -9,15 +9,15 @@ HOST_PYTHON3_BUILD = \
 	CFLAGS="$(HOST_CFLAGS)" \
 	LDFLAGS="$(HOST_LDFLAGS)" \
 	LDSHARED="$(HOSTCC) -shared" \
-	PYTHONPATH=$(HOST_DIR)/$(HOST_PYTHON3_BASE_DIR)/site-packages \
-	$(HOST_PYTHON3_BINARY) ./setup.py -q build --executable=/usr/python
+	PYTHONPATH=$(HOST_DIR)/$(HOST_PYTHON3_LIB_DIR)/site-packages \
+	$(HOST_PYTHON3_BINARY) ./setup.py -q build --executable=/usr/bin/python
 
 HOST_PYTHON3_INSTALL = \
 	CC="$(HOSTCC)" \
 	CFLAGS="$(HOST_CFLAGS)" \
 	LDFLAGS="$(HOST_LDFLAGS)" \
 	LDSHARED="$(HOSTCC) -shared" \
-	PYTHONPATH=$(HOST_DIR)/$(HOST_PYTHON3_BASE_DIR)/site-packages \
+	PYTHONPATH=$(HOST_DIR)/$(HOST_PYTHON3_LIB_DIR)/site-packages \
 	$(HOST_PYTHON3_BINARY) ./setup.py -q install --root=$(HOST_DIR) --prefix=
 
 #define python3-package
