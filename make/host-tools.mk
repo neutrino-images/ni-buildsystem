@@ -58,28 +58,6 @@ host-meson: $(HOST_MESON_DEPENDENCIES) $(DL_DIR)/$(HOST_MESON_SOURCE) | $(HOST_D
 
 # -----------------------------------------------------------------------------
 
-HOST_PYTHON3_SETUPTOOLS_VERSION = 44.0.0
-HOST_PYTHON3_SETUPTOOLS_DIR = setuptools-$(HOST_PYTHON3_SETUPTOOLS_VERSION)
-HOST_PYTHON3_SETUPTOOLS_SOURCE = setuptools-$(HOST_PYTHON3_SETUPTOOLS_VERSION).zip
-HOST_PYTHON3_SETUPTOOLS_SITE = https://files.pythonhosted.org/packages/b0/f3/44da7482ac6da3f36f68e253cb04de37365b3dba9036a3c70773b778b485
-
-$(DL_DIR)/$(HOST_PYTHON3_SETUPTOOLS_SOURCE):
-	$(download) $(HOST_PYTHON3_SETUPTOOLS_SITE)/$(HOST_PYTHON3_SETUPTOOLS_SOURCE)
-
-HOST_PYTHON3_SETUPTOOLS_DEPENDENCIES = host-python3
-
-host-python3-setuptools: $(HOST_PYTHON3_SETUPTOOLS_DEPENDENCIES) $(DL_DIR)/$(HOST_PYTHON3_SETUPTOOLS_SOURCE) | $(HOST_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNZIP)/$(PKG_SOURCE)
-	$(call APPLY_PATCHES,$(PKG_PATCHES_DIR))
-	$(CHDIR)/$(PKG_DIR); \
-		$(HOST_PYTHON_BUILD); \
-		$(HOST_PYTHON_INSTALL)
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
 # helper target to create ccache links
 
 ifndef CCACHE
