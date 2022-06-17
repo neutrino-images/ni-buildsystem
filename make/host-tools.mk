@@ -58,50 +58,6 @@ host-meson: $(HOST_MESON_DEPENDENCIES) $(DL_DIR)/$(HOST_MESON_SOURCE) | $(HOST_D
 
 # -----------------------------------------------------------------------------
 
-HOST_PYTHON3_VERSION = 3.9.0
-HOST_PYTHON3_DIR = Python-$(HOST_PYTHON3_VERSION)
-HOST_PYTHON3_SOURCE = Python-$(HOST_PYTHON3_VERSION).tar.xz
-HOST_PYTHON3_SITE = https://www.python.org/ftp/python/$(HOST_PYTHON3_VERSION)
-
-HOST_PYTHON3_BASE_DIR = lib/python$(basename $(HOST_PYTHON3_VERSION))
-HOST_PYTHON3_INCLUDE_DIR = include/python$(basename $(HOST_PYTHON3_VERSION))
-
-$(DL_DIR)/$(HOST_PYTHON3_SOURCE):
-	$(download) $(HOST_PYTHON3_SITE)/$(HOST_PYTHON3_SOURCE)
-
-HOST_PYTHON3_DEPENDENCIES = host-expat host-libffi
-
-HOST_PYTHON3_CONF_ENV = \
-	OPT="$(HOST_CFLAGS)"
-
-HOST_PYTHON3_CONF_OPTS = \
-	--without-ensurepip \
-	--without-cxx-main \
-	--disable-sqlite3 \
-	--disable-tk \
-	--with-expat=system \
-	--disable-curses \
-	--disable-codecs-cjk \
-	--disable-nis \
-	--enable-unicodedata \
-	--disable-test-modules \
-	--disable-idle3 \
-	--disable-ossaudiodev
-
-host-python3: $(HOST_PYTHON3_DEPENDENCIES) $(DL_DIR)/$(HOST_PYTHON3_SOURCE) | $(HOST_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	#$(call APPLY_PATCHES,$(PKG_PATCHES_DIR))
-	$(CHDIR)/$(PKG_DIR); \
-		autoconf; \
-		$(HOST_CONFIGURE);\
-		$(MAKE); \
-		$(MAKE) install
-	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
 HOST_PYTHON3_SETUPTOOLS_VERSION = 44.0.0
 HOST_PYTHON3_SETUPTOOLS_DIR = setuptools-$(HOST_PYTHON3_SETUPTOOLS_VERSION)
 HOST_PYTHON3_SETUPTOOLS_SOURCE = setuptools-$(HOST_PYTHON3_SETUPTOOLS_VERSION).zip
