@@ -53,21 +53,3 @@ HOSTRANLIB := $(shell which $(HOSTRANLIB) || type -p $(HOSTRANLIB) || echo ranli
 
 export HOSTAR HOSTAS HOSTCC HOSTCXX HOSTLD
 export HOSTCC_NOCCACHE HOSTCXX_NOCCACHE
-
-# -----------------------------------------------------------------------------
-
-HOST_PYTHON_BUILD = \
-	CC="$(HOSTCC)" \
-	CFLAGS="$(CFLAGS)" \
-	LDFLAGS="$(LDFLAGS)" \
-	LDSHARED="$(HOSTCC) -shared" \
-	PYTHONPATH=$(HOST_DIR)/$(HOST_PYTHON3_LIB_DIR)/site-packages \
-	$(HOST_DIR)/bin/python3 ./setup.py build --executable=/usr/python
-
-HOST_PYTHON_INSTALL = \
-	CC="$(HOSTCC)" \
-	CFLAGS="$(CFLAGS)" \
-	LDFLAGS="$(LDFLAGS)" \
-	LDSHARED="$(HOSTCC) -shared" \
-	PYTHONPATH=$(HOST_DIR)/$(HOST_PYTHON3_LIB_DIR)/site-packages \
-	$(HOST_DIR)/bin/python3 ./setup.py install --root=$(HOST_DIR) --prefix=
