@@ -381,6 +381,7 @@ define meson-cross-config # (dest dir)
 		echo "cpp = '$(TARGET_CXX)'"; \
 		echo "ar = '$(TARGET_AR)'"; \
 		echo "strip = '$(TARGET_STRIP)'"; \
+		echo "nm = '$(TARGET_NM)'"; \
 		echo "pkgconfig = '$(PKG_CONFIG)'"; \
 		echo ""; \
 		echo "[built-in options]"; \
@@ -388,6 +389,7 @@ define meson-cross-config # (dest dir)
 		echo "c_link_args = '$(TARGET_LDFLAGS)'"; \
 		echo "cpp_args = '$(TARGET_CXXFLAGS)'"; \
 		echo "cpp_link_args = '$(TARGET_LDFLAGS)'"; \
+		echo "prefix = '$(prefix)'"; \
 		echo ""; \
 		echo "[properties]"; \
 		echo "needs_exe_wrapper = true"; \
