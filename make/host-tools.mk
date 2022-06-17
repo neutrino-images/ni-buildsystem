@@ -34,30 +34,6 @@ $(PKG_CONFIG): $(PKG_CONFIG_DEPENDENCIES) | $(HOST_DIR)
 
 # -----------------------------------------------------------------------------
 
-HOST_MESON_VERSION = 0.56.0
-HOST_MESON_DIR = meson-$(HOST_MESON_VERSION)
-HOST_MESON_SOURCE = meson-$(HOST_MESON_VERSION).tar.gz
-HOST_MESON_SITE = https://github.com/mesonbuild/meson/releases/download/$(HOST_MESON_VERSION)
-
-$(DL_DIR)/$(HOST_MESON_SOURCE):
-	$(download) $(HOST_MESON_SITE)/$(HOST_MESON_SOURCE)
-
-HOST_MESON_DEPENDENCIES = host-ninja host-python3 host-python3-setuptools
-
-HOST_MESON = $(HOST_DIR)/bin/meson
-
-host-meson: $(HOST_MESON_DEPENDENCIES) $(DL_DIR)/$(HOST_MESON_SOURCE) | $(HOST_DIR)
-	$(REMOVE)/$(HOST_MESON_DIR)
-	$(UNTAR)/$(HOST_MESON_SOURCE)
-	$(call APPLY_PATCHES,$(PKG_PATCHES_DIR))
-	$(CHDIR)/$(HOST_MESON_DIR); \
-		$(HOST_PYTHON_BUILD); \
-		$(HOST_PYTHON_INSTALL)
-	$(REMOVE)/$(HOST_MESON_DIR)
-	$(TOUCH)
-
-# -----------------------------------------------------------------------------
-
 # helper target to create ccache links
 
 ifndef CCACHE
