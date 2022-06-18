@@ -9,9 +9,6 @@ CAIRO_DIR = cairo-$(CAIRO_VERSION)
 CAIRO_SOURCE = cairo-$(CAIRO_VERSION).tar.xz
 CAIRO_SITE = https://www.cairographics.org/releases
 
-$(DL_DIR)/$(CAIRO_SOURCE):
-	$(download) $(CAIRO_SITE)/$(CAIRO_SOURCE)
-
 CAIRO_DEPENDENCIES = fontconfig glib2 libpng pixman zlib
 
 CAIRO_CONF_ENV = \
@@ -34,5 +31,5 @@ define CAIRO_TARGET_CLEANUP
 endef
 CAIRO_TARGET_FINALIZE_HOOKS += CAIRO_TARGET_CLEANUP
 
-cairo: $(CAIRO_DEPENDENCIES) $(DL_DIR)/$(CAIRO_SOURCE) | $(TARGET_DIR)
+cairo: | $(TARGET_DIR)
 	$(call autotools-package)
