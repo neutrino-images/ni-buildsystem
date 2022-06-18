@@ -27,4 +27,5 @@ MAKEFLAGS += --no-print-directory
 
 include package/pkg-autotools.mk
 include package/pkg-cmake.mk
+include package/pkg-individual.mk
 include package/pkg-python.mk
