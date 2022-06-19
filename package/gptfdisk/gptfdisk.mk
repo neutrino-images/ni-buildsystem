@@ -11,15 +11,15 @@ GPTFDISK_SITE = https://sourceforge.net/projects/gptfdisk/files/gptfdisk/$(GPTFD
 
 GPTFDISK_DEPENDENCIES = popt e2fsprogs ncurses
 
-GPTFDISK_BINARIES = sgdisk
+GPTFDISK_SBINARIES = sgdisk
 
-define GPTFDISK_INSTALL_BINARIES
-	$(foreach binary,$($(PKG)_BINARIES),\
-		rm -f $(TARGET_sbindir)/$(binary); \
-		$(INSTALL_EXEC) -D $(PKG_BUILD_DIR)/$(binary) $(TARGET_sbindir)/$(binary)$(sep) \
+define GPTFDISK_INSTALL_SBINARIES
+	$(foreach sbinary,$($(PKG)_SBINARIES),\
+		rm -f $(TARGET_sbindir)/$(sbinary); \
+		$(INSTALL_EXEC) -D $(PKG_BUILD_DIR)/$(sbinary) $(TARGET_sbindir)/$(sbinary)$(sep) \
 	)
 endef
-GPTFDISK_PRE_FOLLOWUP_HOOKS += GPTFDISK_INSTALL_BINARIES
+GPTFDISK_PRE_FOLLOWUP_HOOKS += GPTFDISK_INSTALL_SBINARIES
 
 gptfdisk: | $(TARGET_DIR)
 	$(call PREPARE)
