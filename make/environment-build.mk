@@ -356,15 +356,27 @@ TARGET_CMAKE_OPTS += \
 TARGET_CMAKE_OPTS += \
 	$($(PKG)_CONF_OPTS)
 
-HOST_CMAKE = \
-	rm -f CMakeCache.txt; \
-	$(HOST_CMAKE_ENV) cmake $(HOST_CMAKE_OPTS)
+define HOST_CMAKE
+	@$(call MESSAGE,"Configuring")
+	$(foreach hook,$($(PKG)_PRE_CONFIGURE_HOOKS),$(call $(hook))$(sep))
+	$(Q)( \
+	$(CHDIR)/$($(PKG)_DIR); \
+		rm -f CMakeCache.txt; \
+		$(HOST_CMAKE_ENV) cmake $(HOST_CMAKE_OPTS); \
+	)
+	$(foreach hook,$($(PKG)_POST_CONFIGURE_HOOKS),$(call $(hook))$(sep))
+endef
 
-TARGET_CMAKE = \
-	rm -f CMakeCache.txt; \
-	$(TARGET_CMAKE_ENV) cmake $(TARGET_CMAKE_OPTS)
-
-CMAKE = $(TARGET_CMAKE)
+define TARGET_CMAKE
+	@$(call MESSAGE,"Configuring")
+	$(foreach hook,$($(PKG)_PRE_CONFIGURE_HOOKS),$(call $(hook))$(sep))
+	$(Q)( \
+	$(CHDIR)/$($(PKG)_DIR); \
+		rm -f CMakeCache.txt; \
+		$(TARGET_CMAKE_ENV) cmake $(TARGET_CMAKE_OPTS); \
+	)
+	$(foreach hook,$($(PKG)_POST_CONFIGURE_HOOKS),$(call $(hook))$(sep))
+endef
 
 # -----------------------------------------------------------------------------
 
