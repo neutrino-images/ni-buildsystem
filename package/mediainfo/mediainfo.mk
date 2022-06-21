@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-MEDIAINFO_VERSION = 20.08
+MEDIAINFO_VERSION = 22.03
 MEDIAINFO_DIR = MediaInfo
 MEDIAINFO_SOURCE = mediainfo_$(MEDIAINFO_VERSION).tar.bz2
 MEDIAINFO_SITE = https://mediaarea.net/download/source/mediainfo/$(MEDIAINFO_VERSION)

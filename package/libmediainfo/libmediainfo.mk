@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-LIBMEDIAINFO_VERSION = 20.08
+LIBMEDIAINFO_VERSION = 22.03
 LIBMEDIAINFO_DIR = MediaInfoLib
 LIBMEDIAINFO_SOURCE = libmediainfo_$(LIBMEDIAINFO_VERSION).tar.bz2
 LIBMEDIAINFO_SITE = https://mediaarea.net/download/source/libmediainfo/$(LIBMEDIAINFO_VERSION)
