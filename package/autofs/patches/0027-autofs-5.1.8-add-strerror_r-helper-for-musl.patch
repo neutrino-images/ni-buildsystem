@@ -1,0 +1,62 @@
+autofs-5.1.8 - add autofs_strerror_r() helper for musl
+
+From: Fabian Groffen <grobian@gentoo.org>
+
+If using musl libc the XSI-compliant variant strerror_r() which returns
+an integer instead of a pointer so add a helper function to handle this
+case.
+
+Signed-off-by: Fabian Groffen <grobian@gentoo.org>
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG           |    1 +
+ include/automount.h |    5 +++++
+ lib/log.c           |   10 ++++++++++
+ 3 files changed, 16 insertions(+)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index 2e84b954..4f4ee181 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -24,6 +24,7 @@
+ - musl: add missing include to hash.h for _WORDSIZE.
+ - musl: add missing include to log.h for pid_t.
+ - musl: define _SWORD_TYPE.
++- add autofs_strerror_r() helper for musl.
+ 
+ 19/10/2021 autofs-5.1.8
+ - add xdr_exports().
+diff --git a/include/automount.h b/include/automount.h
+index 947ed16d..d2d05d89 100644
+--- a/include/automount.h
++++ b/include/automount.h
+@@ -43,6 +43,11 @@
+ 
+ #define ENABLE_CORES	1
+ 
++#ifndef __GLIBC__
++# define strerror_r(N,B,S) autofs_strerror_r(N,B,S)
++char *autofs_strerror_r(int errnum, char *buf, size_t buflen);  /* GNU */
++#endif
++
+ /* We MUST have the paths to mount(8) and umount(8) */
+ #ifndef HAVE_MOUNT
+ #error Failed to locate mount(8)!
+diff --git a/lib/log.c b/lib/log.c
+index d1edef28..43eccc07 100644
+--- a/lib/log.c
++++ b/lib/log.c
+@@ -367,3 +367,13 @@ pid_t log_pidinfo(struct autofs_point *ap, pid_t pid, char *label) {
+ 
+ 	return ppid;
+ }
++
++#ifndef __GLIBC__
++# undef strerror_r
++char *autofs_strerror_r(int errnum, char *buf, size_t buflen) {
++	int s = strerror_r(errnum, buf, buflen);
++	if (s)
++		return NULL;
++	return buf;
++}
++#endif

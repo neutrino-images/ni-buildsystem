@@ -1,0 +1,56 @@
+autofs-5.1.8 - define _SWORD_TYPE for musl
+
+From: Sam James <sam@gentoo.org>
+
+Copy the definition from glibc. Fixes build failures like:
+```
+automount.c:280:35: error: '__SWORD_TYPE' undeclared (first use in this function)
+  280 |                 if (fs.f_type != (__SWORD_TYPE) AUTOFS_SUPER_MAGIC) {
+      |                                   ^~~~~~~~~~~~
+automount.c:280:35: note: each undeclared identifier is reported only once for each function it appears in
+automount.c:280:48: error: expected ')' before numeric constant
+  280 |                 if (fs.f_type != (__SWORD_TYPE) AUTOFS_SUPER_MAGIC) {
+      |                    ~                           ^
+      |                                                )
+```
+
+Tested-by: Yixun Lan <dlan@gentoo.org>
+Signed-off-by: Sam James <sam@gentoo.org>
+---
+ CHANGELOG          |    1 +
+ daemon/automount.c |   10 ++++++++++
+ 2 files changed, 11 insertions(+)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index 794cd04b..2e84b954 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -23,6 +23,7 @@
+ - musl: avoid internal stat.h definitions.
+ - musl: add missing include to hash.h for _WORDSIZE.
+ - musl: add missing include to log.h for pid_t.
++- musl: define _SWORD_TYPE.
+ 
+ 19/10/2021 autofs-5.1.8
+ - add xdr_exports().
+diff --git a/daemon/automount.c b/daemon/automount.c
+index 85847edf..32f95a53 100644
+--- a/daemon/automount.c
++++ b/daemon/automount.c
+@@ -48,6 +48,16 @@
+ #endif
+ #endif
+ 
++#ifndef __SWORD_TYPE
++#if __WORDSIZE == 32
++# define __SWORD_TYPE	int
++#elif __WORDSIZE == 64
++# define __SWORD_TYPE	long int
++#else
++#error
++#endif
++#endif
++
+ const char *program;		/* Initialized with argv[0] */
+ const char *version = VERSION_STRING;	/* Program version */
+ const char *libdir = AUTOFS_LIB_DIR;	/* Location of library modules */

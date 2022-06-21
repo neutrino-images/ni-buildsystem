@@ -1,0 +1,46 @@
+autofs-5.1.8 - add missing include to hash.h for _WORDSIZE
+
+From: Sam James <sam@gentoo.org>
+
+Fixes build failure on musl like:
+```
+../include/hash.h:22:2: error: #error Wordsize not 32 or 64
+   22 | #error Wordsize not 32 or 64
+      |  ^~~~~
+```
+
+Tested-by: Yixun Lan <dlan@gentoo.org>
+Signed-off-by: Sam James <sam@gentoo.org>
+---
+ CHANGELOG      |    1 +
+ include/hash.h |    5 +++++
+ 2 files changed, 6 insertions(+)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index 98c8da8d..02f8ef5f 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -21,6 +21,7 @@
+ - musl: fix missing include in hash.h.
+ - musl: define fallback dummy NSS config path
+ - musl: avoid internal stat.h definitions.
++- musl: add missing include to hash.h for _WORDSIZE.
+ 
+ 19/10/2021 autofs-5.1.8
+ - add xdr_exports().
+diff --git a/include/hash.h b/include/hash.h
+index 010acd7e..0f1d7b5d 100644
+--- a/include/hash.h
++++ b/include/hash.h
+@@ -3,6 +3,11 @@
+ /* Fast hashing routine for ints,  longs and pointers.
+    (C) 2002 Nadia Yvette Chambers, IBM */
+ 
++#ifdef __GLIBC__
++#include <bits/wordsize.h>
++#else
++#include <bits/reg.h>
++#endif
+ #include <linux/stddef.h>
+ #include <sys/types.h>
+ #include <stdint.h>

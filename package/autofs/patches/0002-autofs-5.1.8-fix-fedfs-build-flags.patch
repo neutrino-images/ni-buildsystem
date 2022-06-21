@@ -1,0 +1,41 @@
+autofs-5.1.8 - fix fedfs build flags
+
+From: Ian Kent <raven@themaw.net>
+
+Dynamic executables should be compiled with -fPIE and linked with -pie.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG      |    1 +
+ fedfs/Makefile |    4 ++--
+ 2 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index 18a2f29c..61090a99 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -1,4 +1,5 @@
+ - fix kernel mount status notification.
++- fix fedfs build flags.
+ 
+ 19/10/2021 autofs-5.1.8
+ - add xdr_exports().
+diff --git a/fedfs/Makefile b/fedfs/Makefile
+index dff749e4..65b2a2f5 100644
+--- a/fedfs/Makefile
++++ b/fedfs/Makefile
+@@ -23,12 +23,12 @@ LDFLAGS += -rdynamic
+ all: mount.fedfs fedfs-map-nfs4
+ 
+ mount.fedfs: $(mount_fedfs_OBJ) $(fedfs-getsrvinfo_OBJ) $(HDRS)
+-	$(CC) -o mount.fedfs \
++	$(CC) $(DAEMON_LDFLAGS) -o mount.fedfs \
+ 	       $(mount_fedfs_OBJ) $(fedfs-getsrvinfo_OBJ) \
+ 	       $(LDFLAGS) $(LIBRESOLV) $(LIBS)
+ 
+ fedfs-map-nfs4: $(fedfs-map-nfs4_OBJ) $(fedfs-getsrvinfo_OBJ) $(HDRS)
+-	$(CC) -o fedfs-map-nfs4 \
++	$(CC) $(DAEMON_LDFLAGS) -o fedfs-map-nfs4 \
+ 	       $(fedfs-map-nfs4_OBJ) $(fedfs-getsrvinfo_OBJ) \
+ 	       $(LDFLAGS) $(LIBRESOLV) $(LIBS)
+ 

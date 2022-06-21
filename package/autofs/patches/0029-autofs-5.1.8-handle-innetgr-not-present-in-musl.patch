@@ -1,0 +1,113 @@
+autofs-5.1.8 - handle innetgr() not present in musl
+
+From: Fabian Groffen <grobian@gentoo.org>
+
+The function innetgr(3) may not be present in musl libc, add a check
+for this.
+
+Originally contributed by Fabian, modified by me.
+
+Signed-off-by: Fabian Groffen <grobian@gentoo.org>
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG           |    1 +
+ configure           |    9 +++++----
+ configure.in        |    2 +-
+ include/config.h.in |    3 +++
+ modules/parse_amd.c |    7 +++++++
+ 5 files changed, 17 insertions(+), 5 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index 2b4ddeb9..1f7c93ab 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -26,6 +26,7 @@
+ - musl: define _SWORD_TYPE.
+ - add autofs_strerror_r() helper for musl.
+ - update configure.
++- handle innetgr() not present in musl.
+ 
+ 19/10/2021 autofs-5.1.8
+ - add xdr_exports().
+diff --git a/configure b/configure
+index dc1c62db..90ce6e0e 100755
+--- a/configure
++++ b/configure
+@@ -4239,12 +4239,13 @@ fi
+ 
+ 
+ 
+-for ac_func in pipe2
++for ac_func in pipe2 innetgr
+ do :
+-  ac_fn_c_check_func "$LINENO" "pipe2" "ac_cv_func_pipe2"
+-if test "x$ac_cv_func_pipe2" = xyes; then :
++  as_ac_var=`$as_echo "ac_cv_func_$ac_func" | $as_tr_sh`
++ac_fn_c_check_func "$LINENO" "$ac_func" "$as_ac_var"
++if eval test \"x\$"$as_ac_var"\" = x"yes"; then :
+   cat >>confdefs.h <<_ACEOF
+-#define HAVE_PIPE2 1
++#define `$as_echo "HAVE_$ac_func" | $as_tr_cpp` 1
+ _ACEOF
+ 
+ fi
+diff --git a/configure.in b/configure.in
+index 723bb30d..68cbd44a 100644
+--- a/configure.in
++++ b/configure.in
+@@ -169,7 +169,7 @@ AF_CHECK_SSS_LIB(SSS_AUTOFS, libsss_autofs.so)
+ AC_SUBST(HAVE_SSS_AUTOFS)
+ AC_SUBST(sssldir)
+ 
+-AC_CHECK_FUNCS(pipe2)
++AC_CHECK_FUNCS(pipe2 innetgr)
+ 
+ #
+ # Newer mounts have the -s (sloppy) option to ignore unknown options,
+diff --git a/include/config.h.in b/include/config.h.in
+index 4e36b390..4f8daa86 100644
+--- a/include/config.h.in
++++ b/include/config.h.in
+@@ -30,6 +30,9 @@
+ /* Define to 1 if you have the `getservbyname' function. */
+ #undef HAVE_GETSERVBYNAME
+ 
++/* Define to 1 if you have the `innetgr' function. */
++#undef HAVE_INNETGR
++
+ /* Define to 1 if you have the <inttypes.h> header file. */
+ #undef HAVE_INTTYPES_H
+ 
+diff --git a/modules/parse_amd.c b/modules/parse_amd.c
+index 163174cd..5090060d 100644
+--- a/modules/parse_amd.c
++++ b/modules/parse_amd.c
+@@ -425,6 +425,7 @@ static int sel_in_network(struct autofs_point *ap,
+ 	return ret;
+ }
+ 
++#ifdef HAVE_INNETGR
+ static int sel_netgrp(struct autofs_point *ap,
+ 		      struct selector *s, struct substvar *sv)
+ {
+@@ -489,6 +490,7 @@ out:
+ 
+ 	return ret;
+ }
++#endif
+ 
+ static int eval_selector(struct autofs_point *ap,
+ 			 struct amd_entry *this, struct substvar *sv)
+@@ -628,7 +630,12 @@ static int eval_selector(struct autofs_point *ap,
+ 		switch (s->sel->selector) {
+ 		case SEL_NETGRP:
+ 		case SEL_NETGRPD:
++#ifndef HAVE_INNETGR
++			error(logopt, MODPREFIX
++			      "netgroups not available, function innetgr(3) not available");
++#else
+ 			ret = sel_netgrp(ap, s, sv);
++#endif
+ 			break;
+ 
+ 		default:

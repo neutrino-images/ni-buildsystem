@@ -1,0 +1,60 @@
+autofs-5.1.8 - fix bashism in configure
+
+From: Sam James <sam@gentoo.org>
+
+configure scripts need to work with a POSIX-compliant shell,
+so let's not use a bashism here.
+
+```
+checking for res_query in -lresolv... yes
+checking for libhesiod... no
+./configure: 4880: test: 0: unexpected operator
+checking how to run the C preprocessor... gcc -E
+```
+
+Tested-by: Yixun Lan <dlan@gentoo.org>
+Signed-off-by: Sam James <sam@gentoo.org>
+---
+ CHANGELOG    |    1 +
+ configure.in |    6 +++---
+ 2 files changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index e1214323..dd76b02f 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -17,6 +17,7 @@
+ - remove nonstrict parameter from tree_mapent_umount_offsets().
+ - fix handling of incorrect return from umount_ent().
+ - dont use initgroups() at spawn.
++- fix bashism in configure.
+ 
+ 19/10/2021 autofs-5.1.8
+ - add xdr_exports().
+diff --git a/configure.in b/configure.in
+index 750ffb48..723bb30d 100644
+--- a/configure.in
++++ b/configure.in
+@@ -262,7 +262,7 @@ if test -z "$HAVE_HESIOD" -o "$HAVE_HESIOD" != "0"
+ then
+ 	HAVE_HESIOD=0
+ 	AF_CHECK_LIBHESIOD()
+-	if test "$HAVE_HESIOD" == "1"; then
++	if test "$HAVE_HESIOD" = "1"; then
+ 		AC_DEFINE(WITH_HESIOD,1,
+ 			[Define if using Hesiod as a source of automount maps])
+ 	fi
+@@ -337,11 +337,11 @@ AC_ARG_WITH(sasl,
+ 		SASL_FLAGS="-I${withval}/include"
+ 	fi
+ )
+-if test -z "$HAVE_SASL" -o "$HAVE_SASL" != "0" -a "$HAVE_LIBXML" == "1"
++if test -z "$HAVE_SASL" -o "$HAVE_SASL" != "0" -a "$HAVE_LIBXML" = "1"
+ then
+ 	HAVE_SASL=0
+ 	AC_CHECK_LIB(sasl2, sasl_client_start, HAVE_SASL=1 LIBSASL="$LIBSASL -lsasl2", , -lsasl2 $LIBS)
+-	if test "$HAVE_SASL" == "1"; then
++	if test "$HAVE_SASL" = "1"; then
+ 		AC_DEFINE(WITH_SASL,1,
+ 			[Define if using SASL authentication with the LDAP module])
+ 	fi
