@@ -9,8 +9,7 @@ SAMBA36_DIR = samba-$(SAMBA36_VERSION)
 SAMBA36_SOURCE = samba-$(SAMBA36_VERSION).tar.gz
 SAMBA36_SITE = https://download.samba.org/pub/samba/stable
 
-$(DL_DIR)/$(SAMBA36_SOURCE):
-	$(download) $(SAMBA36_SITE)/$(SAMBA36_SOURCE)
+SAMBA36_SUBDIR = source3
 
 SAMBA36_DEPENDENCIES = zlib
 
@@ -50,13 +49,18 @@ SAMBA36_CONF_OPTS = \
 	--disable-relro \
 	--disable-swat \
 
+define SAMBA36_AUTOGEN_SH
+	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
+		./autogen.sh
+endef
+SAMBA36_PRE_CONFIGURE_HOOKS += SAMBA36_AUTOGEN_SH
+
 samba36: $(SAMBA36_DEPENDENCIES) $(DL_DIR)/$(SAMBA36_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(call APPLY_PATCHES,$(PKG_PATCHES_DIR))
-	$(CHDIR)/$(PKG_DIR)/source3; \
-		./autogen.sh; \
-		$(TARGET_CONFIGURE); \
+	$(call TARGET_CONFIGURE)
+	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(INSTALL) -d $(TARGET_localstatedir)/samba/locks

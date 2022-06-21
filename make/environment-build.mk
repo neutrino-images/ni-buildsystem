@@ -269,23 +269,41 @@ TARGET_CONFIGURE_OPTS = \
 TARGET_CONFIGURE_OPTS += \
 	$($(PKG)_CONF_OPTS)
 
-HOST_CONFIGURE = \
+define AUTORECONF
+	$(Q)( \
 	if [ "$($(PKG)_AUTORECONF)" == "YES" ]; then \
 		$(call MESSAGE,"Autoreconfiguring"); \
-		$($(PKG)_AUTORECONF_ENV) autoreconf -fi $($(PKG)_AUTORECONF_OPTS); \
+		$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
+			$($(PKG)_AUTORECONF_ENV) autoreconf -fi $($(PKG)_AUTORECONF_OPTS); \
 	fi; \
-	test -f ./configure || ./autogen.sh && \
-	CONFIG_SITE=/dev/null \
-	$(HOST_CONFIGURE_ENV) ./configure $(HOST_CONFIGURE_OPTS)
+	)
+endef
 
-TARGET_CONFIGURE = \
-	if [ "$($(PKG)_AUTORECONF)" == "YES" ]; then \
-		$(call MESSAGE,"Autoreconfiguring"); \
-		$($(PKG)_AUTORECONF_ENV) autoreconf -fi $($(PKG)_AUTORECONF_OPTS); \
-	fi; \
-	test -f ./configure || ./autogen.sh && \
-	CONFIG_SITE=/dev/null \
-	$(TARGET_CONFIGURE_ENV) ./configure $(TARGET_CONFIGURE_OPTS)
+define HOST_CONFIGURE
+	$(call AUTORECONF)
+	@$(call MESSAGE,"Configuring")
+	$(foreach hook,$($(PKG)_PRE_CONFIGURE_HOOKS),$(call $(hook))$(sep))
+	$(Q)( \
+	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
+		test -f ./configure || ./autogen.sh && \
+		CONFIG_SITE=/dev/null \
+		$(HOST_CONFIGURE_ENV) ./configure $(HOST_CONFIGURE_OPTS); \
+	)
+	$(foreach hook,$($(PKG)_POST_CONFIGURE_HOOKS),$(call $(hook))$(sep))
+endef
+
+define TARGET_CONFIGURE
+	$(call AUTORECONF)
+	@$(call MESSAGE,"Configuring")
+	$(foreach hook,$($(PKG)_PRE_CONFIGURE_HOOKS),$(call $(hook))$(sep))
+	$(Q)( \
+	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
+		test -f ./configure || ./autogen.sh && \
+		CONFIG_SITE=/dev/null \
+		$(TARGET_CONFIGURE_ENV) ./configure $(TARGET_CONFIGURE_OPTS); \
+	)
+	$(foreach hook,$($(PKG)_POST_CONFIGURE_HOOKS),$(call $(hook))$(sep))
+endef
 
 # -----------------------------------------------------------------------------
 
@@ -360,7 +378,7 @@ define HOST_CMAKE
 	@$(call MESSAGE,"Configuring")
 	$(foreach hook,$($(PKG)_PRE_CONFIGURE_HOOKS),$(call $(hook))$(sep))
 	$(Q)( \
-	$(CHDIR)/$($(PKG)_DIR); \
+	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
 		rm -f CMakeCache.txt; \
 		$(HOST_CMAKE_ENV) cmake $(HOST_CMAKE_OPTS); \
 	)
@@ -371,7 +389,7 @@ define TARGET_CMAKE
 	@$(call MESSAGE,"Configuring")
 	$(foreach hook,$($(PKG)_PRE_CONFIGURE_HOOKS),$(call $(hook))$(sep))
 	$(Q)( \
-	$(CHDIR)/$($(PKG)_DIR); \
+	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
 		rm -f CMakeCache.txt; \
 		$(TARGET_CMAKE_ENV) cmake $(TARGET_CMAKE_OPTS); \
 	)

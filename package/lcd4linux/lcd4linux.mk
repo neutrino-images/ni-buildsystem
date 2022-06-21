@@ -30,11 +30,16 @@ define LCD4LINUX_INSTALL_SKEL
 endef
 LCD4LINUX_TARGET_FINALIZE_HOOKS += LCD4LINUX_INSTALL_SKEL
 
+define LCD4LINUX_BOOTSTRAP
+	$(CHDIR)/$($(PKG)_DIR); \
+		./bootstrap
+endef
+LCD4LINUX_PRE_CONFIGURE_HOOKS += LCD4LINUX_BOOTSTRAP
+
 lcd4linux: | $(TARGET_DIR)
 	$(call PREPARE)
+	$(call TARGET_CONFIGURE)
 	$(CHDIR)/$($(PKG)_DIR); \
-		./bootstrap; \
-		$(TARGET_CONFIGURE); \
 		$(MAKE) vcs_version; \
 		$(MAKE); \
 		$(MAKE) install

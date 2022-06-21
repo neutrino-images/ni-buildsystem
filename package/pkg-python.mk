@@ -30,7 +30,7 @@ HOST_PYTHON3_INSTALL = \
 
 define host-python3-package
 	$(call PREPARE)
-	$(CHDIR)/$($(PKG)_DIR); \
+	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
 		$(HOST_PYTHON3_BUILD); \
 		$(HOST_PYTHON3_INSTALL)
 	$(call HOST_FOLLOWUP)

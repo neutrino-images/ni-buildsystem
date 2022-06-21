@@ -32,8 +32,8 @@ DROPBEAR_TARGET_FINALIZE_HOOKS += DROPBEAR_INSTALL_INIT_SCRIPT
 
 dropbear: | $(TARGET_DIR)
 	$(call PREPARE)
+	$(call TARGET_CONFIGURE)
 	$(CHDIR)/$($(PKG)_DIR); \
-		$(TARGET_CONFIGURE); \
 		# Ensure that dropbear doesn't use crypt() when it's not available; \
 		echo '#if !HAVE_CRYPT'				>> localoptions.h; \
 		echo '#define DROPBEAR_SVR_PASSWORD_AUTH 0'	>> localoptions.h; \

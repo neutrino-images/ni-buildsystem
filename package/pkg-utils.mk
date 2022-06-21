@@ -9,14 +9,14 @@ pkgname = $(basename $(@F))
 pkg = $(call LOWERCASE,$(pkgname))
 PKG = $(call UPPERCASE,$(pkgname))
 
-PKG_BUILD_DIR = $(BUILD_DIR)/$($(PKG)_DIR)
+PKG_BUILD_DIR = $(BUILD_DIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR)
 PKG_FILES_DIR = $(PACKAGE_DIR)/$(subst host-,,$(pkgname))/files
 PKG_PATCHES_DIR = $(PACKAGE_DIR)/$(subst host-,,$(pkgname))/patches
 
 # -----------------------------------------------------------------------------
 
 # Compatibility variables (marked to remove)
-PKG_DIR         = $($(PKG)_DIR)
+PKG_DIR         = $($(PKG)_DIR)/$($(PKG)_SUBDIR)
 PKG_SOURCE      = $($(PKG)_SOURCE)
 PKG_SITE        = $($(PKG)_SITE)
 PKG_PATCH       = $($(PKG)_PATCH)

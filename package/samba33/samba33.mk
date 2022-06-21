@@ -9,8 +9,7 @@ SAMBA33_DIR = samba-$(SAMBA33_VERSION)
 SAMBA33_SOURCE = samba-$(SAMBA33_VERSION).tar.gz
 SAMBA33_SITE = https://download.samba.org/pub/samba
 
-$(DL_DIR)/$(SAMBA33_SOURCE):
-	$(download) $(SAMBA33_SITE)/$(SAMBA33_SOURCE)
+SAMBA33_SUBDIR = source
 
 SAMBA33_DEPENDENCIES = zlib
 
@@ -52,13 +51,18 @@ SAMBA33_CONF_OPTS = \
 	--disable-relro \
 	--disable-swat
 
-samba33: $(SAMBA33_DEPENDENCIES) $(DL_DIR)/$(SAMBA33_SOURCE) | $(TARGET_DIR)
+define SAMBA33_AUTOGEN_SH
+	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
+		./autogen.sh
+endef
+SAMBA33_PRE_CONFIGURE_HOOKS += SAMBA33_AUTOGEN_SH
+
+samba33: | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(call APPLY_PATCHES,$(PKG_PATCHES_DIR))
-	$(CHDIR)/$(PKG_DIR)/source; \
-		./autogen.sh; \
-		$(TARGET_CONFIGURE); \
+	$(call TARGET_CONFIGURE)
+	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
 		$(MAKE1) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(INSTALL) -d $(TARGET_localstatedir)/samba/locks

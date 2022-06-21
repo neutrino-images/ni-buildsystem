@@ -51,13 +51,17 @@ AUTOFS_CONF_OPTS = \
 AUTOFS_MAKE_ENV = \
 	DONTSTRIP=1
 
+define AUTOFS_PATCH_RPC_SUBS_H
+	$(SED) "s|nfs/nfs.h|linux/nfs.h|" $(PKG_BUILD_DIR)/include/rpc_subs.h
+endef
+AUTOFS_POST_PATCH_HOOKS += AUTOFS_PATCH_RPC_SUBS_H
+
 autofs: $(AUTOFS_DEPENDENCIES) $(DL_DIR)/$(AUTOFS_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
 	$(call APPLY_PATCHES,$($(PKG)_PATCH))
+	$(call TARGET_CONFIGURE)
 	$(CHDIR)/$(PKG_DIR); \
-		$(SED) "s|nfs/nfs.h|linux/nfs.h|" include/rpc_subs.h; \
-		$(TARGET_CONFIGURE); \
 		$($(PKG)_MAKE_ENV) \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)

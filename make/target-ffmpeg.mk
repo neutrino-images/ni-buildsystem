@@ -359,7 +359,7 @@ ffmpeg: $(FFMPEG_DEPENDENCIES) $(DL_DIR)/$(FFMPEG_SOURCE) | $(TARGET_DIR)
 ifneq ($($(PKG)_UNPATCHED),yes)
 	$(call APPLY_PATCHES,$(PKG_PATCHES_DIR))
 endif
-	$(CHDIR)/$($(PKG)_DIR); \
+	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
 		./configure $($(PKG)_CONF_OPTS); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)

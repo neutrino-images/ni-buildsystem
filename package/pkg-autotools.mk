@@ -6,8 +6,8 @@
 
 define autotools-package
 	$(call PREPARE)
-	$(CHDIR)/$($(PKG)_DIR); \
-		$(TARGET_CONFIGURE); \
+	$(call TARGET_CONFIGURE)
+	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(call TARGET_FOLLOWUP)
@@ -15,8 +15,8 @@ endef
 
 define host-autotools-package
 	$(call PREPARE)
-	$(CHDIR)/$($(PKG)_DIR); \
-		$(HOST_CONFIGURE); \
+	$(call HOST_CONFIGURE)
+	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
 		$(MAKE); \
 		$(MAKE) install
 	$(call HOST_FOLLOWUP)

@@ -29,8 +29,8 @@ GETTEXT_CONF_OPTS = \
 gettext: $(DL_DIR)/$(GETTEXT_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(PKG_DIR)
 	$(UNTAR)/$(PKG_SOURCE)
+	$(call TARGET_CONFIGURE)
 	$(CHDIR)/$(PKG_DIR); \
-		$(TARGET_CONFIGURE); \
 		$(MAKE) -C gettext-runtime; \
 		$(MAKE) -C gettext-runtime install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL)
