@@ -39,9 +39,4 @@ endef
 LUAPOSIX_PRE_CONFIGURE_HOOKS += LUAPOSIX_BOOTSTRAP
 
 luaposix: | $(TARGET_DIR)
-	$(call PREPARE)
-	$(call TARGET_CONFIGURE)
-	$(CHDIR)/$($(PKG)_DIR); \
-		$(MAKE); \
-		$(MAKE) install
-	$(call TARGET_FOLLOWUP)
+	$(call autotools-package)
