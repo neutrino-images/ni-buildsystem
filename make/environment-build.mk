@@ -269,7 +269,7 @@ TARGET_CONFIGURE_OPTS = \
 TARGET_CONFIGURE_OPTS += \
 	$($(PKG)_CONF_OPTS)
 
-define AUTORECONF
+define AUTORECONF_HOOK
 	$(Q)( \
 	if [ "$($(PKG)_AUTORECONF)" == "YES" ]; then \
 		$(call MESSAGE,"Autoreconfiguring"); \
@@ -280,9 +280,9 @@ define AUTORECONF
 endef
 
 define HOST_CONFIGURE
-	$(call AUTORECONF)
 	@$(call MESSAGE,"Configuring")
 	$(foreach hook,$($(PKG)_PRE_CONFIGURE_HOOKS),$(call $(hook))$(sep))
+	$(call AUTORECONF_HOOK)
 	$(Q)( \
 	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
 		test -f ./configure || ./autogen.sh && \
@@ -293,9 +293,9 @@ define HOST_CONFIGURE
 endef
 
 define TARGET_CONFIGURE
-	$(call AUTORECONF)
 	@$(call MESSAGE,"Configuring")
 	$(foreach hook,$($(PKG)_PRE_CONFIGURE_HOOKS),$(call $(hook))$(sep))
+	$(call AUTORECONF_HOOK)
 	$(Q)( \
 	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
 		test -f ./configure || ./autogen.sh && \
