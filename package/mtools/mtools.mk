@@ -18,8 +18,8 @@ HOST_MTOOLS_SITE = $(MTOOLS_SITE)
 
 host-mtools: | $(HOST_DIR)
 	$(call PREPARE)
+	$(call HOST_CONFIGURE)
 	$(CHDIR)/$($(PKG)_DIR); \
-		$(HOST_CONFIGURE);\
 		$(MAKE1); \
 		$(MAKE) install
 	$(call HOST_FOLLOWUP)
