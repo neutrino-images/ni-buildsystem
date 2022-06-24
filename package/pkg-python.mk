@@ -4,34 +4,37 @@
 #
 ################################################################################
 
-HOST_PYTHON3_BUILD = \
+HOST_PYTHON3_ENV = \
 	CC="$(HOSTCC)" \
 	CFLAGS="$(HOST_CFLAGS)" \
 	LDFLAGS="$(HOST_LDFLAGS)" \
 	LDSHARED="$(HOSTCC) -shared" \
-	PYTHONPATH=$(HOST_DIR)/$(HOST_PYTHON3_LIB_DIR)/site-packages \
-	$(HOST_PYTHON3_BINARY) ./setup.py -q build --executable=/usr/bin/python
+	PYTHONPATH=$(HOST_DIR)/$(HOST_PYTHON3_SITEPACKAGES_DIR)
 
-HOST_PYTHON3_INSTALL = \
-	CC="$(HOSTCC)" \
-	CFLAGS="$(HOST_CFLAGS)" \
-	LDFLAGS="$(HOST_LDFLAGS)" \
-	LDSHARED="$(HOSTCC) -shared" \
-	PYTHONPATH=$(HOST_DIR)/$(HOST_PYTHON3_LIB_DIR)/site-packages \
-	$(HOST_PYTHON3_BINARY) ./setup.py -q install --root=$(HOST_DIR) --prefix=
+HOST_PYTHON3_OPTS =
 
-#define python3-package
-#	$(call PREPARE)
-#	$(CHDIR)/$($(PKG)_DIR); \
-#		$(PYTHON3_BUILD); \
-#		$(PYTHON3_INSTALL)
-#	$(call TARGET_FOLLOWUP)
-#endef
+ifeq ($(KBUILD_VERBOSE),0)
+HOST_PYTHON3_OPTS += \
+	-q
+endif
+
+define HOST_PYTHON3_BUILD
+	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
+		$(HOST_PYTHON3_ENV) \
+		$(HOST_PYTHON3_BINARY) ./setup.py build --executable=/usr/bin/python \
+		$(HOST_PYTHON3_OPTS)
+endef
+
+define HOST_PYTHON3_INSTALL
+	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
+		$(HOST_PYTHON3_ENV) \
+		$(HOST_PYTHON3_BINARY) ./setup.py install --root=$(HOST_DIR) --prefix= \
+		$(HOST_PYTHON3_OPTS)
+endef
 
 define host-python3-package
 	$(call PREPARE)
-	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
-		$(HOST_PYTHON3_BUILD); \
-		$(HOST_PYTHON3_INSTALL)
+	$(call HOST_PYTHON3_BUILD)
+	$(call HOST_PYTHON3_INSTALL)
 	$(call HOST_FOLLOWUP)
 endef

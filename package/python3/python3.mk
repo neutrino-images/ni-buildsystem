@@ -20,6 +20,7 @@ HOST_PYTHON3_BINARY = $(HOST_DIR)/bin/python3
 
 HOST_PYTHON3_LIB_DIR = lib/python$(basename $(HOST_PYTHON3_VERSION))
 HOST_PYTHON3_INCLUDE_DIR = include/python$(basename $(HOST_PYTHON3_VERSION))
+HOST_PYTHON3_SITEPACKAGES_DIR = $(HOST_PYTHON3_LIB_DIR)/site-packages
 
 HOST_PYTHON3_DEPENDENCIES = host-expat host-zlib host-libffi
 
