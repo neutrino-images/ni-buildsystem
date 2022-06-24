@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-define meson-cross-config # (dest dir)
+define MESON_CROSS_CONFIG_HOOK # (dest dir)
 	$(INSTALL) -d $(1)
 	( \
 		echo "# Note: Buildsystems's and Meson's terminologies differ about the meaning"; \
@@ -41,7 +41,10 @@ define meson-cross-config # (dest dir)
 endef
 
 define TARGET_MESON_CONFIGURE
-	$(call meson-cross-config,$(PKG_BUILD_DIR)/build); \
+	@$(call MESSAGE,"Configuring")
+	$(foreach hook,$($(PKG)_PRE_CONFIGURE_HOOKS),$(call $(hook))$(sep))
+	$(call MESON_CROSS_CONFIG_HOOK,$(PKG_BUILD_DIR)/build)
+	$(Q)( \
 	unset CC CXX CPP LD AR NM STRIP; \
 	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
 		$($(PKG)_CONF_ENV) \
@@ -51,7 +54,9 @@ define TARGET_MESON_CONFIGURE
 			-Db_pie=false \
 			-Dstrip=false \
 			$($(PKG)_CONF_OPTS) \
-			$(PKG_BUILD_DIR) $(PKG_BUILD_DIR)/build
+			$(PKG_BUILD_DIR) $(PKG_BUILD_DIR)/build; \
+	)
+	$(foreach hook,$($(PKG)_POST_CONFIGURE_HOOKS),$(call $(hook))$(sep))
 endef
 
 define TARGET_NINJA_BUILD
@@ -76,6 +81,9 @@ endef
 # -----------------------------------------------------------------------------
 
 define HOST_MESON_CONFIGURE
+	@$(call MESSAGE,"Configuring")
+	$(foreach hook,$($(PKG)_PRE_CONFIGURE_HOOKS),$(call $(hook))$(sep))
+	$(Q)( \
 	unset CC CXX CPP LD AR NM STRIP; \
 	PKG_CONFIG=/usr/bin/pkg-config \
 	PKG_CONFIG_PATH=$(HOST_DIR)/lib/pkgconfig \
@@ -85,7 +93,9 @@ define HOST_MESON_CONFIGURE
 			--prefix=/ \
 			--buildtype=release \
 			$($(PKG)_CONF_OPTS) \
-			$(PKG_BUILD_DIR) $(PKG_BUILD_DIR)/build
+			$(PKG_BUILD_DIR) $(PKG_BUILD_DIR)/build; \
+	)
+	$(foreach hook,$($(PKG)_POST_CONFIGURE_HOOKS),$(call $(hook))$(sep))
 endef
 
 define HOST_NINJA_BUID
