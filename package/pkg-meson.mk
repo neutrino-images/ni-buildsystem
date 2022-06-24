@@ -40,6 +40,8 @@ define MESON_CROSS_CONFIG_HOOK # (dest dir)
 	) > $(1)/meson-cross.config
 endef
 
+# -----------------------------------------------------------------------------
+
 define TARGET_MESON_CONFIGURE
 	@$(call MESSAGE,"Configuring")
 	$(foreach hook,$($(PKG)_PRE_CONFIGURE_HOOKS),$(call $(hook))$(sep))
@@ -69,6 +71,8 @@ define TARGET_NINJA_INSTALL
 		DESTDIR=$(TARGET_DIR) \
 		$(HOST_NINJA_BINARY) -C $(PKG_BUILD_DIR)/build install
 endef
+
+# -----------------------------------------------------------------------------
 
 define meson-package
 	$(call PREPARE)
@@ -108,6 +112,8 @@ define HOST_NINJA_INSTALL
 		DESTDIR=$(HOST_DIR) \
 		$(HOST_NINJA_BINARY) -C $(PKG_BUILD_DIR)/build install
 endef
+
+# -----------------------------------------------------------------------------
 
 define host-meson-package
 	$(call PREPARE)

@@ -28,6 +28,8 @@ define HOST_PYTHON3_INSTALL
 		$(HOST_PYTHON3_OPTS)
 endef
 
+# -----------------------------------------------------------------------------
+
 define host-python3-package
 	$(call PREPARE)
 	$(call HOST_PYTHON3_BUILD)

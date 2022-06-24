@@ -152,15 +152,6 @@ endef
 
 # -----------------------------------------------------------------------------
 
-# individual build
-define INDIVIDUAL
-	@$(call MESSAGE,"Individual build")
-	$(foreach hook,$($(PKG)_INDIVIDUAL_HOOKS),$(call $(hook))$(sep))
-	$(TOUCH)
-endef
-
-# -----------------------------------------------------------------------------
-
 # follow-up build
 define HOST_FOLLOWUP
 	@$(call MESSAGE,"Follow-up build")

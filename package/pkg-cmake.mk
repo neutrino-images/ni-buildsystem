@@ -59,6 +59,8 @@ define TARGET_CMAKE
 	$(foreach hook,$($(PKG)_POST_CONFIGURE_HOOKS),$(call $(hook))$(sep))
 endef
 
+# -----------------------------------------------------------------------------
+
 define cmake-package
 	$(call PREPARE)
 	$(call TARGET_CMAKE)
@@ -104,6 +106,8 @@ define HOST_CMAKE
 	)
 	$(foreach hook,$($(PKG)_POST_CONFIGURE_HOOKS),$(call $(hook))$(sep))
 endef
+
+# -----------------------------------------------------------------------------
 
 define host-cmake-package
 	$(call PREPARE)

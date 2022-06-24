@@ -63,6 +63,8 @@ define TARGET_CONFIGURE
 	$(foreach hook,$($(PKG)_POST_CONFIGURE_HOOKS),$(call $(hook))$(sep))
 endef
 
+# -----------------------------------------------------------------------------
+
 define autotools-package
 	$(call PREPARE)
 	$(call TARGET_CONFIGURE)
@@ -107,6 +109,8 @@ define HOST_CONFIGURE
 	)
 	$(foreach hook,$($(PKG)_POST_CONFIGURE_HOOKS),$(call $(hook))$(sep))
 endef
+
+# -----------------------------------------------------------------------------
 
 define host-autotools-package
 	$(call PREPARE)
