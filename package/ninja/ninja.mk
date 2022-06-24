@@ -16,7 +16,7 @@ HOST_NINJA_DIR = $(NINJA_DIR)
 HOST_NINJA_SOURCE = $(NINJA_SOURCE)
 HOST_NINJA_SITE = $(NINJA_SITE)
 
-HOST_NINJA = $(HOST_DIR)/bin/ninja
+HOST_NINJA_BINARY = $(HOST_DIR)/bin/ninja
 
 host-ninja: | $(HOST_DIR)
 	$(call host-cmake-package)

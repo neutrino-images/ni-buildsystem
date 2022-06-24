@@ -18,11 +18,11 @@ HOST_MESON_SITE = $(MESON_SITE)
 
 HOST_MESON_DEPENDENCIES = host-ninja host-python3 host-python-setuptools
 
-HOST_MESON = $(HOST_DIR)/bin/meson
+HOST_MESON_BINARY = $(HOST_DIR)/bin/meson
 
 # Avoid interpreter shebang longer than 128 chars
 define HOST_MESON_SET_INTERPRETER
-	$(SED) '1s:.*:#!/usr/bin/env python3:' $(HOST_DIR)/bin/meson
+	$(SED) '1s:.*:#!/usr/bin/env python3:' $(HOST_MESON_BINARY)
 endef
 HOST_MESON_HOST_FINALIZE_HOOKS += HOST_MESON_SET_INTERPRETER
 

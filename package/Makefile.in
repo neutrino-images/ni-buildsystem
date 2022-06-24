@@ -29,4 +29,5 @@ include package/pkg-autotools.mk
 include package/pkg-cmake.mk
 include package/pkg-individual.mk
 include package/pkg-kernel-module.mk
+include package/pkg-meson.mk
 include package/pkg-python.mk

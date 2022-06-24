@@ -214,60 +214,6 @@ TARGET_MAKE_OPTS = \
 
 # -----------------------------------------------------------------------------
 
-define meson-cross-config # (dest dir)
-	$(INSTALL) -d $(1)
-	( \
-		echo "# Note: Buildsystems's and Meson's terminologies differ about the meaning"; \
-		echo "# of 'build', 'host' and 'target':"; \
-		echo "# - Buildsystems's 'host' is Meson's 'build'"; \
-		echo "# - Buildsystems's 'target' is Meson's 'host'"; \
-		echo ""; \
-		echo "[binaries]"; \
-		echo "c = '$(TARGET_CC)'"; \
-		echo "cpp = '$(TARGET_CXX)'"; \
-		echo "ar = '$(TARGET_AR)'"; \
-		echo "strip = '$(TARGET_STRIP)'"; \
-		echo "nm = '$(TARGET_NM)'"; \
-		echo "pkgconfig = '$(PKG_CONFIG)'"; \
-		echo ""; \
-		echo "[built-in options]"; \
-		echo "c_args = '$(TARGET_CFLAGS)'"; \
-		echo "c_link_args = '$(TARGET_LDFLAGS)'"; \
-		echo "cpp_args = '$(TARGET_CXXFLAGS)'"; \
-		echo "cpp_link_args = '$(TARGET_LDFLAGS)'"; \
-		echo "prefix = '$(prefix)'"; \
-		echo ""; \
-		echo "[properties]"; \
-		echo "needs_exe_wrapper = true"; \
-		echo "sys_root = '$(TARGET_DIR)'"; \
-		echo "pkg_config_libdir = '$(PKG_CONFIG_LIBDIR)'"; \
-		echo ""; \
-		echo "[host_machine]"; \
-		echo "system = 'linux'"; \
-		echo "cpu_family = '$(TARGET_ARCH)'"; \
-		echo "cpu = '$(TARGET_CPU)'"; \
-		echo "endian = '$(TARGET_ENDIAN)'" \
-	) > $(1)/meson-cross.config
-endef
-
-MESON_CONFIGURE = \
-	$(call meson-cross-config,$(PKG_BUILD_DIR)/build); \
-	unset CC CXX CPP LD AR NM STRIP; \
-	PKG_CONFIG_PATH="$(PKG_CONFIG_PATH)" \
-	$(HOST_MESON) \
-		--buildtype=release \
-		--cross-file $(PKG_BUILD_DIR)/build/meson-cross.config \
-		-Dstrip=false \
-		$(PKG_BUILD_DIR) $(PKG_BUILD_DIR)/build
-
-NINJA = \
-	$(HOST_NINJA) -C $(PKG_BUILD_DIR)/build
-
-NINJA_INSTALL = DESTDIR=$(TARGET_DIR) \
-	$(HOST_NINJA) -C $(PKG_BUILD_DIR)/build install
-
-# -----------------------------------------------------------------------------
-
 GITHUB			= https://github.com
 GITHUB_SSH		= git@github.com
 BITBUCKET		= https://bitbucket.org
