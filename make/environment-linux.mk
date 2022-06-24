@@ -228,19 +228,6 @@ KERNEL_VMLINUX    = $(KERNEL_OBJ_DIR)/vmlinux
 
 # -----------------------------------------------------------------------------
 
-KERNEL_MAKE_VARS = \
-	ARCH=$(TARGET_ARCH) \
-	CROSS_COMPILE=$(TARGET_CROSS) \
-	INSTALL_MOD_PATH=$(KERNEL_MODULES_DIR) \
-	INSTALL_HDR_PATH=$(KERNEL_HEADERS_DIR) \
-	LOCALVERSION= \
-	O=$(KERNEL_OBJ_DIR)
-
-# Compatibility variables
-KERNEL_MAKE_VARS += \
-	KVER=$(KERNEL_VERSION) \
-	KSRC=$(BUILD_DIR)/$(KERNEL_DIR)
-
 ifeq ($(BOXMODEL),$(filter $(BOXMODEL),vuduo))
   KERNEL_IMAGE = vmlinux
 else ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd60 hd61 multiboxse))
@@ -255,14 +242,6 @@ KERNEL_MAKE_TARGETS = $(KERNEL_IMAGE)
 ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 hd60 hd61 multiboxse))
   KERNEL_MAKE_TARGETS += $(notdir $(KERNEL_DTB))
 endif
-
-# -----------------------------------------------------------------------------
-
-define LINUX_RUN_DEPMOD
-	if test -d $(TARGET_modulesdir) && grep -q "CONFIG_MODULES=y" $(KERNEL_OBJ_DIR)/.config; then \
-		PATH=$(PATH):/sbin:/usr/sbin depmod -a -b $(TARGET_DIR) $(KERNEL_VERSION); \
-	fi
-endef
 
 # -----------------------------------------------------------------------------
 
