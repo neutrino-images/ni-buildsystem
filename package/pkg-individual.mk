@@ -7,7 +7,6 @@
 define INDIVIDUAL
 	@$(call MESSAGE,"Individual build")
 	$(foreach hook,$($(PKG)_INDIVIDUAL_HOOKS),$(call $(hook))$(sep))
-	$(TOUCH)
 endef
 
 # -----------------------------------------------------------------------------
