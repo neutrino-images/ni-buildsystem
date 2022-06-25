@@ -57,18 +57,23 @@ define SAMBA33_AUTOGEN_SH
 endef
 SAMBA33_PRE_CONFIGURE_HOOKS += SAMBA33_AUTOGEN_SH
 
-samba33: | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(call APPLY_PATCHES,$(PKG_PATCHES_DIR))
-	$(call TARGET_CONFIGURE)
-	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
-		$(MAKE1) all; \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
+define SAMBA33_INSTALL_FILES
 	$(INSTALL) -d $(TARGET_localstatedir)/samba/locks
 	$(INSTALL_DATA) -D $(PKG_FILES_DIR)/smb3.conf $(TARGET_sysconfdir)/samba/smb.conf
 	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/samba3.init $(TARGET_sysconfdir)/init.d/samba
 	$(UPDATE-RC.D) samba defaults 75 25
+endef
+SAMBA33_POST_INSTALL_HOOKS += SAMBA33_INSTALL_FILES
+
+define SAMBA33_TARGET_CLEANUP
 	$(TARGET_RM) $(addprefix $(TARGET_bindir)/,testparm findsmb smbtar smbclient smbpasswd)
-	$(REMOVE)/$(PKG_DIR)
-	$(call TOUCH)
+endef
+SAMBA33_TARGET_FINALIZE_HOOKS += SAMBA33_TARGET_CLEANUP
+
+samba33: | $(TARGET_DIR)
+	$(call PREPARE)
+	$(call TARGET_CONFIGURE)
+	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
+		$(MAKE1) all; \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(call TARGET_FOLLOWUP)
