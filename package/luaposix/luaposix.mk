@@ -17,10 +17,10 @@ LUAPOSIX_CONF_ENV = \
 	LUA=$(HOST_LUA)
 
 LUAPOSIX_CONF_OPTS = \
-	--libdir=$(TARGET_libdir)/lua/$(LUA_ABIVERSION) \
-	--datadir=$(TARGET_datadir)/lua/$(LUA_ABIVERSION) \
-	--mandir=$(TARGET_DIR)$(REMOVE_mandir) \
-	--docdir=$(TARGET_DIR)$(REMOVE_docdir)
+	--libdir=$(libdir)/lua/$(LUA_ABIVERSION) \
+	--datadir=$(datadir)/lua/$(LUA_ABIVERSION) \
+	--mandir=$(REMOVE_mandir) \
+	--docdir=$(REMOVE_docdir)
 
 define LUAPOSIX_UNPACK_GNULIB
 	tar -C $(PKG_BUILD_DIR)/gnulib --strip=1 -xf $(DL_DIR)/$(GNULIB_SOURCE)
