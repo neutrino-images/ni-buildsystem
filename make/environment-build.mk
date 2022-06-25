@@ -171,49 +171,6 @@ include package/pkg-configuration.mk
 
 # -----------------------------------------------------------------------------
 
-#HOST_MAKE_ENV = \
-#	$($(PKG)_MAKE_ENV)
-
-HOST_MAKE_OPTS = \
-	CC="$(HOSTCC)" \
-	GCC="$(HOSTCC)" \
-	CPP="$(HOSTCPP)" \
-	CXX="$(HOSTCXX)" \
-	LD="$(HOSTLD)" \
-	AR="$(HOSTAR)" \
-	AS="$(HOSTAS)" \
-	NM="$(HOSTNM)" \
-	OBJCOPY="$(HOSTOBJCOPY)" \
-	RANLIB="$(HOSTRANLIB)"
-
-#HOST_MAKE_OPTS += \
-#	$($(PKG)_MAKE_OPTS)
-
-#TARGET_MAKE_ENV = \
-#	$($(PKG)_MAKE_ENV)
-
-TARGET_MAKE_OPTS = \
-	CROSS_COMPILE="$(TARGET_CROSS)" \
-	CC="$(TARGET_CC)" \
-	GCC="$(TARGET_CC)" \
-	CPP="$(TARGET_CPP)" \
-	CXX="$(TARGET_CXX)" \
-	LD="$(TARGET_LD)" \
-	AR="$(TARGET_AR)" \
-	AS="$(TARGET_AS)" \
-	NM="$(TARGET_NM)" \
-	OBJCOPY="$(TARGET_OBJCOPY)" \
-	OBJDUMP="$(TARGET_OBJDUMP)" \
-	RANLIB="$(TARGET_RANLIB)" \
-	READELF="$(TARGET_READELF)" \
-	STRIP="$(TARGET_STRIP)" \
-	ARCH=$(TARGET_ARCH)
-
-#TARGET_MAKE_OPTS += \
-#	$($(PKG)_MAKE_OPTS)
-
-# -----------------------------------------------------------------------------
-
 GITHUB			= https://github.com
 GITHUB_SSH		= git@github.com
 BITBUCKET		= https://bitbucket.org

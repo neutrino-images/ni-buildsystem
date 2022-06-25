@@ -64,9 +64,8 @@ endef
 define cmake-package
 	$(call PREPARE)
 	$(call TARGET_CMAKE)
-	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(call TARGET_MAKE)
+	$(call TARGET_MAKE_INSTALL)
 	$(TARGET_RM) $(TARGET_libdir)/cmake
 	$(call TARGET_FOLLOWUP)
 endef
@@ -112,8 +111,7 @@ endef
 define host-cmake-package
 	$(call PREPARE)
 	$(call HOST_CMAKE)
-	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
-		$(MAKE); \
-		$(MAKE) install
+	$(call HOST_MAKE)
+	$(call HOST_MAKE_INSTALL)
 	$(call HOST_FOLLOWUP)
 endef
