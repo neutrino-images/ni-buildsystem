@@ -193,4 +193,4 @@ ffmpeg: $(FFMPEG_DEPENDENCIES) | $(TARGET_DIR)
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REMOVE)/$(NI_FFMPEG)
-	$(TOUCH)
+	$(call TOUCH)

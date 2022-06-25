@@ -241,7 +241,7 @@ kernel.do_prepare: | $(DEPS_DIR) $(BUILD_DIR)
 ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 hd60 hd61 multiboxse))
 	$(INSTALL_DATA) $(PKG_FILES_DIR)/initramfs-subdirboot.cpio.gz $(KERNEL_OBJ_DIR)
 endif
-	$(TOUCH)
+	$(call TOUCH)
 
 kernel.do_prepare_git:
 	$(MAKE) kernel.do_checkout
@@ -263,22 +263,22 @@ kernel.do_compile: kernel.do_prepare
 ifneq ($(KERNEL_DTB),$(empty))
 	cat $(KERNEL_ZIMAGE) $(KERNEL_DTB) > $(KERNEL_ZIMAGE_DTB)
 endif
-	$(TOUCH)
+	$(call TOUCH)
 
 # -----------------------------------------------------------------------------
 
 kernel: kernel-$(BOXTYPE) kernel-modules-$(BOXTYPE)
-	$(TOUCH)
+	$(call TOUCH)
 
 # -----------------------------------------------------------------------------
 
 kernel-coolstream: kernel-coolstream-$(BOXSERIES)
-	$(TOUCH)
+	$(call TOUCH)
 
 kernel-coolstream-hd1: kernel.do_compile | $(IMAGE_DIR)
 	$(HOST_MKIMAGE) -A $(TARGET_ARCH) -O linux -T kernel -C none -a 0x48000 -e 0x48000 -n "$(KERNEL_NAME)" -d $(KERNEL_ZIMAGE) $(TARGET_localstatedir)/update/zImage
 	$(INSTALL_DATA) $(TARGET_localstatedir)/update/zImage $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-zImage.img
-	$(TOUCH)
+	$(call TOUCH)
 
 kernel-coolstream-hd2: kernel.do_compile | $(IMAGE_DIR)
 	$(HOST_MKIMAGE) -A $(TARGET_ARCH) -O linux -T kernel -C none -a 0x8000 -e 0x8000 -n "$(KERNEL_NAME)" -d $(KERNEL_ZIMAGE_DTB) $(TARGET_localstatedir)/update/vmlinux.ub.gz
@@ -292,19 +292,19 @@ ifeq ($(BOXMODEL),$(filter $(BOXMODEL),apollo shiner))
 	$(INSTALL_DATA) $(TARGET_localstatedir)/update/vmlinux.ub.gz $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-apollo-vmlinux.ub.gz
   endif
 endif
-	$(TOUCH)
+	$(call TOUCH)
 
 kernel-armbox: kernel.do_compile | $(IMAGE_DIR)
-	$(TOUCH)
+	$(call TOUCH)
 
 kernel-mipsbox: kernel.do_compile | $(IMAGE_DIR)
 	gzip -9c < $(KERNEL_VMLINUX) > $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL).bin
-	$(TOUCH)
+	$(call TOUCH)
 
 # -----------------------------------------------------------------------------
 
 kernel-modules-coolstream: kernel-modules-coolstream-$(BOXSERIES)
-	$(TOUCH)
+	$(call TOUCH)
 
 STRIP_MODULES_COOLSTREAM_HD1  =
 STRIP_MODULES_COOLSTREAM_HD1 += kernel/drivers/mtd/devices/mtdram.ko
@@ -327,7 +327,7 @@ kernel-modules-coolstream-hd1: kernel-coolstream
 	rm -f $(TARGET_modulesdir)/usb-storage.ko # already builtin
 	$(LINUX_RUN_DEPMOD)
 	find $(TARGET_modulesdir) -type f -name 'modules.*' -not -name 'modules.dep' -print0 | xargs -0 rm --
-	$(TOUCH)
+	$(call TOUCH)
 
 kernel-modules-coolstream-hd2: kernel-coolstream
 	$(INSTALL) -d $(TARGET_modulesdir)
@@ -336,7 +336,7 @@ kernel-modules-coolstream-hd2: kernel-coolstream
 	$(INSTALL_DATA) $(KERNEL_modulesdir)/modules.order $(TARGET_modulesdir)
 	$(LINUX_RUN_DEPMOD)
 	make rtl8192eu
-	$(TOUCH)
+	$(call TOUCH)
 
 kernel-modules-armbox: kernel-armbox
 	$(INSTALL) -d $(TARGET_modulesdir)
@@ -352,7 +352,7 @@ endif
 ifeq ($(BOXSERIES),hd6x)
 	make hd6x-mali-drivers
 endif
-	$(TOUCH)
+	$(call TOUCH)
 
 kernel-modules-mipsbox: kernel-mipsbox
 	$(INSTALL) -d $(TARGET_modulesdir)
@@ -360,13 +360,13 @@ kernel-modules-mipsbox: kernel-mipsbox
 	$(INSTALL_DATA) $(KERNEL_modulesdir)/modules.builtin $(TARGET_modulesdir)
 	$(INSTALL_DATA) $(KERNEL_modulesdir)/modules.order $(TARGET_modulesdir)
 	$(LINUX_RUN_DEPMOD)
-	$(TOUCH)
+	$(call TOUCH)
 
 # -----------------------------------------------------------------------------
 
 vmlinuz-initrd: $(DL_DIR)/$(VMLINUZ_INITRD_SOURCE)
 	$(UNTAR)/$(VMLINUZ_INITRD_SOURCE)
-	$(TOUCH)
+	$(call TOUCH)
 
 # -----------------------------------------------------------------------------
 

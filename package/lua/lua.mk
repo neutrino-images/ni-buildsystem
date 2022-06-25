@@ -30,7 +30,7 @@ lua: $(LUA_DEPENDENCIES) $(DL_DIR)/$(LUA_SOURCE) | $(TARGET_DIR)
 		$(MAKE) pc INSTALL_TOP=$(TARGET_prefix) > $(TARGET_libdir)/pkgconfig/lua.pc
 	$(TARGET_RM) $(TARGET_bindir)/luac
 	$(REMOVE)/$(LUA_DIR)
-	$(TOUCH)
+	$(call TOUCH)
 
 # -----------------------------------------------------------------------------
 
@@ -55,4 +55,4 @@ host-lua: $(DL_DIR)/$(HOST_LUA_SOURCE) | $(HOST_DIR)
 		$(MAKE) linux; \
 		$(MAKE) install INSTALL_TOP=$(HOST_DIR) INSTALL_MAN=$(HOST_DIR)/share/man/man1
 	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
+	$(call TOUCH)

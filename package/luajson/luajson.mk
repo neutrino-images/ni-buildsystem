@@ -15,4 +15,4 @@ luajson: $(DL_DIR)/$(LUAJSON_SOURCE) | $(TARGET_DIR)
 		curl --remote-name --time-cond $(PKG_SOURCE) $(PKG_SITE)/$(PKG_SOURCE) || true
 	$(INSTALL_DATA) -D $(DL_DIR)/$(PKG_SOURCE) $(TARGET_datadir)/lua/$(LUA_ABIVERSION)
 	ln -sf $(PKG_SOURCE) $(TARGET_datadir)/lua/$(LUA_ABIVERSION)/json.lua
-	$(TOUCH)
+	$(call TOUCH)

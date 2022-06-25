@@ -120,7 +120,7 @@ neutrino-plugins: neutrino $(NEUTRINO_PLUGINS_BUILD_DIR)/config.status
 	$(MAKE) -C $(NEUTRINO_PLUGINS_BUILD_DIR)
 	$(MAKE) -C $(NEUTRINO_PLUGINS_BUILD_DIR) install DESTDIR=$(TARGET_DIR)
 	$(NEUTRINO_PLUGINS_RUNLEVEL_LINKS_INSTALL)
-	$(TOUCH)
+	$(call TOUCH)
 
 # -----------------------------------------------------------------------------
 

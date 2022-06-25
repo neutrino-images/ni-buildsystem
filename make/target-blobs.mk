@@ -17,17 +17,17 @@ endif
 ifeq ($(BOXMODEL),$(filter $(BOXMODEL),vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
 	$(MAKE) vuplus-platform-util
 endif
-	$(TOUCH)
+	$(call TOUCH)
 
 # -----------------------------------------------------------------------------
 
 firmware: firmware-boxmodel firmware-wireless
-	$(TOUCH)
+	$(call TOUCH)
 
 firmware-boxmodel: $(SOURCE_DIR)/$(NI_DRIVERS_BIN) | $(TARGET_DIR)
 	$(call INSTALL_EXIST,$(SOURCE_DIR)/$(NI_DRIVERS_BIN)/$(DRIVERS_BIN_DIR)/lib-firmware/.,$(TARGET_base_libdir)/firmware)
 	$(call INSTALL_EXIST,$(SOURCE_DIR)/$(NI_DRIVERS_BIN)/$(DRIVERS_BIN_DIR)/lib-firmware-dvb/.,$(TARGET_base_libdir)/firmware)
-	$(TOUCH)
+	$(call TOUCH)
 
 ifeq ($(BOXMODEL),nevis)
   FIRMWARE_WIRELESS  = rt2870.bin
@@ -43,7 +43,7 @@ firmware-wireless: $(SOURCE_DIR)/$(NI_DRIVERS_BIN) | $(TARGET_DIR)
 	for firmware in $(FIRMWARE_WIRELESS); do \
 		$(INSTALL_DATA) -D $(SOURCE_DIR)/$(NI_DRIVERS_BIN)/general/firmware-wireless/$$firmware $(TARGET_base_libdir)/firmware/$$firmware; \
 	done
-	$(TOUCH)
+	$(call TOUCH)
 
 # -----------------------------------------------------------------------------
 
@@ -163,7 +163,7 @@ ifeq ($(BOXMODEL),nevis)
 	ln -sf $(KERNEL_VERSION) $(TARGET_modulesdir)-$(BOXMODEL)
 endif
 	$(LINUX_RUN_DEPMOD)
-	$(TOUCH)
+	$(call TOUCH)
 
 hd51-drivers \
 bre2ze4k-drivers \
@@ -171,7 +171,7 @@ h7-drivers: $(DL_DIR)/$(BOXMODEL_DRIVERS_SOURCE) | $(TARGET_DIR)
 	$(INSTALL) -d $(TARGET_modulesdir)/extra
 	unzip -o $(DL_DIR)/$(BOXMODEL_DRIVERS_SOURCE) -d $(TARGET_modulesdir)/extra
 	$(LINUX_RUN_DEPMOD)
-	$(TOUCH)
+	$(call TOUCH)
 
 hd60-drivers \
 hd61-drivers \
@@ -181,7 +181,7 @@ multiboxse-drivers: $(DL_DIR)/$(BOXMODEL_DRIVERS_SOURCE) | $(TARGET_DIR)
 	$(TARGET_RM) $(TARGET_modulesdir)/extra/hi_play.ko
 	mv $(TARGET_modulesdir)/extra/turnoff_power $(TARGET_bindir)
 	$(LINUX_RUN_DEPMOD)
-	$(TOUCH)
+	$(call TOUCH)
 
 vusolo4k-drivers \
 vuduo4k-drivers \
@@ -195,7 +195,7 @@ vuplus-drivers: $(DL_DIR)/$(BOXMODEL_DRIVERS_SOURCE) | $(TARGET_DIR)
 	$(INSTALL) -d $(TARGET_modulesdir)/extra
 	tar -xf $(DL_DIR)/$(BOXMODEL_DRIVERS_SOURCE) -C $(TARGET_modulesdir)/extra
 	$(LINUX_RUN_DEPMOD)
-	$(TOUCH)
+	$(call TOUCH)
 
 # -----------------------------------------------------------------------------
 
@@ -285,14 +285,14 @@ h7-libgles: $(DL_DIR)/$(BOXMODEL_LIBGLES_SOURCE) | $(TARGET_DIR)
 	unzip -o $(DL_DIR)/$(BOXMODEL_LIBGLES_SOURCE) -d $(TARGET_libdir)
 	ln -sf libv3ddriver.so $(TARGET_libdir)/libEGL.so
 	ln -sf libv3ddriver.so $(TARGET_libdir)/libGLESv2.so
-	$(TOUCH)
+	$(call TOUCH)
 
 $(DL_DIR)/$(HD6X_LIBGLES_HEADERS_SOURCE):
 	$(download) $(HD6X_LIBGLES_HEADERS_SITE)/$(HD6X_LIBGLES_HEADERS_SOURCE)
 
 hd6x-libgles-headers: $(DL_DIR)/$(HD6X_LIBGLES_HEADERS_SOURCE) | $(TARGET_DIR)
 	unzip -o $(DL_DIR)/$(HD6X_LIBGLES_HEADERS_SOURCE) -d $(TARGET_includedir)
-	$(TOUCH)
+	$(call TOUCH)
 
 hd60-libgles \
 hd61-libgles \
@@ -304,7 +304,7 @@ multiboxse-libgles: $(DL_DIR)/$(BOXMODEL_LIBGLES_SOURCE) | $(TARGET_DIR)
 		ln -sf libMali.so libGLESv1_CM.so.1.1; ln -sf libGLESv1_CM.so.1.1 libGLESv1_CM.so.1; ln -sf libGLESv1_CM.so.1 libGLESv1_CM.so; \
 		ln -sf libMali.so libGLESv2.so.2.0; ln -sf libGLESv2.so.2.0 libGLESv2.so.2; ln -sf libGLESv2.so.2 libGLESv2.so; \
 		ln -sf libMali.so libgbm.so
-	$(TOUCH)
+	$(call TOUCH)
 
 vusolo4k-libgles \
 vuduo4k-libgles \
@@ -321,7 +321,7 @@ vuplus-libgles: $(DL_DIR)/$(BOXMODEL_LIBGLES_SOURCE) | $(TARGET_DIR)
 	ln -sf libv3ddriver.so $(TARGET_libdir)/libGLESv2.so
 	$(INSTALL_COPY) $(BUILD_DIR)/$(BOXMODEL_LIBGLES_DIR)/include/* $(TARGET_includedir)
 	$(REMOVE)/$(BOXMODEL_LIBGLES_DIR)
-	$(TOUCH)
+	$(call TOUCH)
 
 # -----------------------------------------------------------------------------
 
@@ -362,7 +362,7 @@ multiboxse-libs: $(DL_DIR)/$(BOXMODEL_LIBS_SOURCE) | $(TARGET_DIR)
 	$(INSTALL_EXEC) $(BUILD_DIR)/$(BOXMODEL_LIBS_DIR)/ffmpeg/* $(TARGET_libdir)/hisilicon
 	ln -sf /lib/ld-linux-armhf.so.3 $(TARGET_libdir)/hisilicon/ld-linux.so
 	$(REMOVE)/$(BOXMODEL_LIBS_DIR)
-	$(TOUCH)
+	$(call TOUCH)
 
 # -----------------------------------------------------------------------------
 
@@ -422,4 +422,4 @@ ifeq ($(BOXMODEL),$(filter $(BOXMODEL),vuduo4k))
 	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/bp3flash.sh $(TARGET_bindir)/bp3flash.sh
 endif
 	$(REMOVE)/$(BOXMODEL_PLATFORM_UTIL_DIR)
-	$(TOUCH)
+	$(call TOUCH)

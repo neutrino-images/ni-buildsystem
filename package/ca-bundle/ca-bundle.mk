@@ -17,4 +17,4 @@ ca-bundle: $(DL_DIR)/$(CA_BUNDLE_SOURCE) | $(TARGET_DIR)
 	$(CD) $(DL_DIR); \
 		curl --remote-name --remote-time -z $(PKG_SOURCE) $(PKG_SITE)/$(PKG_SOURCE) || true
 	$(INSTALL_DATA) -D $(DL_DIR)/$(PKG_SOURCE) $(TARGET_DIR)/$(CA_BUNDLE_DIR)/$(CA_BUNDLE_CRT)
-	$(TOUCH)
+	$(call TOUCH)

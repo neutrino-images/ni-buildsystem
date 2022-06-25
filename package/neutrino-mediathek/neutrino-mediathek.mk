@@ -20,4 +20,4 @@ neutrino-mediathek: $(SHARE_PLUGINS) | $(TARGET_DIR)
 	# temporarily use beta-version from our board
 	rm -rf $(SHARE_PLUGINS)/neutrino-mediathek*
 	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS)/scripts-lua/plugins/mediathek/* $(SHARE_PLUGINS)/
-	$(TOUCH)
+	$(call TOUCH)

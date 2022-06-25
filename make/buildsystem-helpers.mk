@@ -19,6 +19,12 @@ endef
 
 # -----------------------------------------------------------------------------
 
+define TOUCH
+	@touch $(if $(findstring host-,$(@)),$(HOST_DEPS_DIR),$(DEPS_DIR))/$(@)
+endef
+
+# -----------------------------------------------------------------------------
+
 # download archives into download directory
 GET_ARCHIVE = wget --no-check-certificate -t3 -T60 -c -P
 
@@ -159,7 +165,7 @@ define HOST_FOLLOWUP
 	$(REMOVE)/$($(PKG)_DIR)
 	$(foreach hook,$($(PKG)_HOST_FINALIZE_HOOKS),$(call $(hook))$(sep))
 	$(foreach hook,$($(PKG)_POST_FOLLOWUP_HOOKS),$(call $(hook))$(sep))
-	$(TOUCH)
+	$(call TOUCH)
 endef
 
 define TARGET_FOLLOWUP
@@ -170,7 +176,7 @@ define TARGET_FOLLOWUP
 	$(REMOVE)/$($(PKG)_DIR)
 	$(foreach hook,$($(PKG)_TARGET_FINALIZE_HOOKS),$(call $(hook))$(sep))
 	$(foreach hook,$($(PKG)_POST_FOLLOWUP_HOOKS),$(call $(hook))$(sep))
-	$(TOUCH)
+	$(call TOUCH)
 endef
 
 # -----------------------------------------------------------------------------
@@ -199,7 +205,6 @@ CD    = set -e; cd
 CHDIR = $(CD) $(BUILD_DIR)
 MKDIR = $(INSTALL) -d $(BUILD_DIR)
 CPDIR = cp -a -t $(BUILD_DIR) $(DL_DIR)
-TOUCH = @touch $(if $(findstring host-,$(@)),$(HOST_DEPS_DIR),$(DEPS_DIR))/$(@)
 SED   = $(shell which sed || type -p sed || echo sed) -i -e
 
 GET_GIT_ARCHIVE = support/scripts/get-git-archive.sh

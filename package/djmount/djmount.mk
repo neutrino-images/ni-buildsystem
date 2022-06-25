@@ -32,4 +32,4 @@ djmount: $(DJMOUNT_DEPENDENCIES) $(DL_DIR)/$(DJMOUNT_SOURCE) | $(TARGET_DIR)
 	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/djmount.init $(TARGET_sysconfdir)/init.d/djmount
 	$(UPDATE-RC.D) djmount defaults 75 25
 	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
+	$(call TOUCH)

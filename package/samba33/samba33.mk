@@ -71,4 +71,4 @@ samba33: | $(TARGET_DIR)
 	$(UPDATE-RC.D) samba defaults 75 25
 	$(TARGET_RM) $(addprefix $(TARGET_bindir)/,testparm findsmb smbtar smbclient smbpasswd)
 	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
+	$(call TOUCH)

@@ -29,4 +29,4 @@ graphlcd-base: $(GRAPHLCD_BASE_DEPENDENCIES) | $(TARGET_DIR)
 		$(MAKE) install DESTDIR=$(TARGET_DIR) PREFIX=$(prefix)
 	$(TARGET_RM) $(TARGET_sysconfdir)/udev
 	$(REMOVE)/$(PKG_DIR)
-	$(TOUCH)
+	$(call TOUCH)

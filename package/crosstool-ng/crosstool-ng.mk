@@ -111,7 +111,7 @@ crosstool-ng.do_prepare: | $(DEPS_DIR) $(BUILD_DIR)
 		test -f ./configure || ./bootstrap; \
 		./configure --enable-local; \
 		MAKELEVEL=0 make
-	$(TOUCH)
+	$(call TOUCH)
 
 crosstool-ng.do_compile: crosstool-ng.do_prepare
 	$(CHDIR)/$($(PKG)_DIR); \
@@ -119,7 +119,7 @@ crosstool-ng.do_compile: crosstool-ng.do_prepare
 		export $($(PKG)_EXPORT); \
 		./ct-ng oldconfig; \
 		./ct-ng build
-	$(TOUCH)
+	$(call TOUCH)
 
 # -----------------------------------------------------------------------------
 
