@@ -6,7 +6,7 @@
 # start-up build
 define STARTUP
 	@$(call MESSAGE,"Start-up build")
-	$(REMOVE)/$($(PKG)_DIR)
+	$(call CLEANUP)
 endef
 
 # -----------------------------------------------------------------------------
@@ -15,6 +15,18 @@ endef
 define DEPENDENCIES
 	@$(call MESSAGE,"Resolving dependencies")
 	$(foreach dependency,$($(PKG)_DEPENDENCIES),$(MAKE) $(dependency)$(sep))
+endef
+
+# -----------------------------------------------------------------------------
+
+# clean up
+define CLEANUP
+	$(Q)( \
+	if [ -d $(BUILD_DIR)/$($(PKG)_DIR) ]; then \
+		$(call MESSAGE,"Clean up"); \
+		rm -rf $(BUILD_DIR)/$($(PKG)_DIR); \
+	fi; \
+	)
 endef
 
 # -----------------------------------------------------------------------------
@@ -162,7 +174,7 @@ endef
 define HOST_FOLLOWUP
 	@$(call MESSAGE,"Follow-up build")
 	$(foreach hook,$($(PKG)_PRE_FOLLOWUP_HOOKS),$(call $(hook))$(sep))
-	$(REMOVE)/$($(PKG)_DIR)
+	$(call CLEANUP)
 	$(foreach hook,$($(PKG)_HOST_FINALIZE_HOOKS),$(call $(hook))$(sep))
 	$(foreach hook,$($(PKG)_POST_FOLLOWUP_HOOKS),$(call $(hook))$(sep))
 	$(call TOUCH)
@@ -173,7 +185,7 @@ define TARGET_FOLLOWUP
 	$(foreach hook,$($(PKG)_PRE_FOLLOWUP_HOOKS),$(call $(hook))$(sep))
 	$(call REWRITE_CONFIG_SCRIPTS)
 	$(call REWRITE_LIBTOOL)
-	$(REMOVE)/$($(PKG)_DIR)
+	$(call CLEANUP)
 	$(foreach hook,$($(PKG)_TARGET_FINALIZE_HOOKS),$(call $(hook))$(sep))
 	$(foreach hook,$($(PKG)_POST_FOLLOWUP_HOOKS),$(call $(hook))$(sep))
 	$(call TOUCH)
