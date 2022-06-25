@@ -9,7 +9,7 @@ LUAPOSIX_DIR = luaposix-$(LUAPOSIX_VERSION)
 LUAPOSIX_SOURCE = luaposix-$(LUAPOSIX_VERSION).tar.gz
 LUAPOSIX_SITE = https://github.com/luaposix/luaposix/archive
 
-LUAPOSIX_DEPENDENCIES = $(HOST_LUA) lua luaexpat gnulib slingshot
+LUAPOSIX_DEPENDENCIES = lua luaexpat gnulib slingshot
 
 LUAPOSIX_AUTORECONF = YES
 
