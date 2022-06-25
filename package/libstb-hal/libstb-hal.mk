@@ -52,7 +52,7 @@ $(LIBSTB_HAL_BUILD_DIR)/config.status: $(LIBSTB_HAL_DEPENDENCIES)
 libstb-hal: $(LIBSTB_HAL_BUILD_DIR)/config.status
 	$(MAKE) -C $(LIBSTB_HAL_BUILD_DIR)
 	$(MAKE) -C $(LIBSTB_HAL_BUILD_DIR) install DESTDIR=$(NEUTRINO_INST_DIR)
-	$(REWRITE_LIBTOOL)
+	$(call REWRITE_LIBTOOL)
 	$(TOUCH)
 
 # -----------------------------------------------------------------------------

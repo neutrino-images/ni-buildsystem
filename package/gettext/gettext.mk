@@ -33,6 +33,6 @@ gettext: $(DL_DIR)/$(GETTEXT_SOURCE) | $(TARGET_DIR)
 	$(CHDIR)/$(PKG_DIR); \
 		$(MAKE) -C gettext-runtime; \
 		$(MAKE) -C gettext-runtime install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL)
+	$(call REWRITE_LIBTOOL)
 	$(REMOVE)/$(PKG_DIR)
 	$(TOUCH)

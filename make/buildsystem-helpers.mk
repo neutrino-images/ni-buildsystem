@@ -165,8 +165,8 @@ endef
 define TARGET_FOLLOWUP
 	@$(call MESSAGE,"Follow-up build")
 	$(foreach hook,$($(PKG)_PRE_FOLLOWUP_HOOKS),$(call $(hook))$(sep))
-	$(REWRITE_CONFIG_SCRIPTS)
-	$(REWRITE_LIBTOOL)
+	$(call REWRITE_CONFIG_SCRIPTS)
+	$(call REWRITE_LIBTOOL)
 	$(REMOVE)/$($(PKG)_DIR)
 	$(foreach hook,$($(PKG)_TARGET_FINALIZE_HOOKS),$(call $(hook))$(sep))
 	$(foreach hook,$($(PKG)_POST_FOLLOWUP_HOOKS),$(call $(hook))$(sep))
@@ -233,7 +233,6 @@ REWRITE_LIBTOOL_RULES = "s,^libdir=.*,libdir='$(1)',; \
 REWRITE_LIBTOOL_TAG = rewritten=1
 
 define rewrite_libtool # (libdir)
-	@#$(call MESSAGE,"Fixing libtool files in $(subst $(TARGET_DIR)/,,$(1))")
 	$(Q)( \
 	for la in $$(find $(1) -name "*.la" -type f); do \
 		if ! grep -q "$(REWRITE_LIBTOOL_TAG)" $${la}; then \
@@ -246,8 +245,10 @@ define rewrite_libtool # (libdir)
 endef
 
 # rewrite libtool libraries automatically
-REWRITE_LIBTOOL = $(foreach libdir,$(TARGET_base_libdir) $(TARGET_libdir),\
-			$(call rewrite_libtool,$(libdir))$(sep))
+define REWRITE_LIBTOOL
+	$(foreach libdir,$(TARGET_base_libdir) $(TARGET_libdir),\
+		$(call rewrite_libtool,$(libdir))$(sep))
+endef
 
 # -----------------------------------------------------------------------------
 
@@ -266,8 +267,10 @@ define rewrite_config_script # (config-script)
 endef
 
 # rewrite config scripts automatically
-REWRITE_CONFIG_SCRIPTS = $(foreach config_script,$($(PKG)_CONFIG_SCRIPTS),\
-				$(call rewrite_config_script,$(config_script))$(sep))
+define REWRITE_CONFIG_SCRIPTS
+	$(foreach config_script,$($(PKG)_CONFIG_SCRIPTS),
+		$(call rewrite_config_script,$(config_script))$(sep))
+endef
 
 # -----------------------------------------------------------------------------
 
