@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-NFS_UTILS_VERSION = 2.6.1
+NFS_UTILS_VERSION = $(if $(filter $(BOXSERIES),hd1),2.2.1,2.6.1)
 NFS_UTILS_DIR = nfs-utils-$(NFS_UTILS_VERSION)
 NFS_UTILS_SOURCE = nfs-utils-$(NFS_UTILS_VERSION).tar.xz
 NFS_UTILS_SITE = $(KERNEL_MIRROR)/linux/utils/nfs-utils/$(NFS_UTILS_VERSION)
