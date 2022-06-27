@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-OPKG_VERSION = 0.4.5
+OPKG_VERSION = 0.6.0
 OPKG_DIR = opkg-$(OPKG_VERSION)
 OPKG_SOURCE = opkg-$(OPKG_VERSION).tar.gz
 OPKG_SITE = https://downloads.yoctoproject.org/releases/opkg
