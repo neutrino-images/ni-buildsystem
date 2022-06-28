@@ -4,13 +4,12 @@
 #
 ################################################################################
 
-ETHTOOL_VERSION = 5.17
+ETHTOOL_VERSION = 5.18
 ETHTOOL_DIR = ethtool-$(ETHTOOL_VERSION)
 ETHTOOL_SOURCE = ethtool-$(ETHTOOL_VERSION).tar.xz
 ETHTOOL_SITE = $(KERNEL_MIRROR)/software/network/ethtool
 
 ETHTOOL_CONF_OPTS = \
-	--libdir=$(TARGET_libdir) \
 	--disable-pretty-dump \
 	--disable-netlink
 
