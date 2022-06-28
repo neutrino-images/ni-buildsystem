@@ -4,9 +4,9 @@
 # -----------------------------------------------------------------------------
 
 BOXMODEL_IMAGE  =
-#ifneq ($(DEBUG),yes)
-#  BOXMODEL_IMAGE += nevis
-#endif
+ifneq ($(DEBUG),yes)
+  BOXMODEL_IMAGE += nevis
+endif
 BOXMODEL_IMAGE += apollo kronos kronos_v2
 BOXMODEL_IMAGE += hd51 bre2ze4k h7
 BOXMODEL_IMAGE += hd60 hd61
