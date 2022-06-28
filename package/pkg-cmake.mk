@@ -66,7 +66,6 @@ define cmake-package
 	$(call TARGET_CMAKE)
 	$(call TARGET_MAKE)
 	$(call TARGET_MAKE_INSTALL)
-	$(TARGET_RM) $(TARGET_libdir)/cmake
 	$(call TARGET_FOLLOWUP)
 endef
 

@@ -101,10 +101,14 @@ rootfs-cleanup: $(ROOTFS)
 	rm -rf $(ROOTFS)$(base_libdir)/pkgconfig
 	rm -rf $(ROOTFS)$(includedir)
 	rm -rf $(ROOTFS)$(libdir)/pkgconfig
+	rm -rf $(ROOTFS)$(libdir)/cmake
 	rm -rf $(ROOTFS)$(libdir)/sigc++*
 	rm -rf $(ROOTFS)$(libdir)/glib-2.0
 	rm -f  $(ROOTFS)$(libdir)/libvorbisenc*
 	rm -rf $(ROOTFS)/.git
+  ifeq ($(BOXSERIES),hd1)
+	rm -rf $(ROOTFS)$(datadir)/bash-completion
+  endif
 	find $(ROOTFS) -name .gitignore -type f -print0 | xargs --no-run-if-empty -0 rm -f
 	find $(ROOTFS) -name Makefile.am -type f -print0 | xargs --no-run-if-empty -0 rm -f
 	find $(ROOTFS)$(base_libdir) \( -name '*.a' -o -name '*.la' \) -print0 | xargs --no-run-if-empty -0 rm -f
