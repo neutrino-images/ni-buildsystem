@@ -36,9 +36,4 @@ endef
 NANO_TARGET_FINALIZE_HOOKS += NANO_INSTALL_PROFILE_D_SCRIPT
 
 nano: | $(TARGET_DIR)
-	$(call PREPARE)
-	$(call TARGET_CONFIGURE)
-	$(CHDIR)/$($(PKG)_DIR); \
-		$(NANO_MAKE_ENV) $(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(call TARGET_FOLLOWUP)
+	$(call autotools-package)
