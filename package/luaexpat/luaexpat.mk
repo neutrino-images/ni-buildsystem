@@ -26,8 +26,4 @@ endef
 LUAEXPAT_POST_PATCH_HOOKS += LUAEXPAT_PATCH_MAKEFILE
 
 luaexpat: | $(TARGET_DIR)
-	$(call PREPARE)
-	$(CHDIR)/$($(PKG)_DIR); \
-		$($(PKG)_MAKE_ENV) $(MAKE) $($(PKG)_MAKE_OPTS); \
-		$($(PKG)_MAKE_ENV) $(MAKE) $($(PKG)_MAKE_OPTS) install
-	$(call TARGET_FOLLOWUP)
+	$(call generic-package)
