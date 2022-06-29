@@ -26,8 +26,4 @@ endef
 RTMPDUMP_TARGET_FINALIZE_HOOKS += RTMPDUMP_TARGET_CLEANUP
 
 rtmpdump: | $(TARGET_DIR)
-	$(call PREPARE)
-	$(CHDIR)/$($(PKG)_DIR); \
-		$($(PKG)_MAKE_ENV) $(MAKE) $($(PKG)_MAKE_OPTS); \
-		$($(PKG)_MAKE_ENV) $(MAKE) $($(PKG)_MAKE_OPTS) install DESTDIR=$(TARGET_DIR)
-	$(call TARGET_FOLLOWUP)
+	$(call generic-package)
