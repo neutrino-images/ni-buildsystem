@@ -21,8 +21,4 @@ LUA_CURL_MAKE_OPTS = \
 	LUA_LMOD=$(datadir)/lua/$(LUA_ABIVERSION)
 
 lua-curl: | $(TARGET_DIR)
-	$(call PREPARE)
-	$(CHDIR)/$($(PKG)_DIR); \
-		$($(PKG)_MAKE_ENV) $(MAKE) $($(PKG)_MAKE_OPTS); \
-		$($(PKG)_MAKE_ENV) $(MAKE) $($(PKG)_MAKE_OPTS) install DESTDIR=$(TARGET_DIR)
-	$(call TARGET_FOLLOWUP)
+	$(call generic-package)
