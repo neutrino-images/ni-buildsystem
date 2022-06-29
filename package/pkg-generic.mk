@@ -4,35 +4,16 @@
 #
 ################################################################################
 
-#TARGET_MAKE_ENV =
-#	$($(PKG)_MAKE_ENV)
-
-TARGET_MAKE_OPTS = \
-	CROSS_COMPILE="$(TARGET_CROSS)" \
-	CC="$(TARGET_CC)" \
-	GCC="$(TARGET_CC)" \
-	CPP="$(TARGET_CPP)" \
-	CXX="$(TARGET_CXX)" \
-	LD="$(TARGET_LD)" \
-	AR="$(TARGET_AR)" \
-	AS="$(TARGET_AS)" \
-	NM="$(TARGET_NM)" \
-	OBJCOPY="$(TARGET_OBJCOPY)" \
-	OBJDUMP="$(TARGET_OBJDUMP)" \
-	RANLIB="$(TARGET_RANLIB)" \
-	READELF="$(TARGET_READELF)" \
-	STRIP="$(TARGET_STRIP)" \
-	ARCH=$(TARGET_ARCH)
-
-#TARGET_MAKE_OPTS += \
-#	$($(PKG)_MAKE_OPTS)
+TARGET_MAKE_ENV =
 
 define TARGET_MAKE
 	@$(call MESSAGE,"Compiling")
 	$(foreach hook,$($(PKG)_PRE_COMPILE_HOOKS),$(call $(hook))$(sep))
 	$(Q)( \
 	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
-		$(MAKE); \
+		$(TARGET_MAKE_ENV) $($(PKG)_MAKE_ENV) \
+		$(MAKE) \
+			$($(PKG)_MAKE_OPTS); \
 	)
 	$(foreach hook,$($(PKG)_POST_COMPILE_HOOKS),$(call $(hook))$(sep))
 endef
@@ -42,7 +23,9 @@ define TARGET_MAKE_INSTALL
 	$(foreach hook,$($(PKG)_PRE_INSTALL_HOOKS),$(call $(hook))$(sep))
 	$(Q)( \
 	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR); \
+		$(TARGET_MAKE_ENV) $($(PKG)_MAKE_ENV) \
+		$(MAKE) install DESTDIR=$(TARGET_DIR) \
+			$($(PKG)_MAKE_OPTS); \
 	)
 	$(foreach hook,$($(PKG)_POST_INSTALL_HOOKS),$(call $(hook))$(sep))
 endef
@@ -58,8 +41,7 @@ endef
 
 # -----------------------------------------------------------------------------
 
-#HOST_MAKE_ENV = \
-#	$($(PKG)_MAKE_ENV)
+HOST_MAKE_ENV =
 
 HOST_MAKE_OPTS = \
 	CC="$(HOSTCC)" \
@@ -73,15 +55,14 @@ HOST_MAKE_OPTS = \
 	OBJCOPY="$(HOSTOBJCOPY)" \
 	RANLIB="$(HOSTRANLIB)"
 
-#HOST_MAKE_OPTS += \
-#	$($(PKG)_MAKE_OPTS)
-
 define HOST_MAKE
 	@$(call MESSAGE,"Compiling")
 	$(foreach hook,$($(PKG)_PRE_COMPILE_HOOKS),$(call $(hook))$(sep))
 	$(Q)( \
 	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
-		$(MAKE); \
+		$(HOST_MAKE_ENV) $($(PKG)_MAKE_ENV) \
+		$(MAKE) \
+			$($(PKG)_MAKE_OPTS); \
 	)
 	$(foreach hook,$($(PKG)_POST_COMPILE_HOOKS),$(call $(hook))$(sep))
 endef
@@ -91,7 +72,9 @@ define HOST_MAKE_INSTALL
 	$(foreach hook,$($(PKG)_PRE_INSTALL_HOOKS),$(call $(hook))$(sep))
 	$(Q)( \
 	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
-		$(MAKE) install; \
+		$(HOST_MAKE_ENV) $($(PKG)_MAKE_ENV) \
+		$(MAKE) install \
+			$($(PKG)_MAKE_OPTS); \
 	)
 	$(foreach hook,$($(PKG)_POST_INSTALL_HOOKS),$(call $(hook))$(sep))
 endef

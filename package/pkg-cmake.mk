@@ -4,8 +4,7 @@
 #
 ################################################################################
 
-TARGET_CMAKE_ENV = \
-	$($(PKG)_CONF_ENV)
+TARGET_CMAKE_ENV =
 
 TARGET_CMAKE_OPTS = \
 	--no-warn-unused-cli
@@ -45,16 +44,15 @@ TARGET_CMAKE_OPTS += \
 	-DCMAKE_READELF="$(TARGET_READELF)" \
 	-DCMAKE_STRIP="$(TARGET_STRIP)"
 
-TARGET_CMAKE_OPTS += \
-	$($(PKG)_CONF_OPTS)
-
 define TARGET_CMAKE
 	@$(call MESSAGE,"Configuring")
 	$(foreach hook,$($(PKG)_PRE_CONFIGURE_HOOKS),$(call $(hook))$(sep))
 	$(Q)( \
 	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
 		rm -f CMakeCache.txt; \
-		$(TARGET_CMAKE_ENV) cmake $(TARGET_CMAKE_OPTS); \
+		$(TARGET_CMAKE_ENV) $($(PKG)_CONF_ENV) \
+		cmake \
+			$(TARGET_CMAKE_OPTS) $($(PKG)_CONF_OPTS); \
 	)
 	$(foreach hook,$($(PKG)_POST_CONFIGURE_HOOKS),$(call $(hook))$(sep))
 endef
@@ -71,8 +69,7 @@ endef
 
 # -----------------------------------------------------------------------------
 
-HOST_CMAKE_ENV = \
-	$($(PKG)_CONF_ENV)
+HOST_CMAKE_ENV =
 
 HOST_CMAKE_OPTS += \
 	--no-warn-unused-cli
@@ -91,16 +88,15 @@ HOST_CMAKE_OPTS += \
 	-DCMAKE_INSTALL_PREFIX="$(HOST_DIR)" \
 	-DCMAKE_PREFIX_PATH="$(HOST_DIR)"
 
-HOST_CMAKE_OPTS += \
-	$($(PKG)_CONF_OPTS)
-
 define HOST_CMAKE
 	@$(call MESSAGE,"Configuring")
 	$(foreach hook,$($(PKG)_PRE_CONFIGURE_HOOKS),$(call $(hook))$(sep))
 	$(Q)( \
 	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
 		rm -f CMakeCache.txt; \
-		$(HOST_CMAKE_ENV) cmake $(HOST_CMAKE_OPTS); \
+		$(HOST_CMAKE_ENV) $($(PKG)_CONF_ENV) \
+		cmake \
+			$(HOST_CMAKE_OPTS) $($(PKG)_CONF_OPTS); \
 	)
 	$(foreach hook,$($(PKG)_POST_CONFIGURE_HOOKS),$(call $(hook))$(sep))
 endef

@@ -52,7 +52,7 @@ define TARGET_MESON_CONFIGURE
 		$($(PKG)_CONF_ENV) \
 		$(HOST_MESON_BINARY) \
 			--buildtype=release \
-			--cross-file $(PKG_BUILD_DIR)/build/meson-cross.config \
+			--cross-file=$(PKG_BUILD_DIR)/build/meson-cross.config \
 			-Db_pie=false \
 			-Dstrip=false \
 			$($(PKG)_CONF_OPTS) \
@@ -63,13 +63,16 @@ endef
 
 define TARGET_NINJA_BUILD
 	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
-		$(HOST_NINJA_BINARY) -C $(PKG_BUILD_DIR)/build
+		$(TARGET_MAKE_ENV) $($(PKG)_NINJA_ENV) \
+		$(HOST_NINJA_BINARY) -C $(PKG_BUILD_DIR)/build \
+			$($(PKG)_NINJA_OPTS)
 endef
 
 define TARGET_NINJA_INSTALL
 	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
-		DESTDIR=$(TARGET_DIR) \
-		$(HOST_NINJA_BINARY) -C $(PKG_BUILD_DIR)/build install
+		$(TARGET_MAKE_ENV) $($(PKG)_NINJA_ENV) \
+		$(HOST_NINJA_BINARY) -C $(PKG_BUILD_DIR)/build install DESTDIR=$(TARGET_DIR) \
+			$($(PKG)_NINJA_OPTS)
 endef
 
 # -----------------------------------------------------------------------------
@@ -94,7 +97,7 @@ define HOST_MESON_CONFIGURE
 	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
 		$($(PKG)_CONF_ENV) \
 		$(HOST_MESON_BINARY) \
-			--prefix=/ \
+			--prefix=$(HOST_DIR) \
 			--buildtype=release \
 			$($(PKG)_CONF_OPTS) \
 			$(PKG_BUILD_DIR) $(PKG_BUILD_DIR)/build; \
@@ -104,13 +107,16 @@ endef
 
 define HOST_NINJA_BUID
 	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
-		$(HOST_NINJA_BINARY) -C $(PKG_BUILD_DIR)/build
+		$(HOST_MAKE_ENV) $($(PKG)_NINJA_ENV) \
+		$(HOST_NINJA_BINARY) -C $(PKG_BUILD_DIR)/build \
+			$($(PKG)_NINJA_OPTS)
 endef
 
 define HOST_NINJA_INSTALL
 	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
-		DESTDIR=$(HOST_DIR) \
-		$(HOST_NINJA_BINARY) -C $(PKG_BUILD_DIR)/build install
+		$(HOST_MAKE_ENV) $($(PKG)_NINJA_ENV) \
+		$(HOST_NINJA_BINARY) -C $(PKG_BUILD_DIR)/build install \
+			$($(PKG)_NINJA_OPTS)
 endef
 
 # -----------------------------------------------------------------------------

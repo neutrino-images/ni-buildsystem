@@ -18,14 +18,14 @@ define HOST_PYTHON3_BUILD
 	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
 		$(HOST_PYTHON3_ENV) \
 		$(HOST_PYTHON3_BINARY) ./setup.py build --executable=/usr/bin/python \
-		$(HOST_PYTHON3_OPTS)
+			$(HOST_PYTHON3_OPTS)
 endef
 
 define HOST_PYTHON3_INSTALL
 	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
 		$(HOST_PYTHON3_ENV) \
 		$(HOST_PYTHON3_BINARY) ./setup.py install --root=$(HOST_DIR) --prefix= \
-		$(HOST_PYTHON3_OPTS)
+			$(HOST_PYTHON3_OPTS)
 endef
 
 # -----------------------------------------------------------------------------

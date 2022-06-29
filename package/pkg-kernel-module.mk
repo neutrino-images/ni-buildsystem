@@ -20,7 +20,9 @@ KERNEL_MAKE_VARS += \
 define KERNEL_MODULE_BUILD
 	@$(call MESSAGE,"Building kernel module")
 	$(CHDIR)/$($(PKG)_DIR); \
-		$($(PKG)_MAKE_ENV) $(MAKE) $($(PKG)_MAKE_OPTS) $(KERNEL_MAKE_VARS)
+		$(TARGET_MAKE_ENV) $($(PKG)_MAKE_ENV) \
+		$(MAKE) \
+			$($(PKG)_MAKE_OPTS) $(KERNEL_MAKE_VARS)
 endef
 
 # -----------------------------------------------------------------------------

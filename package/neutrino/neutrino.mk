@@ -53,7 +53,7 @@ NEUTRINO_LDFLAGS += -lcrypto -ldl -lz
 # -----------------------------------------------------------------------------
 
 NEUTRINO_CONF_ENV = \
-	$(TARGET_MAKE_OPTS) \
+	$(TARGET_CONFIGURE_ENVIRONMENT) \
 	\
 	CFLAGS="$(NEUTRINO_CFLAGS)" \
 	CPPFLAGS="$(NEUTRINO_CFLAGS)" \

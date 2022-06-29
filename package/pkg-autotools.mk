@@ -9,15 +9,34 @@ define AUTORECONF_HOOK
 	if [ "$($(PKG)_AUTORECONF)" == "YES" ]; then \
 		$(call MESSAGE,"Autoreconfiguring"); \
 		$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
-			$($(PKG)_AUTORECONF_ENV) autoreconf -fi $($(PKG)_AUTORECONF_OPTS); \
+			$($(PKG)_AUTORECONF_ENV) \
+			autoreconf -fi \
+				$($(PKG)_AUTORECONF_OPTS); \
 	fi; \
 	)
 endef
 
 # -----------------------------------------------------------------------------
 
-TARGET_CONFIGURE_ENV = \
-	$(TARGET_MAKE_OPTS) \
+TARGET_CONFIGURE_ENVIRONMENT = \
+	CROSS_COMPILE="$(TARGET_CROSS)" \
+	CC="$(TARGET_CC)" \
+	GCC="$(TARGET_CC)" \
+	CPP="$(TARGET_CPP)" \
+	CXX="$(TARGET_CXX)" \
+	LD="$(TARGET_LD)" \
+	AR="$(TARGET_AR)" \
+	AS="$(TARGET_AS)" \
+	NM="$(TARGET_NM)" \
+	OBJCOPY="$(TARGET_OBJCOPY)" \
+	OBJDUMP="$(TARGET_OBJDUMP)" \
+	RANLIB="$(TARGET_RANLIB)" \
+	READELF="$(TARGET_READELF)" \
+	STRIP="$(TARGET_STRIP)" \
+	ARCH=$(TARGET_ARCH)
+
+TARGET_CONFIGURE_ENV += \
+	$(TARGET_CONFIGURE_ENVIRONMENT) \
 	CFLAGS="$(TARGET_CFLAGS)" \
 	CPPFLAGS="$(TARGET_CPPFLAGS)" \
 	CXXFLAGS="$(TARGET_CXXFLAGS)" \
@@ -27,9 +46,6 @@ TARGET_CONFIGURE_ENV += \
 	PKG_CONFIG=$(PKG_CONFIG) \
 	PKG_CONFIG_PATH="$(PKG_CONFIG_PATH)" \
 	PKG_CONFIG_SYSROOT_DIR=$(PKG_CONFIG_SYSROOT_DIR)
-
-TARGET_CONFIGURE_ENV += \
-	$($(PKG)_CONF_ENV)
 
 TARGET_CONFIGURE_OPTS = \
 	--build=$(GNU_HOST_NAME) \
@@ -47,9 +63,6 @@ TARGET_CONFIGURE_OPTS = \
 	--mandir=$(REMOVE_mandir) \
 	--infodir=$(REMOVE_infodir)
 
-TARGET_CONFIGURE_OPTS += \
-	$($(PKG)_CONF_OPTS)
-
 define TARGET_CONFIGURE
 	@$(call MESSAGE,"Configuring")
 	$(foreach hook,$($(PKG)_PRE_CONFIGURE_HOOKS),$(call $(hook))$(sep))
@@ -58,7 +71,9 @@ define TARGET_CONFIGURE
 	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
 		test -f ./configure || ./autogen.sh && \
 		CONFIG_SITE=/dev/null \
-		$(TARGET_CONFIGURE_ENV) ./configure $(TARGET_CONFIGURE_OPTS); \
+		$(TARGET_CONFIGURE_ENV) $($(PKG)_CONF_ENV) \
+		./configure \
+			$(TARGET_CONFIGURE_OPTS) $($(PKG)_CONF_OPTS); \
 	)
 	$(foreach hook,$($(PKG)_POST_CONFIGURE_HOOKS),$(call $(hook))$(sep))
 endef
@@ -86,15 +101,9 @@ HOST_CONFIGURE_ENV += \
 	PKG_CONFIG=/usr/bin/pkg-config \
 	PKG_CONFIG_LIBDIR="$(HOST_DIR)/lib/pkgconfig"
 
-HOST_CONFIGURE_ENV += \
-	$($(PKG)_CONF_ENV)
-
 HOST_CONFIGURE_OPTS = \
 	--prefix=$(HOST_DIR) \
 	--sysconfdir=$(HOST_DIR)/etc
-
-HOST_CONFIGURE_OPTS += \
-	$($(PKG)_CONF_OPTS)
 
 define HOST_CONFIGURE
 	@$(call MESSAGE,"Configuring")
@@ -104,7 +113,9 @@ define HOST_CONFIGURE
 	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
 		test -f ./configure || ./autogen.sh && \
 		CONFIG_SITE=/dev/null \
-		$(HOST_CONFIGURE_ENV) ./configure $(HOST_CONFIGURE_OPTS); \
+		$(HOST_CONFIGURE_ENV) $($(PKG)_CONF_ENV) \
+		./configure \
+			$(HOST_CONFIGURE_OPTS) $($(PKG)_CONF_OPTS); \
 	)
 	$(foreach hook,$($(PKG)_POST_CONFIGURE_HOOKS),$(call $(hook))$(sep))
 endef
