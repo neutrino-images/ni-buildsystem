@@ -13,6 +13,10 @@ VSFTPD_DEPENDENCIES = openssl
 
 VSFTPD_LIBS += -lcrypt $$($(PKG_CONFIG) --libs libssl libcrypto)
 
+VSFTPD_MAKE_OPTS = \
+	$(TARGET_CONFIGURE_ENV) \
+	LIBS="$(VSFTPD_LIBS)"
+
 define VSFTPD_PATCH_BUILDDEFS_H
 	$(SED) 's/.*VSF_BUILD_PAM/#undef VSF_BUILD_PAM/' $(PKG_BUILD_DIR)/builddefs.h
 	$(SED) 's/.*VSF_BUILD_SSL/#define VSF_BUILD_SSL/' $(PKG_BUILD_DIR)/builddefs.h
@@ -29,9 +33,4 @@ endef
 VSFTPD_TARGET_FINALIZE_HOOKS += VSFTPD_INSTALL_FILES
 
 vsftpd: | $(TARGET_DIR)
-	$(call PREPARE)
-	$(CHDIR)/$($(PKG)_DIR); \
-		$(MAKE) clean; \
-		$(MAKE) $(TARGET_CONFIGURE_ENV) LIBS="$($(PKG)_LIBS)"; \
-		$(INSTALL_EXEC) -D vsftpd $(TARGET_sbindir)/vsftpd
-	$(call TARGET_FOLLOWUP)
+	$(call generic-package,$(PKG_NO_INSTALL))
