@@ -9,21 +9,29 @@ XUPNPD_DIR = xupnpd.$(XUPNPD_VERSION)
 XUPNPD_SOURCE = xupnpd.$(XUPNPD_VERSION)
 XUPNPD_SITE = https://github.com/clark15b
 
+XUPNPD_SUBDIR = src
+
 XUPNPD_CHECKOUT = 25d6d44
 
 XUPNPD_DEPENDENCIES = lua openssl
 
+XUPNPD_MAKE_ENV = \
+	$(TARGET_CONFIGURE_ENV)
+
 XUPNPD_MAKE_OPTS = \
-	TARGET=$(TARGET) LUAFLAGS="$(TARGET_LDFLAGS) -I$(TARGET_includedir)"
+	TARGET=$(TARGET) \
+	LUAFLAGS="$(TARGET_LDFLAGS) \
+	-I$(TARGET_includedir)" \
+	embedded
 
 define XUPNPD_INSTALL_BINARY
-	$(INSTALL_EXEC) -D $(PKG_BUILD_DIR)/src/xupnpd $(TARGET_bindir)/xupnpd
+	$(INSTALL_EXEC) -D $(PKG_BUILD_DIR)/xupnpd $(TARGET_bindir)/xupnpd
 endef
 XUPNPD_PRE_FOLLOWUP_HOOKS += XUPNPD_INSTALL_BINARY
 
 define XUPNPD_INSTALL_DATA
 	$(INSTALL) -d $(TARGET_datadir)/xupnpd/config
-	$(INSTALL_COPY) $(PKG_BUILD_DIR)/src/{plugins,profiles,ui,www,*.lua} $(TARGET_datadir)/xupnpd/
+	$(INSTALL_COPY) $(PKG_BUILD_DIR)/{plugins,profiles,ui,www,*.lua} $(TARGET_datadir)/xupnpd/
 endef
 XUPNPD_PRE_FOLLOWUP_HOOKS += XUPNPD_INSTALL_DATA
 
@@ -48,8 +56,4 @@ endef
 XUPNPD_TARGET_FINALIZE_HOOKS += XUPNPD_INSTALL_SKEL
 
 xupnpd: | $(TARGET_DIR)
-	$(call PREPARE)
-	$(CHDIR)/$($(PKG)_DIR); \
-		$(TARGET_CONFIGURE_ENV) \
-		$(MAKE) -C src $($(PKG)_MAKE_OPTS) embedded
-	$(call TARGET_FOLLOWUP)
+	$(call generic-package,$(PKG_NO_INSTALL))
