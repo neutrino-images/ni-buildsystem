@@ -28,7 +28,7 @@ endef
 # -----------------------------------------------------------------------------
 
 define kernel-module
-	$(call PREPARE)
+	$(call PREPARE,$(1))
 	$(call KERNEL_MODULE_BUILD)
 	$(call LINUX_RUN_DEPMOD)
 	$(call TARGET_FOLLOWUP)

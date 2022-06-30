@@ -78,7 +78,7 @@ endef
 # -----------------------------------------------------------------------------
 
 define meson-package
-	$(call PREPARE)
+	$(call PREPARE,$(1))
 	$(call TARGET_MESON_CONFIGURE)
 	$(call TARGET_NINJA_BUILD)
 	$(call TARGET_NINJA_INSTALL)
@@ -122,7 +122,7 @@ endef
 # -----------------------------------------------------------------------------
 
 define host-meson-package
-	$(call PREPARE)
+	$(call PREPARE,$(1))
 	$(call HOST_MESON_CONFIGURE)
 	$(call HOST_NINJA)
 	$(call HOST_NINJA_INSTALL)
