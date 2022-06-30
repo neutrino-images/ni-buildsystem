@@ -61,6 +61,10 @@ define DOWNLOAD
 	elif [ ! -f $(DL_DIR)/$(1) ]; then \
 	  $(call MESSAGE,"Downloading") ; \
 	  $(GET_ARCHIVE) $(DL_DIR) $($(PKG)_SITE)/$(1); \
+	elif [ "$($(PKG)_VERSION)" == "curl-controlled" ]; then \
+	  $(call MESSAGE,"Downloading") ; \
+	  $(CD) $(DL_DIR); \
+		  curl --remote-name --time-cond $($(PKG)_SOURCE) $($(PKG)_SITE)/$($(PKG)_SOURCE) || true; \
 	fi; \
 	)
 	$(foreach hook,$($(PKG)_POST_DOWNLOAD_HOOKS),$(call $(hook))$(sep))
