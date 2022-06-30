@@ -9,12 +9,17 @@ UDPXY_DIR = udpxy.$(UDPXY_VERSION)
 UDPXY_SOURCE = udpxy.$(UDPXY_VERSION)
 UDPXY_SITE = https://github.com/pcherenkov
 
+UDPXY_SUBDIR = chipmunk
+
 UDPXY_CHECKOUT = tags/1.0-25.1
+
+UDPXY_MAKE_ENV = \
+	$(TARGET_CONFIGURE_ENV)
 
 UDPXY_MAKE_OPTS = \
 	NO_UDPXREC=yes
 
-UDPXY_MAKE_INSTALL_OPTS = \
+UDPXY_MAKE_OPTS += \
 	PREFIX=$(prefix) \
 	MANPAGE_DIR=$(TARGET_DIR)$(REMOVE_mandir)
 
@@ -25,9 +30,4 @@ endef
 UDPXY_TARGET_FINALIZE_HOOKS += UDPXY_INSTALL_INIT_SCRIPT
 
 udpxy: | $(TARGET_DIR)
-	$(call PREPARE)
-	$(CHDIR)/$($(PKG)_DIR)/chipmunk; \
-		$(TARGET_CONFIGURE_ENV) \
-		$(MAKE) $($(PKG)_MAKE_OPTS); \
-		$(MAKE) $($(PKG)_MAKE_OPTS) install DESTDIR=$(TARGET_DIR) $($(PKG)_MAKE_INSTALL_OPTS)
-	$(call TARGET_FOLLOWUP)
+	$(call generic-package)
