@@ -13,6 +13,12 @@ GPTFDISK_DEPENDENCIES = popt e2fsprogs ncurses
 
 GPTFDISK_SBINARIES = sgdisk
 
+GPTFDISK_MAKE_ENV = \
+	$(TARGET_CONFIGURE_ENV)
+
+GPTFDISK_MAKE_OPTS = \
+	$(GPTFDISK_SBINARIES)
+
 define GPTFDISK_INSTALL_SBINARIES
 	$(foreach sbinary,$($(PKG)_SBINARIES),\
 		rm -f $(TARGET_sbindir)/$(sbinary); \
@@ -22,8 +28,4 @@ endef
 GPTFDISK_PRE_FOLLOWUP_HOOKS += GPTFDISK_INSTALL_SBINARIES
 
 gptfdisk: | $(TARGET_DIR)
-	$(call PREPARE)
-	$(CHDIR)/$($(PKG)_DIR); \
-		$(TARGET_CONFIGURE_ENV) \
-		$(MAKE) $($(PKG)_SBINARIES)
-	$(call TARGET_FOLLOWUP)
+	$(call generic-package,$(PKG_NO_INSTALL))
