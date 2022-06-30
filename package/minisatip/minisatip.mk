@@ -18,6 +18,9 @@ MINISATIP_CONF_OPTS = \
 	--enable-static \
 	--disable-netcv
 
+MINISATIP_MAKE_ENV = \
+	$(TARGET_CONFIGURE_ENV)
+
 define MINISATIP_INSTALL
 	$(INSTALL_EXEC) -D $(PKG_BUILD_DIR)/minisatip $(TARGET_bindir)/minisatip
 	$(INSTALL) -d $(TARGET_datadir)/minisatip
@@ -38,9 +41,4 @@ endef
 MINISATIP_TARGET_FINALIZE_HOOKS += MINISATIP_INSTALL_INIT_SCRIPT
 
 minisatip: | $(TARGET_DIR)
-	$(call PREPARE)
-	$(call TARGET_CONFIGURE)
-	$(CHDIR)/$($(PKG)_DIR); \
-		$(TARGET_CONFIGURE_ENV) \
-		$(MAKE)
-	$(call TARGET_FOLLOWUP)
+	$(call autotools-package,$(PKG_NO_INSTALL))
