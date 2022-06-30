@@ -31,7 +31,7 @@ endef
 # -----------------------------------------------------------------------------
 
 define host-python3-package
-	$(call PREPARE)
+	$(call PREPARE,$(1))
 	$(call HOST_PYTHON3_BUILD)
 	$(call HOST_PYTHON3_INSTALL)
 	$(call HOST_FOLLOWUP)

@@ -21,7 +21,20 @@ DROPBEAR_CONF_OPTS = \
 	--enable-bundled-libtom
 
 DROPBEAR_MAKE_OPTS = \
+	SCPPROGRESS=1 \
 	PROGRAMS="dropbear dbclient dropbearkey scp"
+
+define DROPBEAR_CONFIGURE_LOCALOPTIONS
+	# Ensure that dropbear doesn't use crypt() when it's not available
+	echo '#if !HAVE_CRYPT'				>> $(PKG_BUILD_DIR)/localoptions.h
+	echo '#define DROPBEAR_SVR_PASSWORD_AUTH 0'	>> $(PKG_BUILD_DIR)/localoptions.h
+	echo '#endif'					>> $(PKG_BUILD_DIR)/localoptions.h
+	# disable SMALL_CODE define
+	echo '#define DROPBEAR_SMALL_CODE 0'		>> $(PKG_BUILD_DIR)/localoptions.h
+	# fix PATH define
+	echo '#define DEFAULT_PATH "/sbin:/bin:/usr/sbin:/usr/bin:/var/bin"' >> $(PKG_BUILD_DIR)/localoptions.h
+endef
+DROPBEAR_POST_CONFIGURE_HOOKS = DROPBEAR_CONFIGURE_LOCALOPTIONS
 
 define DROPBEAR_INSTALL_INIT_SCRIPT
 	$(INSTALL) -d $(TARGET_sysconfdir)/dropbear
@@ -31,17 +44,4 @@ endef
 DROPBEAR_TARGET_FINALIZE_HOOKS += DROPBEAR_INSTALL_INIT_SCRIPT
 
 dropbear: | $(TARGET_DIR)
-	$(call PREPARE)
-	$(call TARGET_CONFIGURE)
-	$(CHDIR)/$($(PKG)_DIR); \
-		# Ensure that dropbear doesn't use crypt() when it's not available; \
-		echo '#if !HAVE_CRYPT'				>> localoptions.h; \
-		echo '#define DROPBEAR_SVR_PASSWORD_AUTH 0'	>> localoptions.h; \
-		echo '#endif'					>> localoptions.h; \
-		# disable SMALL_CODE define; \
-		echo '#define DROPBEAR_SMALL_CODE 0'		>> localoptions.h; \
-		# fix PATH define; \
-		echo '#define DEFAULT_PATH "/sbin:/bin:/usr/sbin:/usr/bin:/var/bin"' >> localoptions.h; \
-		$(MAKE) $($(PKG)_MAKE_OPTS) SCPPROGRESS=1; \
-		$(MAKE) $($(PKG)_MAKE_OPTS) install DESTDIR=$(TARGET_DIR)
-	$(call TARGET_FOLLOWUP)
+	$(call autotools-package)
