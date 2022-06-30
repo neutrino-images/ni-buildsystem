@@ -4,15 +4,16 @@
 #
 ################################################################################
 
+LUAJSON_VERSION = curl-controlled
+LUAJSON_DIR =
 LUAJSON_SOURCE = JSON.lua
 LUAJSON_SITE = http://regex.info/code
 
-$(DL_DIR)/$(LUAJSON_SOURCE):
-	$(download) $(LUAJSON_SITE)/$(LUAJSON_SOURCE)
+define LUAJSON_INSTALL
+	$(INSTALL_DATA) -D $(DL_DIR)/$($(PKG)_SOURCE) $(TARGET_datadir)/lua/$(LUA_ABIVERSION)/$($(PKG)_SOURCE)
+	ln -sf $($(PKG)_SOURCE) $(TARGET_datadir)/lua/$(LUA_ABIVERSION)/json.lua
+endef
+LUAJSON_INDIVIDUAL_HOOKS += LUAJSON_INSTALL
 
-luajson: $(DL_DIR)/$(LUAJSON_SOURCE) | $(TARGET_DIR)
-	$(CD) $(DL_DIR); \
-		curl --remote-name --time-cond $(PKG_SOURCE) $(PKG_SITE)/$(PKG_SOURCE) || true
-	$(INSTALL_DATA) -D $(DL_DIR)/$(PKG_SOURCE) $(TARGET_datadir)/lua/$(LUA_ABIVERSION)
-	ln -sf $(PKG_SOURCE) $(TARGET_datadir)/lua/$(LUA_ABIVERSION)/json.lua
-	$(call TOUCH)
+luajson: | $(TARGET_DIR)
+	$(call individual-package,$(PKG_NO_EXTRACT) $(PKG_NO_PATCHES))
