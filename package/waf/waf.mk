@@ -18,8 +18,10 @@ HOST_WAF_SITE = $(WAF_SITE)
 
 HOST_WAF_BINARY = $(HOST_DIR)/bin/waf
 
+define HOST_WAF_INSTALL_BINARY
+	$(INSTALL_EXEC) -D $(PKG_BUILD_DIR)/waf $(HOST_WAF_BINARY)
+endef
+HOST_WAF_INDIVIDUAL_HOOKS += HOST_WAF_INSTALL_BINARY
+
 host-waf: | $(HOST_DIR)
-	$(call PREPARE)
-	$(CHDIR)/$($(PKG)_DIR); \
-		$(INSTALL_EXEC) -D waf $(HOST_WAF_BINARY)
-	$(call HOST_FOLLOWUP)
+	$(call host-individual-package)
