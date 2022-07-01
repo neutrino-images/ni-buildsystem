@@ -22,8 +22,8 @@ endef
 # clean up
 define CLEANUP
 	$(Q)( \
-	if [ -d $(BUILD_DIR)/$($(PKG)_DIR) ]; then \
-		$(call MESSAGE,"Clean up"); \
+	if [ "$($(PKG)_DIR)" ]; then \
+		$(call MESSAGE,"Clean-up"); \
 		rm -rf $(BUILD_DIR)/$($(PKG)_DIR); \
 	fi; \
 	)
