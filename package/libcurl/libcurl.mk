@@ -32,7 +32,7 @@ LIBCURL_CONF_OPTS = \
 	--disable-ntlm-wb \
 	--disable-ares \
 	--without-libidn \
-	--with-ca-bundle=$(CA_BUNDLE_DIR)/$(CA_BUNDLE_CRT) \
+	--with-ca-bundle=$(CA_BUNDLE_CERTS_DIR)/$(CA_BUNDLE_CERT) \
 	--with-random=/dev/urandom \
 	--with-ssl=$(TARGET_prefix) \
 	--with-librtmp=$(TARGET_libdir) \
