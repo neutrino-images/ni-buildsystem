@@ -43,18 +43,6 @@ endef
 
 HOST_MAKE_ENV =
 
-HOST_MAKE_OPTS = \
-	CC="$(HOSTCC)" \
-	GCC="$(HOSTCC)" \
-	CPP="$(HOSTCPP)" \
-	CXX="$(HOSTCXX)" \
-	LD="$(HOSTLD)" \
-	AR="$(HOSTAR)" \
-	AS="$(HOSTAS)" \
-	NM="$(HOSTNM)" \
-	OBJCOPY="$(HOSTOBJCOPY)" \
-	RANLIB="$(HOSTRANLIB)"
-
 define HOST_MAKE
 	@$(call MESSAGE,"Compiling")
 	$(foreach hook,$($(PKG)_PRE_COMPILE_HOOKS),$(call $(hook))$(sep))

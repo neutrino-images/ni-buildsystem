@@ -90,8 +90,20 @@ endef
 
 # -----------------------------------------------------------------------------
 
+HOST_CONFIGURE_ENVIRONMENT = \
+	CC="$(HOSTCC)" \
+	GCC="$(HOSTCC)" \
+	CPP="$(HOSTCPP)" \
+	CXX="$(HOSTCXX)" \
+	LD="$(HOSTLD)" \
+	AR="$(HOSTAR)" \
+	AS="$(HOSTAS)" \
+	NM="$(HOSTNM)" \
+	OBJCOPY="$(HOSTOBJCOPY)" \
+	RANLIB="$(HOSTRANLIB)"
+
 HOST_CONFIGURE_ENV = \
-	$(HOST_MAKE_OPTS) \
+	$(HOST_CONFIGURE_ENVIRONMENT) \
 	CFLAGS="$(HOST_CFLAGS)" \
 	CPPFLAGS="$(HOST_CPPFLAGS)" \
 	CXXFLAGS="$(HOST_CXXFLAGS)" \
