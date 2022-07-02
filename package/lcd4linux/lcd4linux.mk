@@ -17,10 +17,6 @@ ifeq ($(BOXMODEL),$(filter $(BOXMODEL),vuduo4k vuduo4kse vusolo4k vuultimo4k vuu
 endif
 
 LCD4LINUX_CONF_OPTS = \
-	--libdir=$(TARGET_libdir) \
-	--includedir=$(TARGET_includedir) \
-	--bindir=$(TARGET_bindir) \
-	--docdir=$(REMOVE_docdir) \
 	--with-ncurses=$(TARGET_libdir) \
 	--with-drivers='$(LCD4LINUX_DRIVERS)' \
 	--with-plugins='all,!dbus,!mpris_dbus,!asterisk,!isdn,!pop3,!ppp,!seti,!huawei,!imon,!kvv,!sample,!w1retap,!wireless,!xmms,!gps,!mpd,!mysql,!qnaplog,!iconv' \
