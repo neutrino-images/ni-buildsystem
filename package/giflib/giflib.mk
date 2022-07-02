@@ -9,10 +9,13 @@ GIFLIB_DIR = giflib-$(GIFLIB_VERSION)
 GIFLIB_SOURCE = giflib-$(GIFLIB_VERSION).tar.gz
 GIFLIB_SITE = https://sourceforge.net/projects/giflib/files
 
+GIFLIB_MAKE_ENV = \
+	$(TARGET_CONFIGURE_ENV)
+
+GIFLIB_MAKE_OPTS = \
+	PREFIX=$(prefix) \
+	BINDIR=$(REMOVE_bindir) \
+	MANDIR=$(REMOVE_mandir)
+
 giflib: | $(TARGET_DIR)
-	$(call PREPARE)
-	$(CHDIR)/$($(PKG)_DIR); \
-		$(TARGET_CONFIGURE_ENV) \
-		$(MAKE); \
-		$(MAKE) install-include install-lib DESTDIR=$(TARGET_DIR) PREFIX=$(prefix)
-	$(call TARGET_FOLLOWUP)
+	$(call generic-package)
