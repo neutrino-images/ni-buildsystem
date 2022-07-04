@@ -9,9 +9,6 @@ BUSYBOX_DIR = busybox-$(BUSYBOX_VERSION)
 BUSYBOX_SOURCE = busybox-$(BUSYBOX_VERSION).tar.bz2
 BUSYBOX_SITE = https://busybox.net/downloads
 
-$(DL_DIR)/$(BUSYBOX_SOURCE):
-	$(download) $(BUSYBOX_SITE)/$(BUSYBOX_SOURCE)
-
 BUSYBOX_DEPENDENCIES = libtirpc
 
 # Link busybox against libtirpc so that we can leverage its RPC support for NFS
@@ -28,6 +25,12 @@ BUSYBOX_MAKE_ENV = \
 	CFLAGS="$(BUSYBOX_CFLAGS)" \
 	CFLAGS_busybox="$(BUSYBOX_CFLAGS_busybox)"
 
+BUSYBOX_MAKE_ARGS = \
+	busybox
+
+BUSYBOX_MAKE_INSTALL_ARGS = \
+	install-noclobber
+
 BUSYBOX_MAKE_OPTS = \
 	$(TARGET_CONFIGURE_ENVIRONMENT) \
 	CFLAGS_EXTRA="$(TARGET_CFLAGS)" \
@@ -40,7 +43,9 @@ define BUSYBOX_INSTALL_CONFIG
 	$(INSTALL_DATA) $(PKG_FILES_DIR)/busybox-minimal.config $(BUSYBOX_BUILD_CONFIG)
 	$(call KCONFIG_SET_OPT,CONFIG_PREFIX,"$(TARGET_DIR)",$(BUSYBOX_BUILD_CONFIG))
 endef
+BUSYBOX_POST_PATCH_HOOKS += BUSYBOX_INSTALL_CONFIG
 
+# BUSYBOX_MODIFY_CONFIG start
 ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd2 hd5x hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo))
 
   define BUSYBOX_SET_IPV6
@@ -89,15 +94,17 @@ ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd2 hd5x hd6x vusolo4k vuduo4k vuduo4ks
   endif
 
 endif
+# BUSYBOX_MODIFY_CONFIG end
 
 define BUSYBOX_MODIFY_CONFIG
-	$(BUSYBOX_SET_IPV6)
-	$(BUSYBOX_SET_SWAP)
-	$(BUSYBOX_SET_HEXDUMP)
-	$(BUSYBOX_SET_PKILL)
-	$(BUSYBOX_SET_FBSET)
-	$(BUSYBOX_SET_START_STOP_DAEMON)
+	$(call BUSYBOX_SET_IPV6)
+	$(call BUSYBOX_SET_SWAP)
+	$(call BUSYBOX_SET_HEXDUMP)
+	$(call BUSYBOX_SET_PKILL)
+	$(call BUSYBOX_SET_FBSET)
+	$(call BUSYBOX_SET_START_STOP_DAEMON)
 endef
+BUSYBOX_POST_PATCH_HOOKS += BUSYBOX_MODIFY_CONFIG
 
 define BUSYBOX_ADD_TO_SHELLS
 	if grep -q 'CONFIG_ASH=y' $(BUSYBOX_BUILD_CONFIG); then \
@@ -113,41 +120,54 @@ define BUSYBOX_ADD_TO_SHELLS
 			|| echo "/bin/sh" >> $(TARGET_sysconfdir)/shells; \
 	fi
 endef
+BUSYBOX_PRE_FOLLOWUP_HOOKS += BUSYBOX_ADD_TO_SHELLS
+
+BUSYBOX_TARGET_FINALIZE_HOOKS += BUSYBOX_INSTALL_SWAP
+BUSYBOX_TARGET_FINALIZE_HOOKS += BUSYBOX_INSTALL_FBSET
 
 ifeq ($(PERSISTENT_VAR_PARTITION),yes)
-  define BUSYBOX_INSTALL_LINK_RESOLV_CONF
+define BUSYBOX_INSTALL_LINK_RESOLV_CONF
 	ln -sf /var/etc/resolv.conf $(TARGET_sysconfdir)/resolv.conf
-  endef
+endef
+BUSYBOX_TARGET_FINALIZE_HOOKS += BUSYBOX_INSTALL_LINK_RESOLV_CONF
 endif
 
-define BUSYBOX_INSTALL_FILES
-	$(BUSYBOX_INSTALL_SWAP)
-	$(BUSYBOX_INSTALL_FBSET)
-	$(MAKE) ifupdown-scripts
+define BUSYBOX_INSTALL_UDHCPC_DEFAULT_SCRIPT
 	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/udhcpc-default.script $(TARGET_datadir)/udhcpc/default.script
-	$(BUSYBOX_INSTALL_LINK_RESOLV_CONF)
+endef
+BUSYBOX_TARGET_FINALIZE_HOOKS += BUSYBOX_INSTALL_UDHCPC_DEFAULT_SCRIPT
+
+define BUSYBOX_INSTALL_CROND
 	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/crond.init $(TARGET_sysconfdir)/init.d/crond
 	$(UPDATE-RC.D) crond defaults 50
-	$(INSTALL) -d $(TARGET_localstatedir)/spool/cron/crontabs \
-		$(TARGET_sysconfdir)/cron.{daily,hourly,monthly,weekly}
+	$(INSTALL) -d $(TARGET_localstatedir)/spool/cron/crontabs
+	$(INSTALL) -d $(TARGET_sysconfdir)/cron.{daily,hourly,monthly,weekly}
+endef
+BUSYBOX_TARGET_FINALIZE_HOOKS += BUSYBOX_INSTALL_CROND
+
+define BUSYBOX_INSTALL_INETD
+	$(INSTALL_DATA) -D $(PKG_FILES_DIR)/inetd.conf $(TARGET_sysconfdir)/inetd.conf
 	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/inetd.init $(TARGET_sysconfdir)/init.d/inetd
 	$(UPDATE-RC.D) inetd defaults 50
-	$(INSTALL_DATA) -D $(PKG_FILES_DIR)/inetd.conf $(TARGET_sysconfdir)/inetd.conf
-	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/mdev.init $(TARGET_sysconfdir)/init.d/mdev
+endef
+BUSYBOX_TARGET_FINALIZE_HOOKS += BUSYBOX_INSTALL_INETD
+
+define BUSYBOX_INSTALL_SYSLOGD
 	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/syslogd.init $(TARGET_sysconfdir)/init.d/syslogd
 	$(UPDATE-RC.D) syslogd stop 98 0 6 .
 endef
+BUSYBOX_TARGET_FINALIZE_HOOKS += BUSYBOX_INSTALL_SYSLOGD
 
-busybox: $(BUSYBOX_DEPENDENCIES) $(DL_DIR)/$(BUSYBOX_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(call APPLY_PATCHES,$(PKG_PATCHES_DIR))
-	$($(PKG)_INSTALL_CONFIG)
-	$($(PKG)_MODIFY_CONFIG)
-	$(CHDIR)/$(PKG_DIR); \
-		$($(PKG)_MAKE_ENV) $(MAKE) $($(PKG)_MAKE_OPTS) busybox; \
-		$($(PKG)_MAKE_ENV) $(MAKE) $($(PKG)_MAKE_OPTS) install-noclobber
-	$($(PKG)_ADD_TO_SHELLS)
-	$($(PKG)_INSTALL_FILES)
-	$(REMOVE)/$(PKG_DIR)
-	$(call TOUCH)
+# FIXME: most mdev stuff still located in skel-root
+define BUSYBOX_INSTALL_MDEV
+	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/mdev.init $(TARGET_sysconfdir)/init.d/mdev
+endef
+BUSYBOX_TARGET_FINALIZE_HOOKS += BUSYBOX_INSTALL_MDEV
+
+define BUSYBOX_MAKE_IFUPDOWN_SCRIPTS
+	$(MAKE) ifupdown-scripts
+endef
+BUSYBOX_TARGET_FINALIZE_HOOKS += BUSYBOX_MAKE_IFUPDOWN_SCRIPTS
+
+busybox: | $(TARGET_DIR)
+	$(call generic-package)
