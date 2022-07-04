@@ -9,9 +9,6 @@ GETTEXT_DIR = gettext-$(GETTEXT_VERSION)
 GETTEXT_SOURCE = gettext-$(GETTEXT_VERSION).tar.xz
 GETTEXT_SITE = $(GNU_MIRROR)/gettext
 
-$(DL_DIR)/$(GETTEXT_SOURCE):
-	$(download) $(GETTEXT_SITE)/$(GETTEXT_SOURCE)
-
 GETTEXT_AUTORECONF = YES
 
 GETTEXT_CONF_OPTS = \
@@ -26,13 +23,8 @@ GETTEXT_CONF_OPTS = \
 	--disable-relocatable \
 	--without-emacs
 
-gettext: $(DL_DIR)/$(GETTEXT_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(UNTAR)/$(PKG_SOURCE)
-	$(call TARGET_CONFIGURE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(MAKE) -C gettext-runtime; \
-		$(MAKE) -C gettext-runtime install DESTDIR=$(TARGET_DIR)
-	$(call REWRITE_LIBTOOL)
-	$(REMOVE)/$(PKG_DIR)
-	$(call TOUCH)
+GETTEXT_MAKE_OPTS = \
+	-C gettext-runtime
+
+gettext: | $(TARGET_DIR)
+	$(call autotools-package)
