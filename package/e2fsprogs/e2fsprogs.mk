@@ -50,6 +50,9 @@ E2FSPROGS_CONF_OPTS = \
 	--with-gnu-ld \
 	--with-crond-dir=no
 
+E2FSPROGS_MAKE_INSTALL_OPTS = \
+	install-libs
+
 define E2FSPROGS_TARGET_CLEANUP
 	$(TARGET_RM) $(addprefix $(TARGET_base_sbindir)/,dumpe2fs e2mmpstatus e2undo logsave)
 	$(TARGET_RM) $(addprefix $(TARGET_bindir)/,chattr compile_et lsattr mk_cmds uuidgen)
@@ -58,12 +61,7 @@ endef
 E2FSPROGS_TARGET_FINALIZE_HOOKS += E2FSPROGS_TARGET_CLEANUP
 
 e2fsprogs: | $(TARGET_DIR)
-	$(call PREPARE)
-	$(call TARGET_CONFIGURE)
-	$(CHDIR)/$($(PKG)_DIR); \
-		$(MAKE); \
-		$(MAKE1) install install-libs DESTDIR=$(TARGET_DIR)
-	$(call TARGET_FOLLOWUP)
+	$(call autotools-package)
 
 # -----------------------------------------------------------------------------
 
