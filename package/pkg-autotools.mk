@@ -10,7 +10,7 @@ define AUTORECONF_HOOK
 		$(call MESSAGE,"Autoreconfiguring"); \
 		$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
 			$($(PKG)_AUTORECONF_ENV) \
-			autoreconf -fi \
+			$($(PKG)_AUTORECONF_CMD) \
 				$($(PKG)_AUTORECONF_OPTS); \
 	fi; \
 	)
@@ -69,10 +69,10 @@ define TARGET_CONFIGURE
 	$(call AUTORECONF_HOOK)
 	$(Q)( \
 	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
-		test -f ./configure || ./autogen.sh && \
+		test -f ./$($(PKG)_CONFIGURE_CMD) || ./autogen.sh && \
 		CONFIG_SITE=/dev/null \
 		$(TARGET_CONFIGURE_ENV) $($(PKG)_CONF_ENV) \
-		./configure \
+		./$($(PKG)_CONFIGURE_CMD) \
 			$(TARGET_CONFIGURE_OPTS) $($(PKG)_CONF_OPTS); \
 	)
 	$(foreach hook,$($(PKG)_POST_CONFIGURE_HOOKS),$(call $(hook))$(sep))
@@ -123,10 +123,10 @@ define HOST_CONFIGURE
 	$(call AUTORECONF_HOOK)
 	$(Q)( \
 	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
-		test -f ./configure || ./autogen.sh && \
+		test -f ./$($(PKG)_CONFIGURE_CMD) || ./autogen.sh && \
 		CONFIG_SITE=/dev/null \
 		$(HOST_CONFIGURE_ENV) $($(PKG)_CONF_ENV) \
-		./configure \
+		./$($(PKG)_CONFIGURE_CMD) \
 			$(HOST_CONFIGURE_OPTS) $($(PKG)_CONF_OPTS); \
 	)
 	$(foreach hook,$($(PKG)_POST_CONFIGURE_HOOKS),$(call $(hook))$(sep))

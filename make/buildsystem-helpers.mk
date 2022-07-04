@@ -165,6 +165,7 @@ endef
 
 # prepare for build
 define PREPARE
+	$(eval $(pkg-check-variables))
 	$(call STARTUP)
 	$(call DEPENDENCIES)
 	$(call DOWNLOAD,$($(PKG)_SOURCE))

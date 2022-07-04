@@ -51,7 +51,7 @@ define TARGET_CMAKE
 	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
 		rm -f CMakeCache.txt; \
 		$(TARGET_CMAKE_ENV) $($(PKG)_CONF_ENV) \
-		cmake \
+		$($(PKG)_CMAKE) \
 			$(TARGET_CMAKE_OPTS) $($(PKG)_CONF_OPTS); \
 	)
 	$(foreach hook,$($(PKG)_POST_CONFIGURE_HOOKS),$(call $(hook))$(sep))
@@ -95,7 +95,7 @@ define HOST_CMAKE
 	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
 		rm -f CMakeCache.txt; \
 		$(HOST_CMAKE_ENV) $($(PKG)_CONF_ENV) \
-		cmake \
+		$($(PKG)_CMAKE) \
 			$(HOST_CMAKE_OPTS) $($(PKG)_CONF_OPTS); \
 	)
 	$(foreach hook,$($(PKG)_POST_CONFIGURE_HOOKS),$(call $(hook))$(sep))
