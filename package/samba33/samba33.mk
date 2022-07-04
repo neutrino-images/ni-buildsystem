@@ -51,6 +51,9 @@ SAMBA33_CONF_OPTS = \
 	--disable-relro \
 	--disable-swat
 
+SAMBA33_MAKE = \
+	$(MAKE1)
+
 define SAMBA33_AUTOGEN_SH
 	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
 		./autogen.sh
@@ -71,9 +74,4 @@ endef
 SAMBA33_TARGET_FINALIZE_HOOKS += SAMBA33_TARGET_CLEANUP
 
 samba33: | $(TARGET_DIR)
-	$(call PREPARE)
-	$(call TARGET_CONFIGURE)
-	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
-		$(MAKE1) all; \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(call TARGET_FOLLOWUP)
+	$(call autotools-package)
