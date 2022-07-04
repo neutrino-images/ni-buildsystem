@@ -12,7 +12,7 @@ GIFLIB_SITE = https://sourceforge.net/projects/giflib/files
 GIFLIB_MAKE_ENV = \
 	$(TARGET_CONFIGURE_ENV)
 
-GIFLIB_MAKE_OPTS = \
+GIFLIB_MAKE_INSTALL_OPTS = \
 	PREFIX=$(prefix) \
 	BINDIR=$(REMOVE_bindir) \
 	MANDIR=$(REMOVE_mandir)
