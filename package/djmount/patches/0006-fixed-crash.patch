@@ -12,7 +12,7 @@ diff --git a/djmount/device_list.c b/djmount/device_list.c
 index b3cb08f..b5c2103 100644
 --- a/djmount/device_list.c
 +++ b/djmount/device_list.c
-@@ -426,7 +426,7 @@ AddDevice (const char* deviceId,
+@@ -428,7 +428,7 @@ AddDevice (const char* deviceId,
  		} else {
  			// If SSDP target specified, check that the device
  			// matches it.

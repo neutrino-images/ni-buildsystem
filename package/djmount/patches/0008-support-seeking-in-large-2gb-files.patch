@@ -30,7 +30,7 @@ diff --git a/djmount/media_file.c b/djmount/media_file.c
 index 44b4ffe..761f715 100644
 --- a/djmount/media_file.c
 +++ b/djmount/media_file.c
-@@ -284,7 +284,7 @@ MediaFile_GetResSize (const MediaFile* const file)
+@@ -282,7 +282,7 @@ MediaFile_GetResSize (const MediaFile* const file)
  {
  	const char* const str = ixmlElement_getAttribute (file->res, "size");
  	off_t res;
