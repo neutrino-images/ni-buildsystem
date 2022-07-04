@@ -9,6 +9,17 @@ SYSVINIT_DIR = sysvinit-$(SYSVINIT_VERSION)
 SYSVINIT_SOURCE = sysvinit-$(SYSVINIT_VERSION).tar.xz
 SYSVINIT_SITE = http://download.savannah.nongnu.org/releases/sysvinit
 
+SYSVINIT_MAKE_ENV = \
+	$(TARGET_CONFIGURE_ENV) \
+	ULOGINLIBS=-lcrypt
+
+SYSVINIT_MAKE_OPTS = \
+	-C src
+
+SYSVINIT_MAKE_INSTALL_OPTS = \
+	ROOT=$(TARGET_DIR) \
+	MANDIR=$(REMOVE_mandir)
+
 ifeq ($(BOXMODEL),$(filter $(BOXMODEL),vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
   define SYSVINIT_INSTALL_RCS
 	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/rcS-vuplus $(TARGET_sysconfdir)/init.d/rcS
@@ -43,9 +54,4 @@ endef
 SYSVINIT_TARGET_FINALIZE_HOOKS += SYSVINIT_TARGET_CLEANUP
 
 sysvinit: | $(TARGET_DIR)
-	$(call PREPARE)
-	$(CHDIR)/$($(PKG)_DIR); \
-		$(TARGET_CONFIGURE_ENV) \
-		$(MAKE) -C src SULOGINLIBS=-lcrypt; \
-		$(MAKE) install ROOT=$(TARGET_DIR) MANDIR=$(REMOVE_mandir)
-	$(call TARGET_FOLLOWUP)
+	$(call generic-package)
