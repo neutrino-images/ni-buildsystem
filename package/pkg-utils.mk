@@ -53,6 +53,9 @@ endif
 ifndef $(PKG)_MAKE_ENV
   $(PKG)_MAKE_ENV =
 endif
+ifndef $(PKG)_MAKE_ARGS
+  $(PKG)_MAKE_ARGS =
+endif
 ifndef $(PKG)_MAKE_OPTS
   $(PKG)_MAKE_OPTS =
 endif
@@ -60,6 +63,9 @@ endif
 # make install
 ifndef $(PKG)_MAKE_INSTALL_ENV
   $(PKG)_MAKE_INSTALL_ENV = $($(PKG)_MAKE_ENV)
+endif
+ifndef $(PKG)_MAKE_INSTALL_ARGS
+  $(PKG)_MAKE_INSTALL_ARGS = install
 endif
 ifndef $(PKG)_MAKE_INSTALL_OPTS
   $(PKG)_MAKE_INSTALL_OPTS = $($(PKG)_MAKE_OPTS)
