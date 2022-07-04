@@ -11,7 +11,11 @@ LIBDPF_SITE = $(GITHUB)/MaxWiesel
 
 LIBDPF_DEPENDENCIES = libusb-compat
 
+LIBDPF_MAKE = \
+	$(MAKE1)
+
 LIBDPF_MAKE_OPTS = \
+	-C dpflib libdpf.a \
 	CC=$(TARGET_CC) PREFIX=$(TARGET_prefix)
 
 define LIBDPF_INSTALL_FILES
@@ -23,7 +27,4 @@ endef
 LIBDPF_PRE_FOLLOWUP_HOOKS += LIBDPF_INSTALL_FILES
 
 libdpf: | $(TARGET_DIR)
-	$(call PREPARE)
-	$(CHDIR)/$($(PKG)_DIR); \
-		$(MAKE1) -C dpflib libdpf.a $($(PKG)_MAKE_OPTS)
-	$(call TARGET_FOLLOWUP)
+	$(call generic-package,$(PKG_NO_INSTALL))
