@@ -42,6 +42,35 @@ OPENSSL_CONF_OPTS += \
 	$(TARGET_CFLAGS) \
 	$(TARGET_LDFLAGS) \
 
+define OPENSSL_CONFIGURE_CMDS
+	$(CHDIR)/$($(PKG)_DIR); \
+		./Configure $($(PKG)_CONF_OPTS)
+endef
+
+define OPENSSL_PATCH_MAKEFILE
+	$(SED) 's| build_tests||' $(PKG_BUILD_DIR)/Makefile
+	$(SED) 's|^MANDIR=.*|MANDIR=$(REMOVE_mandir)|' $(PKG_BUILD_DIR)/Makefile
+	$(SED) 's|^HTMLDIR=.*|HTMLDIR=$(REMOVE_htmldir)|' $(PKG_BUILD_DIR)/Makefile
+endef
+OPENSSL_POST_CONFIGURE_HOOKS += OPENSSL_PATCH_MAKEFILE
+
+define OPENSSL_MAKE_DEPEND
+	$(CHDIR)/$($(PKG)_DIR); \
+		$($(PKG)_MAKE) depend
+endef
+OPENSSL_PRE_COMPILE_HOOKS += OPENSSL_MAKE_DEPEND
+
+OPENSSL_MAKE_INSTALL_ARGS = \
+	install_sw
+
+ifeq ($(BOXTYPE),coolstream)
+OPENSSL_MAKE_INSTALL_OPTS = \
+	INSTALL_PREFIX=$(TARGET_DIR)
+else
+OPENSSL_MAKE_INSTALL_ARGS += \
+	install_ssldirs
+endif
+
 define OPENSSL_TARGET_CLEANUP
 	$(TARGET_RM) $(TARGET_libdir)/engines-1.1
 	$(TARGET_RM) $(TARGET_bindir)/c_rehash
@@ -53,6 +82,7 @@ OPENSSL_TARGET_FINALIZE_HOOKS += OPENSSL_TARGET_CLEANUP
 
 ifeq ($(BOXTYPE),coolstream)
 define OPENSSL_TARGET_CLEANUP_COOLSTREAM
+	$(TARGET_RM) $(TARGET_libdir)/engines
 	$(TARGET_RM) $(TARGET_sysconfdir)/ssl/misc/{CA.*,c_*}
 	$(TARGET_RM) $(TARGET_sysconfdir)/ssl/openssl.cnf
 	$(TARGET_RM) $(TARGET_bindir)/openssl
@@ -72,6 +102,7 @@ else
 OPENSSL_SO_ENDING = 1.1
 OPENSSL_COMPATIBILITY_VERSIONS = 0.9.7 0.9.8 1.0.0 1.0.2 1.1.0
 endif
+
 define OPENSSL_COMPATIBILITY_LINKS
 	$(foreach v,$(OPENSSL_COMPATIBILITY_VERSIONS),\
 		ln -sf libcrypto.so.$(OPENSSL_SO_ENDING) $(TARGET_libdir)/libcrypto.so.$(v)$(sep))
@@ -80,20 +111,5 @@ define OPENSSL_COMPATIBILITY_LINKS
 endef
 OPENSSL_TARGET_FINALIZE_HOOKS += OPENSSL_COMPATIBILITY_LINKS
 
-ifeq ($(BOXTYPE),coolstream)
-OPENSSL_MAKE_INSTALL_OPTS = INSTALL_PREFIX=$(TARGET_DIR)
-else
-OPENSSL_MAKE_INSTALL_OPTS = install_ssldirs DESTDIR=$(TARGET_DIR)
-endif
-
 openssl: | $(TARGET_DIR)
-	$(call PREPARE)
-	$(CHDIR)/$($(PKG)_DIR); \
-		./Configure $($(PKG)_CONF_OPTS); \
-		$(SED) 's| build_tests||' Makefile; \
-		$(SED) 's|^MANDIR=.*|MANDIR=$(REMOVE_mandir)|' Makefile; \
-		$(SED) 's|^HTMLDIR=.*|HTMLDIR=$(REMOVE_htmldir)|' Makefile; \
-		$(MAKE) depend; \
-		$(MAKE); \
-		$(MAKE) install_sw $($(PKG)_MAKE_INSTALL_OPTS)
-	$(call TARGET_FOLLOWUP)
+	$(call autotools-package)
