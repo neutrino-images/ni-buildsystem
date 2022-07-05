@@ -63,18 +63,20 @@ TARGET_CONFIGURE_OPTS = \
 	--mandir=$(REMOVE_mandir) \
 	--infodir=$(REMOVE_infodir)
 
-define TARGET_CONFIGURE
-	@$(call MESSAGE,"Configuring")
-	$(foreach hook,$($(PKG)_PRE_CONFIGURE_HOOKS),$(call $(hook))$(sep))
-	$(call AUTORECONF_HOOK)
-	$(Q)( \
+define TARGET_CONFIGURE_CMDS
 	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
 		test -f ./$($(PKG)_CONFIGURE_CMD) || ./autogen.sh && \
 		CONFIG_SITE=/dev/null \
 		$(TARGET_CONFIGURE_ENV) $($(PKG)_CONF_ENV) \
 		./$($(PKG)_CONFIGURE_CMD) \
-			$(TARGET_CONFIGURE_OPTS) $($(PKG)_CONF_OPTS); \
-	)
+			$(TARGET_CONFIGURE_OPTS) $($(PKG)_CONF_OPTS)
+endef
+
+define TARGET_CONFIGURE
+	@$(call MESSAGE,"Configuring")
+	$(foreach hook,$($(PKG)_PRE_CONFIGURE_HOOKS),$(call $(hook))$(sep))
+	$(call AUTORECONF_HOOK)
+	$(Q)$(call $(PKG)_CONFIGURE_CMDS)
 	$(foreach hook,$($(PKG)_POST_CONFIGURE_HOOKS),$(call $(hook))$(sep))
 endef
 
@@ -117,18 +119,20 @@ HOST_CONFIGURE_OPTS = \
 	--prefix=$(HOST_DIR) \
 	--sysconfdir=$(HOST_DIR)/etc
 
-define HOST_CONFIGURE
-	@$(call MESSAGE,"Configuring")
-	$(foreach hook,$($(PKG)_PRE_CONFIGURE_HOOKS),$(call $(hook))$(sep))
-	$(call AUTORECONF_HOOK)
-	$(Q)( \
+define HOST_CONFIGURE_CMDS
 	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
 		test -f ./$($(PKG)_CONFIGURE_CMD) || ./autogen.sh && \
 		CONFIG_SITE=/dev/null \
 		$(HOST_CONFIGURE_ENV) $($(PKG)_CONF_ENV) \
 		./$($(PKG)_CONFIGURE_CMD) \
-			$(HOST_CONFIGURE_OPTS) $($(PKG)_CONF_OPTS); \
-	)
+			$(HOST_CONFIGURE_OPTS) $($(PKG)_CONF_OPTS)
+endef
+
+define HOST_CONFIGURE
+	@$(call MESSAGE,"Configuring")
+	$(foreach hook,$($(PKG)_PRE_CONFIGURE_HOOKS),$(call $(hook))$(sep))
+	$(call AUTORECONF_HOOK)
+	$(Q)$(call $(PKG)_CONFIGURE_CMDS)
 	$(foreach hook,$($(PKG)_POST_CONFIGURE_HOOKS),$(call $(hook))$(sep))
 endef
 

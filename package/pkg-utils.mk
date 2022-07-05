@@ -13,6 +13,9 @@ PKG_BUILD_DIR = $(BUILD_DIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR)
 PKG_FILES_DIR = $(PACKAGE_DIR)/$(subst host-,,$(pkgname))/files
 PKG_PATCHES_DIR = $(PACKAGE_DIR)/$(subst host-,,$(pkgname))/patches
 
+PKG_HOST_PACKAGE = $(if $(filter $(firstword $(subst -, ,$(pkg))),host),YES,NO)
+PKG_TARGET_PACKAGE = $(if $(filter $(PKG_HOST_PACKAGE),NO),YES,NO)
+
 # -----------------------------------------------------------------------------
 
 # check for necessary $(PKG) variables
@@ -46,6 +49,13 @@ ifndef $(PKG)_CMAKE
 endif
 ifndef $(PKG)_CONFIGURE_CMD
   $(PKG)_CONFIGURE_CMD = configure
+endif
+ifndef $(PKG)_CONFIGURE_CMDS
+  ifeq ($(PKG_HOST_PACKAGE),YES)
+    $(PKG)_CONFIGURE_CMDS = $$(HOST_CONFIGURE_CMDS)
+  else
+    $(PKG)_CONFIGURE_CMDS = $$(TARGET_CONFIGURE_CMDS)
+  endif
 endif
 ifndef $(PKG)_CONF_ENV
   $(PKG)_CONF_ENV =
