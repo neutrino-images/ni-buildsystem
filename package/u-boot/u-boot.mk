@@ -18,14 +18,19 @@ HOST_U_BOOT_SITE = $(U_BOOT_SITE)
 
 HOST_MKIMAGE = $(HOST_DIR)/bin/mkimage
 
-define HOST_U_BOOT_INSTALL_BINARY
+define HOST_U_BOOT_MAKE_DEFCONFIG
+	$(CHDIR)/$($(PKG)_DIR); \
+		$($(PKG)_MAKE) defconfig
+endef
+HOST_U_BOOT_PRE_COMPILE_HOOKS += HOST_U_BOOT_MAKE_DEFCONFIG
+
+HOST_U_BOOT_MAKE_ARGS = \
+	tools-only
+
+define HOST_U_BOOT_INSTALL_MKIMAGE
 	$(INSTALL_EXEC) -D $(PKG_BUILD_DIR)/tools/mkimage $(HOST_MKIMAGE)
 endef
-HOST_U_BOOT_PRE_FOLLOWUP_HOOKS += HOST_U_BOOT_INSTALL_BINARY
+HOST_U_BOOT_POST_COMPILE_HOOKS += HOST_U_BOOT_INSTALL_MKIMAGE
 
 host-u-boot: | $(HOST_DIR)
-	$(call PREPARE)
-	$(CHDIR)/$($(PKG)_DIR); \
-		$(MAKE) defconfig; \
-		$(MAKE) tools-only
-	$(call HOST_FOLLOWUP)
+	$(call host-generic-package,$(PKG_NO_INSTALL))
