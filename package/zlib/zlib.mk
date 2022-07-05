@@ -21,6 +21,7 @@ zlib: | $(TARGET_DIR)
 	$(call PREPARE)
 	$(CHDIR)/$($(PKG)_DIR); \
 		$(TARGET_CONFIGURE_ENV) \
+		$($(PKG)_CONF_ENV) \
 		./configure $($(PKG)_CONF_OPTS); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
@@ -46,6 +47,7 @@ host-zlib: | $(HOST_DIR)
 	$(call PREPARE)
 	$(CHDIR)/$($(PKG)_DIR); \
 		$(HOST_CONFIGURE_ENV) \
+		$($(PKG)_CONF_ENV) \
 		./configure $($(PKG)_CONF_OPTS); \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(HOST_DIR)
