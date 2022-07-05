@@ -22,6 +22,9 @@ define PKG_CHECK_VARIABLES
 ifndef $(PKG)_PATCH
   $(PKG)_PATCH = $(PKG_PATCHES_DIR)
 endif
+ifndef $(PKG)_PATCH_CUSTOM
+  $(PKG)_PATCH_CUSTOM =
+endif
 
 # autoreconf
 ifndef $(PKG)_AUTORECONF

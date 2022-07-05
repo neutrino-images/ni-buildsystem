@@ -137,7 +137,7 @@ define APPLY_PATCHES # (patches or directory)
 	$(foreach hook,$($(PKG)_PRE_PATCH_HOOKS),$(call $(hook))$(sep))
 	$(Q)( \
 	$(CHDIR)/$($(PKG)_DIR); \
-	for i in $(1); do \
+	for i in $(1) $(2); do \
 		if [ "$$i" == "$(PKG_PATCHES_DIR)" -a ! -d $$i ]; then \
 			continue; \
 		fi; \
@@ -170,7 +170,7 @@ define PREPARE
 	$(call DEPENDENCIES)
 	$(call DOWNLOAD,$($(PKG)_SOURCE))
 	$(if $(filter $(1),$(PKG_NO_EXTRACT)),,$(call EXTRACT,$(BUILD_DIR)))
-	$(if $(filter $(1),$(PKG_NO_PATCHES)),,$(call APPLY_PATCHES,$($(PKG)_PATCH)))
+	$(if $(filter $(1),$(PKG_NO_PATCHES)),,$(call APPLY_PATCHES,$($(PKG)_PATCH),$($(PKG)_PATCH_CUSTOM)))
 endef
 
 # -----------------------------------------------------------------------------
