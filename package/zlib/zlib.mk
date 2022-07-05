@@ -37,7 +37,7 @@ HOST_ZLIB_CONF_ENV = \
 	$(HOST_CONFIGURE_ENV)
 
 HOST_ZLIB_CONF_OPTS = \
-	--prefix="" \
+	--prefix=$(HOST_DIR) \
 	--shared \
 	--uname=Linux
 
