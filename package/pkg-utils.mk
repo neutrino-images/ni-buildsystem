@@ -18,6 +18,11 @@ PKG_PATCHES_DIR = $(PACKAGE_DIR)/$(subst host-,,$(pkgname))/patches
 # check for necessary $(PKG) variables
 define PKG_CHECK_VARIABLES
 
+# patch
+ifndef $(PKG)_PATCH
+  $(PKG)_PATCH = $(PKG_PATCHES_DIR)
+endif
+
 # autoreconf
 ifndef $(PKG)_AUTORECONF
   $(PKG)_AUTORECONF = NO

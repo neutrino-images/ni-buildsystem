@@ -170,7 +170,7 @@ define PREPARE
 	$(call DEPENDENCIES)
 	$(call DOWNLOAD,$($(PKG)_SOURCE))
 	$(if $(filter $(1),$(PKG_NO_EXTRACT)),,$(call EXTRACT,$(BUILD_DIR)))
-	$(if $(filter $(1),$(PKG_NO_PATCHES)),,$(call APPLY_PATCHES,$(PKG_PATCHES_DIR)))
+	$(if $(filter $(1),$(PKG_NO_PATCHES)),,$(call APPLY_PATCHES,$($(PKG)_PATCH)))
 endef
 
 # -----------------------------------------------------------------------------
