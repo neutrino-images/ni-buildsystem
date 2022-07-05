@@ -111,11 +111,3 @@ PKG_NO_EXTRACT = pkg-no-extract
 PKG_NO_PATCHES = pkg-no-patches
 PKG_NO_BUILD = pkg-no-build
 PKG_NO_INSTALL = pkg-no-install
-
-# -----------------------------------------------------------------------------
-
-# Compatibility variables (marked to remove)
-PKG_DIR         = $($(PKG)_DIR)/$($(PKG)_SUBDIR)
-PKG_SOURCE      = $($(PKG)_SOURCE)
-PKG_SITE        = $($(PKG)_SITE)
-PKG_PATCH       = $($(PKG)_PATCH)
