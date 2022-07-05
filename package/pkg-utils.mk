@@ -61,6 +61,9 @@ ifndef $(PKG)_MAKE_OPTS
 endif
 
 # make install
+ifndef $(PKG)_MAKE_INSTALL
+  $(PKG)_MAKE_INSTALL = $($(PKG)_MAKE)
+endif
 ifndef $(PKG)_MAKE_INSTALL_ENV
   $(PKG)_MAKE_INSTALL_ENV = $($(PKG)_MAKE_ENV)
 endif
