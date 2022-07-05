@@ -11,6 +11,9 @@ USHARE_SITE = $(call github,ddugovic,uShare,v$(USHARE_VERSION))
 
 USHARE_DEPENDENCIES = libupnp
 
+USHARE_CONF_ENV = \
+	$(TARGET_CONFIGURE_ENV)
+
 USHARE_CONF_OPTS = \
 	--prefix=$(prefix) \
 	--sysconfdir=$(REMOVE_sysconfdir) \
@@ -19,6 +22,14 @@ USHARE_CONF_OPTS = \
 	--disable-strip \
 	--cross-compile \
 	--cross-prefix=$(TARGET_CROSS)
+
+define USHARE_CONFIGURE_CMDS
+	$(CHDIR)/$($(PKG)_DIR); \
+		$($(PKG)_CONF_ENV) ./configure $($(PKG)_CONF_OPTS)
+endef
+
+USHARE_MAKE_ENV = \
+	$(TARGET_MAKE_ENV)
 
 USHARE_MAKE_OPTS = \
 	LDFLAGS="$(TARGET_LDFLAGS)"
@@ -41,11 +52,4 @@ endef
 USHARE_TARGET_FINALIZE_HOOKS += USHARE_INSTALL_INIT_SCRIPT
 
 ushare: | $(TARGET_DIR)
-	$(call PREPARE)
-	$(CHDIR)/$($(PKG)_DIR); \
-		$(TARGET_CONFIGURE_ENV) \
-		./configure $($(PKG)_CONF_OPTS); \
-		$(TARGET_MAKE_ENV) \
-		$(MAKE) $($(PKG)_MAKE_OPTS); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(call TARGET_FOLLOWUP)
+	$(call autotools-package)
