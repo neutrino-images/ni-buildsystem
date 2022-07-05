@@ -61,7 +61,7 @@ define HOST_MAKE_INSTALL
 	$(Q)( \
 	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
 		$(HOST_MAKE_ENV) $($(PKG)_MAKE_INSTALL_ENV) \
-		$($(PKG)_MAKE) $($(PKG)_MAKE_INSTALL_ARGS) DESTDIR=$(TARGET_DIR) \
+		$($(PKG)_MAKE) $($(PKG)_MAKE_INSTALL_ARGS) \
 			$($(PKG)_MAKE_INSTALL_OPTS); \
 	)
 	$(foreach hook,$($(PKG)_POST_INSTALL_HOOKS),$(call $(hook))$(sep))
