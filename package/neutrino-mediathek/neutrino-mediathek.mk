@@ -9,15 +9,20 @@ NEUTRINO_MEDIATHEK_DIR = mediathek.$(NEUTRINO_MEDIATHEK_VERSION)
 NEUTRINO_MEDIATHEK_SOURCE = mediathek.$(NEUTRINO_MEDIATHEK_VERSION)
 NEUTRINO_MEDIATHEK_SITE = https://github.com/neutrino-mediathek
 
-neutrino-mediathek: $(SHARE_PLUGINS) | $(TARGET_DIR)
-	$(REMOVE)/$(PKG_DIR)
-	$(GET_GIT_SOURCE) $(PKG_SITE)/$(PKG_SOURCE) $(DL_DIR)/$(PKG_SOURCE)
-	$(CPDIR)/$(PKG_SOURCE)
-	$(CHDIR)/$(PKG_DIR); \
-		$(INSTALL_COPY) plugins/* $(SHARE_PLUGINS)/; \
-		$(INSTALL_COPY) share/* $(TARGET_datadir)
-	$(REMOVE)/$(PKG_DIR)
-	# temporarily use beta-version from our board
-	rm -rf $(SHARE_PLUGINS)/neutrino-mediathek*
-	$(INSTALL_COPY) $(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS)/scripts-lua/plugins/mediathek/* $(SHARE_PLUGINS)/
-	$(call TOUCH)
+ifeq ($(BS_PACKAGE_NEUTRINO_MEDIATHEK_ORIGIN_NI),y)
+NEUTRINO_MEDIATHEK_DEPENDENCIES = $(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS)
+NEUTRINO_MEDIATHEK_ORIGIN = $(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS)/scripts-lua/plugins/mediathek
+else
+NEUTRINO_MEDIATHEK_ORIGIN = $(PKG_BUILD_DIR)/plugins
+endif
+
+define NEUTRINO_MEDIATHEK_INSTALL_PLUGIN
+	$(INSTALL) -d $(TARGET_datadir)
+	$(INSTALL_COPY) $(PKG_BUILD_DIR)/share/* $(TARGET_datadir)
+	$(INSTALL) -d $(SHARE_PLUGINS)
+	$(INSTALL_COPY) $($(PKG)_ORIGIN)/* $(SHARE_PLUGINS)
+endef
+NEUTRINO_MEDIATHEK_INDIVIDUAL_HOOKS += NEUTRINO_MEDIATHEK_INSTALL_PLUGIN
+
+neutrino-mediathek: | $(TARGET_DIR)
+	$(call individual-package)
