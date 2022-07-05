@@ -11,11 +11,8 @@ GRAPHLCD_BASE_SITE = https://projects.vdr-developer.org/git
 
 GRAPHLCD_BASE_DEPENDENCIES = freetype libiconv libusb
 
-GRAPHLCD_BASE_PATCH  = 0001-graphlcd.patch
-GRAPHLCD_BASE_PATCH += 0003-strip-graphlcd-conf.patch
-GRAPHLCD_BASE_PATCH += 0004-material-colors.patch
 ifeq ($(BOXMODEL),$(filter $(BOXMODEL),vuduo4k vuduo4kse vusolo4k vuultimo4k vuuno4kse))
-  GRAPHLCD_BASE_PATCH += 0005-add-vuplus-driver.patch
+GRAPHLCD_BASE_PATCH_CUSTOM = 0005-add-vuplus-driver.patch-custom
 endif
 
 GRAPHLCD_BASE_MAKE_ENV = \
