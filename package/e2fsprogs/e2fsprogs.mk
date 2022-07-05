@@ -50,7 +50,10 @@ E2FSPROGS_CONF_OPTS = \
 	--with-gnu-ld \
 	--with-crond-dir=no
 
-E2FSPROGS_MAKE_INSTALL_OPTS = \
+E2FSPROGS_MAKE_INSTALL = \
+	$(MAKE1)
+
+E2FSPROGS_MAKE_INSTALL_ARGS = \
 	install-libs
 
 define E2FSPROGS_TARGET_CLEANUP
