@@ -68,6 +68,13 @@ endif
 ifndef $(PKG)_MAKE
   $(PKG)_MAKE = $$(MAKE)
 endif
+ifndef $(PKG)_MAKE_CMDS
+  ifeq ($(PKG_HOST_PACKAGE),YES)
+    $(PKG)_MAKE_CMDS = $$(HOST_MAKE_CMDS)
+  else
+    $(PKG)_MAKE_CMDS = $$(TARGET_MAKE_CMDS)
+  endif
+endif
 ifndef $(PKG)_MAKE_ENV
   $(PKG)_MAKE_ENV =
 endif
@@ -81,6 +88,13 @@ endif
 # make install
 ifndef $(PKG)_MAKE_INSTALL
   $(PKG)_MAKE_INSTALL = $$($(PKG)_MAKE)
+endif
+ifndef $(PKG)_MAKE_INSTALL_CMDS
+  ifeq ($(PKG_HOST_PACKAGE),YES)
+    $(PKG)_MAKE_INSTALL_CMDS = $$(HOST_MAKE_INSTALL_CMDS)
+  else
+    $(PKG)_MAKE_INSTALL_CMDS = $$(TARGET_MAKE_INSTALL_CMDS)
+  endif
 endif
 ifndef $(PKG)_MAKE_INSTALL_ENV
   $(PKG)_MAKE_INSTALL_ENV = $$($(PKG)_MAKE_ENV)
