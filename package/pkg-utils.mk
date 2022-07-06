@@ -23,7 +23,7 @@ define PKG_CHECK_VARIABLES
 
 # patch
 ifndef $(PKG)_PATCH
-  $(PKG)_PATCH = $(PKG_PATCHES_DIR)
+  $(PKG)_PATCH = $$(PKG_PATCHES_DIR)
 endif
 ifndef $(PKG)_PATCH_CUSTOM
   $(PKG)_PATCH_CUSTOM =
@@ -66,7 +66,7 @@ endif
 
 # make
 ifndef $(PKG)_MAKE
-  $(PKG)_MAKE = $(MAKE)
+  $(PKG)_MAKE = $$(MAKE)
 endif
 ifndef $(PKG)_MAKE_ENV
   $(PKG)_MAKE_ENV =
@@ -80,16 +80,16 @@ endif
 
 # make install
 ifndef $(PKG)_MAKE_INSTALL
-  $(PKG)_MAKE_INSTALL = $($(PKG)_MAKE)
+  $(PKG)_MAKE_INSTALL = $$($(PKG)_MAKE)
 endif
 ifndef $(PKG)_MAKE_INSTALL_ENV
-  $(PKG)_MAKE_INSTALL_ENV = $($(PKG)_MAKE_ENV)
+  $(PKG)_MAKE_INSTALL_ENV = $$($(PKG)_MAKE_ENV)
 endif
 ifndef $(PKG)_MAKE_INSTALL_ARGS
   $(PKG)_MAKE_INSTALL_ARGS = install
 endif
 ifndef $(PKG)_MAKE_INSTALL_OPTS
-  $(PKG)_MAKE_INSTALL_OPTS = $($(PKG)_MAKE_OPTS)
+  $(PKG)_MAKE_INSTALL_OPTS = $$($(PKG)_MAKE_OPTS)
 endif
 
 # ninja
