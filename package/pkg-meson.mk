@@ -105,7 +105,7 @@ define HOST_MESON_CONFIGURE
 	$(foreach hook,$($(PKG)_POST_CONFIGURE_HOOKS),$(call $(hook))$(sep))
 endef
 
-define HOST_NINJA_BUID
+define HOST_NINJA_BUILD
 	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
 		$(HOST_MAKE_ENV) $($(PKG)_NINJA_ENV) \
 		$(HOST_NINJA_BINARY) -C $(PKG_BUILD_DIR)/build \
