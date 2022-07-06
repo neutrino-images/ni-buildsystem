@@ -43,10 +43,19 @@ ifndef $(PKG)_AUTORECONF_OPTS
   $(PKG)_AUTORECONF_OPTS =
 endif
 
-# cmake / configure / meson
+# cmake
 ifndef $(PKG)_CMAKE
   $(PKG)_CMAKE = cmake
 endif
+ifndef $(PKG)_CMAKE_CMDS
+  ifeq ($(PKG_HOST_PACKAGE),YES)
+    $(PKG)_CMAKE_CMDS = $$(HOST_CMAKE_CMDS)
+  else
+    $(PKG)_CMAKE_CMDS = $$(TARGET_CMAKE_CMDS)
+  endif
+endif
+
+# configure
 ifndef $(PKG)_CONFIGURE_CMD
   $(PKG)_CONFIGURE_CMD = configure
 endif

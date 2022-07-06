@@ -44,16 +44,18 @@ TARGET_CMAKE_OPTS += \
 	-DCMAKE_READELF="$(TARGET_READELF)" \
 	-DCMAKE_STRIP="$(TARGET_STRIP)"
 
-define TARGET_CMAKE
-	@$(call MESSAGE,"Configuring")
-	$(foreach hook,$($(PKG)_PRE_CONFIGURE_HOOKS),$(call $(hook))$(sep))
-	$(Q)( \
+define TARGET_CMAKE_CMDS
 	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
 		rm -f CMakeCache.txt; \
 		$(TARGET_CMAKE_ENV) $($(PKG)_CONF_ENV) \
 		$($(PKG)_CMAKE) \
-			$(TARGET_CMAKE_OPTS) $($(PKG)_CONF_OPTS); \
-	)
+			$(TARGET_CMAKE_OPTS) $($(PKG)_CONF_OPTS)
+endef
+
+define TARGET_CMAKE
+	@$(call MESSAGE,"Configuring")
+	$(foreach hook,$($(PKG)_PRE_CONFIGURE_HOOKS),$(call $(hook))$(sep))
+	$(Q)$(call $(PKG)_CMAKE_CMDS)
 	$(foreach hook,$($(PKG)_POST_CONFIGURE_HOOKS),$(call $(hook))$(sep))
 endef
 
@@ -88,16 +90,18 @@ HOST_CMAKE_OPTS += \
 	-DCMAKE_INSTALL_PREFIX="$(HOST_DIR)" \
 	-DCMAKE_PREFIX_PATH="$(HOST_DIR)"
 
-define HOST_CMAKE
-	@$(call MESSAGE,"Configuring")
-	$(foreach hook,$($(PKG)_PRE_CONFIGURE_HOOKS),$(call $(hook))$(sep))
-	$(Q)( \
+define HOST_CMAKE_CMDS
 	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
 		rm -f CMakeCache.txt; \
 		$(HOST_CMAKE_ENV) $($(PKG)_CONF_ENV) \
 		$($(PKG)_CMAKE) \
-			$(HOST_CMAKE_OPTS) $($(PKG)_CONF_OPTS); \
-	)
+			$(HOST_CMAKE_OPTS) $($(PKG)_CONF_OPTS)
+endef
+
+define HOST_CMAKE
+	@$(call MESSAGE,"Configuring")
+	$(foreach hook,$($(PKG)_PRE_CONFIGURE_HOOKS),$(call $(hook))$(sep))
+	$(Q)$(call $(PKG)_CMAKE_CMDS)
 	$(foreach hook,$($(PKG)_POST_CONFIGURE_HOOKS),$(call $(hook))$(sep))
 endef
 
