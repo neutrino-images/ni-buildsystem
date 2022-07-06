@@ -14,10 +14,10 @@ define TARGET_MAKE_CMDS
 endef
 
 define TARGET_MAKE
-	@$(call MESSAGE,"Compiling")
-	$(foreach hook,$($(PKG)_PRE_COMPILE_HOOKS),$(call $(hook))$(sep))
+	@$(call MESSAGE,"Building")
+	$(foreach hook,$($(PKG)_PRE_BUILD_HOOKS),$(call $(hook))$(sep))
 	$(Q)$(call $(PKG)_MAKE_CMDS)
-	$(foreach hook,$($(PKG)_POST_COMPILE_HOOKS),$(call $(hook))$(sep))
+	$(foreach hook,$($(PKG)_POST_BUILD_HOOKS),$(call $(hook))$(sep))
 endef
 
 define TARGET_MAKE_INSTALL_CMDS
@@ -56,9 +56,9 @@ endef
 
 define HOST_MAKE
 	@$(call MESSAGE,"Compiling")
-	$(foreach hook,$($(PKG)_PRE_COMPILE_HOOKS),$(call $(hook))$(sep))
+	$(foreach hook,$($(PKG)_PRE_BUILD_HOOKS),$(call $(hook))$(sep))
 	$(Q)$(call $(PKG)_MAKE_CMDS)
-	$(foreach hook,$($(PKG)_POST_COMPILE_HOOKS),$(call $(hook))$(sep))
+	$(foreach hook,$($(PKG)_POST_BUILD_HOOKS),$(call $(hook))$(sep))
 endef
 
 define HOST_MAKE_INSTALL_CMDS

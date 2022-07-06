@@ -29,7 +29,7 @@ define LUA_MAKE_PC
 	$(CHDIR)/$($(PKG)_DIR); \
 		$($(PKG)_MAKE) pc INSTALL_TOP=$(TARGET_prefix) > $(TARGET_libdir)/pkgconfig/lua.pc
 endef
-LUA_POST_COMPILE_HOOKS += LUA_MAKE_PC
+LUA_POST_BUILD_HOOKS += LUA_MAKE_PC
 
 define LUA_TARGET_CLEANUP
 	$(TARGET_RM) $(TARGET_bindir)/luac
