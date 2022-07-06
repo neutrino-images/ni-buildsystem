@@ -18,10 +18,6 @@ PROCPS_NG_DEPENDENCIES = ncurses
 
 PROCPS_NG_AUTORECONF = YES
 
-PROCPS_NG_CONF_ENV = \
-	ac_cv_func_malloc_0_nonnull=yes \
-	ac_cv_func_realloc_0_nonnull=yes
-
 PROCPS_NG_CONF_OPTS = \
 	--prefix=$(base_prefix) \
 	--exec_prefix=$(base_prefix) \

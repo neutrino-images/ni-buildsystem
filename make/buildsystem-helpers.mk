@@ -10,7 +10,7 @@ download = $(GET_ARCHIVE) $(DL_DIR)
 UNTAR = tar -C $(BUILD_DIR) -xf $(DL_DIR)
 UNZIP = unzip -d $(BUILD_DIR) -o $(DL_DIR)
 
-# clean up
+# for compatibility with "old" infrastructure
 REMOVE = rm -rf $(BUILD_DIR)
 
 # build helper variables

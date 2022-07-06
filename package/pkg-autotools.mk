@@ -45,6 +45,16 @@ TARGET_CONFIGURE_ENV += \
 	PKG_CONFIG_PATH="$(PKG_CONFIG_PATH)" \
 	PKG_CONFIG_SYSROOT_DIR=$(PKG_CONFIG_SYSROOT_DIR)
 
+TARGET_CONFIGURE_ARGS = \
+	ac_cv_func_mmap_fixed_mapped=yes \
+	ac_cv_func_memcmp_working=yes \
+	ac_cv_have_decl_malloc=yes \
+	gl_cv_func_malloc_0_nonnull=yes \
+	ac_cv_func_malloc_0_nonnull=yes \
+	ac_cv_func_calloc_0_nonnull=yes \
+	ac_cv_func_realloc_0_nonnull=yes \
+	lt_cv_sys_lib_search_path_spec=""
+
 TARGET_CONFIGURE_OPTS = \
 	--build=$(GNU_HOST_NAME) \
 	--host=$(TARGET) \
@@ -65,6 +75,7 @@ define TARGET_CONFIGURE_CMDS
 	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
 		test -f ./$($(PKG)_CONFIGURE_CMD) || ./autogen.sh && \
 		CONFIG_SITE=/dev/null \
+		$(TARGET_CONFIGURE_ARGS) \
 		$(TARGET_CONFIGURE_ENV) $($(PKG)_CONF_ENV) \
 		./$($(PKG)_CONFIGURE_CMD) \
 			$(TARGET_CONFIGURE_OPTS) $($(PKG)_CONF_OPTS)
