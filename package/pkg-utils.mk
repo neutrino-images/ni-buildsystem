@@ -86,13 +86,6 @@ endif
 ifndef $(PKG)_MAKE
   $(PKG)_MAKE = $$(MAKE)
 endif
-ifndef $(PKG)_MAKE_CMDS
-  ifeq ($(PKG_HOST_PACKAGE),YES)
-    $(PKG)_MAKE_CMDS = $$(HOST_MAKE_CMDS)
-  else
-    $(PKG)_MAKE_CMDS = $$(TARGET_MAKE_CMDS)
-  endif
-endif
 ifndef $(PKG)_MAKE_ENV
   $(PKG)_MAKE_ENV =
 endif
@@ -101,6 +94,24 @@ ifndef $(PKG)_MAKE_ARGS
 endif
 ifndef $(PKG)_MAKE_OPTS
   $(PKG)_MAKE_OPTS =
+endif
+
+# build commands
+# TODO: python, kernel
+ifndef $(PKG)_BUILD_CMDS
+  ifeq ($(PKG_MODE),$(filter $(PKG_MODE),AUTOTOOLS CMAKE GENERIC))
+    ifeq ($(PKG_HOST_PACKAGE),YES)
+      $(PKG)_BUILD_CMDS = $$(HOST_MAKE_CMDS)
+    else
+      $(PKG)_BUILD_CMDS = $$(TARGET_MAKE_CMDS)
+    endif
+  else ifeq ($(PKG_MODE),$(filter $(PKG_MODE),MESON))
+    ifeq ($(PKG_HOST_PACKAGE),YES)
+      $(PKG)_BUILD_CMDS = $$(HOST_NINJA_CMDS)
+    else
+      $(PKG)_BUILD_CMDS = $$(TARGET_NINJA_CMDS)
+    endif
+  endif
 endif
 
 # make install

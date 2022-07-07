@@ -63,11 +63,18 @@ define TARGET_MESON_CONFIGURE
 	$(foreach hook,$($(PKG)_POST_CONFIGURE_HOOKS),$(call $(hook))$(sep))
 endef
 
-define TARGET_NINJA_BUILD
+define TARGET_NINJA_CMDS
 	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
 		$(TARGET_MAKE_ENV) $($(PKG)_NINJA_ENV) \
 		$(HOST_NINJA_BINARY) -C $(PKG_BUILD_DIR)/build \
 			$($(PKG)_NINJA_OPTS)
+endef
+
+define TARGET_NINJA_BUILD
+	@$(call MESSAGE,"Building")
+	$(foreach hook,$($(PKG)_PRE_BUILD_HOOKS),$(call $(hook))$(sep))
+	$(Q)$(call $(PKG)_BUILD_CMDS)
+	$(foreach hook,$($(PKG)_POST_BUILD_HOOKS),$(call $(hook))$(sep))
 endef
 
 define TARGET_NINJA_INSTALL
@@ -111,11 +118,18 @@ define HOST_MESON_CONFIGURE
 	$(foreach hook,$($(PKG)_POST_CONFIGURE_HOOKS),$(call $(hook))$(sep))
 endef
 
-define HOST_NINJA_BUILD
+define HOST_NINJA_CMDS
 	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
 		$(HOST_MAKE_ENV) $($(PKG)_NINJA_ENV) \
 		$(HOST_NINJA_BINARY) -C $(PKG_BUILD_DIR)/build \
 			$($(PKG)_NINJA_OPTS)
+endef
+
+define HOST_NINJA_BUILD
+	@$(call MESSAGE,"Building")
+	$(foreach hook,$($(PKG)_PRE_BUILD_HOOKS),$(call $(hook))$(sep))
+	$(Q)$(call $(PKG)_BUILD_CMDS)
+	$(foreach hook,$($(PKG)_POST_BUILD_HOOKS),$(call $(hook))$(sep))
 endef
 
 define HOST_NINJA_INSTALL

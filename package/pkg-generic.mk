@@ -16,7 +16,7 @@ endef
 define TARGET_MAKE
 	@$(call MESSAGE,"Building")
 	$(foreach hook,$($(PKG)_PRE_BUILD_HOOKS),$(call $(hook))$(sep))
-	$(Q)$(call $(PKG)_MAKE_CMDS)
+	$(Q)$(call $(PKG)_BUILD_CMDS)
 	$(foreach hook,$($(PKG)_POST_BUILD_HOOKS),$(call $(hook))$(sep))
 endef
 
@@ -58,7 +58,7 @@ endef
 define HOST_MAKE
 	@$(call MESSAGE,"Compiling")
 	$(foreach hook,$($(PKG)_PRE_BUILD_HOOKS),$(call $(hook))$(sep))
-	$(Q)$(call $(PKG)_MAKE_CMDS)
+	$(Q)$(call $(PKG)_BUILD_CMDS)
 	$(foreach hook,$($(PKG)_POST_BUILD_HOOKS),$(call $(hook))$(sep))
 endef
 
