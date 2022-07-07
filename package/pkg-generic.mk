@@ -13,7 +13,7 @@ define TARGET_MAKE_CMDS
 			$($(PKG)_MAKE_OPTS)
 endef
 
-define TARGET_MAKE
+define TARGET_MAKE_BUILD
 	@$(call MESSAGE,"Building")
 	$(foreach hook,$($(PKG)_PRE_BUILD_HOOKS),$(call $(hook))$(sep))
 	$(Q)$(call $(PKG)_BUILD_CMDS)
@@ -39,7 +39,7 @@ endef
 define generic-package
 	$(eval PKG_MODE = $(pkg-mode))
 	$(call PREPARE,$(1))
-	$(if $(filter $(1),$(PKG_NO_BUILD)),,$(call TARGET_MAKE))
+	$(if $(filter $(1),$(PKG_NO_BUILD)),,$(call TARGET_MAKE_BUILD))
 	$(if $(filter $(1),$(PKG_NO_INSTALL)),,$(call TARGET_MAKE_INSTALL))
 	$(call TARGET_FOLLOWUP)
 endef
@@ -55,7 +55,7 @@ define HOST_MAKE_CMDS
 			$($(PKG)_MAKE_OPTS)
 endef
 
-define HOST_MAKE
+define HOST_MAKE_BUILD
 	@$(call MESSAGE,"Compiling")
 	$(foreach hook,$($(PKG)_PRE_BUILD_HOOKS),$(call $(hook))$(sep))
 	$(Q)$(call $(PKG)_BUILD_CMDS)
@@ -81,7 +81,7 @@ endef
 define host-generic-package
 	$(eval PKG_MODE = $(pkg-mode))
 	$(call PREPARE,$(1))
-	$(if $(filter $(1),$(PKG_NO_BUILD)),,$(call HOST_MAKE))
+	$(if $(filter $(1),$(PKG_NO_BUILD)),,$(call HOST_MAKE_BUILD))
 	$(if $(filter $(1),$(PKG_NO_INSTALL)),,$(call HOST_MAKE_INSTALL))
 	$(call HOST_FOLLOWUP)
 endef
