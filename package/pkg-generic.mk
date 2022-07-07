@@ -6,7 +6,7 @@
 
 TARGET_MAKE_ENV =
 
-define TARGET_MAKE_CMDS
+define TARGET_MAKE_BUILD_CMDS
 	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
 		$(TARGET_MAKE_ENV) $($(PKG)_MAKE_ENV) \
 		$($(PKG)_MAKE) $($(PKG)_MAKE_ARGS)\
@@ -30,7 +30,7 @@ endef
 define TARGET_MAKE_INSTALL
 	@$(call MESSAGE,"Installing")
 	$(foreach hook,$($(PKG)_PRE_INSTALL_HOOKS),$(call $(hook))$(sep))
-	$(Q)$(call $(PKG)_MAKE_INSTALL_CMDS)
+	$(Q)$(call $(PKG)_INSTALL_CMDS)
 	$(foreach hook,$($(PKG)_POST_INSTALL_HOOKS),$(call $(hook))$(sep))
 endef
 
@@ -48,7 +48,7 @@ endef
 
 HOST_MAKE_ENV =
 
-define HOST_MAKE_CMDS
+define HOST_MAKE_BUILD_CMDS
 	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
 		$(HOST_MAKE_ENV) $($(PKG)_MAKE_ENV) \
 		$($(PKG)_MAKE) $($(PKG)_MAKE_ARGS)\
@@ -72,7 +72,7 @@ endef
 define HOST_MAKE_INSTALL
 	@$(call MESSAGE,"Installing")
 	$(foreach hook,$($(PKG)_PRE_INSTALL_HOOKS),$(call $(hook))$(sep))
-	$(Q)$(call $(PKG)_MAKE_INSTALL_CMDS)
+	$(Q)$(call $(PKG)_INSTALL_CMDS)
 	$(foreach hook,$($(PKG)_POST_INSTALL_HOOKS),$(call $(hook))$(sep))
 endef
 

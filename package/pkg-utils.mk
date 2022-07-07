@@ -101,15 +101,15 @@ endif
 ifndef $(PKG)_BUILD_CMDS
   ifeq ($(PKG_MODE),$(filter $(PKG_MODE),AUTOTOOLS CMAKE GENERIC))
     ifeq ($(PKG_HOST_PACKAGE),YES)
-      $(PKG)_BUILD_CMDS = $$(HOST_MAKE_CMDS)
+      $(PKG)_BUILD_CMDS = $$(HOST_MAKE_BUILD_CMDS)
     else
-      $(PKG)_BUILD_CMDS = $$(TARGET_MAKE_CMDS)
+      $(PKG)_BUILD_CMDS = $$(TARGET_MAKE_BUILD_CMDS)
     endif
   else ifeq ($(PKG_MODE),$(filter $(PKG_MODE),MESON))
     ifeq ($(PKG_HOST_PACKAGE),YES)
-      $(PKG)_BUILD_CMDS = $$(HOST_NINJA_CMDS)
+      $(PKG)_BUILD_CMDS = $$(HOST_NINJA_BUILD_CMDS)
     else
-      $(PKG)_BUILD_CMDS = $$(TARGET_NINJA_CMDS)
+      $(PKG)_BUILD_CMDS = $$(TARGET_NINJA_BUILD_CMDS)
     endif
   endif
 endif
@@ -117,13 +117,6 @@ endif
 # make install
 ifndef $(PKG)_MAKE_INSTALL
   $(PKG)_MAKE_INSTALL = $$($(PKG)_MAKE)
-endif
-ifndef $(PKG)_MAKE_INSTALL_CMDS
-  ifeq ($(PKG_HOST_PACKAGE),YES)
-    $(PKG)_MAKE_INSTALL_CMDS = $$(HOST_MAKE_INSTALL_CMDS)
-  else
-    $(PKG)_MAKE_INSTALL_CMDS = $$(TARGET_MAKE_INSTALL_CMDS)
-  endif
 endif
 ifndef $(PKG)_MAKE_INSTALL_ENV
   $(PKG)_MAKE_INSTALL_ENV = $$($(PKG)_MAKE_ENV)
@@ -133,6 +126,24 @@ ifndef $(PKG)_MAKE_INSTALL_ARGS
 endif
 ifndef $(PKG)_MAKE_INSTALL_OPTS
   $(PKG)_MAKE_INSTALL_OPTS = $$($(PKG)_MAKE_OPTS)
+endif
+
+# install commands
+# TODO: python, kernel
+ifndef $(PKG)_INSTALL_CMDS
+  ifeq ($(PKG_MODE),$(filter $(PKG_MODE),AUTOTOOLS CMAKE GENERIC))
+    ifeq ($(PKG_HOST_PACKAGE),YES)
+      $(PKG)_INSTALL_CMDS = $$(HOST_MAKE_INSTALL_CMDS)
+    else
+      $(PKG)_INSTALL_CMDS = $$(TARGET_MAKE_INSTALL_CMDS)
+    endif
+  else ifeq ($(PKG_MODE),$(filter $(PKG_MODE),MESON))
+    ifeq ($(PKG_HOST_PACKAGE),YES)
+      $(PKG)_INSTALL_CMDS = $$(HOST_NINJA_INSTALL_CMDS)
+    else
+      $(PKG)_INSTALL_CMDS = $$(TARGET_NINJA_INSTALL_CMDS)
+    endif
+  endif
 endif
 
 # ninja
