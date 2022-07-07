@@ -24,16 +24,11 @@ XUPNPD_MAKE_OPTS = \
 	-I$(TARGET_includedir)" \
 	embedded
 
-define XUPNPD_INSTALL_BINARY
+define XUPNPD_INSTALL_CMDS
 	$(INSTALL_EXEC) -D $(PKG_BUILD_DIR)/xupnpd $(TARGET_bindir)/xupnpd
-endef
-XUPNPD_PRE_FOLLOWUP_HOOKS += XUPNPD_INSTALL_BINARY
-
-define XUPNPD_INSTALL_DATA
 	$(INSTALL) -d $(TARGET_datadir)/xupnpd/config
 	$(INSTALL_COPY) $(PKG_BUILD_DIR)/{plugins,profiles,ui,www,*.lua} $(TARGET_datadir)/xupnpd/
 endef
-XUPNPD_PRE_FOLLOWUP_HOOKS += XUPNPD_INSTALL_DATA
 
 define XUPNPD_TARGET_CLEANUP
 	$(TARGET_RM) $(TARGET_datadir)/xupnpd/plugins/staff/xupnpd_18plus.lua
@@ -56,4 +51,4 @@ endef
 XUPNPD_TARGET_FINALIZE_HOOKS += XUPNPD_INSTALL_SKEL
 
 xupnpd: | $(TARGET_DIR)
-	$(call generic-package,$(PKG_NO_INSTALL))
+	$(call generic-package)
