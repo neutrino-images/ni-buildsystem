@@ -42,11 +42,7 @@ endef
 
 # -----------------------------------------------------------------------------
 
-define TARGET_MESON_CONFIGURE
-	@$(call MESSAGE,"Configuring")
-	$(foreach hook,$($(PKG)_PRE_CONFIGURE_HOOKS),$(call $(hook))$(sep))
-	$(call MESON_CROSS_CONFIG_HOOK,$(PKG_BUILD_DIR)/build)
-	$(Q)( \
+define TARGET_MESON_CMDS
 	unset CC CXX CPP LD AR NM STRIP; \
 	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
 		$($(PKG)_CONF_ENV) \
@@ -56,8 +52,14 @@ define TARGET_MESON_CONFIGURE
 			-Db_pie=false \
 			-Dstrip=false \
 			$($(PKG)_CONF_OPTS) \
-			$(PKG_BUILD_DIR) $(PKG_BUILD_DIR)/build; \
-	)
+			$(PKG_BUILD_DIR) $(PKG_BUILD_DIR)/build
+endef
+
+define TARGET_MESON_CONFIGURE
+	@$(call MESSAGE,"Configuring")
+	$(foreach hook,$($(PKG)_PRE_CONFIGURE_HOOKS),$(call $(hook))$(sep))
+	$(Q)$(call MESON_CROSS_CONFIG_HOOK,$(PKG_BUILD_DIR)/build)
+	$(Q)$(call $(PKG)_CONFIGURE_CMDS)
 	$(foreach hook,$($(PKG)_POST_CONFIGURE_HOOKS),$(call $(hook))$(sep))
 endef
 
@@ -71,7 +73,8 @@ endef
 define TARGET_NINJA_INSTALL
 	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
 		$(TARGET_MAKE_ENV) $($(PKG)_NINJA_ENV) \
-		$(HOST_NINJA_BINARY) -C $(PKG_BUILD_DIR)/build install DESTDIR=$(TARGET_DIR) \
+		DESTDIR=$(TARGET_DIR) \
+		$(HOST_NINJA_BINARY) -C $(PKG_BUILD_DIR)/build install \
 			$($(PKG)_NINJA_OPTS)
 endef
 
@@ -88,10 +91,7 @@ endef
 
 # -----------------------------------------------------------------------------
 
-define HOST_MESON_CONFIGURE
-	@$(call MESSAGE,"Configuring")
-	$(foreach hook,$($(PKG)_PRE_CONFIGURE_HOOKS),$(call $(hook))$(sep))
-	$(Q)( \
+define HOST_MESON_CMDS
 	unset CC CXX CPP LD AR NM STRIP; \
 	PKG_CONFIG=/usr/bin/pkg-config \
 	PKG_CONFIG_PATH=$(HOST_DIR)/lib/pkgconfig \
@@ -101,8 +101,13 @@ define HOST_MESON_CONFIGURE
 			--prefix=$(HOST_DIR) \
 			--buildtype=release \
 			$($(PKG)_CONF_OPTS) \
-			$(PKG_BUILD_DIR) $(PKG_BUILD_DIR)/build; \
-	)
+			$(PKG_BUILD_DIR) $(PKG_BUILD_DIR)/build
+endef
+
+define HOST_MESON_CONFIGURE
+	@$(call MESSAGE,"Configuring")
+	$(foreach hook,$($(PKG)_PRE_CONFIGURE_HOOKS),$(call $(hook))$(sep))
+	$(Q)$(call $(PKG)_CONFIGURE_CMDS)
 	$(foreach hook,$($(PKG)_POST_CONFIGURE_HOOKS),$(call $(hook))$(sep))
 endef
 

@@ -47,30 +47,39 @@ endif
 ifndef $(PKG)_CMAKE
   $(PKG)_CMAKE = cmake
 endif
-ifndef $(PKG)_CMAKE_CMDS
-  ifeq ($(PKG_HOST_PACKAGE),YES)
-    $(PKG)_CMAKE_CMDS = $$(HOST_CMAKE_CMDS)
-  else
-    $(PKG)_CMAKE_CMDS = $$(TARGET_CMAKE_CMDS)
-  endif
-endif
 
 # configure
 ifndef $(PKG)_CONFIGURE_CMD
   $(PKG)_CONFIGURE_CMD = configure
-endif
-ifndef $(PKG)_CONFIGURE_CMDS
-  ifeq ($(PKG_HOST_PACKAGE),YES)
-    $(PKG)_CONFIGURE_CMDS = $$(HOST_CONFIGURE_CMDS)
-  else
-    $(PKG)_CONFIGURE_CMDS = $$(TARGET_CONFIGURE_CMDS)
-  endif
 endif
 ifndef $(PKG)_CONF_ENV
   $(PKG)_CONF_ENV =
 endif
 ifndef $(PKG)_CONF_OPTS
   $(PKG)_CONF_OPTS =
+endif
+
+# configure commands
+ifndef $(PKG)_CONFIGURE_CMDS
+  ifeq ($(PKG_MODE),CMAKE)
+    ifeq ($(PKG_HOST_PACKAGE),YES)
+      $(PKG)_CONFIGURE_CMDS = $$(HOST_CMAKE_CMDS)
+    else
+      $(PKG)_CONFIGURE_CMDS = $$(TARGET_CMAKE_CMDS)
+    endif
+  else ifeq ($(PKG_MODE),MESON)
+    ifeq ($(PKG_HOST_PACKAGE),YES)
+      $(PKG)_CONFIGURE_CMDS = $$(HOST_MESON_CMDS)
+    else
+      $(PKG)_CONFIGURE_CMDS = $$(TARGET_MESON_CMDS)
+    endif
+  else
+    ifeq ($(PKG_HOST_PACKAGE),YES)
+      $(PKG)_CONFIGURE_CMDS = $$(HOST_CONFIGURE_CMDS)
+    else
+      $(PKG)_CONFIGURE_CMDS = $$(TARGET_CONFIGURE_CMDS)
+    endif
+  endif
 endif
 
 # make
