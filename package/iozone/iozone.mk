@@ -30,10 +30,9 @@ define IOZONE_PATCH_MAKEFILE
 endef
 IOZONE_POST_PATCH_HOOKS += IOZONE_PATCH_MAKEFILE
 
-define IOZONE_INSTALL_BINARY
+define IOZONE_INSTALL_CMDS
 	$(INSTALL_EXEC) -D $(PKG_BUILD_DIR)/iozone $(TARGET_bindir)/iozone
 endef
-IOZONE_PRE_FOLLOWUP_HOOKS += IOZONE_INSTALL_BINARY
 
 iozone: | $(TARGET_DIR)
-	$(call generic-package,$(PKG_NO_INSTALL))
+	$(call generic-package)
