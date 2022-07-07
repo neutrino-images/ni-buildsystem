@@ -19,13 +19,12 @@ GPTFDISK_MAKE_ENV = \
 GPTFDISK_MAKE_OPTS = \
 	$(GPTFDISK_SBINARIES)
 
-define GPTFDISK_INSTALL_SBINARIES
+define GPTFDISK_INSTALL_CMDS
 	$(foreach sbinary,$($(PKG)_SBINARIES),\
 		rm -f $(TARGET_sbindir)/$(sbinary); \
 		$(INSTALL_EXEC) -D $(PKG_BUILD_DIR)/$(sbinary) $(TARGET_sbindir)/$(sbinary)$(sep) \
 	)
 endef
-GPTFDISK_PRE_FOLLOWUP_HOOKS += GPTFDISK_INSTALL_SBINARIES
 
 gptfdisk: | $(TARGET_DIR)
-	$(call generic-package,$(PKG_NO_INSTALL))
+	$(call generic-package)
