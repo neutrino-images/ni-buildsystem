@@ -27,10 +27,9 @@ HOST_U_BOOT_PRE_BUILD_HOOKS += HOST_U_BOOT_MAKE_DEFCONFIG
 HOST_U_BOOT_MAKE_ARGS = \
 	tools-only
 
-define HOST_U_BOOT_INSTALL_MKIMAGE
+define HOST_U_BOOT_INSTALL_CMDS
 	$(INSTALL_EXEC) -D $(PKG_BUILD_DIR)/tools/mkimage $(HOST_MKIMAGE)
 endef
-HOST_U_BOOT_POST_BUILD_HOOKS += HOST_U_BOOT_INSTALL_MKIMAGE
 
 host-u-boot: | $(HOST_DIR)
-	$(call host-generic-package,$(PKG_NO_INSTALL))
+	$(call host-generic-package)
