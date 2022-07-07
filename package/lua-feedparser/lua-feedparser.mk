@@ -11,7 +11,7 @@ LUA_FEEDPARSER_SITE = $(call github,slact,lua-feedparser,$(LUA_FEEDPARSER_VERSIO
 
 LUA_FEEDPARSER_DEPENDENCIES = luaexpat
 
-LUA_FEEDPARSER_MAKE_OPTS = \
+LUA_FEEDPARSER_MAKE_INSTALL_OPTS = \
 	PREFIX=$(TARGET_prefix)
 
 define LUA_FEEDPARSER_PATCH_MAKEFILE
@@ -20,4 +20,4 @@ endef
 LUA_FEEDPARSER_POST_PATCH_HOOKS += LUA_FEEDPARSER_PATCH_MAKEFILE
 
 lua-feedparser: | $(TARGET_DIR)
-	$(call generic-package)
+	$(call generic-package,$(PKG_NO_BUILD))
