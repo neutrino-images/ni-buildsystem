@@ -12,10 +12,9 @@ HD_IDLE_SITE = https://sourceforge.net/projects/hd-idle/files
 HD_IDLE_MAKE_ENV = \
 	$(TARGET_CONFIGURE_ENV)
 
-define HD_IDLE_INSTALL_BINARY
+define HD_IDLE_INSTALL_CMDS
 	$(INSTALL_EXEC) -D $(PKG_BUILD_DIR)/hd-idle $(TARGET_sbindir)/hd-idle
 endef
-HD_IDLE_PRE_FOLLOWUP_HOOKS += HD_IDLE_INSTALL_BINARY
 
 hd-idle: | $(TARGET_DIR)
-	$(call generic-package,$(PKG_NO_INSTALL))
+	$(call generic-package)
