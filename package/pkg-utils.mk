@@ -99,7 +99,7 @@ endif
 # build commands
 # TODO: python, kernel
 ifndef $(PKG)_BUILD_CMDS
-  ifeq ($(PKG_MODE),$(filter $(PKG_MODE),AUTOTOOLS CMAKE GENERIC))
+  ifeq ($(PKG_MODE),$(filter $(PKG_MODE),AUTOTOOLS CMAKE GENERIC KCONFIG))
     ifeq ($(PKG_HOST_PACKAGE),YES)
       $(PKG)_BUILD_CMDS = $$(HOST_MAKE_BUILD_CMDS)
     else
@@ -111,6 +111,8 @@ ifndef $(PKG)_BUILD_CMDS
     else
       $(PKG)_BUILD_CMDS = $$(TARGET_NINJA_BUILD_CMDS)
     endif
+  else
+    $(PKG)_BUILD_CMDS = echo "$(PKG_NO_BUILD)"
   endif
 endif
 
@@ -131,7 +133,7 @@ endif
 # install commands
 # TODO: python, kernel
 ifndef $(PKG)_INSTALL_CMDS
-  ifeq ($(PKG_MODE),$(filter $(PKG_MODE),AUTOTOOLS CMAKE GENERIC))
+  ifeq ($(PKG_MODE),$(filter $(PKG_MODE),AUTOTOOLS CMAKE GENERIC KCONFIG))
     ifeq ($(PKG_HOST_PACKAGE),YES)
       $(PKG)_INSTALL_CMDS = $$(HOST_MAKE_INSTALL_CMDS)
     else
@@ -143,6 +145,8 @@ ifndef $(PKG)_INSTALL_CMDS
     else
       $(PKG)_INSTALL_CMDS = $$(TARGET_NINJA_INSTALL_CMDS)
     endif
+  else
+    $(PKG)_INSTALL_CMDS = echo "$(PKG_NO_INSTALL)"
   endif
 endif
 
@@ -152,6 +156,14 @@ ifndef $(PKG)_NINJA_ENV
 endif
 ifndef $(PKG)_NINJA_OPTS
   $(PKG)_NINJA_OPTS =
+endif
+
+#kconfig
+ifeq ($(PKG_MODE),KCONFIG)
+  ifndef $(PKG)_KCONFIG_FILE
+    $(PKG)_KCONFIG_FILE = .config
+  endif
+  $(PKG)_KCONFIG_DOTCONFIG = $$($(PKG)_KCONFIG_FILE)
 endif
 
 endef # PKG_CHECK_VARIABLES
@@ -408,26 +420,4 @@ define TARGET_FOLLOWUP
 	$(foreach hook,$($(PKG)_TARGET_FINALIZE_HOOKS),$(call $(hook))$(sep))
 	$(foreach hook,$($(PKG)_POST_FOLLOWUP_HOOKS),$(call $(hook))$(sep))
 	$(call TOUCH)
-endef
-
-# -----------------------------------------------------------------------------
-
-#
-# Manipulation of .config files based on the Kconfig infrastructure.
-# Used by the BusyBox package, the Linux kernel package, and more.
-#
-
-define KCONFIG_ENABLE_OPT # (option, file)
-	$(SED) "/\\<$(1)\\>/d" $(2)
-	echo '$(1)=y' >> $(2)
-endef
-
-define KCONFIG_SET_OPT # (option, value, file)
-	$(SED) "/\\<$(1)\\>/d" $(3)
-	echo '$(1)=$(2)' >> $(3)
-endef
-
-define KCONFIG_DISABLE_OPT # (option, file)
-	$(SED) "/\\<$(1)\\>/d" $(2)
-	echo '# $(1) is not set' >> $(2)
 endef
