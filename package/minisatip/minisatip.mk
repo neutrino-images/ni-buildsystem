@@ -21,12 +21,11 @@ MINISATIP_CONF_OPTS = \
 MINISATIP_MAKE_ENV = \
 	$(TARGET_CONFIGURE_ENV)
 
-define MINISATIP_INSTALL
+define MINISATIP_INSTALL_CMDS
 	$(INSTALL_EXEC) -D $(PKG_BUILD_DIR)/minisatip $(TARGET_bindir)/minisatip
 	$(INSTALL) -d $(TARGET_datadir)/minisatip
 	$(INSTALL_COPY) $(PKG_BUILD_DIR)/html $(TARGET_datadir)/minisatip
 endef
-MINISATIP_PRE_FOLLOWUP_HOOKS += MINISATIP_INSTALL
 
 define MINISATIP_INSTALL_DEFAULTS
 	$(INSTALL) -d $(TARGET_sysconfdir)/default
@@ -41,4 +40,4 @@ endef
 MINISATIP_TARGET_FINALIZE_HOOKS += MINISATIP_INSTALL_INIT_SCRIPT
 
 minisatip: | $(TARGET_DIR)
-	$(call autotools-package,$(PKG_NO_INSTALL))
+	$(call autotools-package)
