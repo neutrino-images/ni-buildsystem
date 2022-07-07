@@ -92,6 +92,7 @@ endef
 # -----------------------------------------------------------------------------
 
 define autotools-package
+	$(eval PKG_MODE = $(pkg-mode))
 	$(call PREPARE,$(1))
 	$(call TARGET_CONFIGURE)
 	$(if $(filter $(1),$(PKG_NO_BUILD)),,$(call TARGET_MAKE))
@@ -148,6 +149,7 @@ endef
 # -----------------------------------------------------------------------------
 
 define host-autotools-package
+	$(eval PKG_MODE = $(pkg-mode))
 	$(call PREPARE,$(1))
 	$(call HOST_CONFIGURE)
 	$(if $(filter $(1),$(PKG_NO_BUILD)),,$(call HOST_MAKE))

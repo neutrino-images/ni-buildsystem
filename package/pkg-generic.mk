@@ -37,6 +37,7 @@ endef
 # -----------------------------------------------------------------------------
 
 define generic-package
+	$(eval PKG_MODE = $(pkg-mode))
 	$(call PREPARE,$(1))
 	$(if $(filter $(1),$(PKG_NO_BUILD)),,$(call TARGET_MAKE))
 	$(if $(filter $(1),$(PKG_NO_INSTALL)),,$(call TARGET_MAKE_INSTALL))
@@ -78,6 +79,7 @@ endef
 # -----------------------------------------------------------------------------
 
 define host-generic-package
+	$(eval PKG_MODE = $(pkg-mode))
 	$(call PREPARE,$(1))
 	$(if $(filter $(1),$(PKG_NO_BUILD)),,$(call HOST_MAKE))
 	$(if $(filter $(1),$(PKG_NO_INSTALL)),,$(call HOST_MAKE_INSTALL))

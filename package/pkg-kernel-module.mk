@@ -28,6 +28,7 @@ endef
 # -----------------------------------------------------------------------------
 
 define kernel-module
+	$(eval PKG_MODE = $(pkg-mode))
 	$(call PREPARE,$(1))
 	$(call KERNEL_MODULE_BUILD)
 	$(call LINUX_RUN_DEPMOD)

@@ -129,6 +129,10 @@ pkg-check-variables = $(call PKG_CHECK_VARIABLES)
 
 # -----------------------------------------------------------------------------
 
+pkg-mode = $(call UPPERCASE,$(firstword $(subst -, ,$(subst host-,,$(0)))))
+
+# -----------------------------------------------------------------------------
+
 # PKG "control-flag" variables
 PKG_NO_EXTRACT = pkg-no-extract
 PKG_NO_PATCHES = pkg-no-patches
