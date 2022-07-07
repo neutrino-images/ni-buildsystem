@@ -2,7 +2,7 @@ diff --git a/Makefile b/Makefile
 index b2a62cf..c199335 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -105,8 +105,16 @@ echo:
+@@ -108,8 +108,16 @@ echo:
  pc:
  	@echo "version=$R"
  	@echo "prefix=$(INSTALL_TOP)"
