@@ -1,0 +1,35 @@
+diff --git a/Makefile b/Makefile
+index bd11aca..67f5a38 100644
+--- a/Makefile
++++ b/Makefile
+@@ -15,8 +15,8 @@ INSTALL_BIN= $(INSTALL_TOP)/bin
+ INSTALL_INC= $(INSTALL_TOP)/include
+ INSTALL_LIB= $(INSTALL_TOP)/lib
+ INSTALL_MAN= $(INSTALL_TOP)/man/man1
+-INSTALL_LMOD= $(INSTALL_TOP)/share/lua/$V
+-INSTALL_CMOD= $(INSTALL_TOP)/lib/lua/$V
++INSTALL_LMOD= $(INSTALL_TOP)/share/lua/${VER}
++INSTALL_CMOD= $(INSTALL_TOP)/lib/lua/${VER}
+ 
+ # How to install. If your install program does not support "-p", then
+ # you may have to run ranlib on the installed liblua.a.
+@@ -46,8 +46,8 @@ TO_SOLIB = liblua.so.$(R)
+ TO_MAN= lua.1 luac.1
+ 
+ # Lua version and release.
+-V= 5.2
+-R= $V.4
++VER= 5.2
++R= ${VER}.4
+ 
+ # Targets start here.
+ all:	$(PLAT)
+@@ -88,7 +88,7 @@ dummy:
+ echo:
+ 	@cd src && $(MAKE) -s echo
+ 	@echo "PLAT= $(PLAT)"
+-	@echo "V= $V"
++	@echo "VER= ${VER}"
+ 	@echo "R= $R"
+ 	@echo "TO_BIN= $(TO_BIN)"
+ 	@echo "TO_INC= $(TO_INC)"
