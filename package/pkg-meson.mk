@@ -131,7 +131,7 @@ define host-meson-package
 	$(eval PKG_MODE = $(pkg-mode))
 	$(call PREPARE,$(1))
 	$(call HOST_MESON_CONFIGURE)
-	$(call HOST_NINJA)
+	$(call HOST_NINJA_BUILD)
 	$(call HOST_NINJA_INSTALL)
 	$(call HOST_FOLLOWUP)
 endef
