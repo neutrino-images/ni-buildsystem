@@ -13,7 +13,7 @@ define BASE_PASSWD_INSTALL_MASTER_FILES
 	$(INSTALL_DATA) -D $(PKG_BUILD_DIR)/group.master $(TARGET_datadir)/base-passwd/group.master
 	$(INSTALL_DATA) -D $(PKG_BUILD_DIR)/passwd.master $(TARGET_datadir)/base-passwd/passwd.master
 endef
-BASE_PASSWD_PRE_FOLLOWUP_HOOKS += BASE_PASSWD_INSTALL_MASTER_FILES
+BASE_PASSWD_POST_INSTALL_HOOKS += BASE_PASSWD_INSTALL_MASTER_FILES
 
 base-passwd: | $(TARGET_DIR)
 	$(call autotools-package)
