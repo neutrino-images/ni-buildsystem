@@ -97,7 +97,7 @@ ifndef $(PKG)_MAKE_OPTS
 endif
 
 # build commands
-# TODO: python, kernel
+# TODO: python
 ifndef $(PKG)_BUILD_CMDS
   ifeq ($(PKG_MODE),$(filter $(PKG_MODE),AUTOTOOLS CMAKE GENERIC KCONFIG))
     ifeq ($(PKG_HOST_PACKAGE),YES)
@@ -105,12 +105,14 @@ ifndef $(PKG)_BUILD_CMDS
     else
       $(PKG)_BUILD_CMDS = $$(TARGET_MAKE_BUILD_CMDS_DEFAULT)
     endif
-  else ifeq ($(PKG_MODE),$(filter $(PKG_MODE),MESON))
+  else ifeq ($(PKG_MODE),MESON)
     ifeq ($(PKG_HOST_PACKAGE),YES)
       $(PKG)_BUILD_CMDS = $$(HOST_NINJA_BUILD_CMDS_DEFAULT)
     else
       $(PKG)_BUILD_CMDS = $$(TARGET_NINJA_BUILD_CMDS_DEFAULT)
     endif
+  else ifeq ($(PKG_MODE),KERNEL)
+    $(PKG)_BUILD_CMDS = $$(KERNEL_MODULE_BUILD_CMDS_DEFAULT)
   else
     $(PKG)_BUILD_CMDS = echo "$(PKG_NO_BUILD)"
   endif
@@ -139,7 +141,7 @@ ifndef $(PKG)_INSTALL_CMDS
     else
       $(PKG)_INSTALL_CMDS = $$(TARGET_MAKE_INSTALL_CMDS_DEFAULT)
     endif
-  else ifeq ($(PKG_MODE),$(filter $(PKG_MODE),MESON))
+  else ifeq ($(PKG_MODE),MESON)
     ifeq ($(PKG_HOST_PACKAGE),YES)
       $(PKG)_INSTALL_CMDS = $$(HOST_NINJA_INSTALL_CMDS_DEFAULT)
     else

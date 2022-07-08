@@ -17,12 +17,18 @@ KERNEL_MAKE_VARS += \
 	KVER=$(KERNEL_VERSION) \
 	KSRC=$(BUILD_DIR)/$(KERNEL_DIR)
 
-define KERNEL_MODULE_BUILD
-	@$(call MESSAGE,"Building kernel module")
+define KERNEL_MODULE_BUILD_CMDS_DEFAULT
 	$(CHDIR)/$($(PKG)_DIR); \
 		$(TARGET_MAKE_ENV) $($(PKG)_MAKE_ENV) \
 		$($(PKG)_MAKE) \
 			$($(PKG)_MAKE_OPTS) $(KERNEL_MAKE_VARS)
+endef
+
+define KERNEL_MODULE_BUILD
+	@$(call MESSAGE,"Building kernel module")
+	$(foreach hook,$($(PKG)_PRE_BUILD_HOOKS),$(call $(hook))$(sep))
+	$(Q)$(call $(PKG)_BUILD_CMDS)
+	$(foreach hook,$($(PKG)_POST_BUILD_HOOKS),$(call $(hook))$(sep))
 endef
 
 # -----------------------------------------------------------------------------
