@@ -20,11 +20,15 @@ MINIDLNA_CONF_OPTS = \
 
 define MINIDLNA_INSTALL_MINIDLNAD_CONF
 	$(INSTALL_DATA) -D $(PKG_BUILD_DIR)/minidlna.conf $(TARGET_sysconfdir)/minidlna.conf
+endef
+MINIDLNA_POST_INSTALL_HOOKS += MINIDLNA_INSTALL_MINIDLNAD_CONF
+
+define MINIDLNA_MODIFY_MINIDLNAD_CONF
 	$(SED) 's|^media_dir=.*|media_dir=A,/media/sda1/music\nmedia_dir=V,/media/sda1/movies\nmedia_dir=P,/media/sda1/pictures|' $(TARGET_sysconfdir)/minidlna.conf
 	$(SED) 's|^#user=.*|user=root|' $(TARGET_sysconfdir)/minidlna.conf
 	$(SED) 's|^#friendly_name=.*|friendly_name=$(BOXTYPE)-$(BOXMODEL):ReadyMedia|' $(TARGET_sysconfdir)/minidlna.conf
 endef
-MINIDLNA_PRE_FOLLOWUP_HOOKS += MINIDLNA_INSTALL_MINIDLNAD_CONF
+MINIDLNA_POST_INSTALL_HOOKS += MINIDLNA_MODIFY_MINIDLNAD_CONF
 
 define MINIDLNA_INSTALL_MINIDLNAD_INIT
 	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/minidlnad.init $(TARGET_sysconfdir)/init.d/minidlnad
