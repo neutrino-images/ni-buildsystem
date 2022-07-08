@@ -42,7 +42,7 @@ endef
 
 # -----------------------------------------------------------------------------
 
-define TARGET_MESON_CMDS
+define TARGET_MESON_CMDS_DEFAULT
 	unset CC CXX CPP LD AR NM STRIP; \
 	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
 		$($(PKG)_CONF_ENV) \
@@ -63,7 +63,7 @@ define TARGET_MESON_CONFIGURE
 	$(foreach hook,$($(PKG)_POST_CONFIGURE_HOOKS),$(call $(hook))$(sep))
 endef
 
-define TARGET_NINJA_BUILD_CMDS
+define TARGET_NINJA_BUILD_CMDS_DEFAULT
 	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
 		$(TARGET_MAKE_ENV) $($(PKG)_NINJA_ENV) \
 		$(HOST_NINJA_BINARY) -C $(PKG_BUILD_DIR)/build \
@@ -77,7 +77,7 @@ define TARGET_NINJA_BUILD
 	$(foreach hook,$($(PKG)_POST_BUILD_HOOKS),$(call $(hook))$(sep))
 endef
 
-define TARGET_NINJA_INSTALL_CMDS
+define TARGET_NINJA_INSTALL_CMDS_DEFAULT
 	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
 		$(TARGET_MAKE_ENV) $($(PKG)_NINJA_ENV) \
 		DESTDIR=$(TARGET_DIR) \
@@ -105,7 +105,7 @@ endef
 
 # -----------------------------------------------------------------------------
 
-define HOST_MESON_CMDS
+define HOST_MESON_CMDS_DEFAULT
 	unset CC CXX CPP LD AR NM STRIP; \
 	PKG_CONFIG=/usr/bin/pkg-config \
 	PKG_CONFIG_PATH=$(HOST_DIR)/lib/pkgconfig \
@@ -125,7 +125,7 @@ define HOST_MESON_CONFIGURE
 	$(foreach hook,$($(PKG)_POST_CONFIGURE_HOOKS),$(call $(hook))$(sep))
 endef
 
-define HOST_NINJA_BUILD_CMDS
+define HOST_NINJA_BUILD_CMDS_DEFAULT
 	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
 		$(HOST_MAKE_ENV) $($(PKG)_NINJA_ENV) \
 		$(HOST_NINJA_BINARY) -C $(PKG_BUILD_DIR)/build \
@@ -139,7 +139,7 @@ define HOST_NINJA_BUILD
 	$(foreach hook,$($(PKG)_POST_BUILD_HOOKS),$(call $(hook))$(sep))
 endef
 
-define HOST_NINJA_INSTALL_CMDS
+define HOST_NINJA_INSTALL_CMDS_DEFAULT
 	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
 		$(HOST_MAKE_ENV) $($(PKG)_NINJA_ENV) \
 		$(HOST_NINJA_BINARY) -C $(PKG_BUILD_DIR)/build install \

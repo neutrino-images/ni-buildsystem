@@ -6,7 +6,7 @@
 
 TARGET_MAKE_ENV =
 
-define TARGET_MAKE_BUILD_CMDS
+define TARGET_MAKE_BUILD_CMDS_DEFAULT
 	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
 		$(TARGET_MAKE_ENV) $($(PKG)_MAKE_ENV) \
 		$($(PKG)_MAKE) $($(PKG)_MAKE_ARGS)\
@@ -20,7 +20,7 @@ define TARGET_MAKE_BUILD
 	$(foreach hook,$($(PKG)_POST_BUILD_HOOKS),$(call $(hook))$(sep))
 endef
 
-define TARGET_MAKE_INSTALL_CMDS
+define TARGET_MAKE_INSTALL_CMDS_DEFAULT
 	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
 		$(TARGET_MAKE_ENV) $($(PKG)_MAKE_INSTALL_ENV) \
 		$($(PKG)_MAKE_INSTALL) $($(PKG)_MAKE_INSTALL_ARGS) DESTDIR=$(TARGET_DIR) \
@@ -48,7 +48,7 @@ endef
 
 HOST_MAKE_ENV =
 
-define HOST_MAKE_BUILD_CMDS
+define HOST_MAKE_BUILD_CMDS_DEFAULT
 	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
 		$(HOST_MAKE_ENV) $($(PKG)_MAKE_ENV) \
 		$($(PKG)_MAKE) $($(PKG)_MAKE_ARGS)\
@@ -62,7 +62,7 @@ define HOST_MAKE_BUILD
 	$(foreach hook,$($(PKG)_POST_BUILD_HOOKS),$(call $(hook))$(sep))
 endef
 
-define HOST_MAKE_INSTALL_CMDS
+define HOST_MAKE_INSTALL_CMDS_DEFAULT
 	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
 		$(HOST_MAKE_ENV) $($(PKG)_MAKE_INSTALL_ENV) \
 		$($(PKG)_MAKE_INSTALL) $($(PKG)_MAKE_INSTALL_ARGS) \
