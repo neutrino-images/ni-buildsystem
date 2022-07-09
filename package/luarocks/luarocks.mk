@@ -11,11 +11,6 @@ LUAROCKS_SITE = https://luarocks.github.io/luarocks/releases
 
 # ------------------------------------------------------------------------------
 
-HOST_LUAROCKS_VERSION = $(LUAROCKS_VERSION)
-HOST_LUAROCKS_DIR = $(LUAROCKS_DIR)
-HOST_LUAROCKS_SOURCE = $(LUAROCKS_SOURCE)
-HOST_LUAROCKS_SITE = $(LUAROCKS_SITE)
-
 HOST_LUAROCKS_DEPENDENCIES = host-lua
 
 HOST_LUAROCKS_CONFIG = $(HOST_DIR)/etc/luarocks/config-$(LUA_ABIVERSION).lua

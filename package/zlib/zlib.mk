@@ -28,11 +28,6 @@ zlib: | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-HOST_ZLIB_VERSION = $(ZLIB_VERSION)
-HOST_ZLIB_DIR = $(ZLIB_DIR)
-HOST_ZLIB_SOURCE = $(ZLIB_SOURCE)
-HOST_ZLIB_SITE = $(ZLIB_SITE)
-
 HOST_ZLIB_CONF_ENV = \
 	$(HOST_CONFIGURE_ENV)
 

@@ -20,10 +20,5 @@ libffi: | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-HOST_LIBFFI_VERSION = $(LIBFFI_VERSION)
-HOST_LIBFFI_DIR = $(LIBFFI_DIR)
-HOST_LIBFFI_SOURCE = $(LIBFFI_SOURCE)
-HOST_LIBFFI_SITE = $(LIBFFI_SITE)
-
 host-libffi: | $(HOST_DIR)
 	$(call host-autotools-package)

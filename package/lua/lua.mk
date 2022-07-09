@@ -41,11 +41,6 @@ lua: | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-HOST_LUA_VERSION = $(LUA_VERSION)
-HOST_LUA_DIR = lua-$(HOST_LUA_VERSION)
-HOST_LUA_SOURCE = lua-$(HOST_LUA_VERSION).tar.gz
-HOST_LUA_SITE = http://www.lua.org/ftp
-
 HOST_LUA_PATCH  = 0001-fix-LUA_ROOT.patch
 HOST_LUA_PATCH += 0002-remove-readline.patch
 

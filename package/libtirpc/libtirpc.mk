@@ -24,11 +24,6 @@ libtirpc: | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-HOST_LIBTIRPC_VERSION = $(LIBTIRPC_VERSION)
-HOST_LIBTIRPC_DIR = $(LIBTIRPC_DIR)
-HOST_LIBTIRPC_SOURCE = $(LIBTIRPC_SOURCE)
-HOST_LIBTIRPC_SITE = $(LIBTIRPC_SITE)
-
 HOST_LIBTIRPC_CONF_OPTS = \
 	--disable-gssapi
 

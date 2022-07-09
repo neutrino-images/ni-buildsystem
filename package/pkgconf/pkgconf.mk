@@ -11,11 +11,6 @@ PKGCONF_SITE = https://distfiles.dereferenced.org/pkgconf
 
 # -----------------------------------------------------------------------------
 
-HOST_PKGCONF_VERSION = $(PKGCONF_VERSION)
-HOST_PKGCONF_DIR = $(PKGCONF_DIR)
-HOST_PKGCONF_SOURCE = $(PKGCONF_SOURCE)
-HOST_PKGCONF_SITE = $(PKGCONF_SITE)
-
 HOST_PKG_CONFIG = $(HOST_DIR)/bin/pkg-config
 
 define HOST_PKGCONF_INSTALL_PKG_CONFIG

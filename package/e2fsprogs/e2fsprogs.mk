@@ -68,11 +68,6 @@ e2fsprogs: | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-HOST_E2FSPROGS_VERSION = $(E2FSPROGS_VERSION)
-HOST_E2FSPROGS_DIR = $(E2FSPROGS_DIR)
-HOST_E2FSPROGS_SOURCE = $(E2FSPROGS_SOURCE)
-HOST_E2FSPROGS_SITE = $(E2FSPROGS_SITE)
-
 HOST_E2FSPROGS_CONF_OPTS = \
 	--enable-symlink-install \
 	--with-crond-dir=no

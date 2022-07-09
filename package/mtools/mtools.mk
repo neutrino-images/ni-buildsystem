@@ -11,10 +11,5 @@ MTOOLS_SITE = $(GNU_MIRROR)/mtools
 
 # ------------------------------------------------------------------------------
 
-HOST_MTOOLS_VERSION = $(MTOOLS_VERSION)
-HOST_MTOOLS_DIR = $(MTOOLS_DIR)
-HOST_MTOOLS_SOURCE = $(MTOOLS_SOURCE)
-HOST_MTOOLS_SITE = $(MTOOLS_SITE)
-
 host-mtools: | $(HOST_DIR)
 	$(call host-autotools-package)

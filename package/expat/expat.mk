@@ -26,11 +26,6 @@ expat: | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-HOST_EXPAT_VERSION = $(EXPAT_VERSION)
-HOST_EXPAT_DIR = $(EXPAT_DIR)
-HOST_EXPAT_SOURCE = $(EXPAT_SOURCE)
-HOST_EXPAT_SITE = $(EXPAT_SITE)
-
 HOST_EXPAT_CONF_OPTS = \
 	--without-docbook
 

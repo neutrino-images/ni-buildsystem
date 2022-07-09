@@ -49,11 +49,6 @@ mtd-utils: | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-HOST_MTD_UTILS_VERSION = $(MTD_UTILS_VERSION)
-HOST_MTD_UTILS_DIR = $(MTD_UTILS_DIR)
-HOST_MTD_UTILS_SOURCE = $(MTD_UTILS_SOURCE)
-HOST_MTD_UTILS_SITE = $(MTD_UTILS_SITE)
-
 HOST_MTD_UTILS_CONF_ENV = \
 	ZLIB_CFLAGS=" " \
 	ZLIB_LIBS="-lz" \

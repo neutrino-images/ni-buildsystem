@@ -11,11 +11,6 @@ WAF_SITE = https://waf.io
 
 # ------------------------------------------------------------------------------
 
-HOST_WAF_VERSION = $(WAF_VERSION)
-HOST_WAF_DIR = $(WAF_DIR)
-HOST_WAF_SOURCE = $(WAF_SOURCE)
-HOST_WAF_SITE = $(WAF_SITE)
-
 HOST_WAF_BINARY = $(HOST_DIR)/bin/waf
 
 define HOST_WAF_INSTALL_BINARY

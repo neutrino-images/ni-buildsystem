@@ -32,11 +32,6 @@ parted: | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-HOST_PARTED_VERSION = $(PARTED_VERSION)
-HOST_PARTED_DIR = $(PARTED_DIR)
-HOST_PARTED_SOURCE = $(PARTED_SOURCE)
-HOST_PARTED_SITE = $(PARTED_SITE)
-
 HOST_PARTED_AUTORECONF = YES
 
 HOST_PARTED_CONF_OPTS = \

@@ -11,11 +11,6 @@ QRENCODE_SITE = https://fukuchi.org/works/qrencode
 
 # -----------------------------------------------------------------------------
 
-HOST_QRENCODE_VERSION = $(QRENCODE_VERSION)
-HOST_QRENCODE_DIR = $(QRENCODE_DIR)
-HOST_QRENCODE_SOURCE = $(QRENCODE_SOURCE)
-HOST_QRENCODE_SITE = $(QRENCODE_SITE)
-
 HOST_QRENCODE_DEPENDENCIES = host-libpng
 
 HOST_QRENCODE = $(HOST_DIR)/bin/qrencode

@@ -11,11 +11,6 @@ U_BOOT_SITE = ftp://ftp.denx.de/pub/u-boot
 
 # ------------------------------------------------------------------------------
 
-HOST_U_BOOT_VERSION = $(U_BOOT_VERSION)
-HOST_U_BOOT_DIR = $(U_BOOT_DIR)
-HOST_U_BOOT_SOURCE = $(U_BOOT_SOURCE)
-HOST_U_BOOT_SITE = $(U_BOOT_SITE)
-
 HOST_MKIMAGE = $(HOST_DIR)/bin/mkimage
 
 define HOST_U_BOOT_MAKE_DEFCONFIG

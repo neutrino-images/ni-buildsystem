@@ -11,11 +11,6 @@ PYTHON3_SITE = https://www.python.org/ftp/python/$(PYTHON3_VERSION)
 
 # ------------------------------------------------------------------------------
 
-HOST_PYTHON3_VERSION = $(PYTHON3_VERSION)
-HOST_PYTHON3_DIR = $(PYTHON3_DIR)
-HOST_PYTHON3_SOURCE = $(PYTHON3_SOURCE)
-HOST_PYTHON3_SITE = $(PYTHON3_SITE)
-
 HOST_PYTHON3_BINARY = $(HOST_DIR)/bin/python3
 
 HOST_PYTHON3_LIB_DIR = lib/python$(basename $(HOST_PYTHON3_VERSION))

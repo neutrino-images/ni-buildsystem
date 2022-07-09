@@ -11,11 +11,6 @@ PYTHON_SETUPTOOLS_SITE = https://files.pythonhosted.org/packages/ea/a3/3d3cbbb71
 
 # -----------------------------------------------------------------------------
 
-HOST_PYTHON_SETUPTOOLS_VERSION = $(PYTHON_SETUPTOOLS_VERSION)
-HOST_PYTHON_SETUPTOOLS_DIR = $(PYTHON_SETUPTOOLS_DIR)
-HOST_PYTHON_SETUPTOOLS_SOURCE = $(PYTHON_SETUPTOOLS_SOURCE)
-HOST_PYTHON_SETUPTOOLS_SITE = $(PYTHON_SETUPTOOLS_SITE)
-
 HOST_PYTHON_SETUPTOOLS_DEPENDENCIES = host-python3
 
 host-python-setuptools: | $(HOST_DIR)
