@@ -222,12 +222,11 @@ PKG_NO_INSTALL = pkg-no-install
 
 # clean-up
 define CLEANUP
-	$(Q)( \
 	if [ "$($(PKG)_DIR)" ]; then \
 		$(call MESSAGE,"Clean-up $(pkgname)"); \
-		rm -rf $(BUILD_DIR)/$($(PKG)_DIR); \
-	fi; \
-	)
+		$(CD) $(BUILD_DIR); \
+			rm -rf $($(PKG)_DIR); \
+	fi
 endef
 
 # -----------------------------------------------------------------------------
@@ -235,7 +234,7 @@ endef
 # start-up build
 define STARTUP
 	@$(call MESSAGE,"Start-up build $(pkgname)")
-	$(call CLEANUP)
+	$(Q)$(call CLEANUP)
 endef
 
 # -----------------------------------------------------------------------------
@@ -393,15 +392,13 @@ REWRITE_LIBTOOL_RULES = "s,^libdir=.*,libdir='$(1)',; \
 REWRITE_LIBTOOL_TAG = rewritten=1
 
 define rewrite_libtool # (libdir)
-	$(Q)( \
 	for la in $$(find $(1) -name "*.la" -type f); do \
 		if ! grep -q "$(REWRITE_LIBTOOL_TAG)" $${la}; then \
 			$(call MESSAGE,"Rewriting $${la#$(TARGET_DIR)/}"); \
 			$(SED) $(REWRITE_LIBTOOL_RULES) $${la}; \
 			echo -e "\n# Adapted to buildsystem\n$(REWRITE_LIBTOOL_TAG)" >> $${la}; \
 		fi; \
-	done; \
-	)
+	done
 endef
 
 # rewrite libtool libraries automatically
@@ -419,11 +416,9 @@ REWRITE_CONFIG_RULES = "s,^prefix=.*,prefix='$(TARGET_prefix)',; \
 			s,^includedir=.*,includedir='$(TARGET_includedir)',"
 
 define rewrite_config_script # (config-script)
-	$(Q)( \
-	mv $(TARGET_bindir)/$(1) $(HOST_DIR)/bin; \
-	$(call MESSAGE,"Rewriting $(1)"); \
-	$(SED) $(REWRITE_CONFIG_RULES) $(HOST_DIR)/bin/$(1); \
-	)
+	mv $(TARGET_bindir)/$(1) $(HOST_DIR)/bin
+	$(call MESSAGE,"Rewriting $(1)")
+	$(SED) $(REWRITE_CONFIG_RULES) $(HOST_DIR)/bin/$(1)
 endef
 
 # rewrite config scripts automatically
@@ -435,7 +430,7 @@ endef
 # -----------------------------------------------------------------------------
 
 define TOUCH
-	$(Q)touch $(if $(findstring host-,$(@)),$(HOST_DEPS_DIR),$(DEPS_DIR))/$(@)
+	touch $(if $(findstring host-,$(@)),$(HOST_DEPS_DIR),$(DEPS_DIR))/$(@)
 endef
 
 # -----------------------------------------------------------------------------
@@ -444,19 +439,19 @@ endef
 define HOST_FOLLOWUP
 	@$(call MESSAGE,"Follow-up build $(pkgname)")
 	$(foreach hook,$($(PKG)_PRE_FOLLOWUP_HOOKS),$(call $(hook))$(sep))
-	$(call CLEANUP)
+	$(Q)$(call CLEANUP)
 	$(foreach hook,$($(PKG)_HOST_FINALIZE_HOOKS),$(call $(hook))$(sep))
 	$(foreach hook,$($(PKG)_POST_FOLLOWUP_HOOKS),$(call $(hook))$(sep))
-	$(call TOUCH)
+	$(Q)$(call TOUCH)
 endef
 
 define TARGET_FOLLOWUP
 	@$(call MESSAGE,"Follow-up build $(pkgname)")
 	$(foreach hook,$($(PKG)_PRE_FOLLOWUP_HOOKS),$(call $(hook))$(sep))
-	$(call REWRITE_CONFIG_SCRIPTS)
-	$(call REWRITE_LIBTOOL)
-	$(call CLEANUP)
+	$(Q)$(call REWRITE_CONFIG_SCRIPTS)
+	$(Q)$(call REWRITE_LIBTOOL)
+	$(Q)$(call CLEANUP)
 	$(foreach hook,$($(PKG)_TARGET_FINALIZE_HOOKS),$(call $(hook))$(sep))
 	$(foreach hook,$($(PKG)_POST_FOLLOWUP_HOOKS),$(call $(hook))$(sep))
-	$(call TOUCH)
+	$(Q)$(call TOUCH)
 endef
