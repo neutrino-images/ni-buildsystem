@@ -235,25 +235,20 @@ endef
 GET_ARCHIVE = wget --no-check-certificate -t3 -T60 -c -P
 
 define DOWNLOAD
+	@$(call MESSAGE,"Downloading")
 	$(foreach hook,$($(PKG)_PRE_DOWNLOAD_HOOKS),$(call $(hook))$(sep))
 	$(Q)( \
 	if [ "$($(PKG)_VERSION)" == "ni-git" ]; then \
-	  $(call MESSAGE,"Downloading") ; \
 	  $(GET_GIT_SOURCE) $($(PKG)_SITE)/$($(PKG)_SOURCE) $(SOURCE_DIR)/$($(PKG)_SOURCE); \
 	elif [ "$($(PKG)_VERSION)" == "git" ]; then \
-	  $(call MESSAGE,"Downloading") ; \
 	  $(GET_GIT_SOURCE) $($(PKG)_SITE)/$($(PKG)_SOURCE) $(DL_DIR)/$($(PKG)_SOURCE); \
 	elif [ "$($(PKG)_VERSION)" == "hg" ]; then \
-	  $(call MESSAGE,"Downloading") ; \
 	  $(GET_HG_SOURCE) $($(PKG)_SITE)/$($(PKG)_SOURCE) $(DL_DIR)/$($(PKG)_SOURCE); \
 	elif [ "$($(PKG)_VERSION)" == "svn" ]; then \
-	  $(call MESSAGE,"Downloading") ; \
 	  $(GET_SVN_SOURCE) $($(PKG)_SITE)/$($(PKG)_SOURCE) $(DL_DIR)/$($(PKG)_SOURCE); \
 	elif [ ! -f $(DL_DIR)/$(1) ]; then \
-	  $(call MESSAGE,"Downloading") ; \
 	  $(GET_ARCHIVE) $(DL_DIR) $($(PKG)_SITE)/$(1); \
 	elif [ "$($(PKG)_VERSION)" == "curl-controlled" ]; then \
-	  $(call MESSAGE,"Downloading") ; \
 	  $(CD) $(DL_DIR); \
 		  curl --remote-name --time-cond $($(PKG)_SOURCE) $($(PKG)_SITE)/$($(PKG)_SOURCE) || true; \
 	fi; \
