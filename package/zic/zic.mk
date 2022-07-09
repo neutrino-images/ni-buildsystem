@@ -11,21 +11,18 @@ ZIC_SITE = https://data.iana.org/time-zones/releases
 
 # ------------------------------------------------------------------------------
 
+HOST_ZIC_EXTRACT_DIR = $($(PKG)_DIR)
+
 HOST_ZIC = $(HOST_DIR)/sbin/zic
 
-define HOST_ZIC_INSTALL_BINARY
-	$(INSTALL_EXEC) -D $(PKG_BUILD_DIR)/zic $(HOST_ZIC)
-endef
-HOST_ZIC_PRE_FOLLOWUP_HOOKS += HOST_ZIC_INSTALL_BINARY
-
-host-zic: | $(HOST_DIR)
-	$(eval $(pkg-check-variables))
-	$(call STARTUP)
-	$(call DEPENDENCIES)
-	$(call DOWNLOAD,$($(PKG)_SOURCE))
-	$(MKDIR)/$($(PKG)_DIR)
-	$(call EXTRACT,$(PKG_BUILD_DIR))
-	$(call APPLY_PATCHES,$(PKG_PATCHES_DIR))
+define HOST_ZIC_BUILD_CMDS
 	$(CHDIR)/$($(PKG)_DIR); \
 		$(MAKE) zic
-	$(call HOST_FOLLOWUP)
+endef
+
+define HOST_ZIC_INSTALL_CMDS
+	$(INSTALL_EXEC) -D $(PKG_BUILD_DIR)/zic $(HOST_ZIC)
+endef
+
+host-zic: | $(HOST_DIR)
+	$(call host-generic-package)
