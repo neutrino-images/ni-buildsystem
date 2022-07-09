@@ -11,7 +11,7 @@ MESON_SITE = https://github.com/mesonbuild/meson/releases/download/$(MESON_VERSI
 
 # -----------------------------------------------------------------------------
 
-HOST_MESON_DEPENDENCIES = host-ninja host-python3 host-python-setuptools
+HOST_MESON_DEPENDENCIES = host-ninja
 
 HOST_MESON_BINARY = $(HOST_DIR)/bin/meson
 

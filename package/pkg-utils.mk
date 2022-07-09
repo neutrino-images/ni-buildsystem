@@ -182,12 +182,24 @@ ifndef $(PKG)_NINJA_OPTS
   $(PKG)_NINJA_OPTS =
 endif
 
-#kconfig
+# kconfig
 ifeq ($(PKG_MODE),KCONFIG)
   ifndef $(PKG)_KCONFIG_FILE
     $(PKG)_KCONFIG_FILE = .config
   endif
   $(PKG)_KCONFIG_DOTCONFIG = $$($(PKG)_KCONFIG_FILE)
+endif
+
+# auto-assign some dependencies
+ifndef $(PKG)_DEPENDENCIES
+  $(PKG)_DEPENDENCIES =
+endif
+ifeq ($(PKG_MODE),MESON)
+  $(PKG)_DEPENDENCIES += host-meson
+endif
+ifeq ($(PKG_MODE),PYTHON3)
+  $(PKG)_DEPENDENCIES += host-python3
+  $(PKG)_DEPENDENCIES += $$(if $$(filter $$(pkg),host-python-setuptools),,host-python-setuptools)
 endif
 
 endef # PKG_CHECK_VARIABLES
