@@ -44,6 +44,7 @@ endef
 TZDATA_TARGET_FINALIZE_HOOKS += TZDATA_INSTALL_PROFILE_D_SCRIPT
 
 tzdata: | $(TARGET_DIR)
+	$(eval $(pkg-check-variables))
 	$(call STARTUP)
 	$(call DEPENDENCIES)
 	$(call DOWNLOAD,$($(PKG)_SOURCE))
