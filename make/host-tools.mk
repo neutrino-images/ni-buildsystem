@@ -23,6 +23,8 @@ host-tools: $(BUILD_DIR) $(HOST_DIR) \
 	host-qrencode \
 	host-lua \
 	host-luarocks \
+	host-python3 \
+	host-meson \
 	host-ccache
 
 # -----------------------------------------------------------------------------
@@ -61,5 +63,4 @@ $(HOST_DIR)/bin/$(TARGET_CXX):
 # -----------------------------------------------------------------------------
 
 PHONY += host-tools
-PHONY += pkg-config-preqs
 PHONY += host-ccache
