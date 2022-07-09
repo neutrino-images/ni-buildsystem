@@ -10,4 +10,4 @@ SLINGSHOT_SOURCE = slingshot-$(SLINGSHOT_VERSION).tar.gz
 SLINGSHOT_SITE = $(call github,gvvaughan,slingshot,v$(SLINGSHOT_VERSION))
 
 slingshot:
-	$(call DOWNLOAD,$($(PKG)_SOURCE))
+	$(call download-package)

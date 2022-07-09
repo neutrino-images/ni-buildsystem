@@ -261,6 +261,9 @@ define DOWNLOAD
 	$(foreach hook,$($(PKG)_POST_DOWNLOAD_HOOKS),$(call $(hook))$(sep))
 endef
 
+# just a wrapper for niceness
+download-package = $(call DOWNLOAD,$($(PKG)_SOURCE))
+
 # -----------------------------------------------------------------------------
 
 # unpack archives into given directory
