@@ -19,6 +19,7 @@ endef
 HOST_ZIC_PRE_FOLLOWUP_HOOKS += HOST_ZIC_INSTALL_BINARY
 
 host-zic: | $(HOST_DIR)
+	$(eval $(pkg-check-variables))
 	$(call STARTUP)
 	$(call DEPENDENCIES)
 	$(call DOWNLOAD,$($(PKG)_SOURCE))
