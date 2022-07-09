@@ -404,7 +404,7 @@ endef
 # rewrite libtool libraries automatically
 define REWRITE_LIBTOOL
 	$(foreach libdir,$(TARGET_base_libdir) $(TARGET_libdir),\
-		$(call rewrite_libtool,$(libdir))$(sep))
+		$(Q)$(call rewrite_libtool,$(libdir))$(sep))
 endef
 
 # -----------------------------------------------------------------------------
@@ -424,7 +424,7 @@ endef
 # rewrite config scripts automatically
 define REWRITE_CONFIG_SCRIPTS
 	$(foreach config_script,$($(PKG)_CONFIG_SCRIPTS),
-		$(call rewrite_config_script,$(config_script))$(sep))
+		$(Q)$(call rewrite_config_script,$(config_script))$(sep))
 endef
 
 # -----------------------------------------------------------------------------
