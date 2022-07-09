@@ -11,6 +11,7 @@ ZIC_SITE = https://data.iana.org/time-zones/releases
 
 # ------------------------------------------------------------------------------
 
+# fix non-existing subdir in tzcode tarball
 HOST_ZIC_EXTRACT_DIR = $($(PKG)_DIR)
 
 HOST_ZIC = $(HOST_DIR)/sbin/zic

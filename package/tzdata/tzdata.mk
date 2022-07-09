@@ -11,9 +11,29 @@ TZDATA_SITE = https://data.iana.org/time-zones/releases
 
 TZDATA_DEPENDENCIES = host-zic
 
+# fix non-existing subdir in tzdata tarball
+TZDATA_EXTRACT_DIR = $($(PKG)_DIR)
+
 TZDATA_ZONELIST = \
 	africa antarctica asia australasia europe northamerica \
 	southamerica etcetera backward factory
+
+define TZDATA_BUILD_CMDS
+	$(CHDIR)/$($(PKG)_DIR); \
+		unset ${!LC_*}; LANG=POSIX; LC_ALL=POSIX; export LANG LC_ALL; \
+		$(HOST_ZIC) -b fat -d zoneinfo.tmp $(TZDATA_ZONELIST)
+endef
+
+define TZDATA_INSTALL_CMDS
+	$(CHDIR)/$($(PKG)_DIR); \
+		sed -n '/zone=/{s/.*zone="\(.*\)".*$$/\1/; p}' $(PKG_FILES_DIR)/timezone.xml | sort -u | \
+		while read x; do \
+			find zoneinfo.tmp -type f -name $$x | sort | \
+			while read y; do \
+				test -e $$y && $(INSTALL_DATA) -D $$y $(TARGET_datadir)/zoneinfo/$$x; \
+			done; \
+		done
+endef
 
 TZDATA_LOCALTIME = CET
 
@@ -44,21 +64,4 @@ endef
 TZDATA_TARGET_FINALIZE_HOOKS += TZDATA_INSTALL_PROFILE_D_SCRIPT
 
 tzdata: | $(TARGET_DIR)
-	$(eval $(pkg-check-variables))
-	$(call STARTUP)
-	$(call DEPENDENCIES)
-	$(call DOWNLOAD,$($(PKG)_SOURCE))
-	$(MKDIR)/$($(PKG)_DIR)
-	$(call EXTRACT,$(PKG_BUILD_DIR))
-	$(call APPLY_PATCHES,$(PKG_PATCHES_DIR))
-	$(CHDIR)/$($(PKG)_DIR); \
-		unset ${!LC_*}; LANG=POSIX; LC_ALL=POSIX; export LANG LC_ALL; \
-		$(HOST_ZIC) -b fat -d zoneinfo.tmp $(TZDATA_ZONELIST); \
-		sed -n '/zone=/{s/.*zone="\(.*\)".*$$/\1/; p}' $(PKG_FILES_DIR)/timezone.xml | sort -u | \
-		while read x; do \
-			find zoneinfo.tmp -type f -name $$x | sort | \
-			while read y; do \
-				test -e $$y && $(INSTALL_DATA) -D $$y $(TARGET_datadir)/zoneinfo/$$x; \
-			done; \
-		done
-	$(call TARGET_FOLLOWUP)
+	$(call generic-package)
