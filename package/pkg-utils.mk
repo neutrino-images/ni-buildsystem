@@ -212,7 +212,7 @@ PKG_NO_INSTALL = pkg-no-install
 define CLEANUP
 	$(Q)( \
 	if [ "$($(PKG)_DIR)" ]; then \
-		$(call MESSAGE,"Clean-up"); \
+		$(call MESSAGE,"Clean-up $(pkgname)"); \
 		rm -rf $(BUILD_DIR)/$($(PKG)_DIR); \
 	fi; \
 	)
@@ -222,7 +222,7 @@ endef
 
 # start-up build
 define STARTUP
-	@$(call MESSAGE,"Start-up build")
+	@$(call MESSAGE,"Start-up build $(pkgname)")
 	$(call CLEANUP)
 endef
 
@@ -230,8 +230,8 @@ endef
 
 # resolve dependencies
 define DEPENDENCIES
-	@$(call MESSAGE,"Resolving dependencies")
-	$(foreach dependency,$($(PKG)_DEPENDENCIES),$(MAKE) $(dependency)$(sep))
+	@$(call MESSAGE,"Resolving dependencies for $(pkgname)")
+	$(foreach dependency,$($(PKG)_DEPENDENCIES),$(Q)$(MAKE) $(dependency)$(sep))
 endef
 
 # -----------------------------------------------------------------------------
@@ -240,7 +240,7 @@ endef
 GET_ARCHIVE = wget --no-check-certificate -t3 -T60 -c -P
 
 define DOWNLOAD
-	@$(call MESSAGE,"Downloading")
+	@$(call MESSAGE,"Downloading $(pkgname)")
 	$(foreach hook,$($(PKG)_PRE_DOWNLOAD_HOOKS),$(call $(hook))$(sep))
 	$(Q)( \
 	if [ "$($(PKG)_VERSION)" == "ni-git" ]; then \
@@ -268,7 +268,7 @@ download-package = $(call DOWNLOAD,$($(PKG)_SOURCE))
 
 # unpack archives into given directory
 define EXTRACT # (directory)
-	@$(call MESSAGE,"Extracting")
+	@$(call MESSAGE,"Extracting $(pkgname)")
 	$(foreach hook,$($(PKG)_PRE_EXTRACT_HOOKS),$(call $(hook))$(sep))
 	$(Q)( \
 	EXTRACT_DIR=$(1); \
@@ -312,7 +312,7 @@ define EXTRACT # (directory)
 	    fi; \
 	    ;; \
 	  *) \
-	    $(call MESSAGE,"Cannot extract $($(PKG)_SOURCE)"); \
+	    $(call WARNING,"Cannot extract $($(PKG)_SOURCE)"); \
 	    false ;; \
 	esac \
 	)
@@ -332,7 +332,7 @@ PATCHES = \
 
 # apply single patches or patch sets
 define APPLY_PATCHES # (patches or directory)
-	@$(call MESSAGE,"Patching")
+	@$(call MESSAGE,"Patching $(pkgname)")
 	$(foreach hook,$($(PKG)_PRE_PATCH_HOOKS),$(call $(hook))$(sep))
 	$(Q)( \
 	$(CHDIR)/$($(PKG)_DIR); \
@@ -430,7 +430,7 @@ endef
 
 # follow-up build
 define HOST_FOLLOWUP
-	@$(call MESSAGE,"Follow-up build")
+	@$(call MESSAGE,"Follow-up build $(pkgname)")
 	$(foreach hook,$($(PKG)_PRE_FOLLOWUP_HOOKS),$(call $(hook))$(sep))
 	$(call CLEANUP)
 	$(foreach hook,$($(PKG)_HOST_FINALIZE_HOOKS),$(call $(hook))$(sep))
@@ -439,7 +439,7 @@ define HOST_FOLLOWUP
 endef
 
 define TARGET_FOLLOWUP
-	@$(call MESSAGE,"Follow-up build")
+	@$(call MESSAGE,"Follow-up build $(pkgname)")
 	$(foreach hook,$($(PKG)_PRE_FOLLOWUP_HOOKS),$(call $(hook))$(sep))
 	$(call REWRITE_CONFIG_SCRIPTS)
 	$(call REWRITE_LIBTOOL)

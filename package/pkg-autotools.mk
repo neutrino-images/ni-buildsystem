@@ -6,7 +6,7 @@
 
 define AUTORECONF_HOOK
 	if [ "$($(PKG)_AUTORECONF)" == "YES" ]; then \
-		$(call MESSAGE,"Autoreconfiguring"); \
+		$(call MESSAGE,"Autoreconfiguring $(pkgname)"); \
 		$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
 			$($(PKG)_AUTORECONF_ENV) \
 			$($(PKG)_AUTORECONF_CMD) \
@@ -82,7 +82,7 @@ define TARGET_CONFIGURE_CMDS_DEFAULT
 endef
 
 define TARGET_CONFIGURE
-	@$(call MESSAGE,"Configuring")
+	@$(call MESSAGE,"Configuring $(pkgname)")
 	$(foreach hook,$($(PKG)_PRE_CONFIGURE_HOOKS),$(call $(hook))$(sep))
 	$(Q)$(call AUTORECONF_HOOK)
 	$(Q)$(call $(PKG)_CONFIGURE_CMDS)
@@ -139,7 +139,7 @@ define HOST_CONFIGURE_CMDS_DEFAULT
 endef
 
 define HOST_CONFIGURE
-	@$(call MESSAGE,"Configuring")
+	@$(call MESSAGE,"Configuring $(pkgname)")
 	$(foreach hook,$($(PKG)_PRE_CONFIGURE_HOOKS),$(call $(hook))$(sep))
 	$(Q)$(call AUTORECONF_HOOK)
 	$(Q)$(call $(PKG)_CONFIGURE_CMDS)

@@ -5,7 +5,7 @@
 ################################################################################
 
 define INDIVIDUAL
-	@$(call MESSAGE,"Individual build and/or install")
+	@$(call MESSAGE,"Individual build and/or install $(pkgname)")
 	$(foreach hook,$($(PKG)_INDIVIDUAL_HOOKS),$(call $(hook))$(sep))
 endef
 

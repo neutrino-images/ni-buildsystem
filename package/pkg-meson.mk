@@ -56,7 +56,7 @@ define TARGET_MESON_CMDS_DEFAULT
 endef
 
 define TARGET_MESON_CONFIGURE
-	@$(call MESSAGE,"Configuring")
+	@$(call MESSAGE,"Configuring $(pkgname)")
 	$(foreach hook,$($(PKG)_PRE_CONFIGURE_HOOKS),$(call $(hook))$(sep))
 	$(Q)$(call MESON_CROSS_CONFIG_HOOK,$(PKG_BUILD_DIR)/build)
 	$(Q)$(call $(PKG)_CONFIGURE_CMDS)
@@ -71,7 +71,7 @@ define TARGET_NINJA_BUILD_CMDS_DEFAULT
 endef
 
 define TARGET_NINJA_BUILD
-	@$(call MESSAGE,"Building")
+	@$(call MESSAGE,"Building $(pkgname)")
 	$(foreach hook,$($(PKG)_PRE_BUILD_HOOKS),$(call $(hook))$(sep))
 	$(Q)$(call $(PKG)_BUILD_CMDS)
 	$(foreach hook,$($(PKG)_POST_BUILD_HOOKS),$(call $(hook))$(sep))
@@ -86,7 +86,7 @@ define TARGET_NINJA_INSTALL_CMDS_DEFAULT
 endef
 
 define TARGET_NINJA_INSTALL
-	@$(call MESSAGE,"Installing")
+	@$(call MESSAGE,"Installing $(pkgname)")
 	$(foreach hook,$($(PKG)_PRE_INSTALL_HOOKS),$(call $(hook))$(sep))
 	$(Q)$(call $(PKG)_INSTALL_CMDS)
 	$(foreach hook,$($(PKG)_POST_INSTALL_HOOKS),$(call $(hook))$(sep))
@@ -119,7 +119,7 @@ define HOST_MESON_CMDS_DEFAULT
 endef
 
 define HOST_MESON_CONFIGURE
-	@$(call MESSAGE,"Configuring")
+	@$(call MESSAGE,"Configuring $(pkgname)")
 	$(foreach hook,$($(PKG)_PRE_CONFIGURE_HOOKS),$(call $(hook))$(sep))
 	$(Q)$(call $(PKG)_CONFIGURE_CMDS)
 	$(foreach hook,$($(PKG)_POST_CONFIGURE_HOOKS),$(call $(hook))$(sep))
@@ -133,7 +133,7 @@ define HOST_NINJA_BUILD_CMDS_DEFAULT
 endef
 
 define HOST_NINJA_BUILD
-	@$(call MESSAGE,"Building")
+	@$(call MESSAGE,"Building $(pkgname)")
 	$(foreach hook,$($(PKG)_PRE_BUILD_HOOKS),$(call $(hook))$(sep))
 	$(Q)$(call $(PKG)_BUILD_CMDS)
 	$(foreach hook,$($(PKG)_POST_BUILD_HOOKS),$(call $(hook))$(sep))
@@ -147,7 +147,7 @@ define HOST_NINJA_INSTALL_CMDS_DEFAULT
 endef
 
 define HOST_NINJA_INSTALL
-	@$(call MESSAGE,"Installing")
+	@$(call MESSAGE,"Installing $(pkgname)")
 	$(foreach hook,$($(PKG)_PRE_INSTALL_HOOKS),$(call $(hook))$(sep))
 	$(Q)$(call $(PKG)_INSTALL_CMDS)
 	$(foreach hook,$($(PKG)_POST_INSTALL_HOOKS),$(call $(hook))$(sep))

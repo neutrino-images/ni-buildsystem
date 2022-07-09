@@ -14,7 +14,7 @@ define TARGET_MAKE_BUILD_CMDS_DEFAULT
 endef
 
 define TARGET_MAKE_BUILD
-	@$(call MESSAGE,"Building")
+	@$(call MESSAGE,"Building $(pkgname)")
 	$(foreach hook,$($(PKG)_PRE_BUILD_HOOKS),$(call $(hook))$(sep))
 	$(Q)$(call $(PKG)_BUILD_CMDS)
 	$(foreach hook,$($(PKG)_POST_BUILD_HOOKS),$(call $(hook))$(sep))
@@ -28,7 +28,7 @@ define TARGET_MAKE_INSTALL_CMDS_DEFAULT
 endef
 
 define TARGET_MAKE_INSTALL
-	@$(call MESSAGE,"Installing")
+	@$(call MESSAGE,"Installing $(pkgname)")
 	$(foreach hook,$($(PKG)_PRE_INSTALL_HOOKS),$(call $(hook))$(sep))
 	$(Q)$(call $(PKG)_INSTALL_CMDS)
 	$(foreach hook,$($(PKG)_POST_INSTALL_HOOKS),$(call $(hook))$(sep))
@@ -56,7 +56,7 @@ define HOST_MAKE_BUILD_CMDS_DEFAULT
 endef
 
 define HOST_MAKE_BUILD
-	@$(call MESSAGE,"Compiling")
+	@$(call MESSAGE,"Building $(pkgname)")
 	$(foreach hook,$($(PKG)_PRE_BUILD_HOOKS),$(call $(hook))$(sep))
 	$(Q)$(call $(PKG)_BUILD_CMDS)
 	$(foreach hook,$($(PKG)_POST_BUILD_HOOKS),$(call $(hook))$(sep))
@@ -70,7 +70,7 @@ define HOST_MAKE_INSTALL_CMDS_DEFAULT
 endef
 
 define HOST_MAKE_INSTALL
-	@$(call MESSAGE,"Installing")
+	@$(call MESSAGE,"Installing $(pkgname)")
 	$(foreach hook,$($(PKG)_PRE_INSTALL_HOOKS),$(call $(hook))$(sep))
 	$(Q)$(call $(PKG)_INSTALL_CMDS)
 	$(foreach hook,$($(PKG)_POST_INSTALL_HOOKS),$(call $(hook))$(sep))

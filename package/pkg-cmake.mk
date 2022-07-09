@@ -53,7 +53,7 @@ define TARGET_CMAKE_CMDS_DEFAULT
 endef
 
 define TARGET_CMAKE
-	@$(call MESSAGE,"Configuring")
+	@$(call MESSAGE,"Configuring $(pkgname)")
 	$(foreach hook,$($(PKG)_PRE_CONFIGURE_HOOKS),$(call $(hook))$(sep))
 	$(Q)$(call $(PKG)_CONFIGURE_CMDS)
 	$(foreach hook,$($(PKG)_POST_CONFIGURE_HOOKS),$(call $(hook))$(sep))
@@ -100,7 +100,7 @@ define HOST_CMAKE_CMDS_DEFAULT
 endef
 
 define HOST_CMAKE
-	@$(call MESSAGE,"Configuring")
+	@$(call MESSAGE,"Configuring $(pkgname)")
 	$(foreach hook,$($(PKG)_PRE_CONFIGURE_HOOKS),$(call $(hook))$(sep))
 	$(Q)$(call $(PKG)_CONFIGURE_CMDS)
 	$(foreach hook,$($(PKG)_POST_CONFIGURE_HOOKS),$(call $(hook))$(sep))

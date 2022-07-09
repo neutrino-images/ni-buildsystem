@@ -25,7 +25,7 @@ define KERNEL_MODULE_BUILD_CMDS_DEFAULT
 endef
 
 define KERNEL_MODULE_BUILD
-	@$(call MESSAGE,"Building kernel module")
+	@$(call MESSAGE,"Building $(pkgname) kernel module")
 	$(foreach hook,$($(PKG)_PRE_BUILD_HOOKS),$(call $(hook))$(sep))
 	$(Q)$(call $(PKG)_BUILD_CMDS)
 	$(foreach hook,$($(PKG)_POST_BUILD_HOOKS),$(call $(hook))$(sep))
