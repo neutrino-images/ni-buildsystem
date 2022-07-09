@@ -38,6 +38,11 @@ ifeq ($(PKG_PACKAGE),HOST)
   endif
 endif
 
+# extract
+ifndef $(PKG)_EXTRACT_DIR
+  $(PKG)_EXTRACT_DIR =
+endif
+
 # patch
 ifndef $(PKG)_PATCH
   $(PKG)_PATCH = $$(PKG_PATCHES_DIR)
@@ -263,39 +268,44 @@ define EXTRACT # (directory)
 	@$(call MESSAGE,"Extracting")
 	$(foreach hook,$($(PKG)_PRE_EXTRACT_HOOKS),$(call $(hook))$(sep))
 	$(Q)( \
+	EXTRACT_DIR=$(1); \
+	if [ "$($(PKG)_EXTRACT_DIR)" ]; then \
+		EXTRACT_DIR=$(1)/$($(PKG)_EXTRACT_DIR); \
+		$(INSTALL) -d $${EXTRACT_DIR}; \
+	fi; \
 	case $($(PKG)_VERSION).$($(PKG)_SOURCE) in \
 	  *.tar | *.tar.bz2 | *.tbz | *.tar.gz | *.tgz | *.tar.xz | *.txz) \
-	    tar -xf ${DL_DIR}/$($(PKG)_SOURCE) -C $(1); \
+	    tar -xf $(DL_DIR)/$($(PKG)_SOURCE) -C $${EXTRACT_DIR}; \
 	    ;; \
 	  *.zip) \
-	    unzip -o -q ${DL_DIR}/$($(PKG)_SOURCE) -d $(1); \
+	    unzip -o -q $(DL_DIR)/$($(PKG)_SOURCE) -d $${EXTRACT_DIR}; \
 	    ;; \
 	  ni-git.*) \
-	    cp -a -t $(1) $(SOURCE_DIR)/$($(PKG)_SOURCE); \
+	    cp -a -t $${EXTRACT_DIR} $(SOURCE_DIR)/$($(PKG)_SOURCE); \
 	    if test $($(PKG)_CHECKOUT); then \
 	      $(call MESSAGE,"git checkout $($(PKG)_CHECKOUT)"); \
-	      $(CD) $(1)/$($(PKG)_DIR); git checkout $($(PKG)_CHECKOUT); \
+	      $(CD) $${EXTRACT_DIR}/$($(PKG)_DIR); git checkout $($(PKG)_CHECKOUT); \
 	    fi; \
 	    ;; \
 	  *.git | git.*) \
-	    cp -a -t $(1) $(DL_DIR)/$($(PKG)_SOURCE); \
+	    cp -a -t $${EXTRACT_DIR} $(DL_DIR)/$($(PKG)_SOURCE); \
 	    if test $($(PKG)_CHECKOUT); then \
 	      $(call MESSAGE,"git checkout $($(PKG)_CHECKOUT)"); \
-	      $(CD) $(1)/$($(PKG)_DIR); git checkout $($(PKG)_CHECKOUT); \
+	      $(CD) $${EXTRACT_DIR}/$($(PKG)_DIR); git checkout $($(PKG)_CHECKOUT); \
 	    fi; \
 	    ;; \
 	  *.hg | hg.*) \
-	    cp -a -t $(1) $(DL_DIR)/$($(PKG)_SOURCE); \
+	    cp -a -t $${EXTRACT_DIR} $(DL_DIR)/$($(PKG)_SOURCE); \
 	    if test $($(PKG)_CHECKOUT); then \
 	      $(call MESSAGE,"hg checkout $($(PKG)_CHECKOUT)"); \
-	      $(CD) $(1)/$($(PKG)_DIR); hg checkout $($(PKG)_CHECKOUT); \
+	      $(CD) $${EXTRACT_DIR}/$($(PKG)_DIR); hg checkout $($(PKG)_CHECKOUT); \
 	    fi; \
 	    ;; \
 	  *.svn | svn.*) \
-	    cp -a -t $(1) $(DL_DIR)/$($(PKG)_SOURCE); \
+	    cp -a -t $${EXTRACT_DIR} $(DL_DIR)/$($(PKG)_SOURCE); \
 	    if test $($(PKG)_CHECKOUT); then \
 	      $(call MESSAGE,"svn checkout $($(PKG)_CHECKOUT)"); \
-	      $(CD) $(1)/$($(PKG)_DIR); svn checkout $($(PKG)_CHECKOUT); \
+	      $(CD) $${EXTRACT_DIR}/$($(PKG)_DIR); svn checkout $($(PKG)_CHECKOUT); \
 	    fi; \
 	    ;; \
 	  *) \
