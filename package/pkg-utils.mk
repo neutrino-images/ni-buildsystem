@@ -6,8 +6,11 @@
 ################################################################################
 
 pkgname = $(basename $(@F))
+
 pkg = $(call LOWERCASE,$(pkgname))
 PKG = $(call UPPERCASE,$(pkgname))
+
+PKG_PARENT = $(subst HOST_,,$(PKG))
 
 PKG_BUILD_DIR = $(BUILD_DIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR)
 PKG_FILES_DIR = $(PACKAGE_DIR)/$(subst host-,,$(pkgname))/files
@@ -20,6 +23,22 @@ PKG_TARGET_PACKAGE = $(if $(filter $(PKG_HOST_PACKAGE),NO),YES,NO)
 
 # check for necessary $(PKG) variables
 define PKG_CHECK_VARIABLES
+
+# auto-assign HOST_ variables
+ifeq ($(PKG_HOST_PACKAGE),YES)
+  ifndef $(PKG)_VERSION
+    $(PKG)_VERSION = $$($(PKG_PARENT)_VERSION)
+  endif
+  ifndef $(PKG)_DIR
+    $(PKG)_DIR = $$($(PKG_PARENT)_DIR)
+  endif
+  ifndef $(PKG)_SOURCE
+    $(PKG)_SOURCE = $$($(PKG_PARENT)_SOURCE)
+  endif
+  ifndef $(PKG)_SITE
+    $(PKG)_SITE = $$($(PKG_PARENT)_SITE)
+  endif
+endif
 
 # patch
 ifndef $(PKG)_PATCH
