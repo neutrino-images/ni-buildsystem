@@ -208,7 +208,7 @@ ifeq ($(PKG_MODE),MESON)
   $(PKG)_DEPENDENCIES += host-meson
 endif
 ifeq ($(PKG_MODE),KERNEL)
-  $(PKG)_DEPENDENCIES = kernel-$(BOXTYPE)
+  $(PKG)_DEPENDENCIES += kernel-$(BOXTYPE)
 endif
 ifeq ($(PKG_MODE),PYTHON3)
   $(PKG)_DEPENDENCIES += host-python3
