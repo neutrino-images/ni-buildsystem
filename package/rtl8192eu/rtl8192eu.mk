@@ -11,12 +11,9 @@ RTL8192EU_SITE = https://github.com/mange/$(RTL8192EU_SOURCE)
 
 RTL8192EU_CHECKOUT = 60aa279428024ea78dcffe2c181ffee3cc1495f5
 
-RTL8192EU_DEPENDENCIES = kernel-$(BOXTYPE)
-
-define RTL8192EU_INSTALL_BINARY
+define RTL8192EU_INSTALL_CMDS
 	$(INSTALL_DATA) -D $(PKG_BUILD_DIR)/8192eu.ko $(TARGET_modulesdir)/kernel/drivers/net/wireless/8192eu.ko
 endef
-RTL8192EU_POST_BUILD_HOOKS += RTL8192EU_INSTALL_BINARY
 
 rtl8192eu: | $(TARGET_DIR)
 	$(call kernel-module)

@@ -148,14 +148,18 @@ ifndef $(PKG)_MAKE_INSTALL_ENV
   $(PKG)_MAKE_INSTALL_ENV = $$($(PKG)_MAKE_ENV)
 endif
 ifndef $(PKG)_MAKE_INSTALL_ARGS
-  $(PKG)_MAKE_INSTALL_ARGS = install
+  ifeq ($(PKG_MODE),KERNEL)
+    $(PKG)_MAKE_INSTALL_ARGS = modules_install
+  else
+    $(PKG)_MAKE_INSTALL_ARGS = install
+  endif
 endif
 ifndef $(PKG)_MAKE_INSTALL_OPTS
   $(PKG)_MAKE_INSTALL_OPTS = $$($(PKG)_MAKE_OPTS)
 endif
 
 # install commands
-# TODO: python, kernel
+# TODO: python
 ifndef $(PKG)_INSTALL_CMDS
   ifeq ($(PKG_MODE),$(filter $(PKG_MODE),AUTOTOOLS CMAKE GENERIC KCONFIG))
     ifeq ($(PKG_PACKAGE),HOST)
@@ -169,6 +173,8 @@ ifndef $(PKG)_INSTALL_CMDS
     else
       $(PKG)_INSTALL_CMDS = $$(TARGET_NINJA_INSTALL_CMDS_DEFAULT)
     endif
+  else ifeq ($(PKG_MODE),KERNEL)
+    $(PKG)_INSTALL_CMDS = $$(KERNEL_MODULE_INSTALL_CMDS_DEFAULT)
   else
     $(PKG)_INSTALL_CMDS = echo "$(PKG_NO_INSTALL)"
   endif
@@ -196,6 +202,9 @@ ifndef $(PKG)_DEPENDENCIES
 endif
 ifeq ($(PKG_MODE),MESON)
   $(PKG)_DEPENDENCIES += host-meson
+endif
+ifeq ($(PKG_MODE),KERNEL)
+  $(PKG)_DEPENDENCIES = kernel-$(BOXTYPE)
 endif
 ifeq ($(PKG_MODE),PYTHON3)
   $(PKG)_DEPENDENCIES += host-python3

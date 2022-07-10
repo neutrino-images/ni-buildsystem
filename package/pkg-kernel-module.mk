@@ -20,15 +20,29 @@ KERNEL_MAKE_VARS += \
 define KERNEL_MODULE_BUILD_CMDS_DEFAULT
 	$(CHDIR)/$($(PKG)_DIR); \
 		$(TARGET_MAKE_ENV) $($(PKG)_MAKE_ENV) \
-		$($(PKG)_MAKE) \
+		$($(PKG)_MAKE) $($(PKG)_MAKE_ARGS) \
 			$($(PKG)_MAKE_OPTS) $(KERNEL_MAKE_VARS)
 endef
 
 define KERNEL_MODULE_BUILD
-	@$(call MESSAGE,"Building $(pkgname) kernel module")
+	@$(call MESSAGE,"Building $(pkgname) kernel module(s)")
 	$(foreach hook,$($(PKG)_PRE_BUILD_HOOKS),$(call $(hook))$(sep))
 	$(Q)$(call $(PKG)_BUILD_CMDS)
 	$(foreach hook,$($(PKG)_POST_BUILD_HOOKS),$(call $(hook))$(sep))
+endef
+
+define KERNEL_MODULE_INSTALL_CMDS_DEFAULT
+	$(CHDIR)/$($(PKG)_DIR); \
+		$(TARGET_MAKE_ENV) $($(PKG)_MAKE_INSTALL_ENV) \
+		$($(PKG)_MAKE_INSTALL) $($(PKG)_MAKE_INSTALL_ARGS) \
+			$($(PKG)_MAKE_INSTALL_OPTS) $(KERNEL_MAKE_VARS)
+endef
+
+define KERNEL_MODULE_INSTALL
+	@$(call MESSAGE,"Installing $(pkgname) kernel module(s)")
+	$(foreach hook,$($(PKG)_PRE_INSTALL_HOOKS),$(call $(hook))$(sep))
+	$(Q)$(call $(PKG)_INSTALL_CMDS)
+	$(foreach hook,$($(PKG)_POST_INSTALL_HOOKS),$(call $(hook))$(sep))
 endef
 
 # -----------------------------------------------------------------------------
@@ -36,8 +50,9 @@ endef
 define kernel-module
 	$(eval PKG_MODE = $(pkg-mode))
 	$(call PREPARE,$(1))
-	$(call KERNEL_MODULE_BUILD)
-	$(call LINUX_RUN_DEPMOD)
+	$(if $(filter $(1),$(PKG_NO_BUILD)),,$(call KERNEL_MODULE_BUILD))
+	$(if $(filter $(1),$(PKG_NO_INSTALL)),,$(call KERNEL_MODULE_INSTALL))
+	$(Q)$(call LINUX_RUN_DEPMOD)
 	$(call TARGET_FOLLOWUP)
 endef
 
