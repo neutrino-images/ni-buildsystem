@@ -4,10 +4,10 @@
 #
 ################################################################################
 
-GRAPHLCD_BASE_VERSION = git
-GRAPHLCD_BASE_DIR = graphlcd-base.$(GRAPHLCD_BASE_VERSION)
-GRAPHLCD_BASE_SOURCE = graphlcd-base.$(GRAPHLCD_BASE_VERSION)
-GRAPHLCD_BASE_SITE = https://projects.vdr-developer.org/git
+GRAPHLCD_BASE_VERSION = 2.0.3
+GRAPHLCD_BASE_DIR = graphlcd-base-$(GRAPHLCD_BASE_VERSION)
+GRAPHLCD_BASE_SOURCE = graphlcd-base-$(GRAPHLCD_BASE_VERSION).tar.bz2
+GRAPHLCD_BASE_SITE = https://vdr-projects.e-tobi.net/git/graphlcd-base/snapshot/
 
 GRAPHLCD_BASE_DEPENDENCIES = freetype libiconv libusb
 
