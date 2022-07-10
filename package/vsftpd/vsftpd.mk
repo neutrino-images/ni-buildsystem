@@ -13,6 +13,10 @@ VSFTPD_DEPENDENCIES = openssl
 
 VSFTPD_LIBS += -lcrypt $$($(PKG_CONFIG) --libs libssl libcrypto)
 
+# vsftpd needs $(TARGET_CONFIGURE_ENV) in $($(PKG)_MAKE_OPTS)
+VSFTPD_MAKE_ENV = \
+	$(empty)
+
 VSFTPD_MAKE_OPTS = \
 	$(TARGET_CONFIGURE_ENV) \
 	LIBS="$(VSFTPD_LIBS)"

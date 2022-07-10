@@ -109,7 +109,11 @@ ifndef $(PKG)_MAKE
   $(PKG)_MAKE = $$(MAKE)
 endif
 ifndef $(PKG)_MAKE_ENV
-  $(PKG)_MAKE_ENV =
+  ifeq ($(PKG_MODE),GENERIC)
+    $(PKG)_MAKE_ENV = $$(TARGET_CONFIGURE_ENV)
+  else
+    $(PKG)_MAKE_ENV =
+  endif
 endif
 ifndef $(PKG)_MAKE_ARGS
   $(PKG)_MAKE_ARGS =

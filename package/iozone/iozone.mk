@@ -18,9 +18,6 @@ else
 IOZONE_TARGET = linux-arm
 endif
 
-IOZONE_MAKE_ENV = \
-	$(TARGET_CONFIGURE_ENV)
-
 IOZONE_MAKE_OPTS = \
 	$(IOZONE_TARGET)
 
