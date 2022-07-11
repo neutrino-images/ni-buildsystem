@@ -11,6 +11,9 @@ LUA_CURL_SITE = https://github.com/lua-curl
 
 LUA_CURL_DEPENDENCIES = libcurl lua
 
+LUA_CURL_MAKE_ENV = \
+	$(TARGET_CONFIGURE_ENV)
+
 LUA_CURL_MAKE_OPTS = \
 	LIBDIR=$(TARGET_libdir) \
 	LUA_INC=$(TARGET_includedir) \

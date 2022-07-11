@@ -9,6 +9,9 @@ BZIP2_DIR = bzip2-$(BZIP2_VERSION)
 BZIP2_SOURCE = bzip2-$(BZIP2_VERSION).tar.gz
 BZIP2_SITE = https://sourceware.org/pub/bzip2
 
+BZIP2_MAKE_ENV = \
+	$(TARGET_CONFIGURE_ENV)
+
 BZIP2_MAKE_OPTS = \
 	PREFIX=$(TARGET_prefix)
 
