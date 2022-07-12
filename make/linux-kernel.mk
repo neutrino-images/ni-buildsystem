@@ -226,6 +226,11 @@ $(DL_DIR)/$(VMLINUZ_INITRD_SOURCE):
 
 # -----------------------------------------------------------------------------
 
+LINUX_KERNEL_MAKE_VARS = \
+	$(KERNEL_MAKE_VARS) \
+	INSTALL_MOD_PATH=$(KERNEL_MODULES_DIR) \
+	INSTALL_HDR_PATH=$(KERNEL_HEADERS_DIR)
+
 kernel.do_checkout: $(SOURCE_DIR)/$(NI_LINUX_KERNEL)
 	$(CD) $(SOURCE_DIR)/$(NI_LINUX_KERNEL); \
 		git checkout $(KERNEL_BRANCH)
@@ -237,7 +242,7 @@ kernel.do_prepare: | $(DEPS_DIR) $(BUILD_DIR)
 	$(MKDIR)/$(KERNEL_OBJ)
 	$(MKDIR)/$(KERNEL_MODULES)
 	$(INSTALL_DATA) $(KERNEL_CONFIG) $(KERNEL_OBJ_DIR)/.config
-	$(MAKE) -C $(BUILD_DIR)/$(KERNEL_DIR) $(KERNEL_MAKE_VARS) silentoldconfig
+	$(MAKE) -C $(BUILD_DIR)/$(KERNEL_DIR) $(LINUX_KERNEL_MAKE_VARS) silentoldconfig
 ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 hd60 hd61 multiboxse))
 	$(INSTALL_DATA) $(PKG_FILES_DIR)/initramfs-subdirboot.cpio.gz $(KERNEL_OBJ_DIR)
 endif
@@ -258,8 +263,8 @@ kernel.do_prepare_tar: $(DL_DIR)/$(KERNEL_SOURCE)
 	$(LINUX_FIX_YYLLOC)
 
 kernel.do_compile: kernel.do_prepare
-	$(MAKE) -C $(BUILD_DIR)/$(KERNEL_DIR) $(KERNEL_MAKE_VARS) modules $(KERNEL_MAKE_TARGETS)
-	$(MAKE) -C $(BUILD_DIR)/$(KERNEL_DIR) $(KERNEL_MAKE_VARS) modules_install
+	$(MAKE) -C $(BUILD_DIR)/$(KERNEL_DIR) $(LINUX_KERNEL_MAKE_VARS) modules $(KERNEL_MAKE_TARGETS)
+	$(MAKE) -C $(BUILD_DIR)/$(KERNEL_DIR) $(LINUX_KERNEL_MAKE_VARS) modules_install
 ifneq ($(KERNEL_DTB),$(empty))
 	cat $(KERNEL_ZIMAGE) $(KERNEL_DTB) > $(KERNEL_ZIMAGE_DTB)
 endif
@@ -372,7 +377,7 @@ vmlinuz-initrd: $(DL_DIR)/$(VMLINUZ_INITRD_SOURCE)
 
 kernel-headers: $(KERNEL_HEADERS_DIR)
 $(KERNEL_HEADERS_DIR): kernel.do_prepare
-	$(MAKE) -C $(BUILD_DIR)/$(KERNEL_DIR) $(KERNEL_MAKE_VARS) headers_install
+	$(MAKE) -C $(BUILD_DIR)/$(KERNEL_DIR) $(LINUX_KERNEL_MAKE_VARS) headers_install
 
 kernel-tarball: $(KERNEL_TARBALL)
 $(KERNEL_TARBALL): kernel.do_prepare
