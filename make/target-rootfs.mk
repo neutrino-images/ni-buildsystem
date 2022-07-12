@@ -83,6 +83,9 @@ personalize: | $(TARGET_DIR)
 # -----------------------------------------------------------------------------
 
 rootfs: target-finish $(ROOTFS) rootfs-cleanup rootfs-strip
+ifeq ($(BOXTYPE),coolstream)
+	make rootfs-tarball
+endif
 
 # -----------------------------------------------------------------------------
 
@@ -149,6 +152,14 @@ ifneq ($(DEBUG),yes)
   endif
 	@$(call MESSAGE,"After strip: $$(du -sh $(ROOTFS))")
 endif
+
+# -----------------------------------------------------------------------------
+
+ROOTFS_TARBALL = $(IMAGE_DIR)/$(IMAGE_NAME)-rootfs.tgz
+
+rootfs-tarball: $(ROOTFS_TARBALL)
+$(ROOTFS_TARBALL):
+	tar cf $(@) -C $(ROOTFS) .
 
 # -----------------------------------------------------------------------------
 
