@@ -159,7 +159,7 @@ ROOTFS_TARBALL = $(IMAGE_DIR)/$(IMAGE_NAME)-rootfs.tgz
 
 rootfs-tarball: $(ROOTFS_TARBALL)
 $(ROOTFS_TARBALL):
-	tar cf $(@) -C $(ROOTFS) .
+	tar czf $(@) -C $(ROOTFS) .
 
 # -----------------------------------------------------------------------------
 
