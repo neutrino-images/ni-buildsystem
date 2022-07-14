@@ -282,19 +282,19 @@ kernel-coolstream: kernel-coolstream-$(BOXSERIES)
 
 kernel-coolstream-hd1: kernel.do_compile | $(IMAGE_DIR)
 	$(HOST_MKIMAGE) -A $(TARGET_ARCH) -O linux -T kernel -C none -a 0x48000 -e 0x48000 -n "$(KERNEL_NAME)" -d $(KERNEL_ZIMAGE) $(TARGET_localstatedir)/update/zImage
-	$(INSTALL_DATA) $(TARGET_localstatedir)/update/zImage $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-zImage.img
+	$(INSTALL_DATA) $(TARGET_localstatedir)/update/zImage $(IMAGE_DIR)/$(IMAGE_NAME)-zImage.img
 	$(call TOUCH)
 
 kernel-coolstream-hd2: kernel.do_compile | $(IMAGE_DIR)
 	$(HOST_MKIMAGE) -A $(TARGET_ARCH) -O linux -T kernel -C none -a 0x8000 -e 0x8000 -n "$(KERNEL_NAME)" -d $(KERNEL_ZIMAGE_DTB) $(TARGET_localstatedir)/update/vmlinux.ub.gz
-	$(INSTALL_DATA) $(TARGET_localstatedir)/update/vmlinux.ub.gz $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-$(BOXMODEL)-vmlinux.ub.gz
+	$(INSTALL_DATA) $(TARGET_localstatedir)/update/vmlinux.ub.gz $(IMAGE_DIR)/$(IMAGE_NAME)-vmlinux.ub.gz
 ifeq ($(BOXMODEL),$(filter $(BOXMODEL),apollo shiner))
   ifeq ($(BOXMODEL),apollo)
 	# create kernel for shiner too when building apollo
-	$(INSTALL_DATA) $(TARGET_localstatedir)/update/vmlinux.ub.gz $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-shiner-vmlinux.ub.gz
+	$(INSTALL_DATA) $(TARGET_localstatedir)/update/vmlinux.ub.gz $(IMAGE_DIR)/$(subst apollo,shiner,$(IMAGE_NAME))-vmlinux.ub.gz
   else ifeq ($(BOXMODEL),shiner)
 	# create kernel for apollo too when building shiner
-	$(INSTALL_DATA) $(TARGET_localstatedir)/update/vmlinux.ub.gz $(IMAGE_DIR)/kernel-$(BOXTYPE_SC)-apollo-vmlinux.ub.gz
+	$(INSTALL_DATA) $(TARGET_localstatedir)/update/vmlinux.ub.gz $(IMAGE_DIR)/$(subst shiner,apollo,$(IMAGE_NAME))-vmlinux.ub.gz
   endif
 endif
 	$(call TOUCH)
