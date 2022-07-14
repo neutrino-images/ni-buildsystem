@@ -157,9 +157,12 @@ endif
 
 ROOTFS_TARBALL = $(IMAGE_DIR)/$(IMAGE_NAME)-rootfs.tgz
 
+ROOTFS_TARBALL_EXCLUDE = \
+	./var/update
+
 rootfs-tarball: $(ROOTFS_TARBALL)
 $(ROOTFS_TARBALL):
-	tar czf $(@) -C $(ROOTFS) .
+	tar czf $(@) -C $(ROOTFS) $(foreach exclude,$(ROOTFS_TARBALL_EXCLUDE),--exclude='$(exclude)' ) .
 
 # -----------------------------------------------------------------------------
 
