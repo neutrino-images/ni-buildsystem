@@ -4,6 +4,13 @@
 #
 ################################################################################
 
+# while the kernel is built for the target, the build may need various
+# host libraries depending on config (and version), so use
+# HOST_MAKE_ENV here. In particular, this ensures that our
+# host-pkgconf will look for host libraries and not target ones.
+LINUX_MAKE_ENV = \
+	$(HOST_MAKE_ENV)
+
 KERNEL_MAKE_VARS = \
 	ARCH=$(TARGET_ARCH) \
 	CROSS_COMPILE=$(TARGET_CROSS) \
@@ -22,7 +29,7 @@ KERNEL_MODULE_MAKE_VARS = \
 
 define KERNEL_MODULE_BUILD_CMDS_DEFAULT
 	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
-		$(TARGET_MAKE_ENV) $($(PKG)_MAKE_ENV) \
+		$(LINUX_MAKE_ENV) $($(PKG)_MAKE_ENV) \
 		$($(PKG)_MAKE) $($(PKG)_MAKE_ARGS) \
 			$(KERNEL_MODULE_MAKE_VARS) \
 			$($(PKG)_MAKE_OPTS)
@@ -37,7 +44,7 @@ endef
 
 define KERNEL_MODULE_INSTALL_CMDS_DEFAULT
 	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
-		$(TARGET_MAKE_ENV) $($(PKG)_MAKE_INSTALL_ENV) \
+		$(LINUX_MAKE_ENV) $($(PKG)_MAKE_INSTALL_ENV) \
 		$($(PKG)_MAKE_INSTALL) $($(PKG)_MAKE_INSTALL_ARGS) \
 			$(KERNEL_MODULE_MAKE_VARS) \
 			$($(PKG)_MAKE_INSTALL_OPTS)
