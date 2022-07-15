@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-ALSA_LIB_VERSION = 1.2.7
+ALSA_LIB_VERSION = 1.2.7.2
 ALSA_LIB_DIR = alsa-lib-$(ALSA_LIB_VERSION)
 ALSA_LIB_SOURCE = alsa-lib-$(ALSA_LIB_VERSION).tar.bz2
 ALSA_LIB_SITE = https://www.alsa-project.org/files/pub/lib
@@ -18,6 +18,7 @@ ALSA_LIB_CONF_OPTS = \
 	--with-debug=no \
 	--with-versioned=no \
 	--enable-symbolic-functions \
+	--enable-silent-rules \
 	--disable-aload \
 	--disable-rawmidi \
 	--disable-resmgr \
