@@ -163,6 +163,15 @@ ROOTFS_TARBALL_EXCLUDE = \
 rootfs-tarball: $(ROOTFS_TARBALL)
 $(ROOTFS_TARBALL):
 	tar czf $(@) -C $(ROOTFS) $(foreach exclude,$(ROOTFS_TARBALL_EXCLUDE),--exclude='$(exclude)' ) .
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),apollo shiner))
+  ifeq ($(BOXMODEL),apollo)
+	# create rootfs tarball for shiner too when building apollo
+	$(INSTALL_COPY) $(@) $(subst apollo,shiner,$(@))
+  else ifeq ($(BOXMODEL),shiner)
+	# create rootfs tarball for apollo too when building shiner
+	$(INSTALL_COPY) $(@) $(subst shiner,apollo,$(@))
+  endif
+endif
 
 # -----------------------------------------------------------------------------
 

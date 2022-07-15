@@ -7,8 +7,8 @@
 DEBUG ?= no
 
 # Versioning
-GITTAG=$(shell git tag -l "NI-*" | tail -n1)
-GITREV=$(shell git rev-list $(GITTAG)..HEAD --count)
+GITTAG = $(shell git tag -l "NI-*" | tail -n1)
+GITREV = $(shell git rev-list $(GITTAG)..HEAD --count)
 
 # *Must* be a one-digit number
 IMAGE_VERSION_MAJOR = 4
