@@ -16,7 +16,7 @@ BOXMODEL_IMAGE += vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4k
 images \
 ni-images:
 	for boxmodel in $(BOXMODEL_IMAGE); do \
-		$(MAKE) BOXMODEL=$${boxmodel} clean image || exit; \
+		$(MAKE) BOXMODEL=$${boxmodel} clean image || true; \
 	done;
 	make clean
 
