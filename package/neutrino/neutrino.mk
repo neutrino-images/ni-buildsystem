@@ -18,7 +18,7 @@ NEUTRINO_BUILD_DIR = $(BUILD_DIR)/$(NEUTRINO_OBJ)
 # -----------------------------------------------------------------------------
 
 NEUTRINO_DEPENDENCIES = ffmpeg freetype giflib libcurl libdvbsi fribidi \
-	libjpeg-turbo libsigc lua ntp openssl openthreads pugixml zlib jsoncpp
+	libjpeg-turbo libsigc lua ntp openssl openthreads pugixml zlib
 
 # -----------------------------------------------------------------------------
 
