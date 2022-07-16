@@ -11,16 +11,22 @@ if [ -z "$1" -o "$1" == "--help" ]; then
 	exit 0
 fi
 
+params="$*"
+
+logdate=$(date +%Y%m%d%H%M)
+logdir=.log
+logfile=${logdir}/${logdate}_make_${params// /_}.log
+
+logtmp=$(mktemp makelog.XXXXXX)
+
+# clean up at exit
+trap "rm -f $logtmp" EXIT
+
 if test -d root; then
 	exist_root=true
 else
 	exist_root=false
 fi
-
-logfile=$(mktemp makelog.XXXXXX)
-trap "rm -f $logfile" EXIT
-
-params="$*"
 
 if $exist_root; then
 	pushd root
@@ -30,7 +36,7 @@ if $exist_root; then
 	popd
 fi
 
-time make $params 2>&1 | tee $logfile
+time make $params 2>&1 | tee $logtmp
 
 if $exist_root; then
 	pushd root
@@ -39,6 +45,6 @@ if $exist_root; then
 	popd
 fi
 
-mkdir -p build_tmp
-echo -e "\nmake $*:\n" >> build_tmp/make_${params// /_}.log
-cat $logfile >> build_tmp/make_${params// /_}.log
+test -d ${logdir} || mkdir ${logdir}
+echo -e "\nmake $*:\n" >> ${logfile}
+cat $logtmp >> ${logfile}
