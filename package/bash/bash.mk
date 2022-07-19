@@ -4,12 +4,10 @@
 #
 ################################################################################
 
-BASH_VERSION = 5.1.16
+BASH_VERSION = 5.0
 BASH_DIR = bash-$(BASH_VERSION)
 BASH_SOURCE = bash-$(BASH_VERSION).tar.gz
 BASH_SITE = $(GNU_MIRROR)/bash
-
-BASH_DEPENDENCIES = ncurses readline host-bison
 
 BASH_CONF_ENV += \
 	bash_cv_getcwd_malloc=yes \
