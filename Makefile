@@ -75,7 +75,7 @@ config.local: $(eval BOXMODEL=hd51)
 	@echo "     ##    ##  ##      http://www.neutrino-images.de"
 	@echo "            #"
 	@echo ""
-	$(call draw_line);
+	@$(call draw_line);
 	@echo ""
 	@echo "   1)  Coolstream Nevis (HD1, BSE, Neo, Neo², Zee)"
 	@echo "   2)  Coolstream Apollo (Tank)"
@@ -131,7 +131,7 @@ local:
 	@mkdir -p $(@)/{root,scripts}
 
 printenv:
-	$(call draw_line);
+	@$(call draw_line);
 	@echo "Build Environment Varibles:"
 	@echo "CROSS_DIR:   $(CROSS_DIR)"
 	@echo "TARGET:      $(TARGET)"
@@ -143,7 +143,7 @@ printenv:
 	@echo "BOXTYPE:     $(BOXTYPE)"
 	@echo "BOXSERIES:   $(BOXSERIES)"
 	@echo "BOXMODEL:    $(BOXMODEL)"
-	$(call draw_line);
+	@$(call draw_line);
 	@echo ""
 	@echo "'make help' lists useful targets."
 	@echo ""
@@ -168,7 +168,7 @@ printenv:
 	fi
 
 help:
-	$(call draw_line);
+	@$(call draw_line);
 	@echo "A few helpful make targets:"
 	@echo " * make preqs      - Downloads necessary stuff"
 	@echo " * make crosstool  - Build cross toolchain"
@@ -185,7 +185,7 @@ help:
 	@echo "Total renew:"
 	@echo " * make all-clean  - Reset buildsystem to delivery state"
 	@echo "                     but doesn't touch your local stuff"
-	$(call draw_line);
+	@$(call draw_line);
 
 all:
 	@echo "'make all' is not a valid target."

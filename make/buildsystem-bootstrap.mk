@@ -26,9 +26,9 @@ endif
 
 bootstrap: $(BOOTSTRAP)
 	@touch $(BUILD_DIR)/.$(BOXTYPE)-$(BOXMODEL)
-	$(call draw_line);
+	@$(call draw_line);
 	@$(call SUCCESS,"Bootstrapped for $(shell echo $(BOXTYPE) | sed 's/.*/\u&/') $(BOXNAME) ($(BOXMODEL))")
-	$(call draw_line);
+	@$(call draw_line);
 
 # -----------------------------------------------------------------------------
 
@@ -72,9 +72,9 @@ endif
 # -----------------------------------------------------------------------------
 
 $(TARGET_DIR):
-	$(call draw_line);
+	@$(call draw_line);
 	@echo "TARGET_DIR does not exist. You probably need to run 'make bootstrap'"
-	$(call draw_line);
+	@$(call draw_line);
 	@false
 
 # -----------------------------------------------------------------------------

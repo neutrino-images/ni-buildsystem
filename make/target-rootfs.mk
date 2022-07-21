@@ -132,9 +132,9 @@ ROOTFS_STRIP_LIBS += $(libdir)
 # strip bins and libs in root filesystem
 rootfs-strip: $(ROOTFS)
 ifneq ($(DEBUG),yes)
-	$(call draw_line);
+	@$(call draw_line);
 	@echo "The following warnings from strip are harmless!"
-	$(call draw_line);
+	@$(call draw_line);
 	for dir in $(ROOTFS_STRIP_BINS); do \
 		find $(ROOTFS)$${dir} -type f -print0 | xargs -0 $(TARGET_STRIP) || true; \
 	done

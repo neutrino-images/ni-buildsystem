@@ -34,9 +34,9 @@ crosstools-renew:
 CROSSTOOL_BACKUP = $(DL_DIR)/crosstool-ng-$(TARGET_ARCH)-$(TARGET_OS)-$(KERNEL_VERSION)-backup.tar.gz
 
 $(CROSSTOOL_BACKUP):
-	$(call draw_line);
+	@$(call draw_line);
 	@echo "CROSSTOOL_BACKUP does not exist. You probably need to run 'make crosstool-backup' first."
-	$(call draw_line);
+	@$(call draw_line);
 	@false
 
 crosstool-backup:

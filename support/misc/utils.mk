@@ -161,7 +161,6 @@ endef
 # $(3) = left|center|right
 #
 define draw_line
-	@ \
 	printf '%.0s-' {1..$(shell tput cols)}; \
 	if test "$(1)"; then \
 		cols=$(shell tput cols); \

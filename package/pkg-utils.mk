@@ -248,6 +248,14 @@ endef
 
 # -----------------------------------------------------------------------------
 
+# end-up build
+define ENDUP
+	@$(call SUCCESS,"End-up build $(pkgname)")
+	@$(call draw_line);
+endef
+
+# -----------------------------------------------------------------------------
+
 # resolve dependencies
 define DEPENDENCIES
 	@$(call MESSAGE,"Resolving dependencies for $(pkgname)")
@@ -452,6 +460,7 @@ define HOST_FOLLOWUP
 	$(foreach hook,$($(PKG)_HOST_FINALIZE_HOOKS),$(call $(hook))$(sep))
 	$(foreach hook,$($(PKG)_POST_FOLLOWUP_HOOKS),$(call $(hook))$(sep))
 	$(Q)$(call TOUCH)
+	$(Q)$(call ENDUP)
 endef
 
 define TARGET_FOLLOWUP
@@ -463,4 +472,5 @@ define TARGET_FOLLOWUP
 	$(foreach hook,$($(PKG)_TARGET_FINALIZE_HOOKS),$(call $(hook))$(sep))
 	$(foreach hook,$($(PKG)_POST_FOLLOWUP_HOOKS),$(call $(hook))$(sep))
 	$(Q)$(call TOUCH)
+	$(Q)$(call ENDUP)
 endef
