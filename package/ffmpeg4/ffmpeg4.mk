@@ -1,21 +1,17 @@
+################################################################################
 #
-# makefile to build ffmpeg
+# ffmpeg4
 #
-# -----------------------------------------------------------------------------
+################################################################################
 
-FFMPEG_VERSION = 4.4.2
-FFMPEG_DIR = ffmpeg-$(FFMPEG_VERSION)
-FFMPEG_SOURCE = ffmpeg-$(FFMPEG_VERSION).tar.xz
-FFMPEG_SITE = http://www.ffmpeg.org/releases
+FFMPEG4_VERSION = 4.4.2
+FFMPEG4_DIR = ffmpeg-$(FFMPEG4_VERSION)
+FFMPEG4_SOURCE = ffmpeg-$(FFMPEG4_VERSION).tar.xz
+FFMPEG4_SITE = http://www.ffmpeg.org/releases
 
-$(DL_DIR)/$(FFMPEG_SOURCE):
-	$(download) $(FFMPEG_SITE)/$(FFMPEG_SOURCE)
+FFMPEG4_DEPENDENCIES = openssl zlib bzip2 freetype rtmpdump libbluray libass libxml2 alsa-lib
 
-FFMPEG_DEPENDENCIES = openssl zlib bzip2 freetype rtmpdump libbluray libass libxml2 alsa-lib
-
-FFMPEG_UNPATCHED := no
-
-FFMPEG_CONF_OPTS = \
+FFMPEG4_CONF_OPTS = \
 	--disable-ffprobe \
 	\
 	--disable-doc \
@@ -308,15 +304,15 @@ FFMPEG_CONF_OPTS = \
 	--enable-hardcoded-tables
 
 ifeq ($(BS_PACKAGE_FFMPEG_FFPLAY),y)
-  FFMPEG_DEPENDENCIES += sdl2
-  FFMPEG_CONF_OPTS += --enable-ffplay
-  FFMPEG_CONF_ENV += SDL_CONFIG=$(HOST_DIR)/bin/sdl2-config
+  FFMPEG4_DEPENDENCIES += sdl2
+  FFMPEG4_CONF_OPTS += --enable-ffplay
+  FFMPEG4_CONF_ENV += SDL_CONFIG=$(HOST_DIR)/bin/sdl2-config
 else
-  FFMPEG_CONF_OPTS += --disable-ffplay
+  FFMPEG4_CONF_OPTS += --disable-ffplay
 endif
 
 ifeq ($(TARGET_ARCH),arm)
-  FFMPEG_CONF_OPTS += \
+  FFMPEG4_CONF_OPTS += \
 	--enable-armv6 \
 	--enable-armv6t2 \
 	--enable-neon  \
@@ -325,16 +321,17 @@ ifeq ($(TARGET_ARCH),arm)
 	--cpu=cortex-a15
 
 else ifeq ($(TARGET_ARCH),mips)
-  FFMPEG_CONF_OPTS += \
+  FFMPEG4_CONF_OPTS += \
 	--disable-armv6 \
 	--disable-armv6t2 \
 	--disable-neon \
 	--disable-vfp \
 	\
 	--cpu=generic
+
 endif
 
-FFMPEG_CONF_OPTS += \
+FFMPEG4_CONF_OPTS += \
 	--prefix=$(prefix) \
 	--datadir=$(REMOVE_datadir) \
 	--enable-cross-compile \
@@ -351,16 +348,10 @@ FFMPEG_CONF_OPTS += \
 	--extra-cflags="$(TARGET_CFLAGS) -Wno-deprecated-declarations" \
 	--extra-ldflags="$(TARGET_LDFLAGS)"
 
-ffmpeg: $(FFMPEG_DEPENDENCIES) $(DL_DIR)/$(FFMPEG_SOURCE) | $(TARGET_DIR)
-	$(call DEPENDENCIES)
-	$(call DOWNLOAD,$($(PKG)_SOURCE))
-	$(call STARTUP)
-	$(call EXTRACT,$(BUILD_DIR))
-ifneq ($($(PKG)_UNPATCHED),yes)
-	$(call APPLY_PATCHES,$(PKG_PATCHES_DIR))
-endif
-	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
-		./configure $($(PKG)_CONF_OPTS); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(call TARGET_FOLLOWUP)
+define FFMPEG4_CONFIGURE_CMDS
+	$(CHDIR)/$($(PKG)_DIR); \
+		$($(PKG)_CONF_ENV) ./configure $($(PKG)_CONF_OPTS)
+endef
+
+ffmpeg4: | $(TARGET_DIR)
+	$(call autotools-package)

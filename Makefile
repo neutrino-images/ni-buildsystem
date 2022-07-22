@@ -216,7 +216,6 @@ include make/flash-updates.mk
 include make/flash-images.mk
 include make/linux-kernel.mk
 include make/target-blobs.mk
-include make/target-ffmpeg$(if $(filter $(BOXTYPE),coolstream),-coolstream).mk
 include make/target-files.mk
 include make/target-libs-static.mk
 include make/target-rootfs.mk

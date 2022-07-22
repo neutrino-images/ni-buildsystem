@@ -1,8 +1,8 @@
 ################################################################################
 #
-# samba
+# ffmpeg
 #
 ################################################################################
 
-samba: $(if $(filter $(BOXSERIES),hd1),samba33,samba36)
+ffmpeg: $(if $(filter $(BOXTYPE),coolstream),ffmpeg2,ffmpeg4)
 	@$(call TOUCH)

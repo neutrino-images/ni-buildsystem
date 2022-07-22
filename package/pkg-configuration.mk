@@ -5,8 +5,13 @@
 #
 ################################################################################
 
-# ffmpeg: build ffplay
-BS_PACKAGE_FFMPEG_FFPLAY ?= n
+# ffmpeg2: branch
+BS_PACKAGE_FFMPEG2_BRANCH ?= ni/ffmpeg/2.8
+#BS_PACKAGE_FFMPEG2_BRANCH ?= ni/ffmpeg/master
+#BS_PACKAGE_FFMPEG2_BRANCH ?= ffmpeg/master
+
+# ffmpeg4: build ffplay
+BS_PACKAGE_FFMPEG4_FFPLAY ?= n
 
 # ncurses: build wide-character libraries
 BS_PACKAGE_NCURSES_WCHAR ?= y
