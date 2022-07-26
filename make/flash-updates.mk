@@ -84,31 +84,6 @@ u-update.urls: update.urls
 
 # -----------------------------------------------------------------------------
 
-u-pr-auto-timer:
-	$(MAKE) u-init
-	$(INSTALL_EXEC) $(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS)/scripts-sh/plugins/pr-auto-timer/update-ctrl/preinstall.sh $(PREINSTALL_SH)
-	$(INSTALL_EXEC) $(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS)/scripts-sh/plugins/pr-auto-timer/update-ctrl/postinstall.sh $(POSTINSTALL_SH)
-	$(INSTALL) -d $(UPDATE_INST_DIR)/share/tuxbox/neutrino/plugins
-	$(INSTALL_EXEC) $(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS)/scripts-sh/plugins/pr-auto-timer/pr-auto-timer.sh $(UPDATE_INST_DIR)/share/tuxbox/neutrino/plugins/
-	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS)/scripts-sh/plugins/pr-auto-timer/pr-auto-timer.cfg $(UPDATE_INST_DIR)/share/tuxbox/neutrino/plugins/
-	$(INSTALL_EXEC) $(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS)/scripts-sh/plugins/pr-auto-timer/pr-auto-timer $(UPDATE_INST_DIR)/share/tuxbox/neutrino/plugins/
-	$(INSTALL_EXEC) $(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS)/scripts-sh/plugins/pr-auto-timer/pr-auto-timer_hint.png $(UPDATE_INST_DIR)/share/tuxbox/neutrino/plugins/
-	$(INSTALL_EXEC) $(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS)/scripts-sh/plugins/pr-auto-timer/auto-record-cleaner $(UPDATE_INST_DIR)/share/tuxbox/neutrino/plugins/
-	$(INSTALL) -d $(UPDATE_INST_DIR)/var/tuxbox/config
-	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS)/scripts-sh/plugins/pr-auto-timer/pr-auto-timer.conf.template $(UPDATE_INST_DIR)/var/tuxbox/config/
-	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS)/scripts-sh/plugins/pr-auto-timer/pr-auto-timer.rules.template $(UPDATE_INST_DIR)/var/tuxbox/config/
-	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS)/scripts-sh/plugins/pr-auto-timer/auto-record-cleaner.conf.template $(UPDATE_INST_DIR)/var/tuxbox/config/
-	$(INSTALL_DATA) $(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS)/scripts-sh/plugins/pr-auto-timer/auto-record-cleaner.rules.template $(UPDATE_INST_DIR)/var/tuxbox/config/
-	PKG_VERSION=`cat $(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS)/scripts-sh/plugins/pr-auto-timer/pr-auto-timer | grep '^VERSION' | cut -d= -f2`; \
-	$(MAKE) u-update-bin \
-			UPDATE_MD5FILE=pr-auto-timer.txt \
-			UPDATE_SITE=$(NI_SERVER)/plugins/pr-auto-timer \
-			UPDATE_NAME=pr-auto-timer_$${PKG_VERSION//./} \
-			UPDATE_DESC=Auto-Timer \
-			UPDATE_VERSION=$$PKG_VERSION
-
-# -----------------------------------------------------------------------------
-
 u-custom:
 	$(MAKE) u-update-bin \
 			UPDATE_MD5FILE=custom_bin.txt \
@@ -148,7 +123,6 @@ PHONY += neutrino-full-updates ni-neutrino-full-updates
 PHONY += u-neutrino
 PHONY += u-neutrino-full
 PHONY += u-update.urls
-PHONY += u-pr-auto-timer
 PHONY += u-custom
 PHONY += u-init
 PHONY += u-clean
