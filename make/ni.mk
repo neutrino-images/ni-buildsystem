@@ -3,26 +3,6 @@
 #
 # -----------------------------------------------------------------------------
 
-BOXMODEL_IMAGE  =
-ifneq ($(DEBUG),yes)
-  BOXMODEL_IMAGE += nevis
-endif
-BOXMODEL_IMAGE += apollo kronos kronos_v2
-BOXMODEL_IMAGE += hd51 bre2ze4k h7
-BOXMODEL_IMAGE += hd60 hd61
-BOXMODEL_IMAGE += vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse
-#BOXMODEL_IMAGE += vuduo
-
-images \
-ni-images:
-	for boxmodel in $(BOXMODEL_IMAGE); do \
-		$(MAKE) BOXMODEL=$${boxmodel} clean image || true; \
-	done;
-	make clean
-
-personalized-image:
-	make image PERSONALIZE=yes
-
 image \
 ni-image:
 	@echo "starting 'make $(@)' build with "$(PARALLEL_JOBS)" threads!"
@@ -109,6 +89,28 @@ endif
 
 # -----------------------------------------------------------------------------
 
+IMAGES_BOXMODEL =
+ifneq ($(DEBUG),yes)
+  IMAGES_BOXMODEL += nevis
+endif
+IMAGES_BOXMODEL += apollo kronos kronos_v2
+IMAGES_BOXMODEL += hd51 bre2ze4k h7
+IMAGES_BOXMODEL += hd60 hd61
+IMAGES_BOXMODEL += vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse
+#IMAGES_BOXMODEL += vuduo
+
+images \
+ni-images:
+	for boxmodel in $(IMAGES_BOXMODEL); do \
+		$(MAKE) BOXMODEL=$${boxmodel} clean image || true; \
+	done;
+	make clean
+
+personalized-image:
+	make image PERSONALIZE=yes
+
+# -----------------------------------------------------------------------------
+
+PHONY += image ni-image
 PHONY += images ni-images
 PHONY += personalized-image
-PHONY += image ni-image
