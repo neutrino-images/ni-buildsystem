@@ -1,0 +1,27 @@
+#!/bin/sh
+
+. /etc/init.d/functions
+. /etc/init.d/globals
+
+irqbalance=$(which irqbalance || type -p irqbalance)
+if [ -z ${irqbalance} ]; then
+	SHOWINFO "irqbalance not found."
+	exit 1
+fi
+
+case $1 in
+	start)
+		${irqbalance}
+	;;
+	stop)
+		trap "" INT
+		kill -INT $(pidof irqbalance)
+	;;
+	restart)
+		$0 stop
+		$0 start
+	;;
+	*)
+		echo "[$BASENAME] Usage: $0 {start|restart|stop}"
+	;;
+esac
