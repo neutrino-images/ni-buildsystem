@@ -51,17 +51,16 @@ define VUPLUS_PLATFORM_UTIL_INSTALL_BINARIES
 endef
 VUPLUS_PLATFORM_UTIL_INDIVIDUAL_HOOKS += VUPLUS_PLATFORM_UTIL_INSTALL_BINARIES
 
-define VUPLUS_PLATFORM_UTIL_INSTALL_INIT_SCRIPT
-	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/vuplus-platform-util.init $(TARGET_sysconfdir)/init.d/vuplus-platform-util
-endef
-VUPLUS_PLATFORM_UTIL_INDIVIDUAL_HOOKS += VUPLUS_PLATFORM_UTIL_INSTALL_INIT_SCRIPT
-
 ifeq ($(BOXMODEL),$(filter $(BOXMODEL),vuduo4k))
 define VUPLUS_PLATFORM_UTIL_INSTALL_BP3FLASH_SH
 	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/bp3flash.sh $(TARGET_bindir)/bp3flash.sh
 endef
 VUPLUS_PLATFORM_UTIL_INDIVIDUAL_HOOKS += VUPLUS_PLATFORM_UTIL_INSTALL_BP3FLASH_SH
 endif
+
+define VUPLUS_PLATFORM_UTIL_INSTALL_INIT_SYSV
+	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/vuplus-platform-util.init $(TARGET_sysconfdir)/init.d/vuplus-platform-util
+endef
 
 vuplus-platform-util: | $(TARGET_DIR)
 	$(call individual-package)

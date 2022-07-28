@@ -46,9 +46,13 @@ XUPNPD_TARGET_FINALIZE_HOOKS += XUPNPD_INSTALL_PLUGINS
 
 define XUPNPD_INSTALL_SKEL
 	$(INSTALL_COPY) $(PKG_FILES_DIR)-skel/* $(TARGET_DIR)/
-	$(UPDATE-RC.D) xupnpd defaults 75 25
 endef
 XUPNPD_TARGET_FINALIZE_HOOKS += XUPNPD_INSTALL_SKEL
+
+define XUPNPD_INSTALL_INIT_SYSV
+	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/xupnpd.init $(TARGET_sysconfdir)/init.d/xupnpd
+	$(UPDATE-RC.D) xupnpd defaults 75 25
+endef
 
 xupnpd: | $(TARGET_DIR)
 	$(call generic-package)

@@ -23,11 +23,10 @@ UDPXY_MAKE_OPTS += \
 	PREFIX=$(prefix) \
 	MANPAGE_DIR=$(TARGET_DIR)$(REMOVE_mandir)
 
-define UDPXY_INSTALL_INIT_SCRIPT
+define UDPXY_INSTALL_INIT_SYSV
 	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/udpxy.init $(TARGET_sysconfdir)/init.d/udpxy
 	$(UPDATE-RC.D) udpxy defaults 75 25
 endef
-UDPXY_TARGET_FINALIZE_HOOKS += UDPXY_INSTALL_INIT_SCRIPT
 
 udpxy: | $(TARGET_DIR)
 	$(call generic-package)

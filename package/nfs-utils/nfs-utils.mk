@@ -52,11 +52,10 @@ else
 endif
 NFS_UTILS_TARGET_FINALIZE_HOOKS += NFS_UTILS_INSTALL_EXPORTS_FILE
 
-define NFS_UTILS_INSTALL_NFSD_INIT
+define NFS_UTILS_INSTALL_INIT_SYSV
 	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/nfsd.init $(TARGET_sysconfdir)/init.d/nfsd
 	$(UPDATE-RC.D) nfsd defaults 75 25
 endef
-NFS_UTILS_TARGET_FINALIZE_HOOKS += NFS_UTILS_INSTALL_NFSD_INIT
 
 nfs-utils: | $(TARGET_DIR)
 	$(call autotools-package)

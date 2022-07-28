@@ -31,10 +31,13 @@ define VSFTPD_INSTALL_FILES
 	$(INSTALL) -d $(TARGET_datadir)/empty
 	$(INSTALL_DATA) -D $(PKG_FILES_DIR)/vsftpd.conf $(TARGET_sysconfdir)/vsftpd.conf
 	$(INSTALL_DATA) -D $(PKG_FILES_DIR)/vsftpd.chroot_list $(TARGET_sysconfdir)/vsftpd.chroot_list
+endef
+VSFTPD_TARGET_FINALIZE_HOOKS += VSFTPD_INSTALL_FILES
+
+define VSFTPD_INSTALL_INIT_SYSV
 	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/vsftpd.init $(TARGET_sysconfdir)/init.d/vsftpd
 	$(UPDATE-RC.D) vsftpd defaults 75 25
 endef
-VSFTPD_TARGET_FINALIZE_HOOKS += VSFTPD_INSTALL_FILES
 
 vsftpd: | $(TARGET_DIR)
 	$(call generic-package)

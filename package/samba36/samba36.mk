@@ -58,10 +58,13 @@ SAMBA36_PRE_CONFIGURE_HOOKS += SAMBA36_AUTOGEN_SH
 define SAMBA36_INSTALL_FILES
 	$(INSTALL) -d $(TARGET_localstatedir)/samba/locks
 	$(INSTALL_DATA) -D $(PKG_FILES_DIR)/smb3.conf $(TARGET_sysconfdir)/samba/smb.conf
+endef
+SAMBA36_POST_INSTALL_HOOKS += SAMBA36_INSTALL_FILES
+
+define SAMBA36_INSTALL_INIT_SYSV
 	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/samba3.init $(TARGET_sysconfdir)/init.d/samba
 	$(UPDATE-RC.D) samba defaults 75 25
 endef
-SAMBA36_POST_INSTALL_HOOKS += SAMBA36_INSTALL_FILES
 
 define SAMBA36_TARGET_CLEANUP
 	$(TARGET_RM) $(addprefix $(TARGET_bindir)/,testparm findsmb smbtar smbclient smbpasswd)

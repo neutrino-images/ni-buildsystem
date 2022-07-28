@@ -45,11 +45,10 @@ define USHARE_INSTALL_CONF
 endef
 USHARE_TARGET_FINALIZE_HOOKS += USHARE_INSTALL_CONF
 
-define USHARE_INSTALL_INIT_SCRIPT
+define USHARE_INSTALL_INIT_SYSV
 	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/ushare.init $(TARGET_sysconfdir)/init.d/ushare
 	$(UPDATE-RC.D) ushare defaults 75 25
 endef
-USHARE_TARGET_FINALIZE_HOOKS += USHARE_INSTALL_INIT_SCRIPT
 
 ushare: | $(TARGET_DIR)
 	$(call autotools-package)
