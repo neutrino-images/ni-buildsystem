@@ -409,8 +409,9 @@ endef
 # -----------------------------------------------------------------------------
 
 # rewrite libtool libraries
-REWRITE_LIBTOOL_RULES = "s,^libdir=.*,libdir='$(1)',; \
-			 s,\(^dependency_libs='\| \|-L\|^dependency_libs='\)/lib,\ $(1),g"
+REWRITE_LIBTOOL_RULES = "\
+	s,^libdir=.*,libdir='$(1)',; \
+	s,\(^dependency_libs='\| \|-L\|^dependency_libs='\)/lib,\ $(1),g"
 
 REWRITE_LIBTOOL_TAG = rewritten=1
 
@@ -433,10 +434,11 @@ endef
 # -----------------------------------------------------------------------------
 
 # rewrite pkg-config files
-REWRITE_CONFIG_RULES = "s,^prefix=.*,prefix='$(TARGET_prefix)',; \
-			s,^exec_prefix=.*,exec_prefix='$(TARGET_exec_prefix)',; \
-			s,^libdir=.*,libdir='$(TARGET_libdir)',; \
-			s,^includedir=.*,includedir='$(TARGET_includedir)',"
+REWRITE_CONFIG_RULES = "\
+	s,^prefix=.*,prefix='$(TARGET_prefix)',; \
+	s,^exec_prefix=.*,exec_prefix='$(TARGET_exec_prefix)',; \
+	s,^libdir=.*,libdir='$(TARGET_libdir)',; \
+	s,^includedir=.*,includedir='$(TARGET_includedir)',"
 
 define rewrite_config_script # (config-script)
 	mv $(TARGET_bindir)/$(1) $(HOST_DIR)/bin
