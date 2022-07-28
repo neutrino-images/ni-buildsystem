@@ -17,11 +17,10 @@ IRQBALANCE_AUTORECONF = YES
 IRQBALANCE_CONF_OPTS = \
 	--with-irqbalance-ui
 
-define IRQBALANCE_INSTALL_INIT_SCRIPT
+define IRQBALANCE_INSTALL_INIT_SYSV
 	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/irqbalance.init $(TARGET_sysconfdir)/init.d/irqbalance
 	$(UPDATE-RC.D) irqbalance defaults 75 25
 endef
-IRQBALANCE_TARGET_FINALIZE_HOOKS += IRQBALANCE_INSTALL_INIT_SCRIPT
 
 irqbalance: | $(TARGET_DIR)
 	$(call autotools-package)

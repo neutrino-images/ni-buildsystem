@@ -18,6 +18,8 @@ else
 PARALLEL_JOBS := $(BS_JLEVEL)
 endif
 
+BS_INIT_SYSV = y
+
 MAKE1 := $(HOSTMAKE) -j1
 override MAKE = $(HOSTMAKE) \
 	$(if $(findstring j,$(filter-out --%,$(MAKEFLAGS))),,-j$(PARALLEL_JOBS))
