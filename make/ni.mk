@@ -60,6 +60,7 @@ ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd2 hd5x hd6x vusolo4k vuduo4k vuduo4ks
 	$(MAKE) dvb-apps
   endif
   ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd5x hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo))
+	$(MAKE) irqbalance
 	$(MAKE) udpxy
 	$(MAKE) evtest
 	$(MAKE) gptfdisk
