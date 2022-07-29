@@ -27,7 +27,7 @@ endif
 bootstrap: $(BOOTSTRAP)
 	@touch $(BUILD_DIR)/.$(BOXTYPE)-$(BOXMODEL)
 	@$(call draw_line);
-	@$(call SUCCESS,"Bootstrapped for $(shell echo $(BOXTYPE) | sed 's/.*/\u&/') $(BOXNAME) ($(BOXMODEL))")
+	@$(call SUCCESS,"Bootstrapped for $(TARGET_BOX)")
 	@$(call draw_line);
 
 # -----------------------------------------------------------------------------

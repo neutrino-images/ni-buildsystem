@@ -9,6 +9,7 @@ export LD_LIBRARY_PATH
 # -----------------------------------------------------------------------------
 
 TARGET_VENDOR = NI-Buildsystem
+TARGET_BOX = "$(shell echo $(BOXTYPE) | sed 's/.*/\u&/') $(BOXNAME) ($(BOXMODEL))"
 
 TARGET_OS = linux
 

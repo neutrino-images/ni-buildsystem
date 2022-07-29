@@ -88,7 +88,7 @@ changelogs:
 
 done:
 	@$(call draw_line);
-	@$(call SUCCESS,"Done")
+	@$(call SUCCESS,"Build done for $(TARGET_BOX)")
 	@$(call draw_line);
 
 # -----------------------------------------------------------------------------
