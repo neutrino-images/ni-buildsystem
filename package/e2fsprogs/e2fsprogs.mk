@@ -54,7 +54,7 @@ E2FSPROGS_MAKE_INSTALL = \
 	$(MAKE1)
 
 E2FSPROGS_MAKE_INSTALL_ARGS = \
-	install-libs
+	install install-libs
 
 define E2FSPROGS_TARGET_CLEANUP
 	$(TARGET_RM) $(addprefix $(TARGET_base_sbindir)/,dumpe2fs e2mmpstatus e2undo logsave)
