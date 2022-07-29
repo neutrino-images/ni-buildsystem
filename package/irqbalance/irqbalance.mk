@@ -11,8 +11,11 @@ IRQBALANCE_SITE = $(call github,irqbalance,irqbalance,v$(IRQBALANCE_VERSION))
 
 IRQBALANCE_DEPENDENCIES = glib2 ncurses
 
-# Autoreconf needed because package is distributed without a configure script
-IRQBALANCE_AUTORECONF = YES
+define IRQBALANCE_AUTOGEN_SH
+	$(CHDIR)/$($(PKG)_DIR); \
+		./autogen.sh
+endef
+IRQBALANCE_PRE_CONFIGURE_HOOKS += IRQBALANCE_AUTOGEN_SH
 
 IRQBALANCE_CONF_OPTS = \
 	--with-irqbalance-ui
