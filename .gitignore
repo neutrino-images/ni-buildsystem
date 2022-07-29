@@ -1,6 +1,7 @@
 #
 # exclude directories explicitly
 #
+/.log
 /build-generic-pc
 /build_tmp
 /cross
