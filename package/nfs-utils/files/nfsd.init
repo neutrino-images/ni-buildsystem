@@ -5,8 +5,8 @@
 start() {
 	# prepare filesystem
 	mkdir -p /var/lock/subsys
-	mkdir -p /var/lib/nfs/sm
-	mkdir -p /var/lib/nfs/sm.bak
+	mkdir -p /var/lib/nfs/statd/sm
+	mkdir -p /var/lib/nfs/statd/sm.bak
 	touch /var/lib/nfs/etab
 	touch /var/lib/nfs/rmtab
 
