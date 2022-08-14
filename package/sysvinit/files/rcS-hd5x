@@ -21,6 +21,7 @@ SHOWINFO "creating and mounting system directories ..."
 mount -t devtmpfs devtmpfs /dev
 mount -t sysfs sys /sys
 mount -t tmpfs tmp /tmp
+mount -t tmpfs run /var/run
 mount -t tmpfs media /media
 mount -t tmpfs srv /srv
 mount -t tmpfs mnt /mnt

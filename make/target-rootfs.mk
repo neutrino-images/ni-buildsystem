@@ -39,13 +39,12 @@ $(TARGET_localstatedir)/etc/update.urls: | $(TARGET_DIR)
 symbolic-links: | $(TARGET_DIR)
 	$(CD) $(TARGET_DIR); \
 		rm -rf root; ln -sf /var/root root; \
-		rm -rf share; ln -sf /usr/share share; \
-		rm -rf run; ln -sf /var/run run
+		rm -rf run; ln -sf /var/run run; \
+		rm -rf share; ln -sf /usr/share share
 	$(CD) $(TARGET_localstatedir); \
-		rm -rf run; ln -sf /tmp run; \
 		rm -rf tmp; ln -sf /tmp tmp
 	$(CD) $(TARGET_sysconfdir); \
-		ln -sf /proc/mounts mtab
+		rm -rf mtab; ln -sf /proc/mounts mtab
 ifeq ($(PERSISTENT_VAR_PARTITION),yes)
 	$(CD) $(TARGET_sysconfdir); \
 		ln -sf /var/etc/hostname hostname

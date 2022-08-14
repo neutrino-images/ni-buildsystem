@@ -50,6 +50,7 @@ target-dir:
 	$(INSTALL) -d $(TARGET_localstatedir)/etc/init.d
 	$(INSTALL) -d $(TARGET_localstatedir)/keys
 	$(INSTALL) -d $(TARGET_localstatedir)/root
+	$(INSTALL) -d $(TARGET_localstatedir)/run
 ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd5x hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
 	$(INSTALL) -d $(TARGET_DIR)/boot
 endif
