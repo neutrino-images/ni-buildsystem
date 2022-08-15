@@ -60,6 +60,7 @@ ifeq ($(BOXTYPE),coolstream)
 	--disable-showiframe \
 	--disable-stb_startup \
 	--disable-imgbackup \
+	--disable-replay \
 	--disable-rcu_switcher
 endif
 
