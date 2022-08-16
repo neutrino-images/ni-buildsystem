@@ -42,6 +42,7 @@ else
 endif
 
 NEUTRINO_PLUGINS_CONF_OPTS += \
+	--disable-ard_mediathek \
 	--disable-logoupdater \
 	--disable-logoview \
 	--disable-mountpointmanagement \
