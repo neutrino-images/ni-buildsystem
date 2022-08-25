@@ -28,6 +28,9 @@ NEUTRINO_PLUGINS_CONF_OPTS = \
 	$(if $(findstring 1,$(KBUILD_VERBOSE)),--disable-silent-rules,--enable-silent-rules) \
 	--enable-maintainer-mode \
 	\
+	--with-lua-libdir=$(libdir)/lua/$(LUA_ABIVERSION) \
+	--with-lua-datadir=$(datadir)/lua/$(LUA_ABIVERSION) \
+	\
 	--with-neutrino-source=$(SOURCE_DIR)/$(NI_NEUTRINO) \
 	--with-neutrino-build=$(NEUTRINO_BUILD_DIR) \
 	\
