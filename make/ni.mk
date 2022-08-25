@@ -10,7 +10,6 @@ ni-image:
 	$(MAKE) blobs
 	$(MAKE) neutrino
 	$(MAKE) neutrino-plugins
-	$(MAKE) neutrino-mediathek
 	$(MAKE) doscam-webif-skin
 	$(MAKE) logo-addon
 	make fbshot
