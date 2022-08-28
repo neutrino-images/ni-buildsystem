@@ -96,7 +96,7 @@ ifneq ($(DEBUG),yes)
 endif
 IMAGES_BOXMODEL += apollo kronos kronos_v2
 IMAGES_BOXMODEL += hd51 bre2ze4k h7
-IMAGES_BOXMODEL += hd60 hd61
+IMAGES_BOXMODEL += hd60 hd61 multiboxse
 IMAGES_BOXMODEL += vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse
 #IMAGES_BOXMODEL += vuduo
 
