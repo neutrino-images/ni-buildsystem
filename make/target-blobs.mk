@@ -8,9 +8,9 @@
 blobs: $(BLOBS_DEPENDENCIES)
 	$(MAKE) firmware
 	$(MAKE) $(BOXMODEL)-drivers
-ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 hd60 hd61 multiboxse vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 hd60 hd61 multibox multiboxse vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
 	$(MAKE) $(BOXMODEL)-libgles
-  ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd60 hd61 multiboxse))
+  ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd60 hd61 multibox multiboxse))
 	$(MAKE) $(BOXMODEL)-libs
   endif
 endif
@@ -67,7 +67,11 @@ HD61_DRIVERS_VERSION = 20200731
 HD61_DRIVERS_SOURCE = hd61-drivers-$(KERNEL_VERSION)-$(HD61_DRIVERS_VERSION).zip
 HD61_DRIVERS_SITE = http://source.mynonpublic.com/gfutures
 
-MULTIBOXSE_DRIVERS_VERSION = 20201204
+MULTIBOX_DRIVERS_VERSION = 20201204
+MULTIBOX_DRIVERS_SOURCE = multibox-drivers-$(KERNEL_VERSION)-$(MULTIBOX_DRIVERS_VERSION).zip
+MULTIBOX_DRIVERS_SITE = http://source.mynonpublic.com/maxytec
+
+MULTIBOXSE_DRIVERS_VERSION = 20211129
 MULTIBOXSE_DRIVERS_SOURCE = multiboxse-drivers-$(KERNEL_VERSION)-$(MULTIBOXSE_DRIVERS_VERSION).zip
 MULTIBOXSE_DRIVERS_SITE = http://source.mynonpublic.com/maxytec
 
@@ -175,6 +179,7 @@ h7-drivers: $(DL_DIR)/$(BOXMODEL_DRIVERS_SOURCE) | $(TARGET_DIR)
 
 hd60-drivers \
 hd61-drivers \
+multibox-drivers \
 multiboxse-drivers: $(DL_DIR)/$(BOXMODEL_DRIVERS_SOURCE) | $(TARGET_DIR)
 	$(INSTALL) -d $(TARGET_modulesdir)/extra
 	unzip -o $(DL_DIR)/$(BOXMODEL_DRIVERS_SOURCE) -d $(TARGET_modulesdir)/extra
@@ -223,6 +228,11 @@ HD61_LIBGLES_VERSION = 20181201
 HD61_LIBGLES_DIR = $(empty)
 HD61_LIBGLES_SOURCE = hd61-mali-$(HD61_LIBGLES_VERSION).zip
 HD61_LIBGLES_SITE = http://downloads.mutant-digital.net/hd61
+
+MULTIBOX_LIBGLES_VERSION = 20190104
+MULTIBOX_LIBGLES_DIR = $(empty)
+MULTIBOX_LIBGLES_SOURCE = maxytec-mali-3798mv200-$(MULTIBOXSE_LIBGLES_VERSION).zip
+MULTIBOX_LIBGLES_SITE = http://source.mynonpublic.com/maxytec
 
 MULTIBOXSE_LIBGLES_VERSION = 20190104
 MULTIBOXSE_LIBGLES_DIR = $(empty)
@@ -296,6 +306,7 @@ hd6x-libgles-headers: $(DL_DIR)/$(HD6X_LIBGLES_HEADERS_SOURCE) | $(TARGET_DIR)
 
 hd60-libgles \
 hd61-libgles \
+multibox-libgles \
 multiboxse-libgles: $(DL_DIR)/$(BOXMODEL_LIBGLES_SOURCE) | $(TARGET_DIR)
 	unzip -o $(DL_DIR)/$(BOXMODEL_LIBGLES_SOURCE) -d $(TARGET_libdir)
 	$(CD) $(TARGET_libdir); \
@@ -335,6 +346,11 @@ HD61_LIBS_DIR = hiplay
 HD61_LIBS_SOURCE = gfutures-libs-3798mv200-$(HD61_LIBS_VERSION).zip
 HD61_LIBS_SITE = http://source.mynonpublic.com/gfutures
 
+MULTIBOX_LIBS_VERSION = 20200622
+MULTIBOX_LIBS_DIR = hiplay
+MULTIBOX_LIBS_SOURCE = maxytec-libs-3798mv200-$(MULTIBOXSE_LIBS_VERSION).zip
+MULTIBOX_LIBS_SITE = http://source.mynonpublic.com/maxytec
+
 MULTIBOXSE_LIBS_VERSION = 20200622
 MULTIBOXSE_LIBS_DIR = hiplay
 MULTIBOXSE_LIBS_SOURCE = maxytec-libs-3798mv200-$(MULTIBOXSE_LIBS_VERSION).zip
@@ -354,6 +370,7 @@ endif
 
 hd60-libs \
 hd61-libs \
+multibox-libs \
 multiboxse-libs: $(DL_DIR)/$(BOXMODEL_LIBS_SOURCE) | $(TARGET_DIR)
 	$(REMOVE)/$(BOXMODEL_LIBS_DIR)
 	unzip -o $(DL_DIR)/$(BOXMODEL_LIBS_SOURCE) -d $(BUILD_DIR)/$(BOXMODEL_LIBS_DIR)

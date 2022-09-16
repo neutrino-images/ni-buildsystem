@@ -15,13 +15,13 @@
 
 # - Armbox --------------------------------------------------------------------
 
-# BOXTYPE             armbox ----- +
-#                    /             |
-# BOXSERIES         hd5x         hd6x
-#                    |             |
-# BOXFAMILY       bcm7251s    hi3798mv200
-#                /   |    \   |    |    |
-# BOXMODEL   hd51 bre2ze4k h7 hd60 hd61 multiboxse
+# BOXTYPE             armbox -------- +
+#                    /                 \
+# BOXSERIES         hd5x              hd6x
+#                    |                  |
+# BOXFAMILY       bcm7251s        + hi3798mv200 +
+#                /   |    \      /   |       |   \
+# BOXMODEL   hd51 bre2ze4k h7 hd60 hd61 multibox multiboxse
 
 # BOXTYPE         armbox + ------ + ---- + -------- + ------- + ---- +
 #                /       |         \      \          \         \      \
@@ -165,7 +165,7 @@ else ifneq ($(BOXMODEL),)
     BOXTYPE = armbox
     BOXSERIES = hd5x
     BOXFAMILY = bcm7251s
-  else ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd60 hd61 multiboxse))
+  else ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd60 hd61 multibox multiboxse))
     BOXTYPE = armbox
     BOXSERIES = hd6x
     BOXFAMILY = hi3798mv200
@@ -239,6 +239,8 @@ else ifeq ($(BOXMODEL),hd60)
   BOXNAME = "AX/Mut@nt HD60"
 else ifeq ($(BOXMODEL),hd61)
   BOXNAME = "AX/Mut@nt HD61"
+else ifeq ($(BOXMODEL),multibox)
+  BOXNAME = "Maxytec Multibox 4K"
 else ifeq ($(BOXMODEL),multiboxse)
   BOXNAME = "Maxytec Multibox SE 4K"
 else ifeq ($(BOXMODEL),vusolo4k)
@@ -261,7 +263,7 @@ endif
 
 BOXMODELS  = nevis apollo shiner kronos kronos_v2
 BOXMODELS += hd51 bre2ze4k h7
-BOXMODELS += hd60 hd61 multiboxse
+BOXMODELS += hd60 hd61 multibox multiboxse
 BOXMODELS += vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse
 BOXMODELS += vuduo
 

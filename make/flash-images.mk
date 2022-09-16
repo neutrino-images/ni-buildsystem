@@ -67,7 +67,7 @@ ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7))
 	make flash-image-hd5x
 	make flash-image-hd5x-multi
 endif
-ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd60 hd61 multiboxse))
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd60 hd61 multibox multiboxse))
 	make flash-image-hd6x
 	make flash-image-hd6x-single
 endif
@@ -256,8 +256,11 @@ HD6X_RECOVERY_SOURCE = $(BOXMODEL)-recovery-$(HD6X_RECOVERY_DATE).zip
 
 HD6X_MULTI_RECOVERY_SITE = http://downloads.mutant-digital.net/$(BOXMODEL)
 
+# avoid warning: overriding recipe
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd60 hd61))
 $(DL_DIR)/$(HD6X_BOOTARGS_SOURCE):
 	$(download) $(HD6X_MULTI_RECOVERY_SITE)/$(HD6X_BOOTARGS_SOURCE)
+endif
 
 $(DL_DIR)/$(HD6X_PARTITONS_SOURCE):
 	$(download) $(HD6X_MULTI_RECOVERY_SITE)/$(HD6X_PARTITONS_SOURCE)
@@ -329,52 +332,67 @@ flash-image-hd6x-multi-recovery: | $(IMAGE_DIR)
 		zip -r $(IMAGE_DIR)/$(IMAGE_NAME)_multi_recovery.zip *
 	rm -rf $(IMAGE_BUILD_DIR)
 
-# multiboxse
-MULTIBOXSE_IMAGE_NAME = disk
-MULTIBOXSE_BOOT_IMAGE = bootoptions.img
-MULTIBOXSE_IMAGE_LINK = $(HD6X_IMAGE_NAME).ext4
+# multibox, multiboxse
+MULTIBOX_IMAGE_NAME = disk
+MULTIBOX_BOOT_IMAGE = bootoptions.img
+MULTIBOX_IMAGE_LINK = $(HD6X_IMAGE_NAME).ext4
 
 # partition offsets/sizes
-MULTIBOXSE_BOOTOPTIONS_PARTITION_SIZE = 2048
-MULTIBOXSE_IMAGE_ROOTFS_SIZE = 1024M
+MULTIBOX_BOOTOPTIONS_PARTITION_SIZE = 2048
+MULTIBOX_IMAGE_ROOTFS_SIZE = 1024M
 
-MULTIBOXSE_BOOTARGS_DATE = 20201110
-MULTIBOXSE_BOOTARGS_SOURCE = multiboxse-bootargs-$(MULTIBOXSE_BOOTARGS_DATE).zip
-MULTIBOXSE_FASTBOOT_DATE = 20201110
-MULTIBOXSE_FASTBOOT_SOURCE = multiboxse-fastboot-$(MULTIBOXSE_FASTBOOT_DATE).zip
-MULTIBOXSE_PARAM_DATE = 20200630
-MULTIBOXSE_PARAM_SOURCE = 3798mv200-param-$(MULTIBOXSE_PARAM_DATE).zip
-MULTIBOXSE_RECOVERY_DATE = 20201110
-MULTIBOXSE_RECOVERY_SOURCE = multiboxse-recovery-$(MULTIBOXSE_RECOVERY_DATE).zip
+ifeq ($(BOXMODEL),multibox)
+MULTIBOX_BOOTARGS_DATE = 20200504
+else ifeq ($(BOXMODEL),multiboxse)
+MULTIBOX_BOOTARGS_DATE = 20201110
+endif
+MULTIBOX_BOOTARGS_SOURCE = $(BOXMODEL)-bootargs-$(MULTIBOX_BOOTARGS_DATE).zip
+ifeq ($(BOXMODEL),multibox)
+MULTIBOX_FASTBOOT_DATE = 20200319
+else ifeq ($(BOXMODEL),multiboxse)
+MULTIBOX_FASTBOOT_DATE = 20201110
+endif
+MULTIBOX_FASTBOOT_SOURCE = $(BOXMODEL)-fastboot-$(MULTIBOX_FASTBOOT_DATE).zip
+MULTIBOX_PARAM_DATE = 20200630
+MULTIBOX_PARAM_SOURCE = 3798mv200-param-$(MULTIBOX_PARAM_DATE).zip
+ifeq ($(BOXMODEL),multibox)
+MULTIBOX_RECOVERY_DATE = 20210118
+else ifeq ($(BOXMODEL),multiboxse)
+MULTIBOX_RECOVERY_DATE = 20201110
+endif
+MULTIBOX_RECOVERY_SOURCE = $(BOXMODEL)-recovery-$(MULTIBOX_RECOVERY_DATE).zip
 
-MULTIBOXSE_MULTI_RECOVERY_SITE = http://source.mynonpublic.com/maxytec
+MULTIBOX_MULTI_RECOVERY_SITE = http://source.mynonpublic.com/maxytec
 
-$(DL_DIR)/$(MULTIBOXSE_BOOTARGS_SOURCE):
-	$(download) $(MULTIBOXSE_MULTI_RECOVERY_SITE)/$(MULTIBOXSE_BOOTARGS_SOURCE)
+# avoid warning: overriding recipe
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),multibox multiboxse))
+$(DL_DIR)/$(MULTIBOX_BOOTARGS_SOURCE):
+	$(download) $(MULTIBOX_MULTI_RECOVERY_SITE)/$(MULTIBOX_BOOTARGS_SOURCE)
+endif
 
-$(DL_DIR)/$(MULTIBOXSE_FASTBOOT_SOURCE):
-	$(download) $(MULTIBOXSE_MULTI_RECOVERY_SITE)/$(MULTIBOXSE_FASTBOOT_SOURCE)
+$(DL_DIR)/$(MULTIBOX_FASTBOOT_SOURCE):
+	$(download) $(MULTIBOX_MULTI_RECOVERY_SITE)/$(MULTIBOX_FASTBOOT_SOURCE)
 
-$(DL_DIR)/$(MULTIBOXSE_PARAM_SOURCE):
-	$(download) $(MULTIBOXSE_MULTI_RECOVERY_SITE)/$(MULTIBOXSE_PARAM_SOURCE)
+$(DL_DIR)/$(MULTIBOX_PARAM_SOURCE):
+	$(download) $(MULTIBOX_MULTI_RECOVERY_SITE)/$(MULTIBOX_PARAM_SOURCE)
 
-$(DL_DIR)/$(MULTIBOXSE_RECOVERY_SOURCE):
-	$(download) $(MULTIBOXSE_MULTI_RECOVERY_SITE)/$(MULTIBOXSE_RECOVERY_SOURCE)
+$(DL_DIR)/$(MULTIBOX_RECOVERY_SOURCE):
+	$(download) $(MULTIBOX_MULTI_RECOVERY_SITE)/$(MULTIBOX_RECOVERY_SOURCE)
 
-flash-image-multiboxse-multi-recovery: $(DL_DIR)/$(MULTIBOXSE_BOOTARGS_SOURCE)
-flash-image-multiboxse-multi-recovery: $(DL_DIR)/$(MULTIBOXSE_FASTBOOT_SOURCE)
-flash-image-multiboxse-multi-recovery: $(DL_DIR)/$(MULTIBOXSE_PARAM_SOURCE)
-flash-image-multiboxse-multi-recovery: $(DL_DIR)/$(MULTIBOXSE_RECOVERY_SOURCE)
-flash-image-multiboxse-multi-recovery: | $(IMAGE_DIR)
+flash-image-multibox-multi-recovery: $(DL_DIR)/$(MULTIBOX_BOOTARGS_SOURCE)
+flash-image-multibox-multi-recovery: $(DL_DIR)/$(MULTIBOX_FASTBOOT_SOURCE)
+flash-image-multibox-multi-recovery: $(DL_DIR)/$(MULTIBOX_PARAM_SOURCE)
+flash-image-multibox-multi-recovery: $(DL_DIR)/$(MULTIBOX_RECOVERY_SOURCE)
+flash-image-multibox-multi-recovery: | $(IMAGE_DIR)
 	rm -rf $(IMAGE_BUILD_DIR)
 	$(INSTALL) -d $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)
-	unzip -o $(DL_DIR)/$(MULTIBOXSE_BOOTARGS_SOURCE) -d $(IMAGE_BUILD_DIR)
-	unzip -o $(DL_DIR)/$(MULTIBOXSE_FASTBOOT_SOURCE) -d $(IMAGE_BUILD_DIR)
-	unzip -o $(DL_DIR)/$(MULTIBOXSE_PARAM_SOURCE) -d $(IMAGE_BUILD_DIR)
-	unzip -o $(DL_DIR)/$(MULTIBOXSE_RECOVERY_SOURCE) -d $(IMAGE_BUILD_DIR)
+	unzip -o $(DL_DIR)/$(MULTIBOX_BOOTARGS_SOURCE) -d $(IMAGE_BUILD_DIR)
+	unzip -o $(DL_DIR)/$(MULTIBOX_FASTBOOT_SOURCE) -d $(IMAGE_BUILD_DIR)
+	unzip -o $(DL_DIR)/$(MULTIBOX_PARAM_SOURCE) -d $(IMAGE_BUILD_DIR)
+	unzip -o $(DL_DIR)/$(MULTIBOX_RECOVERY_SOURCE) -d $(IMAGE_BUILD_DIR)
 	$(INSTALL_EXEC) $(IMAGE_BUILD_DIR)/update_bootargs_$(BOXMODEL).bin $(ROOTFS)$(datadir)/update_bootargs_$(BOXMODEL).bin
-	dd if=/dev/zero of=$(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(MULTIBOXSE_BOOT_IMAGE) bs=1024 count=$(MULTIBOXSE_BOOTOPTIONS_PARTITION_SIZE)
-	mkfs.msdos -S 512 $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(MULTIBOXSE_BOOT_IMAGE)
+	dd if=/dev/zero of=$(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(MULTIBOX_BOOT_IMAGE) bs=1024 count=$(MULTIBOX_BOOTOPTIONS_PARTITION_SIZE)
+	mkfs.msdos -S 512 $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(MULTIBOX_BOOT_IMAGE)
 	echo "bootcmd=setenv bootargs \$$(bootargs) \$$(bootargs_common); mmc read 0 0x1000000 0x3BD000 0x8000; bootm 0x1000000; run bootcmd_fallback" > $(IMAGE_BUILD_DIR)/STARTUP
 	echo "bootargs=root=/dev/mmcblk0p23 rootsubdir=linuxrootfs1 rootfstype=ext4 kernel=/dev/mmcblk0p19" >> $(IMAGE_BUILD_DIR)/STARTUP
 	echo "bootcmd=setenv bootargs \$$(bootargs) \$$(bootargs_common); run bootcmd_android; run bootcmd_fallback" > $(IMAGE_BUILD_DIR)/STARTUP_ANDROID
@@ -391,15 +409,15 @@ flash-image-multiboxse-multi-recovery: | $(IMAGE_DIR)
 	echo "bootargs=root=/dev/mmcblk0p23 rootsubdir=linuxrootfs4 rootfstype=ext4 kernel=/dev/mmcblk0p22" >> $(IMAGE_BUILD_DIR)/STARTUP_LINUX_4
 	echo "bootcmd=setenv bootargs \$$(bootargs_common); mmc read 0 0x1000000 0x1000 0x9000; bootm 0x1000000" > $(IMAGE_BUILD_DIR)/STARTUP_RECOVERY
 	$(INSTALL_DATA) -D $(PACKAGE_DIR)/bootmenu/files/$(BOXMODEL)/bootmenu.conf $(IMAGE_BUILD_DIR)/bootmenu.conf
-	mcopy -i $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(MULTIBOXSE_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP ::
-	mcopy -i $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(MULTIBOXSE_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP_ANDROID ::
-	mcopy -i $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(MULTIBOXSE_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP_ANDROID_DISABLE_LINUXSE ::
-	mcopy -i $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(MULTIBOXSE_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP_LINUX_1 ::
-	mcopy -i $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(MULTIBOXSE_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP_LINUX_2 ::
-	mcopy -i $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(MULTIBOXSE_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP_LINUX_3 ::
-	mcopy -i $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(MULTIBOXSE_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP_LINUX_4 ::
-	mcopy -i $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(MULTIBOXSE_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP_RECOVERY ::
-	mcopy -i $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(MULTIBOXSE_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/bootmenu.conf ::
+	mcopy -i $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(MULTIBOX_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP ::
+	mcopy -i $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(MULTIBOX_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP_ANDROID ::
+	mcopy -i $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(MULTIBOX_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP_ANDROID_DISABLE_LINUXSE ::
+	mcopy -i $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(MULTIBOX_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP_LINUX_1 ::
+	mcopy -i $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(MULTIBOX_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP_LINUX_2 ::
+	mcopy -i $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(MULTIBOX_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP_LINUX_3 ::
+	mcopy -i $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(MULTIBOX_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP_LINUX_4 ::
+	mcopy -i $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(MULTIBOX_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/STARTUP_RECOVERY ::
+	mcopy -i $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/$(MULTIBOX_BOOT_IMAGE) -v $(IMAGE_BUILD_DIR)/bootmenu.conf ::
 	mv $(IMAGE_BUILD_DIR)/pq_param.bin $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)
 	mv $(IMAGE_BUILD_DIR)/baseparam.img $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)
 	echo boot-recovery > $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/misc-boot.img
@@ -407,7 +425,7 @@ flash-image-multiboxse-multi-recovery: | $(IMAGE_DIR)
 	rm -rf $(IMAGE_BUILD_DIR)/*.conf
 	rm -rf $(IMAGE_BUILD_DIR)/*.txt
 	rm -rf $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/*.txt
-	rm -rf $(IMAGE_BUILD_DIR)/$(MULTIBOXSE_IMAGE_LINK)
+	rm -rf $(IMAGE_BUILD_DIR)/$(MULTIBOX_IMAGE_LINK)
 	cp $(SUPPORT_DIR)/splash-images/ni-splash-$(BOXSERIES).img $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/logo.img
 	echo $(IMAGE_NAME)_recovery > $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/recoveryversion
 	echo "***** ACHTUNG *****" >$(IMAGE_BUILD_DIR)/recovery_$(BOXMODEL)_lies.mich
@@ -425,7 +443,7 @@ flash-image-multiboxse-multi-recovery: | $(IMAGE_DIR)
 	rm -rf $(IMAGE_BUILD_DIR)
 
 flash-image-hd6x-single: $(if $(filter $(BOXMODEL),hd60 hd61),flash-image-hd6x-multi-recovery)
-flash-image-hd6x-single: $(if $(filter $(BOXMODEL),multiboxse),flash-image-multiboxse-multi-recovery)
+flash-image-hd6x-single: $(if $(filter $(BOXMODEL),multibox multiboxse),flash-image-multibox-multi-recovery)
 flash-image-hd6x-single: | $(IMAGE_DIR)
 	rm -rf $(IMAGE_BUILD_DIR)
 	$(INSTALL) -d $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)

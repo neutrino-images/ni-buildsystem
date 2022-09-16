@@ -59,6 +59,12 @@ if ($revision == 1) // libstb-hal
 		$boxseries = "hd6x";
 		$boxmodel = "hd61";
 	}
+	elseif ($boxname == "multibox 4k")
+	{
+		$boxtype_sc = "arm";
+		$boxseries = "hd6x";
+		$boxmodel = "multibox";
+	}
 	elseif ($boxname == "multibox se 4k")
 	{
 		$boxtype_sc = "arm";

@@ -34,6 +34,9 @@ MAINTAINER = $(shell whoami)
 # Air Digital Zgemma H7
 #BOXMODEL = h7
 
+# Maxytec Multibox 4K
+#BOXMODEL = multibox
+
 # Maxytec Multibox SE 4K
 #BOXMODEL = multiboxse
 
