@@ -11,7 +11,7 @@ fi
 
 case $1 in
 	start)
-		mkdir -p /var/run/irqbalance
+		mkdir -p /run/irqbalance
 		${irqbalance}
 	;;
 	stop)
