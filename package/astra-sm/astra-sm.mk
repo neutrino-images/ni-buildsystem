@@ -7,7 +7,7 @@
 ASTRA_SM_VERSION = git
 ASTRA_SM_DIR = astra-sm.$(ASTRA_SM_VERSION)
 ASTRA_SM_SOURCE = astra-sm.$(ASTRA_SM_VERSION)
-ASTRA_SM_SITE = https://gitlab.com/crazycat69
+ASTRA_SM_SITE = https://github.com/crazycat69
 
 ASTRA_SM_DEPENDENCIES = openssl
 
