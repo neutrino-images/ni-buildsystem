@@ -4,10 +4,10 @@
 #
 ################################################################################
 
-ZLIB_VERSION = 1.2.11
+ZLIB_VERSION = 1.2.12
 ZLIB_DIR = zlib-$(ZLIB_VERSION)
 ZLIB_SOURCE = zlib-$(ZLIB_VERSION).tar.xz
-ZLIB_SITE = https://sourceforge.net/projects/libpng/files/zlib/$(ZLIB_VERSION)
+ZLIB_SITE = https://zlib.net
 
 ZLIB_CONF_ENV = \
 	$(TARGET_CONFIGURE_ENV) \
