@@ -47,29 +47,36 @@ NI_SERVER = http://neutrino-images.de/neutrino-images
 ifeq ($(IMAGE_TYPE),0)
   # Release
   NI_SUBDIR = release
-  IMAGE_TYPE_STRING = release
+  IMAGE_SNAPSHOT = release
 else ifeq ($(IMAGE_TYPE),1)
   # Beta
   NI_SUBDIR = beta
-  IMAGE_TYPE_STRING = beta
+  IMAGE_SNAPSHOT = beta
 else ifeq ($(IMAGE_TYPE),2)
   # Nightly
   NI_SUBDIR = nightly
-  IMAGE_TYPE_STRING = nightly
+  IMAGE_SNAPSHOT = nightly
 else
   # Selfmade; just for compatibility; not needed for our builds
   NI_SUBDIR = selfmade
-  IMAGE_TYPE_STRING = selfmade
+  IMAGE_SNAPSHOT = selfmade
+endif
+
+# Saturday nightlies
+BUILD_DOW = $(shell date +%u)
+BUILD_DAY =
+ifeq ($(BUILD_DOW)-$(IMAGE_SNAPSHOT),6-nightly)
+  BUILD_DAY = saturday
 endif
 
 ifeq ($(BOXTYPE),$(filter $(BOXTYPE),coolstream))
-  IMAGE_DESC ="$(BOXNAME) [$(IMAGE_SUFFIX)][$(BOXSERIES)] $(shell echo $(IMAGE_TYPE_STRING) | sed 's/.*/\u&/')"
+  IMAGE_DESC ="$(BOXNAME) [$(IMAGE_SUFFIX)][$(BOXSERIES)] $(shell echo $(BUILD_DAY) $(IMAGE_SNAPSHOT) | sed 's/.*/\u&/')"
 else
-  IMAGE_DESC ="$(BOXNAME) [$(IMAGE_SUFFIX)] $(shell echo $(IMAGE_TYPE_STRING) | sed 's/.*/\u&/')"
+  IMAGE_DESC ="$(BOXNAME) [$(IMAGE_SUFFIX)] $(shell echo $(BUILD_DAY) $(IMAGE_SNAPSHOT) | sed 's/.*/\u&/')"
 endif
 
 IMAGE_SITE = $(NI_SERVER)/$(NI_SUBDIR)
-IMAGE_MD5FILE = $(IMAGE_TYPE_STRING)-$(IMAGE_SUFFIX).txt
+IMAGE_MD5FILE = $(IMAGE_SNAPSHOT)-$(IMAGE_SUFFIX).txt
 
 IMAGE_BUILD_DIR = $(BUILD_DIR)/image-build
 
