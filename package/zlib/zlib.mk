@@ -4,13 +4,14 @@
 #
 ################################################################################
 
-ZLIB_VERSION = 1.2.12
+ZLIB_VERSION = 1.2.13
 ZLIB_DIR = zlib-$(ZLIB_VERSION)
 ZLIB_SOURCE = zlib-$(ZLIB_VERSION).tar.xz
 ZLIB_SITE = https://zlib.net
 
 ZLIB_CONF_ENV = \
 	$(TARGET_CONFIGURE_ENV) \
+	CFLAGS="$(TARGET_CFLAGS) -fPIC" \
 	mandir=$(REMOVE_mandir)
 
 ZLIB_CONF_OPTS = \
