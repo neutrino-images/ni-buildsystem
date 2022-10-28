@@ -99,6 +99,7 @@ NEUTRINO_PLUGINS_INIT_SCRIPTS_DEFAULTS += tuxcald
 NEUTRINO_PLUGINS_INIT_SCRIPTS_DEFAULTS += tuxmaild
 
 NEUTRINO_PLUGINS_INIT_SCRIPTS  = $(NEUTRINO_PLUGINS_INIT_SCRIPTS_DEFAULTS)
+NEUTRINO_PLUGINS_INIT_SCRIPTS += initfb
 NEUTRINO_PLUGINS_INIT_SCRIPTS += turnoff_power
 
 define NEUTRINO_PLUGINS_RUNLEVEL_LINKS_INSTALL
@@ -107,6 +108,9 @@ define NEUTRINO_PLUGINS_RUNLEVEL_LINKS_INSTALL
 			$(UPDATE-RC.D) $$script defaults 80 20; \
 		fi; \
 	done
+	if [ -x $(TARGET_sysconfdir)/init.d/initfb ]; then \
+		$(UPDATE-RC.D) initfb start 06 S .; \
+	fi
 	if [ -x $(TARGET_sysconfdir)/init.d/turnoff_power ]; then \
 		$(UPDATE-RC.D) turnoff_power start 99 0 .; \
 	fi
