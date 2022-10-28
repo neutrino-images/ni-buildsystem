@@ -15,6 +15,10 @@ ifeq ($(BOXMODEL),$(filter $(BOXMODEL),vuduo4k vuduo4kse vusolo4k vuultimo4k vuu
 GRAPHLCD_BASE_PATCH_CUSTOM = 0005-add-vuplus-driver.patch-custom
 endif
 
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),e4hdultra))
+GRAPHLCD_BASE_PATCH_CUSTOM = 0006-graphlcd-e4hdultra-conf.patch-custom
+endif
+
 GRAPHLCD_BASE_MAKE_ENV = \
 	$(TARGET_CONFIGURE_ENV)
 

@@ -1,0 +1,17 @@
+diff --git a/graphlcd.conf b/graphlcd.conf
+index 270cae8..d256e4b 100644
+--- a/graphlcd.conf
++++ b/graphlcd.conf
+@@ -117,6 +117,12 @@
+ 
+ ########################################################################
+ 
++[e4hdultra]
++# Default for e4hdultra
++Driver=framebuffer
++Device=/dev/fb1
++Zoom=0
++
+ [ax206dpf]
+ #  THIS IS AN EXPERIMENTAL DRIVER!
+ #  You have to uncomment the variable HAVE_DRIVER_AX206DPF
