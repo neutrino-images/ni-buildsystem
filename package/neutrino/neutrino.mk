@@ -84,6 +84,7 @@ NEUTRINO_CONF_OPTS = \
 	--enable-mdev \
 	--enable-pip \
 	--enable-pugixml \
+	--enable-lcd \
 	\
 	--with-omdb-api-key="$(BS_PACKAGE_NEUTRINO_OMDB_API_KEY)" \
 	--with-shoutcast-dev-key="$(BS_PACKAGE_NEUTRINO_SHOUTCAST_DEV_KEY)" \
