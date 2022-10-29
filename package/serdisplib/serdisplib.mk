@@ -9,7 +9,7 @@ SERDISPLIB_DIR = serdisplib-$(SERDISPLIB_VERSION)
 SERDISPLIB_SOURCE = serdisplib-$(SERDISPLIB_VERSION).tar.gz
 SERDISPLIB_SITE = https://sourceforge.net/projects/serdisplib/files/serdisplib/$(SERDISPLIB_VERSION)
 
-SERDISPLIB_DEPENDS = libusb-compat
+SERDISPLIB_DEPENDENCIES = libusb-compat
 
 SERDISPLIB_CONF_OPTS = \
 	--bindir=$(REMOVE_bindir) \
