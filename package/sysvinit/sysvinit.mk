@@ -24,9 +24,23 @@ ifeq ($(BOXMODEL),$(filter $(BOXMODEL),vusolo4k vuduo4k vuduo4kse vuultimo4k vuz
   define SYSVINIT_INSTALL_RCS
 	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/rcS-vuplus $(TARGET_sysconfdir)/init.d/rcS
   endef
+else ifeq ($(BOXMODEL),$(filter $(BOXMODEL),e4hdultra))
+  define SYSVINIT_INSTALL_RCS
+	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/rcS-$(BOXSERIES)-e4hdultra $(TARGET_sysconfdir)/init.d/rcS
+  endef
 else
   define SYSVINIT_INSTALL_RCS
 	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/rcS-$(BOXSERIES) $(TARGET_sysconfdir)/init.d/rcS
+  endef
+endif
+
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),e4hdultra))
+  define SYSVINIT_MODIFY_RCS
+	$(SED) "s|%(BOXMODEL)|e4hd|g" $(TARGET_sysconfdir)/init.d/rcS
+  endef
+else
+  define SYSVINIT_MODIFY_RCS
+	$(SED) "s|%(BOXMODEL)|$(BOXMODEL)|g" $(TARGET_sysconfdir)/init.d/rcS
   endef
 endif
 
@@ -35,7 +49,7 @@ define SYSVINIT_INSTALL_FILES
 	$(INSTALL_DATA) -D $(PKG_FILES_DIR)/default-rcS $(TARGET_sysconfdir)/default/rcS
 	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/rc $(TARGET_sysconfdir)/init.d/rc
 	$(SYSVINIT_INSTALL_RCS)
-	$(SED) "s|%(BOXMODEL)|$(BOXMODEL)|g" $(TARGET_sysconfdir)/init.d/rcS
+	$(SYSVINIT_MODIFY_RCS)
 	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/rcK $(TARGET_sysconfdir)/init.d/rcK
 	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/service $(TARGET_sbindir)/service
 	$(INSTALL_EXEC) -D support/scripts/update-rc.d $(TARGET_sbindir)/update-rc.d

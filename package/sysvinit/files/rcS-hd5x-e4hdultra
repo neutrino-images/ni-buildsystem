@@ -1,0 +1,101 @@
+#!/bin/sh
+
+runlevel=S
+prevlevel=N
+umask 022
+export runlevel prevlevel
+
+# source defaults
+. /etc/default/rcS
+
+. /etc/profile
+. /etc/init.d/functions
+. /etc/init.d/globals
+
+SHOWINFO "start"
+
+mount -t proc proc /proc
+
+# init system
+SHOWINFO "creating and mounting system directories ..."
+mount -t devtmpfs devtmpfs /dev
+mount -t sysfs sys /sys
+mount -t tmpfs tmp /tmp
+mount -t tmpfs run /var/run
+mount -t tmpfs media /media
+mount -t tmpfs srv /srv
+mount -t tmpfs mnt /mnt
+for dir in autofs epg logos logos/events movies music pictures plugins; do
+	mkdir -p /mnt/${dir}
+done
+mkdir -p /dev/pts
+mount -t devpts devpts /dev/pts
+mkdir -p /dev/shm/usb
+
+service partitions-by-name start
+service resizerootfs start
+
+# for nfsd
+mkdir -p /var/lib/nfs
+mount -t tmpfs nfs /var/lib/nfs
+
+# for samba
+mkdir -p /var/samba
+mount -t tmpfs samba /var/samba
+
+# for wget
+mkdir -p /var/run/wget
+
+# for wireless drivers
+mkdir -p /var/run/wpa_supplicant
+
+# set level of messages printed to console
+dmesg -n 1
+
+# set dummy date
+test -e /etc/date-dummy && date -s "$(cat /etc/date-dummy)"
+
+# automatic restore
+if [ -e /var/backup_flash.tar.gz ]; then
+	/usr/bin/restore_flash.sh
+fi
+
+# update system
+if [ -x /etc/init.d/sys_update.sh ]; then
+	/etc/init.d/sys_update.sh
+fi
+
+# set hostname
+service hostname start
+
+# logging as much as possible
+service syslogd start
+
+service sysctl start
+
+# load modules / create nodes
+load_module extra/%(BOXMODEL)_1.ko
+load_module extra/%(BOXMODEL)_2.ko
+load_module extra/%(BOXMODEL)_3.ko
+load_module extra/%(BOXMODEL)_4.ko
+
+# show bootlogo
+showiframe.sh bootlogo.m2v
+
+# mdev coldplug for node permissions
+service mdev start
+
+# fire up network/wlan
+service network start
+service ntpdate start
+
+# say hi to everyone
+display_msg "Booting... NI"
+
+# trap CTRL-C only in this shell so we can interrupt subprocesses
+trap ":" INT QUIT TSTP
+
+# call all parts in order
+exec /etc/init.d/rc S
+
+SHOWINFO "done"
