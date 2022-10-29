@@ -31,13 +31,14 @@ MAINTAINER = $(shell whoami)
 # WWIO
 #BOXMODEL = bre2ze4k
 
-# Air Digital Zgemma H7
+# Air Digital
 #BOXMODEL = h7
 
-# Maxytec Multibox 4K
-#BOXMODEL = multibox
+# AXAS
+#BOXMODEL = e4hdultra
 
-# Maxytec Multibox SE 4K
+# Maxytec
+#BOXMODEL = multibox
 #BOXMODEL = multiboxse
 
 # Edison

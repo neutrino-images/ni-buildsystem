@@ -27,7 +27,7 @@ else ifeq ($(BOXMODEL),$(filter $(BOXMODEL),apollo shiner kronos kronos_v2))
     KERNEL_CONFIG = $(PKG_FILES_DIR)/kernel-kronos.defconfig
   endif
 
-else ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7))
+else ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 e4hdultra))
   KERNEL_VERSION = 4.10.12
   KERNEL_DIR = linux-$(KERNEL_VERSION)
   KERNEL_SOURCE = linux-$(KERNEL_VERSION)-arm.tar.gz
@@ -35,7 +35,11 @@ else ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7))
 
   KERNEL_BRANCH = $(empty)
   KERNEL_DTB = $(KERNEL_OBJ_DIR)/arch/$(TARGET_ARCH)/boot/dts/bcm7445-bcm97445svmb.dtb
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),e4hdultra))
+  KERNEL_CONFIG = $(PKG_FILES_DIR)/kernel-hd5x-e4hdultra.defconfig
+else
   KERNEL_CONFIG = $(PKG_FILES_DIR)/kernel-hd5x.defconfig
+endif
 
   BOOT_PARTITION = 1
 
@@ -239,7 +243,7 @@ endif
 KERNEL_MAKE_TARGETS = $(KERNEL_IMAGE)
 
 # build also the kernel-dtb for arm-hd5x and arm-hd6x
-ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 hd60 hd61 multibox multiboxse))
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 e4hdultra hd60 hd61 multibox multiboxse))
   KERNEL_MAKE_TARGETS += $(notdir $(KERNEL_DTB))
 endif
 

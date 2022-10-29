@@ -15,13 +15,13 @@
 
 # - Armbox --------------------------------------------------------------------
 
-# BOXTYPE             armbox -------- +
-#                    /                 \
-# BOXSERIES         hd5x              hd6x
-#                    |                  |
-# BOXFAMILY       bcm7251s        + hi3798mv200 +
-#                /   |    \      /   |       |   \
-# BOXMODEL   hd51 bre2ze4k h7 hd60 hd61 multibox multiboxse
+# BOXTYPE                    + ----- armbox ----- +
+#                           /                      \
+# BOXSERIES            +  hd5x  +                  hd6x
+#                     /          \                  |
+# BOXFAMILY       bcm7251s     bcm7252s       + hi3798mv200 +
+#                /   |    \       |          /   |       |   \
+# BOXMODEL   hd51 bre2ze4k h7  e4hdultra  hd60 hd61 multibox multiboxse
 
 # BOXTYPE         armbox + ------ + ---- + -------- + ------- + ---- +
 #                /       |         \      \          \         \      \
@@ -115,6 +115,10 @@ else ifneq ($(BOXFAMILY),)
     BOXTYPE = armbox
     BOXSERIES = hd5x
     BOXMODEL = hd51
+  else ifeq ($(BOXFAMILY),bcm7252s)
+    BOXTYPE = armbox
+    BOXSERIES = hd5x
+    BOXMODEL = e4hdultra
   else ifeq ($(BOXFAMILY),hi3798mv200)
     BOXTYPE = armbox
     BOXSERIES = hd6x
@@ -165,6 +169,10 @@ else ifneq ($(BOXMODEL),)
     BOXTYPE = armbox
     BOXSERIES = hd5x
     BOXFAMILY = bcm7251s
+  else ifeq ($(BOXMODEL),$(filter $(BOXMODEL),e4hdultra))
+    BOXTYPE = armbox
+    BOXSERIES = hd5x
+    BOXFAMILY = bcm7252s
   else ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd60 hd61 multibox multiboxse))
     BOXTYPE = armbox
     BOXSERIES = hd6x
@@ -235,6 +243,8 @@ else ifeq ($(BOXMODEL),bre2ze4k)
   BOXNAME = "WWIO BRE2ZE4K"
 else ifeq ($(BOXMODEL),h7)
   BOXNAME = "Air Digital Zgemma H7"
+else ifeq ($(BOXMODEL),e4hdultra)
+  BOXNAME = "AXAS E4HD 4K Ultra"
 else ifeq ($(BOXMODEL),hd60)
   BOXNAME = "AX/Mut@nt HD60"
 else ifeq ($(BOXMODEL),hd61)
@@ -263,6 +273,7 @@ endif
 
 BOXMODELS  = nevis apollo shiner kronos kronos_v2
 BOXMODELS += hd51 bre2ze4k h7
+BOXMODELS += e4hdultra
 BOXMODELS += hd60 hd61 multibox multiboxse
 BOXMODELS += vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse
 BOXMODELS += vuduo

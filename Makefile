@@ -89,6 +89,7 @@ config.local: $(eval BOXMODEL=hd51)
 	@echo "  15)  Maxytec Multibox SE 4K"
 	@echo "  21)  WWIO BRE2ZE4K"
 	@echo "  31)  Air Digital Zgemma H7"
+	@echo "  35)  AXAS E4HD 4K Ultra"
 	@echo "  41)  VU+ Solo 4k"
 	@echo "  42)  VU+ Duo 4k"
 	@echo "  43)  VU+ Duo 4k SE"
@@ -113,6 +114,7 @@ config.local: $(eval BOXMODEL=hd51)
 		15)	boxmodel=multiboxse;; \
 		21)	boxmodel=bre2ze4k;; \
 		31)	boxmodel=h7;; \
+		35)	boxmodel=e4hdultra;; \
 		41)	boxmodel=vusolo4k;; \
 		42)	boxmodel=vuduo4k;; \
 		43)	boxmodel=vuduo4kse;; \

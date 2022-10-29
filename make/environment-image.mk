@@ -84,6 +84,8 @@ ifeq ($(BOXMODEL),$(filter $(BOXMODEL),vusolo4k vuduo4k vuduo4kse vuultimo4k vuz
   IMAGE_SUBDIR = $(subst vu,vuplus/,$(BOXMODEL))
 else ifeq ($(BOXMODEL),$(filter $(BOXMODEL),h7))
   IMAGE_SUBDIR = zgemma/$(BOXMODEL)
+else ifeq ($(BOXMODEL),$(filter $(BOXMODEL),e4hdultra))
+  IMAGE_SUBDIR = e4hd
 else
   IMAGE_SUBDIR = $(BOXMODEL)
 endif

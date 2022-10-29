@@ -166,6 +166,9 @@ BRE2ZE4K_PATCH = \
 H7_PATCH = \
 	$(GFUTURES_4_10_PATCH)
 
+E4HDULTRA_PATCH = \
+	$(GFUTURES_4_10_PATCH)
+
 HD60_PATCH = \
 	$(GFUTURES_4_4_PATCH)
 
@@ -246,7 +249,7 @@ kernel.do_prepare: | $(DEPS_DIR) $(BUILD_DIR)
 	$(MKDIR)/$(KERNEL_MODULES)
 	$(INSTALL_DATA) $(KERNEL_CONFIG) $(KERNEL_OBJ_DIR)/.config
 	$(MAKE) -C $(BUILD_DIR)/$(KERNEL_DIR) $(LINUX_KERNEL_MAKE_VARS) silentoldconfig
-ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 hd60 hd61 multibox multiboxse))
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 e4hdultra hd60 hd61 multibox multiboxse))
 	$(INSTALL_DATA) $(PKG_FILES_DIR)/initramfs-subdirboot.cpio.gz $(KERNEL_OBJ_DIR)
 endif
 	$(call TOUCH)
