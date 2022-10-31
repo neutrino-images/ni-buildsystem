@@ -47,6 +47,12 @@ if ($revision == 1) // libstb-hal
 		$boxseries = "hd5x";
 		$boxmodel = "h7";
 	}
+	elseif ($boxname == "e4hd 4k ultra")
+	{
+		$boxtype_sc = "arm";
+		$boxseries = "hd5x";
+		$boxmodel = "e4hdultra";
+	}
 	elseif ($boxname == "hd60")
 	{
 		$boxtype_sc = "arm";
