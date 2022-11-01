@@ -70,14 +70,6 @@ endif
 
 # -----------------------------------------------------------------------------
 
-ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd1 hd2))
-  NEUTRINO_PLUGINS_BOXMODEL = $(BOXSERIES)
-else
-  NEUTRINO_PLUGINS_BOXMODEL = $(BOXMODEL)
-endif
-
-# -----------------------------------------------------------------------------
-
 $(NEUTRINO_PLUGINS_BUILD_DIR)/config.status: $(NEUTRINO_PLUGINS_DEPENDENCIES)
 	test -d $(NEUTRINO_PLUGINS_BUILD_DIR) || $(INSTALL) -d $(NEUTRINO_PLUGINS_BUILD_DIR)
 	$(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS)/autogen.sh
