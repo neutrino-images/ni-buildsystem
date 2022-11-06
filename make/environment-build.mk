@@ -83,10 +83,6 @@ endif
 BASE_DIR     := $(CURDIR)
 DL_DIR        = $(BASE_DIR)/download
 BUILD_DIR     = $(BASE_DIR)/build_tmp
-ROOTFS        = $(BUILD_DIR)/rootfs
-ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd5x))
-  ROOTFS      = $(BUILD_DIR)/rootfs/linuxrootfs1
-endif
 DEPS_DIR      = $(BASE_DIR)/deps
 D             = $(DEPS_DIR)
 SOURCE_DIR   ?= $(BASE_DIR)/source

@@ -78,6 +78,12 @@ endif
 IMAGE_SITE = $(NI_SERVER)/$(NI_SUBDIR)
 IMAGE_MD5FILE = $(IMAGE_SNAPSHOT)-$(IMAGE_SUFFIX).txt
 
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 hd60 hd61 multibox multiboxse))
+  IMAGE_LAYOUT = subdirboot
+else
+  IMAGE_LAYOUT = single
+endif
+
 IMAGE_BUILD_DIR = $(BUILD_DIR)/image-build
 
 ifeq ($(BOXMODEL),$(filter $(BOXMODEL),vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo))

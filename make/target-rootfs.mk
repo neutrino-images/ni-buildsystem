@@ -82,7 +82,16 @@ personalize: | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-rootfs: target-finish $(ROOTFS) rootfs-cleanup rootfs-strip
+ROOTFS_BASE = $(BUILD_DIR)/rootfs
+ifeq ($(IMAGE_LAYOUT),subdirboot)
+  ROOTFS_DIR = $(ROOTFS_BASE)/linuxrootfs1
+else
+  ROOTFS_DIR = $(ROOTFS_BASE)
+endif
+
+# -----------------------------------------------------------------------------
+
+rootfs: target-finish $(ROOTFS_DIR) rootfs-cleanup rootfs-strip
 ifeq ($(BOXTYPE),coolstream)
 	make rootfs-tarball
 endif
@@ -90,33 +99,33 @@ endif
 # -----------------------------------------------------------------------------
 
 # create filesystem for our images
-$(ROOTFS): | $(TARGET_DIR)
-	rm -rf $(ROOTFS)
-	$(INSTALL) -d $(dir $(ROOTFS))
-	$(INSTALL_COPY) $(TARGET_DIR) $(ROOTFS)
+$(ROOTFS_DIR): | $(TARGET_DIR)
+	rm -rf $(ROOTFS_DIR)
+	$(INSTALL) -d $(dir $(ROOTFS_DIR))
+	$(INSTALL_COPY) $(TARGET_DIR) $(ROOTFS_DIR)
 
 # -----------------------------------------------------------------------------
 
 # cleanup root filesystem from useless stuff
-rootfs-cleanup: $(ROOTFS)
-	rm -rf $(ROOTFS)$(REMOVE_DIR)
-	rm -rf $(ROOTFS)$(base_includedir)
-	rm -rf $(ROOTFS)$(base_libdir)/pkgconfig
-	rm -rf $(ROOTFS)$(includedir)
-	rm -rf $(ROOTFS)$(libdir)/pkgconfig
-	rm -rf $(ROOTFS)$(libdir)/cmake
-	rm -rf $(ROOTFS)$(libdir)/sigc++*
-	rm -rf $(ROOTFS)$(libdir)/glib-2.0
-	rm -f  $(ROOTFS)$(libdir)/libvorbisenc*
-	rm -rf $(ROOTFS)/.git
+rootfs-cleanup: $(ROOTFS_DIR)
+	rm -rf $(ROOTFS_DIR)$(REMOVE_DIR)
+	rm -rf $(ROOTFS_DIR)$(base_includedir)
+	rm -rf $(ROOTFS_DIR)$(base_libdir)/pkgconfig
+	rm -rf $(ROOTFS_DIR)$(includedir)
+	rm -rf $(ROOTFS_DIR)$(libdir)/pkgconfig
+	rm -rf $(ROOTFS_DIR)$(libdir)/cmake
+	rm -rf $(ROOTFS_DIR)$(libdir)/sigc++*
+	rm -rf $(ROOTFS_DIR)$(libdir)/glib-2.0
+	rm -f  $(ROOTFS_DIR)$(libdir)/libvorbisenc*
+	rm -rf $(ROOTFS_DIR)/.git
   ifeq ($(BOXSERIES),hd1)
-	rm -rf $(ROOTFS)$(datadir)/bash-completion
+	rm -rf $(ROOTFS_DIR)$(datadir)/bash-completion
   endif
-	find $(ROOTFS) -name .gitignore -type f -print0 | xargs --no-run-if-empty -0 rm -f
-	find $(ROOTFS) -name Makefile.am -type f -print0 | xargs --no-run-if-empty -0 rm -f
-	find $(ROOTFS)$(base_libdir) \( -name '*.a' -o -name '*.la' \) -print0 | xargs --no-run-if-empty -0 rm -f
-	find $(ROOTFS)$(libdir) \( -name '*.a' -o -name '*.la' \) -print0 | xargs --no-run-if-empty -0 rm -f
-	@$(call MESSAGE,"After cleanup: $$(du -sh $(ROOTFS))")
+	find $(ROOTFS_DIR) -name .gitignore -type f -print0 | xargs --no-run-if-empty -0 rm -f
+	find $(ROOTFS_DIR) -name Makefile.am -type f -print0 | xargs --no-run-if-empty -0 rm -f
+	find $(ROOTFS_DIR)$(base_libdir) \( -name '*.a' -o -name '*.la' \) -print0 | xargs --no-run-if-empty -0 rm -f
+	find $(ROOTFS_DIR)$(libdir) \( -name '*.a' -o -name '*.la' \) -print0 | xargs --no-run-if-empty -0 rm -f
+	@$(call MESSAGE,"After cleanup: $$(du -sh $(ROOTFS_DIR))")
 
 # -----------------------------------------------------------------------------
 
@@ -130,27 +139,27 @@ ROOTFS_STRIP_LIBS  = $(base_libdir)
 ROOTFS_STRIP_LIBS += $(libdir)
 
 # strip bins and libs in root filesystem
-rootfs-strip: $(ROOTFS)
+rootfs-strip: $(ROOTFS_DIR)
 ifneq ($(DEBUG),yes)
 	@$(call draw_line);
 	@echo "The following warnings from strip are harmless!"
 	@$(call draw_line);
 	for dir in $(ROOTFS_STRIP_BINS); do \
-		find $(ROOTFS)$${dir} -type f -print0 | xargs -0 $(TARGET_STRIP) || true; \
+		find $(ROOTFS_DIR)$${dir} -type f -print0 | xargs -0 $(TARGET_STRIP) || true; \
 	done
 	for dir in $(ROOTFS_STRIP_LIBS); do \
-		find $(ROOTFS)$${dir} \( \
-				-path $(ROOTFS)/lib/libnexus.so -o \
-				-path $(ROOTFS)/lib/libnxpl.so -o \
-				-path $(ROOTFS)/lib/libv3ddriver.so -o \
+		find $(ROOTFS_DIR)$${dir} \( \
+				-path $(ROOTFS_DIR)/lib/libnexus.so -o \
+				-path $(ROOTFS_DIR)/lib/libnxpl.so -o \
+				-path $(ROOTFS_DIR)/lib/libv3ddriver.so -o \
 				\
-				-path $(ROOTFS)/lib/modules \) -prune -o \
+				-path $(ROOTFS_DIR)/lib/modules \) -prune -o \
 		-type f -print0 | xargs -0 $(TARGET_STRIP) || true; \
 	done
   ifeq ($(BOXSERIES),hd2)
-	find $(ROOTFS)/lib/modules/$(KERNEL_VERSION)/kernel -type f -name '*.ko' | xargs -n 1 $(TARGET_OBJCOPY) --strip-unneeded
+	find $(ROOTFS_DIR)/lib/modules/$(KERNEL_VERSION)/kernel -type f -name '*.ko' | xargs -n 1 $(TARGET_OBJCOPY) --strip-unneeded
   endif
-	@$(call MESSAGE,"After strip: $$(du -sh $(ROOTFS))")
+	@$(call MESSAGE,"After strip: $$(du -sh $(ROOTFS_DIR))")
 endif
 
 # -----------------------------------------------------------------------------
@@ -162,7 +171,7 @@ ROOTFS_TARBALL_EXCLUDE = \
 
 rootfs-tarball: $(ROOTFS_TARBALL)
 $(ROOTFS_TARBALL):
-	tar czf $(@) -C $(ROOTFS) $(foreach exclude,$(ROOTFS_TARBALL_EXCLUDE),--exclude='$(exclude)' ) .
+	tar czf $(@) -C $(ROOTFS_DIR) $(foreach exclude,$(ROOTFS_TARBALL_EXCLUDE),--exclude='$(exclude)' ) .
 ifeq ($(BOXMODEL),$(filter $(BOXMODEL),apollo shiner))
   ifeq ($(BOXMODEL),apollo)
 	# create rootfs tarball for shiner too when building apollo
@@ -183,6 +192,6 @@ PHONY += e2-multiboot
 PHONY += personalize
 
 PHONY += rootfs
-PHONY += $(ROOTFS)
+PHONY += $(ROOTFS_DIR)
 PHONY += rootfs-cleanup
 PHONY += rootfs-strip
