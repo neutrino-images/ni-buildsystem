@@ -8,7 +8,7 @@ LUA_ABIVERSION = 5.2
 LUA_VERSION = 5.2.4
 LUA_DIR = lua-$(LUA_VERSION)
 LUA_SOURCE = lua-$(LUA_VERSION).tar.gz
-LUA_SITE = https://www.lua.org
+LUA_SITE = https://www.lua.org/ftp
 
 LUA_DEPENDENCIES = ncurses
 
