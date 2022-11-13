@@ -8,7 +8,7 @@
 blobs: $(BLOBS_DEPENDENCIES)
 	$(MAKE) firmware
 	$(MAKE) $(BOXMODEL)-drivers
-ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 e4hdultra hd60 hd61 multibox multiboxse vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 e4hdultra protek4k hd60 hd61 multibox multiboxse vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
 	$(MAKE) $(BOXMODEL)-libgles
   ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd60 hd61 multibox multiboxse))
 	$(MAKE) $(BOXMODEL)-libs
@@ -62,6 +62,10 @@ H7_DRIVERS_SITE = http://source.mynonpublic.com/zgemma
 E4HDULTRA_DRIVERS_VERSION = 20191101
 E4HDULTRA_DRIVERS_SOURCE = e4hd-drivers-$(KERNEL_VERSION)-$(E4HDULTRA_DRIVERS_VERSION).zip
 E4HDULTRA_DRIVERS_SITE = http://source.mynonpublic.com/ceryon
+
+PROTEK4K_DRIVERS_VERSION = 20191101
+PROTEK4K_DRIVERS_SOURCE = protek4k-drivers-$(KERNEL_VERSION)-$(PROTEK4K_DRIVERS_VERSION).zip
+PROTEK4K_DRIVERS_SITE = http://source.mynonpublic.com/ceryon
 
 HD60_DRIVERS_VERSION = 20200731
 HD60_DRIVERS_SOURCE = hd60-drivers-$(KERNEL_VERSION)-$(HD60_DRIVERS_VERSION).zip
@@ -176,7 +180,8 @@ endif
 hd51-drivers \
 bre2ze4k-drivers \
 h7-drivers \
-e4hdultra-drivers: $(DL_DIR)/$(BOXMODEL_DRIVERS_SOURCE) | $(TARGET_DIR)
+e4hdultra-drivers \
+protek4k-drivers: $(DL_DIR)/$(BOXMODEL_DRIVERS_SOURCE) | $(TARGET_DIR)
 	$(INSTALL) -d $(TARGET_modulesdir)/extra
 	unzip -o $(DL_DIR)/$(BOXMODEL_DRIVERS_SOURCE) -d $(TARGET_modulesdir)/extra
 	$(LINUX_RUN_DEPMOD)
@@ -228,6 +233,11 @@ E4HDULTRA_LIBGLES_VERSION = 20191101
 E4HDULTRA_LIBGLES_DIR = $(empty)
 E4HDULTRA_LIBGLES_SOURCE = 8100s-v3ddriver-$(E4HDULTRA_LIBGLES_VERSION).zip
 E4HDULTRA_LIBGLES_SITE = https://source.mynonpublic.com/ceryon
+
+PROTEK4K_LIBGLES_VERSION = 20191101
+PROTEK4K_LIBGLES_DIR = $(empty)
+PROTEK4K_LIBGLES_SOURCE = 8100s-v3ddriver-$(PROTEK4K_LIBGLES_VERSION).zip
+PROTEK4K_LIBGLES_SITE = https://source.mynonpublic.com/ceryon
 
 HD60_LIBGLES_VERSION = 20181201
 HD60_LIBGLES_DIR = $(empty)
@@ -302,7 +312,8 @@ endif
 hd51-libgles \
 bre2ze4k-libgles \
 h7-libgles \
-e4hdultra-libgles: $(DL_DIR)/$(BOXMODEL_LIBGLES_SOURCE) | $(TARGET_DIR)
+e4hdultra-libgles \
+protek4k-libgles: $(DL_DIR)/$(BOXMODEL_LIBGLES_SOURCE) | $(TARGET_DIR)
 	unzip -o $(DL_DIR)/$(BOXMODEL_LIBGLES_SOURCE) -d $(TARGET_libdir)
 	ln -sf libv3ddriver.so $(TARGET_libdir)/libEGL.so
 	ln -sf libv3ddriver.so $(TARGET_libdir)/libGLESv2.so

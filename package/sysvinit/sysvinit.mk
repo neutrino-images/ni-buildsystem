@@ -24,7 +24,7 @@ ifeq ($(BOXMODEL),$(filter $(BOXMODEL),vusolo4k vuduo4k vuduo4kse vuultimo4k vuz
   define SYSVINIT_INSTALL_RCS
 	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/rcS-vuplus $(TARGET_sysconfdir)/init.d/rcS
   endef
-else ifeq ($(BOXMODEL),$(filter $(BOXMODEL),e4hdultra))
+else ifeq ($(BOXMODEL),$(filter $(BOXMODEL),e4hdultra protek4k))
   define SYSVINIT_INSTALL_RCS
 	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/rcS-$(BOXSERIES)-e4hdultra $(TARGET_sysconfdir)/init.d/rcS
   endef

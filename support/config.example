@@ -37,6 +37,9 @@ MAINTAINER = $(shell whoami)
 # AXAS
 #BOXMODEL = e4hdultra
 
+# Protek
+#BOXMODEL = protek4k
+
 # Maxytec
 #BOXMODEL = multibox
 #BOXMODEL = multiboxse

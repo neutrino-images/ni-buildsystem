@@ -15,13 +15,13 @@
 
 # - Armbox --------------------------------------------------------------------
 
-# BOXTYPE                    + ----- armbox ----- +
-#                           /                      \
-# BOXSERIES            +  hd5x  +                  hd6x
-#                     /          \                  |
-# BOXFAMILY       bcm7251s     bcm7252s       + hi3798mv200 +
-#                /   |    \       |          /   |       |   \
-# BOXMODEL   hd51 bre2ze4k h7  e4hdultra  hd60 hd61 multibox multiboxse
+# BOXTYPE                      + ------- armbox -------- +
+#                             /                           \
+# BOXSERIES           + --- hd5x --- +                   hd6x
+#                    /                \                    |
+# BOXFAMILY       bcm7251s         bcm7252s          + hi3798mv200 +
+#                /   |    \       /        \        /   |       |   \
+# BOXMODEL   hd51 bre2ze4k h7 e4hdultra protek4k hd60 hd61 multibox multiboxse
 
 # BOXTYPE         armbox + ------ + ---- + -------- + ------- + ---- +
 #                /       |         \      \          \         \      \
@@ -169,7 +169,7 @@ else ifneq ($(BOXMODEL),)
     BOXTYPE = armbox
     BOXSERIES = hd5x
     BOXFAMILY = bcm7251s
-  else ifeq ($(BOXMODEL),$(filter $(BOXMODEL),e4hdultra))
+  else ifeq ($(BOXMODEL),$(filter $(BOXMODEL),e4hdultra protek4k))
     BOXTYPE = armbox
     BOXSERIES = hd5x
     BOXFAMILY = bcm7252s
@@ -245,6 +245,8 @@ else ifeq ($(BOXMODEL),h7)
   BOXNAME = "Air Digital Zgemma H7"
 else ifeq ($(BOXMODEL),e4hdultra)
   BOXNAME = "AXAS E4HD 4K Ultra"
+else ifeq ($(BOXMODEL),protek4k)
+  BOXNAME = "Protek 4K UHD"
 else ifeq ($(BOXMODEL),hd60)
   BOXNAME = "AX/Mut@nt HD60"
 else ifeq ($(BOXMODEL),hd61)
@@ -273,7 +275,7 @@ endif
 
 BOXMODELS  = nevis apollo shiner kronos kronos_v2
 BOXMODELS += hd51 bre2ze4k h7
-BOXMODELS += e4hdultra
+BOXMODELS += e4hdultra protek4k
 BOXMODELS += hd60 hd61 multibox multiboxse
 BOXMODELS += vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse
 BOXMODELS += vuduo

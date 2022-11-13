@@ -63,7 +63,7 @@ ifeq ($(BOXMODEL),$(filter $(BOXMODEL),apollo shiner))
 	make flash-image-coolstream ERASE_SIZE=0x40000 IMAGE_SUFFIX=$(BOXTYPE_SC)-apollo BOXNAME="Tank"
 	make flash-image-coolstream ERASE_SIZE=0x20000 IMAGE_SUFFIX=$(BOXTYPE_SC)-shiner BOXNAME="Trinity"
 endif
-ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 e4hdultra))
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 e4hdultra protek4k))
 	make flash-image-hd5x
 	make flash-image-hd5x-multi
 endif
@@ -135,7 +135,7 @@ flash-image-hd5x: | $(IMAGE_DIR)
 
 # -----------------------------------------------------------------------------
 
-# hd51, bre2ze4k, h7, e4hdultra
+# hd51, bre2ze4k, h7, e4hdultra, protek4k
 HD5X_IMAGE_NAME = disk
 HD5X_BOOT_IMAGE = boot.img
 HD5X_IMAGE_LINK = $(HD5X_IMAGE_NAME).ext4
@@ -215,7 +215,7 @@ ifeq ($(IMAGE_LAYOUT),subdirboot)
 	parted -s $(EMMC_IMAGE) unit KiB mkpart storage ext4 $(STORAGE_PARTITION_OFFSET) 100%
 	dd if=/dev/zero of=$(IMAGE_BUILD_DIR)/$(HD5X_BOOT_IMAGE) bs=$(BLOCK_SIZE) count=$(shell expr $(BOOT_PARTITION_SIZE) \* $(BLOCK_SECTOR))
 	mkfs.msdos -S 512 $(IMAGE_BUILD_DIR)/$(HD5X_BOOT_IMAGE)
-ifeq ($(BOXMODEL),e4hdultra)
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),e4hdultra protek4k))
 	echo "boot emmcflash0.linuxkernel  'brcm_cma=504M@264M brcm_cma=192M@768M brcm_cma=1024M@2048M root=/dev/mmcblk0p3 rootsubdir=linuxrootfs1 kernel=/dev/mmcblk0p2 rw rootwait $(BOXMODEL)_4.boxmode=5'" > $(IMAGE_BUILD_DIR)/STARTUP
 	echo "boot emmcflash0.linuxkernel  'brcm_cma=504M@264M brcm_cma=192M@768M brcm_cma=1024M@2048M root=/dev/mmcblk0p3 rootsubdir=linuxrootfs1 kernel=/dev/mmcblk0p2 rw rootwait $(BOXMODEL)_4.boxmode=5'" > $(IMAGE_BUILD_DIR)/STARTUP_1
 	echo "boot emmcflash0.linuxkernel2 'brcm_cma=504M@264M brcm_cma=192M@768M brcm_cma=1024M@2048M root=/dev/mmcblk0p8 rootsubdir=linuxrootfs2 kernel=/dev/mmcblk0p4 rw rootwait $(BOXMODEL)_4.boxmode=5'" > $(IMAGE_BUILD_DIR)/STARTUP_2
@@ -241,7 +241,7 @@ else # ($(IMAGE_LAYOUT),single)
 	parted -s $(EMMC_IMAGE) unit KiB mkpart storage ext4 $(STORAGE_PARTITION_OFFSET) 100%
 	dd if=/dev/zero of=$(IMAGE_BUILD_DIR)/$(HD5X_BOOT_IMAGE) bs=$(BLOCK_SIZE) count=$(shell expr $(BOOT_PARTITION_SIZE) \* $(BLOCK_SECTOR))
 	mkfs.msdos -S 512 $(IMAGE_BUILD_DIR)/$(HD5X_BOOT_IMAGE)
-ifeq ($(BOXMODEL),e4hdultra)
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),e4hdultra protek4k))
 	echo "boot emmcflash0.kernel1 'brcm_cma=504M@264M brcm_cma=192M@768M brcm_cma=1024M@2048M root=/dev/mmcblk0p3 rw rootwait $(BOXMODEL)_4.boxmode=5'" > $(IMAGE_BUILD_DIR)/STARTUP
 	echo "boot emmcflash0.kernel1 'brcm_cma=504M@264M brcm_cma=192M@768M brcm_cma=1024M@2048M root=/dev/mmcblk0p3 rw rootwait $(BOXMODEL)_4.boxmode=5'" > $(IMAGE_BUILD_DIR)/STARTUP_1
 	echo "boot emmcflash0.kernel2 'brcm_cma=504M@264M brcm_cma=192M@768M brcm_cma=1024M@2048M root=/dev/mmcblk0p5 rw rootwait $(BOXMODEL)_4.boxmode=5'" > $(IMAGE_BUILD_DIR)/STARTUP_2
@@ -269,7 +269,7 @@ endif
 	$(INSTALL) -d $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)
 	cp $(EMMC_IMAGE) $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)
 	cp $(SUPPORT_DIR)/splash-images/ni-splash.bmp $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/splash.bin
-ifeq ($(BOXMODEL),e4hdultra)
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),e4hdultra protek4k))
 	cp $(SUPPORT_DIR)/splash-images/lcdflashing_220x176.bmp $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/lcdflashing.bmp
 endif
 	cp $(KERNEL_ZIMAGE_DTB) $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/kernel.bin

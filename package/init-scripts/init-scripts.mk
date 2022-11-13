@@ -62,18 +62,18 @@ $(TARGET_sysconfdir)/init.d/hostname:
 	$(INSTALL_EXEC) -D $(INIT_SCRIPTS_FILES_DIR)/hostname.init $(@)
 
 $(TARGET_sysconfdir)/init.d/partitions-by-name:
-ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 e4hdultra hd60 hd61 multiboxse))
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 e4hdultra protek4k hd60 hd61 multiboxse))
 	$(INSTALL_EXEC) -D $(INIT_SCRIPTS_FILES_DIR)/partitions-by-name.init $(@)
 endif
 
 $(TARGET_sysconfdir)/init.d/proc:
-ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 e4hdultra hd60 hd61 multiboxse vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo))
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 e4hdultra protek4k hd60 hd61 multiboxse vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo))
 	$(INSTALL_EXEC) -D $(INIT_SCRIPTS_FILES_DIR)/proc.init $(@)
 	$(UPDATE-RC.D) $(@F) start 90 S .
 endif
 
 $(TARGET_sysconfdir)/init.d/resizerootfs:
-ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 e4hdultra hd60 hd61 multiboxse))
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 e4hdultra protek4k hd60 hd61 multiboxse))
 	$(INSTALL_EXEC) -D $(INIT_SCRIPTS_FILES_DIR)/resizerootfs.init $(@)
 endif
 
