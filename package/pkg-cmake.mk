@@ -10,6 +10,7 @@ TARGET_CMAKE_OPTS = \
 	--no-warn-unused-cli
 
 TARGET_CMAKE_OPTS += \
+	-G"Unix Makefiles" \
 	-DENABLE_STATIC=OFF \
 	-DBUILD_SHARED_LIBS=ON \
 	-DBUILD_DOC=OFF \
@@ -78,6 +79,7 @@ HOST_CMAKE_OPTS += \
 	--no-warn-unused-cli
 
 HOST_CMAKE_OPTS += \
+	-G"Unix Makefiles" \
 	-DENABLE_STATIC=OFF \
 	-DBUILD_SHARED_LIBS=ON \
 	-DBUILD_DOC=OFF \
