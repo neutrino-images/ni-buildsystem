@@ -70,7 +70,10 @@ doStop() {
 }
 
 doOff() {
-	echo "LCD::backlight(0)" | $lcd4linux -i > /dev/null 2>&1
+	# /tmp/.lcd-* gets created by extdisplay script when a display was found
+	if [ -e /tmp/.lcd-* ]; then
+		echo "LCD::backlight(0)" | $lcd4linux -i > /dev/null 2>&1
+	fi
 }
 
 case "$1" in
