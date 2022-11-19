@@ -92,7 +92,7 @@ display_msg()
 		nevis|apollo|shiner|kronos|kronos_v2)
 			dt -t "${msg}"
 		;;
-		hd51|bre2ze4k|h7|hd60|hd61|multiboxse)
+		hd51|bre2ze4k|h7|hd60|hd61|multibox|multiboxse)
 			if [ -e /dev/dbox/oled0 ]; then
 				echo "${msg}" > /dev/dbox/oled0
 			fi
