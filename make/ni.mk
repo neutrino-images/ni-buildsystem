@@ -90,21 +90,22 @@ endif
 
 # -----------------------------------------------------------------------------
 
-IMAGES_BOXMODEL =
+IMAGES_BOXMODELS =
 ifneq ($(DEBUG),yes)
-  IMAGES_BOXMODEL += nevis
+  IMAGES_BOXMODELS += nevis
 endif
-IMAGES_BOXMODEL += apollo kronos kronos_v2
-IMAGES_BOXMODEL += hd51 bre2ze4k h7 e4hdultra
-IMAGES_BOXMODEL += hd60 hd61 multibox multiboxse
+IMAGES_BOXMODELS += apollo kronos kronos_v2
+IMAGES_BOXMODELS += hd51 bre2ze4k h7
+IMAGES_BOXMODELS += e4hdultra protek4k
+IMAGES_BOXMODELS += hd60 hd61 multibox multiboxse
 ifeq ($(BUILD_DAY),saturday)
-  IMAGES_BOXMODEL += vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse
-  #IMAGES_BOXMODEL += vuduo
+  IMAGES_BOXMODELS += vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse
+  #IMAGES_BOXMODELS += vuduo
 endif
 
 images \
 ni-images:
-	for boxmodel in $(IMAGES_BOXMODEL); do \
+	for boxmodel in $(IMAGES_BOXMODELS); do \
 		$(MAKE) BOXMODEL=$${boxmodel} clean image || true; \
 	done;
 	make clean
