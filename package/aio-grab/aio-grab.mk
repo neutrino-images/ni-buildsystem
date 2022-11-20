@@ -9,8 +9,6 @@ AIO_GRAB_DIR = aio-grab.$(AIO_GRAB_VERSION)
 AIO_GRAB_SOURCE = aio-grab.$(AIO_GRAB_VERSION)
 AIO_GRAB_SITE = https://github.com/oe-alliance
 
-AIO_GRAB_CHECKOUT = ef1244454be59f9afe3d3251f1cefc3cbd4cab18
-
 AIO_GRAB_DEPENDENCIES = zlib libpng libjpeg-turbo
 
 AIO_GRAB_AUTORECONF = YES
