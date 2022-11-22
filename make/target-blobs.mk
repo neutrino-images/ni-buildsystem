@@ -259,9 +259,6 @@ MULTIBOXSE_LIBGLES_DIR = $(empty)
 MULTIBOXSE_LIBGLES_SOURCE = maxytec-mali-3798mv200-$(MULTIBOXSE_LIBGLES_VERSION).zip
 MULTIBOXSE_LIBGLES_SITE = http://source.mynonpublic.com/maxytec
 
-HD6X_LIBGLES_HEADERS_SOURCE = libgles-mali-utgard-headers.zip
-HD6X_LIBGLES_HEADERS_SITE = https://github.com/HD-Digital/meta-gfutures/raw/release-6.2/recipes-bsp/mali/files
-
 VUSOLO4K_LIBGLES_VERSION = $(VUSOLO4K_DRIVERS_VERSION)
 VUSOLO4K_LIBGLES_DIR = libgles-vusolo4k
 VUSOLO4K_LIBGLES_SOURCE = libgles-vusolo4k-17.1-$(VUSOLO4K_LIBGLES_VERSION).r0.tar.gz
@@ -317,13 +314,6 @@ protek4k-libgles: $(DL_DIR)/$(BOXMODEL_LIBGLES_SOURCE) | $(TARGET_DIR)
 	unzip -o $(DL_DIR)/$(BOXMODEL_LIBGLES_SOURCE) -d $(TARGET_libdir)
 	ln -sf libv3ddriver.so $(TARGET_libdir)/libEGL.so
 	ln -sf libv3ddriver.so $(TARGET_libdir)/libGLESv2.so
-	$(call TOUCH)
-
-$(DL_DIR)/$(HD6X_LIBGLES_HEADERS_SOURCE):
-	$(download) $(HD6X_LIBGLES_HEADERS_SITE)/$(HD6X_LIBGLES_HEADERS_SOURCE)
-
-hd6x-libgles-headers: $(DL_DIR)/$(HD6X_LIBGLES_HEADERS_SOURCE) | $(TARGET_DIR)
-	unzip -o $(DL_DIR)/$(HD6X_LIBGLES_HEADERS_SOURCE) -d $(TARGET_includedir)
 	$(call TOUCH)
 
 hd60-libgles \
