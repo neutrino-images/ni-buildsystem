@@ -31,7 +31,7 @@ ifeq ($(BOXTYPE),$(filter $(BOXTYPE),coolstream))
 define LINKS_PATCH_RCINPUT_C
 	$(SED) 's|"/dev/input/event0"|"/dev/input/nevis_ir"|' $(PKG_BUILD_DIR)/rcinput.c
 endef
-else ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k))
+else ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k e4hdultra protek4k))
 define LINKS_PATCH_RCINPUT_C
 	$(SED) 's|"/dev/input/event0"|"/dev/input/event1"|' $(PKG_BUILD_DIR)/rcinput.c
 endef
