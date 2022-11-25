@@ -23,6 +23,10 @@ ifeq ($(BOXMODEL),$(filter $(BOXMODEL),protek4k))
 GRAPHLCD_BASE_PATCH_CUSTOM = 0007-graphlcd-protek4k-conf.patch-custom
 endif
 
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),e4hdultra protek4k))
+GRAPHLCD_BASE_PATCH_CUSTOM = 0008-framebuffer-add-SetBrightness.patch-custom
+endif
+
 GRAPHLCD_BASE_MAKE_ENV = \
 	$(TARGET_CONFIGURE_ENV)
 

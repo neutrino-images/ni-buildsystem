@@ -9,8 +9,8 @@ index 270cae8..d256e4b 100644
 +[e4hdultra]
 +# Default for e4hdultra
 +Driver=framebuffer
-+Device=/dev/fb1
 +Zoom=0
++Device=/dev/fb1
 +
  [ax206dpf]
  #  THIS IS AN EXPERIMENTAL DRIVER!

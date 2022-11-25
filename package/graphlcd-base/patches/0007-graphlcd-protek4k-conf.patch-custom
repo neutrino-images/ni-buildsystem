@@ -9,8 +9,8 @@ index 270cae8..d256e4b 100644
 +[protek4k]
 +# Default for protek4k
 +Driver=framebuffer
-+Device=/dev/fb1
 +Zoom=0
++Device=/dev/fb1
 +
  [ax206dpf]
  #  THIS IS AN EXPERIMENTAL DRIVER!
