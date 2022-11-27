@@ -15,6 +15,7 @@ ifeq ($(BOXMODEL),$(filter $(BOXMODEL),vuduo4k vuduo4kse vusolo4k vuultimo4k vuu
 GRAPHLCD_BASE_PATCH_CUSTOM = 0005-add-vuplus-driver.patch-custom
 endif
 
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),e4hdultra protek4k))
 ifeq ($(BOXMODEL),$(filter $(BOXMODEL),e4hdultra))
 GRAPHLCD_BASE_PATCH_CUSTOM = 0006-graphlcd-e4hdultra-conf.patch-custom
 endif
@@ -23,8 +24,7 @@ ifeq ($(BOXMODEL),$(filter $(BOXMODEL),protek4k))
 GRAPHLCD_BASE_PATCH_CUSTOM = 0007-graphlcd-protek4k-conf.patch-custom
 endif
 
-ifeq ($(BOXMODEL),$(filter $(BOXMODEL),e4hdultra protek4k))
-GRAPHLCD_BASE_PATCH_CUSTOM = 0008-framebuffer-add-SetBrightness.patch-custom
+GRAPHLCD_BASE_PATCH_CUSTOM += 0008-framebuffer-add-SetBrightness.patch-custom
 endif
 
 GRAPHLCD_BASE_MAKE_ENV = \
