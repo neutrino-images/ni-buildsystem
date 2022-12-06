@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-MINIDLNA_VERSION = 1.3.0
+MINIDLNA_VERSION = 1.3.2
 MINIDLNA_DIR = minidlna-$(MINIDLNA_VERSION)
 MINIDLNA_SOURCE = minidlna-$(MINIDLNA_VERSION).tar.gz
 MINIDLNA_SITE = https://sourceforge.net/projects/minidlna/files/minidlna/$(MINIDLNA_VERSION)
