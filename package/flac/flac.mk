@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-FLAC_VERSION = 1.4.0
+FLAC_VERSION = 1.4.2
 FLAC_DIR = flac-$(FLAC_VERSION)
 FLAC_SOURCE = flac-$(FLAC_VERSION).tar.xz
 FLAC_SITE = https://ftp.osuosl.org/pub/xiph/releases/flac
