@@ -11,7 +11,7 @@ blobs: $(BLOBS_DEPENDENCIES)
 ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 e4hdultra protek4k hd60 hd61 multibox multiboxse vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
 	$(MAKE) $(BOXMODEL)-libgles
   ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd60 hd61 multibox multiboxse))
-	$(MAKE) $(BOXMODEL)-libs
+	$(MAKE) hd6x-libs
   endif
 endif
 ifeq ($(BOXMODEL),$(filter $(BOXMODEL),vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
@@ -344,51 +344,4 @@ vuplus-libgles: $(DL_DIR)/$(BOXMODEL_LIBGLES_SOURCE) | $(TARGET_DIR)
 	ln -sf libv3ddriver.so $(TARGET_libdir)/libGLESv2.so
 	$(INSTALL_COPY) $(BUILD_DIR)/$(BOXMODEL_LIBGLES_DIR)/include/* $(TARGET_includedir)
 	$(REMOVE)/$(BOXMODEL_LIBGLES_DIR)
-	$(call TOUCH)
-
-# -----------------------------------------------------------------------------
-
-HD60_LIBS_VERSION = 20200622
-HD60_LIBS_DIR = hiplay
-HD60_LIBS_SOURCE = gfutures-libs-3798mv200-$(HD60_LIBS_VERSION).zip
-HD60_LIBS_SITE = http://source.mynonpublic.com/gfutures
-
-HD61_LIBS_VERSION = 20200622
-HD61_LIBS_DIR = hiplay
-HD61_LIBS_SOURCE = gfutures-libs-3798mv200-$(HD61_LIBS_VERSION).zip
-HD61_LIBS_SITE = http://source.mynonpublic.com/gfutures
-
-MULTIBOX_LIBS_VERSION = 20200622
-MULTIBOX_LIBS_DIR = hiplay
-MULTIBOX_LIBS_SOURCE = maxytec-libs-3798mv200-$(MULTIBOXSE_LIBS_VERSION).zip
-MULTIBOX_LIBS_SITE = http://source.mynonpublic.com/maxytec
-
-MULTIBOXSE_LIBS_VERSION = 20200622
-MULTIBOXSE_LIBS_DIR = hiplay
-MULTIBOXSE_LIBS_SOURCE = maxytec-libs-3798mv200-$(MULTIBOXSE_LIBS_VERSION).zip
-MULTIBOXSE_LIBS_SITE = http://source.mynonpublic.com/maxytec
-
-# -----------------------------------------------------------------------------
-
-BOXMODEL_LIBS_VERSION = $($(call UPPERCASE,$(BOXMODEL))_LIBS_VERSION)
-BOXMODEL_LIBS_DIR = $($(call UPPERCASE,$(BOXMODEL))_LIBS_DIR)
-BOXMODEL_LIBS_SOURCE = $($(call UPPERCASE,$(BOXMODEL))_LIBS_SOURCE)
-BOXMODEL_LIBS_SITE = $($(call UPPERCASE,$(BOXMODEL))_LIBS_SITE)
-
-ifneq ($(BOXMODEL_LIBS_SOURCE),$(empty))
-$(DL_DIR)/$(BOXMODEL_LIBS_SOURCE):
-	$(download) $(BOXMODEL_LIBS_SITE)/$(BOXMODEL_LIBS_SOURCE)
-endif
-
-hd60-libs \
-hd61-libs \
-multibox-libs \
-multiboxse-libs: $(DL_DIR)/$(BOXMODEL_LIBS_SOURCE) | $(TARGET_DIR)
-	$(REMOVE)/$(BOXMODEL_LIBS_DIR)
-	unzip -o $(DL_DIR)/$(BOXMODEL_LIBS_SOURCE) -d $(BUILD_DIR)/$(BOXMODEL_LIBS_DIR)
-	$(INSTALL) -d $(TARGET_libdir)/hisilicon
-	$(INSTALL_EXEC) $(BUILD_DIR)/$(BOXMODEL_LIBS_DIR)/hisilicon/* $(TARGET_libdir)/hisilicon
-	$(INSTALL_EXEC) $(BUILD_DIR)/$(BOXMODEL_LIBS_DIR)/ffmpeg/* $(TARGET_libdir)/hisilicon
-	ln -sf /lib/ld-linux-armhf.so.3 $(TARGET_libdir)/hisilicon/ld-linux.so
-	$(REMOVE)/$(BOXMODEL_LIBS_DIR)
 	$(call TOUCH)
