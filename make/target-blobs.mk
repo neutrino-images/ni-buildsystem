@@ -21,32 +21,6 @@ endif
 
 # -----------------------------------------------------------------------------
 
-firmware: firmware-boxmodel firmware-wireless
-	$(call TOUCH)
-
-firmware-boxmodel: $(SOURCE_DIR)/$(NI_DRIVERS_BIN) | $(TARGET_DIR)
-	$(call INSTALL_EXIST,$(SOURCE_DIR)/$(NI_DRIVERS_BIN)/$(DRIVERS_BIN_DIR)/lib-firmware/.,$(TARGET_base_libdir)/firmware)
-	$(call INSTALL_EXIST,$(SOURCE_DIR)/$(NI_DRIVERS_BIN)/$(DRIVERS_BIN_DIR)/lib-firmware-dvb/.,$(TARGET_base_libdir)/firmware)
-	$(call TOUCH)
-
-ifeq ($(BOXMODEL),nevis)
-  FIRMWARE_WIRELESS  = rt2870.bin
-  FIRMWARE_WIRELESS += rt3070.bin
-  FIRMWARE_WIRELESS += rt3071.bin
-  FIRMWARE_WIRELESS += rtlwifi/rtl8192cufw.bin
-  FIRMWARE_WIRELESS += rtlwifi/rtl8712u.bin
-else
-  FIRMWARE_WIRELESS  = $(shell cd $(SOURCE_DIR)/$(NI_DRIVERS_BIN)/general/firmware-wireless; find * -type f)
-endif
-
-firmware-wireless: $(SOURCE_DIR)/$(NI_DRIVERS_BIN) | $(TARGET_DIR)
-	for firmware in $(FIRMWARE_WIRELESS); do \
-		$(INSTALL_DATA) -D $(SOURCE_DIR)/$(NI_DRIVERS_BIN)/general/firmware-wireless/$$firmware $(TARGET_base_libdir)/firmware/$$firmware; \
-	done
-	$(call TOUCH)
-
-# -----------------------------------------------------------------------------
-
 HD51_DRIVERS_VERSION = 20191120
 HD51_DRIVERS_SOURCE = hd51-drivers-$(KERNEL_VERSION)-$(HD51_DRIVERS_VERSION).zip
 HD51_DRIVERS_SITE = http://source.mynonpublic.com/gfutures
