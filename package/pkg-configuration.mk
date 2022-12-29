@@ -45,9 +45,9 @@ endif
 
 # neutrino: weather api key
 BS_PACKAGE_NEUTRINO_WEATHER_DEV_KEY ?= $(NEUTRINO_WEATHER_DEV_KEY)
-ifeq ($(BS_PACKAGE_NEUTRINO_WEATHER_DEV_KEY),$(empty))
-BS_PACKAGE_NEUTRINO_WEATHER_DEV_KEY = 9b9e718858bb5f4589aeaddd3f4047c4
-endif
+#ifeq ($(BS_PACKAGE_NEUTRINO_WEATHER_DEV_KEY),$(empty))
+#BS_PACKAGE_NEUTRINO_WEATHER_DEV_KEY =
+#endif
 
 # neutrino-mediathek: use plugin from NI plugins repository
 BS_PACKAGE_NEUTRINO_MEDIATHEK_ORIGIN_NI ?= y
