@@ -43,19 +43,28 @@ bashcheck:
 		{ $(call WARNING,"Warning",": /bin/sh is not linked to bash"); false; }
 
 toolcheck: bashcheck $(TOOLCHECK)
-	@$(call SUCCESS,"All required tools seem to be installed.")
+	@$(call SUCCESS,"toolcheck",": All required tools seem to be installed.")
+
+# -----------------------------------------------------------------------------
+
+CROSSCHECK  =
+CROSSCHECK += $(TARGET_CC)
+CROSSCHECK += $(TARGET_CPP)
+CROSSCHECK += $(TARGET_CXX)
 
 crosscheck:
-	@if test -e $(TARGET_CC); then \
-		$(call SUCCESS,"$(TARGET_CC)",": found."); \
-	elif test -e $(CROSS_DIR)/bin/$(TARGET_CC); then \
-		$(call SUCCESS,"$(TARGET_CC)",": found in \$$(CROSS_DIR)/bin"); \
-	elif PATH=$(PATH) type -p $(TARGET_CC) >/dev/null 2>&1; then \
-		$(call SUCCESS,"$(TARGET_CC)",": found PATH"); \
-	else \
-		$(call WARNING,"$(TARGET_CC)",": not found in \$$(CROSS_DIR)/bin or PATH"); \
-		$(call WARNING,"=> please check your setup. Maybe you need to 'make crosstool'."); \
-	fi
+	@for c in $(CROSSCHECK); do \
+		if test -e $$c; then \
+			$(call SUCCESS,"$$c",": found."); \
+		elif test -e $(CROSS_DIR)/bin/$$c; then \
+			$(call SUCCESS,"$$c",": found in \$$(CROSS_DIR)/bin"); \
+		elif PATH=$(PATH) type -p $$c >/dev/null 2>&1; then \
+			$(call SUCCESS,"$$c",": found PATH"); \
+		else \
+			$(call WARNING,"$$c",": not found in \$$(CROSS_DIR)/bin or PATH"); \
+			$(call WARNING,"=> please check your setup. Maybe you need to 'make crosstool'."); \
+		fi; \
+	done
 
 # -----------------------------------------------------------------------------
 
