@@ -69,8 +69,8 @@ NEUTRINO_CONF_ENV += \
 
 NEUTRINO_CONF_OPTS = \
 	--build=$(GNU_HOST_NAME) \
-	--host=$(TARGET) \
-	--target=$(TARGET) \
+	--host=$(GNU_TARGET_NAME) \
+	--target=$(GNU_TARGET_NAME) \
 	--prefix=$(prefix) \
 	$(if $(findstring 1,$(KBUILD_VERBOSE)),--disable-silent-rules,--enable-silent-rules) \
 	--enable-maintainer-mode \

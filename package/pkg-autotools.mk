@@ -57,8 +57,8 @@ TARGET_CONFIGURE_ARGS = \
 
 TARGET_CONFIGURE_OPTS = \
 	--build=$(GNU_HOST_NAME) \
-	--host=$(TARGET) \
-	--target=$(TARGET) \
+	--host=$(GNU_TARGET_NAME) \
+	--target=$(GNU_TARGET_NAME) \
 	\
 	--program-prefix="" \
 	--program-suffix="" \

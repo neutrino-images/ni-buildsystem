@@ -30,7 +30,7 @@ AUTOFS_CONF_OPTS = \
 	--enable-ignore-busy \
 	--without-openldap \
 	--without-sasl \
-	--with-path="$(PATH)" \
+	--with-path="$(BS_PATH)" \
 	--with-hesiod=no \
 	--with-libtirpc \
 	--with-confdir=/etc \

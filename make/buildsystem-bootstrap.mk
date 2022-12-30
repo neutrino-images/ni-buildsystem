@@ -91,7 +91,7 @@ $(UPDATE_DIR):
 # -----------------------------------------------------------------------------
 
 libs-cross: | $(TARGET_DIR)
-	$(INSTALL_COPY) $(CROSS_DIR)/$(TARGET)/sys-root/lib/*so* $(TARGET_base_libdir)
+	$(INSTALL_COPY) $(CROSS_DIR)/$(GNU_TARGET_NAME)/sys-root/lib/*so* $(TARGET_base_libdir)
 ifeq ($(BOXSERIES),hd2)
 	$(CD) $(TARGET_base_libdir); \
 		ln -sf libuClibc-$(UCLIBC_NG_VERSION).so libcrypt.so.0; \

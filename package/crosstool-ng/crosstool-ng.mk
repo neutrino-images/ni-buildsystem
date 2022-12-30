@@ -74,8 +74,8 @@ CROSSTOOL_NG_POST_PATCH_HOOKS += CROSSTOOL_NG_INSTALL_PATCHES
 endif
 
 define CROSSTOOL_NG_CLEANUP_COOLSTREAM
-	test -e $(CROSS_DIR)/$(TARGET)/lib && \
-		mv $(CROSS_DIR)/$(TARGET)/lib $(CROSS_DIR)/$(TARGET)/lib.x
+	test -e $(CROSS_DIR)/$(GNU_TARGET_NAME)/lib && \
+		mv $(CROSS_DIR)/$(GNU_TARGET_NAME)/lib $(CROSS_DIR)/$(GNU_TARGET_NAME)/lib.x
 endef
 CROSSTOOL_NG_CLEANUP_HOOKS += CROSSTOOL_NG_CLEANUP_COOLSTREAM
 
@@ -83,9 +83,9 @@ endif
 # end coolstream
 
 define CROSSTOOL_NG_CLEANUP_COMMON
-	test -e $(CROSS_DIR)/$(TARGET)/lib || \
-		ln -sf sys-root/lib $(CROSS_DIR)/$(TARGET)/
-	rm -f $(CROSS_DIR)/$(TARGET)/sys-root/lib/libstdc++.so.6.0.*-gdb.py
+	test -e $(CROSS_DIR)/$(GNU_TARGET_NAME)/lib || \
+		ln -sf sys-root/lib $(CROSS_DIR)/$(GNU_TARGET_NAME)/
+	rm -f $(CROSS_DIR)/$(GNU_TARGET_NAME)/sys-root/lib/libstdc++.so.6.0.*-gdb.py
 endef
 CROSSTOOL_NG_CLEANUP_HOOKS += CROSSTOOL_NG_CLEANUP_COMMON
 

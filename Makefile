@@ -137,29 +137,27 @@ local:
 printenv:
 	@$(call draw_line);
 	@echo "Build Environment Varibles:"
-	@echo "CROSS_DIR:   $(CROSS_DIR)"
-	@echo "TARGET:      $(TARGET)"
-	@echo "BASE_DIR:    $(BASE_DIR)"
-	@echo "SOURCE_DIR:  $(SOURCE_DIR)"
-	@echo "BUILD:       $(BUILD)"
-	@echo "PATH:        `type -p fmt>/dev/null&&echo $(PATH)|sed 's/:/ /g' |fmt -65|sed 's/ /:/g; 2,$$s/^/             /;'||echo $(PATH)`"
-	@echo "BOXARCH:     $(BOXARCH)"
-	@echo "BOXTYPE:     $(BOXTYPE)"
-	@echo "BOXSERIES:   $(BOXSERIES)"
-	@echo "BOXMODEL:    $(BOXMODEL)"
+	@echo "BS_PATH:         `type -p fmt>/dev/null&&echo $(BS_PATH)|sed 's/:/ /g'|fmt -64|sed 's/ /:/g; 2,$$s/^/                 /;'||echo $(BS_PATH)`"
+	@echo "ARCHIVE_DIR:     $(DL_DIR)"
+	@echo "BASE_DIR:        $(BASE_DIR)"
+	@echo "CROSS_DIR:       $(CROSS_DIR)"
+	@echo "SOURCE_DIR:      $(SOURCE_DIR)"
+	@echo "HOST_DIR:        $(HOST_DIR)"
+	@echo "GNU_HOST_NAME:   $(GNU_HOST_NAME)"
+	@echo "TARGET_DIR:      $(TARGET_DIR)"
+	@echo "GNU_TARGET_NAME: $(GNU_TARGET_NAME)"
+	@echo "TARGET_ARCH:     $(TARGET_ARCH)"
+	@echo "TARGET_CPU:      $(TARGET_CPU)"
+	@echo "BOXTYPE:         $(BOXTYPE)"
+	@echo "BOXSERIES:       $(BOXSERIES)"
+	@echo "BOXMODEL:        $(BOXMODEL)"
 	@$(call draw_line);
 	@echo ""
 	@echo "'make help' lists useful targets."
 	@echo ""
 	@make --no-print-directory toolcheck
+	@make --no-print-directory crosscheck
 	@make -i -s $(TARGET_DIR)
-	@PATH=$(PATH):$(CROSS_DIR)/bin && \
-	if type -p $(TARGET_CC) >/dev/null 2>&1; then \
-		echo "$(TARGET_CC) found in PATH or in \$$CROSS_DIR/bin."; \
-	else \
-		echo "$(TARGET_CC) not found in PATH or \$$CROSS_DIR/bin"; \
-		echo "=> please check your setup. Maybe you need to 'make crosstool'."; \
-	fi
 	@if ! LANG=C make -n preqs|grep -q "Nothing to be done"; then \
 		echo; \
 		echo "Your next target to do is probably 'make preqs'"; \

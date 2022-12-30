@@ -18,7 +18,7 @@ TARGET_OS = linux
 ifeq ($(BOXSERIES),hd1)
   DRIVERS_BIN_DIR        = $(BOXTYPE)/$(BOXFAMILY)
   CORTEX_STRINGS_LDFLAG  =
-  TARGET                 = arm-cx2450x-linux-gnueabi
+  GNU_TARGET_NAME        = arm-cx2450x-linux-gnueabi
   TARGET_OPTIMIZATION    = -Os
   TARGET_DEBUGGING       = -g
   TARGET_ARCH            = arm
@@ -32,7 +32,7 @@ ifeq ($(BOXSERIES),hd1)
 else ifeq ($(BOXSERIES),hd2)
   DRIVERS_BIN_DIR        = $(BOXTYPE)/$(BOXFAMILY)
   CORTEX_STRINGS_LDFLAG  = -lcortex-strings
-  TARGET                 = arm-cortex-linux-uclibcgnueabi
+  GNU_TARGET_NAME        = arm-cortex-linux-uclibcgnueabi
   TARGET_OPTIMIZATION    = -O2
   TARGET_DEBUGGING       = -g
   TARGET_ARCH            = arm
@@ -51,7 +51,7 @@ else ifeq ($(BOXSERIES),hd2)
 else ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd5x hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
   DRIVERS_BIN_DIR        = $(BOXTYPE)/$(BOXMODEL)
   CORTEX_STRINGS_LDFLAG  = -lcortex-strings
-  TARGET                 = arm-cortex-linux-gnueabihf
+  GNU_TARGET_NAME        = arm-cortex-linux-gnueabihf
   TARGET_OPTIMIZATION    = -O2
   TARGET_DEBUGGING       = -g
   TARGET_ARCH            = arm
@@ -65,7 +65,7 @@ else ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd5x hd6x vusolo4k vuduo4k vuduo4k
 else ifeq ($(BOXSERIES),$(filter $(BOXSERIES),vuduo))
   DRIVERS_BIN_DIR        = $(BOXTYPE)/$(BOXMODEL)
   CORTEX_STRINGS_LDFLAG  =
-  TARGET                 = mipsel-unknown-linux-gnu
+  GNU_TARGET_NAME        = mipsel-unknown-linux-gnu
   TARGET_OPTIMIZATION    = -O2
   TARGET_DEBUGGING       = -g
   TARGET_ARCH            = mips
@@ -129,7 +129,7 @@ TARGET_LDFLAGS += -Wl,-rpath,$(TARGET_base_libdir),-rpath,$(TARGET_libdir)
 TARGET_LDFLAGS += -Wl,-rpath-link,$(TARGET_base_libdir),-rpath-link,$(TARGET_libdir)
 TARGET_LDFLAGS += -Wl,-O1
 
-TARGET_CROSS    = $(TARGET)-
+TARGET_CROSS = $(GNU_TARGET_NAME)-
 
 # gcc-4.7 and later ships with wrappers that will automatically pass
 # arguments to the binutils tools. Those are paths to necessary linker
@@ -157,11 +157,11 @@ GNU_HOST_NAME  := $(shell support/gnuconfig/config.guess)
 # search path(s) for all prerequisites
 VPATH = $(DEPS_DIR) $(HOST_DEPS_DIR)
 
-PATH := $(HOST_DIR)/bin:$(HOST_DIR)/sbin:$(CROSS_DIR)/bin:$(PATH)
+BS_PATH := $(HOST_DIR)/bin:$(HOST_DIR)/sbin:$(CROSS_DIR)/bin:$(PATH)
 
 # -----------------------------------------------------------------------------
 
-PKG_CONFIG = $(HOST_DIR)/bin/$(TARGET)-pkg-config
+PKG_CONFIG = $(HOST_DIR)/bin/$(GNU_TARGET_NAME)-pkg-config
 PKG_CONFIG_LIBDIR = $(TARGET_base_libdir):$(TARGET_libdir)
 PKG_CONFIG_PATH = $(TARGET_base_libdir)/pkgconfig:$(TARGET_libdir)/pkgconfig
 PKG_CONFIG_SYSROOT_DIR=$(TARGET_DIR)

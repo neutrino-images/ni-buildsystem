@@ -21,8 +21,8 @@ NEUTRINO_PLUGINS_CONF_ENV = \
 
 NEUTRINO_PLUGINS_CONF_OPTS = \
 	--build=$(GNU_HOST_NAME) \
-	--host=$(TARGET) \
-	--target=$(TARGET) \
+	--host=$(GNU_TARGET_NAME) \
+	--target=$(GNU_TARGET_NAME) \
 	--prefix=$(prefix) \
 	--sysconfdir=$(sysconfdir) \
 	$(if $(findstring 1,$(KBUILD_VERBOSE)),--disable-silent-rules,--enable-silent-rules) \

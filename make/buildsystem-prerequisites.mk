@@ -45,6 +45,18 @@ bashcheck:
 toolcheck: bashcheck $(TOOLCHECK)
 	@$(call SUCCESS,"All required tools seem to be installed.")
 
+crosscheck:
+	@if test -e $(TARGET_CC); then \
+		$(call SUCCESS,"$(TARGET_CC)",": found."); \
+	elif test -e $(CROSS_DIR)/bin/$(TARGET_CC); then \
+		$(call SUCCESS,"$(TARGET_CC)",": found in \$$(CROSS_DIR)/bin"); \
+	elif PATH=$(PATH) type -p $(TARGET_CC) >/dev/null 2>&1; then \
+		$(call SUCCESS,"$(TARGET_CC)",": found PATH"); \
+	else \
+		$(call WARNING,"$(TARGET_CC)",": not found in \$$(CROSS_DIR)/bin or PATH"); \
+		$(call WARNING,"=> please check your setup. Maybe you need to 'make crosstool'."); \
+	fi
+
 # -----------------------------------------------------------------------------
 
 preqs: download ni-sources checkout-branches
