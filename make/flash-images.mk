@@ -55,7 +55,6 @@ endef
 
 # -----------------------------------------------------------------------------
 
-flash-image: PATH="$(BS_PATH)"
 flash-image:
 ifeq ($(BOXMODEL),$(filter $(BOXMODEL),nevis kronos kronos_v2))
 	make flash-image-coolstream ERASE_SIZE=0x20000

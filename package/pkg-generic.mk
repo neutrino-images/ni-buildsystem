@@ -5,7 +5,7 @@
 ################################################################################
 
 TARGET_MAKE_ENV = \
-	PATH=$(BS_PATH)
+	PATH=$(PATH)
 
 define TARGET_MAKE_BUILD_CMDS_DEFAULT
 	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
@@ -48,7 +48,7 @@ endef
 # -----------------------------------------------------------------------------
 
 HOST_MAKE_ENV = \
-	PATH=$(BS_PATH) \
+	PATH=$(PATH) \
 	PKG_CONFIG=/usr/bin/pkg-config \
 	PKG_CONFIG_LIBDIR=$(HOST_DIR)/lib \
 	PKG_CONFIG_PATH=$(HOST_DIR)/lib/pkgconfig \

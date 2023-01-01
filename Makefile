@@ -137,7 +137,7 @@ local:
 printenv:
 	@$(call draw_line);
 	@echo "Build Environment Varibles:"
-	@echo "BS_PATH:         `type -p fmt>/dev/null&&echo $(BS_PATH)|sed 's/:/ /g'|fmt -64|sed 's/ /:/g; 2,$$s/^/                 /;'||echo $(BS_PATH)`"
+	@echo "PATH:            `type -p fmt>/dev/null&&echo $(PATH)|sed 's/:/ /g'|fmt -64|sed 's/ /:/g; 2,$$s/^/                 /;'||echo $(PATH)`"
 	@echo "ARCHIVE_DIR:     $(DL_DIR)"
 	@echo "BASE_DIR:        $(BASE_DIR)"
 	@echo "CROSS_DIR:       $(CROSS_DIR)"

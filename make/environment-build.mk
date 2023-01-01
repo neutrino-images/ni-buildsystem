@@ -157,7 +157,7 @@ GNU_HOST_NAME  := $(shell support/gnuconfig/config.guess)
 # search path(s) for all prerequisites
 VPATH = $(DEPS_DIR) $(HOST_DEPS_DIR)
 
-BS_PATH := $(HOST_DIR)/bin:$(HOST_DIR)/sbin:$(CROSS_DIR)/bin:$(PATH)
+PATH := $(HOST_DIR)/bin:$(HOST_DIR)/sbin:$(CROSS_DIR)/bin:$(PATH)
 
 # -----------------------------------------------------------------------------
 
