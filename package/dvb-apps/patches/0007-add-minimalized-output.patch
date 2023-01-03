@@ -1,7 +1,7 @@
 diff -r 3d43b280298c util/femon/femon.c
 --- a/util/femon/femon.c	Fri Mar 21 20:26:36 2014 +0100
-+++ b/util/femon/femon.c	Mon Jan 02 23:51:01 2023 +0100
-@@ -42,6 +42,7 @@
++++ b/util/femon/femon.c	Tue Jan 03 22:34:28 2023 +0100
+@@ -42,16 +42,20 @@
  static char *usage_str =
      "\nusage: femon [options]\n"
      "     -H        : human readable output\n"
@@ -9,24 +9,30 @@ diff -r 3d43b280298c util/femon/femon.c
      "     -A        : Acoustical mode. A sound indicates the signal quality.\n"
      "     -r        : If 'Acoustical mode' is active it tells the application\n"
      "                 is called remotely via ssh. The sound is heard on the 'real'\n"
-@@ -52,6 +53,7 @@
+     "                 machine but. The user has to be root.\n"
++    "     -t number : use given cycle time (default 1.00)\n"
+     "     -a number : use given adapter (default 0)\n"
+     "     -f number : use given frontend (default 0)\n"
+     "     -c number : samples to take (default 0 = infinite)\n\n";
  
  int sleep_time=1000000;
++float fl_sleep_time=1;
  int acoustical_mode=0;
 +int minimalized=0;
  int remote=0;
  
  static void usage(void)
-@@ -67,6 +69,8 @@
- 	struct dvbfe_info fe_info;
+@@ -68,6 +72,9 @@
  	unsigned int samples = 0;
  	FILE *ttyFile=NULL;
+ 	
 +	time_t now;
 +	char *ntime = NULL;
- 	
++
  	// We dont write the "beep"-codes to stdout but to /dev/tty1.
  	// This is neccessary for Thin-Client-Systems or Streaming-Boxes
-@@ -90,12 +94,23 @@
+ 	// where the computer does not have a monitor and femon is called via ssh.
+@@ -90,12 +97,23 @@
  
  	do {
  		if (dvbfe_get_info(fe, FE_STATUS_PARAMS, &fe_info, DVBFE_INFO_QUERYTYPE_IMMEDIATE, 0) != FE_STATUS_PARAMS) {
@@ -36,7 +42,7 @@ diff -r 3d43b280298c util/femon/femon.c
  
  
 +		now = time(NULL);
-+		ntime = asctime(gmtime(&now));
++		ntime = asctime(localtime(&now));
 +		ntime[strlen(ntime)-1] = '\0'; // Remove \n
  
  		if (human_readable) {
@@ -50,7 +56,7 @@ diff -r 3d43b280298c util/femon/femon.c
                         printf ("status %c%c%c%c%c | signal %3u%% | snr %3u%% | ber %d | unc %d | ",
  				fe_info.signal ? 'S' : ' ',
  				fe_info.carrier ? 'C' : ' ',
-@@ -106,7 +121,15 @@
+@@ -106,7 +124,15 @@
  				(fe_info.snr * 100) / 0xffff,
  				fe_info.ber,
  				fe_info.ucblocks);
@@ -66,7 +72,7 @@ diff -r 3d43b280298c util/femon/femon.c
  			printf ("status %c%c%c%c%c | signal %04x | snr %04x | ber %08x | unc %08x | ",
  				fe_info.signal ? 'S' : ' ',
  				fe_info.carrier ? 'C' : ' ',
-@@ -117,9 +140,11 @@
+@@ -117,9 +143,11 @@
  				fe_info.snr,
  				fe_info.ber,
  				fe_info.ucblocks);
@@ -78,16 +84,26 @@ diff -r 3d43b280298c util/femon/femon.c
  			printf("FE_HAS_LOCK");
  
  		// create beep if acoustical_mode enabled
-@@ -188,7 +213,7 @@
+@@ -188,7 +216,7 @@
  	int human_readable = 0;
  	int opt;
  
 -       while ((opt = getopt(argc, argv, "rAHa:f:c:")) != -1) {
-+       while ((opt = getopt(argc, argv, "rAMHa:f:c:")) != -1) {
++       while ((opt = getopt(argc, argv, "rAMHa:f:c:t:")) != -1) {
  		switch (opt)
  		{
  		default:
-@@ -206,6 +231,9 @@
+@@ -200,12 +228,19 @@
+ 		case 'c':
+ 			count = strtoul(optarg, NULL, 0);
+ 			break;
++		case 't':
++			fl_sleep_time = strtof(optarg, NULL);
++			sleep_time=fl_sleep_time*1000000;
++			break;
+ 		case 'f':
+ 			frontend = strtoul(optarg, NULL, 0);
+ 			break;
  		case 'H':
  			human_readable = 1;
  			break;
