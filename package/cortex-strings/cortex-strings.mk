@@ -4,13 +4,12 @@
 #
 ################################################################################
 
-CORTEX_STRINGS_VERSION = 48fd30c
-CORTEX_STRINGS_DIR = cortex-strings-$(CORTEX_STRINGS_VERSION)
-CORTEX_STRINGS_SOURCE = cortex-strings-$(CORTEX_STRINGS_VERSION).tar.bz2
-CORTEX_STRINGS_SITE = http://git.linaro.org/git-ro/toolchain/cortex-strings.git
+CORTEX_STRINGS_VERSION = git
+CORTEX_STRINGS_DIR = cortex-strings.$(CORTEX_STRINGS_VERSION)
+CORTEX_STRINGS_SOURCE = cortex-strings.$(CORTEX_STRINGS_VERSION)
+CORTEX_STRINGS_SITE = http://git.linaro.org/git-ro/toolchain
 
-$(DL_DIR)/$(CORTEX_STRINGS_SOURCE):
-	$(GET_GIT_ARCHIVE) $(CORTEX_STRINGS_SITE) $(CORTEX_STRINGS_VERSION) $(@F) $(DL_DIR)
+CORTEX_STRINGS_CHECKOUT = 499d1a6edf44466ae80c00dbf1ba96c9f5e60c0b
 
 CORTEX_STRINGS_CONF_ENV = \
 	CFLAGS="-pipe -O2 $(TARGET_DEBUGGING) $(CXX11_ABI) -I$(TARGET_includedir)" \
@@ -20,21 +19,14 @@ CORTEX_STRINGS_CONF_ENV = \
 
 CORTEX_STRINGS_CONF_OPTS = \
 	$(TARGET_CONFIGURE_OPTS) \
-	$(if $(filter $(BOXSERIES),hd5x hd6x vusolo4k vuduo4k vuultimo4k vuzero4k vuuno4k vuuno4kse),--with-neon,--without-neon) \
 	--enable-static \
 	--disable-shared
 
-cortex-strings: $(STATIC_libdir)/libcortex-strings.la
-$(STATIC_libdir)/libcortex-strings.la: $(DL_DIR)/$(CORTEX_STRINGS_SOURCE) | $(STATIC_DIR)
-	$(REMOVE)/$(CORTEX_STRINGS_DIR)
-	$(UNTAR)/$(CORTEX_STRINGS_SOURCE)
-	$(CHDIR)/$(CORTEX_STRINGS_DIR); \
-		./autogen.sh; \
-		$(CORTEX_STRINGS_CONF_ENV) ./configure $(CORTEX_STRINGS_CONF_OPTS); \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(STATIC_DIR)
-	$(REMOVE)/$(CORTEX_STRINGS_DIR)
+define CORTEX_STRINGS_AUTOGEN_SH
+	$(CHDIR)/$($(PKG)_DIR); \
+		./autogen.sh
+endef
+CORTEX_STRINGS_PRE_CONFIGURE_HOOKS += CORTEX_STRINGS_AUTOGEN_SH
 
-# -----------------------------------------------------------------------------
-
-PHONY += cortex-strings
+cortex-strings: | $(STATIC_DIR)
+	$(call autotools-package)
