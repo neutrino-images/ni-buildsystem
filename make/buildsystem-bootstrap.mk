@@ -5,7 +5,6 @@
 
 # buildsystem related
 BOOTSTRAP  = $(CROSS_DIR)
-BOOTSTRAP += $(STATIC_DIR)
 BOOTSTRAP += $(DEPS_DIR)
 BOOTSTRAP += $(BUILD_DIR)
 BOOTSTRAP += $(STAGING_DIR)
@@ -15,8 +14,11 @@ BOOTSTRAP += host-tools
 
 # target related
 BOOTSTRAP += target-dir
-BOOTSTRAP += libs-static
 BOOTSTRAP += libs-cross
+
+ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd2))
+  BOOTSTRAP += cortex-strings
+endif
 
 ifeq ($(BOXTYPE),$(filter $(BOXTYPE),coolstream))
   BOOTSTRAP += var-update
@@ -80,7 +82,6 @@ $(TARGET_DIR):
 
 # -----------------------------------------------------------------------------
 
-$(STATIC_DIR) \
 $(DEPS_DIR) \
 $(BUILD_DIR) \
 $(STAGING_DIR) \

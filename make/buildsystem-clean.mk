@@ -24,12 +24,6 @@ host-bin-config-clean:
 staging-clean:
 	-rm -rf $(STAGING_DIR)
 
-static-base-clean:
-	-rm -rf $(STATIC_BASE)
-
-static-clean:
-	-rm -rf $(STATIC_DIR)
-
 target-clean:
 	-rm -rf $(TARGET_DIR)
 
@@ -39,7 +33,7 @@ ccache-clean:
 
 rebuild-clean: host-bin-config-clean target-clean deps-clean build-clean checkout-branches
 
-all-clean: rebuild-clean staging-clean host-clean static-base-clean
+all-clean: rebuild-clean staging-clean host-clean
 	@$(call WARNING,"Any other key then CTRL-C will now remove CROSS_BASE")
 	@read
 	make cross-base-clean
@@ -62,8 +56,6 @@ PHONY += deps-clean
 PHONY += host-clean
 PHONY += host-bin-config-clean
 PHONY += staging-clean
-PHONY += static-base-clean
-PHONY += static-clean
 PHONY += target-clean
 PHONY += ccache-clean
 PHONY += rebuild-clean
