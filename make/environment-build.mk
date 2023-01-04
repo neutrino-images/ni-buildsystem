@@ -50,7 +50,7 @@ else ifeq ($(BOXSERIES),hd2)
 
 else ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd5x hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
   DRIVERS_BIN_DIR        = $(BOXTYPE)/$(BOXMODEL)
-  CORTEX_STRINGS_LDFLAG  = -lcortex-strings
+  CORTEX_STRINGS_LDFLAG  =
   GNU_TARGET_NAME        = arm-cortex-linux-gnueabihf
   TARGET_OPTIMIZATION    = -O2
   TARGET_DEBUGGING       = -g
