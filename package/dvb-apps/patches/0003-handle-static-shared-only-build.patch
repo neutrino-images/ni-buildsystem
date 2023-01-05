@@ -30,7 +30,7 @@ index 3410d7b..d274e16 100644
  
  .PHONY: library
  
-@@ -23,7 +29,7 @@ prerequisites = $(subst .o,.d,$(objects)) $(addsuffix .d,$(binaries))
+@@ -23,7 +29,7 @@
  
  .PHONY: clean install
  

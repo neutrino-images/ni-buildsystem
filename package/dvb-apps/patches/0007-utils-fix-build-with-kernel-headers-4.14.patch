@@ -21,7 +21,7 @@ Signed-off-by: "Yann E. MORIN" <yann.morin.1998@free.fr>
 diff --git a/util/dst-utils/dst_test.c b/util/dst-utils/dst_test.c
 --- a/util/dst-utils/dst_test.c
 +++ b/util/dst-utils/dst_test.c
-@@ -111,6 +111,7 @@
+@@ -122,6 +122,7 @@
  	return 0;
  }
  
@@ -29,7 +29,7 @@ diff --git a/util/dst-utils/dst_test.c b/util/dst-utils/dst_test.c
  static int dst_set_pid(int cafd)
  {
  	if ((ioctl(cafd, CA_SET_PID)) < 0) {
-@@ -120,6 +121,7 @@
+@@ -131,6 +132,7 @@
  
  	return 0;
  }
@@ -37,7 +37,7 @@ diff --git a/util/dst-utils/dst_test.c b/util/dst-utils/dst_test.c
  
  static int dst_get_descr(int cafd)
  {
-@@ -230,8 +232,12 @@
+@@ -241,8 +243,12 @@
  				dst_reset(cafd);
  				break;
  			case 'p':
