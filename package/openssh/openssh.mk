@@ -22,6 +22,8 @@ OPENSSH_CONF_OPTS = \
 	--with-privsep-path=/var/empty \
 	--with-cppflags="-pipe $(TARGET_OPTIMIZATION) $(TARGET_DEBUGGING) $(TARGET_ABI) -I$(TARGET_includedir)" \
 	--with-ldflags="-L$(TARGET_libdir)" \
+	--without-bsd-auth \
+	--without-kerberos5 \
 	--disable-strip \
 	--disable-lastlog \
 	--disable-utmp \
