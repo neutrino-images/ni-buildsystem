@@ -1,6 +1,6 @@
 diff -r 3d43b280298c util/femon/femon.c
 --- a/util/femon/femon.c	Fri Mar 21 20:26:36 2014 +0100
-+++ b/util/femon/femon.c	Tue Jan 03 22:34:28 2023 +0100
++++ b/util/femon/femon.c	Thu Jan 05 20:05:33 2023 +0100
 @@ -42,16 +42,20 @@
  static char *usage_str =
      "\nusage: femon [options]\n"
@@ -22,17 +22,16 @@ diff -r 3d43b280298c util/femon/femon.c
  int remote=0;
  
  static void usage(void)
-@@ -68,6 +72,9 @@
+@@ -68,6 +72,8 @@
  	unsigned int samples = 0;
  	FILE *ttyFile=NULL;
  	
-+	time_t now;
-+	char *ntime = NULL;
++	struct timeval now;
 +
  	// We dont write the "beep"-codes to stdout but to /dev/tty1.
  	// This is neccessary for Thin-Client-Systems or Streaming-Boxes
  	// where the computer does not have a monitor and femon is called via ssh.
-@@ -90,12 +97,23 @@
+@@ -90,12 +96,26 @@
  
  	do {
  		if (dvbfe_get_info(fe, FE_STATUS_PARAMS, &fe_info, DVBFE_INFO_QUERYTYPE_IMMEDIATE, 0) != FE_STATUS_PARAMS) {
@@ -41,9 +40,12 @@ diff -r 3d43b280298c util/femon/femon.c
  		}
  
  
-+		now = time(NULL);
-+		ntime = asctime(localtime(&now));
-+		ntime[strlen(ntime)-1] = '\0'; // Remove \n
++		gettimeofday(&now, NULL);
++		char ltime[80] = "";
++		strftime(ltime, 80, "%a %b %d %Y - %H:%M:%S", localtime(&now.tv_sec));
++		int ms = now.tv_usec / 1000;
++		char ntime[84] = "";
++		sprintf(ntime, "%s.%03d", ltime, ms);
  
  		if (human_readable) {
 +		    if (minimalized) {
@@ -56,7 +58,7 @@ diff -r 3d43b280298c util/femon/femon.c
                         printf ("status %c%c%c%c%c | signal %3u%% | snr %3u%% | ber %d | unc %d | ",
  				fe_info.signal ? 'S' : ' ',
  				fe_info.carrier ? 'C' : ' ',
-@@ -106,7 +124,15 @@
+@@ -106,7 +126,15 @@
  				(fe_info.snr * 100) / 0xffff,
  				fe_info.ber,
  				fe_info.ucblocks);
@@ -72,7 +74,7 @@ diff -r 3d43b280298c util/femon/femon.c
  			printf ("status %c%c%c%c%c | signal %04x | snr %04x | ber %08x | unc %08x | ",
  				fe_info.signal ? 'S' : ' ',
  				fe_info.carrier ? 'C' : ' ',
-@@ -117,9 +143,11 @@
+@@ -117,9 +145,11 @@
  				fe_info.snr,
  				fe_info.ber,
  				fe_info.ucblocks);
@@ -84,7 +86,7 @@ diff -r 3d43b280298c util/femon/femon.c
  			printf("FE_HAS_LOCK");
  
  		// create beep if acoustical_mode enabled
-@@ -188,7 +216,7 @@
+@@ -188,7 +218,7 @@
  	int human_readable = 0;
  	int opt;
  
@@ -93,7 +95,7 @@ diff -r 3d43b280298c util/femon/femon.c
  		switch (opt)
  		{
  		default:
-@@ -200,12 +228,19 @@
+@@ -200,12 +230,19 @@
  		case 'c':
  			count = strtoul(optarg, NULL, 0);
  			break;
