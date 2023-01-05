@@ -70,6 +70,7 @@ ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd2 hd5x hd6x vusolo4k vuduo4k vuduo4ks
 	$(MAKE) minisatip
 	$(MAKE) xfsprogs
 	$(MAKE) libxslt
+	$(MAKE) xz
   endif
   ifeq ($(DEBUG),yes)
 	$(MAKE) strace
