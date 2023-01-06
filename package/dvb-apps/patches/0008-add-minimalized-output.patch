@@ -1,11 +1,12 @@
 diff -r 3d43b280298c util/femon/femon.c
 --- a/util/femon/femon.c	Fri Mar 21 20:26:36 2014 +0100
-+++ b/util/femon/femon.c	Thu Jan 05 20:05:33 2023 +0100
-@@ -42,16 +42,20 @@
++++ b/util/femon/femon.c	Sat Jan 07 00:55:41 2023 +0100
+@@ -42,16 +42,22 @@
  static char *usage_str =
      "\nusage: femon [options]\n"
      "     -H        : human readable output\n"
 +    "     -M        : minimalized output\n"
++    "     -d        : show different values only (depends on -M)\n"
      "     -A        : Acoustical mode. A sound indicates the signal quality.\n"
      "     -r        : If 'Acoustical mode' is active it tells the application\n"
      "                 is called remotely via ssh. The sound is heard on the 'real'\n"
@@ -19,10 +20,15 @@ diff -r 3d43b280298c util/femon/femon.c
 +float fl_sleep_time=1;
  int acoustical_mode=0;
 +int minimalized=0;
++int diffonly=0;
  int remote=0;
  
  static void usage(void)
-@@ -68,6 +72,8 @@
+@@ -65,9 +71,12 @@
+ int check_frontend (struct dvbfe_handle *fe, int human_readable, unsigned int count)
+ {
+ 	struct dvbfe_info fe_info;
++	struct dvbfe_info fe_info_tmp;
  	unsigned int samples = 0;
  	FILE *ttyFile=NULL;
  	
@@ -31,7 +37,7 @@ diff -r 3d43b280298c util/femon/femon.c
  	// We dont write the "beep"-codes to stdout but to /dev/tty1.
  	// This is neccessary for Thin-Client-Systems or Streaming-Boxes
  	// where the computer does not have a monitor and femon is called via ssh.
-@@ -90,12 +96,26 @@
+@@ -90,12 +99,39 @@
  
  	do {
  		if (dvbfe_get_info(fe, FE_STATUS_PARAMS, &fe_info, DVBFE_INFO_QUERYTYPE_IMMEDIATE, 0) != FE_STATUS_PARAMS) {
@@ -40,6 +46,19 @@ diff -r 3d43b280298c util/femon/femon.c
  		}
  
  
++		if (diffonly && minimalized)
++		{
++			if (fe_info.signal_strength != fe_info_tmp.signal_strength || fe_info.snr != fe_info_tmp.snr || fe_info.ber != fe_info_tmp.ber)
++			{
++				fe_info_tmp = fe_info;
++			}
++			else
++			{
++				usleep(sleep_time);
++				continue;
++			}
++		}
++
 +		gettimeofday(&now, NULL);
 +		char ltime[80] = "";
 +		strftime(ltime, 80, "%a %b %d %Y - %H:%M:%S", localtime(&now.tv_sec));
@@ -58,7 +77,7 @@ diff -r 3d43b280298c util/femon/femon.c
                         printf ("status %c%c%c%c%c | signal %3u%% | snr %3u%% | ber %d | unc %d | ",
  				fe_info.signal ? 'S' : ' ',
  				fe_info.carrier ? 'C' : ' ',
-@@ -106,7 +126,15 @@
+@@ -106,7 +142,15 @@
  				(fe_info.snr * 100) / 0xffff,
  				fe_info.ber,
  				fe_info.ucblocks);
@@ -74,7 +93,7 @@ diff -r 3d43b280298c util/femon/femon.c
  			printf ("status %c%c%c%c%c | signal %04x | snr %04x | ber %08x | unc %08x | ",
  				fe_info.signal ? 'S' : ' ',
  				fe_info.carrier ? 'C' : ' ',
-@@ -117,9 +145,11 @@
+@@ -117,9 +161,11 @@
  				fe_info.snr,
  				fe_info.ber,
  				fe_info.ucblocks);
@@ -86,16 +105,16 @@ diff -r 3d43b280298c util/femon/femon.c
  			printf("FE_HAS_LOCK");
  
  		// create beep if acoustical_mode enabled
-@@ -188,7 +218,7 @@
+@@ -188,7 +234,7 @@
  	int human_readable = 0;
  	int opt;
  
 -       while ((opt = getopt(argc, argv, "rAHa:f:c:")) != -1) {
-+       while ((opt = getopt(argc, argv, "rAMHa:f:c:t:")) != -1) {
++       while ((opt = getopt(argc, argv, "rAdMHa:f:c:t:")) != -1) {
  		switch (opt)
  		{
  		default:
-@@ -200,12 +230,19 @@
+@@ -200,12 +246,22 @@
  		case 'c':
  			count = strtoul(optarg, NULL, 0);
  			break;
@@ -112,6 +131,19 @@ diff -r 3d43b280298c util/femon/femon.c
 +		case 'M':
 +			minimalized = 1;
 +			break;
++		case 'd':
++			diffonly = 1;
++			break;
  		case 'A':
  			// Acoustical mode: we have to reduce the delay between
  			// checks in order to hear nice sound
+@@ -218,6 +274,9 @@
+ 		}
+ 	}
+ 
++	if (diffonly && !minimalized)
++		printf ("femon: ignored option -- 'd'\n");
++
+ 	do_mon(adapter, frontend, human_readable, count);
+ 
+ 	return 0;
