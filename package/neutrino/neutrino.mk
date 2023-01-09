@@ -82,7 +82,6 @@ NEUTRINO_CONF_OPTS = \
 	--enable-giflib \
 	--enable-lua \
 	--enable-mdev \
-	--enable-pip \
 	--enable-pugixml \
 	\
 	--with-omdb-api-key="$(BS_PACKAGE_NEUTRINO_OMDB_API_KEY)" \
@@ -135,6 +134,10 @@ endif
 
 NEUTRINO_DEPENDENCIES += lcd4linux
 NEUTRINO_CONF_OPTS += --enable-lcd4linux
+
+ifeq ($(BS_PACKAGE_NEUTRINO_PIP),y)
+  NEUTRINO_CONF_OPTS += --enable-pip
+endif
 
 ifeq ($(BS_PACKAGE_NEUTRINO_AUDIODEC_FFMPEG),y)
   NEUTRINO_CONF_OPTS += --enable-ffmpegdec

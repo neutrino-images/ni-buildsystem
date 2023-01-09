@@ -19,6 +19,9 @@ BS_PACKAGE_NCURSES_WCHAR ?= y
 # neutrino: use ffmpeg audio decoder
 BS_PACKAGE_NEUTRINO_AUDIODEC_FFMPEG ?= y
 
+# neutrino: use pip
+BS_PACKAGE_NEUTRINO_PIP ?= y
+
 # neutrino: omdb api key
 BS_PACKAGE_NEUTRINO_OMDB_API_KEY ?= $(NEUTRINO_OMDB_API_KEY)
 ifeq ($(BS_PACKAGE_NEUTRINO_OMDB_API_KEY),$(empty))
