@@ -20,6 +20,9 @@ CORTEX_STRINGS_CONF_ENV = \
 
 CORTEX_STRINGS_CONF_OPTS = \
 	$(TARGET_CONFIGURE_OPTS) \
+	--with-cpu=cortex-a9 \
+	--with-vfp \
+	--without-neon \
 	--enable-static \
 	--disable-shared
 
@@ -28,6 +31,11 @@ define CORTEX_STRINGS_AUTOGEN_SH
 		./autogen.sh
 endef
 CORTEX_STRINGS_PRE_CONFIGURE_HOOKS += CORTEX_STRINGS_AUTOGEN_SH
+
+define CORTEX_STRINGS_PATCH_MAKEFILE
+	$(SED) 's|-mfpu=vfp|-mfpu=vfpv3-d16|' $(PKG_BUILD_DIR)/Makefile.am
+endef
+CORTEX_STRINGS_POST_PATCH_HOOKS += CORTEX_STRINGS_PATCH_MAKEFILE
 
 cortex-strings: | $(STATIC_DIR)
 	$(call autotools-package)
