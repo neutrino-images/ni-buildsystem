@@ -9,8 +9,7 @@ CORTEX_STRINGS_DIR = cortex-strings.$(CORTEX_STRINGS_VERSION)
 CORTEX_STRINGS_SOURCE = cortex-strings.$(CORTEX_STRINGS_VERSION)
 CORTEX_STRINGS_SITE = http://git.linaro.org/git-ro/toolchain
 
-# hd2: never change version
-CORTEX_STRINGS_CHECKOUT = 48fd30c346ff2ab14ca574b770b5c1bcbefadba8
+CORTEX_STRINGS_CHECKOUT = 499d1a6edf44466ae80c00dbf1ba96c9f5e60c0b
 
 CORTEX_STRINGS_CONF_ENV = \
 	CFLAGS="-pipe -O2 $(TARGET_DEBUGGING) $(CXX11_ABI) -I$(TARGET_includedir)" \
