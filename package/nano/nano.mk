@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-NANO_VERSION = 6.3
+NANO_VERSION = 7.2
 NANO_DIR = nano-$(NANO_VERSION)
 NANO_SOURCE = nano-$(NANO_VERSION).tar.gz
 NANO_SITE = $(GNU_MIRROR)/nano
