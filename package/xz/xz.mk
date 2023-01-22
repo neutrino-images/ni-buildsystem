@@ -9,6 +9,9 @@ XZ_DIR = xz-$(XZ_VERSION)
 XZ_SOURCE = xz-$(XZ_VERSION).tar.xz
 XZ_SITE = https://tukaani.org/xz
 
+XZ_CONF_ENV = \
+	ac_cv_prog_cc_c99='-std=gnu99'
+
 XZ_CONF_OPTS = \
 	--datarootdir=$(REMOVE_datarootdir) \
 	--enable-small \
