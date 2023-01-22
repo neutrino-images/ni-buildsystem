@@ -97,7 +97,6 @@ SKEL_ROOT     = $(BASE_DIR)/skel-root/$(BOXSERIES)
 ifeq ($(BOXMODEL),$(filter $(BOXMODEL),vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
   SKEL_ROOT   = $(BASE_DIR)/skel-root/vuplus
 endif
-TARGET_FILES  = $(BASE_DIR)/skel-root/general
 PACKAGE_DIR   = $(BASE_DIR)/package
 SUPPORT_DIR   = $(BASE_DIR)/support
 
