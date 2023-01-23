@@ -75,8 +75,6 @@ NEUTRINO_CONF_OPTS = \
 	$(if $(findstring 1,$(KBUILD_VERBOSE)),--disable-silent-rules,--enable-silent-rules) \
 	--enable-maintainer-mode \
 	\
-	--disable-youtube-player \
-	\
 	--enable-freesatepg \
 	--enable-fribidi \
 	--enable-giflib \
