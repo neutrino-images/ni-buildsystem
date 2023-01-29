@@ -105,10 +105,11 @@
  		}
  	}
  	if (optind < argc) // filename
-@@ -699,7 +739,24 @@
+@@ -699,7 +739,26 @@
  	if (stb_type == VULCAN || stb_type == PALLAS)
  		mallocsize=720*576;
  
++	/*
 +	if (pips == 0)
 +	{
 +		for (int p=1; p < 4; p++)
@@ -119,6 +120,7 @@
 +				pips = p;
 +		}
 +	}
++	*/
 +
  	video = (unsigned char *)malloc(mallocsize*3);
 +	if (pips > 0)
