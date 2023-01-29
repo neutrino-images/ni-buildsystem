@@ -23,12 +23,6 @@ NEUTRINO_DEPENDENCIES = ffmpeg freetype giflib libcurl libdvbsi fribidi \
 # -----------------------------------------------------------------------------
 
 NEUTRINO_CFLAGS = -Wall -W -Wshadow -D__STDC_CONSTANT_MACROS
-ifeq ($(BOXSERIES),hd1)
-  NEUTRINO_CFLAGS += -DCPU_FREQ
-endif
-ifeq ($(BOXSERIES),hd2)
-  NEUTRINO_CFLAGS += -DFB_HW_ACCELERATION
-endif
 
 ifeq ($(DEBUG),yes)
   NEUTRINO_CFLAGS += -ggdb3 -rdynamic -I$(TARGET_includedir) $(CXX11_ABI)
