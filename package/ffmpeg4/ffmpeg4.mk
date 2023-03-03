@@ -90,6 +90,7 @@ FFMPEG4_CONF_OPTS = \
 	\
 	--disable-encoders \
 	--enable-encoder=aac \
+	--enable-encoder=eac3 \
 	--enable-encoder=h261 \
 	--enable-encoder=h263 \
 	--enable-encoder=h263p \
@@ -237,6 +238,7 @@ FFMPEG4_CONF_OPTS = \
 	--enable-demuxer=avi \
 	--enable-demuxer=dash \
 	--enable-demuxer=dts \
+	--enable-demuxer=eac3 \
 	--enable-demuxer=ffmetadata \
 	--enable-demuxer=flac \
 	--enable-demuxer=flv \
