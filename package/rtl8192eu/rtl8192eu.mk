@@ -7,7 +7,7 @@
 RTL8192EU_VERSION = git
 RTL8192EU_DIR = rtl8192eu-linux-driver.$(RTL8192EU_VERSION)
 RTL8192EU_SOURCE = rtl8192eu-linux-driver.$(RTL8192EU_VERSION)
-RTL8192EU_SITE = https://github.com/mange/$(RTL8192EU_SOURCE)
+RTL8192EU_SITE = https://github.com/mange
 
 RTL8192EU_CHECKOUT = 60aa279428024ea78dcffe2c181ffee3cc1495f5
 
