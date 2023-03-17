@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-OPENSSH_VERSION = 9.0p1
+OPENSSH_VERSION = 9.3p1
 OPENSSH_DIR = openssh-$(OPENSSH_VERSION)
 OPENSSH_SOURCE = openssh-$(OPENSSH_VERSION).tar.gz
 OPENSSH_SITE = https://artfiles.org/openbsd/OpenSSH/portable
