@@ -7,7 +7,7 @@
 MC_VERSION = 4.8.29
 MC_DIR = mc-$(MC_VERSION)
 MC_SOURCE = mc-$(MC_VERSION).tar.xz
-MC_SITE = http://ftp.midnight-commander.org/
+MC_SITE = http://ftp.midnight-commander.org
 
 MC_DEPENDENCIES = glib2 ncurses
 
