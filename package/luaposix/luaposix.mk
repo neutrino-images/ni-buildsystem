@@ -7,7 +7,7 @@
 LUAPOSIX_VERSION = 31
 LUAPOSIX_DIR = luaposix-$(LUAPOSIX_VERSION)
 LUAPOSIX_SOURCE = luaposix-$(LUAPOSIX_VERSION).tar.gz
-LUAPOSIX_SITE = https://github.com/luaposix/luaposix/archive
+LUAPOSIX_SITE = $(call github,luaposix,luaposix,v$(LUAPOSIX_VERSION))
 
 LUAPOSIX_DEPENDENCIES = lua luaexpat gnulib slingshot
 
