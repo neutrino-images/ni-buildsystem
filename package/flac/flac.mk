@@ -17,7 +17,7 @@ FLAC_CONF_OPTS = \
 	--disable-cpplibs \
 	--disable-debug \
 	--disable-asm-optimizations \
-	--disable-sse \
+	--disable-stack-smash-protection \
 	--disable-altivec \
 	--disable-vsx \
 	--disable-doxygen-docs \
@@ -26,8 +26,6 @@ FLAC_CONF_OPTS = \
 	--disable-valgrind-testing \
 	--disable-ogg \
 	--disable-oggtest \
-	--disable-local-xmms-plugin \
-	--disable-xmms-plugin \
 	--disable-examples \
 	--disable-rpath
 
