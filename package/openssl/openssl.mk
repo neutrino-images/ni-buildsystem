@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-OPENSSL_VERSION = $(if $(filter $(BOXTYPE),coolstream),1.0.2u,1.1.1o)
+OPENSSL_VERSION = $(if $(filter $(BOXTYPE),coolstream),1.0.2u,1.1.1t)
 OPENSSL_DIR = openssl-$(OPENSSL_VERSION)
 OPENSSL_SOURCE = openssl-$(OPENSSL_VERSION).tar.gz
 OPENSSL_SITE = https://www.openssl.org/source
