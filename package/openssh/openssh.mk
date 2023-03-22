@@ -17,13 +17,13 @@ OPENSSH_CONF_ENV = \
 OPENSSH_CONF_OPTS = \
 	--docdir=$(REMOVE_docdir) \
 	--sysconfdir=$(sysconfdir)/ssh \
-	--libexecdir=$(sbindir) \
-	--with-pid-dir=/tmp \
+	--with-pid-dir=/var/run \
 	--with-privsep-path=/var/empty \
 	--with-cppflags="-pipe $(TARGET_OPTIMIZATION) $(TARGET_DEBUGGING) $(TARGET_ABI) -I$(TARGET_includedir)" \
 	--with-ldflags="-L$(TARGET_libdir)" \
 	--without-bsd-auth \
 	--without-kerberos5 \
+	--without-sandbox \
 	--disable-strip \
 	--disable-lastlog \
 	--disable-utmp \
