@@ -20,6 +20,7 @@ set -e
 cd ${TARGET_DIR}
 for r in $@; do
 	r=${r//${TARGET_DIR}\//}
+	rm -rf ${REMOVE_DIR}/${r}
 	mkdir -p $(dirname ${REMOVE_DIR}/${r})
 	mv -fv ${r} ${REMOVE_DIR}/${r} || true
 done
