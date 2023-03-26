@@ -1,0 +1,12 @@
+diff --git a/lib/getrandom.c b/lib/getrandom.c
+index 19bb342..0251e0f 100644
+--- a/lib/getrandom.c
++++ b/lib/getrandom.c
+@@ -19,6 +19,7 @@
+ 
+ #include <config.h>
+ 
++#include <stddef.h>
+ #include <sys/random.h>
+ 
+ #include <errno.h>
