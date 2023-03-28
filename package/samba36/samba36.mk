@@ -47,13 +47,20 @@ SAMBA36_CONF_OPTS = \
 	--disable-iprint \
 	--disable-pie \
 	--disable-relro \
-	--disable-swat \
+	--disable-swat
 
 define SAMBA36_AUTOGEN_SH
 	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
 		./autogen.sh
 endef
 SAMBA36_PRE_CONFIGURE_HOOKS += SAMBA36_AUTOGEN_SH
+
+ifeq ($(AUTOCONF_VER_ge_270),1)
+define SAMBA36_PATCH_AUTOCONF
+	$(call APPLY_PATCHES,autoconf2.71.patch-custom)
+endef
+SAMBA36_PRE_CONFIGURE_HOOKS += SAMBA36_PATCH_AUTOCONF
+endif
 
 define SAMBA36_INSTALL_FILES
 	$(INSTALL) -d $(TARGET_localstatedir)/samba/locks

@@ -1,0 +1,14 @@
+--- a/source3/configure
++++ b/source3/configure
+@@ -5183,10 +5183,6 @@
+ 
+ CFLAGS=$savedCFLAGS
+ 
+-if test x"$GCC" != x"yes" ; then
+-
+-fi
+-
+ if test x"$GCC" = x"yes" ; then
+ 	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for version of gcc" >&5
+ printf %s "checking for version of gcc... " >&6; }
+
