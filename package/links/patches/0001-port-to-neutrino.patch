@@ -19,8 +19,8 @@
  links_LDADD=builtin.o context.o ipret.o javascr.o javascript.o md5.o md5hl.o ns.o pomocny.o regexp.o
  endif
  
--links_SOURCES=af_unix.c auth.c beos.c bfu.c block.c bookmark.c cache.c charsets.c compress.c connect.c cookies.c data.c default.c dip.c directfb.c dither.c dns.c doh.c dos.c drivers.c error.c file.c finger.c fn_impl.c fontconf.c font_inc.c framebuf.c freetype.c ftp.c gif.c grx.c hpux.c html.c html_gr.c html_r.c html_tbl.c http.c https.c img.c imgcache.c jpeg.c jsint.c kbd.c language.c listedit.c lru.c mailto.c main.c memory.c menu.c objreq.c os_dep.c pmshell.c png.c sched.c select.c session.c smb.c string.c suffix.c svg.c svgalib.c terminal.c tiff.c types.c url.c view.c view_gr.c vms.c webp.c x.c xbm.c beos.h bits.h cfg.h codepage.h com-defs.h config-vms.h dfb_cur.h hpux.h language.h links.h os_dep.h os_depx.h setup.h arrow.inc certs.inc codepage.inc entity.inc fbcommon.inc language.inc links_ic.inc locase.inc suffix.inc suffix_x.inc uni_7b.inc upcase.inc vpipe.inc
-+links_SOURCES=af_unix.c auth.c beos.c bfu.c block.c bookmark.c cache.c charsets.c compress.c connect.c cookies.c data.c default.c dip.c directfb.c dither.c dns.c doh.c dos.c drivers.c error.c file.c finger.c fn_impl.c fontconf.c font_inc.c framebuf.c freetype.c ftp.c gif.c grx.c hpux.c html.c html_gr.c html_r.c html_tbl.c http.c https.c img.c imgcache.c jpeg.c jsint.c kbd.c language.c listedit.c lru.c mailto.c main.c memory.c menu.c objreq.c os_dep.c pmshell.c png.c sched.c select.c session.c smb.c string.c suffix.c svg.c svgalib.c terminal.c tiff.c types.c url.c view.c view_gr.c vms.c webp.c x.c xbm.c beos.h bits.h cfg.h codepage.h com-defs.h config-vms.h dfb_cur.h hpux.h language.h links.h os_dep.h os_depx.h setup.h arrow.inc certs.inc codepage.inc entity.inc fbcommon.inc language.inc links_ic.inc locase.inc suffix.inc suffix_x.inc uni_7b.inc upcase.inc vpipe.inc rcmouse.c rc.c rcinput.c rcinput.h
+-links_SOURCES=af_unix.c avif.c auth.c beos.c bfu.c block.c bookmark.c cache.c charsets.c compress.c connect.c cookies.c data.c default.c dip.c directfb.c dither.c dns.c doh.c dos.c drivers.c error.c file.c finger.c fn_impl.c fontconf.c font_inc.c framebuf.c freetype.c ftp.c gif.c grx.c hpux.c html.c html_gr.c html_r.c html_tbl.c http.c https.c img.c imgcache.c jpeg.c jsint.c kbd.c language.c listedit.c lru.c mailto.c main.c memory.c menu.c objreq.c os_dep.c pmshell.c png.c sched.c select.c session.c smb.c string.c suffix.c svg.c svgalib.c terminal.c tiff.c types.c url.c view.c view_gr.c vms.c webp.c x.c xbm.c beos.h bits.h cfg.h codepage.h com-defs.h config-vms.h dfb_cur.h hpux.h language.h links.h os_dep.h os_depx.h setup.h arrow.inc certs.inc codepage.inc entity.inc fbcommon.inc language.inc links_ic.inc locase.inc suffix.inc suffix_x.inc uni_7b.inc upcase.inc vpipe.inc
++links_SOURCES=af_unix.c avif.c auth.c beos.c bfu.c block.c bookmark.c cache.c charsets.c compress.c connect.c cookies.c data.c default.c dip.c directfb.c dither.c dns.c doh.c dos.c drivers.c error.c file.c finger.c fn_impl.c fontconf.c font_inc.c framebuf.c freetype.c ftp.c gif.c grx.c hpux.c html.c html_gr.c html_r.c html_tbl.c http.c https.c img.c imgcache.c jpeg.c jsint.c kbd.c language.c listedit.c lru.c mailto.c main.c memory.c menu.c objreq.c os_dep.c pmshell.c png.c sched.c select.c session.c smb.c string.c suffix.c svg.c svgalib.c terminal.c tiff.c types.c url.c view.c view_gr.c vms.c webp.c x.c xbm.c beos.h bits.h cfg.h codepage.h com-defs.h config-vms.h dfb_cur.h hpux.h language.h links.h os_dep.h os_depx.h setup.h arrow.inc certs.inc codepage.inc entity.inc fbcommon.inc language.inc links_ic.inc locase.inc suffix.inc suffix_x.inc uni_7b.inc upcase.inc vpipe.inc rcmouse.c rc.c rcinput.c rcinput.h
  # builtin.c context.c ipret.c javascr.c javascript.c md5.c md5hl.c ns.c pomocny.c regexp.c md5.h ns.h struct.h tree.h typy.h ipret.h javascript.h builtin.h builtin_keys.h
  
  dist-hook:
@@ -30,8 +30,8 @@
  @HAIKU_GR_TRUE@links_LDADD = haiku.o
  @JAVASCRIPT_TRUE@links_LDADD = builtin.o context.o ipret.o javascr.o javascript.o md5.o md5hl.o ns.o pomocny.o regexp.o
  
--links_SOURCES = af_unix.c auth.c beos.c bfu.c block.c bookmark.c cache.c charsets.c compress.c connect.c cookies.c data.c default.c dip.c directfb.c dither.c dns.c doh.c dos.c drivers.c error.c file.c finger.c fn_impl.c fontconf.c font_inc.c framebuf.c freetype.c ftp.c gif.c grx.c hpux.c html.c html_gr.c html_r.c html_tbl.c http.c https.c img.c imgcache.c jpeg.c jsint.c kbd.c language.c listedit.c lru.c mailto.c main.c memory.c menu.c objreq.c os_dep.c pmshell.c png.c sched.c select.c session.c smb.c string.c suffix.c svg.c svgalib.c terminal.c tiff.c types.c url.c view.c view_gr.c vms.c webp.c x.c xbm.c beos.h bits.h cfg.h codepage.h com-defs.h config-vms.h dfb_cur.h hpux.h language.h links.h os_dep.h os_depx.h setup.h arrow.inc certs.inc codepage.inc entity.inc fbcommon.inc language.inc links_ic.inc locase.inc suffix.inc suffix_x.inc uni_7b.inc upcase.inc vpipe.inc
-+links_SOURCES = af_unix.c auth.c beos.c bfu.c block.c bookmark.c cache.c charsets.c compress.c connect.c cookies.c data.c default.c dip.c directfb.c dither.c dns.c doh.c dos.c drivers.c error.c file.c finger.c fn_impl.c fontconf.c font_inc.c framebuf.c freetype.c ftp.c gif.c grx.c hpux.c html.c html_gr.c html_r.c html_tbl.c http.c https.c img.c imgcache.c jpeg.c jsint.c kbd.c language.c listedit.c lru.c mailto.c main.c memory.c menu.c objreq.c os_dep.c pmshell.c png.c sched.c select.c session.c smb.c string.c suffix.c svg.c svgalib.c terminal.c tiff.c types.c url.c view.c view_gr.c vms.c webp.c x.c xbm.c beos.h bits.h cfg.h codepage.h com-defs.h config-vms.h dfb_cur.h hpux.h language.h links.h os_dep.h os_depx.h setup.h arrow.inc certs.inc codepage.inc entity.inc fbcommon.inc language.inc links_ic.inc locase.inc suffix.inc suffix_x.inc uni_7b.inc upcase.inc vpipe.inc rcmouse.c rc.c rcinput.c rcinput.h
+-links_SOURCES = af_unix.c avif.c auth.c beos.c bfu.c block.c bookmark.c cache.c charsets.c compress.c connect.c cookies.c data.c default.c dip.c directfb.c dither.c dns.c doh.c dos.c drivers.c error.c file.c finger.c fn_impl.c fontconf.c font_inc.c framebuf.c freetype.c ftp.c gif.c grx.c hpux.c html.c html_gr.c html_r.c html_tbl.c http.c https.c img.c imgcache.c jpeg.c jsint.c kbd.c language.c listedit.c lru.c mailto.c main.c memory.c menu.c objreq.c os_dep.c pmshell.c png.c sched.c select.c session.c smb.c string.c suffix.c svg.c svgalib.c terminal.c tiff.c types.c url.c view.c view_gr.c vms.c webp.c x.c xbm.c beos.h bits.h cfg.h codepage.h com-defs.h config-vms.h dfb_cur.h hpux.h language.h links.h os_dep.h os_depx.h setup.h arrow.inc certs.inc codepage.inc entity.inc fbcommon.inc language.inc links_ic.inc locase.inc suffix.inc suffix_x.inc uni_7b.inc upcase.inc vpipe.inc
++links_SOURCES = af_unix.c avif.c auth.c beos.c bfu.c block.c bookmark.c cache.c charsets.c compress.c connect.c cookies.c data.c default.c dip.c directfb.c dither.c dns.c doh.c dos.c drivers.c error.c file.c finger.c fn_impl.c fontconf.c font_inc.c framebuf.c freetype.c ftp.c gif.c grx.c hpux.c html.c html_gr.c html_r.c html_tbl.c http.c https.c img.c imgcache.c jpeg.c jsint.c kbd.c language.c listedit.c lru.c mailto.c main.c memory.c menu.c objreq.c os_dep.c pmshell.c png.c sched.c select.c session.c smb.c string.c suffix.c svg.c svgalib.c terminal.c tiff.c types.c url.c view.c view_gr.c vms.c webp.c x.c xbm.c beos.h bits.h cfg.h codepage.h com-defs.h config-vms.h dfb_cur.h hpux.h language.h links.h os_dep.h os_depx.h setup.h arrow.inc certs.inc codepage.inc entity.inc fbcommon.inc language.inc links_ic.inc locase.inc suffix.inc suffix_x.inc uni_7b.inc upcase.inc vpipe.inc rcmouse.c rc.c rcinput.c rcinput.h
  
  CXXFLAGS = @CXXFLAGS@
  
@@ -41,9 +41,9 @@
  sched.o select.o session.o smb.o string.o suffix.o svg.o svgalib.o \
 -terminal.o tiff.o types.o url.o view.o view_gr.o vms.o webp.o x.o xbm.o
 +terminal.o tiff.o types.o url.o view.o view_gr.o vms.o webp.o x.o xbm.o rcmouse.o rc.o rcinput.o
+ @ATHEOS_GR_TRUE@links_DEPENDENCIES =  atheos.o
  @JAVASCRIPT_TRUE@links_DEPENDENCIES =  builtin.o context.o ipret.o \
  @JAVASCRIPT_TRUE@javascr.o javascript.o md5.o md5hl.o ns.o pomocny.o \
- @JAVASCRIPT_TRUE@regexp.o
 --- a/bfu.c
 +++ b/bfu.c
 @@ -1544,7 +1544,7 @@
@@ -68,7 +68,7 @@
  #if SIZEOF_UNSIGNED_LONG >= 8 || defined(__x86_64__) || defined(__aarch64__)
 --- a/configure
 +++ b/configure
-@@ -8586,7 +8586,7 @@
+@@ -8589,7 +8589,7 @@
  fi
  done
  
@@ -79,7 +79,7 @@
  EOF
 --- a/configure.in
 +++ b/configure.in
-@@ -1073,7 +1073,7 @@
+@@ -1074,7 +1074,7 @@
  
  if test "$disable_fb" != yes; then
  	AC_CHECK_HEADERS(linux/fb.h linux/kd.h linux/vt.h sys/mman.h)
@@ -516,7 +516,7 @@
 +
 --- a/menu.c
 +++ b/menu.c
-@@ -4025,16 +4025,16 @@
+@@ -4029,16 +4029,16 @@
  
  #ifdef G
  static_const struct menu_item file_menu111[] = {
@@ -538,7 +538,7 @@
  };
  
  static_const struct menu_item file_menu21[] = {
-@@ -4134,6 +4134,7 @@
+@@ -4138,6 +4138,7 @@
  	/*cast_uchar "", cast_uchar "", M_BAR, NULL, NULL, 0, 0,
  	TEXT_(T_OS_SHELL), cast_uchar "", TEXT_(T_HK_OS_SHELL), menu_shell, NULL, 0, 0,*/
  	x = 1;
@@ -546,7 +546,7 @@
  	if (!anonymous && can_open_os_shell(term->environment)) {
  		e->text = TEXT_(T_OS_SHELL);
  		e->rtext = cast_uchar "";
-@@ -4145,6 +4146,7 @@
+@@ -4149,6 +4150,7 @@
  		e++;
  		x = 0;
  	}
@@ -554,7 +554,7 @@
  	if (can_resize_window(term)) {
  		e->text = TEXT_(T_RESIZE_TERMINAL);
  		e->rtext = cast_uchar "";
-@@ -4168,15 +4170,15 @@
+@@ -4172,15 +4174,15 @@
  static void (* const set_frame_ptr)(struct session *ses, struct f_data_c *f, int a) = set_frame;
  
  static_const struct menu_item view_menu[] = {

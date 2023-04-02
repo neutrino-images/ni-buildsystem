@@ -1,6 +1,6 @@
 --- a/session.c
 +++ b/session.c
-@@ -2376,6 +2376,7 @@
+@@ -2378,6 +2378,7 @@
  	unsigned char *proto = get_protocol_name(rq->url);
  	int ret = 0;
  	if (!proto) return 0;
