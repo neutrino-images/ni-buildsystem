@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-TZDATA_VERSION = 2023a
+TZDATA_VERSION = 2023b
 TZDATA_DIR = tzdata$(TZDATA_VERSION)
 TZDATA_SOURCE = tzdata$(TZDATA_VERSION).tar.gz
 TZDATA_SITE = https://data.iana.org/time-zones/releases
