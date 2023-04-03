@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-LIBCURL_VERSION = 7.87.0
+LIBCURL_VERSION = 8.0.1
 LIBCURL_DIR = curl-$(LIBCURL_VERSION)
 LIBCURL_SOURCE = curl-$(LIBCURL_VERSION).tar.bz2
 LIBCURL_SITE = https://curl.haxx.se/download
@@ -21,6 +21,7 @@ LIBCURL_CONF_OPTS = \
 	--disable-rtsp \
 	--disable-dict \
 	--disable-ldap \
+	--disable-ldaps \
 	--disable-curldebug \
 	--disable-static \
 	--disable-imap \
@@ -32,7 +33,7 @@ LIBCURL_CONF_OPTS = \
 	--disable-ntlm-wb \
 	--disable-ares \
 	--without-libidn \
-	--with-ca-bundle=$(CA_BUNDLE_CERTS_DIR)/$(CA_BUNDLE_CERT) \
+	--with-ca-path=$(CA_BUNDLE_CERTS_DIR) \
 	--with-random=/dev/urandom \
 	--with-ssl=$(TARGET_prefix) \
 	--with-librtmp=$(TARGET_libdir) \
