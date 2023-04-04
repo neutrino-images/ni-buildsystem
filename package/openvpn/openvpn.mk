@@ -27,7 +27,9 @@ OPENVPN_CONF_OPTS = \
 	--disable-debug \
 	--disable-selinux \
 	--disable-plugins \
-	--disable-pkcs11
+	--disable-pkcs11 \
+	--disable-systemd \
+	--disable-lz4
 
 openvpn: | $(TARGET_DIR)
 	$(call autotools-package)
