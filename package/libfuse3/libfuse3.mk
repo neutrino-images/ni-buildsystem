@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-LIBFUSE3_VERSION = 3.11.0
+LIBFUSE3_VERSION = 3.14.1
 LIBFUSE3_DIR     = fuse-$(LIBFUSE3_VERSION)
 LIBFUSE3_SOURCE  = fuse-$(LIBFUSE3_VERSION).tar.xz
 LIBFUSE3_SITE    = https://github.com/libfuse/libfuse/releases/download/fuse-$(LIBFUSE3_VERSION)
