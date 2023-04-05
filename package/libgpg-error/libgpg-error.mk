@@ -23,7 +23,7 @@ LIBGPG_ERROR_CONF_OPTS = \
 
 # fix build for libgcrypt 1.10.1
 LIBGPG_ERROR_CONFIG_SCRIPTS += gpg-error-config
-LIBGPG_ERROR_CONF_OPTS = \
+LIBGPG_ERROR_CONF_OPTS += \
 	--enable-install-gpg-error-config \
 
 define LIBGPG_ERROR_LINKING_HEADER
