@@ -16,8 +16,7 @@ LIBGCRYPT_CONFIG_SCRIPTS = libgcrypt-config
 LIBGCRYPT_CONF_OPTS = \
 	--datarootdir=$(REMOVE_datarootdir) \
 	--enable-shared \
-	--disable-static \
-	--disable-tests
+	--disable-static
 
 define LIBGCRYPT_TARGET_CLEANUP
 	$(TARGET_RM) $(addprefix $(TARGET_bindir)/,dumpsexp hmac256 mpicalc)
