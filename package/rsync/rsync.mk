@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-RSYNC_VERSION = 3.2.4
+RSYNC_VERSION = 3.2.7
 RSYNC_DIR = rsync-$(RSYNC_VERSION)
 RSYNC_SOURCE = rsync-$(RSYNC_VERSION).tar.gz
 RSYNC_SITE = https://download.samba.org/pub/rsync/src
