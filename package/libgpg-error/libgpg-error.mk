@@ -4,14 +4,14 @@
 #
 ################################################################################
 
-LIBGPG_ERROR_VERSION = 1.45
+LIBGPG_ERROR_VERSION = 1.46
 LIBGPG_ERROR_DIR = libgpg-error-$(LIBGPG_ERROR_VERSION)
 LIBGPG_ERROR_SOURCE = libgpg-error-$(LIBGPG_ERROR_VERSION).tar.bz2
 LIBGPG_ERROR_SITE = ftp://ftp.gnupg.org/gcrypt/libgpg-error
 
 LIBGPG_ERROR_AUTORECONF = YES
 
-LIBGPG_ERROR_CONFIG_SCRIPTS = gpg-error-config
+LIBGPG_ERROR_CONFIG_SCRIPTS = gpgrt-config
 
 LIBGPG_ERROR_CONF_OPTS = \
 	--datarootdir=$(REMOVE_datarootdir) \
@@ -28,7 +28,7 @@ endef
 LIBGPG_ERROR_POST_EXTRACT_HOOKS += LIBGPG_ERROR_LINKING_HEADER
 
 define LIBGPG_ERROR_TARGET_CLEANUP
-	$(TARGET_RM) $(addprefix $(TARGET_bindir)/,gpg-error gpgrt-config)
+	$(TARGET_RM) $(addprefix $(TARGET_bindir)/,gpg-error)
 endef
 LIBGPG_ERROR_TARGET_FINALIZE_HOOKS += LIBGPG_ERROR_TARGET_CLEANUP
 
