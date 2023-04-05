@@ -4,10 +4,10 @@
 #
 ################################################################################
 
-SYSVINIT_VERSION = 3.04
+SYSVINIT_VERSION = 3.06
 SYSVINIT_DIR = sysvinit-$(SYSVINIT_VERSION)
 SYSVINIT_SOURCE = sysvinit-$(SYSVINIT_VERSION).tar.xz
-SYSVINIT_SITE = http://download.savannah.nongnu.org/releases/sysvinit
+SYSVINIT_SITE = https://github.com/slicer69/sysvinit/releases/download/$(SYSVINIT_VERSION)
 
 SYSVINIT_MAKE_ENV = \
 	$(TARGET_CONFIGURE_ENV) \

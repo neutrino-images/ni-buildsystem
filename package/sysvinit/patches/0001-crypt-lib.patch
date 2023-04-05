@@ -1,29 +1,20 @@
-Upstream-Status: Inappropriate [configuration]
-
-# The src Makefile was checking for libcrypt.a on the host, not in the
-# build environment.  This patch checks for $LCRYPT in the environment
-# and uses it if it's there.
-# - jdike@linux.intel.com
-
-Index: sysvinit-2.96/src/Makefile
-===================================================================
 diff --git a/src/Makefile b/src/Makefile
-index 9f9f09e..9ae35df 100644
+index 21cbb2e..4457de2 100644
 --- a/src/Makefile
 +++ b/src/Makefile
-@@ -89,6 +89,10 @@ else
-   SULOGINLIBS	=
- endif
+@@ -94,6 +94,10 @@ endif
+ 
+ ROOT	?= $(DESTDIR)
  
 +ifneq ($(LCRYPT),)
 +  SULOGINLIBS	+= $(LCRYPT)
 +else
 +
  # Additional libs for GNU libc.
- ifneq ($(wildcard /usr/lib*/libcrypt.*),)
+ ifneq ($(wildcard $(ROOT)/usr/lib*/libcrypt.*),)
    SULOGINLIBS	+= -lcrypt
-@@ -99,6 +103,8 @@ ifneq ($(wildcard /usr/lib/*/libcrypt.*),)
-   SULOGINLIBS	+= -lcrypt
+@@ -106,6 +110,8 @@ ifneq ($(findstring -lcrypt, $(SULOGINLIBS)), -lcrypt)
+ endif
  endif
  
 +endif

@@ -21,7 +21,7 @@ diff --git a/src/killall5.c b/src/killall5.c
 index a664954..9798423 100644
 --- a/src/killall5.c
 +++ b/src/killall5.c
-@@ -970,9 +970,9 @@
+@@ -903,9 +903,9 @@
  	char *oargv1, *pargv1;
  	if ((o->argv0 && p->argv0 && !strcmp(o->argv0,p->argv0))) {
  		if (o->argv1 && p->argv1) {
