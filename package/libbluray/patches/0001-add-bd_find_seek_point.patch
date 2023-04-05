@@ -2,7 +2,7 @@ diff --git a/src/libbluray/bluray.c b/src/libbluray/bluray.c
 index 1aedf2c..e519650 100644
 --- a/src/libbluray/bluray.c
 +++ b/src/libbluray/bluray.c
-@@ -1637,6 +1637,39 @@ int64_t bd_seek_time(BLURAY *bd, uint64_t tick)
+@@ -1741,6 +1741,39 @@ int64_t bd_seek_time(BLURAY *bd, uint64_t tick)
      return bd->s_pos;
  }
  
@@ -46,7 +46,7 @@ diff --git a/src/libbluray/bluray.h b/src/libbluray/bluray.h
 index ae9f412..8ce6ddd 100644
 --- a/src/libbluray/bluray.h
 +++ b/src/libbluray/bluray.h
-@@ -493,6 +493,16 @@ int64_t bd_seek_time(BLURAY *bd, uint64_t tick);
+@@ -549,6 +549,16 @@ int64_t bd_seek_time(BLURAY *bd, uint64_t tick);
  
  /**
   *
