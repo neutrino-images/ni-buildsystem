@@ -8,7 +8,7 @@ ifeq ($(BOXTYPE),coolstream)
 PROCPS_NG_VERSION = 3.3.17
 PROCPS_NG_DIR = procps-$(PROCPS_NG_VERSION)
 else
-PROCPS_NG_VERSION = 4.0.0
+PROCPS_NG_VERSION = 4.0.3
 PROCPS_NG_DIR = procps-ng-$(PROCPS_NG_VERSION)
 endif
 PROCPS_NG_SOURCE = procps-ng-$(PROCPS_NG_VERSION).tar.xz
@@ -24,7 +24,7 @@ PROCPS_NG_CONF_OPTS = \
 	--includedir=$(includedir) \
 	--libdir=$(libdir) \
 	--bindir=$(base_bindir).$(@F) \
-	--docdir=$(REMOVE_docdir) \
+	--datarootdir=$(REMOVE_datarootdir) \
 	--disable-numa \
 	--without-systemd
 
