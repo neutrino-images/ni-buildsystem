@@ -378,6 +378,8 @@ define APPLY_PATCHES # (patches or directory)
 			v=; \
 			if [ -d $$i/$($(PKG)_VERSION) ]; then \
 				v="$($(PKG)_VERSION)/"; \
+			elif [ -d $$i/$($(PKG)_VERSION)-$($(PKG)_CHECKOUT) ]; then \
+				v="$($(PKG)_VERSION)-$($(PKG)_CHECKOUT)/"; \
 			fi; \
 			for p in $(addprefix $$i/$$v,$(PATCHES)); do \
 				if [ -e $$p ]; then \
