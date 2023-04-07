@@ -1,4 +1,4 @@
-diff --git a/watch.c b/watch.c
+diff --git a/src/watch.c b/src/watch.c
 index 0ba6b3f..96f525b 100644
 --- a/src/watch.c
 +++ b/src/watch.c
