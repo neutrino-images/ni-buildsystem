@@ -44,9 +44,9 @@ CROSSTOOL_NG_EXPORT += \
 	BS_KERNEL_LOCATION=$(KERNEL_TARBALL) \
 	BS_KERNEL_HEADERS=$(KERNEL_HEADERS_DIR) \
 
-# crosstool-ng for cst hd1 uses external gcc-linaro 4.9-2017.01
 ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd1))
 
+# crosstool-ng for cst hd1 uses external gcc-linaro 4.9
 GCC_LINARO_VERSION = 4.9-2017.01
 GCC_LINARO_SOURCE = gcc-linaro-$(GCC_LINARO_VERSION).tar.xz
 GCC_LINARO_SITE = https://releases.linaro.org/components/toolchain/gcc-linaro/$(GCC_LINARO_VERSION)
@@ -58,21 +58,27 @@ CROSSTOOL_NG_POST_DOWNLOAD_HOOKS += CROSSTOOL_NG_DOWNLOAD_LINARO_4_9
 
 endif
 
-# crosstool-ng for cst hd2 uses uclibc-ng 1.0.24
 ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd2))
 
+# crosstool-ng for cst hd2 uses uclibc-ng 1.0.24
 UCLIBC_NG_VERSION = 1.0.24
 
 CROSSTOOL_NG_EXPORT += \
 	BS_LIBC_UCLIBC_CONFIG_FILE=$(PKG_FILES_DIR)/uclibc-ng-$(UCLIBC_NG_VERSION).config
 
+# crosstool-ng for cst hd1 uses gcc-linaro 6.3
+GCC_LINARO_VERSION = 6.3-2017.02
+
 define CROSSTOOL_NG_INSTALL_PATCHES
 	$(INSTALL_COPY) $(PKG_PATCHES_DIR)/$(CROSSTOOL_NG_VERSION)-$(CROSSTOOL_NG_CHECKOUT)-gcc/* \
-		$(PKG_BUILD_DIR)/patches/gcc/linaro-6.3-2017.02
+		$(PKG_BUILD_DIR)/patches/gcc/linaro-$(GCC_LINARO_VERSION)
 endef
 CROSSTOOL_NG_POST_PATCH_HOOKS += CROSSTOOL_NG_INSTALL_PATCHES
 
 endif
+
+CROSSTOOL_NG_EXPORT += \
+	BS_CC_GCC_VERSION=linaro-$(GCC_LINARO_VERSION)
 
 define CROSSTOOL_NG_CLEANUP_COOLSTREAM
 	test -e $(CROSS_DIR)/$(GNU_TARGET_NAME)/lib && \
@@ -124,7 +130,7 @@ crosstool-ng.do_compile: crosstool-ng.do_prepare
 
 # -----------------------------------------------------------------------------
 
-# upgradeconfig doesn't work for coolstream; crosstool-ng 1dbb06f2 is too old
+# upgradeconfig doesn't work for coolstream; crosstool-ng 1dbb06f is too old
 
 crosstool-ng.menuconfig \
 crosstool-ng.upgradeconfig: crosstool-ng.do_prepare
