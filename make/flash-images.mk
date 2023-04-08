@@ -550,7 +550,7 @@ flash-image-vuplus-multi: | $(IMAGE_DIR)
 	rm -rf $(IMAGE_BUILD_DIR)
 	$(INSTALL) -d $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)
 	cp $(SUPPORT_DIR)/splash-images/ni-splash.bmp $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/splash_auto.bin
-	cp $(BUILD_DIR)/$(VMLINUZ_INITRD) $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/initrd_auto.bin
+	cp $(BUILD_DIR)/$(VMLINUZ_INITRD_FILE) $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/initrd_auto.bin
 	echo Dummy for update. > $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/kernel_auto.bin
 	cp $(KERNEL_ZIMAGE) $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/kernel1_auto.bin
 	cp $(KERNEL_ZIMAGE) $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)/kernel2_auto.bin

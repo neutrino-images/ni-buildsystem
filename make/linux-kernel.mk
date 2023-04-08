@@ -233,9 +233,6 @@ endef
 $(DL_DIR)/$(KERNEL_SOURCE):
 	$(download) $(KERNEL_SITE)/$(KERNEL_SOURCE)
 
-$(DL_DIR)/$(VMLINUZ_INITRD_SOURCE):
-	$(download) $(VMLINUZ_INITRD_SITE)/$(VMLINUZ_INITRD_SOURCE)
-
 # -----------------------------------------------------------------------------
 
 LINUX_KERNEL_MAKE_VARS = \
@@ -377,12 +374,6 @@ kernel-modules-mipsbox: kernel-mipsbox
 	$(INSTALL_DATA) $(KERNEL_modulesdir)/modules.builtin $(TARGET_modulesdir)
 	$(INSTALL_DATA) $(KERNEL_modulesdir)/modules.order $(TARGET_modulesdir)
 	$(LINUX_RUN_DEPMOD)
-	$(call TOUCH)
-
-# -----------------------------------------------------------------------------
-
-vmlinuz-initrd: $(DL_DIR)/$(VMLINUZ_INITRD_SOURCE)
-	$(UNTAR)/$(VMLINUZ_INITRD_SOURCE)
 	$(call TOUCH)
 
 # -----------------------------------------------------------------------------

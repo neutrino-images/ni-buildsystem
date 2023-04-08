@@ -91,11 +91,6 @@ else ifeq ($(BOXMODEL),vusolo4k)
   KERNEL_BRANCH = $(empty)
   KERNEL_DTB = $(empty)
 
-  VMLINUZ_INITRD_VERSION = 20221006
-  VMLINUZ_INITRD_SOURCE = vmlinuz-initrd_$(BOXMODEL)_$(VMLINUZ_INITRD_VERSION).tar.gz
-  VMLINUZ_INITRD_SITE = https://bitbucket.org/max_10/vmlinuz-initrd-$(BOXMODEL)/downloads
-  VMLINUZ_INITRD = vmlinuz-initrd-7366c0
-
   BOOT_PARTITION = 1
 
 else ifeq ($(BOXMODEL),vuduo4k)
@@ -106,11 +101,6 @@ else ifeq ($(BOXMODEL),vuduo4k)
 
   KERNEL_BRANCH = $(empty)
   KERNEL_DTB = $(empty)
-
-  VMLINUZ_INITRD_VERSION = 20221006
-  VMLINUZ_INITRD_SOURCE = vmlinuz-initrd_$(BOXMODEL)_$(VMLINUZ_INITRD_VERSION).tar.gz
-  VMLINUZ_INITRD_SITE = https://bitbucket.org/max_10/vmlinuz-initrd-$(BOXMODEL)/downloads
-  VMLINUZ_INITRD = vmlinuz-initrd-7278b1
 
   BOOT_PARTITION = 6
 
@@ -123,11 +113,6 @@ else ifeq ($(BOXMODEL),vuduo4kse)
   KERNEL_BRANCH = $(empty)
   KERNEL_DTB = $(empty)
 
-  VMLINUZ_INITRD_VERSION = 20221006
-  VMLINUZ_INITRD_SOURCE = vmlinuz-initrd_$(BOXMODEL)_$(VMLINUZ_INITRD_VERSION).tar.gz
-  VMLINUZ_INITRD_SITE = https://bitbucket.org/max_10/vmlinuz-initrd-$(BOXMODEL)/downloads
-  VMLINUZ_INITRD = vmlinuz-initrd-7445d0
-
   BOOT_PARTITION = 6
 
 else ifeq ($(BOXMODEL),vuultimo4k)
@@ -138,11 +123,6 @@ else ifeq ($(BOXMODEL),vuultimo4k)
 
   KERNEL_BRANCH = $(empty)
   KERNEL_DTB = $(empty)
-
-  VMLINUZ_INITRD_VERSION = 20221006
-  VMLINUZ_INITRD_SOURCE = vmlinuz-initrd_$(BOXMODEL)_$(VMLINUZ_INITRD_VERSION).tar.gz
-  VMLINUZ_INITRD_SITE = https://bitbucket.org/max_10/vmlinuz-initrd-$(BOXMODEL)/downloads
-  VMLINUZ_INITRD = vmlinuz-initrd-7445d0
 
   BOOT_PARTITION = 1
 
@@ -155,11 +135,6 @@ else ifeq ($(BOXMODEL),vuzero4k)
   KERNEL_BRANCH = $(empty)
   KERNEL_DTB = $(empty)
 
-  VMLINUZ_INITRD_VERSION = 20221006
-  VMLINUZ_INITRD_SOURCE = vmlinuz-initrd_$(BOXMODEL)_$(VMLINUZ_INITRD_VERSION).tar.gz
-  VMLINUZ_INITRD_SITE = https://bitbucket.org/max_10/vmlinuz-initrd-$(BOXMODEL)/downloads
-  VMLINUZ_INITRD = vmlinuz-initrd-7260a0
-
   BOOT_PARTITION = 4
 
 else ifeq ($(BOXMODEL),vuuno4k)
@@ -171,11 +146,6 @@ else ifeq ($(BOXMODEL),vuuno4k)
   KERNEL_BRANCH = $(empty)
   KERNEL_DTB = $(empty)
 
-  VMLINUZ_INITRD_VERSION = 20221006
-  VMLINUZ_INITRD_SOURCE = vmlinuz-initrd_$(BOXMODEL)_$(VMLINUZ_INITRD_VERSION).tar.gz
-  VMLINUZ_INITRD_SITE = https://bitbucket.org/max_10/vmlinuz-initrd-$(BOXMODEL)/downloads
-  VMLINUZ_INITRD = vmlinuz-initrd-7439b0
-
   BOOT_PARTITION = 1
 
 else ifeq ($(BOXMODEL),vuuno4kse)
@@ -186,11 +156,6 @@ else ifeq ($(BOXMODEL),vuuno4kse)
 
   KERNEL_BRANCH = $(empty)
   KERNEL_DTB = $(empty)
-
-  VMLINUZ_INITRD_VERSION = 20221006
-  VMLINUZ_INITRD_SOURCE = vmlinuz-initrd_$(BOXMODEL)_$(VMLINUZ_INITRD_VERSION).tar.gz
-  VMLINUZ_INITRD_SITE = https://bitbucket.org/max_10/vmlinuz-initrd-$(BOXMODEL)/downloads
-  VMLINUZ_INITRD = vmlinuz-initrd-7439b0
 
   BOOT_PARTITION = 1
 
