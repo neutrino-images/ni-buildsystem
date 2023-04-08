@@ -64,6 +64,7 @@ ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd2))
 UCLIBC_NG_VERSION = 1.0.24
 
 CROSSTOOL_NG_EXPORT += \
+	BS_LIBC_VERSION=$(UCLIBC_NG_VERSION) \
 	BS_LIBC_UCLIBC_CONFIG_FILE=$(PKG_FILES_DIR)/uclibc-ng-$(UCLIBC_NG_VERSION).config
 
 # crosstool-ng for cst hd1 uses gcc-linaro 6.3
