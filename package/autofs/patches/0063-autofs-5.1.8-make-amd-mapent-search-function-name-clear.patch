@@ -1,0 +1,87 @@
+autofs-5.1.8 - make amd mapent search function name clear
+
+From: Ian Kent <raven@themaw.net>
+
+When looking for amd sections in the configuration the function to
+find mount entries is not named so it is clear what it's trying to
+do so change its name. Also make it static since it is called only
+once in the same source file.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG        |    1 +
+ daemon/master.c  |    7 ++++---
+ include/master.h |    2 +-
+ 3 files changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index de25c072..67eec269 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -60,6 +60,7 @@
+ - don't close lookup at umount.
+ - fix deadlock in lookups.
+ - dont delay expire.
++- make amd mapent search function name clear.
+ 
+ 19/10/2021 autofs-5.1.8
+ - add xdr_exports().
+diff --git a/daemon/master.c b/daemon/master.c
+index 178fb842..cb4fcb7e 100644
+--- a/daemon/master.c
++++ b/daemon/master.c
+@@ -747,7 +747,7 @@ struct master_mapent *master_find_mapent(struct master *master, const char *path
+ 	return NULL;
+ }
+ 
+-unsigned int master_partial_match_mapent(struct master *master, const char *path)
++static unsigned int master_partial_match_amd_mapent(struct master *master, const char *path)
+ {
+ 	struct list_head *head, *p;
+ 	size_t path_len = strlen(path);
+@@ -761,7 +761,7 @@ unsigned int master_partial_match_mapent(struct master *master, const char *path
+ 
+ 		entry = list_entry(p, struct master_mapent, list);
+ 
+-		entry_len = strlen(entry->path);
++		entry_len = entry->len;
+ 		cmp_len = min(entry_len, path_len);
+ 
+ 		if (!strncmp(entry->path, path, cmp_len)) {
+@@ -812,6 +812,7 @@ struct master_mapent *master_new_mapent(struct master *master, const char *path,
+ 		return NULL;
+ 	}
+ 	entry->path = tmp;
++	entry->len = strlen(tmp);
+ 
+ 	entry->thid = 0;
+ 	entry->age = age;
+@@ -1044,7 +1045,7 @@ static void master_add_amd_mount_section_mounts(struct master *master, time_t ag
+ 		char *map = NULL;
+ 		char *opts;
+ 
+-		ret = master_partial_match_mapent(master, path);
++		ret = master_partial_match_amd_mapent(master, path);
+ 		if (ret) {
+ 			/* If this amd entry is already present in the
+ 			 * master map it's not a duplicate, don't issue
+diff --git a/include/master.h b/include/master.h
+index 597b3213..056e5106 100644
+--- a/include/master.h
++++ b/include/master.h
+@@ -45,6 +45,7 @@ struct map_source {
+ 
+ struct master_mapent {
+ 	char *path;
++	size_t len;
+ 	pthread_t thid;
+ 	time_t age;
+ 	struct master *master;
+@@ -109,7 +110,6 @@ void master_source_lock_cleanup(void *);
+ void master_source_current_wait(struct master_mapent *);
+ void master_source_current_signal(struct master_mapent *);
+ struct master_mapent *master_find_mapent(struct master *, const char *);
+-unsigned int master_partial_match_mapent(struct master *, const char *);
+ struct master_mapent *master_new_mapent(struct master *, const char *, time_t);
+ void master_add_mapent(struct master *, struct master_mapent *);
+ void master_remove_mapent(struct master_mapent *);

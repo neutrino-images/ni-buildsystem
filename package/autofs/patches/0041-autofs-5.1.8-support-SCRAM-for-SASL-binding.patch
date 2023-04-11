@@ -1,0 +1,93 @@
+autofs-5.1.8 - support SCRAM for SASL binding
+
+From: Thomas Reim <reimth@gmail.com>
+
+In general, automount users that apply SASL binding for authentication are
+free to use any SASL mechanism supported by the underlying SASL library.
+automounter does not check the specified mechanism and transparently
+forwards the information to SASL or LDAP.
+
+Most directory services now support the more secure Salted Challenge
+Response Authentication Mechanismis (SCRAM) for SASL binding (RFC 5802).
+But automount users cannot request use of SCRAM, as automount does not
+read user and password credentials for SCRAM mechanisms.
+
+This patch enables SCRAM-SHA-1 and other SCRAM-SHA mechanisms
+(if supported by SASL library).
+
+Signed-off-by: Thomas Reim <reimth@gmail.com>
+---
+ CHANGELOG                      |    1 +
+ man/autofs_ldap_auth.conf.5.in |    2 +-
+ modules/cyrus-sasl.c           |    4 ++--
+ modules/lookup_ldap.c          |    3 ++-
+ 4 files changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index ba350319..41e299fe 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -38,6 +38,7 @@
+ - internal SASL logging only in debug log mode.
+ - more comprehensive verbose logging for LDAP maps.
+ - fix invalid tsv access.
++- support SCRAM for SASL binding.
+ 
+ 19/10/2021 autofs-5.1.8
+ - add xdr_exports().
+diff --git a/man/autofs_ldap_auth.conf.5.in b/man/autofs_ldap_auth.conf.5.in
+index 2357566c..0b3c706b 100644
+--- a/man/autofs_ldap_auth.conf.5.in
++++ b/man/autofs_ldap_auth.conf.5.in
+@@ -60,7 +60,7 @@ authentication mechanism. If no suitable mechanism can be found, connections
+ to the ldap server are made without authentication. Finally, if it is set to
+ simple, then simple authentication will be used instead of SASL.
+ .TP
+-\fBauthtype="GSSAPI"|"LOGIN"|"PLAIN"|"ANONYMOUS"|"DIGEST-MD5|EXTERNAL"\fP
++\fBauthtype="GSSAPI"|"LOGIN"|"PLAIN"|"ANONYMOUS"|"DIGEST-MD5"|"SCRAM-SHA-1"|"EXTERNAL"\fP
+ This attribute can be used to specify a preferred authentication mechanism.
+ In normal operations, the automounter will attempt to authenticate to the
+ ldap server using the list of supportedSASLmechanisms obtained from the
+diff --git a/modules/cyrus-sasl.c b/modules/cyrus-sasl.c
+index c41f2174..fe46f5d7 100644
+--- a/modules/cyrus-sasl.c
++++ b/modules/cyrus-sasl.c
+@@ -35,7 +35,7 @@
+  *
+  *  This file implements SASL authentication to an LDAP server for the
+  *  following mechanisms:
+- *    GSSAPI, EXTERNAL, ANONYMOUS, PLAIN, DIGEST-MD5, KERBEROS_V5, LOGIN
++ *    GSSAPI, EXTERNAL, ANONYMOUS, PLAIN, DIGEST-MD5, SCRAM-SHA-*, KERBEROS_V5, LOGIN
+  *  The mechanism to use is specified in an external file,
+  *  LDAP_AUTH_CONF_FILE.  See the samples directory in the autofs
+  *  distribution for an example configuration file.
+@@ -1028,7 +1028,7 @@ sasl_choose_mech(unsigned logopt, LDAP *ldap, struct lookup_context *ctxt)
+ 		 *  This routine is called if there is no configured
+ 		 *  mechanism.  As such, we can skip over any auth
+ 		 *  mechanisms that require user credentials.  These include
+-		 *  PLAIN, LOGIN, and DIGEST-MD5.
++		 *  PLAIN, LOGIN, SCRAM-SHA-*, and DIGEST-MD5.
+ 		 */
+ 		if (authtype_requires_creds(mechanisms[i]))
+ 			continue;
+diff --git a/modules/lookup_ldap.c b/modules/lookup_ldap.c
+index b0a28f10..0803e09b 100644
+--- a/modules/lookup_ldap.c
++++ b/modules/lookup_ldap.c
+@@ -1233,7 +1233,7 @@ int get_property(unsigned logopt, xmlNodePtr node, const char *prop, char **valu
+ }
+ 
+ /*
+- *  For plain text, login and digest-md5 authentication types, we need
++ *  For plain text, login, scram-sha-* and digest-md5 authentication types, we need
+  *  user and password credentials.
+  */
+ int authtype_requires_creds(const char *authtype)
+@@ -1241,6 +1241,7 @@ int authtype_requires_creds(const char *authtype)
+ #ifdef WITH_SASL
+ 	if (!strncmp(authtype, "PLAIN", strlen("PLAIN")) ||
+ 	    !strncmp(authtype, "DIGEST-MD5", strlen("DIGEST-MD5")) ||
++	    !strncmp(authtype, "SCRAM-SHA-", strlen("SCRAM-SHA-")) ||
+ 	    !strncmp(authtype, "LOGIN", strlen("LOGIN")))
+ 		return 1;
+ #endif

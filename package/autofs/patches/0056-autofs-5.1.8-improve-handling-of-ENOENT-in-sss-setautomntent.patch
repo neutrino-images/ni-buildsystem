@@ -1,0 +1,63 @@
+autofs-5.1.8 - improve handling of ENOENT in sss setautomntent()
+
+From: Ian Kent <raven@themaw.net>
+
+In the sss lookup module function setautomntent() a return of ENOENT
+isn't handled quite right.
+
+If ENOENT (rather than EHOSTDOWN) is returned from sss setautomntent()
+we should assume the LDAP info. has been read by sss and the entry in
+fact doesn't exist.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG            |    1 +
+ modules/lookup_sss.c |   16 +++++++++++++++-
+ 2 files changed, 16 insertions(+), 1 deletion(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index b5c259bb..c79f7cb8 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -53,6 +53,7 @@
+ - fix use_ignore_mount_option description.
+ - include addtional log info for mounts.
+ - fail on empty replicated host name.
++- improve handling of ENOENT in sss setautomntent().
+ 
+ 19/10/2021 autofs-5.1.8
+ - add xdr_exports().
+diff --git a/modules/lookup_sss.c b/modules/lookup_sss.c
+index ad834626..73832dc9 100644
+--- a/modules/lookup_sss.c
++++ b/modules/lookup_sss.c
+@@ -394,7 +394,17 @@ static int setautomntent(unsigned int logopt,
+ 			if (ret != ENOENT)
+ 				goto error;
+ 		} else {
+-			if (ret != ENOENT && ret != EHOSTDOWN)
++			/* If we get an ENOENT here assume it's accurrate
++			 * and return the error.
++			 */
++			if (ret == ENOENT) {
++				error(logopt, MODPREFIX
++				      "setautomountent: entry for map %s not found",
++				      ctxt->mapname);
++				err = NSS_STATUS_NOTFOUND;
++				goto free;
++			}
++			if (ret != EHOSTDOWN)
+ 				goto error;
+ 		}
+ 
+@@ -410,6 +420,10 @@ static int setautomntent(unsigned int logopt,
+ 			if (ret == EINVAL)
+ 				goto free;
+ 			if (ret == ENOENT) {
++				/* Map info. not found after host became available */
++				error(logopt, MODPREFIX
++				      "setautomountent: entry for map %s not found",
++				      ctxt->mapname);
+ 				err = NSS_STATUS_NOTFOUND;
+ 				goto free;
+ 			}

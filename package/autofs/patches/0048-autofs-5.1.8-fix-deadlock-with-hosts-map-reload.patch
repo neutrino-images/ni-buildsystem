@@ -1,0 +1,173 @@
+autofs-5.1.8 - fix deadlock with hosts map reload
+
+From: Ian Kent <raven@themaw.net>
+
+When reloading maps the hosts map calls lookup method ->parse_mount()
+for each multi-mount root entry in the map (each host) while holding
+the cache read lock which leads to a cache lock deadlock.
+
+Remove the need to hold the cache read lock by creating an independent
+list of entries for the update so the lock doesn't need to be taken.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG              |    1 
+ modules/lookup_hosts.c |  100 +++++++++++++++++++++++++++++++++++++++---------
+ 2 files changed, 83 insertions(+), 18 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index a83bc875..2ec4cc31 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -45,6 +45,7 @@
+ - serialise lookup module open and reinit.
+ - coverity fix for invalid access.
+ - fix hosts map deadlock on restart.
++- fix deadlock with hosts map reload.
+ 
+ 19/10/2021 autofs-5.1.8
+ - add xdr_exports().
+diff --git a/modules/lookup_hosts.c b/modules/lookup_hosts.c
+index 26c224f6..0d46eb3e 100644
+--- a/modules/lookup_hosts.c
++++ b/modules/lookup_hosts.c
+@@ -201,10 +201,72 @@ static int do_parse_mount(struct autofs_point *ap, struct map_source *source,
+ 	return NSS_STATUS_SUCCESS;
+ }
+ 
++struct update_context {
++	char *key;
++	int key_len;
++	char *entry;
++	struct update_context *next;
++};
++
++static int add_update_entry(struct update_context **entries, struct mapent *me)
++{
++	struct update_context *upd;
++	char *key, *ent;
++
++	key = strdup(me->key);
++	if (!key)
++		return 0;
++
++	ent = strdup(me->mapent);
++	if (!ent) {
++		free(key);
++		return 0;
++	}
++
++	upd = malloc(sizeof(struct update_context));
++	if (!upd) {
++		free(ent);
++		free(key);
++		return 0;
++	}
++
++	upd->key = key;
++	upd->key_len = me->len;
++	upd->entry = ent;
++	upd->next = NULL;
++	if (*entries)
++		(*entries)->next = upd;
++	*entries = upd;
++
++	return 1;
++}
++
++static void free_update_entries(struct update_context *entries)
++{
++	struct update_context *this = entries;
++
++	while (this) {
++		struct update_context *next = this->next;
++		free(this->key);
++		free(this->entry);
++		free(this);
++		this = next;
++	}
++}
++
++void entries_cleanup(void *arg)
++{
++	struct update_context *entries = arg;
++
++	free_update_entries(entries);
++}
++
+ static void update_hosts_mounts(struct autofs_point *ap,
+ 				struct map_source *source, time_t age,
+ 				struct lookup_context *ctxt)
+ {
++	struct update_context *head = NULL;
++	struct update_context *entries = NULL;
+ 	struct mapent_cache *mc;
+ 	struct mapent *me;
+ 	char *mapent;
+@@ -212,6 +274,8 @@ static void update_hosts_mounts(struct autofs_point *ap,
+ 
+ 	mc = source->mc;
+ 
++	pthread_cleanup_push(entries_cleanup, head);
++
+ 	pthread_cleanup_push(cache_lock_cleanup, mc);
+ 	cache_writelock(mc);
+ 	me = cache_lookup_first(mc);
+@@ -224,39 +288,39 @@ static void update_hosts_mounts(struct autofs_point *ap,
+ 
+ 		mapent = get_exports(ap, me->key);
+ 		if (mapent) {
+-			cache_update(mc, source, me->key, mapent, age);
++			int ret;
++
++			ret = cache_update(mc, source, me->key, mapent, age);
+ 			free(mapent);
++			if (!IS_MM_ROOT(me))
++				goto next;
++			if (ret != CHE_FAIL) {
++				if (!add_update_entry(&entries, me))
++					warn(ap->logopt, MODPREFIX
++					     "failed to add update entry for %s", me->key);
++				else if (!head)
++					head = entries;
++			}
+ 		}
+ next:
+ 		me = cache_lookup_next(mc, me);
+ 	}
+ 	pthread_cleanup_pop(1);
+ 
+-	pthread_cleanup_push(cache_lock_cleanup, mc);
+-	cache_readlock(mc);
+-	me = cache_lookup_first(mc);
+-	while (me) {
+-		/*
+-		 * Hosts map entry not yet expanded, already expired
+-		 * or not the base of the tree
+-		 */
+-		if (!IS_MM(me) || !IS_MM_ROOT(me))
+-			goto cont;
+-
++	while (head) {
+ 		debug(ap->logopt, MODPREFIX
+-		      "attempt to update exports for %s", me->key);
++		      "attempt to update exports for %s", head->key);
+ 
+ 		master_source_current_wait(ap->entry);
+ 		ap->entry->current = source;
+ 		ap->flags |= MOUNT_FLAG_REMOUNT;
+-		ret = ctxt->parse->parse_mount(ap, me->key, strlen(me->key),
+-					       me->mapent, ctxt->parse->context);
++		ret = ctxt->parse->parse_mount(ap, head->key, strlen(head->key),
++					       head->entry, ctxt->parse->context);
+ 		if (ret)
+ 			warn(ap->logopt, MODPREFIX
+-			     "failed to parse mount %s", me->mapent);
++			     "failed to parse mount %s", head->entry);
+ 		ap->flags &= ~MOUNT_FLAG_REMOUNT;
+-cont:
+-		me = cache_lookup_next(mc, me);
++		head = head->next;
+ 	}
+ 	pthread_cleanup_pop(1);
+ }

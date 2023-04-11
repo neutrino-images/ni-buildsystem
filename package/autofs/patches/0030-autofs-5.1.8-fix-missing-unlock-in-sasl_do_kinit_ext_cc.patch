@@ -1,0 +1,41 @@
+autofs-5.1.8 - fix missing unlock in sasl_do_kinit_ext_cc()
+
+From: James Dingwall <james-autofs@dingwall.me.uk>
+
+There is a missing mutex unlock in function sasl_do_kinit_ext_cc(),
+fix it.
+
+Signed-off-by: James Dingwall <james-autofs@dingwall.me.uk>
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG            |    1 +
+ modules/cyrus-sasl.c |    4 ++++
+ 2 files changed, 5 insertions(+)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index 1f7c93ab..e0b285d1 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -27,6 +27,7 @@
+ - add autofs_strerror_r() helper for musl.
+ - update configure.
+ - handle innetgr() not present in musl.
++- fix missing unlock in sasl_do_kinit_ext_cc().
+ 
+ 19/10/2021 autofs-5.1.8
+ - add xdr_exports().
+diff --git a/modules/cyrus-sasl.c b/modules/cyrus-sasl.c
+index ae046e01..738e363f 100644
+--- a/modules/cyrus-sasl.c
++++ b/modules/cyrus-sasl.c
+@@ -721,6 +721,10 @@ sasl_do_kinit_ext_cc(unsigned logopt, struct lookup_context *ctxt)
+ 
+ 	debug(logopt, "Kerberos authentication was successful!");
+ 
++	status = pthread_mutex_unlock(&krb5cc_mutex);
++	if (status)
++		fatal(status);
++
+ 	return 0;
+ 
+ out_cleanup_def_princ:

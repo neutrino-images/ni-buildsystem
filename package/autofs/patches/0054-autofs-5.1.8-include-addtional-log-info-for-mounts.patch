@@ -1,0 +1,176 @@
+autofs-5.1.8 - include addtional log info for mounts
+
+From: Ian Kent <raven@themaw.net>
+
+There has been a request to include some additional information when
+logging mounts and umounts, specifically host and mount location path.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG               |    1 +
+ daemon/automount.c      |    7 +++++--
+ daemon/indirect.c       |    2 +-
+ daemon/spawn.c          |    6 +++---
+ modules/mount_bind.c    |    4 ++--
+ modules/mount_ext2.c    |    2 +-
+ modules/mount_generic.c |    2 +-
+ modules/mount_nfs.c     |    4 +++-
+ 8 files changed, 17 insertions(+), 11 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index b22edc63..0688304e 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -51,6 +51,7 @@
+ - fix incorrect path for is_mounted() in try_remount().
+ - fix additional tsv invalid access.
+ - fix use_ignore_mount_option description.
++- include addtional log info for mounts.
+ 
+ 19/10/2021 autofs-5.1.8
+ - add xdr_exports().
+diff --git a/daemon/automount.c b/daemon/automount.c
+index 64e95ee9..7c4d4303 100644
+--- a/daemon/automount.c
++++ b/daemon/automount.c
+@@ -1161,14 +1161,17 @@ static int get_pkt(struct autofs_point *ap, union autofs_v5_packet_union *pkt)
+ int do_expire(struct autofs_point *ap, const char *name, int namelen)
+ {
+ 	char buf[PATH_MAX];
++	const char *parent;
+ 	int len, ret;
+ 
+ 	if (*name != '/') {
+ 		len = ncat_path(buf, sizeof(buf), ap->path, name, namelen);
++		parent = ap->path;
+ 	} else {
+ 		len = snprintf(buf, PATH_MAX, "%s", name);
+ 		if (len >= PATH_MAX)
+ 			len = 0;
++		parent = name;
+ 	}
+ 
+ 	if (!len) {
+@@ -1176,13 +1179,13 @@ int do_expire(struct autofs_point *ap, const char *name, int namelen)
+ 		return 1;
+ 	}
+ 
+-	info(ap->logopt, "expiring path %s", buf);
++	info(ap->logopt, "expiring path %s on %s", buf, parent);
+ 
+ 	pthread_cleanup_push(master_source_lock_cleanup, ap->entry);
+ 	master_source_readlock(ap->entry);
+ 	ret = umount_multi(ap, buf, 1);
+ 	if (ret == 0)
+-		info(ap->logopt, "expired %s", buf);
++		info(ap->logopt, "umounting %s succeeded", buf);
+ 	else
+ 		warn(ap->logopt, "couldn't complete expire of %s", buf);
+ 	pthread_cleanup_pop(1);
+diff --git a/daemon/indirect.c b/daemon/indirect.c
+index 23ef9f41..4534907d 100644
+--- a/daemon/indirect.c
++++ b/daemon/indirect.c
+@@ -342,7 +342,7 @@ force_umount:
+ 		     "forcing umount of indirect mount %s", mountpoint);
+ 		rv = umount2(mountpoint, MNT_DETACH);
+ 	} else {
+-		info(ap->logopt, "umounted indirect mount %s", mountpoint);
++		info(ap->logopt, "umounting indirect mount %s succeeded", mountpoint);
+ 		if (ap->submount)
+ 			rm_unwanted(ap, mountpoint, 1);
+ 	}
+diff --git a/daemon/spawn.c b/daemon/spawn.c
+index 6f8856a9..85f7959c 100644
+--- a/daemon/spawn.c
++++ b/daemon/spawn.c
+@@ -542,7 +542,7 @@ done:
+ 				while (errp && (p = memchr(sp, '\n', errp))) {
+ 					*p++ = '\0';
+ 					if (sp[0])	/* Don't output empty lines */
+-						warn(logopt, ">> %s", sp);
++						debug(logopt, ">> %s", sp);
+ 					errp -= (p - sp);
+ 					sp = p;
+ 				}
+@@ -553,7 +553,7 @@ done:
+ 				if (errp >= ERRBUFSIZ) {
+ 					/* Line too long, split */
+ 					errbuf[errp] = '\0';
+-					warn(logopt, ">> %s", errbuf);
++					debug(logopt, ">> %s", errbuf);
+ 					errp = 0;
+ 				}
+ 			}
+@@ -567,7 +567,7 @@ done:
+ 		if (errp > 0) {
+ 			/* End of file without \n */
+ 			errbuf[errp] = '\0';
+-			warn(logopt, ">> %s", errbuf);
++			debug(logopt, ">> %s", errbuf);
+ 		}
+ 
+ 		if (waitpid(f, &ret, 0) != f)
+diff --git a/modules/mount_bind.c b/modules/mount_bind.c
+index 7f64332b..ebaa8a93 100644
+--- a/modules/mount_bind.c
++++ b/modules/mount_bind.c
+@@ -177,7 +177,7 @@ int mount_mount(struct autofs_point *ap, const char *root, const char *name, int
+ 
+ 			return err;
+ 		} else {
+-			debug(ap->logopt,
++			mountlog(ap->logopt,
+ 			      MODPREFIX "mounted %s type %s on %s",
+ 			      what, fstype, fullpath);
+ 		}
+@@ -252,7 +252,7 @@ int mount_mount(struct autofs_point *ap, const char *root, const char *name, int
+ 			}
+ 			return 1;
+ 		} else {
+-			debug(ap->logopt,
++			mountlog(ap->logopt,
+ 			      MODPREFIX "symlinked %s -> %s", fullpath, what);
+ 			return 0;
+ 		}
+diff --git a/modules/mount_ext2.c b/modules/mount_ext2.c
+index f4002e58..d462812a 100644
+--- a/modules/mount_ext2.c
++++ b/modules/mount_ext2.c
+@@ -140,7 +140,7 @@ int mount_mount(struct autofs_point *ap, const char *root, const char *name, int
+ 
+ 		return 1;
+ 	} else {
+-		debug(ap->logopt,
++		mountlog(ap->logopt,
+ 		      MODPREFIX "mounted %s type %s on %s",
+ 		      what, fstype, fullpath);
+ 		return 0;
+diff --git a/modules/mount_generic.c b/modules/mount_generic.c
+index 8cd0f4ab..9cfdf139 100644
+--- a/modules/mount_generic.c
++++ b/modules/mount_generic.c
+@@ -99,7 +99,7 @@ int mount_mount(struct autofs_point *ap, const char *root, const char *name, int
+ 
+ 		return 1;
+ 	} else {
+-		debug(ap->logopt, MODPREFIX "mounted %s type %s on %s",
++		mountlog(ap->logopt, MODPREFIX "mounted %s type %s on %s",
+ 		     what, fstype, fullpath);
+ 		return 0;
+ 	}
+diff --git a/modules/mount_nfs.c b/modules/mount_nfs.c
+index feb5afcd..34ec8222 100644
+--- a/modules/mount_nfs.c
++++ b/modules/mount_nfs.c
+@@ -403,7 +403,9 @@ dont_probe:
+ 		}
+ 
+ 		if (!err) {
+-			debug(ap->logopt, MODPREFIX "mounted %s on %s", loc, fullpath);
++			mountlog(ap->logopt,
++			         MODPREFIX "mounted %s type %s on %s",
++				 loc, fstype, fullpath);
+ 			free(loc);
+ 			free_host_list(&hosts);
+ 			return 0;

@@ -1,0 +1,282 @@
+autofs-5.1.8 - serialise lookup module open and reinit
+
+From: Ian Kent <raven@themaw.net>
+
+Add a map source lock to serialise map setting and use of module
+structure fields such as the context.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG           |    1 +
+ daemon/lookup.c     |   35 +++++++++++++++++++++--------------
+ daemon/master.c     |   43 +++++++++++++++++++++++++++++++++++++++++++
+ include/master.h    |    5 +++++
+ modules/parse_amd.c |   26 +++++++++++++++-----------
+ 5 files changed, 85 insertions(+), 25 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index e60a0fd7..279f8de9 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -42,6 +42,7 @@
+ - ldap_sasl_interactive_bind() needs credentials for auto-detection.
+ - fix autofs regression due to positive_timeout.
+ - fix parse module instance mutex naming.
++- serialise lookup module open and reinit.
+ 
+ 19/10/2021 autofs-5.1.8
+ - add xdr_exports().
+diff --git a/daemon/lookup.c b/daemon/lookup.c
+index 47727ebb..26026a12 100644
+--- a/daemon/lookup.c
++++ b/daemon/lookup.c
+@@ -320,28 +320,27 @@ static int do_read_map(struct autofs_point *ap, struct map_source *map, time_t a
+ 	struct lookup_mod *lookup;
+ 	int status;
+ 
+-	lookup = NULL;
+-	master_source_writelock(ap->entry);
++	pthread_cleanup_push(map_module_lock_cleanup, map);
++	map_module_writelock(map);
+ 	if (!map->lookup) {
+ 		status = open_lookup(map->type, "", map->format,
+ 				     map->argc, map->argv, &lookup);
+-		if (status != NSS_STATUS_SUCCESS) {
+-			master_source_unlock(ap->entry);
++		if (status == NSS_STATUS_SUCCESS)
++			map->lookup = lookup;
++		else
+ 			debug(ap->logopt,
+ 			      "lookup module %s open failed", map->type);
+-			return status;
+-		}
+-		map->lookup = lookup;
+ 	} else {
+-		lookup = map->lookup;
+-		status = lookup->lookup_reinit(map->format,
+-					       map->argc, map->argv,
+-					       &lookup->context);
++		status = map->lookup->lookup_reinit(map->format,
++						    map->argc, map->argv,
++						    &map->lookup->context);
+ 		if (status)
+ 			warn(ap->logopt,
+ 			     "lookup module %s reinit failed", map->type);
+ 	}
+-	master_source_unlock(ap->entry);
++	pthread_cleanup_pop(1);
++	if (status != NSS_STATUS_SUCCESS)
++		return status;
+ 
+ 	if (!map->stale)
+ 		return NSS_STATUS_SUCCESS;
+@@ -349,7 +348,11 @@ static int do_read_map(struct autofs_point *ap, struct map_source *map, time_t a
+ 	master_source_current_wait(ap->entry);
+ 	ap->entry->current = map;
+ 
++	pthread_cleanup_push(map_module_lock_cleanup, map);
++	map_module_readlock(map);
++	lookup = map->lookup;
+ 	status = lookup->lookup_read_map(ap, age, lookup->context);
++	pthread_cleanup_pop(1);
+ 
+ 	if (status != NSS_STATUS_SUCCESS)
+ 		map->stale = 0;
+@@ -806,23 +809,27 @@ int do_lookup_mount(struct autofs_point *ap, struct map_source *map, const char
+ 	struct lookup_mod *lookup;
+ 	int status;
+ 
++	map_module_writelock(map);
+ 	if (!map->lookup) {
+ 		status = open_lookup(map->type, "",
+ 				     map->format, map->argc, map->argv, &lookup);
+ 		if (status != NSS_STATUS_SUCCESS) {
++			map_module_unlock(map);
+ 			debug(ap->logopt,
+ 			      "lookup module %s open failed", map->type);
+ 			return status;
+ 		}
+ 		map->lookup = lookup;
+ 	}
+-
+-	lookup = map->lookup;
++	map_module_unlock(map);
+ 
+ 	master_source_current_wait(ap->entry);
+ 	ap->entry->current = map;
+ 
++	map_module_readlock(map);
++	lookup = map->lookup;
+ 	status = lookup->lookup_mount(ap, name, name_len, lookup->context);
++	map_module_unlock(map);
+ 
+ 	return status;
+ }
+diff --git a/daemon/master.c b/daemon/master.c
+index 4ddb7b66..3f540d01 100644
+--- a/daemon/master.c
++++ b/daemon/master.c
+@@ -66,6 +66,34 @@ void master_mutex_lock_cleanup(void *arg)
+ 	return;
+ }
+ 
++void map_module_writelock(struct map_source *map)
++{
++	int status = pthread_rwlock_wrlock(&map->module_lock);
++	if (status)
++		fatal(status);
++}
++
++void map_module_readlock(struct map_source *map)
++{
++	int status = pthread_rwlock_rdlock(&map->module_lock);
++	if (status)
++		fatal(status);
++}
++
++void map_module_unlock(struct map_source *map)
++{
++	int status = pthread_rwlock_unlock(&map->module_lock);
++	if (status)
++		fatal(status);
++}
++
++void map_module_lock_cleanup(void *arg)
++{
++	struct map_source *map = (struct map_source *) arg;
++
++	map_module_unlock(map);
++}
++
+ int master_add_autofs_point(struct master_mapent *entry, unsigned logopt,
+ 			    unsigned nobind, unsigned ghost, int submount)
+ {
+@@ -161,6 +189,7 @@ master_add_map_source(struct master_mapent *entry,
+ 	struct map_source *source;
+ 	char *ntype, *nformat;
+ 	const char **tmpargv;
++	int status;
+ 
+ 	source = malloc(sizeof(struct map_source));
+ 	if (!source)
+@@ -247,6 +276,10 @@ master_add_map_source(struct master_mapent *entry,
+ 
+ 	master_source_unlock(entry);
+ 
++	status = pthread_rwlock_init(&source->module_lock, NULL);
++	if (status)
++		fatal(status);
++
+ 	return source;
+ }
+ 
+@@ -336,6 +369,8 @@ master_get_map_source(struct master_mapent *entry,
+ 
+ static void __master_free_map_source(struct map_source *source, unsigned int free_cache)
+ {
++	int status;
++
+ 	/* instance map sources are not ref counted */
+ 	if (source->ref && --source->ref)
+ 		return;
+@@ -371,6 +406,10 @@ static void __master_free_map_source(struct map_source *source, unsigned int fre
+ 		}
+ 	}
+ 
++	status = pthread_rwlock_destroy(&source->module_lock);
++	if (status)
++		fatal(status);
++
+ 	free(source);
+ 
+ 	return;
+@@ -502,6 +541,10 @@ master_add_source_instance(struct map_source *source, const char *type, const ch
+ 	if (status)
+ 		fatal(status);
+ 
++	status = pthread_rwlock_init(&new->module_lock, NULL);
++	if (status)
++		fatal(status);
++
+ 	return new;
+ }
+ 
+diff --git a/include/master.h b/include/master.h
+index 2d727943..cea2e6e7 100644
+--- a/include/master.h
++++ b/include/master.h
+@@ -35,6 +35,7 @@ struct map_source {
+ 	unsigned int stale;
+ 	unsigned int recurse;
+ 	unsigned int depth;
++	pthread_rwlock_t module_lock;
+ 	struct lookup_mod *lookup;
+ 	int argc;
+ 	const char **argv;
+@@ -126,5 +127,9 @@ int __master_list_empty(struct master *);
+ int master_list_empty(struct master *);
+ int master_done(struct master *);
+ int master_kill(struct master *);
++void map_module_writelock(struct map_source *map);
++void map_module_readlock(struct map_source *map);
++void map_module_unlock(struct map_source *map);
++void map_module_lock_cleanup(void *arg);
+ 
+ #endif
+diff --git a/modules/parse_amd.c b/modules/parse_amd.c
+index 8274c5be..e4909d57 100644
+--- a/modules/parse_amd.c
++++ b/modules/parse_amd.c
+@@ -1365,14 +1365,6 @@ static int do_host_mount(struct autofs_point *ap, const char *name,
+ 		argc = 1;
+ 	}
+ 
+-	parse_instance_mutex_lock();
+-	status = open_lookup("hosts", MODPREFIX, NULL, argc, pargv, &lookup);
+-	if (status != NSS_STATUS_SUCCESS) {
+-		debug(ap->logopt, "open lookup module hosts failed");
+-		parse_instance_mutex_unlock();
+-		goto out;
+-	}
+-
+ 	instance = master_find_source_instance(source,
+ 					 "hosts", "sun", argc, pargv);
+ 	if (!instance) {
+@@ -1381,13 +1373,22 @@ static int do_host_mount(struct autofs_point *ap, const char *name,
+ 		if (!instance) {
+ 			error(ap->logopt, MODPREFIX
+ 			     "failed to create source instance for hosts map");
+-			parse_instance_mutex_unlock();
+ 			close_lookup(lookup);
+ 			goto out;
+ 		}
+ 	}
+-	instance->lookup = lookup;
+-	parse_instance_mutex_unlock();
++
++	map_module_writelock(instance);
++	if (!instance->lookup) {
++		status = open_lookup("hosts", MODPREFIX, NULL, argc, pargv, &lookup);
++		if (status != NSS_STATUS_SUCCESS) {
++			map_module_unlock(instance);
++			debug(ap->logopt, "open lookup module hosts failed");
++			goto out;
++		}
++		instance->lookup = lookup;
++	}
++	map_module_unlock(instance);
+ 
+ 	cache_writelock(source->mc);
+ 	me = cache_lookup_distinct(source->mc, name);
+@@ -1398,8 +1399,11 @@ static int do_host_mount(struct autofs_point *ap, const char *name,
+ 	master_source_current_wait(ap->entry);
+ 	ap->entry->current = source;
+ 
++	map_module_readlock(instance);
++	lookup = instance->lookup;
+ 	ret = lookup->lookup_mount(ap, entry->rhost,
+ 				   strlen(entry->rhost), lookup->context);
++	map_module_unlock(instance);
+ 
+ 	if (!strcmp(name, entry->rhost))
+ 		goto out;

@@ -1,0 +1,120 @@
+autofs-5.1.8 - internal SASL logging only in debug log mode
+
+From: Thomas Reim <reimth@gmail.com>
+
+Cyrus SASL library is known for useless error notifications of internal
+events that can and will be easily handled by the applications. By default
+automounter provides a logging callback to the SASL library, which displays
+annoying SASL error messages to users for internal library issues that do
+not harm SASL authentication operation.
+
+OpenLDAP only provides a logging callback to SASL library for its server
+application. Client side applications won't see any internal SASL
+notifcations.
+
+Choose a compromise and provide SASL internal logging messages only if user
+requests debug logging mode.
+
+Signed-off-by: Thomas Reim <reimth@gmail.com>
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG            |    1 +
+ include/log.h        |    2 ++
+ lib/log.c            |   10 ++++++++++
+ modules/cyrus-sasl.c |   16 ++++++++++++++--
+ 4 files changed, 27 insertions(+), 2 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index bf8fa2d0..ffdbe0f2 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -35,6 +35,7 @@
+ - configure: LDAP function checks ignore implicit declarations.
+ - improve debug logging of LDAP binds.
+ - improve debug logging of SASL binds.
++- internal SASL logging only in debug log mode.
+ 
+ 19/10/2021 autofs-5.1.8
+ - add xdr_exports().
+diff --git a/include/log.h b/include/log.h
+index 3ec8f0c1..f0733000 100644
+--- a/include/log.h
++++ b/include/log.h
+@@ -37,6 +37,8 @@ extern void set_log_verbose_ap(struct autofs_point *ap);
+ extern void set_log_debug_ap(struct autofs_point *ap);
+ extern void set_mnt_logging(unsigned global_logopt);
+ 
++extern unsigned int have_log_verbose(void);
++extern unsigned int have_log_debug(void);
+ extern int get_log_debug_level(void);
+ 
+ extern void open_log(void);
+diff --git a/lib/log.c b/lib/log.c
+index 9567460c..1c5b3da7 100644
+--- a/lib/log.c
++++ b/lib/log.c
+@@ -58,6 +58,16 @@ static char *prepare_attempt_prefix(const char *msg)
+ 	return prefixed_msg;
+ }
+ 
++unsigned int have_log_verbose(void)
++{
++	return do_verbose;
++}
++
++unsigned int have_log_debug(void)
++{
++	return do_debug;
++}
++
+ int get_log_debug_level(void)
+ {
+ 	return debug_level;
+diff --git a/modules/cyrus-sasl.c b/modules/cyrus-sasl.c
+index 6a95ef0c..c41f2174 100644
+--- a/modules/cyrus-sasl.c
++++ b/modules/cyrus-sasl.c
+@@ -109,6 +109,13 @@ static int getpass_func(sasl_conn_t *, void *, int, sasl_secret_t **);
+ static int getuser_func(void *, int, const char **, unsigned *);
+ 
+ static sasl_callback_t callbacks[] = {
++	{ SASL_CB_USER, &getuser_func, NULL },
++	{ SASL_CB_AUTHNAME, &getuser_func, NULL },
++	{ SASL_CB_PASS, &getpass_func, NULL },
++	{ SASL_CB_LIST_END, NULL, NULL },
++};
++
++static sasl_callback_t debug_callbacks[] = {
+ 	{ SASL_CB_LOG, &sasl_log_func, NULL },
+ 	{ SASL_CB_USER, &getuser_func, NULL },
+ 	{ SASL_CB_AUTHNAME, &getuser_func, NULL },
+@@ -136,7 +143,7 @@ sasl_log_func(void *context, int level, const char *message)
+ 	case SASL_LOG_DEBUG:
+ 	case SASL_LOG_TRACE:
+ 	case SASL_LOG_PASS:
+-		debug(LOGOPT_NONE, "%s", message);
++		log_debug(LOGOPT_NONE, "libsasl2: %s", message);
+ 		break;
+ 	default:
+ 		break;
+@@ -1247,6 +1254,7 @@ static void sasl_mutex_dispose(void *mutex __attribute__((unused)))
+  */
+ int autofs_sasl_client_init(unsigned logopt)
+ {
++	int result;
+ 
+ 	sasl_set_mutex(sasl_mutex_new,
+ 		       sasl_mutex_lock,
+@@ -1254,7 +1262,11 @@ int autofs_sasl_client_init(unsigned logopt)
+ 		       sasl_mutex_dispose);
+ 
+ 	/* Start up Cyrus SASL--only needs to be done at library load. */
+-	if (sasl_client_init(callbacks) != SASL_OK) {
++	if (have_log_debug())
++		result = sasl_client_init(debug_callbacks);
++	else
++		result = sasl_client_init(callbacks);
++	if (result != SASL_OK) {
+ 		error(logopt, "sasl_client_init failed");
+ 		return 0;
+ 	}

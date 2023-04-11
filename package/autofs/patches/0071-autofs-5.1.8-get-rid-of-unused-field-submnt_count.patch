@@ -1,0 +1,79 @@
+autofs-5.1.8 - get rid of unused field submnt_count
+
+From: Ian Kent <raven@themaw.net>
+
+The autofs mount point struct field submnt_count is present but not
+used, remove it.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG              |    1 +
+ daemon/automount.c     |    3 ---
+ daemon/master.c        |    1 -
+ include/automount.h    |    1 -
+ modules/mount_autofs.c |    2 --
+ 5 files changed, 1 insertion(+), 7 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index 03acab60..45fd9dde 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -68,6 +68,7 @@
+ - use device id to locate autofs_point when setting log priotity.
+ - add command pipe handling functions.
+ - switch to application wide command pipe.
++- get rid of unused field submnt_count.
+ 
+ 19/10/2021 autofs-5.1.8
+ - add xdr_exports().
+diff --git a/daemon/automount.c b/daemon/automount.c
+index 4d271fbc..0e43e942 100644
+--- a/daemon/automount.c
++++ b/daemon/automount.c
+@@ -1772,9 +1772,6 @@ static void handle_mounts_cleanup(void *arg)
+ 	if (submount) {
+ 		struct mnt_list *mnt;
+ 
+-		/* We are finishing up */
+-		ap->parent->submnt_count--;
+-
+ 		/* Submount at ap->path belongs to parent submount list. */
+ 		mnts_remove_submount(ap->path);
+ 		/* Also remove from parent mounted list */
+diff --git a/daemon/master.c b/daemon/master.c
+index c29dfc81..3c2ed9d2 100644
+--- a/daemon/master.c
++++ b/daemon/master.c
+@@ -158,7 +158,6 @@ int master_add_autofs_point(struct master_mapent *entry, unsigned logopt,
+ 
+ 	ap->parent = NULL;
+ 	ap->thid = 0;
+-	ap->submnt_count = 0;
+ 	ap->submount = submount;
+ 	INIT_LIST_HEAD(&ap->mounts);
+ 	INIT_LIST_HEAD(&ap->submounts);
+diff --git a/include/automount.h b/include/automount.h
+index 06e921e3..4792128a 100644
+--- a/include/automount.h
++++ b/include/automount.h
+@@ -572,7 +572,6 @@ struct autofs_point {
+ 	struct autofs_point *parent;	/* Owner of mounts list for submount */
+ 	struct list_head mounts;	/* List of autofs mounts at current level */
+ 	unsigned int submount;		/* Is this a submount */
+-	unsigned int submnt_count;	/* Number of submounts */
+ 	struct list_head submounts;	/* List of child submounts */
+ 	struct list_head amdmounts;	/* List of non submount amd mounts */
+ 	unsigned int shutdown;		/* Shutdown notification */
+diff --git a/modules/mount_autofs.c b/modules/mount_autofs.c
+index b2233573..9967d466 100644
+--- a/modules/mount_autofs.c
++++ b/modules/mount_autofs.c
+@@ -379,8 +379,6 @@ int mount_mount(struct autofs_point *ap, const char *root, const char *name,
+ 	}
+ 	nap->thid = thid;
+ 
+-	ap->submnt_count++;
+-
+ 	handle_mounts_startup_cond_destroy(&suc);
+ 
+ 	return 0;

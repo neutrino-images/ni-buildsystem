@@ -1,0 +1,578 @@
+autofs-5.1.8 - switch to application wide command pipe
+
+From: Ian Kent <raven@themaw.net>
+
+Switch to use the functions previously added to allow a single
+application wide command pipe to be used.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG           |    1 
+ daemon/automount.c  |  426 +++++++++------------------------------------------
+ daemon/master.c     |    2 
+ include/automount.h |    1 
+ modules/parse_sun.c |    1 
+ 5 files changed, 80 insertions(+), 351 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index 09b5b157..03acab60 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -67,6 +67,7 @@
+ - add function master_find_mapent_by_devid().
+ - use device id to locate autofs_point when setting log priotity.
+ - add command pipe handling functions.
++- switch to application wide command pipe.
+ 
+ 19/10/2021 autofs-5.1.8
+ - add xdr_exports().
+diff --git a/daemon/automount.c b/daemon/automount.c
+index 33301121..4d271fbc 100644
+--- a/daemon/automount.c
++++ b/daemon/automount.c
+@@ -79,10 +79,6 @@ const char *cmd_pipe_name = AUTOFS_FIFO_DIR "/" FIFO_NAME;
+ int start_cmd_pipe_handler(void);
+ void finish_cmd_pipe_handler(void);
+ 
+-/* autofs fifo name prefix */
+-#define FIFO_NAME_PREFIX "autofs.fifo"
+-const char *fifodir = AUTOFS_FIFO_DIR "/" FIFO_NAME_PREFIX;
+-
+ const char *global_options;		/* Global option, from command line */
+ 
+ static char *pid_file = NULL;		/* File in which to keep pid */
+@@ -816,319 +812,6 @@ static int fullread(int fd, void *ptr, size_t len)
+ 	return len;
+ }
+ 
+-static char *automount_path_to_fifo(unsigned logopt, const char *path)
+-{
+-	char *fifo_name, *p;
+-	int  name_len = strlen(path) + strlen(fifodir) + 1;
+-	int ret;
+-
+-	fifo_name = malloc(name_len);
+-	if (!fifo_name)
+-		return NULL;
+-	ret = snprintf(fifo_name, name_len, "%s%s", fifodir, path);
+-	if (ret >= name_len) {
+-		info(logopt,
+-		     "fifo path for \"%s\" truncated to \"%s\".  This may "
+-		     "lead to --set-log-priority commands being sent to the "
+-		     "wrong automount daemon.", path, fifo_name);
+-	}
+-
+-	/*
+-	 *  An automount path can be made up of subdirectories.  So, to
+-	 *  create the fifo name, we will just replace instances of '/' with
+-	 *  '-'. 
+-	 */
+-	p = fifo_name + strlen(fifodir);
+-	while (*p != '\0') {
+-		if (*p == '/')
+-			*p = '-';
+-		p++;
+-	}
+-
+-	debug(logopt, "fifo name %s",fifo_name);
+-
+-	return fifo_name;
+-}
+-
+-static int create_logpri_fifo(struct autofs_point *ap)
+-{
+-	int ret = -1;
+-	int fd;
+-	char *fifo_name;
+-	char buf[MAX_ERR_BUF];
+-
+-	fifo_name = automount_path_to_fifo(ap->logopt, ap->path);
+-	if (!fifo_name) {
+-		crit(ap->logopt, "Failed to allocate memory!");
+-		goto out_free; /* free(NULL) is okay */
+-	}
+-
+-	ret = unlink(fifo_name);
+-	if (ret != 0 && errno != ENOENT) {
+-		crit(ap->logopt,
+-		     "Failed to unlink FIFO. Is the automount daemon "
+-		     "already running?");
+-		goto out_free;
+-	}
+-
+-	ret = mkfifo(fifo_name, S_IRUSR|S_IWUSR);
+-	if (ret != 0) {
+-		char *estr = strerror_r(errno, buf, MAX_ERR_BUF);
+-		crit(ap->logopt,
+-		     "mkfifo for %s failed: %s", fifo_name, estr);
+-		goto out_free;
+-	}
+-
+-	fd = open_fd(fifo_name, O_RDWR|O_NONBLOCK);
+-	if (fd < 0) {
+-		unlink(fifo_name);
+-		ret = -1;
+-		goto out_free;
+-	}
+-
+-	ap->logpri_fifo = fd;
+-
+-out_free:
+-	free(fifo_name);
+-	return ret;
+-}
+-
+-int destroy_logpri_fifo(struct autofs_point *ap)
+-{
+-	int ret = -1;
+-	int fd = ap->logpri_fifo;
+-	char *fifo_name;
+-	char buf[MAX_ERR_BUF];
+-
+-	if (fd == -1)
+-		return 0;
+-
+-	fifo_name = automount_path_to_fifo(ap->logopt, ap->path);
+-	if (!fifo_name) {
+-		crit(ap->logopt, "Failed to allocate memory!");
+-		goto out_free; /* free(NULL) is okay */
+-	}
+-
+-	ap->logpri_fifo = -1;
+-
+-	ret = close(fd);
+-	if (ret != 0) {
+-		char *estr = strerror_r(errno, buf, MAX_ERR_BUF);
+-		warn(ap->logopt,
+-		     "close for fifo %s: %s", fifo_name, estr);
+-	}
+-
+-	ret = unlink(fifo_name);
+-	if (ret != 0) {
+-		warn(ap->logopt,
+-		     "Failed to unlink FIFO. Was the fifo created OK?");
+-	}
+-
+-out_free:
+-	free(fifo_name);
+-	return ret;
+-}
+-
+-static void cleanup_stale_logpri_fifo_pipes(void)
+-{
+-	size_t prefix_len = strlen(FIFO_NAME_PREFIX);
+-	char *dir = AUTOFS_FIFO_DIR;
+-	size_t dir_len = strlen(dir);
+-	struct dirent *dent;
+-	DIR *dfd;
+-	int ret;
+-
+-	dfd = opendir(dir);
+-	if (!dfd) {
+-		warn(LOGOPT_ANY, "failed to open fifo dir %s", dir);
+-		return;
+-	}
+-
+-	while ((dent = readdir(dfd))) {
+-		char fifo_path[PATH_MAX];
+-
+-		if (!(dent->d_type & DT_FIFO))
+-			continue;
+-		if (strncmp(FIFO_NAME_PREFIX, dent->d_name, prefix_len))
+-			continue;
+-		if ((dir_len + 1 + strlen(dent->d_name)) >= PATH_MAX) {
+-			warn(LOGOPT_ANY, "fifo path too long for buffer");
+-			continue;
+-		}
+-
+-		strcpy(fifo_path, dir);
+-		strcat(fifo_path, "/");
+-		strcat(fifo_path, dent->d_name);
+-
+-		ret = unlink(fifo_path);
+-		if (ret == -1) {
+-			char buf[MAX_ERR_BUF];
+-			char *estr = strerror_r(errno, buf, MAX_ERR_BUF);
+-			warn(LOGOPT_ANY, "unlink of fifo failed: %s", estr);
+-		}
+-	}
+-
+-	closedir(dfd);
+-}
+-
+-static void handle_fifo_message(int fd)
+-{
+-	struct autofs_point *ap;
+-	int ret;
+-	char buffer[PIPE_BUF];
+-	char *end, *sep;
+-	long pri;
+-	char buf[MAX_ERR_BUF];
+-	dev_t devid;
+-
+-	memset(buffer, 0, sizeof(buffer));
+-	ret = read(fd, &buffer, sizeof(buffer));
+-	if (ret < 0) {
+-		char *estr = strerror_r(errno, buf, MAX_ERR_BUF);
+-		warn(LOGOPT_ANY, "read on fifo returned error: %s", estr);
+-		return;
+-	}
+-
+-	sep = strrchr(buffer, ' ');
+-	if (!sep) {
+-		error(LOGOPT_ANY, "Incorrect cmd message format %s.", buffer);
+-		return;
+-	}
+-	sep++;
+-
+-	errno = 0;
+-	devid = strtol(buffer, &end, 10);
+-	if ((devid == LONG_MIN || devid == LONG_MAX) && errno == ERANGE) {
+-		debug(LOGOPT_ANY, "strtol reported a range error.");
+-		error(LOGOPT_ANY, "Invalid cmd message format %s.", buffer);
+-		return;
+-	}
+-	if ((devid == 0 && errno == EINVAL) || end == buffer) {
+-		debug(LOGOPT_ANY, "devid id is expected to be a integer.");
+-		return;
+-	}
+-
+-	ap = master_find_mapent_by_devid(master_list, devid);
+-	if (!ap) {
+-		error(LOGOPT_ANY, "Can't locate autofs_point for device id %ld.", devid);
+-		return;
+-	}
+-
+-	errno = 0;
+-	pri = strtol(sep, &end, 10);
+-	if ((pri == LONG_MIN || pri == LONG_MAX) && errno == ERANGE) {
+-		debug(ap->logopt, "strtol reported an %s.  Failed to set "
+-		      "log priority.", pri == LONG_MIN ? "underflow" : "overflow");
+-		return;
+-	}
+-	if ((pri == 0 && errno == EINVAL) || end == sep) {
+-		debug(ap->logopt, "priority is expected to be an integer "
+-		      "in the range 0-7 inclusive.");
+-		return;
+-	}
+-
+-	if (pri > LOG_DEBUG || pri < LOG_EMERG) {
+-		debug(ap->logopt, "invalid log priority (%ld) received "
+-		      "on fifo", pri);
+-		return;
+-	}
+-
+-	/*
+-	 * OK, the message passed all of the sanity checks.  The
+-	 * automounter actually only supports three log priorities.
+-	 * Everything is logged at log level debug, deamon messages
+-	 * and everything except debug messages are logged with the
+-	 * verbose setting and only error and critical messages are
+-	 * logged when debugging isn't enabled.
+-	 */
+-	if (pri >= LOG_WARNING) {
+-		if (pri == LOG_DEBUG) {
+-			set_log_debug_ap(ap);
+-			info(ap->logopt, "Debug logging set for %s", ap->path);
+-		} else {
+-			set_log_verbose_ap(ap);
+-			info(ap->logopt, "Verbose logging set for %s", ap->path);
+-		}
+-	} else {
+-		if (ap->logopt & LOGOPT_ANY)
+-			info(ap->logopt, "Basic logging set for %s", ap->path);
+-		set_log_norm_ap(ap);
+-	}
+-}
+-
+-static int set_log_priority(const char *path, int priority)
+-{
+-	struct ioctl_ops *ops = get_ioctl_ops();
+-	int fd;
+-	char *fifo_name;
+-	char buf[FIFO_BUF_SIZE];
+-	int ret;
+-	dev_t devid;
+-
+-	if (!ops) {
+-		fprintf(stderr, "Could not get ioctl ops\n");
+-		return -1;
+-	} else {
+-		ret = ops->mount_device(LOGOPT_ANY, path, 0, &devid);
+-		if (ret == -1 || ret == 0) {
+-			fprintf(stderr,
+-				"Could not find device id for mount %s\n", path);
+-			return -1;
+-		}
+-	}
+-
+-	if (priority > LOG_DEBUG || priority < LOG_EMERG) {
+-		fprintf(stderr, "Log priority %d is invalid.\n", priority);
+-		fprintf(stderr, "Please specify a number in the range 0-7.\n");
+-		return -1;
+-	}
+-
+-	/*
+-	 * This is an ascii based protocol, so we want the string
+-	 * representation of the integer log priority.
+-	 */
+-	ret = snprintf(buf, sizeof(buf), "%ld %d", devid, priority);
+-	if (ret >= FIFO_BUF_SIZE) {
+-		fprintf(stderr, "Invalid device id or log priotity\n");
+-		return -1;
+-	}
+-
+-	fifo_name = automount_path_to_fifo(LOGOPT_NONE, path);
+-	if (!fifo_name) {
+-		fprintf(stderr, "%s: Failed to allocate memory!\n",
+-			__FUNCTION__);
+-		return -1;
+-	}
+-
+-	/*
+-	 * Specify O_NONBLOCK so that the open will fail if there is no
+-	 * daemon reading from the other side of the FIFO.
+-	 */
+-	fd = open_fd(fifo_name, O_WRONLY|O_NONBLOCK);
+-	if (fd < 0) {
+-		fprintf(stderr, "%s: open of %s failed with %s\n",
+-			__FUNCTION__, fifo_name, strerror(errno));
+-		fprintf(stderr, "%s: perhaps the fifo wasn't setup,"
+-			" please check your log for more information\n", __FUNCTION__);
+-		free(fifo_name);
+-		return -1;
+-	}
+-
+-	if (write(fd, buf, sizeof(buf)) != sizeof(buf)) {
+-		fprintf(stderr, "Failed to change logging priority.  ");
+-		fprintf(stderr, "write to fifo failed: %s.\n",
+-			strerror(errno));
+-		close(fd);
+-		free(fifo_name);
+-		return -1;
+-	}
+-	close(fd);
+-	free(fifo_name);
+-	fprintf(stdout, "Successfully set log priority for %s.\n", path);
+-
+-	return 0;
+-}
+-
+ static void dummy(int sig)
+ {
+ }
+@@ -1137,18 +820,14 @@ static int get_pkt(struct autofs_point *ap, union autofs_v5_packet_union *pkt)
+ {
+ 	struct sigaction sa;
+ 	sigset_t signalset;
+-	struct pollfd fds[2];
+-	int pollfds = 2;
++	struct pollfd fds[1];
++	int pollfds = 1;
+ 	char buf[MAX_ERR_BUF];
+ 	size_t read;
+ 	char *estr;
+ 
+ 	fds[0].fd = ap->pipefd;
+ 	fds[0].events = POLLIN;
+-	fds[1].fd = ap->logpri_fifo;
+-	fds[1].events = POLLIN;
+-	if (fds[1].fd  == -1)
+-		pollfds--;
+ 
+ 	sa.sa_handler = dummy;
+ 	sigemptyset(&sa.sa_mask);
+@@ -1187,11 +866,6 @@ static int get_pkt(struct autofs_point *ap, union autofs_v5_packet_union *pkt)
+ 			}
+ 			return read;
+ 		}
+-
+-		if (fds[1].fd != -1 && fds[1].revents & POLLIN) {
+-			debug(ap->logopt, "message pending on control fifo.");
+-			handle_fifo_message(fds[1].fd);
+-		}
+ 	}
+ }
+ 
+@@ -1253,11 +927,6 @@ static int autofs_init_ap(struct autofs_point *ap)
+ 	ap->pipefd = pipefd[0];
+ 	ap->kpipefd = pipefd[1];
+ 
+-	if (create_logpri_fifo(ap) < 0) {
+-		logmsg("could not create FIFO for path %s\n", ap->path);
+-		logmsg("dynamic log level changes not available for %s", ap->path);
+-	}
+-
+ 	return 0;
+ }
+ 
+@@ -1278,11 +947,6 @@ static int mount_autofs(struct autofs_point *ap, const char *root)
+ 	else
+ 		status = mount_autofs_indirect(ap, root);
+ 
+-	if (status < 0) {
+-		destroy_logpri_fifo(ap);
+-		return -1;
+-	}
+-
+ 	st_add_task(ap, ST_READY);
+ 
+ 	return status;
+@@ -1868,6 +1532,68 @@ static void handle_cmd_pipe_fifo_message(int fd)
+ 	}
+ }
+ 
++static int set_log_priority(const char *path, int priority)
++{
++	struct ioctl_ops *ops = get_ioctl_ops();
++	char buf[FIFO_BUF_SIZE];
++	dev_t devid;
++	int fd;
++	int ret;
++
++	if (!ops) {
++		fprintf(stderr, "Could not get ioctl ops\n");
++		return -1;
++	} else {
++		ret = ops->mount_device(LOGOPT_ANY, path, 0, &devid);
++		if (ret == -1 || ret == 0) {
++			fprintf(stderr,
++				"Could not find device id for mount %s\n", path);
++			return -1;
++		}
++	}
++
++	if (priority > LOG_DEBUG || priority < LOG_EMERG) {
++		fprintf(stderr, "Log priority %d is invalid.\n", priority);
++		fprintf(stderr, "Please specify a number in the range 0-7.\n");
++		return -1;
++	}
++
++	/*
++	 * This is an ascii based protocol, so we want the string
++	 * representation of the integer log priority.
++	 */
++	ret = snprintf(buf, sizeof(buf), "%ld %d", devid, priority);
++	if (ret >= FIFO_BUF_SIZE) {
++		fprintf(stderr, "Invalid device id or log priotity\n");
++		return -1;
++	}
++
++	/*
++	 * Specify O_NONBLOCK so that the open will fail if there is no
++	 * daemon reading from the other side of the FIFO.
++	 */
++	fd = open_fd(cmd_pipe_name, O_WRONLY|O_NONBLOCK);
++	if (fd < 0) {
++		fprintf(stderr, "%s: open of %s failed with %s\n",
++			__FUNCTION__, cmd_pipe_name, strerror(errno));
++		fprintf(stderr, "%s: perhaps the fifo wasn't setup,"
++			" please check your log for more information\n", __FUNCTION__);
++		return -1;
++	}
++
++	if (write(fd, buf, sizeof(buf)) != sizeof(buf)) {
++		fprintf(stderr, "Failed to change logging priority.  ");
++		fprintf(stderr, "write to fifo failed: %s.\n",
++			strerror(errno));
++		close(fd);
++		return -1;
++	}
++	close(fd);
++	fprintf(stdout, "Successfully set log priority for %s.\n", path);
++
++	return 0;
++}
++
+ static void cmd_pipe_dummy(int sig)
+ {
+ }
+@@ -2066,8 +1792,6 @@ static void handle_mounts_cleanup(void *arg)
+ 
+ 	info(logopt, "shut down path %s", ap->path);
+ 
+-	destroy_logpri_fifo(ap);
+-
+ 	/*
+ 	 * Submounts are detached threads and don't belong to the
+ 	 * master map entry list so we need to free their resources
+@@ -3003,6 +2727,18 @@ int main(int argc, char *argv[])
+ 
+ 	init_ioctl_ctl();
+ 
++	if (!start_cmd_pipe_handler()) {
++		logerr("%s: failed to create command pipe handler thread!", program);
++		master_kill(master_list);
++		if (start_pipefd[1] != -1) {
++			res = write(start_pipefd[1], pst_stat, sizeof(*pst_stat));
++			close(start_pipefd[1]);
++		}
++		release_flag_file();
++		macro_free_global_table();
++		exit(1);
++	}
++
+ 	if (!alarm_start_handler()) {
+ 		logerr("%s: failed to create alarm handler thread!", program);
+ 		master_kill(master_list);
+@@ -3068,13 +2804,7 @@ int main(int argc, char *argv[])
+ 		}
+ 	}
+ 
+-	/* If the option to unlink all autofs mounts and exit has
+-	 * been given remove logpri fifo pipe files as all the mounts
+-	 * will be detached leaving them stale.
+-	 */
+-	if (do_force_unlink & UNLINK_AND_EXIT)
+-		cleanup_stale_logpri_fifo_pipes();
+-	else {
++	if (!(do_force_unlink & UNLINK_AND_EXIT)) {
+ 		/*
+ 		 * Mmm ... reset force unlink umount so we don't also do
+ 		 * this in future when we receive a HUP signal.
+@@ -3098,6 +2828,8 @@ int main(int argc, char *argv[])
+ 
+ 	master_kill(master_list);
+ 
++	finish_cmd_pipe_handler();
++
+ 	if (pid_file) {
+ 		unlink(pid_file);
+ 		pid_file = NULL;
+diff --git a/daemon/master.c b/daemon/master.c
+index 366fb622..c29dfc81 100644
+--- a/daemon/master.c
++++ b/daemon/master.c
+@@ -113,8 +113,6 @@ int master_add_autofs_point(struct master_mapent *entry, unsigned logopt,
+ 
+ 	ap->state = ST_INIT;
+ 
+-	ap->logpri_fifo = -1;
+-
+ 	ap->path = strdup(entry->path);
+ 	if (!ap->path) {
+ 		free(ap);
+diff --git a/include/automount.h b/include/automount.h
+index 404777a2..06e921e3 100644
+--- a/include/automount.h
++++ b/include/automount.h
+@@ -557,7 +557,6 @@ struct autofs_point {
+ 	int pipefd;			/* File descriptor for pipe */
+ 	int kpipefd;			/* Kernel end descriptor for pipe */
+ 	int ioctlfd;			/* File descriptor for ioctls */
+-	int logpri_fifo;		/* FIFO used for changing log levels */
+ 	dev_t dev;			/* "Device" number assigned by kernel */
+ 	struct master_mapent *entry;	/* Master map entry for this mount */
+ 	unsigned int type;		/* Type of map direct or indirect */
+diff --git a/modules/parse_sun.c b/modules/parse_sun.c
+index 74ac4712..09ec6d4d 100644
+--- a/modules/parse_sun.c
++++ b/modules/parse_sun.c
+@@ -82,7 +82,6 @@ static struct parse_context default_context = {
+ 	1			/* Do slashify_colons */
+ };
+ 
+-int destroy_logpri_fifo(struct autofs_point *ap);
+ static char *concat_options(char *left, char *right);
+ 
+ /* Free all storage associated with this context */

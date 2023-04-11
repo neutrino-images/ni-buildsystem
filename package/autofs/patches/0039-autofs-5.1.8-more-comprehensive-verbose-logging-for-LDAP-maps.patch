@@ -1,0 +1,120 @@
+autofs-5.1.8 - more comprehensive verbose logging for LDAP maps
+
+From: Thomas Reim <reimth@gmail.com>
+
+Current logging of LDAP map lookups in verbose mode is not very
+comprehensive. It's not clear for what purpose connections to the LDAP
+directory are made as the only result that will be reported is the autofs
+mount point creation.
+
+Inform users about the intention of the LDAP directory access in verbose
+mode.
+
+Signed-off-by: Thomas Reim <reimth@gmail.com>
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG             |    1 +
+ daemon/lookup.c       |   20 ++++++++++----------
+ modules/lookup_ldap.c |    4 ++--
+ 3 files changed, 13 insertions(+), 12 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index ffdbe0f2..e3077844 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -36,6 +36,7 @@
+ - improve debug logging of LDAP binds.
+ - improve debug logging of SASL binds.
+ - internal SASL logging only in debug log mode.
++- more comprehensive verbose logging for LDAP maps.
+ 
+ 19/10/2021 autofs-5.1.8
+ - add xdr_exports().
+diff --git a/daemon/lookup.c b/daemon/lookup.c
+index 4a286d6b..b2fd488e 100644
+--- a/daemon/lookup.c
++++ b/daemon/lookup.c
+@@ -169,7 +169,7 @@ int lookup_nss_read_master(struct master *master, time_t age)
+ 	/* If it starts with a '/' it has to be a file or LDAP map */
+ 	if (*master->name == '/') {
+ 		if (*(master->name + 1) == '/') {
+-			debug(logopt, "reading master ldap %s", master->name);
++			info(logopt, "reading ldap master %s", master->name);
+ 			result = do_read_master(master, "ldap", age);
+ 		} else {
+ 			debug(logopt, "reading master file %s", master->name);
+@@ -215,7 +215,7 @@ int lookup_nss_read_master(struct master *master, time_t age)
+ 				 */
+ 				if (strncmp(name, "ldap", 4)) {
+ 					master->name = tmp + 1;
+-					debug(logopt, "reading master %s %s",
++					info(logopt, "reading %s master %s",
+ 					      source, master->name);
+ 				} else {
+ 					master->name = name;
+@@ -260,8 +260,8 @@ int lookup_nss_read_master(struct master *master, time_t age)
+ 		    strncmp(this->source, "sss", 3))
+ 			continue;
+ 
+-		debug(logopt,
+-		      "reading master %s %s", this->source, master->name);
++		info(logopt,
++		      "reading %s master %s", this->source, master->name);
+ 
+ 		result = read_master_map(master, this->source, age);
+ 
+@@ -549,8 +549,8 @@ int lookup_nss_read_map(struct autofs_point *ap, struct map_source *source, time
+ 			if (!strncmp(map->type, "multi", 5))
+ 				debug(ap->logopt, "reading multi map");
+ 			else
+-				debug(ap->logopt,
+-				      "reading map %s %s",
++				info(ap->logopt,
++				      "reading %s map %s",
+ 				       map->type, map->argv[0]);
+ 			result = lookup_map_read_map(ap, map, age);
+ 			map = map->next;
+@@ -566,8 +566,8 @@ int lookup_nss_read_map(struct autofs_point *ap, struct map_source *source, time
+ 					continue;
+ 				}
+ 				map->type = tmp;
+-				debug(ap->logopt,
+-				      "reading map %s %s", tmp, map->argv[0]);
++				info(ap->logopt,
++				      "reading %s map %s", tmp, map->argv[0]);
+ 				result = do_read_map(ap, map, age);
+ 			} else {
+ 				debug(ap->logopt,
+@@ -602,8 +602,8 @@ int lookup_nss_read_map(struct autofs_point *ap, struct map_source *source, time
+ 				continue;
+ 			}
+ 
+-			debug(ap->logopt,
+-			      "reading map %s %s", this->source, map->argv[0]);
++			info(ap->logopt,
++			      "reading %s map %s", this->source, map->argv[0]);
+ 
+ 			result = read_map_source(this, ap, map, age);
+ 			if (result == NSS_STATUS_UNKNOWN)
+diff --git a/modules/lookup_ldap.c b/modules/lookup_ldap.c
+index a2d1d587..b0a28f10 100644
+--- a/modules/lookup_ldap.c
++++ b/modules/lookup_ldap.c
+@@ -2624,7 +2624,7 @@ static int do_get_entries(struct ldap_search_params *sp, struct map_source *sour
+ 	e = ldap_first_entry(sp->ldap, sp->result);
+ 	if (!e) {
+ 		debug(ap->logopt,
+-		      MODPREFIX "query succeeded, no matches for %s",
++		      MODPREFIX "query succeeded, no matches for query %s",
+ 		      sp->query);
+ 		ret = ldap_parse_result(sp->ldap, sp->result,
+ 					&rv, NULL, NULL, NULL, NULL, 0);
+@@ -2647,7 +2647,7 @@ static int do_get_entries(struct ldap_search_params *sp, struct map_source *sour
+ 			e = ldap_next_entry(sp->ldap, e);
+ 			if (!e) {
+ 				debug(ap->logopt, MODPREFIX
+-				      "failed to get next entry for query %s",
++				      "query succeeded, no more matches for query %s",
+ 				      sp->query);
+ 				ret = ldap_parse_result(sp->ldap,
+ 							sp->result, &rv,

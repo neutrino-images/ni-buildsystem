@@ -1,0 +1,67 @@
+autofs-5.1.8 - rename statemachine() to signal_handler()
+
+From: Ian Kent <raven@themaw.net>
+
+Rename function statemachine() to signal_handler() to align with what
+the function actually does.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG          |    1 +
+ daemon/automount.c |   10 +++++-----
+ 2 files changed, 6 insertions(+), 5 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index 67eec269..27e706a0 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -61,6 +61,7 @@
+ - fix deadlock in lookups.
+ - dont delay expire.
+ - make amd mapent search function name clear.
++- rename statemachine() to signal_handler().
+ 
+ 19/10/2021 autofs-5.1.8
+ - add xdr_exports().
+diff --git a/daemon/automount.c b/daemon/automount.c
+index 67fdd8ab..0df82315 100644
+--- a/daemon/automount.c
++++ b/daemon/automount.c
+@@ -85,7 +85,7 @@ int do_force_unlink = 0;		/* Forceably unlink mount tree at startup */
+ static int start_pipefd[2] = {-1, -1};
+ static int st_stat = 1;
+ static int *pst_stat = &st_stat;
+-static pthread_t state_mach_thid;
++static pthread_t signal_handler_thid;
+ 
+ static sigset_t block_sigs;
+ 
+@@ -1613,7 +1613,7 @@ static int do_hup_signal(struct master *master)
+ }
+ 
+ /* Deal with all the signal-driven events in the state machine */
+-static void *statemachine(void *arg)
++static void *signal_handler(void *arg)
+ {
+ 	sigset_t signalset;
+ 	int sig;
+@@ -1800,7 +1800,7 @@ static void handle_mounts_cleanup(void *arg)
+ 	 * perform final cleanup.
+ 	 */
+ 	if (!submount && !pending)
+-		pthread_kill(state_mach_thid, SIGTERM);
++		pthread_kill(signal_handler_thid, SIGTERM);
+ 
+ 	master_mutex_unlock();
+ 
+@@ -2796,8 +2796,8 @@ int main(int argc, char *argv[])
+ 			sd_notify(1, "READY=1");
+ #endif
+ 
+-		state_mach_thid = pthread_self();
+-		statemachine(NULL);
++		signal_handler_thid = pthread_self();
++		signal_handler(NULL);
+ 	}
+ 
+ 	master_kill(master_list);

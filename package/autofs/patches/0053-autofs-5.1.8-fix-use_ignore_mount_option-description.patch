@@ -1,0 +1,62 @@
+autofs-5.1.8 - fix use_ignore_mount_option description
+
+From: Ian Kent <raven@themaw.net>
+
+Fix a couple of grammer problem with the configuration setting
+use_ignore_mount_option description.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG                      |    1 +
+ redhat/autofs.conf.default.in  |    4 ++--
+ samples/autofs.conf.default.in |    4 ++--
+ 3 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index 4658deed..b22edc63 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -50,6 +50,7 @@
+ - fix minus only option handling in concat_options().
+ - fix incorrect path for is_mounted() in try_remount().
+ - fix additional tsv invalid access.
++- fix use_ignore_mount_option description.
+ 
+ 19/10/2021 autofs-5.1.8
+ - add xdr_exports().
+diff --git a/redhat/autofs.conf.default.in b/redhat/autofs.conf.default.in
+index 9cca906f..766878a4 100644
+--- a/redhat/autofs.conf.default.in
++++ b/redhat/autofs.conf.default.in
+@@ -192,11 +192,11 @@ mount_nfs_default_protocol = 4
+ #disable_not_found_message = "no"
+ #
+ # use_ignore_mount_option - This option is used to enable the use of autofs
+-#			pseudo option "disable". This option is used as a
++#			pseudo option "ignore". This option is used as a
+ #			hint to user space that the mount entry should be
+ #			ommitted from mount table listings. The default is
+ #			"no" to avoid unexpected changes in behaviour and
+-#			so is an opt-in setting.
++#			is an opt-in setting.
+ #
+ #use_ignore_mount_option = no
+ #
+diff --git a/samples/autofs.conf.default.in b/samples/autofs.conf.default.in
+index 8f80e87b..56240c99 100644
+--- a/samples/autofs.conf.default.in
++++ b/samples/autofs.conf.default.in
+@@ -191,11 +191,11 @@ browse_mode = no
+ #disable_not_found_message = "no"
+ #
+ # use_ignore_mount_option - This option is used to enable the use of autofs
+-#			pseudo option "disable". This option is used as a
++#			pseudo option "ignore". This option is used as a
+ #			hint to user space that the mount entry should be
+ #			ommitted from mount table listings. The default is
+ #			"no" to avoid unexpected changes in behaviour and
+-#			so is an opt-in setting.
++#			is an opt-in setting.
+ #
+ #use_ignore_mount_option = no
+ #

@@ -1,0 +1,81 @@
+autofs-5.1.8 - make signal handling consistent
+
+From: Ian Kent <raven@themaw.net>
+
+There's a mixture of usage of sigprocmask() and pthread_sigmask(), change
+to use the pthread versions of this for correctness.
+
+The only exception to this is reset_signals() which is done in a forked
+process that is single threaded so it's valid to keep them as they are.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG          |    1 +
+ daemon/automount.c |    8 ++++----
+ daemon/spawn.c     |    1 -
+ 3 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index 27e706a0..087dff58 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -62,6 +62,7 @@
+ - dont delay expire.
+ - make amd mapent search function name clear.
+ - rename statemachine() to signal_handler().
++- make signal handling consistent.
+ 
+ 19/10/2021 autofs-5.1.8
+ - add xdr_exports().
+diff --git a/daemon/automount.c b/daemon/automount.c
+index 0df82315..624d3349 100644
+--- a/daemon/automount.c
++++ b/daemon/automount.c
+@@ -2250,7 +2250,7 @@ static void do_master_list_reset(struct master *master)
+ 
+ static int do_master_read_master(struct master *master, time_t *age, int wait)
+ {
+-	sigset_t signalset;
++	sigset_t signalset, savesigset;
+ 	/* Wait must be at least 1 second */
+ 	unsigned int retry_wait = 2;
+ 	unsigned int elapsed = 0;
+@@ -2261,7 +2261,7 @@ static int do_master_read_master(struct master *master, time_t *age, int wait)
+ 	sigaddset(&signalset, SIGTERM);
+ 	sigaddset(&signalset, SIGINT);
+ 	sigaddset(&signalset, SIGHUP);
+-	sigprocmask(SIG_UNBLOCK, &signalset, NULL);
++	pthread_sigmask(SIG_UNBLOCK, &signalset, &savesigset);
+ 
+ 	while (1) {
+ 		struct timespec t = { retry_wait, 0 };
+@@ -2287,7 +2287,7 @@ static int do_master_read_master(struct master *master, time_t *age, int wait)
+ 		}
+ 	}
+ 
+-	sigprocmask(SIG_BLOCK, &signalset, NULL);
++	pthread_sigmask(SIG_SETMASK, &savesigset, NULL);
+ 
+ 	return ret;
+ }
+@@ -2336,7 +2336,7 @@ int main(int argc, char *argv[])
+ 	sigdelset(&block_sigs, SIGILL);
+ 	sigdelset(&block_sigs, SIGFPE);
+ 	sigdelset(&block_sigs, SIGTRAP);
+-	sigprocmask(SIG_BLOCK, &block_sigs, NULL);
++	pthread_sigmask(SIG_BLOCK, &block_sigs, NULL);
+ 
+ 	program = argv[0];
+ 
+diff --git a/daemon/spawn.c b/daemon/spawn.c
+index 85f7959c..452a18d0 100644
+--- a/daemon/spawn.c
++++ b/daemon/spawn.c
+@@ -46,7 +46,6 @@ void dump_core(void)
+ 	sigemptyset(&segv);
+ 	sigaddset(&segv, SIGSEGV);
+ 	pthread_sigmask(SIG_UNBLOCK, &segv, NULL);
+-	sigprocmask(SIG_UNBLOCK, &segv, NULL);
+ 
+ 	raise(SIGSEGV);
+ }
