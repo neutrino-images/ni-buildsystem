@@ -29,7 +29,6 @@ endef
 CD    = set -e; cd
 CHDIR = $(CD) $(BUILD_DIR)
 MKDIR = $(INSTALL) -d $(BUILD_DIR)
-CPDIR = cp -a -t $(BUILD_DIR) $(DL_DIR)
 SED   = $(shell which sed || type -p sed || echo sed) -i -e
 
 GET_GIT_ARCHIVE = support/scripts/get-git-archive.sh
