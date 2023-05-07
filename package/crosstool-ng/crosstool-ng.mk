@@ -11,7 +11,7 @@ CROSSTOOL_NG_SITE = https://github.com/crosstool-ng
 
 CROSSTOOL_NG_DEPENDENCIES = kernel-tarball kernel-headers
 
-CROSSTOOL_NG_CHECKOUT = tags/crosstool-ng-1.25.0
+CROSSTOOL_NG_CHECKOUT = 1adc236
 
 CROSSTOOL_NG_CONFIG = $(PKG_FILES_DIR)/crosstool-ng-$(BOXTYPE).config
 CROSSTOOL_NG_BUILD_CONFIG = $(PKG_BUILD_DIR)/.config
