@@ -4,14 +4,13 @@
 #
 ################################################################################
 
-UDPXY_VERSION = git
-UDPXY_DIR = udpxy.$(UDPXY_VERSION)
-UDPXY_SOURCE = udpxy.$(UDPXY_VERSION)
+UDPXY_VERSION = tags/1.0-25.1
+UDPXY_DIR = udpxy.git
+UDPXY_SOURCE = udpxy.git
 UDPXY_SITE = https://github.com/pcherenkov
+UDPXY_SITE_METHOD = git
 
 UDPXY_SUBDIR = chipmunk
-
-UDPXY_CHECKOUT = tags/1.0-25.1
 
 UDPXY_MAKE_ENV = \
 	$(TARGET_CONFIGURE_ENV)

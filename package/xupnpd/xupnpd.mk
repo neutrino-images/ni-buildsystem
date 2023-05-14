@@ -4,14 +4,13 @@
 #
 ################################################################################
 
-XUPNPD_VERSION = git
-XUPNPD_DIR = xupnpd.$(XUPNPD_VERSION)
-XUPNPD_SOURCE = xupnpd.$(XUPNPD_VERSION)
+XUPNPD_VERSION = 25d6d44
+XUPNPD_DIR = xupnpd.git
+XUPNPD_SOURCE = xupnpd.git
 XUPNPD_SITE = https://github.com/clark15b
+XUPNPD_SITE_METHOD = git
 
 XUPNPD_SUBDIR = src
-
-XUPNPD_CHECKOUT = 25d6d44
 
 XUPNPD_DEPENDENCIES = lua openssl
 

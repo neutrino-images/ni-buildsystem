@@ -4,10 +4,11 @@
 #
 ################################################################################
 
-RTMPDUMP_VERSION = ni-git
+RTMPDUMP_VERSION = master
 RTMPDUMP_DIR = $(NI_RTMPDUMP)
 RTMPDUMP_SOURCE = $(NI_RTMPDUMP)
 RTMPDUMP_SITE = https://github.com/neutrino-images
+RTMPDUMP_SITE_METHOD = ni-git
 
 RTMPDUMP_DEPENDENCIES = zlib openssl
 

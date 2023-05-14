@@ -4,10 +4,11 @@
 #
 ################################################################################
 
-CA_BUNDLE_VERSION = curl-controlled
+CA_BUNDLE_VERSION =
 CA_BUNDLE_DIR =
 CA_BUNDLE_SOURCE = cacert.pem
 CA_BUNDLE_SITE = https://curl.se/ca
+CA_BUNDLE_SITE_METHOD = curl
 
 CA_BUNDLE_CERTS_DIR = $(sysconfdir)/ssl/certs
 CA_BUNDLE_CERT = ca-certificates.crt

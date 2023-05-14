@@ -4,10 +4,11 @@
 #
 ################################################################################
 
-OFGWRITE_VERSION = ni-git
+OFGWRITE_VERSION = master
 OFGWRITE_DIR = $(NI_OFGWRITE)
 OFGWRITE_SOURCE = $(NI_OFGWRITE)
 OFGWRITE_SITE = https://github.com/neutrino-images
+OFGWRITE_SITE_METHOD = ni-git
 
 OFGWRITE_MAKE_ENV = \
 	$(TARGET_CONFIGURE_ENV)

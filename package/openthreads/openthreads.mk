@@ -4,10 +4,11 @@
 #
 ################################################################################
 
-OPENTHREADS_VERSION = ni-git
+OPENTHREADS_VERSION = master
 OPENTHREADS_DIR = $(NI_OPENTHREADS)
 OPENTHREADS_SOURCE = $(NI_OPENTHREADS)
 OPENTHREADS_SITE = https://github.com/neutrino-images
+OPENTHREADS_SITE_METHOD = ni-git
 
 OPENTHREADS_CONF_OPTS = \
 	-DCMAKE_SUPPRESS_DEVELOPER_WARNINGS="1" \

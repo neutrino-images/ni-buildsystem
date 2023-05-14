@@ -4,10 +4,11 @@
 #
 ################################################################################
 
-FIRMWARE_VERSION = ni-git
+FIRMWARE_VERSION = master
 FIRMWARE_DIR = $(NI_DRIVERS_BIN)
 FIRMWARE_SOURCE = $(NI_DRIVERS_BIN)
 FIRMWARE_SITE = https://github.com/neutrino-images
+FIRMWARE_SITE_METHOD = ni-git
 
 define FIRMWARE_INSTALL
 	$(call INSTALL_EXIST,$(SOURCE_DIR)/$(NI_DRIVERS_BIN)/$(DRIVERS_BIN_DIR)/lib-firmware/.,$(TARGET_base_libdir)/firmware)

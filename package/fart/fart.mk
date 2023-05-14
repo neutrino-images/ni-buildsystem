@@ -4,10 +4,11 @@
 #
 ################################################################################
 
-FART_VERSION = git
-FART_DIR = fart-it.$(LUA_CURL_VERSION)
-FART_SOURCE = fart-it.$(LUA_CURL_VERSION)
+FART_VERSION = master
+FART_DIR = fart-it.git
+FART_SOURCE = fart-it.git
 FART_SITE = https://github.com/lionello
+FART_SITE_METHOD = git
 
 define FART_BUILD_CMDS
 	$(CHDIR)/$($(PKG)_DIR); \

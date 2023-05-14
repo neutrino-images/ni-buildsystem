@@ -4,14 +4,13 @@
 #
 ################################################################################
 
-FFMPEG2_VERSION = ni-git
+FFMPEG2_VERSION = $(BS_PACKAGE_FFMPEG2_BRANCH)
 FFMPEG2_DIR = $(NI_FFMPEG)
 FFMPEG2_SOURCE = $(NI_FFMPEG)
 FFMPEG2_SITE = https://github.com/neutrino-images
+FFMPEG2_SITE_METHOD = ni-git
 
 FFMPEG2_DEPENDENCIES = openssl rtmpdump libbluray libass
-
-FFMPEG2_CHECKOUT = $(BS_PACKAGE_FFMPEG2_BRANCH)
 
 FFMPEG2_CONF_OPTS = \
 	--disable-ffplay \

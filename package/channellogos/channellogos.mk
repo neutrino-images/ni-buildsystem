@@ -4,10 +4,11 @@
 #
 ################################################################################
 
-CHANNELLOGOS_VERSION = ni-git
+CHANNELLOGOS_VERSION = master
 CHANNELLOGOS_DIR = $(NI_LOGO_STUFF)
 CHANNELLOGOS_SOURCE = $(NI_LOGO_STUFF)
 CHANNELLOGOS_SITE = https://github.com/neutrino-images
+CHANNELLOGOS_SITE_METHOD = ni-git
 
 define CHANNELLOGOS_REMOVE_LOGODIR
 	rm -rf $(SHARE_LOGOS)

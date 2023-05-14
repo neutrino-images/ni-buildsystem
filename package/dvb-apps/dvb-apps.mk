@@ -4,12 +4,11 @@
 #
 ################################################################################
 
-DVB_APPS_VERSION = hg
+DVB_APPS_VERSION = 3d43b28
 DVB_APPS_DIR = dvb-apps
 DVB_APPS_SOURCE = dvb-apps
 DVB_APPS_SITE = https://linuxtv.org/hg
-
-DVB_APPS_CHECKOUT = 3d43b280298c39a67d1d889e01e173f52c12da35
+DVB_APPS_SITE_METHOD = hg
 
 DVB_APPS_DEPENDENCIES = kernel-headers libiconv
 

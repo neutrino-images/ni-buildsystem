@@ -4,10 +4,11 @@
 #
 ################################################################################
 
-LUAJSON_VERSION = curl-controlled
+LUAJSON_VERSION =
 LUAJSON_DIR =
 LUAJSON_SOURCE = JSON.lua
 LUAJSON_SITE = http://regex.info/code
+LUAJSON_SITE_METHOD = curl
 
 define LUAJSON_INSTALL
 	$(INSTALL_DATA) -D $(DL_DIR)/$($(PKG)_SOURCE) $(TARGET_datadir)/lua/$(LUA_ABIVERSION)/$($(PKG)_SOURCE)

@@ -4,10 +4,11 @@
 #
 ################################################################################
 
-JQ_VERSION = git
-JQ_DIR = jq.$(JQ_VERSION)
-JQ_SOURCE = jq.$(JQ_VERSION)
+JQ_VERSION = master
+JQ_DIR = jq.git
+JQ_SOURCE = jq.git
 JQ_SITE = https://github.com/stedolan
+JQ_SITE_METHOD = git
 
 JQ_DEPENDENCIES = oniguruma
 

@@ -38,6 +38,11 @@ ifeq ($(PKG_PACKAGE),HOST)
   endif
 endif
 
+# site method
+ifndef $(PKG)_SITE_METHOD
+  $(PKG)_SITE_METHOD = archive
+endif
+
 # extract
 ifndef $(PKG)_EXTRACT_DIR
   $(PKG)_EXTRACT_DIR =
@@ -277,20 +282,33 @@ define DOWNLOAD
 	@$(call MESSAGE,"Downloading $(pkgname)")
 	$(foreach hook,$($(PKG)_PRE_DOWNLOAD_HOOKS),$(call $(hook))$(sep))
 	$(Q)( \
-	if [ "$($(PKG)_VERSION)" == "ni-git" ]; then \
-	  $(GET_GIT_SOURCE) $($(PKG)_SITE)/$($(PKG)_SOURCE) $(SOURCE_DIR)/$($(PKG)_SOURCE); \
-	elif [ "$($(PKG)_VERSION)" == "git" ]; then \
-	  $(GET_GIT_SOURCE) $($(PKG)_SITE)/$($(PKG)_SOURCE) $(DL_DIR)/$($(PKG)_SOURCE); \
-	elif [ "$($(PKG)_VERSION)" == "hg" ]; then \
-	  $(GET_HG_SOURCE) $($(PKG)_SITE)/$($(PKG)_SOURCE) $(DL_DIR)/$($(PKG)_SOURCE); \
-	elif [ "$($(PKG)_VERSION)" == "svn" ]; then \
-	  $(GET_SVN_SOURCE) $($(PKG)_SITE)/$($(PKG)_SOURCE) $(DL_DIR)/$($(PKG)_SOURCE); \
-	elif [ ! -f $(DL_DIR)/$(1) ]; then \
-	  $(GET_ARCHIVE) $(DL_DIR) $($(PKG)_SITE)/$(1); \
-	elif [ "$($(PKG)_VERSION)" == "curl-controlled" ]; then \
-	  $(CD) $(DL_DIR); \
-		  curl --remote-name --time-cond $($(PKG)_SOURCE) $($(PKG)_SITE)/$($(PKG)_SOURCE) || true; \
-	fi; \
+	case $($(PKG)_SITE_METHOD) in \
+	  ni-git) \
+	    $(GET_GIT_SOURCE) $($(PKG)_SITE)/$($(PKG)_SOURCE) $(SOURCE_DIR)/$($(PKG)_SOURCE); \
+	  ;; \
+	  git) \
+	    $(GET_GIT_SOURCE) $($(PKG)_SITE)/$($(PKG)_SOURCE) $(DL_DIR)/$($(PKG)_SOURCE); \
+	  ;; \
+	  hg) \
+	    $(GET_HG_SOURCE) $($(PKG)_SITE)/$($(PKG)_SOURCE) $(DL_DIR)/$($(PKG)_SOURCE); \
+	  ;; \
+	  svn) \
+	    $(GET_SVN_SOURCE) $($(PKG)_SITE)/$($(PKG)_SOURCE) $(DL_DIR)/$($(PKG)_SOURCE); \
+	  ;; \
+	  curl) \
+	    $(CD) $(DL_DIR); \
+	      curl --remote-name --time-cond $($(PKG)_SOURCE) $($(PKG)_SITE)/$($(PKG)_SOURCE) || true; \
+	  ;; \
+	  archive) \
+	    if [ ! -f $(DL_DIR)/$(1) ]; then \
+	      $(GET_ARCHIVE) $(DL_DIR) $($(PKG)_SITE)/$(1); \
+	    fi; \
+	  ;; \
+	  *) \
+	    $(call WARNING,"Cannot handle PKG_SITE_METHOD $($(PKG)_SITE_METHOD)"); \
+	    false; \
+	  ;; \
+	esac \
 	)
 	$(foreach hook,$($(PKG)_POST_DOWNLOAD_HOOKS),$(call $(hook))$(sep))
 endef
@@ -310,44 +328,41 @@ define EXTRACT # (directory)
 		EXTRACT_DIR=$(1)/$($(PKG)_EXTRACT_DIR); \
 		$(INSTALL) -d $${EXTRACT_DIR}; \
 	fi; \
-	case $($(PKG)_VERSION).$($(PKG)_SOURCE) in \
-	  *.tar | *.tar.bz2 | *.tbz | *.tar.gz | *.tgz | *.tar.xz | *.txz) \
-	    tar -xf $(DL_DIR)/$($(PKG)_SOURCE) -C $${EXTRACT_DIR}; \
-	    ;; \
-	  *.zip) \
-	    unzip -o -q $(DL_DIR)/$($(PKG)_SOURCE) -d $${EXTRACT_DIR}; \
-	    ;; \
-	  ni-git.*) \
+	case $($(PKG)_SITE_METHOD) in \
+	  ni-git) \
 	    cp -a -t $${EXTRACT_DIR} $(SOURCE_DIR)/$($(PKG)_SOURCE); \
-	    if test $($(PKG)_CHECKOUT); then \
-	      $(call MESSAGE,"git checkout $($(PKG)_CHECKOUT)"); \
-	      $(CD) $${EXTRACT_DIR}/$($(PKG)_DIR); git checkout $($(PKG)_CHECKOUT); \
-	    fi; \
-	    ;; \
-	  *.git | git.*) \
+	    $(call MESSAGE,"git checkout $($(PKG)_VERSION)"); \
+	    $(CD) $${EXTRACT_DIR}/$($(PKG)_DIR); git checkout $($(PKG)_VERSION); \
+	  ;; \
+	  git) \
 	    cp -a -t $${EXTRACT_DIR} $(DL_DIR)/$($(PKG)_SOURCE); \
-	    if test $($(PKG)_CHECKOUT); then \
-	      $(call MESSAGE,"git checkout $($(PKG)_CHECKOUT)"); \
-	      $(CD) $${EXTRACT_DIR}/$($(PKG)_DIR); git checkout $($(PKG)_CHECKOUT); \
-	    fi; \
-	    ;; \
-	  *.hg | hg.*) \
+	    $(call MESSAGE,"git checkout $($(PKG)_VERSION)"); \
+	    $(CD) $${EXTRACT_DIR}/$($(PKG)_DIR); git checkout $($(PKG)_VERSION); \
+	  ;; \
+	  hg) \
 	    cp -a -t $${EXTRACT_DIR} $(DL_DIR)/$($(PKG)_SOURCE); \
-	    if test $($(PKG)_CHECKOUT); then \
-	      $(call MESSAGE,"hg checkout $($(PKG)_CHECKOUT)"); \
-	      $(CD) $${EXTRACT_DIR}/$($(PKG)_DIR); hg checkout $($(PKG)_CHECKOUT); \
-	    fi; \
-	    ;; \
-	  *.svn | svn.*) \
+	    $(call MESSAGE,"hg checkout $($(PKG)_VERSION)"); \
+	    $(CD) $${EXTRACT_DIR}/$($(PKG)_DIR); hg checkout $($(PKG)_VERSION); \
+	  ;; \
+	  svn) \
 	    cp -a -t $${EXTRACT_DIR} $(DL_DIR)/$($(PKG)_SOURCE); \
-	    if test $($(PKG)_CHECKOUT); then \
-	      $(call MESSAGE,"svn checkout $($(PKG)_CHECKOUT)"); \
-	      $(CD) $${EXTRACT_DIR}/$($(PKG)_DIR); svn checkout $($(PKG)_CHECKOUT); \
-	    fi; \
-	    ;; \
-	  *) \
-	    $(call WARNING,"Cannot extract $($(PKG)_SOURCE)"); \
-	    false ;; \
+	    $(call MESSAGE,"svn checkout $($(PKG)_VERSION)"); \
+	    $(CD) $${EXTRACT_DIR}/$($(PKG)_DIR); svn checkout $($(PKG)_SITE) -r $($(PKG)_VERSION); \
+	  ;; \
+	  archive) \
+	    case $($(PKG)_SOURCE) in \
+	      *.tar | *.tar.bz2 | *.tbz | *.tar.gz | *.tgz | *.tar.xz | *.txz) \
+	        tar -xf $(DL_DIR)/$($(PKG)_SOURCE) -C $${EXTRACT_DIR}; \
+	      ;; \
+	      *.zip) \
+	        unzip -o -q $(DL_DIR)/$($(PKG)_SOURCE) -d $${EXTRACT_DIR}; \
+	      ;; \
+	      *) \
+	        $(call WARNING,"Cannot extract $($(PKG)_SOURCE)"); \
+	        false; \
+	      ;; \
+	    esac; \
+	  ;; \
 	esac \
 	)
 	$(foreach hook,$($(PKG)_POST_EXTRACT_HOOKS),$(call $(hook))$(sep))
@@ -378,8 +393,8 @@ define APPLY_PATCHES # (patches or directory)
 			v=; \
 			if [ -d $$i/$($(PKG)_VERSION) ]; then \
 				v="$($(PKG)_VERSION)/"; \
-			elif [ -d $$i/$($(PKG)_VERSION)-$($(PKG)_CHECKOUT) ]; then \
-				v="$($(PKG)_VERSION)-$($(PKG)_CHECKOUT)/"; \
+			elif [ -d $$i/$($(PKG)_SITE_METHOD)-$($(PKG)_VERSION) ]; then \
+				v="$($(PKG)_SITE_METHOD)-$($(PKG)_VERSION)/"; \
 			fi; \
 			for p in $(addprefix $$i/$$v,$(PATCHES)); do \
 				if [ -e $$p ]; then \

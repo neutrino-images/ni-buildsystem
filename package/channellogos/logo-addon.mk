@@ -4,10 +4,11 @@
 #
 ################################################################################
 
-LOGO_ADDON_VERSION = ni-git
+LOGO_ADDON_VERSION = master
 LOGO_ADDON_DIR = $(NI_LOGO_STUFF)
 LOGO_ADDON_SOURCE = $(NI_LOGO_STUFF)
 LOGO_ADDON_SITE = https://github.com/neutrino-images
+LOGO_ADDON_SITE_METHOD = ni-git
 
 define LOGO_ADDON_INSTALL
 	$(INSTALL) -d $(SHARE_PLUGINS)
