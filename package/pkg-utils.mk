@@ -38,11 +38,6 @@ ifeq ($(PKG_PACKAGE),HOST)
   endif
 endif
 
-# site method
-ifndef $(PKG)_SITE_METHOD
-  $(PKG)_SITE_METHOD = archive
-endif
-
 # extract
 ifndef $(PKG)_EXTRACT_DIR
   $(PKG)_EXTRACT_DIR =
@@ -282,7 +277,7 @@ define DOWNLOAD
 	@$(call MESSAGE,"Downloading $(pkgname)")
 	$(foreach hook,$($(PKG)_PRE_DOWNLOAD_HOOKS),$(call $(hook))$(sep))
 	$(Q)( \
-	case $($(PKG)_SITE_METHOD) in \
+	case "$($(PKG)_SITE_METHOD)" in \
 	  ni-git) \
 	    $(GET_GIT_SOURCE) $($(PKG)_SITE)/$($(PKG)_SOURCE) $(SOURCE_DIR)/$($(PKG)_SOURCE); \
 	  ;; \
@@ -299,14 +294,10 @@ define DOWNLOAD
 	    $(CD) $(DL_DIR); \
 	      curl --remote-name --time-cond $($(PKG)_SOURCE) $($(PKG)_SITE)/$($(PKG)_SOURCE) || true; \
 	  ;; \
-	  archive) \
+	  *) \
 	    if [ ! -f $(DL_DIR)/$(1) ]; then \
 	      $(GET_ARCHIVE) $(DL_DIR) $($(PKG)_SITE)/$(1); \
 	    fi; \
-	  ;; \
-	  *) \
-	    $(call WARNING,"Cannot handle PKG_SITE_METHOD $($(PKG)_SITE_METHOD)"); \
-	    false; \
 	  ;; \
 	esac \
 	)
@@ -328,7 +319,7 @@ define EXTRACT # (directory)
 		EXTRACT_DIR=$(1)/$($(PKG)_EXTRACT_DIR); \
 		$(INSTALL) -d $${EXTRACT_DIR}; \
 	fi; \
-	case $($(PKG)_SITE_METHOD) in \
+	case "$($(PKG)_SITE_METHOD)" in \
 	  ni-git) \
 	    cp -a -t $${EXTRACT_DIR} $(SOURCE_DIR)/$($(PKG)_SOURCE); \
 	    $(call MESSAGE,"git checkout $($(PKG)_VERSION)"); \
@@ -349,8 +340,8 @@ define EXTRACT # (directory)
 	    $(call MESSAGE,"svn checkout $($(PKG)_VERSION)"); \
 	    $(CD) $${EXTRACT_DIR}/$($(PKG)_DIR); svn checkout $($(PKG)_SITE) -r $($(PKG)_VERSION); \
 	  ;; \
-	  archive) \
-	    case $($(PKG)_SOURCE) in \
+	  *) \
+	    case "$($(PKG)_SOURCE)" in \
 	      *.tar | *.tar.bz2 | *.tbz | *.tar.gz | *.tgz | *.tar.xz | *.txz) \
 	        tar -xf $(DL_DIR)/$($(PKG)_SOURCE) -C $${EXTRACT_DIR}; \
 	      ;; \
