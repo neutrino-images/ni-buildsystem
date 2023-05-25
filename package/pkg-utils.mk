@@ -384,8 +384,6 @@ define APPLY_PATCHES # (patches or directory)
 			v=; \
 			if [ -d $$i/$($(PKG)_VERSION) ]; then \
 				v="$($(PKG)_VERSION)/"; \
-			elif [ -d $$i/$($(PKG)_SITE_METHOD)-$($(PKG)_VERSION) ]; then \
-				v="$($(PKG)_SITE_METHOD)-$($(PKG)_VERSION)/"; \
 			fi; \
 			for p in $(addprefix $$i/$$v,$(PATCHES)); do \
 				if [ -e $$p ]; then \
