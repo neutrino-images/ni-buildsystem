@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-SYSVINIT_VERSION = 3.06
+SYSVINIT_VERSION = 3.07
 SYSVINIT_DIR = sysvinit-$(SYSVINIT_VERSION)
 SYSVINIT_SOURCE = sysvinit-$(SYSVINIT_VERSION).tar.xz
 SYSVINIT_SITE = https://github.com/slicer69/sysvinit/releases/download/$(SYSVINIT_VERSION)
