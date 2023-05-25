@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-ZIC_VERSION = 2023b
+ZIC_VERSION = 2023c
 ZIC_DIR = tzcode$(ZIC_VERSION)
 ZIC_SOURCE = tzcode$(ZIC_VERSION).tar.gz
 ZIC_SITE = https://data.iana.org/time-zones/releases
