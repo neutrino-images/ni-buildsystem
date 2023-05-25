@@ -58,6 +58,7 @@ ifeq ($(BOXTYPE),coolstream)
 	--disable-plutotv \
 	--disable-rakutentv \
 	--disable-spiegel_tv_doc \
+	--disable-sysinfo \
 	--disable-tierwelt_tv
   endif
   NEUTRINO_PLUGINS_CONF_OPTS += \
