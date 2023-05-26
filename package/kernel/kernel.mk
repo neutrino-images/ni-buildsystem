@@ -230,11 +230,6 @@ endef
 
 # -----------------------------------------------------------------------------
 
-$(DL_DIR)/$(KERNEL_SOURCE):
-	$(download) $(KERNEL_SITE)/$(KERNEL_SOURCE)
-
-# -----------------------------------------------------------------------------
-
 LINUX_KERNEL_MAKE_VARS = \
 	$(KERNEL_MAKE_VARS) \
 	INSTALL_MOD_PATH=$(KERNEL_MODULES_DIR) \
@@ -265,10 +260,8 @@ kernel.do_prepare_git:
 	$(CD) $(BUILD_DIR); \
 		mv $(NI_LINUX_KERNEL) $(KERNEL_DIR)
 
-kernel.do_prepare_tar: $(DL_DIR)/$(KERNEL_SOURCE)
-	$(REMOVE)/$(KERNEL_DIR)
-	$(UNTAR)/$(KERNEL_SOURCE)
-	$(call APPLY_PATCHES,$(KERNEL_PATCH))
+kernel.do_prepare_tar:
+	$(call PREPARE)
 	$(LINUX_FIX_YYLLOC)
 
 kernel.do_compile: kernel.do_prepare
@@ -349,7 +342,7 @@ kernel-modules-coolstream-hd2: kernel-coolstream
 	$(INSTALL_DATA) $(KERNEL_modulesdir)/modules.builtin $(TARGET_modulesdir)
 	$(INSTALL_DATA) $(KERNEL_modulesdir)/modules.order $(TARGET_modulesdir)
 	$(LINUX_RUN_DEPMOD)
-	make rtl8192eu
+	$(MAKE) rtl8192eu
 	$(call TOUCH)
 
 kernel-modules-armbox: kernel-armbox
@@ -359,12 +352,12 @@ kernel-modules-armbox: kernel-armbox
 	$(INSTALL_DATA) $(KERNEL_modulesdir)/modules.order $(TARGET_modulesdir)
 	$(LINUX_RUN_DEPMOD)
 ifeq ($(BOXSERIES),hd5x hd6x)
-	make rtl8192eu
-	make rtl8812au
-	make rtl8822bu
+	$(MAKE) rtl8192eu
+	$(MAKE) rtl8812au
+	$(MAKE) rtl8822bu
 endif
 ifeq ($(BOXSERIES),hd6x)
-	make hd6x-mali-drivers
+	$(MAKE) hd6x-mali-drivers
 endif
 	$(call TOUCH)
 
