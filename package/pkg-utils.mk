@@ -136,7 +136,7 @@ ifndef $(PKG)_BUILD_CMDS
     ifeq ($(PKG_PACKAGE),HOST)
       $(PKG)_BUILD_CMDS = $$(HOST_PYTHON3_BUILD_CMDS_DEFAULT)
     endif
-  else ifeq ($(PKG_MODE),KERNEL)
+  else ifeq ($(PKG_MODE),KERNEL_MODULE)
     $(PKG)_BUILD_CMDS = $$(KERNEL_MODULE_BUILD_CMDS_DEFAULT)
   else
     $(PKG)_BUILD_CMDS = echo "$(PKG_NO_BUILD)"
@@ -151,7 +151,7 @@ ifndef $(PKG)_MAKE_INSTALL_ENV
   $(PKG)_MAKE_INSTALL_ENV = $$($(PKG)_MAKE_ENV)
 endif
 ifndef $(PKG)_MAKE_INSTALL_ARGS
-  ifeq ($(PKG_MODE),KERNEL)
+  ifeq ($(PKG_MODE),KERNEL_MODULE)
     $(PKG)_MAKE_INSTALL_ARGS = modules_install
   else
     $(PKG)_MAKE_INSTALL_ARGS = install
@@ -179,7 +179,7 @@ ifndef $(PKG)_INSTALL_CMDS
     ifeq ($(PKG_PACKAGE),HOST)
       $(PKG)_INSTALL_CMDS = $$(HOST_PYTHON3_INSTALL_CMDS_DEFAULT)
     endif
-  else ifeq ($(PKG_MODE),KERNEL)
+  else ifeq ($(PKG_MODE),KERNEL_MODULE)
     $(PKG)_INSTALL_CMDS = $$(KERNEL_MODULE_INSTALL_CMDS_DEFAULT)
   else
     $(PKG)_INSTALL_CMDS = echo "$(PKG_NO_INSTALL)"
@@ -209,7 +209,7 @@ endif
 ifeq ($(PKG_MODE),MESON)
   $(PKG)_DEPENDENCIES += host-meson
 endif
-ifeq ($(PKG_MODE),KERNEL)
+ifeq ($(PKG_MODE),KERNEL_MODULE)
   $(PKG)_DEPENDENCIES += kernel-$(BOXTYPE)
 endif
 ifeq ($(PKG_MODE),PYTHON3)
@@ -223,7 +223,7 @@ pkg-check-variables = $(call PKG_CHECK_VARIABLES)
 
 # -----------------------------------------------------------------------------
 
-pkg-mode = $(call UPPERCASE,$(firstword $(subst -, ,$(subst host-,,$(0)))))
+pkg-mode = $(call UPPERCASE,$(subst -package,,$(subst host-,,$(0))))
 
 # -----------------------------------------------------------------------------
 
