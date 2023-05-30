@@ -9,7 +9,7 @@ FREETYPE_DIR = freetype-$(FREETYPE_VERSION)
 FREETYPE_SOURCE = freetype-$(FREETYPE_VERSION).tar.xz
 FREETYPE_SITE = https://sourceforge.net/projects/freetype/files/freetype2/$(FREETYPE_VERSION)
 
-FREETYPE_DEPENDENCIES = zlib libpng
+FREETYPE_DEPENDENCIES = libpng zlib
 
 FREETYPE_CONFIG_SCRIPTS = freetype-config
 
@@ -19,8 +19,9 @@ FREETYPE_CONF_OPTS = \
 	--enable-freetype-config \
 	--with-png \
 	--with-zlib \
-	--without-harfbuzz \
-	--without-bzip2
+	--without-brotli \
+	--without-bzip2 \
+	--without-harfbuzz
 
 define FREETYPE_PATCH_MODULES_CFG
 	$(SED) '/^FONT_MODULES += \(type1\|cid\|pfr\|type42\|pcf\|bdf\|winfonts\|cff\)/d' $(PKG_BUILD_DIR)/modules.cfg
