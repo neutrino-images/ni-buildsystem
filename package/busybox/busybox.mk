@@ -4,16 +4,18 @@
 #
 ################################################################################
 
-BUSYBOX_VERSION = 1.34.1
+BUSYBOX_VERSION = 1.36.1
 BUSYBOX_DIR = busybox-$(BUSYBOX_VERSION)
 BUSYBOX_SOURCE = busybox-$(BUSYBOX_VERSION).tar.bz2
 BUSYBOX_SITE = https://busybox.net/downloads
 
 BUSYBOX_DEPENDENCIES = libtirpc
 
+BUSYBOX_CFLAGS = \
+	$(TARGET_CFLAGS)
+
 # Link busybox against libtirpc so that we can leverage its RPC support for NFS
 # mounting with BusyBox
-BUSYBOX_CFLAGS = $(TARGET_CFLAGS)
 BUSYBOX_CFLAGS += "`$(PKG_CONFIG) --cflags libtirpc`"
 
 # Don't use LDFLAGS for -ltirpc, because LDFLAGS is used for the non-final link

@@ -2,7 +2,7 @@ diff --git a/coreutils/df.c b/coreutils/df.c
 index cf36716..df42ffe 100644
 --- a/coreutils/df.c
 +++ b/coreutils/df.c
-@@ -232,7 +232,7 @@ int df_main(int argc UNUSED_PARAM, char **argv)
+@@ -263,7 +263,7 @@ int df_main(int argc UNUSED_PARAM, char **argv)
  			if (opt & OPT_INODE) {
  				s.f_blocks = s.f_files;
  				s.f_bavail = s.f_bfree = s.f_ffree;
@@ -11,7 +11,7 @@ index cf36716..df42ffe 100644
  				if (df_disp_hr)
  					df_disp_hr = 1;
  			}
-@@ -291,26 +291,26 @@ int df_main(int argc UNUSED_PARAM, char **argv)
+@@ -322,26 +322,26 @@ int df_main(int argc UNUSED_PARAM, char **argv)
  
  #if ENABLE_FEATURE_HUMAN_READABLE
  			printf(" %9s ",

@@ -1,6 +1,6 @@
 --- a/util-linux/mount.c
 +++ b/util-linux/mount.c
-@@ -2323,6 +2323,8 @@ int mount_main(int argc UNUSED_PARAM, ch
+@@ -2408,6 +2408,8 @@ int mount_main(int argc UNUSED_PARAM, ch
  		// "proc") or a full path from root
  		if (argv[0]) {
  
