@@ -274,30 +274,37 @@ endef
 # download archives into download directory
 GET_ARCHIVE = wget --no-check-certificate -t3 -T60 -c -P
 
-define DOWNLOAD
+GET_GIT_ARCHIVE = support/scripts/get-git-archive.sh
+GET_GIT_SOURCE = support/scripts/get-git-source.sh
+GET_HG_SOURCE = support/scripts/get-hg-source.sh
+GET_SVN_SOURCE = support/scripts/get-svn-source.sh
+
+define DOWNLOAD # (site,source)
 	@$(call MESSAGE,"Downloading $(pkgname)")
 	$(foreach hook,$($(PKG)_PRE_DOWNLOAD_HOOKS),$(call $(hook))$(sep))
 	$(Q)( \
+	DOWNLOAD_SITE=$(1); \
+	DOWNLOAD_SOURCE=$(2); \
 	case "$($(PKG)_SITE_METHOD)" in \
 	  ni-git) \
-	    $(GET_GIT_SOURCE) $($(PKG)_SITE)/$($(PKG)_SOURCE) $(SOURCE_DIR)/$($(PKG)_SOURCE); \
+	    $(GET_GIT_SOURCE) $${DOWNLOAD_SITE}/$${DOWNLOAD_SOURCE} $(SOURCE_DIR)/$${DOWNLOAD_SOURCE}; \
 	  ;; \
 	  git) \
-	    $(GET_GIT_SOURCE) $($(PKG)_SITE)/$($(PKG)_SOURCE) $(DL_DIR)/$($(PKG)_SOURCE); \
+	    $(GET_GIT_SOURCE) $${DOWNLOAD_SITE}/$${DOWNLOAD_SOURCE} $(DL_DIR)/$${DOWNLOAD_SOURCE}; \
 	  ;; \
 	  hg) \
-	    $(GET_HG_SOURCE) $($(PKG)_SITE)/$($(PKG)_SOURCE) $(DL_DIR)/$($(PKG)_SOURCE); \
+	    $(GET_HG_SOURCE) $${DOWNLOAD_SITE}/$${DOWNLOAD_SOURCE} $(DL_DIR)/$${DOWNLOAD_SOURCE}; \
 	  ;; \
 	  svn) \
-	    $(GET_SVN_SOURCE) $($(PKG)_SITE)/$($(PKG)_SOURCE) $(DL_DIR)/$($(PKG)_SOURCE); \
+	    $(GET_SVN_SOURCE) $${DOWNLOAD_SITE}/$${DOWNLOAD_SOURCE} $(DL_DIR)/$${DOWNLOAD_SOURCE}; \
 	  ;; \
 	  curl) \
 	    $(CD) $(DL_DIR); \
-	      curl --remote-name --time-cond $($(PKG)_SOURCE) $($(PKG)_SITE)/$($(PKG)_SOURCE) || true; \
+	      curl --remote-name --time-cond $${DOWNLOAD_SOURCE} $${DOWNLOAD_SITE}/$${DOWNLOAD_SOURCE} || true; \
 	  ;; \
 	  *) \
-	    if [ ! -f $(DL_DIR)/$(1) ]; then \
-	      $(GET_ARCHIVE) $(DL_DIR) $($(PKG)_SITE)/$(1); \
+	    if [ ! -f $(DL_DIR)/$${DOWNLOAD_SOURCE} ]; then \
+	      $(GET_ARCHIVE) $(DL_DIR) $${DOWNLOAD_SITE}/$${DOWNLOAD_SOURCE}; \
 	    fi; \
 	  ;; \
 	esac \
@@ -306,7 +313,7 @@ define DOWNLOAD
 endef
 
 # just a wrapper for niceness
-download-package = $(call DOWNLOAD,$($(PKG)_SOURCE))
+download-package = $(call DOWNLOAD,$($(PKG)_SITE),$($(PKG)_SOURCE))
 
 # -----------------------------------------------------------------------------
 
@@ -404,11 +411,11 @@ endef
 # -----------------------------------------------------------------------------
 
 # prepare for build
-define PREPARE
+define PREPARE # (control-flag(s))
 	$(eval $(pkg-check-variables))
 	$(call STARTUP)
 	$(call DEPENDENCIES)
-	$(if $(filter $(1),$(PKG_NO_DOWNLOAD)),,$(call DOWNLOAD,$($(PKG)_SOURCE)))
+	$(if $(filter $(1),$(PKG_NO_DOWNLOAD)),,$(call DOWNLOAD,$($(PKG)_SITE),$($(PKG)_SOURCE)))
 	$(if $(filter $(1),$(PKG_NO_EXTRACT)),,$(call EXTRACT,$(BUILD_DIR)))
 	$(if $(filter $(1),$(PKG_NO_PATCHES)),,$(call APPLY_PATCHES,$($(PKG)_PATCH),$($(PKG)_PATCH_CUSTOM)))
 endef

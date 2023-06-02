@@ -31,10 +31,6 @@ CHDIR = $(CD) $(BUILD_DIR)
 MKDIR = $(INSTALL) -d $(BUILD_DIR)
 SED   = $(shell which sed || type -p sed || echo sed) -i -e
 
-GET_GIT_ARCHIVE = support/scripts/get-git-archive.sh
-GET_GIT_SOURCE  = support/scripts/get-git-source.sh
-GET_HG_SOURCE   = support/scripts/get-hg-source.sh
-GET_SVN_SOURCE  = support/scripts/get-svn-source.sh
 UPDATE-RC.D     = support/scripts/update-rc.d -r $(TARGET_DIR)
 REMOVE-RC.D     = support/scripts/update-rc.d -f -r $(TARGET_DIR)
 TARGET_RM       = support/scripts/target-remove.sh $(TARGET_DIR) $(REMOVE_DIR)
