@@ -3,8 +3,6 @@
 #
 # -----------------------------------------------------------------------------
 
-#BLOBS_DEPENDENCIES = kernel # because of $(LINUX_RUN_DEPMOD)
-
 blobs: $(BLOBS_DEPENDENCIES)
 	$(MAKE) firmware
 	$(MAKE) $(BOXMODEL)-drivers
