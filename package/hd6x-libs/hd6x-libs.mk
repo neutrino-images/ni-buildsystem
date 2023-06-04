@@ -24,6 +24,11 @@ MULTIBOXSE_LIBS_DIR = hiplay
 MULTIBOXSE_LIBS_SOURCE = maxytec-libs-3798mv200-$(MULTIBOXSE_LIBS_VERSION).zip
 MULTIBOXSE_LIBS_SITE = http://source.mynonpublic.com/maxytec
 
+hd60-libs \
+hd61-libs \
+multibox-libs \
+multiboxse-libs: hd6x-libs
+
 # -----------------------------------------------------------------------------
 
 HD6X_LIBS_VERSION = $($(call UPPERCASE,$(BOXMODEL))_LIBS_VERSION)
