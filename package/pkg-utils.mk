@@ -491,8 +491,7 @@ define TARGET_FOLLOWUP
 	$(Q)$(call CLEANUP)
 	$(Q)$(call REWRITE_CONFIG_SCRIPTS)
 	$(Q)$(call REWRITE_LIBTOOL)
-	$(if $(filter $(BS_INIT_SYSV),y),\
-		$($(PKG)_INSTALL_INIT_SYSV))
+	$(if $(filter $(BS_INIT_SYSV),y),$($(PKG)_INSTALL_INIT_SYSV))
 	$(foreach hook,$($(PKG)_TARGET_FINALIZE_HOOKS),$(call $(hook))$(sep))
 	$(foreach hook,$($(PKG)_POST_FOLLOWUP_HOOKS),$(call $(hook))$(sep))
 	$(Q)$(call TOUCH)
