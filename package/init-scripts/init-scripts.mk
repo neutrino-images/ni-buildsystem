@@ -6,31 +6,6 @@
 
 INIT_SCRIPTS_FILES_DIR = $(PACKAGE_DIR)/init-scripts/files
 
-init-scripts: \
-	$(TARGET_sysconfdir)/init.d/globals \
-	$(TARGET_sysconfdir)/init.d/functions \
-	\
-	$(TARGET_sysconfdir)/init.d/camd \
-	$(TARGET_sysconfdir)/init.d/camd_datefix \
-	$(TARGET_sysconfdir)/init.d/coredump \
-	$(TARGET_sysconfdir)/init.d/custom-poweroff \
-	$(TARGET_sysconfdir)/init.d/fstab \
-	$(TARGET_sysconfdir)/init.d/hostname \
-	$(TARGET_sysconfdir)/init.d/partitions-by-name \
-	$(TARGET_sysconfdir)/init.d/proc \
-	$(TARGET_sysconfdir)/init.d/resizerootfs \
-	$(TARGET_sysconfdir)/init.d/sys_update.sh \
-	$(TARGET_sysconfdir)/init.d/sendsigs \
-	$(TARGET_sysconfdir)/init.d/umountfs \
-	$(TARGET_sysconfdir)/init.d/suspend \
-	$(TARGET_sysconfdir)/init.d/user-initscripts \
-	\
-	$(TARGET_sysconfdir)/init.d/stb_update.sh \
-	\
-	$(TARGET_sysconfdir)/init.d/rootx-mount \
-	$(TARGET_sysconfdir)/init.d/var_mount.sh \
-	$(TARGET_sysconfdir)/init.d/var_update.sh
-
 $(TARGET_sysconfdir)/init.d/globals:
 	$(INSTALL_DATA) -D $(INIT_SCRIPTS_FILES_DIR)/init.globals $(@)
 
@@ -122,3 +97,33 @@ $(TARGET_sysconfdir)/init.d/var_update.sh:
 ifeq ($(PERSISTENT_VAR_PARTITION),yes)
 	$(INSTALL_EXEC) -D $(INIT_SCRIPTS_FILES_DIR)/var_update.sh $(@)
 endif
+
+# -----------------------------------------------------------------------------
+
+INIT_SCRIPTS_DEPENDENCIES = \
+	$(TARGET_sysconfdir)/init.d/globals \
+	$(TARGET_sysconfdir)/init.d/functions \
+	\
+	$(TARGET_sysconfdir)/init.d/camd \
+	$(TARGET_sysconfdir)/init.d/camd_datefix \
+	$(TARGET_sysconfdir)/init.d/coredump \
+	$(TARGET_sysconfdir)/init.d/custom-poweroff \
+	$(TARGET_sysconfdir)/init.d/fstab \
+	$(TARGET_sysconfdir)/init.d/hostname \
+	$(TARGET_sysconfdir)/init.d/partitions-by-name \
+	$(TARGET_sysconfdir)/init.d/proc \
+	$(TARGET_sysconfdir)/init.d/resizerootfs \
+	$(TARGET_sysconfdir)/init.d/sys_update.sh \
+	$(TARGET_sysconfdir)/init.d/sendsigs \
+	$(TARGET_sysconfdir)/init.d/umountfs \
+	$(TARGET_sysconfdir)/init.d/suspend \
+	$(TARGET_sysconfdir)/init.d/user-initscripts \
+	\
+	$(TARGET_sysconfdir)/init.d/stb_update.sh \
+	\
+	$(TARGET_sysconfdir)/init.d/rootx-mount \
+	$(TARGET_sysconfdir)/init.d/var_mount.sh \
+	$(TARGET_sysconfdir)/init.d/var_update.sh
+
+init-scripts: | $(TARGET_DIR)
+	$(call virtual-package)
