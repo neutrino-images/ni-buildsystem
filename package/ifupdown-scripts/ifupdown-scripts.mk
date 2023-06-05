@@ -27,4 +27,4 @@ define IFUPDOWN_SCRIPTS_INSTALL_INIT_SYSV
 endef
 
 ifupdown-scripts: | $(TARGET_DIR)
-	$(call individual-package,$(PKG_NO_DOWNLOAD) $(PKG_NO_EXTRACT) $(PKG_NO_PATCHES))
+	$(call virtual-package)
