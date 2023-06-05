@@ -99,8 +99,8 @@ define meson-package
 	$(eval PKG_MODE = $(pkg-mode))
 	$(call PREPARE,$(1))
 	$(call TARGET_MESON_CONFIGURE)
-	$(call TARGET_NINJA_BUILD)
-	$(call TARGET_NINJA_INSTALL)
+	$(if $(filter $(1),$(PKG_NO_BUILD)),,$(call TARGET_NINJA_BUILD))
+	$(if $(filter $(1),$(PKG_NO_INSTALL)),,$(call TARGET_NINJA_INSTALL))
 	$(call TARGET_FOLLOWUP)
 endef
 
