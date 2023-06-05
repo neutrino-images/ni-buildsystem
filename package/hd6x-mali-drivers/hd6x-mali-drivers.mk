@@ -4,9 +4,9 @@
 #
 ################################################################################
 
-HD6X_MALI_DRIVERS_VERSION = DX910-SW-99002-r7p0-00rel0
-HD6X_MALI_DRIVERS_DIR = $(HD6X_MALI_DRIVERS_VERSION)
-HD6X_MALI_DRIVERS_SOURCE = $(HD6X_MALI_DRIVERS_VERSION).tgz
+HD6X_MALI_DRIVERS_VERSION = r7p0-00rel0
+HD6X_MALI_DRIVERS_DIR = DX910-SW-99002-$(HD6X_MALI_DRIVERS_VERSION)
+HD6X_MALI_DRIVERS_SOURCE = DX910-SW-99002-$(HD6X_MALI_DRIVERS_VERSION).tgz
 HD6X_MALI_DRIVERS_SITE = https://developer.arm.com/-/media/Files/downloads/mali-drivers/kernel/mali-utgard-gpu
 
 HD6X_MALI_DEPENDENCIES = kernel-$(BOXTYPE) hd6x-libgles-headers
