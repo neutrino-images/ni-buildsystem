@@ -61,5 +61,6 @@ PHONY += ccache-clean
 PHONY += rebuild-clean
 PHONY += all-clean
 PHONY += clean
+PHONY += distclean
 PHONY += clean-all
 PHONY += %-clean
