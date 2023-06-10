@@ -11,7 +11,7 @@ channellists: matze-192 matze-192-130
 
 # -----------------------------------------------------------------------------
 
-MATZE_192_VERSION = 25.03.2023
+MATZE_192_VERSION = 10.06.2023
 MATZE_192_130_VERSION = $(MATZE_192_VERSION)
 
 matze-192 \
