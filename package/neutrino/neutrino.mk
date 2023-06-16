@@ -4,35 +4,27 @@
 #
 ################################################################################
 
-NEUTRINO_INST_DIR ?= $(TARGET_DIR)
-
-NEUTRINO_OBJ       = $(NI_NEUTRINO)-obj
-NEUTRINO_BUILD_DIR = $(BUILD_DIR)/$(NEUTRINO_OBJ)
-
-#ifeq ($(BOXTYPE),coolstream)
-#  NEUTRINO_BRANCH = ni/$(BOXTYPE)
-#else
-  NEUTRINO_BRANCH ?= master
-#endif
-
-# -----------------------------------------------------------------------------
+NEUTRINO_VERSION = master
+NEUTRINO_DIR = $(NI_NEUTRINO)
+NEUTRINO_SOURCE = $(NI_NEUTRINO)
+NEUTRINO_SITE = https://github.com/neutrino-images
+NEUTRINO_SITE_METHOD = ni-git
 
 NEUTRINO_DEPENDENCIES = ffmpeg freetype giflib libcurl libdvbsi fribidi \
 	libjpeg-turbo libsigc lua ntp openssl openthreads pugixml zlib
 
-# -----------------------------------------------------------------------------
+NEUTRINO_OBJ_DIR = $(BUILD_DIR)/$(NEUTRINO_DIR)-obj
+NEUTRINO_CONFIG_STATUS = $(wildcard $(NEUTRINO_OBJ_DIR)/config.status)
+
+NEUTRINO_INST_DIR ?= $(TARGET_DIR)
 
 NEUTRINO_CFLAGS = -Wall -W -Wshadow -D__STDC_CONSTANT_MACROS
-
 ifeq ($(DEBUG),yes)
   NEUTRINO_CFLAGS += -ggdb3 -rdynamic -I$(TARGET_includedir) $(CXX11_ABI)
 else
   NEUTRINO_CFLAGS += $(TARGET_CFLAGS)
 endif
-
 NEUTRINO_CFLAGS += -Wno-psabi
-
-# -----------------------------------------------------------------------------
 
 NEUTRINO_LDFLAGS  = $(CORTEX_STRINGS_LDFLAG)
 NEUTRINO_LDFLAGS += -L$(TARGET_base_libdir) -L$(TARGET_libdir)
@@ -43,8 +35,6 @@ else
   NEUTRINO_LDFLAGS += -Wl,-O1 $(TARGET_EXTRA_LDFLAGS)
 endif
 NEUTRINO_LDFLAGS += -lcrypto -ldl -lz
-
-# -----------------------------------------------------------------------------
 
 NEUTRINO_CONF_ENV = \
 	$(TARGET_CONFIGURE_ENVIRONMENT) \
@@ -58,8 +48,6 @@ NEUTRINO_CONF_ENV += \
 	PKG_CONFIG=$(PKG_CONFIG) \
 	PKG_CONFIG_PATH="$(PKG_CONFIG_PATH)" \
 	PKG_CONFIG_SYSROOT_DIR=$(PKG_CONFIG_SYSROOT_DIR)
-
-# -----------------------------------------------------------------------------
 
 NEUTRINO_CONF_OPTS = \
 	--build=$(GNU_HOST_NAME) \
@@ -109,7 +97,7 @@ else
   NEUTRINO_DEPENDENCIES += libstb-hal
   NEUTRINO_CONF_OPTS += \
 	--with-stb-hal-includes=$(SOURCE_DIR)/$(NI_LIBSTB_HAL)/include \
-	--with-stb-hal-build=$(LIBSTB_HAL_BUILD_DIR)
+	--with-stb-hal-build=$(LIBSTB_HAL_OBJ_DIR)
 
   NEUTRINO_DEPENDENCIES += graphlcd-base
   NEUTRINO_CONF_OPTS += --enable-graphlcd
@@ -144,52 +132,39 @@ else
   NEUTRINO_CONF_OPTS += --enable-flac
 endif
 
-# -----------------------------------------------------------------------------
+define NEUTRINO_AUTOGEN_SH
+	$($(PKG)_BUILD_DIR)/autogen.sh
+endef
+NEUTRINO_PRE_CONFIGURE_HOOKS += NEUTRINO_AUTOGEN_SH
 
-$(NEUTRINO_BUILD_DIR)/config.status: $(NEUTRINO_DEPENDENCIES)
-	test -d $(NEUTRINO_BUILD_DIR) || $(INSTALL) -d $(NEUTRINO_BUILD_DIR)
-	$(CD) $(SOURCE_DIR)/$(NI_NEUTRINO); \
-		git checkout $(NEUTRINO_BRANCH)
-	$(SOURCE_DIR)/$(NI_NEUTRINO)/autogen.sh
-	$(CD) $(NEUTRINO_BUILD_DIR); \
-		$(NEUTRINO_CONF_ENV) \
-		$(SOURCE_DIR)/$(NI_NEUTRINO)/configure \
-			$(NEUTRINO_CONF_OPTS)
+define NEUTRINO_CONFIGURE_CMDS
+	$(INSTALL) -d $(NEUTRINO_OBJ_DIR)
+	$(CD) $(NEUTRINO_OBJ_DIR); \
+		$($(PKG)_CONF_ENV) \
+		$($(PKG)_BUILD_DIR)/configure \
+			$($(PKG)_CONF_OPTS)
+endef
 
-# -----------------------------------------------------------------------------
+define NEUTRINO_BUILD_CMDS
+	$(MAKE) -C $(NEUTRINO_OBJ_DIR)
+endef
 
-neutrino: $(NEUTRINO_BUILD_DIR)/config.status
-	$(MAKE) -C $(NEUTRINO_BUILD_DIR)
-	$(MAKE) -C $(NEUTRINO_BUILD_DIR) install DESTDIR=$(NEUTRINO_INST_DIR)
+define NEUTRINO_INSTALL_CMDS
+	$(MAKE) -C $(NEUTRINO_OBJ_DIR) install DESTDIR=$(NEUTRINO_INST_DIR)
+endef
+
+define NEUTRINO_INSTALL_STARTSCRIPT
 	$(INSTALL_EXEC) $(PKG_FILES_DIR)/start_neutrino $(TARGET_sysconfdir)/init.d/start_neutrino
-	$(call TOUCH)
+endef
+NEUTRINO_POST_INSTALL_HOOKS += NEUTRINO_INSTALL_STARTSCRIPT
 
-# -----------------------------------------------------------------------------
-
-neutrino-bin:
-ifeq ($(CLEAN),yes)
-	$(MAKE) neutrino-clean
-endif
-	$(MAKE) $(NEUTRINO_BUILD_DIR)/config.status
-	$(MAKE) -C $(NEUTRINO_BUILD_DIR)
-	$(INSTALL_EXEC) -D $(NEUTRINO_BUILD_DIR)/src/neutrino $(TARGET_bindir)/neutrino
-ifneq ($(DEBUG),yes)
-	$(TARGET_STRIP) $(TARGET_bindir)/neutrino
-endif
-	@make done
-
-# -----------------------------------------------------------------------------
-
-neutrino-uninstall:
-	-make -C $(NEUTRINO_BUILD_DIR) uninstall DESTDIR=$(TARGET_DIR)
-
-neutrino-distclean:
-	-make -C $(NEUTRINO_BUILD_DIR) distclean
-
-neutrino-clean: neutrino-uninstall neutrino-distclean
-	rm -f $(NEUTRINO_BUILD_DIR)/config.status
-	rm -f $(DEPS_DIR)/neutrino
+define NEUTRINO_UNINSTALL_STARTSCRIPT
 	rm -f $(TARGET_sysconfdir)/init.d/start_neutrino
+endef
+NEUTRINO_PRE_UNINSTALL_HOOKS += NEUTRINO_UNINSTALL_STARTSCRIPT
 
-neutrino-clean-all: neutrino-clean
-	rm -rf $(NEUTRINO_BUILD_DIR)
+# needed to build neutrino-bin target only
+NEUTRINO_PKG_FLAGS ?=
+
+neutrino: | $(TARGET_DIR)
+	$(call autotools-package,$(if $(NEUTRINO_CONFIG_STATUS),$(PKG_NO_CONFIGURE)) $(NEUTRINO_PKG_FLAGS))
