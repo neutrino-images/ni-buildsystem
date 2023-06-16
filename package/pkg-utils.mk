@@ -275,7 +275,7 @@ endef
 # resolve dependencies
 define DEPENDENCIES
 	@$(call MESSAGE,"Resolving dependencies for $(pkgname)")
-	$(foreach dependency,$($(PKG)_DEPENDENCIES),$(Q)$(MAKE) $(dependency)$(sep))
+	$(foreach dependency,$($(PKG)_DEPENDENCIES),$(Q)+$(MAKE) $(dependency)$(sep))
 endef
 
 # -----------------------------------------------------------------------------
