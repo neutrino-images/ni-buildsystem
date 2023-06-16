@@ -4,20 +4,20 @@
 #
 ################################################################################
 
-NEUTRINO_PLUGINS_OBJ       = $(NI_NEUTRINO_PLUGINS)-obj
-NEUTRINO_PLUGINS_BUILD_DIR = $(BUILD_DIR)/$(NEUTRINO_PLUGINS_OBJ)
-
-# -----------------------------------------------------------------------------
+NEUTRINO_PLUGINS_VERSION = master
+NEUTRINO_PLUGINS_DIR = $(NI_NEUTRINO_PLUGINS)
+NEUTRINO_PLUGINS_SOURCE = $(NI_NEUTRINO_PLUGINS)
+NEUTRINO_PLUGINS_SITE = https://github.com/neutrino-images
+NEUTRINO_PLUGINS_SITE_METHOD = ni-git
 
 NEUTRINO_PLUGINS_DEPENDENCIES = ffmpeg libcurl libpng libjpeg-turbo giflib \
 	freetype lua-curl lua-feedparser luaexpat luajson luaposix
 
-# -----------------------------------------------------------------------------
+NEUTRINO_PLUGINS_OBJ_DIR = $(BUILD_DIR)/$(NEUTRINO_PLUGINS_DIR)-obj
+NEUTRINO_PLUGINS_CONFIG_STATUS = $(wildcard $(NEUTRINO_PLUGINS_OBJ_DIR)/config.status)
 
 NEUTRINO_PLUGINS_CONF_ENV = \
 	$(TARGET_CONFIGURE_ENV)
-
-# -----------------------------------------------------------------------------
 
 NEUTRINO_PLUGINS_CONF_OPTS = \
 	--build=$(GNU_HOST_NAME) \
@@ -69,17 +69,26 @@ ifeq ($(BOXTYPE),coolstream)
 	--disable-rcu_switcher
 endif
 
-# -----------------------------------------------------------------------------
+define NEUTRINO_PLUGINS_AUTOGEN_SH
+	$($(PKG)_BUILD_DIR)/autogen.sh
+endef
+NEUTRINO_PLUGINS_PRE_CONFIGURE_HOOKS += NEUTRINO_PLUGINS_AUTOGEN_SH
 
-$(NEUTRINO_PLUGINS_BUILD_DIR)/config.status: $(NEUTRINO_PLUGINS_DEPENDENCIES)
-	test -d $(NEUTRINO_PLUGINS_BUILD_DIR) || $(INSTALL) -d $(NEUTRINO_PLUGINS_BUILD_DIR)
-	$(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS)/autogen.sh
-	$(CD) $(NEUTRINO_PLUGINS_BUILD_DIR); \
-		$(NEUTRINO_PLUGINS_CONF_ENV) \
-		$(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS)/configure \
-			$(NEUTRINO_PLUGINS_CONF_OPTS)
+define NEUTRINO_PLUGINS_CONFIGURE_CMDS
+	$(INSTALL) -d $(NEUTRINO_PLUGINS_OBJ_DIR)
+	$(CD) $(NEUTRINO_PLUGINS_OBJ_DIR); \
+		$($(PKG)_CONF_ENV) \
+		$($(PKG)_BUILD_DIR)/configure \
+			$($(PKG)_CONF_OPTS)
+endef
 
-# -----------------------------------------------------------------------------
+define NEUTRINO_PLUGINS_BUILD_CMDS
+	$(MAKE) -C $(NEUTRINO_PLUGINS_OBJ_DIR)
+endef
+
+define NEUTRINO_PLUGINS_INSTALL_CMDS
+	$(MAKE) -C $(NEUTRINO_PLUGINS_OBJ_DIR) install DESTDIR=$(TARGET_DIR)
+endef
 
 NEUTRINO_PLUGINS_INIT_SCRIPTS_DEFAULTS =
 NEUTRINO_PLUGINS_INIT_SCRIPTS_DEFAULTS += emmrd
@@ -108,6 +117,7 @@ define NEUTRINO_PLUGINS_RUNLEVEL_LINKS_INSTALL
 		$(UPDATE-RC.D) turnoff_power start 99 0 .; \
 	fi
 endef
+NEUTRINO_PLUGINS_POST_INSTALL_HOOKS += NEUTRINO_PLUGINS_RUNLEVEL_LINKS_INSTALL
 
 define NEUTRINO_PLUGINS_RUNLEVEL_LINKS_UNINSTALL
 	for script in $(NEUTRINO_PLUGINS_INIT_SCRIPTS); do \
@@ -116,27 +126,7 @@ define NEUTRINO_PLUGINS_RUNLEVEL_LINKS_UNINSTALL
 		fi; \
 	done
 endef
+NEUTRINO_PLUGINS_PRE_UNINSTALL_HOOKS += NEUTRINO_PLUGINS_RUNLEVEL_LINKS_UNINSTALL
 
-# -----------------------------------------------------------------------------
-
-neutrino-plugins: neutrino $(NEUTRINO_PLUGINS_BUILD_DIR)/config.status
-	$(MAKE) -C $(NEUTRINO_PLUGINS_BUILD_DIR)
-	$(MAKE) -C $(NEUTRINO_PLUGINS_BUILD_DIR) install DESTDIR=$(TARGET_DIR)
-	$(NEUTRINO_PLUGINS_RUNLEVEL_LINKS_INSTALL)
-	$(call TOUCH)
-
-# -----------------------------------------------------------------------------
-
-neutrino-plugins-uninstall:
-	$(NEUTRINO_PLUGINS_RUNLEVEL_LINKS_UNINSTALL)
-	-make -C $(NEUTRINO_PLUGINS_BUILD_DIR) uninstall DESTDIR=$(TARGET_DIR)
-
-neutrino-plugins-distclean:
-	-make -C $(NEUTRINO_PLUGINS_BUILD_DIR) distclean
-
-neutrino-plugins-clean: neutrino-plugins-uninstall neutrino-plugins-distclean
-	rm -f $(NEUTRINO_PLUGINS_BUILD_DIR)/config.status
-	rm -f $(DEPS_DIR)/neutrino-plugins
-
-neutrino-plugins-clean-all: neutrino-plugins-clean
-	rm -rf $(NEUTRINO_PLUGINS_BUILD_DIR)
+neutrino-plugins: | $(TARGET_DIR)
+	$(call autotools-package,$(if $(NEUTRINO_PLUGINS_CONFIG_STATUS),$(PKG_NO_CONFIGURE)))
