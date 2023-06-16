@@ -391,7 +391,7 @@ define APPLY_PATCHES # (patches or directory)
 	@$(call MESSAGE,"Patching $(pkgname)")
 	$(foreach hook,$($(PKG)_PRE_PATCH_HOOKS),$(call $(hook))$(sep))
 	$(Q)( \
-	$(CHDIR)/$($(PKG)_DIR); \
+	$(CD) $($(PKG)_BUILD_DIR); \
 	for i in $(1) $(2); do \
 		if [ "$$i" == "$(PKG_PATCHES_DIR)" -a ! -d $$i ]; then \
 			continue; \

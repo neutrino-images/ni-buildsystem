@@ -55,7 +55,7 @@ SAMBA33_MAKE = \
 	$(MAKE1)
 
 define SAMBA33_AUTOGEN_SH
-	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
+	$(CD) $($(PKG)_BUILD_DIR); \
 		./autogen.sh
 endef
 SAMBA33_PRE_CONFIGURE_HOOKS += SAMBA33_AUTOGEN_SH

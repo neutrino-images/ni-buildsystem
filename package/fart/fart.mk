@@ -11,7 +11,7 @@ FART_SITE = https://github.com/lionello
 FART_SITE_METHOD = git
 
 define FART_BUILD_CMDS
-	$(CHDIR)/$($(PKG)_DIR); \
+	$(CD) $($(PKG)_BUILD_DIR); \
 		$(TARGET_CC) fart.cpp fart_shared.c wildmat.c -o fart
 endef
 

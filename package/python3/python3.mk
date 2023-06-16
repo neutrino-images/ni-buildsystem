@@ -23,7 +23,7 @@ HOST_PYTHON3_DEPENDENCIES = host-expat host-zlib host-libffi
 
 # HOST_PYTHON3_AUTORECONF won't work
 define HOST_PYTHON3_AUTOCONF
-	$(CHDIR)/$($(PKG)_DIR); \
+	$(CD) $($(PKG)_BUILD_DIR); \
 		autoconf
 endef
 HOST_PYTHON3_POST_PATCH_HOOKS += HOST_PYTHON3_AUTOCONF

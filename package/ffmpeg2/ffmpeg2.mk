@@ -187,7 +187,7 @@ FFMPEG2_CONF_OPTS += \
 	--extra-ldflags="$(TARGET_LDFLAGS)"
 
 define FFMPEG2_CONFIGURE_CMDS
-	$(CHDIR)/$($(PKG)_DIR); \
+	$(CD) $($(PKG)_BUILD_DIR); \
 		$($(PKG)_CONF_ENV) ./configure $($(PKG)_CONF_OPTS)
 endef
 

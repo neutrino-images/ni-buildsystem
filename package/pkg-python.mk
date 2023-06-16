@@ -15,7 +15,7 @@ HOST_PYTHON3_OPTS = \
 	$(if $(VERBOSE),,-q)
 
 define HOST_PYTHON3_BUILD_CMDS_DEFAULT
-	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
+	$(CD) $($(PKG)_BUILD_DIR); \
 		$(HOST_PYTHON3_ENV) \
 		$(HOST_PYTHON3_BINARY) ./setup.py build --executable=/usr/bin/python \
 			$(HOST_PYTHON3_OPTS)
@@ -29,7 +29,7 @@ define HOST_PYTHON3_BUILD
 endef
 
 define HOST_PYTHON3_INSTALL_CMDS_DEFAULT
-	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
+	$(CD) $($(PKG)_BUILD_DIR); \
 		$(HOST_PYTHON3_ENV) \
 		$(HOST_PYTHON3_BINARY) ./setup.py install --root=$(HOST_DIR) --prefix= \
 			$(HOST_PYTHON3_OPTS)

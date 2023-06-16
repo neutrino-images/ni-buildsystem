@@ -7,7 +7,7 @@
 define AUTORECONF_HOOK
 	if [ "$($(PKG)_AUTORECONF)" == "YES" ]; then \
 		$(call MESSAGE,"Autoreconfiguring $(pkgname)"); \
-		$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
+		$(CD) $($(PKG)_BUILD_DIR); \
 			$($(PKG)_AUTORECONF_ENV) \
 			$($(PKG)_AUTORECONF_CMD) \
 				$($(PKG)_AUTORECONF_OPTS); \
@@ -72,7 +72,7 @@ TARGET_CONFIGURE_OPTS = \
 	--infodir=$(REMOVE_infodir)
 
 define TARGET_CONFIGURE_CMDS_DEFAULT
-	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
+	$(CD) $($(PKG)_BUILD_DIR); \
 		test -f ./$($(PKG)_CONFIGURE_CMD) || ./autogen.sh && \
 		CONFIG_SITE=/dev/null \
 		$(TARGET_CONFIGURE_ARGS) \
@@ -130,7 +130,7 @@ HOST_CONFIGURE_OPTS = \
 	--sysconfdir=$(HOST_DIR)/etc
 
 define HOST_CONFIGURE_CMDS_DEFAULT
-	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
+	$(CD) $($(PKG)_BUILD_DIR); \
 		test -f ./$($(PKG)_CONFIGURE_CMD) || ./autogen.sh && \
 		CONFIG_SITE=/dev/null \
 		$(HOST_CONFIGURE_ENV) $($(PKG)_CONF_ENV) \

@@ -46,7 +46,7 @@ TARGET_CMAKE_OPTS += \
 	-DCMAKE_STRIP="$(TARGET_STRIP)"
 
 define TARGET_CMAKE_CMDS_DEFAULT
-	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
+	$(CD) $($(PKG)_BUILD_DIR); \
 		rm -f CMakeCache.txt; \
 		$(TARGET_CMAKE_ENV) $($(PKG)_CONF_ENV) \
 		$($(PKG)_CMAKE) \
@@ -94,7 +94,7 @@ HOST_CMAKE_OPTS += \
 	-DCMAKE_PREFIX_PATH="$(HOST_DIR)"
 
 define HOST_CMAKE_CMDS_DEFAULT
-	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
+	$(CD) $($(PKG)_BUILD_DIR); \
 		rm -f CMakeCache.txt; \
 		$(HOST_CMAKE_ENV) $($(PKG)_CONF_ENV) \
 		$($(PKG)_CMAKE) \

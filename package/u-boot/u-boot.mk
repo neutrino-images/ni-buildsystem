@@ -14,7 +14,7 @@ U_BOOT_SITE = ftp://ftp.denx.de/pub/u-boot
 HOST_MKIMAGE = $(HOST_DIR)/bin/mkimage
 
 define HOST_U_BOOT_MAKE_DEFCONFIG
-	$(CHDIR)/$($(PKG)_DIR); \
+	$(CD) $($(PKG)_BUILD_DIR); \
 		$($(PKG)_MAKE) defconfig
 endef
 HOST_U_BOOT_PRE_BUILD_HOOKS += HOST_U_BOOT_MAKE_DEFCONFIG

@@ -12,7 +12,7 @@ IRQBALANCE_SITE = $(call github,irqbalance,irqbalance,v$(IRQBALANCE_VERSION))
 IRQBALANCE_DEPENDENCIES = glib2 ncurses
 
 define IRQBALANCE_AUTOGEN_SH
-	$(CHDIR)/$($(PKG)_DIR); \
+	$(CD) $($(PKG)_BUILD_DIR); \
 		./autogen.sh
 endef
 IRQBALANCE_PRE_CONFIGURE_HOOKS += IRQBALANCE_AUTOGEN_SH

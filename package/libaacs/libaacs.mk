@@ -22,7 +22,7 @@ LIBAACS_CONF_OPTS = \
 	--disable-static
 
 define LIBAACS_BOOTSTRAP
-	$(CHDIR)/$($(PKG)_DIR); \
+	$(CD) $($(PKG)_BUILD_DIR); \
 		./bootstrap
 endef
 LIBAACS_PRE_CONFIGURE_HOOKS += LIBAACS_BOOTSTRAP
