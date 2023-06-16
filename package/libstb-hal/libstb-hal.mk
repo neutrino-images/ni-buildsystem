@@ -4,19 +4,19 @@
 #
 ################################################################################
 
-LIBSTB_HAL_OBJ       = $(NI_LIBSTB_HAL)-obj
-LIBSTB_HAL_BUILD_DIR = $(BUILD_DIR)/$(LIBSTB_HAL_OBJ)
-
-# -----------------------------------------------------------------------------
+LIBSTB_HAL_VERSION = master
+LIBSTB_HAL_DIR = $(NI_LIBSTB_HAL)
+LIBSTB_HAL_SOURCE = $(NI_LIBSTB_HAL)
+LIBSTB_HAL_SITE = https://github.com/neutrino-images
+LIBSTB_HAL_SITE_METHOD = ni-git
 
 LIBSTB_HAL_DEPENDENCIES = ffmpeg openthreads
 
-# -----------------------------------------------------------------------------
+LIBSTB_HAL_OBJ_DIR = $(BUILD_DIR)/$(LIBSTB_HAL_DIR)-obj
+LIBSTB_HAL_CONFIG_STATUS = $(wildcard $(LIBSTB_HAL_OBJ_DIR)/config.status)
 
 LIBSTB_HAL_CONF_ENV = \
 	$(NEUTRINO_CONF_ENV)
-
-# -----------------------------------------------------------------------------
 
 LIBSTB_HAL_CONF_OPTS = \
 	--build=$(GNU_HOST_NAME) \
@@ -37,35 +37,26 @@ else
   LIBSTB_HAL_CONF_OPTS += --with-boxmodel=$(BOXMODEL)
 endif
 
-# -----------------------------------------------------------------------------
+define LIBSTB_HAL_AUTOGEN_SH
+	$($(PKG)_BUILD_DIR)/autogen.sh
+endef
+LIBSTB_HAL_PRE_CONFIGURE_HOOKS += LIBSTB_HAL_AUTOGEN_SH
 
-$(LIBSTB_HAL_BUILD_DIR)/config.status: $(LIBSTB_HAL_DEPENDENCIES)
-	test -d $(LIBSTB_HAL_BUILD_DIR) || $(INSTALL) -d $(LIBSTB_HAL_BUILD_DIR)
-	$(SOURCE_DIR)/$(NI_LIBSTB_HAL)/autogen.sh
-	$(CD) $(LIBSTB_HAL_BUILD_DIR); \
-		$(LIBSTB_HAL_CONF_ENV) \
-		$(SOURCE_DIR)/$(NI_LIBSTB_HAL)/configure \
-			$(LIBSTB_HAL_CONF_OPTS)
+define LIBSTB_HAL_CONFIGURE_CMDS
+	$(INSTALL) -d $(LIBSTB_HAL_OBJ_DIR)
+	$(CD) $(LIBSTB_HAL_OBJ_DIR); \
+		$($(PKG)_CONF_ENV) \
+		$($(PKG)_BUILD_DIR)/configure \
+			$($(PKG)_CONF_OPTS)
+endef
 
-# -----------------------------------------------------------------------------
+define LIBSTB_HAL_BUILD_CMDS
+	$(MAKE) -C $(LIBSTB_HAL_OBJ_DIR)
+endef
 
-libstb-hal: $(LIBSTB_HAL_BUILD_DIR)/config.status
-	$(MAKE) -C $(LIBSTB_HAL_BUILD_DIR)
-	$(MAKE) -C $(LIBSTB_HAL_BUILD_DIR) install DESTDIR=$(NEUTRINO_INST_DIR)
-	$(call REWRITE_LIBTOOL)
-	$(call TOUCH)
+define LIBSTB_HAL_INSTALL_CMDS
+	$(MAKE) -C $(LIBSTB_HAL_OBJ_DIR) install DESTDIR=$(NEUTRINO_INST_DIR)
+endef
 
-# -----------------------------------------------------------------------------
-
-libstb-hal-uninstall:
-	-make -C $(LIBSTB_HAL_BUILD_DIR) uninstall DESTDIR=$(TARGET_DIR)
-
-libstb-hal-distclean:
-	-make -C $(LIBSTB_HAL_BUILD_DIR) distclean
-
-libstb-hal-clean: libstb-hal-uninstall libstb-hal-distclean
-	rm -f $(LIBSTB_HAL_BUILD_DIR)/config.status
-	rm -f $(DEPS_DIR)/libstb-hal
-
-libstb-hal-clean-all: libstb-hal-clean
-	rm -rf $(LIBSTB_HAL_BUILD_DIR)
+libstb-hal: | $(TARGET_DIR)
+	$(call autotools-package,$(if $(LIBSTB_HAL_CONFIG_STATUS),$(PKG_NO_CONFIGURE)))
