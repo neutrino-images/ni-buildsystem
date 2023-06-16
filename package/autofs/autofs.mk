@@ -43,7 +43,7 @@ AUTOFS_CONF_OPTS = \
 #	DONTSTRIP=1
 
 define AUTOFS_PATCH_RPC_SUBS_H
-	$(SED) "s|nfs/nfs.h|linux/nfs.h|" $(PKG_BUILD_DIR)/include/rpc_subs.h
+	$(SED) "s|nfs/nfs.h|linux/nfs.h|" $($(PKG)_BUILD_DIR)/include/rpc_subs.h
 endef
 AUTOFS_POST_PATCH_HOOKS += AUTOFS_PATCH_RPC_SUBS_H
 

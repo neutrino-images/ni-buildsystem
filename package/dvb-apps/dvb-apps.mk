@@ -19,7 +19,7 @@ DVB_APPS_MAKE_ENV = \
 DVB_APPS_MAKE_OPTS = \
 	enable_shared=no \
 	KERNEL_HEADERS=$(KERNEL_HEADERS_DIR) \
-	PERL5LIB=$(PKG_BUILD_DIR)/util/scan \
+	PERL5LIB=$($(PKG)_BUILD_DIR)/util/scan \
 
 dvb-apps: | $(TARGET_DIR)
 	$(call generic-package)

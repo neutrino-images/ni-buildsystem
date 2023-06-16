@@ -16,7 +16,7 @@ LIBSIGC_CONF_OPTS = \
 	--without-boost
 
 define LIBSIGC_INSTALL_HEADER
-	cp $(PKG_BUILD_DIR)/sigc++config.h $(TARGET_includedir)
+	cp $($(PKG)_BUILD_DIR)/sigc++config.h $(TARGET_includedir)
 	ln -sf ./sigc++-2.0/sigc++ $(TARGET_includedir)/sigc++
 endef
 LIBSIGC_POST_INSTALL_HOOKS += LIBSIGC_INSTALL_HEADER

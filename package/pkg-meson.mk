@@ -49,17 +49,17 @@ define TARGET_MESON_CMDS_DEFAULT
 		$($(PKG)_CONF_ENV) \
 		$(HOST_MESON_BINARY) \
 			--buildtype=release \
-			--cross-file=$(PKG_BUILD_DIR)/build/meson-cross.config \
+			--cross-file=$($(PKG)_BUILD_DIR)/build/meson-cross.config \
 			-Db_pie=false \
 			-Dstrip=false \
 			$($(PKG)_CONF_OPTS) \
-			$(PKG_BUILD_DIR) $(PKG_BUILD_DIR)/build
+			$($(PKG)_BUILD_DIR) $($(PKG)_BUILD_DIR)/build
 endef
 
 define TARGET_MESON_CONFIGURE
 	@$(call MESSAGE,"Configuring $(pkgname)")
 	$(foreach hook,$($(PKG)_PRE_CONFIGURE_HOOKS),$(call $(hook))$(sep))
-	$(Q)$(call MESON_CROSS_CONFIG_HOOK,$(PKG_BUILD_DIR)/build)
+	$(Q)$(call MESON_CROSS_CONFIG_HOOK,$($(PKG)_BUILD_DIR)/build)
 	$(Q)$(call $(PKG)_CONFIGURE_CMDS)
 	$(foreach hook,$($(PKG)_POST_CONFIGURE_HOOKS),$(call $(hook))$(sep))
 endef
@@ -67,7 +67,7 @@ endef
 define TARGET_NINJA_BUILD_CMDS_DEFAULT
 	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
 		$(TARGET_MAKE_ENV) $($(PKG)_NINJA_ENV) \
-		$(HOST_NINJA_BINARY) -C $(PKG_BUILD_DIR)/build \
+		$(HOST_NINJA_BINARY) -C $($(PKG)_BUILD_DIR)/build \
 			$($(PKG)_NINJA_OPTS)
 endef
 
@@ -82,7 +82,7 @@ define TARGET_NINJA_INSTALL_CMDS_DEFAULT
 	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
 		$(TARGET_MAKE_ENV) $($(PKG)_NINJA_ENV) \
 		DESTDIR=$(TARGET_DIR) \
-		$(HOST_NINJA_BINARY) -C $(PKG_BUILD_DIR)/build install \
+		$(HOST_NINJA_BINARY) -C $($(PKG)_BUILD_DIR)/build install \
 			$($(PKG)_NINJA_OPTS)
 endef
 
@@ -117,7 +117,7 @@ define HOST_MESON_CMDS_DEFAULT
 			--prefix=$(HOST_DIR) \
 			--buildtype=release \
 			$($(PKG)_CONF_OPTS) \
-			$(PKG_BUILD_DIR) $(PKG_BUILD_DIR)/build
+			$($(PKG)_BUILD_DIR) $($(PKG)_BUILD_DIR)/build
 endef
 
 define HOST_MESON_CONFIGURE
@@ -130,7 +130,7 @@ endef
 define HOST_NINJA_BUILD_CMDS_DEFAULT
 	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
 		$(HOST_MAKE_ENV) $($(PKG)_NINJA_ENV) \
-		$(HOST_NINJA_BINARY) -C $(PKG_BUILD_DIR)/build \
+		$(HOST_NINJA_BINARY) -C $($(PKG)_BUILD_DIR)/build \
 			$($(PKG)_NINJA_OPTS)
 endef
 
@@ -144,7 +144,7 @@ endef
 define HOST_NINJA_INSTALL_CMDS_DEFAULT
 	$(CHDIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR); \
 		$(HOST_MAKE_ENV) $($(PKG)_NINJA_ENV) \
-		$(HOST_NINJA_BINARY) -C $(PKG_BUILD_DIR)/build install \
+		$(HOST_NINJA_BINARY) -C $($(PKG)_BUILD_DIR)/build install \
 			$($(PKG)_NINJA_OPTS)
 endef
 

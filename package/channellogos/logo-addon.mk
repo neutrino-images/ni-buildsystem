@@ -12,9 +12,9 @@ LOGO_ADDON_SITE_METHOD = ni-git
 
 define LOGO_ADDON_INSTALL
 	$(INSTALL) -d $(SHARE_PLUGINS)
-	$(INSTALL_EXEC) $(PKG_BUILD_DIR)/logo-addon/logo-addon.sh $(SHARE_PLUGINS)/
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/logo-addon/logo-addon.cfg $(SHARE_PLUGINS)/
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/logo-addon/logo-addon_hint.png $(SHARE_PLUGINS)/
+	$(INSTALL_EXEC) $($(PKG)_BUILD_DIR)/logo-addon/logo-addon.sh $(SHARE_PLUGINS)/
+	$(INSTALL_DATA) $($(PKG)_BUILD_DIR)/logo-addon/logo-addon.cfg $(SHARE_PLUGINS)/
+	$(INSTALL_DATA) $($(PKG)_BUILD_DIR)/logo-addon/logo-addon_hint.png $(SHARE_PLUGINS)/
 endef
 LOGO_ADDON_INDIVIDUAL_HOOKS += LOGO_ADDON_INSTALL
 

@@ -23,9 +23,9 @@ MINISATIP_MAKE_ENV = \
 	$(TARGET_CONFIGURE_ENV)
 
 define MINISATIP_INSTALL_CMDS
-	$(INSTALL_EXEC) -D $(PKG_BUILD_DIR)/minisatip $(TARGET_bindir)/minisatip
+	$(INSTALL_EXEC) -D $($(PKG)_BUILD_DIR)/minisatip $(TARGET_bindir)/minisatip
 	$(INSTALL) -d $(TARGET_datadir)/minisatip
-	$(INSTALL_COPY) $(PKG_BUILD_DIR)/html $(TARGET_datadir)/minisatip
+	$(INSTALL_COPY) $($(PKG)_BUILD_DIR)/html $(TARGET_datadir)/minisatip
 endef
 
 define MINISATIP_INSTALL_DEFAULTS

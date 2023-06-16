@@ -25,13 +25,13 @@ IOZONE_MAKE_OPTS = \
 	$(IOZONE_TARGET)
 
 define IOZONE_PATCH_MAKEFILE
-	$(SED) "s/= gcc/= $(TARGET_CC)/" $(PKG_BUILD_DIR)/makefile
-	$(SED) "s/= cc/= $(TARGET_CC)/" $(PKG_BUILD_DIR)/makefile
+	$(SED) "s/= gcc/= $(TARGET_CC)/" $($(PKG)_BUILD_DIR)/makefile
+	$(SED) "s/= cc/= $(TARGET_CC)/" $($(PKG)_BUILD_DIR)/makefile
 endef
 IOZONE_POST_PATCH_HOOKS += IOZONE_PATCH_MAKEFILE
 
 define IOZONE_INSTALL_CMDS
-	$(INSTALL_EXEC) -D $(PKG_BUILD_DIR)/iozone $(TARGET_bindir)/iozone
+	$(INSTALL_EXEC) -D $($(PKG)_BUILD_DIR)/iozone $(TARGET_bindir)/iozone
 endef
 
 iozone: | $(TARGET_DIR)

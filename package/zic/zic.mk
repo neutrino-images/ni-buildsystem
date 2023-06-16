@@ -22,7 +22,7 @@ define HOST_ZIC_BUILD_CMDS
 endef
 
 define HOST_ZIC_INSTALL_CMDS
-	$(INSTALL_EXEC) -D $(PKG_BUILD_DIR)/zic $(HOST_ZIC)
+	$(INSTALL_EXEC) -D $($(PKG)_BUILD_DIR)/zic $(HOST_ZIC)
 endef
 
 host-zic: | $(HOST_DIR)

@@ -14,7 +14,7 @@
 # be $(1) if provided, or the current package .config file otherwise.
 KCONFIG_DOT_CONFIG = $(strip \
 	$(if $(strip $(1)), $(1), \
-		$(PKG_BUILD_DIR)/$($(PKG)_KCONFIG_DOTCONFIG) \
+		$($(PKG)_BUILD_DIR)/$($(PKG)_KCONFIG_DOTCONFIG) \
 	) \
 )
 

@@ -16,7 +16,7 @@ BZIP2_MAKE_OPTS = \
 	PREFIX=$(TARGET_prefix)
 
 define BZIP2_MAKEFILE_LIBBZ2_SO
-	mv $(PKG_BUILD_DIR)/Makefile-libbz2_so $(PKG_BUILD_DIR)/Makefile
+	mv $($(PKG)_BUILD_DIR)/Makefile-libbz2_so $($(PKG)_BUILD_DIR)/Makefile
 endef
 BZIP2_POST_PATCH_HOOKS += BZIP2_MAKEFILE_LIBBZ2_SO
 

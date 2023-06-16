@@ -13,7 +13,6 @@ PKG = $(call UPPERCASE,$(pkgname))
 PKG_PARENT = $(subst HOST_,,$(PKG))
 PKG_PACKAGE = $(if $(filter $(firstword $(subst -, ,$(pkg))),host),HOST,TARGET)
 
-PKG_BUILD_DIR = $(BUILD_DIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR)
 PKG_FILES_DIR = $(PACKAGE_DIR)/$(subst host-,,$(pkgname))/files
 PKG_PATCHES_DIR = $(PACKAGE_DIR)/$(subst host-,,$(pkgname))/patches
 
@@ -21,6 +20,15 @@ PKG_PATCHES_DIR = $(PACKAGE_DIR)/$(subst host-,,$(pkgname))/patches
 
 # check for necessary $(PKG) variables
 define PKG_CHECK_VARIABLES
+
+# build dir
+ifndef $(PKG)_BUILD_DIR
+  ifdef $(PKG)_SUBDIR
+    $(PKG)_BUILD_DIR = $(BUILD_DIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR)
+  else
+    $(PKG)_BUILD_DIR = $(BUILD_DIR)/$($(PKG)_DIR)
+  endif
+endif
 
 # auto-assign HOST_ variables
 ifeq ($(PKG_PACKAGE),HOST)

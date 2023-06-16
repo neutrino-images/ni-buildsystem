@@ -16,7 +16,7 @@ define FART_BUILD_CMDS
 endef
 
 define FART_INSTALL_CMDS
-	$(INSTALL_EXEC) -D $(PKG_BUILD_DIR)/fart $(TARGET_bindir)/fart
+	$(INSTALL_EXEC) -D $($(PKG)_BUILD_DIR)/fart $(TARGET_bindir)/fart
 endef
 
 fart: | $(TARGET_DIR)

@@ -48,9 +48,9 @@ define OPENSSL_CONFIGURE_CMDS
 endef
 
 define OPENSSL_PATCH_MAKEFILE
-	$(SED) 's| build_tests||' $(PKG_BUILD_DIR)/Makefile
-	$(SED) 's|^MANDIR=.*|MANDIR=$(REMOVE_mandir)|' $(PKG_BUILD_DIR)/Makefile
-	$(SED) 's|^HTMLDIR=.*|HTMLDIR=$(REMOVE_htmldir)|' $(PKG_BUILD_DIR)/Makefile
+	$(SED) 's| build_tests||' $($(PKG)_BUILD_DIR)/Makefile
+	$(SED) 's|^MANDIR=.*|MANDIR=$(REMOVE_mandir)|' $($(PKG)_BUILD_DIR)/Makefile
+	$(SED) 's|^HTMLDIR=.*|HTMLDIR=$(REMOVE_htmldir)|' $($(PKG)_BUILD_DIR)/Makefile
 endef
 OPENSSL_POST_CONFIGURE_HOOKS += OPENSSL_PATCH_MAKEFILE
 

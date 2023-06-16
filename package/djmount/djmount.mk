@@ -21,7 +21,7 @@ DJMOUNT_MAKE = \
 	$(MAKE1)
 
 define DJMOUNT_TOUCH_CONFIG_RPATH
-	touch $(PKG_BUILD_DIR)/libupnp/config.aux/config.rpath
+	touch $($(PKG)_BUILD_DIR)/libupnp/config.aux/config.rpath
 endef
 DJMOUNT_PRE_CONFIGURE_HOOKS += DJMOUNT_TOUCH_CONFIG_RPATH
 

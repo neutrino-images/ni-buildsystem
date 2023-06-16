@@ -26,13 +26,13 @@ DROPBEAR_MAKE_OPTS = \
 
 define DROPBEAR_CONFIGURE_LOCALOPTIONS
 	# Ensure that dropbear doesn't use crypt() when it's not available
-	echo '#if !HAVE_CRYPT'				>> $(PKG_BUILD_DIR)/localoptions.h
-	echo '#define DROPBEAR_SVR_PASSWORD_AUTH 0'	>> $(PKG_BUILD_DIR)/localoptions.h
-	echo '#endif'					>> $(PKG_BUILD_DIR)/localoptions.h
+	echo '#if !HAVE_CRYPT'				>> $($(PKG)_BUILD_DIR)/localoptions.h
+	echo '#define DROPBEAR_SVR_PASSWORD_AUTH 0'	>> $($(PKG)_BUILD_DIR)/localoptions.h
+	echo '#endif'					>> $($(PKG)_BUILD_DIR)/localoptions.h
 	# disable SMALL_CODE define
-	echo '#define DROPBEAR_SMALL_CODE 0'		>> $(PKG_BUILD_DIR)/localoptions.h
+	echo '#define DROPBEAR_SMALL_CODE 0'		>> $($(PKG)_BUILD_DIR)/localoptions.h
 	# fix PATH define
-	echo '#define DEFAULT_PATH "/sbin:/bin:/usr/sbin:/usr/bin:/var/bin"' >> $(PKG_BUILD_DIR)/localoptions.h
+	echo '#define DEFAULT_PATH "/sbin:/bin:/usr/sbin:/usr/bin:/var/bin"' >> $($(PKG)_BUILD_DIR)/localoptions.h
 endef
 DROPBEAR_POST_CONFIGURE_HOOKS = DROPBEAR_CONFIGURE_LOCALOPTIONS
 

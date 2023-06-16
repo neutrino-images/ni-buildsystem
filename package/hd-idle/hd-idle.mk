@@ -13,7 +13,7 @@ HD_IDLE_MAKE_ENV = \
 	$(TARGET_CONFIGURE_ENV)
 
 define HD_IDLE_INSTALL_CMDS
-	$(INSTALL_EXEC) -D $(PKG_BUILD_DIR)/hd-idle $(TARGET_sbindir)/hd-idle
+	$(INSTALL_EXEC) -D $($(PKG)_BUILD_DIR)/hd-idle $(TARGET_sbindir)/hd-idle
 endef
 
 hd-idle: | $(TARGET_DIR)

@@ -35,7 +35,7 @@ USHARE_MAKE_OPTS = \
 	LDFLAGS="$(TARGET_LDFLAGS)"
 
 define USHARE_LINK_CONFIG_H
-	ln -sf ../config.h $(PKG_BUILD_DIR)/src/
+	ln -sf ../config.h $($(PKG)_BUILD_DIR)/src/
 endef
 USHARE_POST_PATCH_HOOKS += USHARE_LINK_CONFIG_H
 

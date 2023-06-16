@@ -24,7 +24,7 @@ FREETYPE_CONF_OPTS = \
 	--without-harfbuzz
 
 define FREETYPE_PATCH_MODULES_CFG
-	$(SED) '/^FONT_MODULES += \(type1\|cid\|pfr\|type42\|pcf\|bdf\|winfonts\|cff\)/d' $(PKG_BUILD_DIR)/modules.cfg
+	$(SED) '/^FONT_MODULES += \(type1\|cid\|pfr\|type42\|pcf\|bdf\|winfonts\|cff\)/d' $($(PKG)_BUILD_DIR)/modules.cfg
 endef
 FREETYPE_POST_PATCH_HOOKS += FREETYPE_PATCH_MODULES_CFG
 

@@ -11,7 +11,7 @@ RTL8192EU_SITE = https://github.com/mange
 RTL8192EU_SITE_METHOD = git
 
 define RTL8192EU_INSTALL_CMDS
-	$(INSTALL_DATA) -D $(PKG_BUILD_DIR)/8192eu.ko $(TARGET_modulesdir)/kernel/drivers/net/wireless/8192eu.ko
+	$(INSTALL_DATA) -D $($(PKG)_BUILD_DIR)/8192eu.ko $(TARGET_modulesdir)/kernel/drivers/net/wireless/8192eu.ko
 endef
 
 rtl8192eu: | $(TARGET_DIR)

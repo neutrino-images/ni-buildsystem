@@ -29,23 +29,23 @@ LINKS_CONF_OPTS = \
 
 ifeq ($(BOXTYPE),$(filter $(BOXTYPE),coolstream))
 define LINKS_PATCH_RCINPUT_C
-	$(SED) 's|"/dev/input/event0"|"/dev/input/nevis_ir"|' $(PKG_BUILD_DIR)/rcinput.c
+	$(SED) 's|"/dev/input/event0"|"/dev/input/nevis_ir"|' $($(PKG)_BUILD_DIR)/rcinput.c
 endef
 else ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k e4hdultra protek4k))
 define LINKS_PATCH_RCINPUT_C
-	$(SED) 's|"/dev/input/event0"|"/dev/input/event1"|' $(PKG_BUILD_DIR)/rcinput.c
+	$(SED) 's|"/dev/input/event0"|"/dev/input/event1"|' $($(PKG)_BUILD_DIR)/rcinput.c
 endef
 else ifeq ($(BOXMODEL),$(filter $(BOXMODEL),h7))
 define LINKS_PATCH_RCINPUT_C
-	$(SED) 's|"/dev/input/event0"|"/dev/input/event2"|' $(PKG_BUILD_DIR)/rcinput.c
+	$(SED) 's|"/dev/input/event0"|"/dev/input/event2"|' $($(PKG)_BUILD_DIR)/rcinput.c
 endef
 endif
 LINKS_POST_PATCH_HOOKS += LINKS_PATCH_RCINPUT_C
 
 define LINKS_PREPARE_INTL
-	$(SED) 's|^T_SAVE_HTML_OPTIONS,.*|T_SAVE_HTML_OPTIONS, "HTML-Optionen speichern",|' $(PKG_BUILD_DIR)/intl/german.lng
-	echo "english" > $(PKG_BUILD_DIR)/intl/index.txt
-	echo "german" >> $(PKG_BUILD_DIR)/intl/index.txt
+	$(SED) 's|^T_SAVE_HTML_OPTIONS,.*|T_SAVE_HTML_OPTIONS, "HTML-Optionen speichern",|' $($(PKG)_BUILD_DIR)/intl/german.lng
+	echo "english" > $($(PKG)_BUILD_DIR)/intl/index.txt
+	echo "german" >> $($(PKG)_BUILD_DIR)/intl/index.txt
 	$(CHDIR)/$($(PKG)_DIR)/intl; \
 		./gen-intl
 endef

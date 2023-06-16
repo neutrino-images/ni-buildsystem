@@ -18,7 +18,7 @@ ASTRA_SM_CONF_OPTS = \
 	--without-lua
 
 define ASTRA_SM_PATCH_MAKEFILE
-	$(SED) 's:(CFLAGS):(CFLAGS_FOR_BUILD):' $(PKG_BUILD_DIR)/tools/Makefile.am
+	$(SED) 's:(CFLAGS):(CFLAGS_FOR_BUILD):' $($(PKG)_BUILD_DIR)/tools/Makefile.am
 endef
 ASTRA_SM_POST_PATCH_HOOKS = ASTRA_SM_PATCH_MAKEFILE
 
