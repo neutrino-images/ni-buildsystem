@@ -98,7 +98,7 @@ endef
 define meson-package
 	$(eval PKG_MODE = $(pkg-mode))
 	$(call PREPARE,$(1))
-	$(call TARGET_MESON_CONFIGURE)
+	$(if $(filter $(1),$(PKG_NO_CONFIGURE)),,$(call TARGET_MESON_CONFIGURE))
 	$(if $(filter $(1),$(PKG_NO_BUILD)),,$(call TARGET_NINJA_BUILD))
 	$(if $(filter $(1),$(PKG_NO_INSTALL)),,$(call TARGET_NINJA_INSTALL))
 	$(call TARGET_FOLLOWUP)
@@ -160,7 +160,7 @@ endef
 define host-meson-package
 	$(eval PKG_MODE = $(pkg-mode))
 	$(call PREPARE,$(1))
-	$(call HOST_MESON_CONFIGURE)
+	$(if $(filter $(1),$(PKG_NO_CONFIGURE)),,$(call HOST_MESON_CONFIGURE))
 	$(if $(filter $(1),$(PKG_NO_BUILD)),,$(call HOST_NINJA_BUILD))
 	$(if $(filter $(1),$(PKG_NO_INSTALL)),,$(call HOST_NINJA_INSTALL))
 	$(call HOST_FOLLOWUP)

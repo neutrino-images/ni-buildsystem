@@ -65,7 +65,7 @@ endef
 define cmake-package
 	$(eval PKG_MODE = $(pkg-mode))
 	$(call PREPARE,$(1))
-	$(call TARGET_CMAKE)
+	$(if $(filter $(1),$(PKG_NO_CONFIGURE)),,$(call TARGET_CMAKE))
 	$(if $(filter $(1),$(PKG_NO_BUILD)),,$(call TARGET_MAKE_BUILD))
 	$(if $(filter $(1),$(PKG_NO_INSTALL)),,$(call TARGET_MAKE_INSTALL))
 	$(call TARGET_FOLLOWUP)
@@ -113,7 +113,7 @@ endef
 define host-cmake-package
 	$(eval PKG_MODE = $(pkg-mode))
 	$(call PREPARE,$(1))
-	$(call HOST_CMAKE)
+	$(if $(filter $(1),$(PKG_NO_CONFIGURE)),,$(call HOST_CMAKE))
 	$(if $(filter $(1),$(PKG_NO_BUILD)),,$(call HOST_MAKE_BUILD))
 	$(if $(filter $(1),$(PKG_NO_INSTALL)),,$(call HOST_MAKE_INSTALL))
 	$(call HOST_FOLLOWUP)

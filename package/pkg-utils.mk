@@ -239,6 +239,7 @@ pkg-mode = $(call UPPERCASE,$(subst -package,,$(subst host-,,$(0))))
 PKG_NO_DOWNLOAD = pkg-no-download
 PKG_NO_EXTRACT = pkg-no-extract
 PKG_NO_PATCHES = pkg-no-patches
+PKG_NO_CONFIGURE = pkg-no-configure
 PKG_NO_BUILD = pkg-no-build
 PKG_NO_INSTALL = pkg-no-install
 
