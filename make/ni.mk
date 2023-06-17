@@ -80,7 +80,6 @@ ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd2 hd5x hd6x vusolo4k vuduo4k vuduo4ks
 endif
 	make autofs
 	make sysconfdir
-	make sysconfdir-var
 	make init-scripts
 ifeq ($(PERSONALIZE),yes)
 	make personalize

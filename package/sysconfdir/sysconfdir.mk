@@ -6,26 +6,6 @@
 
 SYSCONFDIR_FILES_DIR = $(PACKAGE_DIR)/sysconfdir/files
 
-sysconfdir: \
-	$(TARGET_sysconfdir)/date-dummy \
-	$(TARGET_sysconfdir)/filesystems \
-	$(TARGET_sysconfdir)/fstab \
-	$(TARGET_sysconfdir)/group \
-	$(TARGET_sysconfdir)/hosts \
-	$(TARGET_sysconfdir)/issue.net \
-	$(TARGET_sysconfdir)/model \
-	$(TARGET_sysconfdir)/nsswitch.conf \
-	$(TARGET_sysconfdir)/passwd \
-	$(TARGET_sysconfdir)/profile \
-	$(TARGET_sysconfdir)/profile.local \
-	$(TARGET_sysconfdir)/profile.d \
-	$(TARGET_sysconfdir)/protocols \
-	$(TARGET_sysconfdir)/services
-
-PHONY += $(TARGET_sysconfdir)/profile.d
-
-# -----------------------------------------------------------------------------
-
 $(TARGET_sysconfdir)/date-dummy:
 	echo "$(shell date +%Y)01010000" > $(@)
 
@@ -71,18 +51,36 @@ $(TARGET_sysconfdir)/profile.d:
 	$(foreach p,$(wildcard $(SYSCONFDIR_FILES_DIR)/profile.d/*.sh),\
 		$(INSTALL_DATA) -D $(p) $(TARGET_sysconfdir)/profile.d/$(notdir $(p))$(sep))
 
-$(TARGET_sysconfdir)/services:
-	$(INSTALL_DATA) -D $(SYSCONFDIR_FILES_DIR)/services $(@)
+PHONY += $(TARGET_sysconfdir)/profile.d
 
 $(TARGET_sysconfdir)/protocols:
 	$(INSTALL_DATA) -D $(SYSCONFDIR_FILES_DIR)/protocols $(@)
 
-# -----------------------------------------------------------------------------
-
-sysconfdir-var: \
-	$(TARGET_localstatedir)/etc/fstab
-
-# -----------------------------------------------------------------------------
+$(TARGET_sysconfdir)/services:
+	$(INSTALL_DATA) -D $(SYSCONFDIR_FILES_DIR)/services $(@)
 
 $(TARGET_localstatedir)/etc/fstab:
 	$(INSTALL_DATA) -D $(SYSCONFDIR_FILES_DIR)/fstab-var $(@)
+
+# -----------------------------------------------------------------------------
+
+SYSCONFDIR_DEPENDENCIES = \
+	$(TARGET_sysconfdir)/date-dummy \
+	$(TARGET_sysconfdir)/filesystems \
+	$(TARGET_sysconfdir)/fstab \
+	$(TARGET_sysconfdir)/group \
+	$(TARGET_sysconfdir)/hosts \
+	$(TARGET_sysconfdir)/issue.net \
+	$(TARGET_sysconfdir)/model \
+	$(TARGET_sysconfdir)/nsswitch.conf \
+	$(TARGET_sysconfdir)/passwd \
+	$(TARGET_sysconfdir)/profile \
+	$(TARGET_sysconfdir)/profile.local \
+	$(TARGET_sysconfdir)/profile.d \
+	$(TARGET_sysconfdir)/protocols \
+	$(TARGET_sysconfdir)/services \
+	\
+	$(TARGET_localstatedir)/etc/fstab
+
+sysconfdir: | $(TARGET_DIR)
+	$(call virtual-package)
