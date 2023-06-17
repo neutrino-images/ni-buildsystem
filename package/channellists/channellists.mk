@@ -7,7 +7,13 @@
 CHANNELLISTS_SITE = $(NI_SERVER)/channellists
 CHANNELLISTS_MD5FILE = channellists.txt
 
-channellists: matze-192 matze-192-130
+CHANNELLISTS_DEPENDENCIES = matze-192 matze-192-130
+
+channellists:
+	$(call virtual-package)
+
+# force build
+PHONY += channellists
 
 # -----------------------------------------------------------------------------
 
