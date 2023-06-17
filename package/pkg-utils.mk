@@ -247,7 +247,7 @@ PKG_NO_INSTALL = pkg-no-install
 
 # clean-up
 define CLEANUP
-	if [ "$($(PKG)_DIR)" ]; then \
+	if [ "$($(PKG)_DIR)" -a -e $(BUILD_DIR)/$($(PKG)_DIR) ]; then \
 		$(call MESSAGE,"Clean-up $(pkgname)"); \
 		$(CD) $(BUILD_DIR); \
 			rm -rf $($(PKG)_DIR); \
