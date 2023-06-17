@@ -38,4 +38,5 @@ HOST_CCACHE_DEPENDENCIES = find-ccache $(CCACHE) \
 	$(HOST_CCACHE_HOST_LINKS) \
 	$(HOST_CCACHE_TARGET_LINKS)
 
-host-ccache: $(HOST_CCACHE_DEPENDENCIES)
+host-ccache: | $(HOST_DIR)
+	$(call host-virtual-package)
