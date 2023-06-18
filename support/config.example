@@ -60,11 +60,6 @@ MAINTAINER = $(shell whoami)
 
 # -----------------------------------------------------------------------------
 
-# use lastest VU+ drivers
-#VUPLUS_DRIVERS_LATEST = yes
-
-# -----------------------------------------------------------------------------
-
 # Neutrino branch
 #BS_PACKAGE_NEUTRINO_BRANCH = your/branch
 
@@ -74,6 +69,11 @@ MAINTAINER = $(shell whoami)
 #BS_PACKAGE_NEUTRINO_TMDB_DEV_KEY =
 #BS_PACKAGE_NEUTRINO_YOUTUBE_DEV_KEY =
 #BS_PACKAGE_NEUTRINO_WEATHER_DEV_KEY =
+
+# -----------------------------------------------------------------------------
+
+# use lastest VU+ drivers
+#BS_PACKAGE_VUPLUS_DRIVERS_LATEST = yes
 
 # -----------------------------------------------------------------------------
 
