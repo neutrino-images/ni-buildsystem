@@ -65,6 +65,9 @@ MAINTAINER = $(shell whoami)
 
 # -----------------------------------------------------------------------------
 
+# Neutrino branch
+#BS_PACKAGE_NEUTRINO_BRANCH = your/branch
+
 # Neutrino API keys
 #BS_PACKAGE_NEUTRINO_OMDB_API_KEY =
 #BS_PACKAGE_NEUTRINO_SHOUTCAST_DEV_KEY =

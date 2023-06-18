@@ -16,6 +16,12 @@ BS_PACKAGE_FFMPEG4_FFPLAY ?= n
 # ncurses: build wide-character libraries
 BS_PACKAGE_NCURSES_WCHAR ?= y
 
+# neutrino: branch
+BS_PACKAGE_NEUTRINO_BRANCH ?= $(NEUTRINO_BRANCH)
+ifeq ($(BS_PACKAGE_NEUTRINO_BRANCH),$(empty))
+BS_PACKAGE_NEUTRINO_BRANCH = master
+endif
+
 # neutrino: use ffmpeg audio decoder
 BS_PACKAGE_NEUTRINO_AUDIODEC_FFMPEG ?= y
 

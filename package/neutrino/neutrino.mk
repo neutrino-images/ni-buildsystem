@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-NEUTRINO_VERSION = master
+NEUTRINO_VERSION = $(BS_PACKAGE_NEUTRINO_BRANCH)
 NEUTRINO_DIR = $(NI_NEUTRINO)
 NEUTRINO_SOURCE = $(NI_NEUTRINO)
 NEUTRINO_SITE = https://github.com/neutrino-images
