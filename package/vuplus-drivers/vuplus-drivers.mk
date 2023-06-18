@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-ifeq ($(BS_PACKAGE_VUPLUS_DRIVERS_LATEST),yes)
+ifeq ($(BS_PACKAGE_VUPLUS_DRIVERS_LATEST),y)
 VUSOLO4K_DRIVERS_VERSION = 20190424
 else
 VUSOLO4K_DRIVERS_VERSION = 20190424
@@ -13,7 +13,7 @@ VUSOLO4K_DRIVERS_DIR = vuplus-dvb-proxy-vusolo4k
 VUSOLO4K_DRIVERS_SOURCE = vuplus-dvb-proxy-vusolo4k-3.14.28-$(VUSOLO4K_DRIVERS_VERSION).r0.tar.gz
 VUSOLO4K_DRIVERS_SITE = http://code.vuplus.com/download/release/vuplus-dvb-proxy
 
-ifeq ($(BS_PACKAGE_VUPLUS_DRIVERS_LATEST),yes)
+ifeq ($(BS_PACKAGE_VUPLUS_DRIVERS_LATEST),y)
 VUDUO4K_DRIVERS_VERSION = 20191218
 else
 VUDUO4K_DRIVERS_VERSION = 20191218
@@ -22,7 +22,7 @@ VUDUO4K_DRIVERS_DIR = vuplus-dvb-proxy-vuduo4k
 VUDUO4K_DRIVERS_SOURCE = vuplus-dvb-proxy-vuduo4k-4.1.45-$(VUDUO4K_DRIVERS_VERSION).r0.tar.gz
 VUDUO4K_DRIVERS_SITE = http://code.vuplus.com/download/release/vuplus-dvb-proxy
 
-ifeq ($(BS_PACKAGE_VUPLUS_DRIVERS_LATEST),yes)
+ifeq ($(BS_PACKAGE_VUPLUS_DRIVERS_LATEST),y)
 VUDUO4KSE_DRIVERS_VERSION = 20210407
 else
 VUDUO4KSE_DRIVERS_VERSION = 20210407
@@ -32,7 +32,7 @@ VUDUO4KSE_DRIVERS_DIR = vuplus-dvb-proxy-vuduo4kse
 VUDUO4KSE_DRIVERS_SOURCE = vuplus-dvb-proxy-vuduo4kse-4.1.45-$(VUDUO4KSE_DRIVERS_VERSION).r0.tar.gz
 VUDUO4KSE_DRIVERS_SITE = http://code.vuplus.com/download/release/vuplus-dvb-proxy
 
-ifeq ($(BS_PACKAGE_VUPLUS_DRIVERS_LATEST),yes)
+ifeq ($(BS_PACKAGE_VUPLUS_DRIVERS_LATEST),y)
 VUULTIMO4K_DRIVERS_VERSION = 20190424
 else
 VUULTIMO4K_DRIVERS_VERSION = 20190424
@@ -41,7 +41,7 @@ VUULTIMO4K_DRIVERS_DIR = vuplus-dvb-proxy-vuultimo4k
 VUULTIMO4K_DRIVERS_SOURCE = vuplus-dvb-proxy-vuultimo4k-3.14.28-$(VUULTIMO4K_DRIVERS_VERSION).r0.tar.gz
 VUULTIMO4K_DRIVERS_SITE = http://code.vuplus.com/download/release/vuplus-dvb-proxy
 
-ifeq ($(BS_PACKAGE_VUPLUS_DRIVERS_LATEST),yes)
+ifeq ($(BS_PACKAGE_VUPLUS_DRIVERS_LATEST),y)
 VUZERO4K_DRIVERS_VERSION = 20210407
 else
 VUZERO4K_DRIVERS_VERSION = 20210407
@@ -51,7 +51,7 @@ VUZERO4K_DRIVERS_DIR = vuplus-dvb-proxy-vuzero4k
 VUZERO4K_DRIVERS_SOURCE = vuplus-dvb-proxy-vuzero4k-4.1.20-$(VUZERO4K_DRIVERS_VERSION).r0.tar.gz
 VUZERO4K_DRIVERS_SITE = http://code.vuplus.com/download/release/vuplus-dvb-proxy
 
-ifeq ($(BS_PACKAGE_VUPLUS_DRIVERS_LATEST),yes)
+ifeq ($(BS_PACKAGE_VUPLUS_DRIVERS_LATEST),y)
 VUUNO4K_DRIVERS_VERSION = 20190424
 else
 VUUNO4K_DRIVERS_VERSION = 20190424
@@ -60,7 +60,7 @@ VUUNO4K_DRIVERS_DIR = vuplus-dvb-proxy-vuuno4k
 VUUNO4K_DRIVERS_SOURCE = vuplus-dvb-proxy-vuuno4k-3.14.28-$(VUUNO4K_DRIVERS_VERSION).r0.tar.gz
 VUUNO4K_DRIVERS_SITE = http://code.vuplus.com/download/release/vuplus-dvb-proxy
 
-ifeq ($(BS_PACKAGE_VUPLUS_DRIVERS_LATEST),yes)
+ifeq ($(BS_PACKAGE_VUPLUS_DRIVERS_LATEST),y)
 VUUNO4KSE_DRIVERS_VERSION = 20210407
 else
 VUUNO4KSE_DRIVERS_VERSION = 20210407

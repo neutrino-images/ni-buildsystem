@@ -60,3 +60,6 @@ BS_PACKAGE_NEUTRINO_WEATHER_DEV_KEY ?= $(NEUTRINO_WEATHER_DEV_KEY)
 
 # neutrino-mediathek: use plugin from NI plugins repository
 BS_PACKAGE_NEUTRINO_MEDIATHEK_ORIGIN_NI ?= y
+
+# vu+ drivers: use latest version
+BS_PACKAGE_VUPLUS_DRIVERS_LATEST ?= n

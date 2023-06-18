@@ -73,7 +73,7 @@ MAINTAINER = $(shell whoami)
 # -----------------------------------------------------------------------------
 
 # use lastest VU+ drivers
-#BS_PACKAGE_VUPLUS_DRIVERS_LATEST = yes
+#BS_PACKAGE_VUPLUS_DRIVERS_LATEST = y
 
 # -----------------------------------------------------------------------------
 
