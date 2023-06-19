@@ -24,9 +24,9 @@ XUPNPD_MAKE_OPTS = \
 	embedded
 
 define XUPNPD_INSTALL_CMDS
-	$(INSTALL_EXEC) -D $($(PKG)_BUILD_DIR)/xupnpd $(TARGET_bindir)/xupnpd
+	$(INSTALL_EXEC) -D $(PKG_BUILD_DIR)/xupnpd $(TARGET_bindir)/xupnpd
 	$(INSTALL) -d $(TARGET_datadir)/xupnpd/config
-	$(INSTALL_COPY) $($(PKG)_BUILD_DIR)/{plugins,profiles,ui,www,*.lua} $(TARGET_datadir)/xupnpd/
+	$(INSTALL_COPY) $(PKG_BUILD_DIR)/{plugins,profiles,ui,www,*.lua} $(TARGET_datadir)/xupnpd/
 endef
 
 define XUPNPD_TARGET_CLEANUP

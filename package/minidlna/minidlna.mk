@@ -19,7 +19,7 @@ MINIDLNA_CONF_OPTS = \
 	--disable-static
 
 define MINIDLNA_INSTALL_MINIDLNAD_CONF
-	$(INSTALL_DATA) -D $($(PKG)_BUILD_DIR)/minidlna.conf $(TARGET_sysconfdir)/minidlna.conf
+	$(INSTALL_DATA) -D $(PKG_BUILD_DIR)/minidlna.conf $(TARGET_sysconfdir)/minidlna.conf
 endef
 MINIDLNA_POST_INSTALL_HOOKS += MINIDLNA_INSTALL_MINIDLNAD_CONF
 

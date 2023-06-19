@@ -43,19 +43,19 @@ OPENSSL_CONF_OPTS += \
 	$(TARGET_LDFLAGS) \
 
 define OPENSSL_CONFIGURE_CMDS
-	$(CD) $($(PKG)_BUILD_DIR); \
+	$(CD) $(PKG_BUILD_DIR); \
 		./Configure $($(PKG)_CONF_OPTS)
 endef
 
 define OPENSSL_PATCH_MAKEFILE
-	$(SED) 's| build_tests||' $($(PKG)_BUILD_DIR)/Makefile
-	$(SED) 's|^MANDIR=.*|MANDIR=$(REMOVE_mandir)|' $($(PKG)_BUILD_DIR)/Makefile
-	$(SED) 's|^HTMLDIR=.*|HTMLDIR=$(REMOVE_htmldir)|' $($(PKG)_BUILD_DIR)/Makefile
+	$(SED) 's| build_tests||' $(PKG_BUILD_DIR)/Makefile
+	$(SED) 's|^MANDIR=.*|MANDIR=$(REMOVE_mandir)|' $(PKG_BUILD_DIR)/Makefile
+	$(SED) 's|^HTMLDIR=.*|HTMLDIR=$(REMOVE_htmldir)|' $(PKG_BUILD_DIR)/Makefile
 endef
 OPENSSL_POST_CONFIGURE_HOOKS += OPENSSL_PATCH_MAKEFILE
 
 define OPENSSL_MAKE_DEPEND
-	$(CD) $($(PKG)_BUILD_DIR); \
+	$(CD) $(PKG_BUILD_DIR); \
 		$($(PKG)_MAKE) depend
 endef
 OPENSSL_PRE_BUILD_HOOKS += OPENSSL_MAKE_DEPEND

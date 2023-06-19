@@ -27,8 +27,8 @@ LIBGPG_ERROR_CONF_OPTS += \
 	--enable-install-gpg-error-config \
 
 define LIBGPG_ERROR_LINKING_HEADER
-	ln -sf lock-obj-pub.arm-unknown-linux-gnueabi.h $($(PKG)_BUILD_DIR)/src/syscfg/lock-obj-pub.$(GNU_TARGET_NAME).h
-	ln -sf lock-obj-pub.arm-unknown-linux-gnueabi.h $($(PKG)_BUILD_DIR)/src/syscfg/lock-obj-pub.linux-uclibcgnueabi.h
+	ln -sf lock-obj-pub.arm-unknown-linux-gnueabi.h $(PKG_BUILD_DIR)/src/syscfg/lock-obj-pub.$(GNU_TARGET_NAME).h
+	ln -sf lock-obj-pub.arm-unknown-linux-gnueabi.h $(PKG_BUILD_DIR)/src/syscfg/lock-obj-pub.linux-uclibcgnueabi.h
 endef
 LIBGPG_ERROR_POST_EXTRACT_HOOKS += LIBGPG_ERROR_LINKING_HEADER
 

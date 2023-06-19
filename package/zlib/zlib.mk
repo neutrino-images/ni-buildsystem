@@ -20,7 +20,7 @@ ZLIB_CONF_OPTS = \
 	--uname=Linux
 
 define ZLIB_CONFIGURE_CMDS
-	$(CD) $($(PKG)_BUILD_DIR); \
+	$(CD) $(PKG_BUILD_DIR); \
 		$($(PKG)_CONF_ENV) ./configure $($(PKG)_CONF_OPTS)
 endef
 
@@ -38,7 +38,7 @@ HOST_ZLIB_CONF_OPTS = \
 	--uname=Linux
 
 define HOST_ZLIB_CONFIGURE_CMDS
-	$(CD) $($(PKG)_BUILD_DIR); \
+	$(CD) $(PKG_BUILD_DIR); \
 		$($(PKG)_CONF_ENV) ./configure $($(PKG)_CONF_OPTS)
 endef
 

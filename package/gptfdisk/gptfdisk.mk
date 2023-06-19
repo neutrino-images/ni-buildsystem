@@ -22,7 +22,7 @@ GPTFDISK_MAKE_OPTS = \
 define GPTFDISK_INSTALL_CMDS
 	$(foreach sbinary,$($(PKG)_SBINARIES),\
 		rm -f $(TARGET_sbindir)/$(sbinary); \
-		$(INSTALL_EXEC) -D $($(PKG)_BUILD_DIR)/$(sbinary) $(TARGET_sbindir)/$(sbinary)$(sep) \
+		$(INSTALL_EXEC) -D $(PKG_BUILD_DIR)/$(sbinary) $(TARGET_sbindir)/$(sbinary)$(sep) \
 	)
 endef
 

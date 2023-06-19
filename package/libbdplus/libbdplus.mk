@@ -16,7 +16,7 @@ LIBBDPLUS_CONF_OPTS = \
 	--disable-static
 
 define LIBBDPLUS_BOOTSTRAP
-	$(CD) $($(PKG)_BUILD_DIR); \
+	$(CD) $(PKG_BUILD_DIR); \
 		./bootstrap
 endef
 LIBBDPLUS_PRE_CONFIGURE_HOOKS += LIBBDPLUS_BOOTSTRAP

@@ -26,7 +26,7 @@ LUA_MAKE_INSTALL_OPTS = \
 	INSTALL_MAN=$(TARGET_DIR)$(REMOVE_man1dir)
 
 define LUA_MAKE_PC
-	$(CD) $($(PKG)_BUILD_DIR); \
+	$(CD) $(PKG_BUILD_DIR); \
 		$($(PKG)_MAKE) pc INSTALL_TOP=$(TARGET_prefix) > $(TARGET_libdir)/pkgconfig/lua.pc
 endef
 LUA_POST_BUILD_HOOKS += LUA_MAKE_PC

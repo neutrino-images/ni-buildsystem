@@ -19,13 +19,13 @@ TZDATA_ZONELIST = \
 	southamerica etcetera backward factory
 
 define TZDATA_BUILD_CMDS
-	$(CD) $($(PKG)_BUILD_DIR); \
+	$(CD) $(PKG_BUILD_DIR); \
 		unset ${!LC_*}; LANG=POSIX; LC_ALL=POSIX; export LANG LC_ALL; \
 		$(HOST_ZIC) -b fat -d zoneinfo.tmp $(TZDATA_ZONELIST)
 endef
 
 define TZDATA_INSTALL_CMDS
-	$(CD) $($(PKG)_BUILD_DIR); \
+	$(CD) $(PKG_BUILD_DIR); \
 		sed -n '/zone=/{s/.*zone="\(.*\)".*$$/\1/; p}' $(PKG_FILES_DIR)/timezone.xml | sort -u | \
 		while read x; do \
 			find zoneinfo.tmp -type f -name $$x | sort | \

@@ -20,10 +20,10 @@ LIBDPF_MAKE_OPTS = \
 	CC=$(TARGET_CC) PREFIX=$(TARGET_prefix)
 
 define LIBDPF_INSTALL_CMDS
-	$(INSTALL_DATA) -D $($(PKG)_BUILD_DIR)/dpflib/libdpf.a $(TARGET_libdir)/libdpf.a
-	$(INSTALL_DATA) -D $($(PKG)_BUILD_DIR)/dpflib/dpf.h $(TARGET_includedir)/libdpf/libdpf.h
-	$(INSTALL_DATA) -D $($(PKG)_BUILD_DIR)/include/spiflash.h $(TARGET_includedir)/libdpf/spiflash.h
-	$(INSTALL_DATA) -D $($(PKG)_BUILD_DIR)/include/usbuser.h $(TARGET_includedir)/libdpf/usbuser.h
+	$(INSTALL_DATA) -D $(PKG_BUILD_DIR)/dpflib/libdpf.a $(TARGET_libdir)/libdpf.a
+	$(INSTALL_DATA) -D $(PKG_BUILD_DIR)/dpflib/dpf.h $(TARGET_includedir)/libdpf/libdpf.h
+	$(INSTALL_DATA) -D $(PKG_BUILD_DIR)/include/spiflash.h $(TARGET_includedir)/libdpf/spiflash.h
+	$(INSTALL_DATA) -D $(PKG_BUILD_DIR)/include/usbuser.h $(TARGET_includedir)/libdpf/usbuser.h
 endef
 
 libdpf: | $(TARGET_DIR)

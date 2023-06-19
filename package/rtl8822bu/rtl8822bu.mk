@@ -10,7 +10,7 @@ RTL8822BU_SOURCE = rtl8822bu-driver-$(RTL8822BU_VERSION).zip
 RTL8822BU_SITE = http://source.mynonpublic.com
 
 define RTL8822BU_INSTALL_CMDS
-	$(INSTALL_DATA) -D $($(PKG)_BUILD_DIR)/88x2bu.ko $(TARGET_modulesdir)/kernel/drivers/net/wireless/88x2bu.ko
+	$(INSTALL_DATA) -D $(PKG_BUILD_DIR)/88x2bu.ko $(TARGET_modulesdir)/kernel/drivers/net/wireless/88x2bu.ko
 endef
 
 rtl8822bu: | $(TARGET_DIR)

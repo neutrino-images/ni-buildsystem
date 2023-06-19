@@ -50,7 +50,7 @@ SAMBA36_CONF_OPTS = \
 	--disable-swat
 
 define SAMBA36_AUTOGEN_SH
-	$(CD) $($(PKG)_BUILD_DIR); \
+	$(CD) $(PKG_BUILD_DIR); \
 		./autogen.sh
 endef
 SAMBA36_PRE_CONFIGURE_HOOKS += SAMBA36_AUTOGEN_SH

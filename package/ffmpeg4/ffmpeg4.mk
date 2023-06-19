@@ -351,7 +351,7 @@ FFMPEG4_CONF_OPTS += \
 	--extra-ldflags="$(TARGET_LDFLAGS)"
 
 define FFMPEG4_CONFIGURE_CMDS
-	$(CD) $($(PKG)_BUILD_DIR); \
+	$(CD) $(PKG_BUILD_DIR); \
 		$($(PKG)_CONF_ENV) ./configure $($(PKG)_CONF_OPTS)
 endef
 

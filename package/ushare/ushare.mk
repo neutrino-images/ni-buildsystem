@@ -24,7 +24,7 @@ USHARE_CONF_OPTS = \
 	--cross-prefix=$(TARGET_CROSS)
 
 define USHARE_CONFIGURE_CMDS
-	$(CD) $($(PKG)_BUILD_DIR); \
+	$(CD) $(PKG_BUILD_DIR); \
 		$($(PKG)_CONF_ENV) ./configure $($(PKG)_CONF_OPTS)
 endef
 
@@ -35,7 +35,7 @@ USHARE_MAKE_OPTS = \
 	LDFLAGS="$(TARGET_LDFLAGS)"
 
 define USHARE_LINK_CONFIG_H
-	ln -sf ../config.h $($(PKG)_BUILD_DIR)/src/
+	ln -sf ../config.h $(PKG_BUILD_DIR)/src/
 endef
 USHARE_POST_PATCH_HOOKS += USHARE_LINK_CONFIG_H
 

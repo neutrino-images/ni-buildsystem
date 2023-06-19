@@ -17,12 +17,12 @@ HOST_ZIC_EXTRACT_DIR = $($(PKG)_DIR)
 HOST_ZIC = $(HOST_DIR)/sbin/zic
 
 define HOST_ZIC_BUILD_CMDS
-	$(CD) $($(PKG)_BUILD_DIR); \
+	$(CD) $(PKG_BUILD_DIR); \
 		$(MAKE) zic
 endef
 
 define HOST_ZIC_INSTALL_CMDS
-	$(INSTALL_EXEC) -D $($(PKG)_BUILD_DIR)/zic $(HOST_ZIC)
+	$(INSTALL_EXEC) -D $(PKG_BUILD_DIR)/zic $(HOST_ZIC)
 endef
 
 host-zic: | $(HOST_DIR)

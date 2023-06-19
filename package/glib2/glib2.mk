@@ -37,13 +37,13 @@ ifeq ($(BOXTYPE),$(filter $(BOXTYPE),armbox mipsbox))
 endif
 
 define GLIB2_CREATE_CONF_ENV_FILE
-	echo "ac_cv_func_posix_getgrgid_r=yes"	 > $($(PKG)_BUILD_DIR)/arm-linux.cache
-	echo "ac_cv_func_posix_getpwuid_r=yes"	>> $($(PKG)_BUILD_DIR)/arm-linux.cache
-	echo "ac_cv_type_long_long=yes"		>> $($(PKG)_BUILD_DIR)/arm-linux.cache
-	echo "glib_cv_stack_grows=no"		>> $($(PKG)_BUILD_DIR)/arm-linux.cache
-	echo "glib_cv_uscore=no"		>> $($(PKG)_BUILD_DIR)/arm-linux.cache
-	echo "glib_cv_va_copy=no"		>> $($(PKG)_BUILD_DIR)/arm-linux.cache
-	echo "glib_cv_va_val_copy=yes"		>> $($(PKG)_BUILD_DIR)/arm-linux.cache
+	echo "ac_cv_func_posix_getgrgid_r=yes"	 > $(PKG_BUILD_DIR)/arm-linux.cache
+	echo "ac_cv_func_posix_getpwuid_r=yes"	>> $(PKG_BUILD_DIR)/arm-linux.cache
+	echo "ac_cv_type_long_long=yes"		>> $(PKG_BUILD_DIR)/arm-linux.cache
+	echo "glib_cv_stack_grows=no"		>> $(PKG_BUILD_DIR)/arm-linux.cache
+	echo "glib_cv_uscore=no"		>> $(PKG_BUILD_DIR)/arm-linux.cache
+	echo "glib_cv_va_copy=no"		>> $(PKG_BUILD_DIR)/arm-linux.cache
+	echo "glib_cv_va_val_copy=yes"		>> $(PKG_BUILD_DIR)/arm-linux.cache
 endef
 GLIB2_POST_PATCH_HOOKS += GLIB2_CREATE_CONF_ENV_FILE
 

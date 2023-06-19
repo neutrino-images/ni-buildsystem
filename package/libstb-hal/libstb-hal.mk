@@ -12,7 +12,7 @@ LIBSTB_HAL_SITE_METHOD = ni-git
 
 LIBSTB_HAL_DEPENDENCIES = ffmpeg openthreads
 
-LIBSTB_HAL_OBJ_DIR = $(BUILD_DIR)/$(LIBSTB_HAL_DIR)-obj
+LIBSTB_HAL_OBJ_DIR = $(PKG_BUILD_DIR)-obj
 LIBSTB_HAL_CONFIG_STATUS = $(wildcard $(LIBSTB_HAL_OBJ_DIR)/config.status)
 
 LIBSTB_HAL_CONF_ENV = \
@@ -38,7 +38,7 @@ else
 endif
 
 define LIBSTB_HAL_AUTOGEN_SH
-	$($(PKG)_BUILD_DIR)/autogen.sh
+	$(PKG_BUILD_DIR)/autogen.sh
 endef
 LIBSTB_HAL_PRE_CONFIGURE_HOOKS += LIBSTB_HAL_AUTOGEN_SH
 
@@ -46,7 +46,7 @@ define LIBSTB_HAL_CONFIGURE_CMDS
 	$(INSTALL) -d $(LIBSTB_HAL_OBJ_DIR)
 	$(CD) $(LIBSTB_HAL_OBJ_DIR); \
 		$($(PKG)_CONF_ENV) \
-		$($(PKG)_BUILD_DIR)/configure \
+		$(PKG_BUILD_DIR)/configure \
 			$($(PKG)_CONF_OPTS)
 endef
 

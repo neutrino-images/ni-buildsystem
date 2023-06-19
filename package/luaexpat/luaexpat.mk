@@ -19,9 +19,9 @@ LUAEXPAT_MAKE_OPTS = \
 	LUA_SYS_VER=$(LUA_ABIVERSION)
 
 define LUAEXPAT_PATCH_MAKEFILE
-	$(SED) 's|^EXPAT_INC=.*|EXPAT_INC= $(TARGET_includedir)|' $($(PKG)_BUILD_DIR)/makefile
-	$(SED) 's|^CFLAGS =.*|& -L$(TARGET_libdir)|' $($(PKG)_BUILD_DIR)/makefile
-	$(SED) 's|^CC =.*|CC = $(TARGET_CC)|' $($(PKG)_BUILD_DIR)/makefile
+	$(SED) 's|^EXPAT_INC=.*|EXPAT_INC= $(TARGET_includedir)|' $(PKG_BUILD_DIR)/makefile
+	$(SED) 's|^CFLAGS =.*|& -L$(TARGET_libdir)|' $(PKG_BUILD_DIR)/makefile
+	$(SED) 's|^CC =.*|CC = $(TARGET_CC)|' $(PKG_BUILD_DIR)/makefile
 endef
 LUAEXPAT_POST_PATCH_HOOKS += LUAEXPAT_PATCH_MAKEFILE
 

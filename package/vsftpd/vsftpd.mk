@@ -18,13 +18,13 @@ VSFTPD_MAKE_OPTS = \
 	LIBS="$(VSFTPD_LIBS)"
 
 define VSFTPD_PATCH_BUILDDEFS_H
-	$(SED) 's/.*VSF_BUILD_PAM/#undef VSF_BUILD_PAM/' $($(PKG)_BUILD_DIR)/builddefs.h
-	$(SED) 's/.*VSF_BUILD_SSL/#define VSF_BUILD_SSL/' $($(PKG)_BUILD_DIR)/builddefs.h
+	$(SED) 's/.*VSF_BUILD_PAM/#undef VSF_BUILD_PAM/' $(PKG_BUILD_DIR)/builddefs.h
+	$(SED) 's/.*VSF_BUILD_SSL/#define VSF_BUILD_SSL/' $(PKG_BUILD_DIR)/builddefs.h
 endef
 VSFTPD_POST_PATCH_HOOKS += VSFTPD_PATCH_BUILDDEFS_H
 
 define VSFTPD_INSTALL_CMDS
-	$(INSTALL_EXEC) -D $($(PKG)_BUILD_DIR)/vsftpd $(TARGET_sbindir)/vsftpd
+	$(INSTALL_EXEC) -D $(PKG_BUILD_DIR)/vsftpd $(TARGET_sbindir)/vsftpd
 endef
 
 define VSFTPD_INSTALL_FILES

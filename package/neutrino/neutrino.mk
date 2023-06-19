@@ -13,7 +13,7 @@ NEUTRINO_SITE_METHOD = ni-git
 NEUTRINO_DEPENDENCIES = ffmpeg freetype giflib libcurl libdvbsi fribidi \
 	libjpeg-turbo libsigc lua ntp openssl openthreads pugixml zlib
 
-NEUTRINO_OBJ_DIR = $(BUILD_DIR)/$(NEUTRINO_DIR)-obj
+NEUTRINO_OBJ_DIR = $(PKG_BUILD_DIR)-obj
 NEUTRINO_CONFIG_STATUS = $(wildcard $(NEUTRINO_OBJ_DIR)/config.status)
 
 NEUTRINO_INST_DIR ?= $(TARGET_DIR)
@@ -133,7 +133,7 @@ else
 endif
 
 define NEUTRINO_AUTOGEN_SH
-	$($(PKG)_BUILD_DIR)/autogen.sh
+	$(PKG_BUILD_DIR)/autogen.sh
 endef
 NEUTRINO_PRE_CONFIGURE_HOOKS += NEUTRINO_AUTOGEN_SH
 
@@ -141,7 +141,7 @@ define NEUTRINO_CONFIGURE_CMDS
 	$(INSTALL) -d $(NEUTRINO_OBJ_DIR)
 	$(CD) $(NEUTRINO_OBJ_DIR); \
 		$($(PKG)_CONF_ENV) \
-		$($(PKG)_BUILD_DIR)/configure \
+		$(PKG_BUILD_DIR)/configure \
 			$($(PKG)_CONF_OPTS)
 endef
 

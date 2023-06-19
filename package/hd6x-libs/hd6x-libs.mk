@@ -41,8 +41,8 @@ HD6X_LIBS_EXTRACT_DIR = $($(PKG)_DIR)
 
 define HD6X_LIBS_INSTALL
 	$(INSTALL) -d $(TARGET_libdir)/hisilicon
-	$(INSTALL_EXEC) $($(PKG)_BUILD_DIR)/hisilicon/* $(TARGET_libdir)/hisilicon
-	$(INSTALL_EXEC) $($(PKG)_BUILD_DIR)/ffmpeg/* $(TARGET_libdir)/hisilicon
+	$(INSTALL_EXEC) $(PKG_BUILD_DIR)/hisilicon/* $(TARGET_libdir)/hisilicon
+	$(INSTALL_EXEC) $(PKG_BUILD_DIR)/ffmpeg/* $(TARGET_libdir)/hisilicon
 	ln -sf /lib/ld-linux-armhf.so.3 $(TARGET_libdir)/hisilicon/ld-linux.so
 endef
 HD6X_LIBS_INDIVIDUAL_HOOKS += HD6X_LIBS_INSTALL
