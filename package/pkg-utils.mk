@@ -13,7 +13,7 @@ PKG = $(call UPPERCASE,$(pkgname))
 PKG_PARENT = $(subst HOST_,,$(PKG))
 PKG_PACKAGE = $(if $(filter $(firstword $(subst -, ,$(pkg))),host),HOST,TARGET)
 
-PKG_BUILD_DIR = $(BUILD_DIR)/$($(PKG)_DIR)
+PKG_BUILD_DIR = $(BUILD_DIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR)
 PKG_FILES_DIR = $(PACKAGE_DIR)/$(subst host-,,$(pkgname))/files
 PKG_PATCHES_DIR = $(PACKAGE_DIR)/$(subst host-,,$(pkgname))/patches
 
@@ -384,7 +384,7 @@ define APPLY_PATCHES # (patches or directory)
 	@$(call MESSAGE,"Patching $(pkgname)")
 	$(foreach hook,$($(PKG)_PRE_PATCH_HOOKS),$(call $(hook))$(sep))
 	$(Q)( \
-	$(CD) $(PKG_BUILD_DIR); \
+	$(CD) $(BUILD_DIR)/$($(PKG)_DIR); \
 	for i in $(1) $(2); do \
 		if [ "$$i" == "$(PKG_PATCHES_DIR)" -a ! -d $$i ]; then \
 			continue; \
