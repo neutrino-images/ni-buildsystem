@@ -11,12 +11,7 @@ LIBPNG_SITE = https://sourceforge.net/projects/libpng/files/libpng16/$(LIBPNG_VE
 
 LIBPNG_DEPENDENCIES = zlib
 
-LIBPNG_CONFIG_SCRIPTS = libpng16-config
-
-define LIBPNG_TARGET_CLEANUP
-	$(TARGET_RM) $(addprefix $(TARGET_bindir)/,libpng-config)
-endef
-LIBPNG_TARGET_FINALIZE_HOOKS += LIBPNG_TARGET_CLEANUP
+LIBPNG_CONFIG_SCRIPTS = libpng16-config libpng-config
 
 libpng: | $(TARGET_DIR)
 	$(call autotools-package)
