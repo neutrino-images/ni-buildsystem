@@ -19,7 +19,7 @@ host-clean:
 	-rm -rf $(HOST_DIR)
 
 host-bin-config-clean:
-	-find $(HOST_DIR)/bin -name *-config ! -name pkg-config -delete
+	-find $(HOST_DIR)/bin -name *-config ! -name *pkg-config -delete
 
 staging-clean:
 	-rm -rf $(STAGING_DIR)
