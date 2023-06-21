@@ -11,6 +11,7 @@ $(HOST_DIR):
 
 host-tools: $(BUILD_DIR) $(HOST_DIR) \
 	host-pkgconf \
+	$(PKG_CONFIG) \
 	host-mtd-utils \
 	host-u-boot \
 	host-zic \
@@ -22,6 +23,13 @@ host-tools: $(BUILD_DIR) $(HOST_DIR) \
 	host-lua \
 	host-luarocks \
 	host-ccache
+
+# -----------------------------------------------------------------------------
+
+PKG_CONFIG_DEPENDENCIES = host-pkgconf
+
+$(PKG_CONFIG): $(PKG_CONFIG_DEPENDENCIES) | $(HOST_DIR)
+	ln -sf $(HOST_PKG_CONFIG) $(@)
 
 # -----------------------------------------------------------------------------
 
