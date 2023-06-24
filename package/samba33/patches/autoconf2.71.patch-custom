@@ -1,5 +1,5 @@
---- a/source3/configure
-+++ b/source3/configure
+--- a/source/configure
++++ b/source/configure
 @@ -5183,10 +5183,6 @@
  
  CFLAGS=$savedCFLAGS
