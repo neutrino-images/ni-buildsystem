@@ -60,6 +60,13 @@ define SAMBA33_AUTOGEN_SH
 endef
 SAMBA33_PRE_CONFIGURE_HOOKS += SAMBA33_AUTOGEN_SH
 
+ifeq ($(AUTOCONF_VER_ge_270),1)
+define SAMBA33_PATCH_AUTOCONF
+	$(call APPLY_PATCHES,autoconf2.71.patch-custom)
+endef
+SAMBA33_PRE_CONFIGURE_HOOKS += SAMBA33_PATCH_AUTOCONF
+endif
+
 define SAMBA33_INSTALL_FILES
 	$(INSTALL) -d $(TARGET_localstatedir)/samba/locks
 	$(INSTALL_DATA) -D $(PKG_FILES_DIR)/smb3.conf $(TARGET_sysconfdir)/samba/smb.conf
