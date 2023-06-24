@@ -18,11 +18,12 @@ SAMBA33_CONF_ENV = \
 
 SAMBA33_CONF_OPTS = \
 	--datadir=/var/samba \
-	--datarootdir=$(REMOVE_datarootdir) \
 	--localstatedir=/var/samba \
 	--sysconfdir=/etc/samba \
 	--with-configdir=/etc/samba \
 	--with-privatedir=/etc/samba \
+	--with-localedir=$(REMOVE_localedir) \
+	--with-mandir=$(REMOVE_mandir) \
 	--with-modulesdir=$(REMOVE_libdir)/samba \
 	--with-sys-quotas=no \
 	--with-piddir=/var/run \
@@ -80,6 +81,7 @@ endef
 
 define SAMBA33_TARGET_CLEANUP
 	$(TARGET_RM) $(addprefix $(TARGET_bindir)/,testparm findsmb smbtar smbclient smbpasswd)
+	$(TARGET_RM) $(addprefix $(TARGET_sbindir)/,smbd.old nmbd.old)
 endef
 SAMBA33_TARGET_FINALIZE_HOOKS += SAMBA33_TARGET_CLEANUP
 

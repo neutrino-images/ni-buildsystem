@@ -18,11 +18,12 @@ SAMBA36_CONF_ENV = \
 
 SAMBA36_CONF_OPTS = \
 	--datadir=/var/samba \
-	--datarootdir=$(REMOVE_datarootdir) \
 	--localstatedir=/var/samba \
 	--sysconfdir=/etc/samba \
 	--with-configdir=/etc/samba \
 	--with-privatedir=/etc/samba \
+	--with-localedir=$(REMOVE_localedir) \
+	--with-mandir=$(REMOVE_mandir) \
 	--with-modulesdir=$(REMOVE_libdir)/samba \
 	--with-piddir=/var/run \
 	--with-sys-quotas=no \
@@ -75,6 +76,7 @@ endef
 
 define SAMBA36_TARGET_CLEANUP
 	$(TARGET_RM) $(addprefix $(TARGET_bindir)/,testparm findsmb smbtar smbclient smbpasswd)
+	$(TARGET_RM) $(addprefix $(TARGET_sbindir)/,smbd.old nmbd.old)
 endef
 SAMBA36_TARGET_FINALIZE_HOOKS += SAMBA36_TARGET_CLEANUP
 
