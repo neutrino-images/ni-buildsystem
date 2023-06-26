@@ -13,7 +13,7 @@ NEUTRINO_PLUGINS_SITE_METHOD = ni-git
 NEUTRINO_PLUGINS_DEPENDENCIES = ffmpeg libcurl libpng libjpeg-turbo giflib \
 	freetype lua-curl lua-feedparser luaexpat luajson luaposix
 
-NEUTRINO_PLUGINS_OBJ_DIR = $(PKG_BUILD_DIR)-obj
+NEUTRINO_PLUGINS_OBJ_DIR = $(BUILD_DIR)/$(NEUTRINO_PLUGINS_DIR)-obj
 NEUTRINO_PLUGINS_CONFIG_STATUS = $(wildcard $(NEUTRINO_PLUGINS_OBJ_DIR)/config.status)
 
 NEUTRINO_PLUGINS_CONF_ENV = \

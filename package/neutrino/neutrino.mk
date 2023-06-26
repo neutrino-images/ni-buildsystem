@@ -13,7 +13,7 @@ NEUTRINO_SITE_METHOD = ni-git
 NEUTRINO_DEPENDENCIES = ffmpeg freetype giflib libcurl libdvbsi fribidi \
 	libjpeg-turbo libsigc lua ntp openssl openthreads pugixml zlib
 
-NEUTRINO_OBJ_DIR = $(PKG_BUILD_DIR)-obj
+NEUTRINO_OBJ_DIR = $(BUILD_DIR)/$(NEUTRINO_DIR)-obj
 NEUTRINO_CONFIG_STATUS = $(wildcard $(NEUTRINO_OBJ_DIR)/config.status)
 
 NEUTRINO_INST_DIR ?= $(TARGET_DIR)
