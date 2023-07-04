@@ -7,7 +7,7 @@
 PKGCONF_VERSION = 1.7.3
 PKGCONF_DIR = pkgconf-$(PKGCONF_VERSION)
 PKGCONF_SOURCE = pkgconf-$(PKGCONF_VERSION).tar.gz
-PKGCONF_SITE = https://distfiles.dereferenced.org/pkgconf
+PKGCONF_SITE = https://distfiles.ariadne.space/pkgconf
 
 # -----------------------------------------------------------------------------
 
