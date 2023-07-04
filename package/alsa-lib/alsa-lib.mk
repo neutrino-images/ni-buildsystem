@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-ALSA_LIB_VERSION = 1.2.7.2
+ALSA_LIB_VERSION = 1.2.9
 ALSA_LIB_DIR = alsa-lib-$(ALSA_LIB_VERSION)
 ALSA_LIB_SOURCE = alsa-lib-$(ALSA_LIB_VERSION).tar.bz2
 ALSA_LIB_SITE = https://www.alsa-project.org/files/pub/lib
