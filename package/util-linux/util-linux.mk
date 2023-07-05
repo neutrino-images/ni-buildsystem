@@ -4,29 +4,31 @@
 #
 ################################################################################
 
-UTIL_LINUX_VERSION = $(if $(filter $(BOXSERIES),hd1),2.36.2,2.38)
+ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd1))
+UTIL_LINUX_VERSION_MAJOR = 2.36
+UTIL_LINUX_VERSION_MINOR = .2
+else
+UTIL_LINUX_VERSION_MAJOR = 2.39
+UTIL_LINUX_VERSION_MINOR = .1
+endif
+
+UTIL_LINUX_VERSION = $(UTIL_LINUX_VERSION_MAJOR)$(UTIL_LINUX_VERSION_MINOR)
 UTIL_LINUX_DIR = util-linux-$(UTIL_LINUX_VERSION)
 UTIL_LINUX_SOURCE = util-linux-$(UTIL_LINUX_VERSION).tar.xz
-ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd1))
-UTIL_LINUX_SITE = $(KERNEL_MIRROR)/linux/utils/util-linux/v$(basename $(UTIL_LINUX_VERSION))
-else
-UTIL_LINUX_SITE = $(KERNEL_MIRROR)/linux/utils/util-linux/v$(UTIL_LINUX_VERSION)
-endif
+UTIL_LINUX_SITE = $(KERNEL_MIRROR)/linux/utils/util-linux/v$(UTIL_LINUX_VERSION_MAJOR)
 
 UTIL_LINUX_DEPENDENCIES = ncurses zlib
 
 #UTIL_LINUX_AUTORECONF = YES
 
 define UTIL_LINUX_TARGET_CLEANUP
-	$(TARGET_RM) $(addprefix $(TARGET_base_bindir)/,dmesg findmnt lsblk)
+	$(TARGET_RM) $(addprefix $(TARGET_base_bindir)/,dmesg findmnt lsblk lsfd pipesz)
 	$(TARGET_RM) $(addprefix $(TARGET_base_sbindir)/,blkzone blockdev cfdisk chcpu ctrlaltdel fdisk findfs fsck fsfreeze fstrim mkfs mkswap sfdisk swaplabel swapoff swapon)
-	$(TARGET_RM) $(addprefix $(TARGET_bindir)/,choom col colcrt colrm column fincore flock getopt hexdump ipcmk irqtop isosize linux32 linux64 look lscpu lsipc lslocks lsns mcookie namei prlimit renice rev script scriptlive scriptreplay setarch setsid uname26 uuidgen uuidparse whereis)
+	$(TARGET_RM) $(addprefix $(TARGET_bindir)/,choom col colcrt colrm column fadvise fincore flock getopt hexdump ipcmk irqtop isosize linux32 linux64 look lscpu lsipc lslocks lsns mcookie namei prlimit renice rev script scriptlive scriptreplay setarch setsid uname26 uuidgen uuidparse whereis)
 	$(TARGET_RM) $(addprefix $(TARGET_sbindir)/,ldattach readprofile rtcwake uuidd)
-	$(TARGET_RM) $(addprefix $(TARGET_datadir)/bash-completion/completions/,blkzone blockdev cfdisk chcpu col colcrt colrm column ctrlaltdel dmesg fdisk fincore findfs findmnt flock fsck fsfreeze fstrim getopt hexdump ipcmk irqtop isosize ldattach look lsblk lscpu lsipc lslocks lsns mcookie mkfs mkswap namei prlimit readprofile renice rev rtcwake script scriptlive scriptreplay setarch setsid sfdisk swaplabel swapoff swapon uuidd uuidgen uuidparse whereis)
+	$(TARGET_RM) $(addprefix $(TARGET_datadir)/bash-completion/completions/,blkzone blockdev cfdisk chcpu col colcrt colrm column ctrlaltdel dmesg fadvise fdisk fincore findfs findmnt flock fsck fsfreeze fstrim getopt hexdump ipcmk irqtop isosize ldattach look lsblk lscpu lsipc lslocks lsns mcookie mkfs mkswap namei pipesz prlimit readprofile renice rev rtcwake script scriptlive scriptreplay setarch setsid sfdisk swaplabel swapoff swapon uuidd uuidgen uuidparse whereis)
 endef
 UTIL_LINUX_TARGET_FINALIZE_HOOKS += UTIL_LINUX_TARGET_CLEANUP
-
-#	--runstatedir=$(runstatedir) \
 
 UTIL_LINUX_CONF_OPTS = \
 	--includedir=$(includedir) \
