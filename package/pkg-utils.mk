@@ -267,8 +267,13 @@ endef
 # resolve dependencies
 define DEPENDENCIES
 	@$(call MESSAGE,"Resolving dependencies for $(pkgname)")
-	$(foreach dependency,$($(PKG)_DEPENDENCIES),$(Q)+$(MAKE) $(dependency)$(sep))
+	+$(MAKE) $($(PKG)_DEPENDENCIES)
 endef
+
+# helpers to resolve dependencies only
+%-deps \
+%-dependencies:
+	@make $($(call UPPERCASE,$(subst -deps,-dependencies,$(@))))
 
 # -----------------------------------------------------------------------------
 
