@@ -153,6 +153,29 @@ define PRINTF
 				$(subst \,\\,$(1)))))\n'
 endef
 
+# strip elements from semantic versions (https://github.com/semver/semver)
+# major.minor.patch-prerelease+buildmetadata
+
+# major.minor.patch-prerelease
+define STRIP_SEMVER_BUILDMETADATA
+	echo '$(1)' | cut -d"+" -f1
+endef
+
+# major.minor.patch
+define STRIP_SEMVER_PRERELEASE
+	echo '$(1)' | cut -d"+" -f1 | cut -d"-" -f1
+endef
+
+# major.minor
+define STRIP_SEMVER_PATCH
+	echo '$(1)' | cut -d"." -f1-2
+endef
+
+# major
+define STRIP_SEMVER_MINOR
+	echo '$(1)' | cut -d"." -f1
+endef
+
 #
 # $(1) = title
 # $(2) = color
