@@ -15,7 +15,6 @@ FFMPEG2_DEPENDENCIES = openssl rtmpdump libbluray libass
 FFMPEG2_CONF_OPTS = \
 	--disable-ffplay \
 	--disable-ffprobe \
-	--disable-ffserver \
 	\
 	--disable-doc \
 	--disable-htmlpages \
@@ -142,6 +141,9 @@ FFMPEG2_CONF_OPTS = \
 	--enable-swresample
 
 ifeq ($(BS_PACKAGE_FFMPEG2_BRANCH),ni/ffmpeg/2.8)
+  FFMPEG2_CONF_OPTS += \
+	--disable-ffserver
+
   FFMPEG2_DEPENDENCIES += libroxml
 else
   FFMPEG2_DEPENDENCIES +=  libxml2
