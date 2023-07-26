@@ -420,7 +420,7 @@ endef
 define PREPARE # (control-flag(s))
 	$(eval $(pkg-check-variables))
 	$(call STARTUP)
-	$(call DEPENDENCIES)
+	$(if $($(PKG)_DEPENDENCIES),$(call DEPENDENCIES))
 	$(if $(filter $(1),$(PKG_NO_DOWNLOAD)),,$(call DOWNLOAD,$($(PKG)_SITE),$($(PKG)_SOURCE)))
 	$(if $(filter $(1),$(PKG_NO_EXTRACT)),,$(call EXTRACT,$(BUILD_DIR)))
 	$(if $(filter $(1),$(PKG_NO_PATCHES)),,$(call APPLY_PATCHES,$($(PKG)_PATCH),$($(PKG)_PATCH_CUSTOM)))
