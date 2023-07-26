@@ -82,6 +82,7 @@ endif
 
 ifeq ($(BOXTYPE),coolstream)
   NEUTRINO_DEPENDENCIES += coolstream-drivers
+  NEUTRINO_DEPENDENCIES += coolstream-libs
   ifeq ($(HAS_LIBCOOLSTREAM),yes)
     NEUTRINO_DEPENDENCIES += libcoolstream
     ifeq ($(DEBUG),yes)
