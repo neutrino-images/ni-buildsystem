@@ -67,7 +67,7 @@ ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 e4hdultra protek4k))
 	make flash-image-hd5x
 	make flash-image-hd5x-multi
   ifeq ($(BOXMODEL),$(filter $(BOXMODEL),e4hdultra))
-	make flash-image-hd5x-multi FLASH_SIZE=8gb IMAGE_SUFFIX=$(IMAGE_SUFFIX)-8gb
+	make flash-image-hd5x-multi FLASH_SIZE=8gb IMAGE_SUFFIX=$(IMAGE_SUFFIX)_8gb
   endif
 endif
 ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd60 hd61 multibox multiboxse))
