@@ -1,7 +1,7 @@
 <?php
 /*
 	Example:
-	http://www.neutrino-images.de/neutrino-images/get-image.php?boxtype=armbox&boxmodel=hd51(&debug)(&mmc)(&recovery)
+	http://www.neutrino-images.de/neutrino-images/get-image.php?boxtype=armbox&boxmodel=hd51(&debug)(&mmc)(&flashsize=8gb)(&recovery)
 */
 
 $boxtype = trim($_GET["boxtype"]);
@@ -11,6 +11,10 @@ $boxmodel = trim($_GET["boxmodel"]);
 
 $debug = false;
 $mmc = false;
+# flashsize only useful for e4hdultra
+$flashsize = trim($_GET["flashsize"]);
+if ($flashsize != "8gb")
+	$flashsize = "";
 $recovery = false;
 
 if ($boxmodel == "hd60-mmc" || $boxmodel == "hd61-mmc" || $boxmodel == "multibox-mmc" || $boxmodel == "multiboxse-mmc")
@@ -82,6 +86,10 @@ elseif ($boxtype == "armbox" || $boxtype == "arm")
 				$add_str = "_single_mmc";
 			else
 				$add_str = "_multi_recovery";
+		}
+		elseif ($boxmodel == "e4hdultra" && $mmc & $flashsize == "8gb")
+		{
+			$add_str = "_8gb_multi_usb";
 		}
 		else
 		{
