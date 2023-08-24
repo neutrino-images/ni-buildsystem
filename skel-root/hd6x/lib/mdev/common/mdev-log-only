@@ -5,4 +5,4 @@
 
 . /etc/init.d/globals
 
-env | egrep -v '^(HOME|PATH|PWD|CONFIG_.*)=') | LOGDEBUG
+env | egrep -v '^(HOME|PATH|PWD|CONFIG_.*)=' | LOGDEBUG
