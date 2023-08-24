@@ -2,6 +2,8 @@
 
 . /etc/init.d/globals
 
+LOGINFO "[$ACTION] processing $MDEV"
+
 MOUNTBASE=/mnt
 MOUNTPOINT="$MOUNTBASE/$MDEV"
 ROOTDEV=$(readlink /dev/root)
@@ -53,7 +55,10 @@ elif [ "$PARTNAME" == "storage" ]; then
 fi
 
 # do not add or remove root device again...
-[ "$ROOTDEV" = "$MDEV" -a "$R_PARTNAME" != "userdata" ] && exit 0
+if [ "$ROOTDEV" = "$MDEV" -a "$R_PARTNAME" != "userdata" ]; then
+	LOGINFO "/dev/$MDEV already mounted - not mounting again"
+	exit 0
+fi
 
 if [ -e /tmp/.nomdevmount ]; then
 	LOGINFO "no action on $MDEV -- /tmp/.nomdevmount exists"
