@@ -34,12 +34,6 @@ bootstrap: $(BOOTSTRAP)
 
 # -----------------------------------------------------------------------------
 
-skeleton: | $(TARGET_DIR)
-	$(INSTALL_COPY) --remove-destination $(SKEL_ROOT)/. $(TARGET_DIR)/
-	$(SED) 's|%(BOOT_PARTITION)|$(BOOT_PARTITION)|' $(TARGET_sysconfdir)/mdev.conf
-
-# -----------------------------------------------------------------------------
-
 target-dir:
 	$(INSTALL) -d $(TARGET_DIR)
 	$(INSTALL) -d $(TARGET_bindir)
@@ -65,7 +59,6 @@ endif
 	$(INSTALL) -d $(TARGET_DIR)/sys
 	$(INSTALL) -d $(TARGET_DIR)/tmp
 	$(foreach dir,$(subst :, ,$(PKG_CONFIG_PATH)),$(shell $(INSTALL) -d $(dir)))
-	make skeleton
 ifeq ($(PERSISTENT_VAR_PARTITION),yes)
   ifeq ($(IMAGE_NEW),yes)
 	touch -f $(TARGET_localstatedir)/etc/.newimage
@@ -135,6 +128,5 @@ PHONY += $(TARGET_localstatedir)/update
 # -----------------------------------------------------------------------------
 
 PHONY += bootstrap
-PHONY += skeleton
 PHONY += target-dir
 PHONY += libs-cross

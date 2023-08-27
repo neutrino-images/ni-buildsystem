@@ -93,10 +93,6 @@ IMAGE_DIR     = $(STAGING_DIR)/images
 UPDATE_DIR    = $(STAGING_DIR)/updates
 CROSS_BASE    = $(BASE_DIR)/cross
 CROSS_DIR    ?= $(CROSS_BASE)/$(TARGET_ARCH)-$(TARGET_OS)-$(KERNEL_VERSION)
-SKEL_ROOT     = $(BASE_DIR)/skel-root/$(BOXSERIES)
-ifeq ($(BOXMODEL),$(filter $(BOXMODEL),vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
-  SKEL_ROOT   = $(BASE_DIR)/skel-root/vuplus
-endif
 PACKAGE_DIR   = $(BASE_DIR)/package
 SUPPORT_DIR   = $(BASE_DIR)/support
 

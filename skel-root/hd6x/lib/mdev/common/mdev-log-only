@@ -1,8 +1,0 @@
-#!/bin/sh
-
-# log only when requested
-[ $# -eq 0 ] && exit 0
-
-. /etc/init.d/globals
-
-env | egrep -v '^(HOME|PATH|PWD|CONFIG_.*)=' | LOGDEBUG

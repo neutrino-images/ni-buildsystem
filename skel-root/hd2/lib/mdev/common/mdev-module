@@ -1,6 +1,0 @@
-#!/bin/sh
-
-. /etc/init.d/globals
-
-LOGINFO "${ACTION:-scan} module chain $@"
-/lib/mdev/common/mdev-modprobe "$@"
