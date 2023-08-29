@@ -44,10 +44,6 @@ MAINTAINER = $(shell whoami)
 #BOXMODEL = multibox
 #BOXMODEL = multiboxse
 
-# Edison
-#BOXMODEL = osmio4k
-#BOXMODEL = osmio4kse
-
 # VU+
 #BOXMODEL = vusolo4k
 #BOXMODEL = vuduo4k
