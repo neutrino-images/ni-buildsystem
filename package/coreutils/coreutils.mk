@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-COREUTILS_VERSION = 9.2
+COREUTILS_VERSION = 9.4
 COREUTILS_DIR = coreutils-$(COREUTILS_VERSION)
 COREUTILS_SOURCE = coreutils-$(COREUTILS_VERSION).tar.xz
 COREUTILS_SITE = $(GNU_MIRROR)/coreutils
@@ -22,6 +22,7 @@ COREUTILS_CONF_OPTS = \
 	--disable-xattr \
 	--disable-libcap \
 	--disable-acl \
+	--disable-year2038 \
 	--without-gmp \
 	--without-selinux
 
