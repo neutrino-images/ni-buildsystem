@@ -10,12 +10,12 @@ Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 
 Index: mc-4.8.23/doc/man/date-of-man-include.am
 ===================================================================
---- mc-4.8.23.orig/doc/man/date-of-man-include.am
-+++ mc-4.8.23/doc/man/date-of-man-include.am
+--- a/doc/man/date-of-man-include.am
++++ b/doc/man/date-of-man-include.am
 @@ -1,5 +1,5 @@
  SED_PARAMETERS = \
 -	-e "s/%DATE_OF_MAN_PAGE%/$${MAN_DATE}/g" \
 +	-e "s/%DATE_OF_MAN_PAGE%//g" \
  	-e "s/%MAN_VERSION%/@MAN_VERSION@/g" \
- 	-e "s{%prefix%{@prefix@{g" \
  	-e "s{%sysconfdir%{@sysconfdir@{g" \
+ 	-e "s{%libexecdir%{@libexecdir@{g" \

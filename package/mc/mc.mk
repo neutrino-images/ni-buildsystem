@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-MC_VERSION = 4.8.29
+MC_VERSION = 4.8.30
 MC_DIR = mc-$(MC_VERSION)
 MC_SOURCE = mc-$(MC_VERSION).tar.xz
 MC_SITE = http://ftp.midnight-commander.org
