@@ -4,10 +4,10 @@
 #
 ################################################################################
 
-LIBXML2_VERSION = 2.9.12
+LIBXML2_VERSION = 2.11.5
 LIBXML2_DIR = libxml2-$(LIBXML2_VERSION)
-LIBXML2_SOURCE = libxml2-$(LIBXML2_VERSION).tar.gz
-LIBXML2_SITE = http://xmlsoft.org/sources
+LIBXML2_SOURCE = libxml2-$(LIBXML2_VERSION).tar.xz
+LIBXML2_SITE = https://download.gnome.org/sources/libxml2/$(basename $(LIBXML2_VERSION))
 
 LIBXML2_CONFIG_SCRIPTS = xml2-config
 
@@ -26,7 +26,7 @@ LIBXML2_CONF_OPTS = \
 	--without-schematron
 
 define LIBXML2_TARGET_CLEANUP
-	$(TARGET_RM) $(addprefix $(TARGET_libdir)/,cmake xml2Conf.sh)
+	$(TARGET_RM) $(addprefix $(TARGET_libdir)/,cmake)
 endef
 LIBXML2_TARGET_FINALIZE_HOOKS += LIBXML2_TARGET_CLEANUP
 
