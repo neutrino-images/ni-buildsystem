@@ -12,6 +12,7 @@ $(HOST_DIR):
 host-tools: $(BUILD_DIR) $(HOST_DIR) \
 	host-pkgconf \
 	$(PKG_CONFIG) \
+	host-kmod \
 	host-mtd-utils \
 	host-u-boot \
 	host-zic \

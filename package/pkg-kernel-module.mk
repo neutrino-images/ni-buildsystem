@@ -74,6 +74,6 @@ endef
 define LINUX_RUN_DEPMOD
 	@$(call MESSAGE,"Running depmod")
 	if test -d $(TARGET_modulesdir) && grep -q "CONFIG_MODULES=y" $(KERNEL_OBJ_DIR)/.config; then \
-		PATH=$(PATH):/sbin:/usr/sbin depmod -a -b $(TARGET_DIR) $(KERNEL_VERSION); \
+		$(HOST_DEPMOD) -a -b $(TARGET_DIR) $(KERNEL_VERSION); \
 	fi
 endef
