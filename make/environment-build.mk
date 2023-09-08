@@ -82,8 +82,8 @@ endif
 
 BASE_DIR     := $(CURDIR)
 DL_DIR        = $(BASE_DIR)/download
-BUILD_DIR     = $(BASE_DIR)/build_tmp
-DEPS_DIR      = $(BASE_DIR)/deps
+BUILD_DIR     = $(BASE_DIR)/.build
+DEPS_DIR      = $(BASE_DIR)/.deps
 D             = $(DEPS_DIR)
 SOURCE_DIR   ?= $(BASE_DIR)/source
 MAKE_DIR      = $(BASE_DIR)/make

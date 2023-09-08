@@ -1,11 +1,11 @@
 #
 # exclude directories explicitly
 #
+/.build
+/.deps
 /.log
 /build-generic-pc
-/build_tmp
 /cross*
-/deps
 /download
 /host
 /internal

@@ -34,4 +34,5 @@ $(PKG_CONFIG): $(PKG_CONFIG_DEPENDENCIES) | $(HOST_DIR)
 
 # -----------------------------------------------------------------------------
 
+PHONY += $(HOST_DIR)
 PHONY += host-tools
