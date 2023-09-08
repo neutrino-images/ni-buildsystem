@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-COREUTILS_VERSION = 9.4
+COREUTILS_VERSION = $(if $(filter $(BOXTYPE),coolstream),9.2,9.4)
 COREUTILS_DIR = coreutils-$(COREUTILS_VERSION)
 COREUTILS_SOURCE = coreutils-$(COREUTILS_VERSION).tar.xz
 COREUTILS_SITE = $(GNU_MIRROR)/coreutils
@@ -22,11 +22,12 @@ COREUTILS_CONF_OPTS = \
 	--disable-xattr \
 	--disable-libcap \
 	--disable-acl \
-	--disable-year2038 \
 	--without-gmp \
 	--without-selinux
 
 COREUTILS_BINARIES = touch
+
+COREUTILS_MAKE = $(MAKE1)
 
 define COREUTILS_INSTALL_BINARIES
 	$(foreach binary,$($(PKG)_BINARIES),\
