@@ -172,8 +172,8 @@ BITBUCKET_SSH		= git@bitbucket.org
 GNU_MIRROR		= http://ftp.gnu.org/pub/gnu
 KERNEL_MIRROR		= https://cdn.kernel.org/pub
 
-NI_PUBLIC		= $(GITHUB)/neutrino-images
-NI_PRIVATE		= $(BITBUCKET_SSH):neutrino-images
+NI_GITHUB		= $(GITHUB)/neutrino-images
+NI_BITBUCKET		= $(BITBUCKET_SSH):neutrino-images
 
 NI_NEUTRINO		= ni-neutrino
 NI_NEUTRINO_PLUGINS	= ni-neutrino-plugins

@@ -90,11 +90,11 @@ $(SOURCE_DIR):
 	$(INSTALL) -d $(@)
 
 $(BUILD_GENERIC_PC):
-	git clone $(NI_PUBLIC)/$(NI_BUILD_GENERIC_PC).git $(BUILD_GENERIC_PC)
+	git clone $(NI_GITHUB)/$(NI_BUILD_GENERIC_PC).git $(BUILD_GENERIC_PC)
 
 $(SOURCE_DIR)/$(NI_NEUTRINO):
 	$(CD) $(SOURCE_DIR); \
-		git clone $(NI_PUBLIC)/$(@F).git
+		git clone $(NI_GITHUB)/$(@F).git
 ifeq ($(NI_ADMIN),true)
 	$(CD) $(@); \
 		git remote add tuxbox $(GITHUB)/tuxbox-neutrino/gui-neutrino.git; \
@@ -106,7 +106,7 @@ endif
 
 $(SOURCE_DIR)/$(NI_LIBSTB_HAL):
 	$(CD) $(SOURCE_DIR); \
-		git clone $(NI_PUBLIC)/$(@F).git
+		git clone $(NI_GITHUB)/$(@F).git
 ifeq ($(NI_ADMIN),true)
 	$(CD) $(@); \
 		git remote add tuxbox $(GITHUB)/tuxbox-neutrino/library-stb-hal.git; \
@@ -119,13 +119,13 @@ endif
 $(SOURCE_DIR)/$(NI_LIBCOOLSTREAM):
 ifeq ($(HAS_LIBCOOLSTREAM),yes)
 	$(CD) $(SOURCE_DIR); \
-		git clone $(NI_PRIVATE)/$(@F).git
+		git clone $(NI_GITHUB)/$(@F).git
 endif
 
 # upstream for rebase
 $(SOURCE_DIR)/$(NI_FFMPEG):
 	$(CD) $(SOURCE_DIR); \
-		git clone $(NI_PUBLIC)/$(@F).git
+		git clone $(NI_GITHUB)/$(@F).git
 ifeq ($(NI_ADMIN),true)
 	$(CD) $(@); \
 		git remote add upstream https://git.ffmpeg.org/ffmpeg.git; \
@@ -136,7 +136,7 @@ endif
 # torvalds for cherry-picking
 $(SOURCE_DIR)/$(NI_LINUX_KERNEL):
 	$(CD) $(SOURCE_DIR); \
-		git clone $(NI_PUBLIC)/$(@F).git
+		git clone $(NI_GITHUB)/$(@F).git
 ifeq ($(NI_ADMIN),true)
 	$(CD) $(@); \
 		git remote add upstream https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git; \
@@ -147,7 +147,7 @@ endif
 # upstream for rebase
 $(SOURCE_DIR)/$(NI_OFGWRITE):
 	$(CD) $(SOURCE_DIR); \
-		git clone $(NI_PUBLIC)/$(@F).git
+		git clone $(NI_GITHUB)/$(@F).git
 ifeq ($(NI_ADMIN),true)
 	$(CD) $(@); \
 		git remote add upstream $(GITHUB)/oe-alliance/ofgwrite.git; \
@@ -157,7 +157,7 @@ endif
 # upstream for rebase
 $(SOURCE_DIR)/$(NI_RTMPDUMP):
 	$(CD) $(SOURCE_DIR); \
-		git clone $(NI_PUBLIC)/$(@F).git
+		git clone $(NI_GITHUB)/$(@F).git
 ifeq ($(NI_ADMIN),true)
 	$(CD) $(@); \
 		git remote add upstream https://git.ffmpeg.org/rtmpdump; \
@@ -170,7 +170,7 @@ $(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS) \
 $(SOURCE_DIR)/$(NI_OPENTHREADS) \
 $(SOURCE_DIR)/$(NI_STREAMRIPPER):
 	$(CD) $(SOURCE_DIR); \
-		git clone $(NI_PUBLIC)/$(@F).git
+		git clone $(NI_GITHUB)/$(@F).git
 
 ni-sources: $(SOURCE_DIR) \
 	$(BUILD_GENERIC_PC) \
