@@ -23,12 +23,12 @@ HOST_KMOD_CONF_OPTS = \
 	--without-xz \
 	--with-zlib
 
-HOST_DEPMOD = $(HOST_DIR)/sbin/depmod
+HOST_DEPMOD_BINARY = $(HOST_DIR)/sbin/depmod
 
 # We only install depmod, since that's the only tool used for the host.
 define HOST_KMOD_INSTALL_TOOLS
-	$(INSTALL) -d $(dir $(HOST_DEPMOD))
-	ln -sf ../bin/kmod $(HOST_DEPMOD)
+	$(INSTALL) -d $(dir $(HOST_DEPMOD_BINARY))
+	ln -sf ../bin/kmod $(HOST_DEPMOD_BINARY)
 endef
 HOST_KMOD_POST_INSTALL_HOOKS += HOST_KMOD_INSTALL_TOOLS
 
