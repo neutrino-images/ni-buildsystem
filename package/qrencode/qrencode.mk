@@ -13,7 +13,7 @@ QRENCODE_SITE = https://fukuchi.org/works/qrencode
 
 HOST_QRENCODE_DEPENDENCIES = host-libpng
 
-HOST_QRENCODE = $(HOST_DIR)/bin/qrencode
+HOST_QRENCODE_BINARY = $(HOST_DIR)/bin/qrencode
 
 host-qrencode: | $(HOST_DIR)
 	$(call host-autotools-package)
