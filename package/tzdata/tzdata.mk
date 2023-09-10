@@ -21,7 +21,7 @@ TZDATA_ZONELIST = \
 define TZDATA_BUILD_CMDS
 	$(CD) $(PKG_BUILD_DIR); \
 		unset ${!LC_*}; LANG=POSIX; LC_ALL=POSIX; export LANG LC_ALL; \
-		$(HOST_ZIC) -b fat -d zoneinfo.tmp $(TZDATA_ZONELIST)
+		$(HOST_ZIC_BINARY) -b fat -d zoneinfo.tmp $(TZDATA_ZONELIST)
 endef
 
 define TZDATA_INSTALL_CMDS

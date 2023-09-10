@@ -14,7 +14,7 @@ ZIC_SITE = https://data.iana.org/time-zones/releases
 # fix non-existing subdir in tzcode tarball
 HOST_ZIC_EXTRACT_DIR = $($(PKG)_DIR)
 
-HOST_ZIC = $(HOST_DIR)/sbin/zic
+HOST_ZIC_BINARY = $(HOST_DIR)/sbin/zic
 
 define HOST_ZIC_BUILD_CMDS
 	$(CD) $(PKG_BUILD_DIR); \
@@ -22,7 +22,7 @@ define HOST_ZIC_BUILD_CMDS
 endef
 
 define HOST_ZIC_INSTALL_CMDS
-	$(INSTALL_EXEC) -D $(PKG_BUILD_DIR)/zic $(HOST_ZIC)
+	$(INSTALL_EXEC) -D $(PKG_BUILD_DIR)/zic $(HOST_ZIC_BINARY)
 endef
 
 host-zic: | $(HOST_DIR)
