@@ -30,7 +30,7 @@ host-tools: $(BUILD_DIR) $(HOST_DIR) \
 PKG_CONFIG_DEPENDENCIES = host-pkgconf
 
 $(PKG_CONFIG): $(PKG_CONFIG_DEPENDENCIES) | $(HOST_DIR)
-	ln -sf $(HOST_PKG_CONFIG) $(@)
+	ln -sf $(HOST_PKG_CONFIG_BINARY) $(@)
 
 # -----------------------------------------------------------------------------
 
