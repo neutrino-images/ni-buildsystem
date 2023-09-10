@@ -9,7 +9,7 @@ LUAPOSIX_DIR = luaposix-$(LUAPOSIX_VERSION)
 LUAPOSIX_SOURCE = luaposix-$(LUAPOSIX_VERSION).tar.gz
 LUAPOSIX_SITE = $(call github,luaposix,luaposix,v$(LUAPOSIX_VERSION))
 
-LUAPOSIX_DEPENDENCIES = $(HOST_LUA) lua luaexpat
+LUAPOSIX_DEPENDENCIES = $(HOST_LUA_BINARY) lua luaexpat
 
 LUAPOSIX_AUTORECONF = YES
 
@@ -25,6 +25,6 @@ LUAPOSIX_LUKE_INSTALL_OPTS = \
 luaposix: | $(TARGET_DIR)
 	$(call PREPARE)
 	$(CHDIR)/$($(PKG)_DIR); \
-		$(HOST_LUA) build-aux/luke $($(PKG)_LUKE_OPTS); \
-		$(HOST_LUA) build-aux/luke install $($(PKG)_LUKE_INSTALL_OPTS)
+		$(HOST_LUA_BINARY) build-aux/luke $($(PKG)_LUKE_OPTS); \
+		$(HOST_LUA_BINARY) build-aux/luke install $($(PKG)_LUKE_INSTALL_OPTS)
 	$(call TARGET_FOLLOWUP)

@@ -51,7 +51,7 @@ HOST_LUA_MAKE_INSTALL_OPTS = \
 	INSTALL_TOP=$(HOST_DIR) \
 	INSTALL_MAN=$(HOST_DIR)/share/man/man1
 
-HOST_LUA = $(HOST_DIR)/bin/lua
+HOST_LUA_BINARY = $(HOST_DIR)/bin/lua
 
 host-lua: | $(HOST_DIR)
 	$(call host-generic-package)

@@ -14,7 +14,7 @@ LUAPOSIX_DEPENDENCIES = lua luaexpat gnulib slingshot
 LUAPOSIX_AUTORECONF = YES
 
 LUAPOSIX_CONF_ENV = \
-	LUA=$(HOST_LUA)
+	LUA=$(HOST_LUA_BINARY)
 
 LUAPOSIX_CONF_OPTS = \
 	--libdir=$(libdir)/lua/$(LUA_ABIVERSION) \
