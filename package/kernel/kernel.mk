@@ -287,12 +287,12 @@ kernel-coolstream: kernel-coolstream-$(BOXSERIES)
 	$(call TOUCH)
 
 kernel-coolstream-hd1: kernel.do_compile | $(IMAGE_DIR)
-	$(HOST_MKIMAGE) -A $(TARGET_ARCH) -O linux -T kernel -C none -a 0x48000 -e 0x48000 -n "$(KERNEL_NAME)" -d $(KERNEL_ZIMAGE) $(TARGET_localstatedir)/update/zImage
+	$(HOST_MKIMAGE_BINARY) -A $(TARGET_ARCH) -O linux -T kernel -C none -a 0x48000 -e 0x48000 -n "$(KERNEL_NAME)" -d $(KERNEL_ZIMAGE) $(TARGET_localstatedir)/update/zImage
 	$(INSTALL_DATA) $(TARGET_localstatedir)/update/zImage $(IMAGE_DIR)/$(IMAGE_NAME)-zImage.img
 	$(call TOUCH)
 
 kernel-coolstream-hd2: kernel.do_compile | $(IMAGE_DIR)
-	$(HOST_MKIMAGE) -A $(TARGET_ARCH) -O linux -T kernel -C none -a 0x8000 -e 0x8000 -n "$(KERNEL_NAME)" -d $(KERNEL_ZIMAGE_DTB) $(TARGET_localstatedir)/update/vmlinux.ub.gz
+	$(HOST_MKIMAGE_BINARY) -A $(TARGET_ARCH) -O linux -T kernel -C none -a 0x8000 -e 0x8000 -n "$(KERNEL_NAME)" -d $(KERNEL_ZIMAGE_DTB) $(TARGET_localstatedir)/update/vmlinux.ub.gz
 	$(INSTALL_DATA) $(TARGET_localstatedir)/update/vmlinux.ub.gz $(IMAGE_DIR)/$(IMAGE_NAME)-vmlinux.ub.gz
 ifeq ($(BOXMODEL),$(filter $(BOXMODEL),apollo shiner))
   ifeq ($(BOXMODEL),apollo)
