@@ -80,6 +80,9 @@ endif
 ifndef $(PKG)_CONF_OPTS
   $(PKG)_CONF_OPTS =
 endif
+ifneq ($$(BS_PACKAGE_$(PKG)_CONF_OPTS),$(empty))
+  $(PKG)_CONF_OPTS += $$(BS_PACKAGE_$(PKG)_CONF_OPTS)
+endif
 
 # configure commands
 ifndef $(PKG)_CONFIGURE_CMDS
