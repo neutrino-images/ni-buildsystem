@@ -39,7 +39,7 @@ define HOST_LUAROCKS_CREATE_CONFIG
 endef
 HOST_LUAROCKS_HOST_FINALIZE_HOOKS += HOST_LUAROCKS_CREATE_CONFIG
 
-HOST_LUAROCKS = $(HOST_DIR)/bin/luarocks
+HOST_LUAROCKS_BINARY = $(HOST_DIR)/bin/luarocks
 
 host-luarocks: | $(HOST_DIR)
 	$(call host-autotools-package)
