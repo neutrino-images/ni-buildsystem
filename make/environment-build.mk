@@ -178,8 +178,8 @@ NI_BITBUCKET		= $(BITBUCKET_SSH):neutrino-images
 NI_NEUTRINO		= ni-neutrino
 NI_NEUTRINO_PLUGINS	= ni-neutrino-plugins
 
-BUILD_GENERIC_PC	= build-generic-pc
-NI_BUILD_GENERIC_PC	= ni-build-generic-pc
+GENERIC_PC		= generic-pc
+NI_BUILDSYSTEM_GENERIC_PC = ni-buildsystem-generic-pc
 NI_DRIVERS_BIN		= ni-drivers-bin
 NI_FFMPEG		= ni-ffmpeg
 NI_LIBSTB_HAL		= ni-libstb-hal

@@ -89,8 +89,8 @@ download:
 $(SOURCE_DIR):
 	$(INSTALL) -d $(@)
 
-$(BUILD_GENERIC_PC):
-	git clone $(NI_GITHUB)/$(NI_BUILD_GENERIC_PC).git $(BUILD_GENERIC_PC)
+$(GENERIC_PC):
+	git clone $(NI_GITHUB)/$(NI_BUILDSYSTEM_GENERIC_PC).git $(GENERIC_PC)
 
 $(SOURCE_DIR)/$(NI_NEUTRINO):
 	$(CD) $(SOURCE_DIR); \
@@ -173,7 +173,7 @@ $(SOURCE_DIR)/$(NI_STREAMRIPPER):
 		git clone $(NI_GITHUB)/$(@F).git
 
 ni-sources: $(SOURCE_DIR) \
-	$(BUILD_GENERIC_PC) \
+	$(GENERIC_PC) \
 	$(SOURCE_DIR)/$(NI_DRIVERS_BIN) \
 	$(SOURCE_DIR)/$(NI_FFMPEG) \
 	$(SOURCE_DIR)/$(NI_LIBCOOLSTREAM) \

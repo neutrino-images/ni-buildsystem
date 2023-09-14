@@ -46,7 +46,7 @@ update-ni-force:
 	make update-ni-sources
 
 update-ni-sources: ni-sources update-neutrino
-	$(CD) $(BUILD_GENERIC_PC); git pull
+	$(CD) $(BASE_DIR)/$(GENERIC_PC); git pull
 	$(CD) $(SOURCE_DIR)/$(NI_DRIVERS_BIN); git pull
 	$(CD) $(SOURCE_DIR)/$(NI_FFMPEG); git pull --all
 ifeq ($(HAS_LIBCOOLSTREAM),yes)
@@ -72,7 +72,7 @@ push:
 ifeq ($(HAS_INTERNALS),yes)
 	$(CD) $(BASE_DIR)/$(NI_INTERNALS); git push
 endif
-	$(CD) $(BUILD_GENERIC_PC); git push
+	$(CD) $(BASE_DIR)/$(GENERIC_PC); git push
 	$(CD) $(SOURCE_DIR)/$(NI_DRIVERS_BIN); git push
 	$(CD) $(SOURCE_DIR)/$(NI_FFMPEG); git push --all
 ifeq ($(HAS_LIBCOOLSTREAM),yes)
@@ -93,7 +93,7 @@ status:
 ifeq ($(HAS_INTERNALS),yes)
 	$(CD) $(BASE_DIR)/$(NI_INTERNALS); git status -s -b
 endif
-	$(CD) $(BUILD_GENERIC_PC); git status -s -b
+	$(CD) $(BASE_DIR)/$(GENERIC_PC); git status -s -b
 	$(CD) $(SOURCE_DIR)/$(NI_DRIVERS_BIN); git status -s -b
 	$(CD) $(SOURCE_DIR)/$(NI_FFMPEG); git status -s -b
 ifeq ($(HAS_LIBCOOLSTREAM),yes)
@@ -117,7 +117,7 @@ include support/gnuconfig/gnuconfig-update.mk
 
 REPOSITORIES = \
 	. \
-	$(BUILD_GENERIC_PC) \
+	$(GENERIC_PC) \
 	$(SOURCE_DIR)/$(NI_DRIVERS_BIN) \
 	$(SOURCE_DIR)/$(NI_FFMPEG) \
 	$(SOURCE_DIR)/$(NI_LIBSTB_HAL) \
