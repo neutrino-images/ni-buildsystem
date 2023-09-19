@@ -17,22 +17,36 @@ if [ -e /tmp/.nomdevmount ]; then
 fi
 
 create_symlinks() {
+	LOGINFO "try to create symlinks for /dev/$MDEV in $MOUNTBASE"
 	DEVBASE=${MDEV:0:3} # first 3 characters
+	#LOGINFO "create symlinks: DEVBASE=$DEVBASE"
 	PARTNUM=${MDEV:3}   # characters 4-
+	#LOGINFO "create symlinks: PARTNUM=$PARTNUM"
+
+	if which wakeup.sh > /dev/null; then
+		wakeup.sh $MOUNTPOINT
+	fi
+
+	if which blkid > /dev/null; then
+		# blkid delivers LABEL and UUID
+		BLKID=$(blkid -c /dev/null -w /dev/null /dev/$MDEV)
+		eval ${BLKID#*:}
+	fi
 	if [ -e /sys/block/$DEVBASE/device/model ]; then # don't read if blockdevice not present
 		read MODEL < /sys/block/$DEVBASE/device/model
 	fi
 	MODEL=${MODEL// /_} # replace ' ' with '_'
+
+	#LOGINFO "create symlinks: LABEL=$LABEL"
+	#LOGINFO "create symlinks: UUID=$UUID"
+	#LOGINFO "create symlinks: MODEL=$MODEL"
+
 	OLDPWD=$PWD
 	cd $MOUNTBASE
-	if which blkid > /dev/null; then
-		BLKID=$(blkid -c /dev/null /dev/$MDEV)
-		eval ${BLKID#*:}
-	fi
 	if [ -n "$LABEL" ]; then
-		LABEL=${LABEL// /_} # replace ' ' with '_'
-		rm -f "$LABEL"
-		ln -s $MDEV "$LABEL"
+		LINK=${LABEL// /_} # replace ' ' with '_'
+		rm -f "${LINK}"
+		ln -s $MDEV "${LINK}"
 	fi
 	if [ -n "$UUID" ]; then
 		LINK="${TYPE}${TYPE:+-}${UUID}"
@@ -65,7 +79,7 @@ case "$ACTION" in
 		if [ ${#MDEV} = 3 ]; then # sda, sdb, sdc => whole drive
 			PARTS=$(sed -n "/ ${MDEV}[0-9]$/{s/ *[0-9]* *[0-9]* * [0-9]* //;p}" /proc/partitions)
 			if [ -n "$PARTS" ]; then
-				LOGINFO "drive has partitions $PARTS, not trying to mount $MDEV"
+				LOGINFO "drive $MDEV has partitions ($PARTS); not trying to mount $MDEV"
 				exit 0
 			fi
 		fi
@@ -77,8 +91,8 @@ case "$ACTION" in
 		# remove old mountpoint symlinks we might have for this device
 		rm -f $MOUNTPOINT
 		mkdir -p $MOUNTPOINT
-		for i in 1 2 3 4 5 6 7 8 9; do # retry 9 times for slow devices
-			# LOGINFO "mounting /dev/$MDEV to $MOUNTPOINT try $i"
+		for i in 1 2 3 4 5 6 7 8 9 10; do # retry 10 times for ssslllooowww devices
+			#LOGINFO "[$ACTION] mounting /dev/$MDEV to $MOUNTPOINT; try $i/10"
 			OUT1=$(mount -t auto /dev/$MDEV $MOUNTPOINT 2>&1 >/dev/null)
 			RET1=$?
 			[ $RET1 = 0 ] && break
