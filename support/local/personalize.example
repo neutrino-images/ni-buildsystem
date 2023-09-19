@@ -1,0 +1,19 @@
+#!/bin/sh
+
+# TARGET_DIR and BUILD_DIR are transferred
+TARGET_DIR="$2"
+BUILD_DIR="$3"
+
+case $1 in
+	start)
+		echo "personalize start"
+		# your personalized stuff *before* copying local/root here
+	;;
+	stop)
+		echo "personalize stop"
+		# your personalized stuff *after* copying local/root here
+	;;
+	*)
+		echo "[$BASENAME] Usage: $0 {start|stop}"
+	;;
+esac

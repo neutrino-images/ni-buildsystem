@@ -60,7 +60,7 @@ export SHELL CONFIG_SHELL Q KBUILD_VERBOSE
 # first target is default ...
 default: all
 
-local-files: config.local Makefile.local local
+local-files: config.local Makefile.local local-scripts
 
 # workaround unset variables at first start
 config.local: $(eval BOXMODEL=hd51)
@@ -125,14 +125,20 @@ config.local: $(eval BOXMODEL=hd51)
 		51)	boxmodel=vuduo;; \
 		*)	boxmodel=hd51;; \
 	esac; \
-	cp support/config.example $@; \
+	install -m 0644 support/config.example $@; \
 	sed -i -e "s|^#BOXMODEL = $$boxmodel|BOXMODEL = $$boxmodel|" $@
 
 Makefile.local:
-	@cp support/Makefile.example $@
+	@install -m 0644 support/Makefile.example $@
 
 local:
-	@mkdir -p $(@)/{root,scripts}
+	@install -d $(@)/{root,scripts}
+
+local-scripts: local \
+	local/scripts/personalize
+
+local/scripts/personalize:
+	@install -m 0755 support/local/personalize.example $(@)
 
 printenv:
 	@$(call draw_line);
