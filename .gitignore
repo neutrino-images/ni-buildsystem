@@ -4,7 +4,7 @@
 /.build
 /.deps
 /.log
-/build-generic-pc
+/generic-pc
 /cross*
 /download
 /host
