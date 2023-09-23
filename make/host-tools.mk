@@ -17,6 +17,7 @@ host-tools: $(BUILD_DIR) $(HOST_DIR) \
 	host-u-boot \
 	host-zic \
 	host-parted \
+	host-python3 \
 	host-dosfstools \
 	host-mtools \
 	host-e2fsprogs \
