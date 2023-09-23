@@ -4,7 +4,8 @@
 #
 ################################################################################
 
-PYTHON3_VERSION = 3.10.4
+PYTHON3_VERSION_MAJOR = 3.11
+PYTHON3_VERSION = $(PYTHON3_VERSION_MAJOR).5
 PYTHON3_DIR = Python-$(PYTHON3_VERSION)
 PYTHON3_SOURCE = Python-$(PYTHON3_VERSION).tar.xz
 PYTHON3_SITE = https://www.python.org/ftp/python/$(PYTHON3_VERSION)
@@ -13,8 +14,8 @@ PYTHON3_SITE = https://www.python.org/ftp/python/$(PYTHON3_VERSION)
 
 HOST_PYTHON3_BINARY = $(HOST_DIR)/bin/python3
 
-HOST_PYTHON3_LIB_DIR = lib/python$(basename $(HOST_PYTHON3_VERSION))
-HOST_PYTHON3_INCLUDE_DIR = include/python$(basename $(HOST_PYTHON3_VERSION))
+HOST_PYTHON3_LIB_DIR = lib/python$(PYTHON3_VERSION_MAJOR)
+HOST_PYTHON3_INCLUDE_DIR = include/python$(PYTHON3_VERSION_MAJOR)
 HOST_PYTHON3_SITEPACKAGES_DIR = $(HOST_PYTHON3_LIB_DIR)/site-packages
 
 HOST_PYTHON3_DEPENDENCIES = host-expat host-zlib host-libffi
@@ -52,6 +53,7 @@ HOST_PYTHON3_CONF_OPTS += \
 	--enable-unicodedata \
 	--disable-test-modules \
 	--disable-idle3 \
+	--disable-uuid \
 	--disable-ossaudiodev
 
 HOST_PYTHON3_CONF_OPTS += --disable-uuid
