@@ -225,6 +225,11 @@ include make/flash-images.mk
 include make/target-rootfs.mk
 include make/host-tools.mk
 
+# If SOURCE_DATE_EPOCH has not been set then use the last commit date.
+# See: https://reproducible-builds.org/specs/source-date-epoch/
+BS_VERSION_GIT_EPOCH := $(shell git log -1 --format=%at 2>/dev/null)
+export SOURCE_DATE_EPOCH ?= $(BS_VERSION_GIT_EPOCH)
+
 include $(sort $(wildcard package/*/*.mk))
 
 include make/ni.mk
