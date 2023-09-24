@@ -4,12 +4,14 @@
 #
 ################################################################################
 
-PYTHON_SETUPTOOLS_VERSION = 62.1.0
+PYTHON_SETUPTOOLS_VERSION = 68.0.0
 PYTHON_SETUPTOOLS_DIR = setuptools-$(PYTHON_SETUPTOOLS_VERSION)
 PYTHON_SETUPTOOLS_SOURCE = setuptools-$(PYTHON_SETUPTOOLS_VERSION).tar.gz
-PYTHON_SETUPTOOLS_SITE = https://files.pythonhosted.org/packages/ea/a3/3d3cbbb7150f90c4cf554048e1dceb7c6ab330e4b9138a40e130a4cc79e1
+PYTHON_SETUPTOOLS_SITE = https://files.pythonhosted.org/packages/dc/98/5f896af066c128669229ff1aa81553ac14cfb3e5e74b6b44594132b8540e
 
 # -----------------------------------------------------------------------------
+
+HOST_PYTHON_SETUPTOOLS_DEPENDENCIES = host-python-wheel
 
 host-python-setuptools: | $(HOST_DIR)
 	$(call host-python-package)

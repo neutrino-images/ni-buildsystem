@@ -221,7 +221,7 @@ ifeq ($(PKG_MODE),KERNEL_MODULE)
 endif
 ifeq ($(PKG_MODE),PYTHON)
   $(PKG)_DEPENDENCIES += host-python3
-  $(PKG)_DEPENDENCIES += $$(if $$(filter $$(pkg),host-python-setuptools),,host-python-setuptools)
+  $(PKG)_DEPENDENCIES += $$(if $$(filter $$(pkg),host-python-setuptools host-python-wheel),,host-python-setuptools)
 endif
 
 endef # PKG_CHECK_VARIABLES
