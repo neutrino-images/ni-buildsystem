@@ -135,11 +135,11 @@ ifndef $(PKG)_BUILD_CMDS
     else
       $(PKG)_BUILD_CMDS = $$(TARGET_NINJA_BUILD_CMDS_DEFAULT)
     endif
-  else ifeq ($(PKG_MODE),PYTHON3)
+  else ifeq ($(PKG_MODE),PYTHON)
     ifeq ($(PKG_PACKAGE),HOST)
-      $(PKG)_BUILD_CMDS = $$(HOST_PYTHON3_BUILD_CMDS_DEFAULT)
+      $(PKG)_BUILD_CMDS = $$(HOST_PYTHON_BUILD_CMDS_DEFAULT)
     else
-      $(PKG)_BUILD_CMDS = $$(TARGET_PYTHON3_BUILD_CMDS_DEFAULT)
+      $(PKG)_BUILD_CMDS = $$(TARGET_PYTHON_BUILD_CMDS_DEFAULT)
     endif
   else ifeq ($(PKG_MODE),KERNEL_MODULE)
     $(PKG)_BUILD_CMDS = $$(KERNEL_MODULE_BUILD_CMDS_DEFAULT)
@@ -180,11 +180,11 @@ ifndef $(PKG)_INSTALL_CMDS
     else
       $(PKG)_INSTALL_CMDS = $$(TARGET_NINJA_INSTALL_CMDS_DEFAULT)
     endif
-  else ifeq ($(PKG_MODE),PYTHON3)
+  else ifeq ($(PKG_MODE),PYTHON)
     ifeq ($(PKG_PACKAGE),HOST)
-      $(PKG)_INSTALL_CMDS = $$(HOST_PYTHON3_INSTALL_CMDS_DEFAULT)
+      $(PKG)_INSTALL_CMDS = $$(HOST_PYTHON_INSTALL_CMDS_DEFAULT)
     else
-      $(PKG)_INSTALL_CMDS = $$(TARGET_PYTHON3_INSTALL_CMDS_DEFAULT)
+      $(PKG)_INSTALL_CMDS = $$(TARGET_PYTHON_INSTALL_CMDS_DEFAULT)
     endif
   else ifeq ($(PKG_MODE),KERNEL_MODULE)
     $(PKG)_INSTALL_CMDS = $$(KERNEL_MODULE_INSTALL_CMDS_DEFAULT)
@@ -219,7 +219,7 @@ endif
 ifeq ($(PKG_MODE),KERNEL_MODULE)
   $(PKG)_DEPENDENCIES += kernel-$(BOXTYPE)
 endif
-ifeq ($(PKG_MODE),PYTHON3)
+ifeq ($(PKG_MODE),PYTHON)
   $(PKG)_DEPENDENCIES += host-python3
   $(PKG)_DEPENDENCIES += $$(if $$(filter $$(pkg),host-python-setuptools),,host-python-setuptools)
 endif

@@ -12,4 +12,4 @@ PYTHON_SETUPTOOLS_SITE = https://files.pythonhosted.org/packages/ea/a3/3d3cbbb71
 # -----------------------------------------------------------------------------
 
 host-python-setuptools: | $(HOST_DIR)
-	$(call host-python3-package)
+	$(call host-python-package)

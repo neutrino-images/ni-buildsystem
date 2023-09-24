@@ -12,12 +12,6 @@ PYTHON3_SITE = https://www.python.org/ftp/python/$(PYTHON3_VERSION)
 
 PYTHON3_DEPENDENCIES = libffi
 
-# Provided to other packages
-PYTHON3_LIB_DIR = $(TARGET_libdir)/python$(PYTHON3_VERSION_MAJOR)
-PYTHON3_INCLUDE_DIR = $(TARGET_includedir)/python$(PYTHON3_VERSION_MAJOR)
-PYTHON3_SITEPACKAGES_DIR = $(PYTHON3_LIB_DIR)/site-packages
-PYTHON3_PATH = $(PYTHON3_LIB_DIR)
-
 #PYTHON3_AUTORECONF = YES
 
 # PYTHON3_AUTORECONF won't work
@@ -61,7 +55,7 @@ PYTHON3_CONF_OPTS = \
 	--disable-static \
 	--without-ensurepip \
 	--without-cxx-main \
-	--with-build-python=$(HOST_PYTHON3_BINARY) \
+	--with-build-python=$(HOST_PYTHON_BINARY) \
 	--with-system-ffi \
 	--disable-pydoc \
 	--disable-test-modules \
@@ -137,7 +131,7 @@ endef
 define PYTHON3_CREATE_PYC_FILES
 	$(PYTHON3_FIX_TIME)
 	PYTHONPATH="$(PYTHON3_PATH)" \
-	$(HOST_PYTHON3_BINARY) \
+	$(HOST_PYTHON_BINARY) \
 		$(PKG_BUILD_DIR)/Lib/compileall.py \
 		$(if $(VERBOSE),,-q) \
 		-s $(TARGET_DIR) \
@@ -161,12 +155,6 @@ python3: | $(TARGET_DIR)
 	$(call autotools-package)
 
 # ------------------------------------------------------------------------------
-
-HOST_PYTHON3_BINARY = $(HOST_DIR)/bin/python3
-
-HOST_PYTHON3_LIB_DIR = $(HOST_DIR)/lib/python$(PYTHON3_VERSION_MAJOR)
-HOST_PYTHON3_INCLUDE_DIR = $(HOST_DIR)/include/python$(PYTHON3_VERSION_MAJOR)
-HOST_PYTHON3_SITEPACKAGES_DIR = $(HOST_PYTHON3_LIB_DIR)/site-packages
 
 HOST_PYTHON3_DEPENDENCIES = host-expat host-zlib host-libffi
 
