@@ -4,20 +4,22 @@
 #
 ################################################################################
 
-MINISATIP_VERSION = master
-MINISATIP_DIR = minisatip.git
-MINISATIP_SOURCE = minisatip.git
-MINISATIP_SITE = https://github.com/catalinii
-MINISATIP_SITE_METHOD = git
+MINISATIP_VERSION = 1.3.0
+MINISATIP_DIR = minisatip-$(MINISATIP_VERSION)
+MINISATIP_SOURCE = minisatip-$(MINISATIP_VERSION).tar.gz
+MINISATIP_SITE = $(call github,catalinii,minisatip,v$(MINISATIP_VERSION))
 
-MINISATIP_DEPENDENCIES = libdvbcsa openssl
+MINISATIP_DEPENDENCIES = libdvbcsa libxml2 openssl
 
 MINISATIP_CONF_ENV = \
 	CFLAGS+=" -ldl"
 
 MINISATIP_CONF_OPTS = \
 	--enable-static \
-	--disable-netcv
+	--disable-netcv \
+	--enable-dvbca \
+	--enable-dvbcsa \
+	--with-xml2=$(TARGET_includedir)/libxml2
 
 MINISATIP_MAKE_ENV = \
 	$(TARGET_CONFIGURE_ENV)
