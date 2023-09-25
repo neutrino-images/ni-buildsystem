@@ -220,10 +220,9 @@ ifeq ($(PKG_MODE),KERNEL_MODULE)
   $(PKG)_DEPENDENCIES += kernel-$(BOXTYPE)
 endif
 ifeq ($(PKG_MODE),PYTHON)
-  ifeq ($(PKG_PACKAGE),HOST)
-    $(PKG)_DEPENDENCIES += host-python3
-    $(PKG)_DEPENDENCIES += $$(if $$(filter $$(pkg),host-python-setuptools host-python-wheel),,host-python-setuptools)
-  else
+  $(PKG)_DEPENDENCIES += host-python3
+  $(PKG)_DEPENDENCIES += $$(if $$(filter $$(pkg),host-python-setuptools host-python-wheel),,host-python-setuptools)
+  ifeq ($(PKG_PACKAGE),TARGET)
     $(PKG)_DEPENDENCIES += python3
     $(PKG)_DEPENDENCIES += $$(if $$(filter $$(pkg),python-setuptools python-wheel),,python-setuptools)
   endif
