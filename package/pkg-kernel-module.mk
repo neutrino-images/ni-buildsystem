@@ -1,6 +1,6 @@
 ################################################################################
 #
-# kernel module infrastructure for building Linux kernel modules
+# kernel module infrastructure for building Linux kernel modules - TARGET only
 #
 ################################################################################
 
