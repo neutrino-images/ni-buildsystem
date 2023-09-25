@@ -42,6 +42,9 @@ AUTOFS_CONF_OPTS = \
 #AUTOFS_MAKE_ENV = \
 #	DONTSTRIP=1
 
+AUTOFS_MAKE = \
+	$(MAKE1)
+
 define AUTOFS_PATCH_RPC_SUBS_H
 	$(SED) "s|nfs/nfs.h|linux/nfs.h|" $(PKG_BUILD_DIR)/include/rpc_subs.h
 endef

@@ -11,6 +11,9 @@ FBSHOT_SITE = http://distro.ibiblio.org/amigolinux/download/Utils/fbshot
 
 FBSHOT_DEPENDENCIES = libpng
 
+FBSHOT_MAKE = \
+	$(MAKE1)
+
 define FBSHOT_PATCH_MAKEFILE
 	$(SED) 's|	gcc |	$(TARGET_CC) $(TARGET_CFLAGS) $(TARGET_LDFLAGS) |' $(PKG_BUILD_DIR)/Makefile
 	$(SED) '/strip fbshot/d' $(PKG_BUILD_DIR)/Makefile

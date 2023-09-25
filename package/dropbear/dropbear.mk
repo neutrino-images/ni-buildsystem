@@ -20,6 +20,9 @@ DROPBEAR_CONF_OPTS = \
 	--disable-harden \
 	--enable-bundled-libtom
 
+DROPBEAR_MAKE = \
+	$(MAKE1)
+
 DROPBEAR_MAKE_OPTS = \
 	SCPPROGRESS=1 \
 	PROGRAMS="dropbear dbclient dropbearkey scp"

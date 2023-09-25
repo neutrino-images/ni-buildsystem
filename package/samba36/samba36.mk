@@ -50,6 +50,9 @@ SAMBA36_CONF_OPTS = \
 	--disable-relro \
 	--disable-swat
 
+SAMBA36_MAKE = \
+	$(MAKE1)
+
 define SAMBA36_AUTOGEN_SH
 	$(CD) $(PKG_BUILD_DIR); \
 		./autogen.sh

@@ -9,6 +9,9 @@ HD_IDLE_DIR = hd-idle
 HD_IDLE_SOURCE = hd-idle-$(HD_IDLE_VERSION).tgz
 HD_IDLE_SITE = https://sourceforge.net/projects/hd-idle/files
 
+HD_IDLE_MAKE = \
+	$(MAKE1)
+
 HD_IDLE_MAKE_ENV = \
 	$(TARGET_CONFIGURE_ENV)
 

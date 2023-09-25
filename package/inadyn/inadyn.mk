@@ -17,6 +17,9 @@ INADYN_CONF_OPTS = \
 	--docdir=$(REMOVE_docdir) \
 	--enable-openssl
 
+INADYN_MAKE = \
+	$(MAKE1)
+
 define INADYN_INSTALL_INADYN_CONF
 	$(INSTALL_DATA) -D $(PKG_FILES_DIR)/inadyn.conf $(TARGET_localstatedir)/etc/inadyn.conf
 	ln -sf /var/etc/inadyn.conf $(TARGET_sysconfdir)/inadyn.conf
