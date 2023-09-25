@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-WAF_VERSION = 2.0.24
+WAF_VERSION = 2.0.26
 WAF_DIR = waf-$(WAF_VERSION)
 WAF_SOURCE = waf-$(WAF_VERSION).tar.bz2
 WAF_SITE = https://waf.io
