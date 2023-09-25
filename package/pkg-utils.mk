@@ -98,6 +98,8 @@ ifndef $(PKG)_CONFIGURE_CMDS
     else
       $(PKG)_CONFIGURE_CMDS = $$(TARGET_MESON_CMDS_DEFAULT)
     endif
+  else ifeq ($(PKG_MODE),WAF)
+    $(PKG)_CONFIGURE_CMDS = $$(WAF_CONFIGURE_CMDS_DEFAULT)
   else
     ifeq ($(PKG_PACKAGE),HOST)
       $(PKG)_CONFIGURE_CMDS = $$(HOST_CONFIGURE_CMDS_DEFAULT)
@@ -119,6 +121,11 @@ ifndef $(PKG)_MAKE_ARGS
 endif
 ifndef $(PKG)_MAKE_OPTS
   $(PKG)_MAKE_OPTS =
+endif
+
+# waf
+ifndef $(PKG)_BUILD_OPTS
+  $(PKG)_BUILD_OPTS =
 endif
 
 # build commands
@@ -143,6 +150,8 @@ ifndef $(PKG)_BUILD_CMDS
     endif
   else ifeq ($(PKG_MODE),KERNEL_MODULE)
     $(PKG)_BUILD_CMDS = $$(KERNEL_MODULE_BUILD_CMDS_DEFAULT)
+  else ifeq ($(PKG_MODE),WAF)
+    $(PKG)_BUILD_CMDS = $$(WAF_BUILD_CMDS_DEFAULT)
   else
     $(PKG)_BUILD_CMDS = echo "$(PKG_NO_BUILD)"
   endif
@@ -164,6 +173,11 @@ ifndef $(PKG)_MAKE_INSTALL_ARGS
 endif
 ifndef $(PKG)_MAKE_INSTALL_OPTS
   $(PKG)_MAKE_INSTALL_OPTS = $$($(PKG)_MAKE_OPTS)
+endif
+
+# waf
+ifndef $(PKG)_INSTALL_OPTS
+  $(PKG)_INSTALL_OPTS =
 endif
 
 # install commands
@@ -188,6 +202,8 @@ ifndef $(PKG)_INSTALL_CMDS
     endif
   else ifeq ($(PKG_MODE),KERNEL_MODULE)
     $(PKG)_INSTALL_CMDS = $$(KERNEL_MODULE_INSTALL_CMDS_DEFAULT)
+  else ifeq ($(PKG_MODE),WAF)
+    $(PKG)_INSTALL_CMDS = $$(WAF_INSTALL_CMDS_DEFAULT)
   else
     $(PKG)_INSTALL_CMDS = echo "$(PKG_NO_INSTALL)"
   endif
@@ -209,6 +225,24 @@ ifeq ($(PKG_MODE),KCONFIG)
   $(PKG)_KCONFIG_DOTCONFIG = $$($(PKG)_KCONFIG_FILE)
 endif
 
+# waf
+ifndef $(PKG)_NEEDS_EXTERNAL_WAF
+  $(PKG)_NEEDS_EXTERNAL_WAF = NO
+endif
+ifeq ($$($(PKG)_NEEDS_EXTERNAL_WAF),YES)
+  $(PKG)_WAF = $$(HOST_WAF_BINARY)
+else
+  $(PKG)_WAF = ./waf
+endif
+ifndef $(PKG)_WAF_OPTS
+  $(PKG)_WAF_OPTS =
+endif
+
+# auto-assign some hooks
+ifeq ($$($(PKG)_NEEDS_EXTERNAL_WAF),YES)
+  $(PKG)_PRE_CONFIGURE_HOOKS += WAF_PACKAGE_REMOVE_WAF_LIB
+endif
+
 # auto-assign some dependencies
 ifndef $(PKG)_DEPENDENCIES
   $(PKG)_DEPENDENCIES =
@@ -216,15 +250,21 @@ endif
 ifeq ($(PKG_MODE),MESON)
   $(PKG)_DEPENDENCIES += host-meson
 endif
-ifeq ($(PKG_MODE),KERNEL_MODULE)
-  $(PKG)_DEPENDENCIES += kernel-$(BOXTYPE)
-endif
 ifeq ($(PKG_MODE),PYTHON)
   $(PKG)_DEPENDENCIES += host-python3
   $(PKG)_DEPENDENCIES += $$(if $$(filter $$(pkg),host-python-setuptools host-python-wheel),,host-python-setuptools)
   ifeq ($(PKG_PACKAGE),TARGET)
     $(PKG)_DEPENDENCIES += python3
     $(PKG)_DEPENDENCIES += $$(if $$(filter $$(pkg),python-setuptools python-wheel),,python-setuptools)
+  endif
+endif
+ifeq ($(PKG_MODE),KERNEL_MODULE)
+  $(PKG)_DEPENDENCIES += kernel-$(BOXTYPE)
+endif
+ifeq ($(PKG_MODE),WAF)
+  $(PKG)_DEPENDENCIES += host-python3
+  ifeq ($$($(PKG)_NEEDS_EXTERNAL_WAF),YES)
+    $(PKG)_DEPENDENCIES += host-waf
   endif
 endif
 
