@@ -64,6 +64,9 @@ endif
 ifndef $(PKG)_AUTORECONF_OPTS
   $(PKG)_AUTORECONF_OPTS =
 endif
+ifndef $(PKG)_AUTORECONF_CMDS
+  $(PKG)_AUTORECONF_CMDS = $$(AUTORECONF_CMDS_DEFAULT)
+endif
 
 # cmake
 ifndef $(PKG)_CMAKE
@@ -241,6 +244,10 @@ endif
 # auto-assign some hooks
 ifeq ($$($(PKG)_NEEDS_EXTERNAL_WAF),YES)
   $(PKG)_PRE_CONFIGURE_HOOKS += WAF_PACKAGE_REMOVE_WAF_LIB
+endif
+ifeq ($$($(PKG)_AUTORECONF),YES)
+  $(PKG)_AUTORECONF_HOOKS += AUTORECONF_CMDS_MESSAGE
+  $(PKG)_AUTORECONF_HOOKS += $(PKG)_AUTORECONF_CMDS
 endif
 
 # auto-assign some dependencies

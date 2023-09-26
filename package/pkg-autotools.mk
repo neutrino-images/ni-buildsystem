@@ -4,14 +4,15 @@
 #
 ################################################################################
 
-define AUTORECONF_HOOK
-	if [ "$($(PKG)_AUTORECONF)" == "YES" ]; then \
-		$(call MESSAGE,"Autoreconfiguring $(pkgname)"); \
-		$(CD) $(PKG_BUILD_DIR); \
-			$($(PKG)_AUTORECONF_ENV) \
-			$($(PKG)_AUTORECONF_CMD) \
-				$($(PKG)_AUTORECONF_OPTS); \
-	fi
+define AUTORECONF_CMDS_MESSAGE
+	@$(call MESSAGE,"Autoreconfiguring $(pkgname)")
+endef
+
+define AUTORECONF_CMDS_DEFAULT
+	$(CD) $(PKG_BUILD_DIR); \
+		$($(PKG)_AUTORECONF_ENV) \
+		$($(PKG)_AUTORECONF_CMD) \
+			$($(PKG)_AUTORECONF_OPTS)
 endef
 
 # -----------------------------------------------------------------------------
@@ -84,7 +85,7 @@ endef
 define TARGET_CONFIGURE
 	@$(call MESSAGE,"Configuring $(pkgname)")
 	$(foreach hook,$($(PKG)_PRE_CONFIGURE_HOOKS),$(call $(hook))$(sep))
-	$(Q)$(call AUTORECONF_HOOK)
+	$(foreach hook,$($(PKG)_AUTORECONF_HOOKS),$(call $(hook))$(sep))
 	$(Q)$(call $(PKG)_CONFIGURE_CMDS)
 	$(foreach hook,$($(PKG)_POST_CONFIGURE_HOOKS),$(call $(hook))$(sep))
 endef
@@ -141,7 +142,7 @@ endef
 define HOST_CONFIGURE
 	@$(call MESSAGE,"Configuring $(pkgname)")
 	$(foreach hook,$($(PKG)_PRE_CONFIGURE_HOOKS),$(call $(hook))$(sep))
-	$(Q)$(call AUTORECONF_HOOK)
+	$(foreach hook,$($(PKG)_AUTORECONF_HOOKS),$(call $(hook))$(sep))
 	$(Q)$(call $(PKG)_CONFIGURE_CMDS)
 	$(foreach hook,$($(PKG)_POST_CONFIGURE_HOOKS),$(call $(hook))$(sep))
 endef
