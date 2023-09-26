@@ -235,7 +235,9 @@ endif
 ifeq ($$($(PKG)_NEEDS_EXTERNAL_WAF),YES)
   $(PKG)_WAF = $$(HOST_WAF_BINARY)
 else
-  $(PKG)_WAF = ./waf
+  ifndef $(PKG)_WAF
+    $(PKG)_WAF = ./waf
+  endif
 endif
 ifndef $(PKG)_WAF_OPTS
   $(PKG)_WAF_OPTS =
