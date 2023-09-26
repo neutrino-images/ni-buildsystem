@@ -19,15 +19,9 @@ WAF_CONFIGURE_OPTS = \
 	--target=$(GNU_TARGET_NAME) \
 	\
 	--prefix=$(prefix) \
-	--exec-prefix=$(exec_prefix) \
-	--bindir=$(bindir) \
-	--datadir=$(datadir) \
-	--includedir=$(includedir) \
 	--libdir=$(libdir) \
 	\
-	--mandir=$(REMOVE_mandir) \
-	--datarootdir=$(datadir) \
-	--sysconfdir=$(sysconfdir)
+	--mandir=$(REMOVE_mandir)
 
 define WAF_CONFIGURE_CMDS_DEFAULT
 	$(CD) $(PKG_BUILD_DIR); \
