@@ -85,5 +85,5 @@ define waf-package
 	$(if $(filter $(1),$(PKG_NO_CONFIGURE)),,$(call WAF_CONFIGURE))
 	$(if $(filter $(1),$(PKG_NO_BUILD)),,$(call WAF_BUILD))
 	$(if $(filter $(1),$(PKG_NO_INSTALL)),,$(call WAF_INSTALL))
-	$(call HOST_FOLLOWUP)
+	$(call TARGET_FOLLOWUP)
 endef
