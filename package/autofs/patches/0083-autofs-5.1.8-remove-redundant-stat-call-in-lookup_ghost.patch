@@ -1,0 +1,62 @@
+autofs-5.1.8 - remove redundant stat call in lookup_ghost()
+
+From: Ian Kent <raven@themaw.net>
+
+There's nothing to be gained by checking for existence of the path
+here, just trust the mkdir_path() call will return the correct error
+if the path exists.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG       |    1 +
+ daemon/lookup.c |   24 ++++++------------------
+ 2 files changed, 7 insertions(+), 18 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index 97dc4aba..c697434c 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -80,6 +80,7 @@
+ - eliminate root param from autofs mount and umount.
+ - remove redundant fstat from do_mount_direct().
+ - get rid of strlen call in handle_packet_missing_direct().
++- remove redundant stat call in lookup_ghost().
+ 
+ 19/10/2021 autofs-5.1.8
+ - add xdr_exports().
+diff --git a/daemon/lookup.c b/daemon/lookup.c
+index 5d5241c1..0bfbaa5f 100644
+--- a/daemon/lookup.c
++++ b/daemon/lookup.c
+@@ -782,25 +782,13 @@ int lookup_ghost(struct autofs_point *ap)
+ 			if (!fullpath)
+ 				goto next;
+ 
+-			ret = stat(fullpath, &st);
+-			if (ret == -1 && errno != ENOENT) {
+-				char *estr = strerror_r(errno, buf, MAX_ERR_BUF);
+-				warn(ap->logopt, "stat error %s", estr);
+-				free(fullpath);
+-				goto next;
+-			}
+-
+-			/* Directory already exists? */
+-			if (!ret) {
+-				free(fullpath);
+-				goto next;
+-			}
+-
+ 			ret = mkdir_path(fullpath, mp_mode);
+-			if (ret < 0 && errno != EEXIST) {
+-				char *estr = strerror_r(errno, buf, MAX_ERR_BUF);
+-				warn(ap->logopt,
+-				     "mkdir_path %s failed: %s", fullpath, estr);
++			if (ret < 0) {
++				if (errno != EEXIST) {
++					char *estr = strerror_r(errno, buf, MAX_ERR_BUF);
++					warn(ap->logopt,
++					     "mkdir_path %s failed: %s", fullpath, estr);
++				}
+ 				free(fullpath);
+ 				goto next;
+ 			}

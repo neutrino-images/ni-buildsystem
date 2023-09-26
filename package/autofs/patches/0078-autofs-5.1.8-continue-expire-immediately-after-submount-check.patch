@@ -1,0 +1,62 @@
+autofs-5.1.8 - continue expire immediately after submount check
+
+From: Ian Kent <raven@themaw.net>
+
+The expire proc for both direct and indirect mounts doesn't immediately
+continue after seeing an autofs submount and sending it a notification.
+
+Add the "continue" to avoid some wasted overhead.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG         |    1 +
+ daemon/direct.c   |    5 ++++-
+ daemon/indirect.c |    5 ++++-
+ 3 files changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index ba6bab3b..0bfd0720 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -75,6 +75,7 @@
+ - fix fix mount tree startup reconnect.
+ - fix amd selector function matching.
+ - get rid entry thid field.
++- continue expire immediately after submount check.
+ 
+ 19/10/2021 autofs-5.1.8
+ - add xdr_exports().
+diff --git a/daemon/direct.c b/daemon/direct.c
+index 2a199af4..f4988543 100644
+--- a/daemon/direct.c
++++ b/daemon/direct.c
+@@ -856,8 +856,11 @@ void *expire_proc_direct(void *arg)
+ 			 * one of them and pass on state change.
+ 			 */
+ 			pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, &cur_state);
+-			if (mnt->flags & MNTS_AUTOFS)
++			if (mnt->flags & MNTS_AUTOFS) {
+ 				master_notify_submount(ap, mnt->mp, ap->state);
++				pthread_setcancelstate(cur_state, NULL);
++				continue;
++			}
+ 
+ 			if (me->ioctlfd == -1) {
+ 				pthread_setcancelstate(cur_state, NULL);
+diff --git a/daemon/indirect.c b/daemon/indirect.c
+index 47d866eb..469cf50a 100644
+--- a/daemon/indirect.c
++++ b/daemon/indirect.c
+@@ -401,8 +401,11 @@ void *expire_proc_indirect(void *arg)
+ 			 * one of them and pass on the state change.
+ 			 */
+ 			pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, &cur_state);
+-			if (mnt->flags & MNTS_AUTOFS)
++			if (mnt->flags & MNTS_AUTOFS) {
+ 				master_notify_submount(ap, mnt->mp, ap->state);
++				pthread_setcancelstate(cur_state, NULL);
++				continue;
++			}
+ 
+ 			/* An offset without a real mount, check for manual umount */
+ 			if (mnt->flags & MNTS_OFFSET &&

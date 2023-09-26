@@ -1,0 +1,421 @@
+autofs-5.1.8 - eliminate root param from autofs mount and umount
+
+From: Ian Kent <raven@themaw.net>
+
+Eliminate the "root" parameter of both mount and umount of autofs mounts.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG              |    1 +
+ daemon/automount.c     |   30 ++++++----------------
+ daemon/indirect.c      |   66 +++++++++++++++++-------------------------------
+ daemon/lookup.c        |    4 +--
+ daemon/master.c        |    1 -
+ daemon/state.c         |    2 +
+ include/automount.h    |    7 ++---
+ modules/mount_autofs.c |    1 -
+ 8 files changed, 39 insertions(+), 73 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index 7afffec0..9f15e8ae 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -77,6 +77,7 @@
+ - get rid entry thid field.
+ - continue expire immediately after submount check.
+ - eliminate realpath from mount of submount.
++- eliminate root param from autofs mount and umount.
+ 
+ 19/10/2021 autofs-5.1.8
+ - add xdr_exports().
+diff --git a/daemon/automount.c b/daemon/automount.c
+index 4fefb870..4b5a58d7 100644
+--- a/daemon/automount.c
++++ b/daemon/automount.c
+@@ -751,7 +751,7 @@ static void umount_all(struct autofs_point *ap)
+ 		     left, ap->path);
+ }
+ 
+-static int umount_autofs(struct autofs_point *ap, const char *root)
++static int umount_autofs(struct autofs_point *ap)
+ {
+ 	int ret = 0;
+ 
+@@ -760,7 +760,7 @@ static int umount_autofs(struct autofs_point *ap, const char *root)
+ 
+ 	if (ap->type == LKP_INDIRECT) {
+ 		umount_all(ap);
+-		ret = umount_autofs_indirect(ap, root);
++		ret = umount_autofs_indirect(ap);
+ 	} else
+ 		ret = umount_autofs_direct(ap);
+ 
+@@ -930,7 +930,7 @@ static int autofs_init_ap(struct autofs_point *ap)
+ 	return 0;
+ }
+ 
+-static int mount_autofs(struct autofs_point *ap, const char *root)
++static int mount_autofs(struct autofs_point *ap)
+ {
+ 	int status;
+ 
+@@ -945,7 +945,7 @@ static int mount_autofs(struct autofs_point *ap, const char *root)
+ 	if (ap->type == LKP_DIRECT)
+ 		status = mount_autofs_direct(ap);
+ 	else
+-		status = mount_autofs_indirect(ap, root);
++		status = mount_autofs_indirect(ap);
+ 
+ 	st_add_task(ap, ST_READY);
+ 
+@@ -1917,7 +1917,7 @@ int handle_mounts_exit(struct autofs_point *ap)
+ 	 * to check for possible recovery.
+ 	 */
+ 	if (ap->type == LKP_DIRECT) {
+-		umount_autofs(ap, NULL);
++		umount_autofs(ap);
+ 		handle_mounts_cleanup(ap);
+ 		return 1;
+ 	}
+@@ -1928,7 +1928,7 @@ int handle_mounts_exit(struct autofs_point *ap)
+ 	 * so we can continue. This can happen if a lookup
+ 	 * occurs while we're trying to umount.
+ 	 */
+-	ret = umount_autofs(ap, NULL);
++	ret = umount_autofs(ap);
+ 	if (!ret) {
+ 		set_indirect_mount_tree_catatonic(ap);
+ 		handle_mounts_cleanup(ap);
+@@ -1956,12 +1956,10 @@ void *handle_mounts(void *arg)
+ 	struct startup_cond *suc;
+ 	struct autofs_point *ap;
+ 	int cancel_state, status = 0;
+-	char *root;
+ 
+ 	suc = (struct startup_cond *) arg;
+ 
+ 	ap = suc->ap;
+-	root = strdup(suc->root);
+ 
+ 	pthread_cleanup_push(return_start_status, suc);
+ 	pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, &cancel_state);
+@@ -1969,30 +1967,18 @@ void *handle_mounts(void *arg)
+ 	status = pthread_mutex_lock(&suc->mutex);
+ 	if (status) {
+ 		logerr("failed to lock startup condition mutex!");
+-		if (root)
+-			free(root);
+ 		fatal(status);
+ 	}
+ 
+-	if (!root) {
+-		crit(ap->logopt, "failed to alloc string root");
+-		suc->status = 1;
+-		pthread_setcancelstate(cancel_state, NULL);
+-		pthread_exit(NULL);
+-	}
+-
+-	if (mount_autofs(ap, root) < 0) {
++	if (mount_autofs(ap) < 0) {
+ 		if (!(do_force_unlink & UNLINK_AND_EXIT))
+ 			crit(ap->logopt, "mount of %s failed!", ap->path);
+ 		suc->status = 1;
+-		umount_autofs(ap, root);
+-		free(root);
++		umount_autofs(ap);
+ 		pthread_setcancelstate(cancel_state, NULL);
+ 		pthread_exit(NULL);
+ 	}
+ 
+-	free(root);
+-
+ 	if (ap->flags & MOUNT_FLAG_NOBIND)
+ 		info(ap->logopt, "bind mounts disabled");
+ 
+diff --git a/daemon/indirect.c b/daemon/indirect.c
+index 469cf50a..784a2894 100644
+--- a/daemon/indirect.c
++++ b/daemon/indirect.c
+@@ -40,7 +40,7 @@
+ /* Attribute to create detached thread */
+ extern pthread_attr_t th_attr_detached;
+ 
+-static int do_mount_autofs_indirect(struct autofs_point *ap, const char *root)
++static int do_mount_autofs_indirect(struct autofs_point *ap)
+ {
+ 	const char *str_indirect = mount_type_str(t_indirect);
+ 	struct ioctl_ops *ops = get_ioctl_ops();
+@@ -89,11 +89,11 @@ static int do_mount_autofs_indirect(struct autofs_point *ap, const char *root)
+ 	}
+ 
+ 	/* In case the directory doesn't exist, try to mkdir it */
+-	if (mkdir_path(root, mp_mode) < 0) {
++	if (mkdir_path(ap->path, mp_mode) < 0) {
+ 		if (errno != EEXIST && errno != EROFS) {
+ 			crit(ap->logopt,
+ 			     "failed to create autofs directory %s",
+-			     root);
++			     ap->path);
+ 			goto out_err;
+ 		}
+ 		/* If we recieve an error, and it's EEXIST or EROFS we know
+@@ -108,27 +108,27 @@ static int do_mount_autofs_indirect(struct autofs_point *ap, const char *root)
+ 	if (!type || strcmp(ap->entry->maps->type, "hosts"))
+ 		map_name = ap->entry->maps->argv[0];
+ 
+-	ret = mount(map_name, root, "autofs", MS_MGC_VAL, options);
++	ret = mount(map_name, ap->path, "autofs", MS_MGC_VAL, options);
+ 	if (ret) {
+ 		crit(ap->logopt,
+-		     "failed to mount autofs path %s at %s", ap->path, root);
++		     "failed to mount autofs at %s", ap->path);
+ 		goto out_rmdir;
+ 	}
+ 
+ 	free(options);
+ 	options = NULL;
+ 
+-	ret = stat(root, &st);
++	ret = stat(ap->path, &st);
+ 	if (ret == -1) {
+ 		crit(ap->logopt,
+ 		     "failed to stat mount for autofs path %s", ap->path);
+ 		goto out_umount;
+ 	}
+ 
+-	if (ap->mode && (err = chmod(root, ap->mode)))
++	if (ap->mode && (err = chmod(ap->path, ap->mode)))
+ 		warn(ap->logopt, "failed to change mode of %s", ap->path);
+ 
+-	if (ops->open(ap->logopt, &ap->ioctlfd, st.st_dev, root)) {
++	if (ops->open(ap->logopt, &ap->ioctlfd, st.st_dev, ap->path)) {
+ 		crit(ap->logopt,
+ 		     "failed to create ioctl fd for autofs path %s", ap->path);
+ 		goto out_umount;
+@@ -137,18 +137,15 @@ static int do_mount_autofs_indirect(struct autofs_point *ap, const char *root)
+ 	ap->dev = st.st_dev;	/* Device number for mount point checks */
+ 
+ 	ops->timeout(ap->logopt, ap->ioctlfd, timeout);
+-	if (ap->logopt & LOGOPT_DEBUG)
+-		notify_mount_result(ap, root, timeout, str_indirect);
+-	else
+-		notify_mount_result(ap, ap->path, timeout, str_indirect);
++	notify_mount_result(ap, ap->path, timeout, str_indirect);
+ 
+ 	return 0;
+ 
+ out_umount:
+-	umount(root);
++	umount(ap->path);
+ out_rmdir:
+ 	if (ap->flags & MOUNT_FLAG_DIR_CREATED)
+-		rmdir(root);
++		rmdir(ap->path);
+ out_err:
+ 	if (options)
+ 		free(options);
+@@ -158,7 +155,7 @@ out_err:
+ 	return -1;
+ }
+ 
+-int mount_autofs_indirect(struct autofs_point *ap, const char *root)
++int mount_autofs_indirect(struct autofs_point *ap)
+ {
+ 	time_t now = monotonic_time(NULL);
+ 	int status;
+@@ -180,11 +177,11 @@ int mount_autofs_indirect(struct autofs_point *ap, const char *root)
+ 		}
+ 	}
+ 
+-	status = do_mount_autofs_indirect(ap, root);
++	status = do_mount_autofs_indirect(ap);
+ 	if (status < 0)
+ 		return -1;
+ 
+-	map = lookup_ghost(ap, root);
++	map = lookup_ghost(ap);
+ 	if (map & LKP_FAIL) {
+ 		if (map & LKP_DIRECT) {
+ 			error(ap->logopt,
+@@ -223,28 +220,13 @@ void close_mount_fds(struct autofs_point *ap)
+ 	return;
+ }
+ 
+-int umount_autofs_indirect(struct autofs_point *ap, const char *root)
++int umount_autofs_indirect(struct autofs_point *ap)
+ {
+ 	struct ioctl_ops *ops = get_ioctl_ops();
+ 	char buf[MAX_ERR_BUF];
+-	char mountpoint[PATH_MAX + 1];
+ 	int rv, retries;
+ 	unsigned int unused;
+ 
+-	if (root) {
+-		if (strlen(root) > PATH_MAX) {
+-			error(ap->logopt, "mountpoint path too long");
+-			return 1;
+-		}
+-		strcpy(mountpoint, root);
+-	} else {
+-		if (ap->len > PATH_MAX) {
+-			error(ap->logopt, "mountpoint path too long");
+-			return 1;
+-		}
+-		strcpy(mountpoint, ap->path);
+-	}
+-
+ 	/* If we are trying to shutdown make sure we can umount */
+ 	rv = ops->askumount(ap->logopt, ap->ioctlfd, &unused);
+ 	if (rv == -1) {
+@@ -266,7 +248,7 @@ int umount_autofs_indirect(struct autofs_point *ap, const char *root)
+ 	sched_yield();
+ 
+ 	retries = UMOUNT_RETRIES;
+-	while ((rv = umount(mountpoint)) == -1 && retries--) {
++	while ((rv = umount(ap->path)) == -1 && retries--) {
+ 		struct timespec tm = {0, 50000000};
+ 		if (errno != EBUSY)
+ 			break;
+@@ -278,13 +260,13 @@ int umount_autofs_indirect(struct autofs_point *ap, const char *root)
+ 		case ENOENT:
+ 		case EINVAL:
+ 			error(ap->logopt,
+-			      "mount point %s does not exist", mountpoint);
++			      "mount point %s does not exist", ap->path);
+ 			close_mount_fds(ap);
+ 			return 0;
+ 			break;
+ 		case EBUSY:
+ 			debug(ap->logopt,
+-			      "mount point %s is in use", mountpoint);
++			      "mount point %s is in use", ap->path);
+ 			if (ap->state == ST_SHUTDOWN_FORCE) {
+ 				close_mount_fds(ap);
+ 				goto force_umount;
+@@ -303,11 +285,11 @@ int umount_autofs_indirect(struct autofs_point *ap, const char *root)
+ 				}
+ #endif
+ 				ops->open(ap->logopt,
+-					  &ap->ioctlfd, ap->dev, mountpoint);
++					  &ap->ioctlfd, ap->dev, ap->path);
+ 				if (ap->ioctlfd < 0) {
+ 					warn(ap->logopt,
+ 					     "could not recover autofs path %s",
+-					     mountpoint);
++					     ap->path);
+ 					close_mount_fds(ap);
+ 					return 0;
+ 				}
+@@ -332,12 +314,12 @@ int umount_autofs_indirect(struct autofs_point *ap, const char *root)
+ force_umount:
+ 	if (rv != 0) {
+ 		warn(ap->logopt,
+-		     "forcing umount of indirect mount %s", mountpoint);
+-		rv = umount2(mountpoint, MNT_DETACH);
++		     "forcing umount of indirect mount %s", ap->path);
++		rv = umount2(ap->path, MNT_DETACH);
+ 	} else {
+-		info(ap->logopt, "umounting indirect mount %s succeeded", mountpoint);
++		info(ap->logopt, "umounting indirect mount %s succeeded", ap->path);
+ 		if (ap->submount)
+-			rm_unwanted(ap, mountpoint, 1);
++			rm_unwanted(ap, ap->path, 1);
+ 	}
+ 
+ 	return rv;
+diff --git a/daemon/lookup.c b/daemon/lookup.c
+index 33fca23a..5d5241c1 100644
+--- a/daemon/lookup.c
++++ b/daemon/lookup.c
+@@ -714,7 +714,7 @@ static char *make_browse_path(unsigned int logopt,
+ 	return path;
+ }
+ 
+-int lookup_ghost(struct autofs_point *ap, const char *root)
++int lookup_ghost(struct autofs_point *ap)
+ {
+ 	struct master_mapent *entry = ap->entry;
+ 	struct map_source *map;
+@@ -778,7 +778,7 @@ int lookup_ghost(struct autofs_point *ap, const char *root)
+ 			}
+ 
+ 			fullpath = make_browse_path(ap->logopt,
+-						    root, me->key, ap->pref);
++						    ap->path, me->key, ap->pref);
+ 			if (!fullpath)
+ 				goto next;
+ 
+diff --git a/daemon/master.c b/daemon/master.c
+index 60f69648..5e6ce1d8 100644
+--- a/daemon/master.c
++++ b/daemon/master.c
+@@ -1393,7 +1393,6 @@ static int master_do_mount(struct master_mapent *entry)
+ 	}
+ 
+ 	suc.ap = ap;
+-	suc.root = ap->path;
+ 	suc.done = 0;
+ 	suc.status = 0;
+ 
+diff --git a/daemon/state.c b/daemon/state.c
+index 9912ffec..634e5275 100644
+--- a/daemon/state.c
++++ b/daemon/state.c
+@@ -433,7 +433,7 @@ static void *do_readmap(void *arg)
+ 		ap->exp_runfreq = (timeout + CHECK_RATIO - 1) / CHECK_RATIO;
+ 		ops->timeout(ap->logopt, ap->ioctlfd, timeout);
+ 		lookup_prune_cache(ap, now);
+-		status = lookup_ghost(ap, ap->path);
++		status = lookup_ghost(ap);
+ 	} else {
+ 		struct mapent *me;
+ 		unsigned int append_alarm = !ap->exp_runfreq;
+diff --git a/include/automount.h b/include/automount.h
+index 4792128a..614f12aa 100644
+--- a/include/automount.h
++++ b/include/automount.h
+@@ -275,7 +275,7 @@ int lookup_nss_read_master(struct master *master, time_t age);
+ int lookup_nss_read_map(struct autofs_point *ap, struct map_source *source, time_t age);
+ int lookup_enumerate(struct autofs_point *ap,
+ 	int (*fn)(struct autofs_point *,struct mapent *, int), time_t now);
+-int lookup_ghost(struct autofs_point *ap, const char *root);
++int lookup_ghost(struct autofs_point *ap);
+ int lookup_nss_mount(struct autofs_point *ap, struct map_source *source, const char *name, int name_len);
+ void lookup_close_lookup(struct autofs_point *ap);
+ void lookup_prune_one_cache(struct autofs_point *ap, struct mapent_cache *mc, time_t age);
+@@ -397,7 +397,6 @@ struct startup_cond {
+ 	pthread_mutex_t mutex;
+ 	pthread_cond_t  cond;
+ 	struct autofs_point *ap;
+-	char *root;
+ 	unsigned int done;
+ 	unsigned int status;
+ };
+@@ -595,13 +594,13 @@ int do_expire(struct autofs_point *ap, const char *name, int namelen);
+ void *expire_proc_indirect(void *);
+ void *expire_proc_direct(void *);
+ int expire_offsets_direct(struct autofs_point *ap, struct mapent *me, int now);
+-int mount_autofs_indirect(struct autofs_point *ap, const char *root);
++int mount_autofs_indirect(struct autofs_point *ap);
+ int do_mount_autofs_direct(struct autofs_point *ap, struct mapent *me, time_t timeout);
+ int mount_autofs_direct(struct autofs_point *ap);
+ int mount_autofs_offset(struct autofs_point *ap, struct mapent *me);
+ void submount_signal_parent(struct autofs_point *ap, unsigned int success);
+ void close_mount_fds(struct autofs_point *ap);
+-int umount_autofs_indirect(struct autofs_point *ap, const char *root);
++int umount_autofs_indirect(struct autofs_point *ap);
+ int do_umount_autofs_direct(struct autofs_point *ap, struct mapent *me);
+ int umount_autofs_direct(struct autofs_point *ap);
+ int umount_autofs_offset(struct autofs_point *ap, struct mapent *me);
+diff --git a/modules/mount_autofs.c b/modules/mount_autofs.c
+index 6ce3baa8..3ce4db00 100644
+--- a/modules/mount_autofs.c
++++ b/modules/mount_autofs.c
+@@ -324,7 +324,6 @@ int mount_mount(struct autofs_point *ap, const char *root, const char *name,
+ 
+ 
+ 	suc.ap = nap;
+-	suc.root = mountpoint;
+ 	suc.done = 0;
+ 	suc.status = 0;
+ 

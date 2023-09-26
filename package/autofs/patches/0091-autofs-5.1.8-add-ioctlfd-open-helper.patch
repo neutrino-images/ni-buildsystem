@@ -1,0 +1,280 @@
+autofs-5.1.8 - add ioctlfd open helper
+
+From: Ian Kent <raven@themaw.net>
+
+Add an ioctl fd open helper, it simplifies the code in some areas.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG         |    1 +
+ daemon/direct.c   |   25 ++++++++--------
+ daemon/indirect.c |    9 +++---
+ include/mounts.h  |    3 ++
+ lib/mounts.c      |   82 ++++++++++++++++++++++++++++++-----------------------
+ 5 files changed, 68 insertions(+), 52 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index 998fe63f..d46a4519 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -88,6 +88,7 @@
+ - fix possible use after free in handle_mounts_exit().
+ - make submount cleanup the same as top level mounts.
+ - add soucre parameter to module functions.
++- add ioctlfd open helper.
+ 
+ 19/10/2021 autofs-5.1.8
+ - add xdr_exports().
+diff --git a/daemon/direct.c b/daemon/direct.c
+index 80a4ee4d..a9d71281 100644
+--- a/daemon/direct.c
++++ b/daemon/direct.c
+@@ -121,7 +121,9 @@ int do_umount_autofs_direct(struct autofs_point *ap, struct mapent *me)
+ 		}
+ 		ioctlfd = me->ioctlfd;
+ 	} else {
+-		ops->open(ap->logopt, &ioctlfd, me->dev, me->key);
++		ioctlfd = open_ioctlfd(ap, me->key, me->dev);
++		if (ioctlfd == -1)
++			return 1;
+ 		opened = 1;
+ 	}
+ 
+@@ -317,8 +319,7 @@ int do_mount_autofs_direct(struct autofs_point *ap,
+ 			save_ioctlfd = ioctlfd = me->ioctlfd;
+ 
+ 			if (ioctlfd == -1)
+-				ops->open(ap->logopt,
+-					  &ioctlfd, me->dev, me->key);
++				ioctlfd = open_ioctlfd(ap, me->key, me->dev);
+ 
+ 			if (ioctlfd < 0) {
+ 				error(ap->logopt,
+@@ -416,7 +417,7 @@ int do_mount_autofs_direct(struct autofs_point *ap,
+ 	if (ap->mode && (err = chmod(me->key, ap->mode)))
+ 		warn(ap->logopt, "failed to change mode of %s", me->key);
+ 
+-	ops->open(ap->logopt, &ioctlfd, st.st_dev, me->key);
++	ioctlfd = open_ioctlfd(ap, me->key, me->dev);
+ 	if (ioctlfd < 0) {
+ 		crit(ap->logopt, "failed to create ioctl fd for %s", me->key);
+ 		goto out_umount;
+@@ -542,7 +543,9 @@ int umount_autofs_offset(struct autofs_point *ap, struct mapent *me)
+ 			      me->key);
+ 			return 0;
+ 		}
+-		ops->open(ap->logopt, &ioctlfd, me->dev, me->key);
++		ioctlfd = open_ioctlfd(ap, me->key, me->dev);
++		if (ioctlfd == -1)
++			return 1;
+ 		opened = 1;
+ 	}
+ 
+@@ -772,11 +775,9 @@ int mount_autofs_offset(struct autofs_point *ap, struct mapent *me)
+ 	me->dev = st.st_dev;
+ 	me->ino = st.st_ino;
+ 
+-	ops->open(ap->logopt, &ioctlfd, st.st_dev, me->key);
+-	if (ioctlfd < 0) {
+-		crit(ap->logopt, "failed to create ioctl fd for %s", me->key);
++	ioctlfd = open_ioctlfd(ap, me->key, me->dev);
++	if (ioctlfd < 0)
+ 		goto out_umount;
+-	}
+ 
+ 	ops->timeout(ap->logopt, ioctlfd, timeout);
+ 	cache_set_ino_index(me->mc, me);
+@@ -1066,9 +1067,9 @@ int handle_packet_expire_direct(struct autofs_point *ap, autofs_packet_expire_di
+ 	/* Can't expire it if it isn't mounted */
+ 	if (me->ioctlfd == -1) {
+ 		int ioctlfd;
+-		ops->open(ap->logopt, &ioctlfd, me->dev, me->key);
++
++		ioctlfd = open_ioctlfd(ap, me->key, me->dev);
+ 		if (ioctlfd == -1) {
+-			crit(ap->logopt, "can't open ioctlfd for %s", me->key);
+ 			cache_unlock(mc);
+ 			master_source_unlock(ap->entry);
+ 			pthread_setcancelstate(state, NULL);
+@@ -1361,8 +1362,8 @@ int handle_packet_missing_direct(struct autofs_point *ap, autofs_packet_missing_
+ 		close(me->ioctlfd);
+ 		me->ioctlfd = -1;
+ 	}
+-	ops->open(ap->logopt, &ioctlfd, me->dev, me->key);
+ 
++	ioctlfd = open_ioctlfd(ap, me->key, me->dev);
+ 	if (ioctlfd == -1) {
+ 		cache_unlock(mc);
+ 		master_source_unlock(ap->entry);
+diff --git a/daemon/indirect.c b/daemon/indirect.c
+index 784a2894..204fa076 100644
+--- a/daemon/indirect.c
++++ b/daemon/indirect.c
+@@ -124,18 +124,18 @@ static int do_mount_autofs_indirect(struct autofs_point *ap)
+ 		     "failed to stat mount for autofs path %s", ap->path);
+ 		goto out_umount;
+ 	}
++	ap->dev = st.st_dev;	/* Device number for mount point checks */
+ 
+ 	if (ap->mode && (err = chmod(ap->path, ap->mode)))
+ 		warn(ap->logopt, "failed to change mode of %s", ap->path);
+ 
+-	if (ops->open(ap->logopt, &ap->ioctlfd, st.st_dev, ap->path)) {
++	ap->ioctlfd = open_ioctlfd(ap, ap->path, ap->dev);
++	if (ap->ioctlfd == -1) {
+ 		crit(ap->logopt,
+ 		     "failed to create ioctl fd for autofs path %s", ap->path);
+ 		goto out_umount;
+ 	}
+ 
+-	ap->dev = st.st_dev;	/* Device number for mount point checks */
+-
+ 	ops->timeout(ap->logopt, ap->ioctlfd, timeout);
+ 	notify_mount_result(ap, ap->path, timeout, str_indirect);
+ 
+@@ -284,8 +284,7 @@ int umount_autofs_indirect(struct autofs_point *ap)
+ 					return 0;
+ 				}
+ #endif
+-				ops->open(ap->logopt,
+-					  &ap->ioctlfd, ap->dev, ap->path);
++				ap->ioctlfd = open_ioctlfd(ap, ap->path, ap->dev);
+ 				if (ap->ioctlfd < 0) {
+ 					warn(ap->logopt,
+ 					     "could not recover autofs path %s",
+diff --git a/include/mounts.h b/include/mounts.h
+index 68ab4dc6..8e6f62a0 100644
+--- a/include/mounts.h
++++ b/include/mounts.h
+@@ -151,6 +151,9 @@ void free_amd_entry_list(struct list_head *entries);
+ unsigned int query_kproto_ver(void);
+ unsigned int get_kver_major(void);
+ unsigned int get_kver_minor(void);
++
++int open_ioctlfd(struct autofs_point *ap, const char *path, dev_t dev);
++
+ char *make_options_string(char *path, int pipefd,
+ 			  const char *type, unsigned int flags);
+ char *make_mnt_name_string(char *path);
+diff --git a/lib/mounts.c b/lib/mounts.c
+index d844912b..05f18dbc 100644
+--- a/lib/mounts.c
++++ b/lib/mounts.c
+@@ -231,6 +231,32 @@ unsigned int get_kver_minor(void)
+ 	return kver.minor;
+ }
+ 
++int open_ioctlfd(struct autofs_point *ap, const char *path, dev_t dev)
++{
++	struct ioctl_ops *ops = get_ioctl_ops();
++	int fd = -1;
++	int error;
++
++	error = ops->open(ap->logopt, &fd, dev, path);
++	if (error == -1) {
++		char buf[MAX_ERR_BUF];
++		int err = errno;
++		char *estr;
++
++		if (errno == ENOENT)
++			return -1;
++
++		estr = strerror_r(errno, buf, MAX_ERR_BUF);
++		error(ap->logopt,
++		      "failed to open ioctlfd for %s, error: %s",
++		      path, estr);
++		errno = err;
++		return -1;
++	}
++
++	return fd;
++}
++
+ #ifdef HAVE_MOUNT_NFS
+ static int extract_version(char *start, struct nfs_mount_vers *vers)
+ {
+@@ -2719,7 +2745,7 @@ static int remount_active_mount(struct autofs_point *ap,
+ 	*ioctlfd = -1;
+ 
+ 	/* Open failed, no mount present */
+-	ops->open(ap->logopt, &fd, devid, path);
++	fd = open_ioctlfd(ap, path, devid);
+ 	if (fd == -1)
+ 		return REMOUNT_OPEN_FAIL;
+ 
+@@ -2918,10 +2944,9 @@ static int set_mount_catatonic(struct autofs_point *ap, struct mapent *me, int i
+ {
+ 	struct ioctl_ops *ops = get_ioctl_ops();
+ 	unsigned int opened = 0;
+-	char buf[MAX_ERR_BUF];
+-	char *path;
+-	int fd = -1;
+-	int error;
++	const char *path;
++	int fd;
++	int err;
+ 	dev_t dev;
+ 
+ 	path = ap->path;
+@@ -2936,44 +2961,31 @@ static int set_mount_catatonic(struct autofs_point *ap, struct mapent *me, int i
+ 	else if (me && me->ioctlfd >= 0)
+ 		fd = me->ioctlfd;
+ 	else {
+-		error = ops->open(ap->logopt, &fd, dev, path);
+-		if (error == -1) {
+-			int err = errno;
+-			char *estr;
+-
+-			if (errno == ENOENT)
+-				return 0;
+-
+-			estr = strerror_r(errno, buf, MAX_ERR_BUF);
+-			error(ap->logopt,
+-			      "failed to open ioctlfd for %s, error: %s",
+-			      path, estr);
+-			return err;
+-		}
++		fd = open_ioctlfd(ap, path, dev);
++		if (fd == -1)
++			return (errno == ENOENT ? 0 : errno);
+ 		opened = 1;
+ 	}
+ 
+-	if (fd >= 0) {
+-		error = ops->catatonic(ap->logopt, fd);
+-		if (error == -1) {
+-			int err = errno;
+-			char *estr;
++	err = ops->catatonic(ap->logopt, fd);
++	if (err == -1) {
++		char buf[MAX_ERR_BUF];
++		char *estr;
+ 
+-			estr = strerror_r(errno, buf, MAX_ERR_BUF);
+-			error(ap->logopt,
+-			      "failed to set %s catatonic, error: %s",
+-			      path, estr);
+-			if (opened)
+-				ops->close(ap->logopt, fd);
+-			return err;
+-		}
+-		if (opened)
+-			ops->close(ap->logopt, fd);
++		err = errno;
++		estr = strerror_r(err, buf, MAX_ERR_BUF);
++		error(ap->logopt,
++		      "failed to set %s catatonic, error: %s",
++		      path, estr);
++		goto out;
+ 	}
+ 
+ 	debug(ap->logopt, "set %s catatonic", path);
++out:
++	if (opened)
++		ops->close(ap->logopt, fd);
+ 
+-	return 0;
++	return err;
+ }
+ 
+ static int set_offset_tree_catatonic_work(struct tree_node *n, void *ptr)

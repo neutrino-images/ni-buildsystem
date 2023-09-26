@@ -1,0 +1,139 @@
+autofs-5.1.8 - make submount cleanup the same as top level mounts
+
+From: Ian Kent <raven@themaw.net>
+
+We often see segfaults when cleaning up resources at submount shutdown
+after changes are made to resolve problems. It's always really hard to
+work out what's causing these to happen.
+
+But changing submounts to use the same final cleanup method as top level
+mounts eliminates the faulting, at least in the case of the most recent
+changes, hopefully this change in proceedure will continue to work.
+Admitedly there's some setting of fields to NULL after freeing but that
+didn't fix the problem until the procedure change was also made.
+
+In any case the result is a consistency improvement.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG              |    1 +
+ daemon/automount.c     |   17 +++--------------
+ daemon/master.c        |   19 +++++++++++++++++--
+ modules/mount_autofs.c |    6 +++---
+ 4 files changed, 24 insertions(+), 19 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index 81c4d0c9..ebd02b8c 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -86,6 +86,7 @@
+ - dont call umount_subtree_mounts() on parent at umount.
+ - dont take parent source lock at mount shutdown.
+ - fix possible use after free in handle_mounts_exit().
++- make submount cleanup the same as top level mounts.
+ 
+ 19/10/2021 autofs-5.1.8
+ - add xdr_exports().
+diff --git a/daemon/automount.c b/daemon/automount.c
+index beb552f5..ee8e1330 100644
+--- a/daemon/automount.c
++++ b/daemon/automount.c
+@@ -1799,21 +1799,10 @@ static void handle_mounts_cleanup(void *arg)
+ 	master_source_unlock(ap->entry);
+ 
+ 	/*
+-	 * Submounts are detached threads and don't belong to the
+-	 * master map entry list so we need to free their resources
+-	 * here.
++	 * Send a signal to the signal handler so it can join with any
++	 * completed handle_mounts() threads and perform final cleanup.
+ 	 */
+-	if (submount) {
+-		master_free_mapent_sources(ap->entry, 1);
+-		master_free_mapent(ap->entry);
+-	}
+-
+-	/*
+-	 * If we are not a submount send a signal to the signal handler
+-	 * so it can join with any completed handle_mounts() threads and
+-	 * perform final cleanup.
+-	 */
+-	if (!submount && !pending)
++	if (!pending)
+ 		pthread_kill(signal_handler_thid, SIGTERM);
+ 
+ 	master_mutex_unlock();
+diff --git a/daemon/master.c b/daemon/master.c
+index 5e6ce1d8..77dc7694 100644
+--- a/daemon/master.c
++++ b/daemon/master.c
+@@ -390,11 +390,14 @@ static void __master_free_map_source(struct map_source *source, unsigned int fre
+ 
+ 		instance = source->instance;
+ 		while (instance) {
+-			if (instance->lookup)
++			if (instance->lookup) {
+ 				close_lookup(instance->lookup);
++				instance->lookup = NULL;
++			}
+ 			instance = instance->next;
+ 		}
+ 		close_lookup(source->lookup);
++		source->lookup = NULL;
+ 	}
+ 	if (source->argv)
+ 		free_argv(source->argc, source->argv);
+@@ -407,6 +410,7 @@ static void __master_free_map_source(struct map_source *source, unsigned int fre
+ 			__master_free_map_source(instance, 0);
+ 			instance = next;
+ 		}
++		source->instance = NULL;
+ 	}
+ 
+ 	status = pthread_rwlock_destroy(&source->module_lock);
+@@ -869,9 +873,20 @@ void master_add_mapent(struct master *master, struct master_mapent *entry)
+ void master_remove_mapent(struct master_mapent *entry)
+ {
+ 	struct master *master = entry->master;
++	struct autofs_point *ap = entry->ap;
++
++	if (ap->submount) {
++		struct mnt_list *mnt;
+ 
+-	if (entry->ap->submount)
++		mnt = mnts_find_submount(ap->path);
++		if (mnt) {
++			warn(ap->logopt,
++			     "map entry %s in use at shutdown", ap->path);
++			mnts_put_mount(mnt);
++		}
++		list_add(&entry->join, &master->completed);
+ 		return;
++	}
+ 
+ 	if (!list_empty(&entry->list)) {
+ 		list_del_init(&entry->list);
+diff --git a/modules/mount_autofs.c b/modules/mount_autofs.c
+index 3ce4db00..b567fccd 100644
+--- a/modules/mount_autofs.c
++++ b/modules/mount_autofs.c
+@@ -28,8 +28,8 @@
+ 
+ #define MODPREFIX "mount(autofs): "
+ 
+-/* Attribute to create detached thread */
+-extern pthread_attr_t th_attr_detached;
++/* Attributes to create handle_mounts() thread */
++extern pthread_attr_t th_attr;
+ extern struct startup_cond suc;
+ 
+ int mount_version = AUTOFS_MOUNT_VERSION;	/* Required by protocol */
+@@ -327,7 +327,7 @@ int mount_mount(struct autofs_point *ap, const char *root, const char *name,
+ 	suc.done = 0;
+ 	suc.status = 0;
+ 
+-	if (pthread_create(&thid, &th_attr_detached, handle_mounts, &suc)) {
++	if (pthread_create(&thid, &th_attr, handle_mounts, &suc)) {
+ 		crit(ap->logopt,
+ 		     MODPREFIX
+ 		     "failed to create mount handler thread for %s",

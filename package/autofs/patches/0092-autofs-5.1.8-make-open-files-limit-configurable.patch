@@ -1,0 +1,191 @@
+autofs-5.1.8 - make open files limit configurable
+
+From: Ian Kent <raven@themaw.net>
+
+autofs can use quite a few file handles, particularly with very large
+direct mount maps or many submounts as is often seen with amd maps.
+
+So make the maximum number of open files configurable.
+
+Signed-off-by: Ian Kent <raven@themaw.net>
+---
+ CHANGELOG                      |    1 +
+ daemon/automount.c             |   13 +++++++------
+ include/defaults.h             |    2 ++
+ lib/defaults.c                 |   17 +++++++++++++++++
+ man/autofs.conf.5.in           |    7 +++++++
+ redhat/autofs.conf.default.in  |   11 +++++++++++
+ samples/autofs.conf.default.in |   11 +++++++++++
+ 7 files changed, 56 insertions(+), 6 deletions(-)
+
+diff --git a/CHANGELOG b/CHANGELOG
+index d46a4519..b7ab3591 100644
+--- a/CHANGELOG
++++ b/CHANGELOG
+@@ -89,6 +89,7 @@
+ - make submount cleanup the same as top level mounts.
+ - add soucre parameter to module functions.
+ - add ioctlfd open helper.
++- make open files limit configurable.
+ 
+ 19/10/2021 autofs-5.1.8
+ - add xdr_exports().
+diff --git a/daemon/automount.c b/daemon/automount.c
+index ee8e1330..7acb3276 100644
+--- a/daemon/automount.c
++++ b/daemon/automount.c
+@@ -111,8 +111,6 @@ struct startup_cond suc = {
+ pthread_key_t key_thread_stdenv_vars;
+ pthread_key_t key_thread_attempt_id = (pthread_key_t) 0L;
+ 
+-#define MAX_OPEN_FILES		20480
+-
+ int aquire_flag_file(void);
+ void release_flag_file(void);
+ 
+@@ -2240,6 +2238,7 @@ int main(int argc, char *argv[])
+ 	time_t timeout;
+ 	time_t age = monotonic_time(NULL);
+ 	struct rlimit rlim;
++	unsigned long max_open_files;
+ 	const char *options = "+hp:t:vmd::D:SfVrO:l:n:P:CFUM:";
+ 	static const struct option long_options[] = {
+ 		{"help", 0, 0, 'h'},
+@@ -2452,11 +2451,13 @@ int main(int argc, char *argv[])
+ 		exit(1);
+ 	}
+ 
++	max_open_files = defaults_get_open_file_limit();
++
+ 	res = getrlimit(RLIMIT_NOFILE, &rlim);
+-	if (res == -1 || rlim.rlim_cur <= MAX_OPEN_FILES)  {
+-		rlim.rlim_cur = MAX_OPEN_FILES;
+-		if (rlim.rlim_max < MAX_OPEN_FILES)
+-			rlim.rlim_max = MAX_OPEN_FILES;
++	if (res == -1 || rlim.rlim_cur <= max_open_files)  {
++		rlim.rlim_cur = max_open_files;
++		if (rlim.rlim_max < max_open_files)
++			rlim.rlim_max = max_open_files;
+ 	}
+ 	res = setrlimit(RLIMIT_NOFILE, &rlim);
+ 	if (res)
+diff --git a/include/defaults.h b/include/defaults.h
+index a9db04e5..d1e013ff 100644
+--- a/include/defaults.h
++++ b/include/defaults.h
+@@ -24,6 +24,7 @@
+ 
+ #define DEFAULT_MASTER_MAP_NAME	"auto.master"
+ 
++#define DEFAULT_OPEN_FILE_LIMIT		"20480"
+ #define DEFAULT_TIMEOUT			"600"
+ #define DEFAULT_MASTER_WAIT		"10"
+ #define DEFAULT_NEGATIVE_TIMEOUT	"60"
+@@ -158,6 +159,7 @@ unsigned int defaults_read_config(unsigned int);
+ void defaults_conf_release(void);
+ const char *defaults_get_master_map(void);
+ int defaults_master_set(void);
++unsigned long defaults_get_open_file_limit(void);
+ unsigned int defaults_get_timeout(void);
+ int defaults_get_master_wait(void);
+ unsigned int defaults_get_negative_timeout(void);
+diff --git a/lib/defaults.c b/lib/defaults.c
+index 5a05680f..2cbb57ac 100644
+--- a/lib/defaults.c
++++ b/lib/defaults.c
+@@ -47,6 +47,7 @@
+ 
+ #define NAME_MASTER_MAP			"master_map_name"
+ 
++#define NAME_OPEN_FILE_LIMIT		"open_file_limit"
+ #define NAME_TIMEOUT			"timeout"
+ #define NAME_MASTER_WAIT		"master_wait"
+ #define NAME_NEGATIVE_TIMEOUT		"negative_timeout"
+@@ -291,6 +292,11 @@ static int conf_load_autofs_defaults(void)
+ 	const char *sec = autofs_gbl_sec;
+ 	int ret;
+ 
++	ret = conf_update(sec, NAME_OPEN_FILE_LIMIT,
++			  DEFAULT_OPEN_FILE_LIMIT, CONF_ENV);
++	if (ret == CFG_FAIL)
++		goto error;
++
+ 	ret = conf_update(sec, NAME_TIMEOUT,
+ 			  DEFAULT_TIMEOUT, CONF_ENV);
+ 	if (ret == CFG_FAIL)
+@@ -1671,6 +1677,17 @@ int defaults_master_set(void)
+ 	return 0;
+ }
+ 
++unsigned long defaults_get_open_file_limit(void)
++{
++	long limit;
++
++	limit = conf_get_number(autofs_gbl_sec, NAME_OPEN_FILE_LIMIT);
++	if (limit < 0)
++		limit = atol(DEFAULT_OPEN_FILE_LIMIT);
++
++	return limit;
++}
++
+ unsigned int defaults_get_timeout(void)
+ {
+ 	long timeout;
+diff --git a/man/autofs.conf.5.in b/man/autofs.conf.5.in
+index a8d921ab..27fe4a4f 100644
+--- a/man/autofs.conf.5.in
++++ b/man/autofs.conf.5.in
+@@ -23,6 +23,13 @@ configuration settings.
+ .P
+ Configuration settings available are:
+ .TP
+++.B open_file_limit
+++.br
+++Set the maximum number of open files. Note there may be other limits
+++within the system that prevent this from being set, systemd for example
+++may need a setting in the unit file to increase its default. The autofs
+++default is 20480.
+++.TP
+ .B timeout
+ .br
+ Sets the default mount timeout in seconds. The internal program
+diff --git a/redhat/autofs.conf.default.in b/redhat/autofs.conf.default.in
+index 766878a4..50f50329 100644
+--- a/redhat/autofs.conf.default.in
++++ b/redhat/autofs.conf.default.in
+@@ -1,4 +1,15 @@
+ #
++# Global configuration options.
++#
++# open_file_limit - set the maximum number of open files. Note there
++#                   may be other limits within the system that prevent
++#                   this from being set, systemd for example may need
++#                   a setting in the unit file to increase its default.
++#                   The autofs default is 20480.
++#
++#open_file_limit = 20480
++#
++#
+ # Define default options for autofs.
+ #
+ [ autofs ]
+diff --git a/samples/autofs.conf.default.in b/samples/autofs.conf.default.in
+index 56240c99..94635203 100644
+--- a/samples/autofs.conf.default.in
++++ b/samples/autofs.conf.default.in
+@@ -1,4 +1,15 @@
+ #
++# Global configuration options.
++#
++# open_file_limit - set the maximum number of open files. Note there
++#                   may be other limits within the system that prevent
++#                   this from being set, systemd for example may need
++#                   a setting in the unit file to increase its default.
++#                   The autofs default is 20480.
++#
++#open_file_limit = 20480
++#
++#
+ # Define default options for autofs.
+ #
+ [ autofs ]
