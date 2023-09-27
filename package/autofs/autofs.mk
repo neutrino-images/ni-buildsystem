@@ -13,6 +13,9 @@ AUTOFS_DEPENDENCIES = libtirpc
 
 AUTOFS_AUTORECONF = YES
 
+# autofs looks on the build machine for the path of modprobe, mount,
+# umount and fsck programs so tell it explicitly where they will be
+# located on the target.
 AUTOFS_CONF_ENV = \
 	ac_cv_path_E2FSCK=/sbin/fsck \
 	ac_cv_path_E3FSCK=no \
@@ -24,6 +27,9 @@ AUTOFS_CONF_ENV = \
 	ac_cv_path_UMOUNT=/bin/umount \
 	ac_cv_linux_procfs=yes
 
+# instead of looking in the PATH like any reasonable package, autofs
+# configure looks only in an hardcoded search path for host tools,
+# which we have to override with --with-path.
 AUTOFS_CONF_OPTS = \
 	--datarootdir=$(REMOVE_datarootdir) \
 	--disable-mount-locking \
@@ -38,9 +44,8 @@ AUTOFS_CONF_OPTS = \
 	--with-fifodir=/var/run \
 	--with-flagdir=/var/run
 
-# We're patching Makefile.rules, so there's no need to set DONTSTRIP
-#AUTOFS_MAKE_ENV = \
-#	DONTSTRIP=1
+AUTOFS_MAKE_ENV = \
+	DONTSTRIP=1
 
 AUTOFS_MAKE = \
 	$(MAKE1)
