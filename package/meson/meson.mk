@@ -22,4 +22,4 @@ endef
 HOST_MESON_HOST_FINALIZE_HOOKS += HOST_MESON_SET_INTERPRETER
 
 host-meson: | $(HOST_DIR)
-	$(call host-python3-package)
+	$(call host-python-package)
