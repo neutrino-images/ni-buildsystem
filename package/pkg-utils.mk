@@ -70,7 +70,7 @@ endif
 
 # cmake
 ifndef $(PKG)_CMAKE
-  $(PKG)_CMAKE = cmake
+  $(PKG)_CMAKE = $$(HOST_CMAKE_BINARY)
 endif
 
 # configure
@@ -255,6 +255,9 @@ endif
 # auto-assign some dependencies
 ifndef $(PKG)_DEPENDENCIES
   $(PKG)_DEPENDENCIES =
+endif
+ifeq ($(PKG_MODE),CMAKE)
+  $(PKG)_DEPENDENCIES += host-cmake
 endif
 ifeq ($(PKG_MODE),MESON)
   $(PKG)_DEPENDENCIES += host-meson

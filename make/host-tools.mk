@@ -10,6 +10,7 @@ $(HOST_DIR):
 # -----------------------------------------------------------------------------
 
 host-tools: $(BUILD_DIR) $(HOST_DIR) \
+	host-cmake \
 	host-pkgconf \
 	$(PKG_CONFIG) \
 	host-kmod \
