@@ -65,7 +65,8 @@ get-cxx-version:
 	$(Q)$(TARGET_CXX) --version
 
 which-%:
-	which $(subst which-,,$(@))
+	@TOOL=$$(which $(subst which-,,$(@))) \
+		&& echo $$TOOL && $$TOOL --version | head -1
 
 # -----------------------------------------------------------------------------
 
