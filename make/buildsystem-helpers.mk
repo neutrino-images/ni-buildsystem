@@ -64,6 +64,9 @@ get-cpp-version:
 get-cxx-version:
 	$(Q)$(TARGET_CXX) --version
 
+which-%:
+	which $(subst which-,,$(@))
+
 # -----------------------------------------------------------------------------
 
 # Create reversed changelog using git log --reverse.
