@@ -3,8 +3,8 @@
 ## Für die Einrichtung unter Debian sind folgende Pakete nötig
 ```bash
 apt-get install \
-git subversion mercurial cvs automake build-essential ccache cmake patch bison \
-flex texinfo autopoint libtool libtool-bin python curl gawk gzip bzip2 lzma \
+git subversion mercurial cvs automake build-essential ccache patch \
+texinfo autopoint libtool libtool-bin python curl gzip bzip2 lzma \
 gperf gettext help2man bc libglib2.0-dev libncurses5-dev libncursesw5-dev \
 liblzo2-dev uuid-dev libssl-dev libltdl-dev libcurl4-openssl-dev intltool zip
 

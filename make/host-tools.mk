@@ -13,6 +13,10 @@ host-tools: $(BUILD_DIR) $(HOST_DIR) \
 	host-cmake \
 	host-pkgconf \
 	$(PKG_CONFIG) \
+	host-m4 \
+	host-bison \
+	host-flex \
+	host-gawk \
 	host-kmod \
 	host-mtd-utils \
 	host-u-boot \
