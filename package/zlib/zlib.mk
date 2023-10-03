@@ -25,7 +25,7 @@ define ZLIB_CONFIGURE_CMDS
 endef
 
 zlib: | $(TARGET_DIR)
-	$(call autotools-package)
+	$(call generic-package)
 
 # -----------------------------------------------------------------------------
 
@@ -43,4 +43,4 @@ define HOST_ZLIB_CONFIGURE_CMDS
 endef
 
 host-zlib: | $(HOST_DIR)
-	$(call host-autotools-package)
+	$(call host-generic-package)
