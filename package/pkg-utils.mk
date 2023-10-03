@@ -89,7 +89,17 @@ endif
 
 # configure commands
 ifndef $(PKG)_CONFIGURE_CMDS
-  ifeq ($(PKG_MODE),CMAKE)
+  ifeq ($(PKG_MODE),AUTOTOOLS)
+    ifeq ($(PKG_PACKAGE),HOST)
+      $(PKG)_CONFIGURE_CMDS = $$(HOST_CONFIGURE_CMDS_DEFAULT)
+    else
+      $(PKG)_CONFIGURE_CMDS = $$(TARGET_CONFIGURE_CMDS_DEFAULT)
+    endif
+  else ifeq ($(PKG_MODE),GENERIC)
+    # no default configure commands in generic packages, but we allow it
+    # for packages with non-autotools configure call, e.g. zlib
+    $(PKG)_CONFIGURE_CMDS =
+  else ifeq ($(PKG_MODE),CMAKE)
     ifeq ($(PKG_PACKAGE),HOST)
       $(PKG)_CONFIGURE_CMDS = $$(HOST_CMAKE_CMDS_DEFAULT)
     else
@@ -104,11 +114,7 @@ ifndef $(PKG)_CONFIGURE_CMDS
   else ifeq ($(PKG_MODE),WAF)
     $(PKG)_CONFIGURE_CMDS = $$(WAF_CONFIGURE_CMDS_DEFAULT)
   else
-    ifeq ($(PKG_PACKAGE),HOST)
-      $(PKG)_CONFIGURE_CMDS = $$(HOST_CONFIGURE_CMDS_DEFAULT)
-    else
-      $(PKG)_CONFIGURE_CMDS = $$(TARGET_CONFIGURE_CMDS_DEFAULT)
-    endif
+    $(PKG)_CONFIGURE_CMDS = echo "$(PKG_NO_CONFIGURE)"
   endif
 endif
 

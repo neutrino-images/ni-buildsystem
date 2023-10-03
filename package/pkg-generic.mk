@@ -7,6 +7,13 @@
 TARGET_MAKE_ENV = \
 	PATH=$(PATH)
 
+define TARGET_MAKE_CONFIGURE
+	@$(call MESSAGE,"Configuring $(pkgname)")
+	$(foreach hook,$($(PKG)_PRE_CONFIGURE_HOOKS),$(call $(hook))$(sep))
+	$(Q)$(call $(PKG)_CONFIGURE_CMDS)
+	$(foreach hook,$($(PKG)_POST_CONFIGURE_HOOKS),$(call $(hook))$(sep))
+endef
+
 define TARGET_MAKE_BUILD_CMDS_DEFAULT
 	$(CD) $(PKG_BUILD_DIR); \
 		$(TARGET_MAKE_ENV) $($(PKG)_MAKE_ENV) \
@@ -40,6 +47,7 @@ endef
 define generic-package
 	$(eval PKG_MODE = $(pkg-mode))
 	$(call PREPARE,$(1))
+	$(if $($(PKG)_CONFIGURE_CMDS),$(call TARGET_MAKE_CONFIGURE))
 	$(if $(filter $(1),$(PKG_NO_BUILD)),,$(call TARGET_MAKE_BUILD))
 	$(if $(filter $(1),$(PKG_NO_INSTALL)),,$(call TARGET_MAKE_INSTALL))
 	$(call TARGET_FOLLOWUP)
@@ -53,6 +61,13 @@ HOST_MAKE_ENV = \
 	PKG_CONFIG_LIBDIR=$(HOST_DIR)/lib \
 	PKG_CONFIG_PATH=$(HOST_DIR)/lib/pkgconfig \
 	PKG_CONFIG_SYSROOT_DIR="/"
+
+define HOST_MAKE_CONFIGURE
+	@$(call MESSAGE,"Configuring $(pkgname)")
+	$(foreach hook,$($(PKG)_PRE_CONFIGURE_HOOKS),$(call $(hook))$(sep))
+	$(Q)$(call $(PKG)_CONFIGURE_CMDS)
+	$(foreach hook,$($(PKG)_POST_CONFIGURE_HOOKS),$(call $(hook))$(sep))
+endef
 
 define HOST_MAKE_BUILD_CMDS_DEFAULT
 	$(CD) $(PKG_BUILD_DIR); \
@@ -87,6 +102,7 @@ endef
 define host-generic-package
 	$(eval PKG_MODE = $(pkg-mode))
 	$(call PREPARE,$(1))
+	$(if $($(PKG)_CONFIGURE_CMDS),$(call HOST_MAKE_CONFIGURE))
 	$(if $(filter $(1),$(PKG_NO_BUILD)),,$(call HOST_MAKE_BUILD))
 	$(if $(filter $(1),$(PKG_NO_INSTALL)),,$(call HOST_MAKE_INSTALL))
 	$(call HOST_FOLLOWUP)
