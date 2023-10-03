@@ -4,7 +4,7 @@
 ```bash
 apt-get install \
 git subversion mercurial cvs automake build-essential ccache patch \
-texinfo autopoint libtool libtool-bin python curl gzip bzip2 lzma \
+texinfo autopoint libtool libtool-bin python curl gzip lzma \
 gperf gettext help2man bc libglib2.0-dev libncurses5-dev libncursesw5-dev \
 liblzo2-dev uuid-dev libssl-dev libltdl-dev libcurl4-openssl-dev intltool zip
 

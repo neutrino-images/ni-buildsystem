@@ -27,3 +27,19 @@ BZIP2_TARGET_FINALIZE_HOOKS += BZIP2_TARGET_CLEANUP
 
 bzip2: | $(TARGET_DIR)
 	$(call generic-package)
+
+# -----------------------------------------------------------------------------
+
+HOST_BZIP2_MAKE_ENV = \
+	$(HOST_CONFIGURE_ENV)
+
+HOST_BZIP2_MAKE_OPTS = \
+	PREFIX=$(HOST_DIR)
+
+define HOST_BZIP2_MAKEFILE_LIBBZ2_SO
+	mv $(PKG_BUILD_DIR)/Makefile-libbz2_so $(PKG_BUILD_DIR)/Makefile
+endef
+HOST_BZIP2_POST_PATCH_HOOKS += HOST_BZIP2_MAKEFILE_LIBBZ2_SO
+
+host-bzip2: | $(TARGET_DIR)
+	$(call host-generic-package)
