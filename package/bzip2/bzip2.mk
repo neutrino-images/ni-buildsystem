@@ -41,5 +41,5 @@ define HOST_BZIP2_MAKEFILE_LIBBZ2_SO
 endef
 HOST_BZIP2_POST_PATCH_HOOKS += HOST_BZIP2_MAKEFILE_LIBBZ2_SO
 
-host-bzip2: | $(TARGET_DIR)
+host-bzip2: | $(HOST_DIR)
 	$(call host-generic-package)
