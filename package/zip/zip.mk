@@ -19,7 +19,7 @@ ZIP_CFLAGS += -DUIDGID_NOT_16BIT
 
 # ------------------------------------------------------------------------------
 
-HOST_ZIP_DEPENDENCIES = bzip2
+HOST_ZIP_DEPENDENCIES = host-bzip2
 
 define HOST_ZIP_BUILD_CMDS
 	$(CD) $(PKG_BUILD_DIR); \
