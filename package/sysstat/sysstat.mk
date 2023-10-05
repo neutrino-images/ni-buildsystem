@@ -19,5 +19,10 @@ SYSSTAT_CONF_OPTS = \
 	conf_dir="$(sysconfdir)/sysstat" \
 	sa_lib_dir="$(libdir)/sa"
 
+define SYSSTAT_TARGET_CLEANUP
+	$(TARGET_RM) $(TARGET_localstatedir)/log
+endef
+SYSSTAT_TARGET_FINALIZE_HOOKS += SYSSTAT_TARGET_CLEANUP
+
 sysstat: | $(TARGET_DIR)
 	$(call autotools-package)
