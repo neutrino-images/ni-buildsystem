@@ -11,31 +11,23 @@ TOOLCHECK  =
 TOOLCHECK += find-automake
 TOOLCHECK += find-autopoint
 TOOLCHECK += find-bc
-TOOLCHECK += find-bison
-TOOLCHECK += find-bzip2
 TOOLCHECK += find-ccache
-TOOLCHECK += find-cmake
 TOOLCHECK += find-curl
-TOOLCHECK += find-flex
-TOOLCHECK += find-gawk
 TOOLCHECK += find-gcc
 TOOLCHECK += find-gettext
 TOOLCHECK += find-git
-TOOLCHECK += find-gperf
-TOOLCHECK += find-gzip
 TOOLCHECK += find-help2man
+TOOLCHECK += find-hg
 TOOLCHECK += find-libtool
 TOOLCHECK += find-lzma
 TOOLCHECK += find-makeinfo
-TOOLCHECK += find-patch
 TOOLCHECK += find-pkg-config
-TOOLCHECK += find-python
 TOOLCHECK += find-svn
+TOOLCHECK += find-tar
 TOOLCHECK += find-tic
-TOOLCHECK += find-yacc
 
 find-%:
-	@TOOL=$(patsubst find-%,%,$(@)); type -p $$TOOL >/dev/null || \
+	@TOOL=$(patsubst find-%,%,$(@)); which $$TOOL $(if $(VERBOSE),,>/dev/null) || \
 		{ $(call WARNING,"Warning",": required tool $$TOOL missing."); false; }
 
 bashcheck:
