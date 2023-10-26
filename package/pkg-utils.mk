@@ -425,7 +425,7 @@ define EXTRACT # (directory)
 	  ;; \
 	  *) \
 	    case "$($(PKG)_SOURCE)" in \
-	      *.tar | *.tar.bz2 | *.tbz | *.tar.gz | *.tgz | *.tar.xz | *.txz) \
+	      *.tar | *.tar.bz2 | *.tbz | *.tar.gz | *.tgz | *.tar.lz | *.tlz | *.tar.xz | *.txz) \
 	        tar -xf $(DL_DIR)/$($(PKG)_SOURCE) -C $${EXTRACT_DIR}; \
 	      ;; \
 	      *.zip) \
