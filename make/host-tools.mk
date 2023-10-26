@@ -10,16 +10,18 @@ $(HOST_DIR):
 # -----------------------------------------------------------------------------
 
 HOST_TOOLS_COMPRESSION = host-tar host-bzip2 host-gzip host-zip
+HOST_TOOLS_ESSENTIALS = host-sed host-patch host-gawk
 
 host-tools: $(BUILD_DIR) $(HOST_DIR) \
 	$(HOST_TOOLS_COMPRESSION) \
+	$(HOST_TOOLS_ESSENTIALS) \
 	host-cmake \
 	host-pkgconf \
 	$(PKG_CONFIG) \
 	host-m4 \
 	host-bison \
 	host-flex \
-	host-gawk \
+	host-gperf \
 	host-kmod \
 	host-mtd-utils \
 	host-u-boot \
