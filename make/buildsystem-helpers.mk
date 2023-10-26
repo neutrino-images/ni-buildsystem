@@ -14,7 +14,11 @@ UNZIP = unzip -d $(BUILD_DIR) -o $(DL_DIR)
 REMOVE = rm -rf $(BUILD_DIR)
 
 # build helper variables
-INSTALL      = $(shell which install || type -p install || echo install)
+define TOOLFIND # (tool)
+$(shell PATH=$(PATH) which $(1) || type -p $(1) || echo $(1))
+endef
+
+INSTALL = $(call TOOLFIND,install)
 INSTALL_DATA = $(INSTALL) -m 0644
 INSTALL_EXEC = $(INSTALL) -m 0755
 INSTALL_COPY = cp -a
@@ -26,14 +30,16 @@ define INSTALL_EXIST # (source, dest)
 	fi
 endef
 
-CD    = set -e; cd
+PATCH = $(call TOOLFIND,patch) -p1 -i
+SED = $(call TOOLFIND,sed) -i -e
+
+CD = set -e; cd
 CHDIR = $(CD) $(BUILD_DIR)
 MKDIR = $(INSTALL) -d $(BUILD_DIR)
-SED   = $(shell which sed || type -p sed || echo sed) -i -e
 
-UPDATE-RC.D     = support/scripts/update-rc.d -r $(TARGET_DIR)
-REMOVE-RC.D     = support/scripts/update-rc.d -f -r $(TARGET_DIR)
-TARGET_RM       = support/scripts/target-remove.sh $(TARGET_DIR) $(REMOVE_DIR)
+UPDATE-RC.D = support/scripts/update-rc.d -r $(TARGET_DIR)
+REMOVE-RC.D = support/scripts/update-rc.d -f -r $(TARGET_DIR)
+TARGET_RM = support/scripts/target-remove.sh $(TARGET_DIR) $(REMOVE_DIR)
 
 AUTOCONF_VER = $(shell autoconf --version | head -1 | awk '{print $$4}')
 AUTOCONF_VER_ge_270 = $(shell echo $(AUTOCONF_VER) \>= 2.70 | bc)

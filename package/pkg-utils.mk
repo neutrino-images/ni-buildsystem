@@ -471,12 +471,12 @@ define APPLY_PATCHES # (patches or directory)
 			for p in $(addprefix $$i/$$v,$(PATCHES)); do \
 				if [ -e $$p ]; then \
 					$(call MESSAGE,"Applying $${p#$(PKG_PATCHES_DIR)/} (*)"); \
-					patch -p1 -i $$p; \
+					$(PATCH) $$p; \
 				fi; \
 			done; \
 		else \
 			$(call MESSAGE,"Applying $${i#$(PKG_PATCHES_DIR)/}"); \
-			patch -p1 -i $(PKG_PATCHES_DIR)/$$i; \
+			$(PATCH) $(PKG_PATCHES_DIR)/$$i; \
 		fi; \
 	done; \
 	)
