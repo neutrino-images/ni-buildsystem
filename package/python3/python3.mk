@@ -81,7 +81,7 @@ PYTHON3_DEPENDENCIES += openssl
 PYTHON3_CONF_OPTS += --with-openssl=$(TARGET_prefix)
 
 PYTHON3_CONF_OPTS += --disable-codecs-cjk
-PYTHON3_CONF_OPTS += --disable-unicodedata
+PYTHON3_CONF_OPTS += --enable-unicodedata
 
 # Disable auto-detection of uuid.h (util-linux)
 # which would add _uuid module support, instead
