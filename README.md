@@ -5,7 +5,7 @@
 apt-get install \
 git subversion mercurial cvs automake build-essential ccache tar \
 texinfo autopoint libtool libtool-bin python curl lzma \
-gettext help2man bc libglib2.0-dev libncurses5-dev libncursesw5-dev \
+gettext help2man libglib2.0-dev libncurses5-dev libncursesw5-dev \
 liblzo2-dev uuid-dev libssl-dev libltdl-dev libcurl4-openssl-dev intltool
 
 ```

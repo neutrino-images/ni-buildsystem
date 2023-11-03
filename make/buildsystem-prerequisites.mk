@@ -10,7 +10,6 @@ init: preqs crosstool bootstrap
 TOOLCHECK  =
 TOOLCHECK += find-automake
 TOOLCHECK += find-autopoint
-TOOLCHECK += find-bc
 TOOLCHECK += find-ccache
 TOOLCHECK += find-curl
 TOOLCHECK += find-gcc

@@ -23,6 +23,7 @@ host-tools: $(BUILD_DIR) $(HOST_DIR) \
 	host-flex \
 	host-gperf \
 	host-kmod \
+	host-bc \
 	host-mtd-utils \
 	host-u-boot \
 	host-zic \
