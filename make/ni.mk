@@ -73,6 +73,7 @@ ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd2 hd5x hd6x vusolo4k vuduo4k vuduo4ks
 	$(MAKE) libxslt
 	$(MAKE) xz
 	$(MAKE) python3
+	$(MAKE) yt-dlp
 	$(MAKE) sysstat
   endif
   ifeq ($(DEBUG),yes)
