@@ -4,10 +4,11 @@
 #
 ################################################################################
 
-YT_DLP_VERSION = 2023.10.13
+YT_DLP_VERSION = latest
 YT_DLP_DIR =
 YT_DLP_SOURCE = yt-dlp
-YT_DLP_SITE = https://github.com/yt-dlp/yt-dlp/releases/download/$(YT_DLP_VERSION)
+YT_DLP_SITE = https://github.com/yt-dlp/yt-dlp/releases/$(YT_DLP_VERSION)/download
+YT_DLP_SITE_METHOD = curl
 
 define YT_DLP_INSTALL
 	$(INSTALL_EXEC) -D $(DL_DIR)/yt-dlp $(TARGET_bindir)/yt-dlp
