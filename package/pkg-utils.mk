@@ -375,7 +375,7 @@ define DOWNLOAD # (site,source)
 	  ;; \
 	  curl) \
 	    $(CD) $(DL_DIR); \
-	      curl --remote-name --time-cond $${DOWNLOAD_SOURCE} $${DOWNLOAD_SITE}/$${DOWNLOAD_SOURCE} || true; \
+	      curl --location --remote-name --time-cond $${DOWNLOAD_SOURCE} $${DOWNLOAD_SITE}/$${DOWNLOAD_SOURCE} || true; \
 	  ;; \
 	  *) \
 	    if [ ! -f $(DL_DIR)/$${DOWNLOAD_SOURCE} ]; then \
