@@ -127,6 +127,11 @@ define BUSYBOX_ADD_TO_SHELLS
 endef
 BUSYBOX_POST_INSTALL_HOOKS += BUSYBOX_ADD_TO_SHELLS
 
+define BUSYBOX_INSTALL_LINK_ENV
+	ln -sf /bin/env $(TARGET_bindir)/env
+endef
+BUSYBOX_POST_INSTALL_HOOKS += BUSYBOX_INSTALL_LINK_ENV
+
 ifeq ($(PERSISTENT_VAR_PARTITION),yes)
 define BUSYBOX_INSTALL_LINK_RESOLV_CONF
 	ln -sf /var/etc/resolv.conf $(TARGET_sysconfdir)/resolv.conf
