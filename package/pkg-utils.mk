@@ -36,6 +36,9 @@ ifeq ($(PKG_PACKAGE),HOST)
   ifndef $(PKG)_SITE
     $(PKG)_SITE = $$($(PKG_PARENT)_SITE)
   endif
+  ifndef $(PKG)_SITE_METHOD
+    $(PKG)_SITE_METHOD = $$($(PKG_PARENT)_SITE_METHOD)
+  endif
 endif
 
 # extract
