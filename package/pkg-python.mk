@@ -33,7 +33,7 @@ define TARGET_PYTHON_INSTALL_CMDS_DEFAULT
 	$(CD) $(PKG_BUILD_DIR); \
 		$(TARGET_PYTHON_ENV) \
 		CPPFLAGS="$(TARGET_CPPFLAGS) -I$(PYTHON_INCLUDE_DIR)" \
-		$(HOST_PYTHON_BINARY) ./setup.py install --root=$(TARGET_DIR) --prefix=/usr \
+		$(HOST_PYTHON_BINARY) ./setup.py install --root=$(TARGET_DIR) --executable=/usr/bin/python --prefix=/usr \
 			$(TARGET_PYTHON_OPTS)
 endef
 
