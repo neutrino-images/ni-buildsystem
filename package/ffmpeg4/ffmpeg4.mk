@@ -12,8 +12,6 @@ FFMPEG4_SITE = http://www.ffmpeg.org/releases
 FFMPEG4_DEPENDENCIES = openssl zlib bzip2 freetype rtmpdump libbluray libass libxml2 alsa-lib
 
 FFMPEG4_CONF_OPTS = \
-	--disable-ffprobe \
-	\
 	--disable-doc \
 	--disable-htmlpages \
 	--disable-manpages \
@@ -305,12 +303,18 @@ FFMPEG4_CONF_OPTS = \
 	--enable-swresample \
 	--enable-hardcoded-tables
 
-ifeq ($(BS_PACKAGE_FFMPEG_FFPLAY),y)
+ifeq ($(BS_PACKAGE_FFMPEG4_FFPLAY),y)
   FFMPEG4_DEPENDENCIES += sdl2
   FFMPEG4_CONF_OPTS += --enable-ffplay
   FFMPEG4_CONF_ENV += SDL_CONFIG=$(HOST_DIR)/bin/sdl2-config
 else
   FFMPEG4_CONF_OPTS += --disable-ffplay
+endif
+
+ifeq ($(BS_PACKAGE_FFMPEG4_FFPROBE),y)
+  FFMPEG4_CONF_OPTS += --enable-ffprobe
+else
+  FFMPEG4_CONF_OPTS += --disable-ffprobe
 endif
 
 ifeq ($(TARGET_ARCH),arm)

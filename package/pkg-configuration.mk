@@ -13,6 +13,9 @@ BS_PACKAGE_FFMPEG2_BRANCH ?= ni/ffmpeg/2.8
 # ffmpeg4: build ffplay
 BS_PACKAGE_FFMPEG4_FFPLAY ?= n
 
+# ffmpeg4: build ffprobe (needed by yt-dlp)
+BS_PACKAGE_FFMPEG4_FFPROBE ?= y
+
 # ncurses: build wide-character libraries
 BS_PACKAGE_NCURSES_WCHAR ?= y
 
