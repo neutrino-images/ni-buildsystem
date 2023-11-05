@@ -273,7 +273,7 @@ ifeq ($(PKG_MODE),PYTHON)
   $(PKG)_DEPENDENCIES += $$(if $$(filter $$(pkg),host-python-setuptools host-python-wheel),,host-python-setuptools)
   ifeq ($(PKG_PACKAGE),TARGET)
     $(PKG)_DEPENDENCIES += python3
-    $(PKG)_DEPENDENCIES += $$(if $$(filter $$(pkg),python-setuptools python-wheel),,python-setuptools)
+    #$(PKG)_DEPENDENCIES += $$(if $$(filter $$(pkg),python-setuptools python-wheel),,python-setuptools)
   endif
 endif
 ifeq ($(PKG_MODE),KERNEL_MODULE)
