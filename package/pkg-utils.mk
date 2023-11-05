@@ -39,6 +39,11 @@ ifeq ($(PKG_PACKAGE),HOST)
   ifndef $(PKG)_SITE_METHOD
     $(PKG)_SITE_METHOD = $$($(PKG_PARENT)_SITE_METHOD)
   endif
+  ifeq ($(PKG_MODE),PYTHON)
+    ifndef $(PKG)_SETUP_TYPE
+      $(PKG)_SETUP_TYPE = $$($(PKG_PARENT)_SETUP_TYPE)
+    endif
+  endif
 endif
 
 # extract
