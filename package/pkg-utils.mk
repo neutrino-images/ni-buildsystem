@@ -294,6 +294,11 @@ ifeq ($(PKG_MODE),WAF)
   endif
 endif
 
+# cleanup
+ifndef $(PKG)_KEEP_BUILD_DIR
+  $(PKG)_KEEP_BUILD_DIR = NO
+endif
+
 endef # PKG_CHECK_VARIABLES
 
 pkg-check-variables = $(call PKG_CHECK_VARIABLES)
@@ -317,9 +322,9 @@ PKG_NO_INSTALL = pkg-no-install
 # clean-up
 define CLEANUP
 	if [ "$($(PKG)_DIR)" -a -e $(BUILD_DIR)/$($(PKG)_DIR) ]; then \
-		$(call MESSAGE,"Clean-up $(pkgname)"); \
-		$(CD) $(BUILD_DIR); \
-			rm -rf $($(PKG)_DIR); \
+	  $(call MESSAGE,"Clean-up $(pkgname)"); \
+	  $(CD) $(BUILD_DIR); \
+	    rm -rf $($(PKG)_DIR); \
 	fi
 endef
 
@@ -561,17 +566,18 @@ endef
 define HOST_FOLLOWUP
 	@$(call MESSAGE,"Follow-up build $(pkgname)")
 	$(foreach hook,$($(PKG)_PRE_FOLLOWUP_HOOKS),$(call $(hook))$(sep))
-	$(Q)$(call CLEANUP)
+	$(Q)$(if $(filter $($(PKG)_KEEP_BUILD_DIR),NO),$(call CLEANUP))
 	$(foreach hook,$($(PKG)_HOST_FINALIZE_HOOKS),$(call $(hook))$(sep))
 	$(foreach hook,$($(PKG)_POST_FOLLOWUP_HOOKS),$(call $(hook))$(sep))
 	$(Q)$(call TOUCH)
 	$(Q)$(call ENDUP)
 endef
 
+
 define TARGET_FOLLOWUP
 	@$(call MESSAGE,"Follow-up build $(pkgname)")
 	$(foreach hook,$($(PKG)_PRE_FOLLOWUP_HOOKS),$(call $(hook))$(sep))
-	$(Q)$(call CLEANUP)
+	$(Q)$(if $(filter $($(PKG)_KEEP_BUILD_DIR),NO),$(call CLEANUP))
 	$(Q)$(call REWRITE_CONFIG_SCRIPTS)
 	$(Q)$(call REWRITE_LIBTOOL)
 	$(if $(filter $(BS_INIT_SYSV),y),$($(PKG)_INSTALL_INIT_SYSV))
