@@ -12,6 +12,9 @@ PYTHON3_SITE = https://www.python.org/ftp/python/$(PYTHON3_VERSION)
 
 PYTHON3_DEPENDENCIES = libffi
 
+# no cleanup
+PYTHON3_KEEP_BUILD_DIR = YES
+
 #PYTHON3_AUTORECONF = YES
 
 # PYTHON3_AUTORECONF won't work
