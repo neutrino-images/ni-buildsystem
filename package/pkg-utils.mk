@@ -59,6 +59,11 @@ ifndef $(PKG)_PATCH_CUSTOM
   $(PKG)_PATCH_CUSTOM =
 endif
 
+# common
+ifndef $(PKG)_ENV
+  $(PKG)_ENV =
+endif
+
 # autoreconf
 ifndef $(PKG)_AUTORECONF
   $(PKG)_AUTORECONF = NO
@@ -140,7 +145,10 @@ ifndef $(PKG)_MAKE_OPTS
   $(PKG)_MAKE_OPTS =
 endif
 
-# waf
+# common
+ifndef $(PKG)_BUILD_ENV
+  $(PKG)_BUILD_ENV =
+endif
 ifndef $(PKG)_BUILD_OPTS
   $(PKG)_BUILD_OPTS =
 endif
@@ -192,7 +200,10 @@ ifndef $(PKG)_MAKE_INSTALL_OPTS
   $(PKG)_MAKE_INSTALL_OPTS = $$($(PKG)_MAKE_OPTS)
 endif
 
-# waf
+# common
+ifndef $(PKG)_INSTALL_ENV
+  $(PKG)_INSTALL_ENV =
+endif
 ifndef $(PKG)_INSTALL_OPTS
   $(PKG)_INSTALL_OPTS =
 endif
