@@ -133,7 +133,7 @@ endef
 
 define PYTHON3_CREATE_PYC_FILES
 	$(PYTHON3_FIX_TIME)
-	PYTHONPATH="$(PYTHON3_PATH)" \
+	PYTHONPATH="$(PYTHON_PATH)" \
 	$(HOST_PYTHON_BINARY) \
 		$(PKG_BUILD_DIR)/Lib/compileall.py \
 		$(if $(VERBOSE),,-q) \
