@@ -584,7 +584,6 @@ define HOST_FOLLOWUP
 	$(Q)$(call ENDUP)
 endef
 
-
 define TARGET_FOLLOWUP
 	@$(call MESSAGE,"Follow-up build $(pkgname)")
 	$(foreach hook,$($(PKG)_PRE_FOLLOWUP_HOOKS),$(call $(hook))$(sep))

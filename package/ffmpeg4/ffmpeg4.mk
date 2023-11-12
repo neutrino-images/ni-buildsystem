@@ -317,6 +317,9 @@ else
   FFMPEG4_CONF_OPTS += --disable-ffprobe
 endif
 
+FFMPEG4_DEPENDENCIES += lame
+FFMPEG4_CONF_OPTS += --enable-libmp3lame
+
 ifeq ($(TARGET_ARCH),arm)
   FFMPEG4_CONF_OPTS += \
 	--enable-armv6 \
