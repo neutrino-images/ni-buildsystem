@@ -145,6 +145,48 @@ ifndef $(PKG)_MAKE_OPTS
   $(PKG)_MAKE_OPTS =
 endif
 
+# python SETUP_TYPE
+ifeq ($(PKG_MODE),PYTHON)
+  ifdef $(PKG)_SETUP_TYPE
+    # setuptools
+    ifeq ($$($(PKG)_SETUP_TYPE),setuptools)
+      ifeq ($(PKG_PACKAGE),HOST)
+        $(PKG)_PYTHON_BASE_ENV = $(HOST_PKG_PYTHON_SETUPTOOLS_ENV)
+        $(PKG)_PYTHON_BASE_BUILD_CMD = ./setup.py build $(HOST_PKG_PYTHON_SETUPTOOLS_BUILD_OPTS)
+        $(PKG)_PYTHON_BASE_INSTALL_CMD = ./setup.py install $(HOST_PKG_PYTHON_SETUPTOOLS_INSTALL_OPTS)
+      else
+        $(PKG)_PYTHON_BASE_ENV = $(TARGET_PKG_PYTHON_SETUPTOOLS_ENV)
+        $(PKG)_PYTHON_BASE_BUILD_CMD = ./setup.py build $(TARGET_PKG_PYTHON_SETUPTOOLS_BUILD_OPTS)
+        $(PKG)_PYTHON_BASE_INSTALL_CMD = ./setup.py install --no-compile $(TARGET_PKG_PYTHON_SETUPTOOLS_INSTALL_OPTS)
+      endif
+    # flit, pep517
+    else ifeq ($$($(PKG)_SETUP_TYPE),$$(filter $$($(PKG)_SETUP_TYPE),flit pep517))
+      ifeq ($(PKG_PACKAGE),HOST)
+        $(PKG)_PYTHON_BASE_ENV = $(HOST_PKG_PYTHON_PEP517_ENV)
+        $(PKG)_PYTHON_BASE_BUILD_CMD = -m build -n -w $(HOST_PKG_PYTHON_PEP517_BUILD_OPTS)
+        $(PKG)_PYTHON_BASE_INSTALL_CMD = $(PYINSTALLER) dist/* $(HOST_PKG_PYTHON_PEP517_INSTALL_OPTS)
+      else
+        $(PKG)_PYTHON_BASE_ENV = $(TARGET_PKG_PYTHON_PEP517_ENV)
+        $(PKG)_PYTHON_BASE_BUILD_CMD = -m build -n -w $(TARGET_PKG_PYTHON_PEP517_BUILD_OPTS)
+        $(PKG)_PYTHON_BASE_INSTALL_CMD = $(PYINSTALLER) dist/* $(TARGET_PKG_PYTHON_PEP517_INSTALL_OPTS)
+      endif
+    # flit-bootstrap
+    else ifeq ($$($(PKG)_SETUP_TYPE),flit-bootstrap)
+      ifeq ($(PKG_PACKAGE),HOST)
+        $(PKG)_PYTHON_BASE_ENV = $(HOST_PKG_PYTHON_PEP517_ENV)
+        $(PKG)_PYTHON_BASE_BUILD_CMD = -m flit_core.wheel $(HOST_PKG_PYTHON_PEP517_BUILD_OPTS)
+        $(PKG)_PYTHON_BASE_INSTALL_CMD ?= $(PYINSTALLER) dist/* $(HOST_PKG_PYTHON_PEP517_INSTALL_OPTS)
+      else
+        $$(error Invalid $(PKG)_SETUP_TYPE. flit-bootstrap only supported for host packages)
+      endif
+    else
+      $$(error Invalid $(PKG)_SETUP_TYPE. Valid options are 'setuptools', 'pep517' or 'flit')
+    endif
+  else
+    $$(error $(PKG_PARENT)_SETUP_TYPE must be set)
+  endif
+endif
+
 # common
 ifndef $(PKG)_BUILD_ENV
   $(PKG)_BUILD_ENV =
@@ -288,11 +330,22 @@ ifeq ($(PKG_MODE),MESON)
   $(PKG)_DEPENDENCIES += host-meson
 endif
 ifeq ($(PKG_MODE),PYTHON)
-  $(PKG)_DEPENDENCIES += host-python3
-  $(PKG)_DEPENDENCIES += $$(if $$(filter $$(pkg),host-python-setuptools host-python-wheel),,host-python-setuptools)
+  # Add dependency on host-python3 at first
+  $(PKG)_DEPENDENCIES = host-python3 $($(PKG)_DEPENDENCIES)
+  ifeq ($$($(PKG)_SETUP_TYPE),setuptools)
+    $(PKG)_DEPENDENCIES += host-python-setuptools
+  else ifeq ($$($(PKG)_SETUP_TYPE),$$(filter $$($(PKG)_SETUP_TYPE),flit pep517))
+    $(PKG)_DEPENDENCIES += host-python-pypa-build host-python-installer
+    ifeq ($$($(PKG)_SETUP_TYPE),flit)
+      $(PKG)_DEPENDENCIES += host-python-flit-core
+    endif
+  else ifeq ($$($(PKG)_SETUP_TYPE),flit-bootstrap)
+    # Don't add dependency on host-python-installer for
+    # host-python-installer itself, and its dependencies.
+    $(PKG)_DEPENDENCIES += $$(if $$(filter $$(pkg),host-python-flit-core host-python-installer),,host-python-installer)
+  endif
   ifeq ($(PKG_PACKAGE),TARGET)
     $(PKG)_DEPENDENCIES += python3
-    #$(PKG)_DEPENDENCIES += $$(if $$(filter $$(pkg),python-setuptools python-wheel),,python-setuptools)
   endif
 endif
 ifeq ($(PKG_MODE),KERNEL_MODULE)
