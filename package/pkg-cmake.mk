@@ -4,13 +4,14 @@
 #
 ################################################################################
 
-TARGET_CMAKE_ENV =
+TARGET_CMAKE_CONF_ENV =
 
-TARGET_CMAKE_OPTS = \
+TARGET_CMAKE_CONF_OPTS = \
 	--no-warn-unused-cli
 
-TARGET_CMAKE_OPTS += \
-	-G"Unix Makefiles" \
+TARGET_CMAKE_CONF_OPTS += \
+	-G$($(PKG)_GENERATOR) \
+	-DCMAKE_MAKE_PROGRAM="$($(PKG)_GENERATOR_PROGRAM)" \
 	-DENABLE_STATIC=OFF \
 	-DBUILD_SHARED_LIBS=ON \
 	-DBUILD_DOC=OFF \
@@ -45,19 +46,45 @@ TARGET_CMAKE_OPTS += \
 	-DCMAKE_READELF="$(TARGET_READELF)" \
 	-DCMAKE_STRIP="$(TARGET_STRIP)"
 
-define TARGET_CMAKE_CMDS_DEFAULT
+define TARGET_CMAKE_CONFIGURE_CMDS_DEFAULT
 	$(CD) $(PKG_BUILD_DIR); \
 		rm -f CMakeCache.txt; \
-		$(TARGET_CMAKE_ENV) $($(PKG)_CONF_ENV) \
+		$(TARGET_CMAKE_CONF_ENV) $($(PKG)_CONF_ENV) \
 		$($(PKG)_CMAKE) \
-			$(TARGET_CMAKE_OPTS) $($(PKG)_CONF_OPTS)
+			$(TARGET_CMAKE_CONF_OPTS) $($(PKG)_CONF_OPTS)
 endef
 
-define TARGET_CMAKE
+define TARGET_CMAKE_CONFIGURE
 	@$(call MESSAGE,"Configuring $(pkgname)")
 	$(foreach hook,$($(PKG)_PRE_CONFIGURE_HOOKS),$(call $(hook))$(sep))
 	$(Q)$(call $(PKG)_CONFIGURE_CMDS)
 	$(foreach hook,$($(PKG)_POST_CONFIGURE_HOOKS),$(call $(hook))$(sep))
+endef
+
+define TARGET_CMAKE_BUILD_CMDS_DEFAULT
+	$(TARGET_MAKE_ENV) $($(PKG)_BUILD_ENV) \
+	$($(PKG)_CMAKE) --build $(PKG_BUILD_DIR) -j$(PARALLEL_JOBS) \
+		$($(PKG)_BUILD_OPTS)
+endef
+
+define TARGET_CMAKE_BUILD
+	@$(call MESSAGE,"Building $(pkgname)")
+	$(foreach hook,$($(PKG)_PRE_BUILD_HOOKS),$(call $(hook))$(sep))
+	$(Q)$(call $(PKG)_BUILD_CMDS)
+	$(foreach hook,$($(PKG)_POST_BUILD_HOOKS),$(call $(hook))$(sep))
+endef
+
+define TARGET_CMAKE_INSTALL_CMDS_DEFAULT
+	$(TARGET_MAKE_ENV) $($(PKG)_INSTALL_ENV) DESTDIR=$(TARGET_DIR) \
+	$($(PKG)_CMAKE) --install $(PKG_BUILD_DIR) \
+		$($(PKG)_INSTALL_OPTS)
+endef
+
+define TARGET_CMAKE_INSTALL
+	@$(call MESSAGE,"Installing $(pkgname)")
+	$(foreach hook,$($(PKG)_PRE_INSTALL_HOOKS),$(call $(hook))$(sep))
+	$(Q)$(call $(PKG)_INSTALL_CMDS)
+	$(foreach hook,$($(PKG)_POST_INSTALL_HOOKS),$(call $(hook))$(sep))
 endef
 
 # -----------------------------------------------------------------------------
@@ -65,21 +92,22 @@ endef
 define cmake-package
 	$(eval PKG_MODE = $(pkg-mode))
 	$(call PREPARE,$(1))
-	$(if $(filter $(1),$(PKG_NO_CONFIGURE)),,$(call TARGET_CMAKE))
-	$(if $(filter $(1),$(PKG_NO_BUILD)),,$(call TARGET_MAKE_BUILD))
-	$(if $(filter $(1),$(PKG_NO_INSTALL)),,$(call TARGET_MAKE_INSTALL))
+	$(if $(filter $(1),$(PKG_NO_CONFIGURE)),,$(call TARGET_CMAKE_CONFIGURE))
+	$(if $(filter $(1),$(PKG_NO_BUILD)),,$(call TARGET_CMAKE_BUILD))
+	$(if $(filter $(1),$(PKG_NO_INSTALL)),,$(call TARGET_CMAKE_INSTALL))
 	$(call TARGET_FOLLOWUP)
 endef
 
 # -----------------------------------------------------------------------------
 
-HOST_CMAKE_ENV =
+HOST_CMAKE_CONF_ENV =
 
-HOST_CMAKE_OPTS += \
+HOST_CMAKE_CONF_OPTS += \
 	--no-warn-unused-cli
 
-HOST_CMAKE_OPTS += \
-	-G"Unix Makefiles" \
+HOST_CMAKE_CONF_OPTS += \
+	-G$($(PKG)_GENERATOR) \
+	-DCMAKE_MAKE_PROGRAM="$($(PKG)_GENERATOR_PROGRAM)" \
 	-DENABLE_STATIC=OFF \
 	-DBUILD_SHARED_LIBS=ON \
 	-DBUILD_DOC=OFF \
@@ -93,19 +121,45 @@ HOST_CMAKE_OPTS += \
 	-DCMAKE_INSTALL_PREFIX="$(HOST_DIR)" \
 	-DCMAKE_PREFIX_PATH="$(HOST_DIR)"
 
-define HOST_CMAKE_CMDS_DEFAULT
+define HOST_CMAKE_CONFIGURE_CMDS_DEFAULT
 	$(CD) $(PKG_BUILD_DIR); \
 		rm -f CMakeCache.txt; \
-		$(HOST_CMAKE_ENV) $($(PKG)_CONF_ENV) \
+		$(HOST_CMAKE_CONF_ENV) $($(PKG)_CONF_ENV) \
 		$($(PKG)_CMAKE) \
-			$(HOST_CMAKE_OPTS) $($(PKG)_CONF_OPTS)
+			$(HOST_CMAKE_CONF_OPTS) $($(PKG)_CONF_OPTS)
 endef
 
-define HOST_CMAKE
+define HOST_CMAKE_CONFIGURE
 	@$(call MESSAGE,"Configuring $(pkgname)")
 	$(foreach hook,$($(PKG)_PRE_CONFIGURE_HOOKS),$(call $(hook))$(sep))
 	$(Q)$(call $(PKG)_CONFIGURE_CMDS)
 	$(foreach hook,$($(PKG)_POST_CONFIGURE_HOOKS),$(call $(hook))$(sep))
+endef
+
+define HOST_CMAKE_BUILD_CMDS_DEFAULT
+	$(HOST_MAKE_ENV) $($(PKG)_BUILD_ENV) \
+	$($(PKG)_CMAKE) --build $(PKG_BUILD_DIR) -j$(PARALLEL_JOBS) \
+		$($(PKG)_BUILD_OPTS)
+endef
+
+define HOST_CMAKE_BUILD
+	@$(call MESSAGE,"Building $(pkgname)")
+	$(foreach hook,$($(PKG)_PRE_BUILD_HOOKS),$(call $(hook))$(sep))
+	$(Q)$(call $(PKG)_BUILD_CMDS)
+	$(foreach hook,$($(PKG)_POST_BUILD_HOOKS),$(call $(hook))$(sep))
+endef
+
+define HOST_CMAKE_INSTALL_CMDS_DEFAULT
+	$(HOST_MAKE_ENV) $($(PKG)_INSTALL_ENV) \
+	$($(PKG)_CMAKE) --install $(PKG_BUILD_DIR) \
+		$($(PKG)_INSTALL_OPTS)
+endef
+
+define HOST_CMAKE_INSTALL
+	@$(call MESSAGE,"Installing $(pkgname)")
+	$(foreach hook,$($(PKG)_PRE_INSTALL_HOOKS),$(call $(hook))$(sep))
+	$(Q)$(call $(PKG)_INSTALL_CMDS)
+	$(foreach hook,$($(PKG)_POST_INSTALL_HOOKS),$(call $(hook))$(sep))
 endef
 
 # -----------------------------------------------------------------------------
@@ -113,8 +167,8 @@ endef
 define host-cmake-package
 	$(eval PKG_MODE = $(pkg-mode))
 	$(call PREPARE,$(1))
-	$(if $(filter $(1),$(PKG_NO_CONFIGURE)),,$(call HOST_CMAKE))
-	$(if $(filter $(1),$(PKG_NO_BUILD)),,$(call HOST_MAKE_BUILD))
-	$(if $(filter $(1),$(PKG_NO_INSTALL)),,$(call HOST_MAKE_INSTALL))
+	$(if $(filter $(1),$(PKG_NO_CONFIGURE)),,$(call HOST_CMAKE_CONFIGURE))
+	$(if $(filter $(1),$(PKG_NO_BUILD)),,$(call HOST_CMAKE_BUILD))
+	$(if $(filter $(1),$(PKG_NO_INSTALL)),,$(call HOST_CMAKE_INSTALL))
 	$(call HOST_FOLLOWUP)
 endef

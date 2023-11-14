@@ -85,6 +85,19 @@ endif
 ifndef $(PKG)_CMAKE
   $(PKG)_CMAKE = $$(HOST_CMAKE_BINARY)
 endif
+ifndef $(PKG)_CMAKE_BACKEND
+  $(PKG)_CMAKE_BACKEND = make
+endif
+
+ifeq ($$($(PKG)_CMAKE_BACKEND),make)
+  $(PKG)_GENERATOR = "Unix Makefiles"
+  $(PKG)_GENERATOR_PROGRAM = $$(firstword $$(MAKE))
+else ifeq ($$($(PKG)_CMAKE_BACKEND),ninja)
+  $(PKG)_GENERATOR = "Ninja"
+  $(PKG)_GENERATOR_PROGRAM = $$(HOST_NINJA_BINARY)
+else
+  $$(error Invalid $(PKG)_CMAKE_BACKEND. Valid options are 'make' or 'ninja')
+endif
 
 # configure
 ifndef $(PKG)_CONFIGURE_CMD
@@ -114,9 +127,9 @@ ifndef $(PKG)_CONFIGURE_CMDS
     $(PKG)_CONFIGURE_CMDS =
   else ifeq ($(PKG_MODE),CMAKE)
     ifeq ($(PKG_PACKAGE),HOST)
-      $(PKG)_CONFIGURE_CMDS = $$(HOST_CMAKE_CMDS_DEFAULT)
+      $(PKG)_CONFIGURE_CMDS = $$(HOST_CMAKE_CONFIGURE_CMDS_DEFAULT)
     else
-      $(PKG)_CONFIGURE_CMDS = $$(TARGET_CMAKE_CMDS_DEFAULT)
+      $(PKG)_CONFIGURE_CMDS = $$(TARGET_CMAKE_CONFIGURE_CMDS_DEFAULT)
     endif
   else ifeq ($(PKG_MODE),MESON)
     ifeq ($(PKG_PACKAGE),HOST)
@@ -197,11 +210,17 @@ endif
 
 # build commands
 ifndef $(PKG)_BUILD_CMDS
-  ifeq ($(PKG_MODE),$(filter $(PKG_MODE),AUTOTOOLS CMAKE GENERIC KCONFIG))
+  ifeq ($(PKG_MODE),$(filter $(PKG_MODE),AUTOTOOLS GENERIC KCONFIG))
     ifeq ($(PKG_PACKAGE),HOST)
       $(PKG)_BUILD_CMDS = $$(HOST_MAKE_BUILD_CMDS_DEFAULT)
     else
       $(PKG)_BUILD_CMDS = $$(TARGET_MAKE_BUILD_CMDS_DEFAULT)
+    endif
+  else ifeq ($(PKG_MODE),CMAKE)
+    ifeq ($(PKG_PACKAGE),HOST)
+      $(PKG)_BUILD_CMDS = $$(HOST_CMAKE_BUILD_CMDS_DEFAULT)
+    else
+      $(PKG)_BUILD_CMDS = $$(TARGET_CMAKE_BUILD_CMDS_DEFAULT)
     endif
   else ifeq ($(PKG_MODE),MESON)
     ifeq ($(PKG_PACKAGE),HOST)
@@ -252,11 +271,17 @@ endif
 
 # install commands
 ifndef $(PKG)_INSTALL_CMDS
-  ifeq ($(PKG_MODE),$(filter $(PKG_MODE),AUTOTOOLS CMAKE GENERIC KCONFIG))
+  ifeq ($(PKG_MODE),$(filter $(PKG_MODE),AUTOTOOLS GENERIC KCONFIG))
     ifeq ($(PKG_PACKAGE),HOST)
       $(PKG)_INSTALL_CMDS = $$(HOST_MAKE_INSTALL_CMDS_DEFAULT)
     else
       $(PKG)_INSTALL_CMDS = $$(TARGET_MAKE_INSTALL_CMDS_DEFAULT)
+    endif
+  else ifeq ($(PKG_MODE),CMAKE)
+    ifeq ($(PKG_PACKAGE),HOST)
+      $(PKG)_INSTALL_CMDS = $$(HOST_CMAKE_INSTALL_CMDS_DEFAULT)
+    else
+      $(PKG)_INSTALL_CMDS = $$(TARGET_CMAKE_INSTALL_CMDS_DEFAULT)
     endif
   else ifeq ($(PKG_MODE),MESON)
     ifeq ($(PKG_PACKAGE),HOST)
@@ -325,6 +350,9 @@ ifndef $(PKG)_DEPENDENCIES
 endif
 ifeq ($(PKG_MODE),CMAKE)
   $(PKG)_DEPENDENCIES += host-cmake
+  ifeq ($$($(PKG)_CMAKE_BACKEND),ninja)
+    $(PKG)_DEPENDENCIES += host-ninja
+  endif
 endif
 ifeq ($(PKG_MODE),MESON)
   $(PKG)_DEPENDENCIES += host-meson
