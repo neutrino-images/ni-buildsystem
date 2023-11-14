@@ -11,5 +11,10 @@ PYTHON_MUTAGEN_SITE = https://files.pythonhosted.org/packages/b1/54/d1760a363d0f
 
 PYTHON_MUTAGEN_SETUP_TYPE = setuptools
 
+define PYTHON_MUTAGEN_TARGET_CLEANUP
+	$(TARGET_RM) $(TARGET_mandir)
+endef
+PYTHON_MUTAGEN_TARGET_FINALIZE_HOOKS += PYTHON_MUTAGEN_TARGET_CLEANUP
+
 python-mutagen: | $(TARGET_DIR)
 	$(call python-package)

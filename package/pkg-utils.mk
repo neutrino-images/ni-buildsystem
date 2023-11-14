@@ -419,7 +419,7 @@ endef
 # helpers to resolve dependencies only
 %-deps \
 %-dependencies:
-	@make $($(call UPPERCASE,$(subst -deps,-dependencies,$(@))))
+	@$(MAKE) $($(call UPPERCASE,$(subst -deps,-dependencies,$(@))))
 
 # -----------------------------------------------------------------------------
 
