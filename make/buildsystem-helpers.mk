@@ -40,6 +40,7 @@ MKDIR = $(INSTALL) -d $(BUILD_DIR)
 UPDATE-RC.D = support/scripts/update-rc.d -r $(TARGET_DIR)
 REMOVE-RC.D = support/scripts/update-rc.d -f -r $(TARGET_DIR)
 TARGET_RM = support/scripts/target-remove.sh $(TARGET_DIR) $(REMOVE_DIR)
+PYINSTALLER = $(BASE_DIR)/support/scripts/pyinstaller.py
 
 AUTOCONF_VER = $(shell autoconf --version | head -1 | awk '{print $$4}')
 AUTOCONF_VER_ge_270 = $(shell echo $(AUTOCONF_VER) \>= 2.70 | bc)
