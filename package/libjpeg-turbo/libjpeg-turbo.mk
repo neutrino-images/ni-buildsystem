@@ -17,5 +17,7 @@ LIBJPEG_TURBO_CONF_OPTS = \
 	-DWITH_TURBOJPEG=OFF \
 	-DWITH_JPEG8=80
 
+LIBJPEG_TURBO_CMAKE_BACKEND = ninja
+
 libjpeg-turbo: | $(TARGET_DIR)
 	$(call cmake-package)
