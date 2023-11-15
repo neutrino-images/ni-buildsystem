@@ -41,7 +41,9 @@ ifeq ($(PKG_PACKAGE),HOST)
   endif
   ifeq ($(PKG_MODE),PYTHON)
     ifndef $(PKG)_SETUP_TYPE
-      $(PKG)_SETUP_TYPE = $$($(PKG_PARENT)_SETUP_TYPE)
+      ifdef $(PKG_PARENT)_SETUP_TYPE
+        $(PKG)_SETUP_TYPE = $$($(PKG_PARENT)_SETUP_TYPE)
+      endif
     endif
   endif
 endif
