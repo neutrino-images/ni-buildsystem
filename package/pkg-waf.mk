@@ -16,12 +16,8 @@ endef
 WAF_OPTS = $(if $(VERBOSE),-v) -j $(PARALLEL_JOBS)
 
 WAF_CONFIGURE_OPTS = \
-	--target=$(GNU_TARGET_NAME) \
-	\
 	--prefix=$(prefix) \
-	--libdir=$(libdir) \
-	\
-	--mandir=$(REMOVE_mandir)
+	--libdir=$(libdir)
 
 define WAF_CONFIGURE_CMDS_DEFAULT
 	$(CD) $(PKG_BUILD_DIR); \
