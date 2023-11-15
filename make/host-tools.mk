@@ -3,16 +3,16 @@
 #
 # -----------------------------------------------------------------------------
 
-$(HOST_DIR):
-	$(Q)$(INSTALL) -d $(HOST_DIR)
-	$(Q)$(INSTALL) -d $(HOST_DEPS_DIR)
+$(HOST_DIR) \
+$(HOST_DEPS_DIR):
+	$(INSTALL) -d $(@)
 
 # -----------------------------------------------------------------------------
 
 HOST_TOOLS_COMPRESSION = host-tar host-bzip2 host-gzip host-zip
 HOST_TOOLS_ESSENTIALS = host-findutils host-grep host-sed host-patch host-gawk
 
-host-tools: $(BUILD_DIR) $(HOST_DIR) \
+host-tools: $(BUILD_DIR) $(HOST_DIR) $(HOST_DEPS_DIR) \
 	$(HOST_TOOLS_COMPRESSION) \
 	$(HOST_TOOLS_ESSENTIALS) \
 	host-cmake \
@@ -47,5 +47,4 @@ $(PKG_CONFIG): $(PKG_CONFIG_DEPENDENCIES) | $(HOST_DIR)
 
 # -----------------------------------------------------------------------------
 
-PHONY += $(HOST_DIR)
 PHONY += host-tools

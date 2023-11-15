@@ -651,7 +651,8 @@ endef
 # -----------------------------------------------------------------------------
 
 define TOUCH
-	touch $(if $(findstring host-,$(@)),$(HOST_DEPS_DIR),$(DEPS_DIR))/$(@)
+	$(MAKE) $(if $(VERBOSE),,-s) $(HOST_DEPS_DIR) $(DEPS_DIR)
+	$(Q)touch $(if $(findstring host-,$(@)),$(HOST_DEPS_DIR),$(DEPS_DIR))/$(@)
 endef
 
 # -----------------------------------------------------------------------------
