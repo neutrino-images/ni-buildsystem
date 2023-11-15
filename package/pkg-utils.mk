@@ -84,9 +84,6 @@ ifndef $(PKG)_AUTORECONF_CMDS
 endif
 
 # cmake
-ifndef $(PKG)_CMAKE
-  $(PKG)_CMAKE = $$(HOST_CMAKE_BINARY)
-endif
 ifndef $(PKG)_CMAKE_BACKEND
   $(PKG)_CMAKE_BACKEND = make
 endif
