@@ -26,7 +26,7 @@ LIBCOOLSTREAM_MAKE_ENV = \
 
 define LIBCOOLSTREAM_INSTALL_CMDS
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/build/libcoolstream.a $(TARGET_libdir)
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/build/libcoolstream.so $(TARGET_libdir)
+	$(INSTALL_COPY) $(PKG_BUILD_DIR)/build/libcoolstream.so* $(TARGET_libdir)
 endef
 
 libcoolstream: | $(TARGET_DIR)
@@ -55,7 +55,7 @@ LIBNXP_MAKE_ENV = \
 
 define LIBNXP_INSTALL_CMDS
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/build/libnxp.a $(TARGET_libdir)
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/build/libnxp.so $(TARGET_libdir)
+	$(INSTALL_COPY) $(PKG_BUILD_DIR)/build/libnxp.so* $(TARGET_libdir)
 endef
 
 libnxp: | $(TARGET_DIR)
