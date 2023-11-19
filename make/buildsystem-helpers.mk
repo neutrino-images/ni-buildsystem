@@ -31,6 +31,7 @@ define INSTALL_EXIST # (source, dest)
 endef
 
 PATCH = $(call TOOLFIND,patch) -p1 -i
+PATCH0 = $(call TOOLFIND,patch) -p0 -i
 SED = $(call TOOLFIND,sed) -i -e
 
 CD = set -e; cd
