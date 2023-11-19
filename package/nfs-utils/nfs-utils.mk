@@ -29,14 +29,20 @@ NFS_UTILS_CONF_OPTS = \
 	--enable-libmount-mount \
 	--without-tcp-wrappers \
 	--without-systemd \
-	--with-statduser=rpcuser \
+	--with-modprobedir=$(REMOVE_libdir)/modprobe.d \
+	--with-statduser=nobody \
 	--with-statdpath=/var/lib/nfs/statd \
 	--with-statedir=/var/lib/nfs
 
-define NFS_UTILS_TARGET_CLEANUP
+define NFS_UTILS_FIXUP_PERMISSIONS
 	chmod 0755 $(TARGET_base_sbindir)/mount.nfs
-	$(TARGET_RM) $(addprefix $(TARGET_base_sbindir)/,mount.nfs4 osd_login umount.nfs umount.nfs4)
+endef
+NFS_UTILS_TARGET_FINALIZE_HOOKS += NFS_UTILS_FIXUP_PERMISSIONS
+
+define NFS_UTILS_TARGET_CLEANUP
+	$(TARGET_RM) $(addprefix $(TARGET_base_sbindir)/,mount.nfs4 umount.nfs4 osd_login)
 	$(TARGET_RM) $(addprefix $(TARGET_sbindir)/,mountstats nfsiostat)
+	$(TARGET_RM) $(addprefix $(TARGET_libdir)/,udev)
 endef
 NFS_UTILS_TARGET_FINALIZE_HOOKS += NFS_UTILS_TARGET_CLEANUP
 
