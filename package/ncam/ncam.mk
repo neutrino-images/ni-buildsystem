@@ -29,11 +29,6 @@ NCAM_DEPENDENCIES += libcurl
 NCAM_MAKE_OPTS += \
 	USE_LIBCURL=1 \
 
-# enable emu by default
-NCAM_CONF_OPTS += \
-	WITH_EMU \
-	WITH_SOFTCAM
-
 ifeq ($(BOXMODEL),$(filter $(BOXMODEL),kronos kronos_v2))
 NCAM_POST_PATCH_HOOKS += OSCAM_FIXUP_MAX_COOL_DMX
 endif
