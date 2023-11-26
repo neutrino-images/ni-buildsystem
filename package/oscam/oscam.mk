@@ -49,6 +49,17 @@ OSCAM_CONF_OPTS = \
 	CARDREADER_SC8IN1 \
 	CARDREADER_SMARGO
 
+# enable ssl
+OSCAM_DEPENDENCIES += openssl
+OSCAM_CONF_OPTS += \
+	--enable WITH_SSL
+
+ifeq ($(TARGET_ARCH),arm)
+# enable/disable arm-neon
+OSCAM_CONF_OPTS += \
+	$(if $(findstring neon,$(TARGET_ABI)),--enable,--disable) WITH_ARM_NEON
+endif
+
 define OSCAM_CONFIGURE_CMDS
 	$(CD) $(PKG_BUILD_DIR); \
 		./config.sh $($(PKG)_CONF_OPTS)
@@ -69,21 +80,10 @@ OSCAM_MAKE_OPTS = \
 	LIST_SMARGO_BIN=$($(PKG)_LIST_SMARGO_BIN) \
 	OSCAM_BIN=$($(PKG)_OSCAM_BIN)
 
-# enable ssl
-OSCAM_DEPENDENCIES += openssl
-OSCAM_CONF_OPTS += \
-	WITH_SSL
-
 # enable libusb
 OSCAM_DEPENDENCIES += libusb
 OSCAM_MAKE_OPTS += \
 	USE_LIBUSB=1
-
-ifeq ($(TARGET_ARCH),arm)
-# enable/disable arm-neon
-OSCAM_CONF_OPTS += \
-	$(if $(findstring neon,$(TARGET_ABI)),--enable,--disable) WITH_ARM_NEON
-endif
 
 ifeq ($(BOXTYPE),coolstream)
 OSCAM_DEPENDENCIES += coolstream-libs
