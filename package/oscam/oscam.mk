@@ -10,12 +10,9 @@ OSCAM_SOURCE = oscam.svn
 OSCAM_SITE = https://svn.streamboard.tv/oscam/trunk
 OSCAM_SITE_METHOD = svn
 
-OSCAM_DEPENDENCIES = $(if $(filter $(BOXTYPE),coolstream),blobs)
-
 OSCAM_KEEP_BUILD_DIR = YES
 
 OSCAM_CONF_OPTS = \
-	--disable all \
 	--enable readers \
 	--enable \
 	CS_ANTICASC \
@@ -35,7 +32,6 @@ OSCAM_CONF_OPTS = \
 	\
 	WITH_EMU \
 	WITH_SOFTCAM \
-	WITH_ARM_NEON \
 	\
 	MODULE_CAMD35 \
 	MODULE_CAMD35_TCP \
@@ -83,6 +79,25 @@ OSCAM_DEPENDENCIES += libusb
 OSCAM_MAKE_OPTS += \
 	USE_LIBUSB=1
 
+ifeq ($(TARGET_ARCH),arm)
+# enable/disable arm-neon
+OSCAM_CONF_OPTS += \
+	$(if $(findstring neon,$(TARGET_ABI)),--enable,--disable) WITH_ARM_NEON
+endif
+
+ifeq ($(BOXTYPE),coolstream)
+OSCAM_DEPENDENCIES += coolstream-libs
+
+# enable coolapi
+ifeq ($(BOXMODEL),nevis)
+OSCAM_MAKE_OPTS += \
+	USE_COOLAPI=1
+else
+OSCAM_MAKE_OPTS += \
+	USE_COOLAPI2=1
+endif
+endif
+
 # apply oscam-emu patch with OSCAM_EMU=yes
 ifeq ($(OSCAM_EMU),yes)
 OSCAM_DEPENDENCIES += oscam-emu
@@ -92,17 +107,6 @@ define OSCAM_EMU_APPLY_PATCH
 		$(PATCH0) $(DL_DIR)/$(OSCAM_EMU_SOURCE)/$(OSCAM_EMU_PATCH_FILE)
 endef
 OSCAM_PRE_PATCH_HOOKS += OSCAM_EMU_APPLY_PATCH
-endif
-
-# enable coolapi
-ifeq ($(BOXTYPE),coolstream)
-ifeq ($(BOXMODEL),nevis)
-OSCAM_MAKE_OPTS += \
-	USE_COOLAPI=1
-else
-OSCAM_MAKE_OPTS += \
-	USE_COOLAPI2=1
-endif
 endif
 
 ifeq ($(BOXMODEL),$(filter $(BOXMODEL),kronos kronos_v2))
