@@ -4,39 +4,21 @@
 #
 ################################################################################
 
-LUAPOSIX_VERSION = 31
+LUAPOSIX_VERSION = 36.2.1
 LUAPOSIX_DIR = luaposix-$(LUAPOSIX_VERSION)
 LUAPOSIX_SOURCE = luaposix-$(LUAPOSIX_VERSION).tar.gz
 LUAPOSIX_SITE = $(call github,luaposix,luaposix,v$(LUAPOSIX_VERSION))
 
-LUAPOSIX_DEPENDENCIES = lua luaexpat gnulib slingshot
+LUAPOSIX_DEPENDENCIES = lua
 
-LUAPOSIX_AUTORECONF = YES
+LUAPOSIX_BUILD_OPTS = \
+	CC="$(TARGET_CC)" \
+	CFLAGS="$(TARGET_CFLAGS)" \
+	LUA_INCDIR=$(TARGET_includedir)
 
-LUAPOSIX_CONF_ENV = \
-	LUA=$(HOST_LUA_BINARY)
-
-LUAPOSIX_CONF_OPTS = \
-	--libdir=$(libdir)/lua/$(LUA_ABIVERSION) \
-	--datadir=$(datadir)/lua/$(LUA_ABIVERSION) \
-	--mandir=$(REMOVE_mandir) \
-	--docdir=$(REMOVE_docdir)
-
-define LUAPOSIX_UNPACK_GNULIB
-	tar -C $(PKG_BUILD_DIR)/gnulib --strip=1 -xf $(DL_DIR)/$(GNULIB_SOURCE)
-endef
-LUAPOSIX_POST_PATCH_HOOKS += LUAPOSIX_UNPACK_GNULIB
-
-define LUAPOSIX_UNPACK_SLINGSHOT
-	tar -C $(PKG_BUILD_DIR)/slingshot --strip=1 -xf $(DL_DIR)/$(SLINGSHOT_SOURCE)
-endef
-LUAPOSIX_POST_PATCH_HOOKS += LUAPOSIX_UNPACK_SLINGSHOT
-
-define LUAPOSIX_BOOTSTRAP
-	$(CD) $(PKG_BUILD_DIR); \
-		./bootstrap
-endef
-LUAPOSIX_PRE_CONFIGURE_HOOKS += LUAPOSIX_BOOTSTRAP
+LUAPOSIX_INSTALL_OPTS = \
+	INST_LIBDIR="$(TARGET_libdir)/lua/$(LUA_ABIVERSION)" \
+	INST_LUADIR="$(TARGET_datadir)/lua/$(LUA_ABIVERSION)"
 
 luaposix: | $(TARGET_DIR)
-	$(call autotools-package)
+	$(call luke-package)
