@@ -17,7 +17,7 @@ endef
 define TARGET_MAKE_BUILD_CMDS_DEFAULT
 	$(CD) $(PKG_BUILD_DIR); \
 		$(TARGET_MAKE_ENV) $($(PKG)_MAKE_ENV) \
-		$($(PKG)_MAKE) $($(PKG)_MAKE_ARGS)\
+		$($(PKG)_MAKE) $($(PKG)_MAKE_ARGS) \
 			$($(PKG)_MAKE_OPTS)
 endef
 
@@ -72,7 +72,7 @@ endef
 define HOST_MAKE_BUILD_CMDS_DEFAULT
 	$(CD) $(PKG_BUILD_DIR); \
 		$(HOST_MAKE_ENV) $($(PKG)_MAKE_ENV) \
-		$($(PKG)_MAKE) $($(PKG)_MAKE_ARGS)\
+		$($(PKG)_MAKE) $($(PKG)_MAKE_ARGS) \
 			$($(PKG)_MAKE_OPTS)
 endef
 
