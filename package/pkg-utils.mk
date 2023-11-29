@@ -136,6 +136,9 @@ ifndef $(PKG)_CONFIGURE_CMDS
     else
       $(PKG)_CONFIGURE_CMDS = $$(TARGET_MESON_CMDS_DEFAULT)
     endif
+  else ifeq ($(PKG_MODE),LUKE)
+    # no default configure commands in luke packages
+    $(PKG)_CONFIGURE_CMDS =
   else ifeq ($(PKG_MODE),WAF)
     $(PKG)_CONFIGURE_CMDS = $$(WAF_CONFIGURE_CMDS_DEFAULT)
   else
@@ -235,6 +238,8 @@ ifndef $(PKG)_BUILD_CMDS
     endif
   else ifeq ($(PKG_MODE),KERNEL_MODULE)
     $(PKG)_BUILD_CMDS = $$(KERNEL_MODULE_BUILD_CMDS_DEFAULT)
+  else ifeq ($(PKG_MODE),LUKE)
+    $(PKG)_BUILD_CMDS = $$(LUKE_BUILD_CMDS_DEFAULT)
   else ifeq ($(PKG_MODE),WAF)
     $(PKG)_BUILD_CMDS = $$(WAF_BUILD_CMDS_DEFAULT)
   else
@@ -296,6 +301,8 @@ ifndef $(PKG)_INSTALL_CMDS
     endif
   else ifeq ($(PKG_MODE),KERNEL_MODULE)
     $(PKG)_INSTALL_CMDS = $$(KERNEL_MODULE_INSTALL_CMDS_DEFAULT)
+  else ifeq ($(PKG_MODE),LUKE)
+    $(PKG)_INSTALL_CMDS = $$(LUKE_INSTALL_CMDS_DEFAULT)
   else ifeq ($(PKG_MODE),WAF)
     $(PKG)_INSTALL_CMDS = $$(WAF_INSTALL_CMDS_DEFAULT)
   else
@@ -377,6 +384,9 @@ ifeq ($(PKG_MODE),PYTHON)
 endif
 ifeq ($(PKG_MODE),KERNEL_MODULE)
   $(PKG)_DEPENDENCIES += kernel-$(BOXTYPE)
+endif
+ifeq ($(PKG_MODE),LUKE)
+  $(PKG)_DEPENDENCIES += host-lua
 endif
 ifeq ($(PKG_MODE),WAF)
   $(PKG)_DEPENDENCIES += host-python3
