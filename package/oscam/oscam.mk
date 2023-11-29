@@ -123,4 +123,4 @@ endef
 OSCAM_TARGET_FINALIZE_HOOKS += OSCAM_TARGET_CLEANUP
 
 oscam: | $(TARGET_DIR)
-	$(call autotools-package,$(PKG_NO_INSTALL))
+	$(call generic-package,$(PKG_NO_INSTALL))
