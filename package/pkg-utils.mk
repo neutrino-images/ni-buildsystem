@@ -46,6 +46,18 @@ ifeq ($(PKG_PACKAGE),HOST)
       endif
     endif
   endif
+  ifeq ($(PKG_MODE),LUAROCKS)
+    ifndef $(PKG)_ROCKSPEC
+      ifdef $(PKG_PARENT)_ROCKSPEC
+        $(PKG)_ROCKSPEC = $$($(PKG_PARENT)_ROCKSPEC)
+      endif
+    endif
+    ifndef $(PKG)_SUBDIR
+      ifdef $(PKG_PARENT)_SUBDIR
+        $(PKG)_SUBDIR = $$($(PKG_PARENT)_SUBDIR)
+      endif
+    endif
+  endif
 endif
 
 # extract
@@ -160,7 +172,7 @@ ifndef $(PKG)_MAKE_OPTS
   $(PKG)_MAKE_OPTS =
 endif
 
-# python SETUP_TYPE
+# python
 ifeq ($(PKG_MODE),PYTHON)
   ifdef $(PKG)_SETUP_TYPE
     # setuptools
@@ -202,6 +214,16 @@ ifeq ($(PKG_MODE),PYTHON)
   endif
 endif
 
+# luarocks
+ifeq ($(PKG_MODE),LUAROCKS)
+  ifndef $(PKG)_ROCKSPEC
+    $$(error $(PKG_PARENT)_ROCKSPEC must be set)
+  endif
+  ifndef $(PKG)_SUBDIR
+    $$(error $(PKG_PARENT)_SUBDIR must be set)
+  endif
+endif
+
 # common
 ifndef $(PKG)_BUILD_ENV
   $(PKG)_BUILD_ENV =
@@ -235,6 +257,12 @@ ifndef $(PKG)_BUILD_CMDS
       $(PKG)_BUILD_CMDS = $$(HOST_PYTHON_BUILD_CMDS_DEFAULT)
     else
       $(PKG)_BUILD_CMDS = $$(TARGET_PYTHON_BUILD_CMDS_DEFAULT)
+    endif
+  else ifeq ($(PKG_MODE),LUAROCKS)
+    ifeq ($(PKG_PACKAGE),HOST)
+      $(PKG)_BUILD_CMDS = $$(HOST_LUAROCKS_BUILD_CMDS_DEFAULT)
+    else
+      $(PKG)_BUILD_CMDS = $$(TARGET_LUAROCKS_BUILD_CMDS_DEFAULT)
     endif
   else ifeq ($(PKG_MODE),KERNEL_MODULE)
     $(PKG)_BUILD_CMDS = $$(KERNEL_MODULE_BUILD_CMDS_DEFAULT)
@@ -380,6 +408,12 @@ ifeq ($(PKG_MODE),PYTHON)
   endif
   ifeq ($(PKG_PACKAGE),TARGET)
     $(PKG)_DEPENDENCIES += python3
+  endif
+endif
+ifeq ($(PKG_MODE),LUAROCKS)
+  $(PKG)_DEPENDENCIES += host-luarocks
+  ifeq ($(PKG_PACKAGE),TARGET)
+    $(PKG)_DEPENDENCIES += lua
   endif
 endif
 ifeq ($(PKG_MODE),KERNEL_MODULE)
@@ -544,6 +578,10 @@ define EXTRACT # (directory)
 	      ;; \
 	      *.zip) \
 	        unzip -o -q $(DL_DIR)/$($(PKG)_SOURCE) -d $${EXTRACT_DIR}; \
+	      ;; \
+	      *.src.rock) \
+	        $(CD) $${EXTRACT_DIR}; \
+		  $(HOST_LUAROCKS_BINARY) unpack --force $(DL_DIR)/$($(PKG)_SOURCE); \
 	      ;; \
 	      *) \
 	        $(call WARNING,"Cannot extract $($(PKG)_SOURCE)"); \
