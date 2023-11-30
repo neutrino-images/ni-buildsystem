@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-define AUTORECONF_CMDS_MESSAGE
+define AUTORECONF_MESSAGE
 	@$(call MESSAGE,"Autoreconfiguring $(pkgname)")
 endef
 
