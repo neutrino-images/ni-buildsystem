@@ -4,10 +4,10 @@
 #
 ################################################################################
 
-LUAROCKS_VERSION = 3.9.0
+LUAROCKS_VERSION = 3.9.2
 LUAROCKS_DIR = luarocks-$(LUAROCKS_VERSION)
 LUAROCKS_SOURCE = luarocks-$(LUAROCKS_VERSION).tar.gz
-LUAROCKS_SITE = https://luarocks.github.io/luarocks/releases
+LUAROCKS_SITE = https://luarocks.org/releases
 
 # ------------------------------------------------------------------------------
 
