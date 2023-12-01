@@ -33,6 +33,7 @@ define HOST_ZIP_INSTALL_CMDS
 	$(CD) $(PKG_BUILD_DIR); \
 		$(HOST_MAKE_ENV) $(MAKE) $(HOST_CONFIGURE_ENV) \
 		prefix=$(HOST_DIR) \
+		MANDIR=$(HOST_DIR)/share/man/man1 \
 		-f unix/Makefile install
 endef
 
