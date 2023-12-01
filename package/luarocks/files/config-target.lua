@@ -15,7 +15,3 @@ external_deps_dirs = { getenv('TARGET_DIR') }
 gcc_rpath = false
 wrap_bin_scripts = false
 deps_mode = [[none]]
-
--- overriding rocks_trees
-
-rocks_trees = { getenv('TARGET_DIR') }
