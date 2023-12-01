@@ -11,7 +11,7 @@ pkg = $(call LOWERCASE,$(pkgname))
 PKG = $(call UPPERCASE,$(pkgname))
 
 PKG_PARENT = $(subst HOST_,,$(PKG))
-PKG_PACKAGE = $(if $(filter $(firstword $(subst -, ,$(pkg))),host),HOST,TARGET)
+PKG_DESTINATION = $(if $(filter $(firstword $(subst -, ,$(pkg))),host),HOST,TARGET)
 
 PKG_BUILD_DIR = $(BUILD_DIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR)
 PKG_FILES_DIR = $(PACKAGE_DIR)/$(subst host-,,$(pkgname))/files
@@ -23,7 +23,7 @@ PKG_PATCHES_DIR = $(PACKAGE_DIR)/$(subst host-,,$(pkgname))/patches
 define PKG_CHECK_VARIABLES
 
 # auto-assign HOST_ variables
-ifeq ($(PKG_PACKAGE),HOST)
+ifeq ($(PKG_DESTINATION),HOST)
   ifndef $(PKG)_VERSION
     $(PKG)_VERSION = $$($(PKG_PARENT)_VERSION)
   endif
@@ -127,7 +127,7 @@ endif
 # configure commands
 ifndef $(PKG)_CONFIGURE_CMDS
   ifeq ($(PKG_MODE),AUTOTOOLS)
-    ifeq ($(PKG_PACKAGE),HOST)
+    ifeq ($(PKG_DESTINATION),HOST)
       $(PKG)_CONFIGURE_CMDS = $$(HOST_CONFIGURE_CMDS_DEFAULT)
     else
       $(PKG)_CONFIGURE_CMDS = $$(TARGET_CONFIGURE_CMDS_DEFAULT)
@@ -137,13 +137,13 @@ ifndef $(PKG)_CONFIGURE_CMDS
     # for packages with non-autotools configure call, e.g. zlib
     $(PKG)_CONFIGURE_CMDS =
   else ifeq ($(PKG_MODE),CMAKE)
-    ifeq ($(PKG_PACKAGE),HOST)
+    ifeq ($(PKG_DESTINATION),HOST)
       $(PKG)_CONFIGURE_CMDS = $$(HOST_CMAKE_CONFIGURE_CMDS_DEFAULT)
     else
       $(PKG)_CONFIGURE_CMDS = $$(TARGET_CMAKE_CONFIGURE_CMDS_DEFAULT)
     endif
   else ifeq ($(PKG_MODE),MESON)
-    ifeq ($(PKG_PACKAGE),HOST)
+    ifeq ($(PKG_DESTINATION),HOST)
       $(PKG)_CONFIGURE_CMDS = $$(HOST_MESON_CMDS_DEFAULT)
     else
       $(PKG)_CONFIGURE_CMDS = $$(TARGET_MESON_CMDS_DEFAULT)
@@ -177,7 +177,7 @@ ifeq ($(PKG_MODE),PYTHON)
   ifdef $(PKG)_SETUP_TYPE
     # setuptools
     ifeq ($$($(PKG)_SETUP_TYPE),setuptools)
-      ifeq ($(PKG_PACKAGE),HOST)
+      ifeq ($(PKG_DESTINATION),HOST)
         $(PKG)_PYTHON_BASE_ENV = $(HOST_PKG_PYTHON_SETUPTOOLS_ENV)
         $(PKG)_PYTHON_BASE_BUILD_CMD = ./setup.py build $(HOST_PKG_PYTHON_SETUPTOOLS_BUILD_OPTS)
         $(PKG)_PYTHON_BASE_INSTALL_CMD = ./setup.py install $(HOST_PKG_PYTHON_SETUPTOOLS_INSTALL_OPTS)
@@ -188,7 +188,7 @@ ifeq ($(PKG_MODE),PYTHON)
       endif
     # flit, pep517
     else ifeq ($$($(PKG)_SETUP_TYPE),$$(filter $$($(PKG)_SETUP_TYPE),flit pep517))
-      ifeq ($(PKG_PACKAGE),HOST)
+      ifeq ($(PKG_DESTINATION),HOST)
         $(PKG)_PYTHON_BASE_ENV = $(HOST_PKG_PYTHON_PEP517_ENV)
         $(PKG)_PYTHON_BASE_BUILD_CMD = -m build -n -w $(HOST_PKG_PYTHON_PEP517_BUILD_OPTS)
         $(PKG)_PYTHON_BASE_INSTALL_CMD = $(PYINSTALLER) dist/* $(HOST_PKG_PYTHON_PEP517_INSTALL_OPTS)
@@ -199,7 +199,7 @@ ifeq ($(PKG_MODE),PYTHON)
       endif
     # flit-bootstrap
     else ifeq ($$($(PKG)_SETUP_TYPE),flit-bootstrap)
-      ifeq ($(PKG_PACKAGE),HOST)
+      ifeq ($(PKG_DESTINATION),HOST)
         $(PKG)_PYTHON_BASE_ENV = $(HOST_PKG_PYTHON_PEP517_ENV)
         $(PKG)_PYTHON_BASE_BUILD_CMD = -m flit_core.wheel $(HOST_PKG_PYTHON_PEP517_BUILD_OPTS)
         $(PKG)_PYTHON_BASE_INSTALL_CMD ?= $(PYINSTALLER) dist/* $(HOST_PKG_PYTHON_PEP517_INSTALL_OPTS)
@@ -235,31 +235,31 @@ endif
 # build commands
 ifndef $(PKG)_BUILD_CMDS
   ifeq ($(PKG_MODE),$(filter $(PKG_MODE),AUTOTOOLS GENERIC KCONFIG))
-    ifeq ($(PKG_PACKAGE),HOST)
+    ifeq ($(PKG_DESTINATION),HOST)
       $(PKG)_BUILD_CMDS = $$(HOST_MAKE_BUILD_CMDS_DEFAULT)
     else
       $(PKG)_BUILD_CMDS = $$(TARGET_MAKE_BUILD_CMDS_DEFAULT)
     endif
   else ifeq ($(PKG_MODE),CMAKE)
-    ifeq ($(PKG_PACKAGE),HOST)
+    ifeq ($(PKG_DESTINATION),HOST)
       $(PKG)_BUILD_CMDS = $$(HOST_CMAKE_BUILD_CMDS_DEFAULT)
     else
       $(PKG)_BUILD_CMDS = $$(TARGET_CMAKE_BUILD_CMDS_DEFAULT)
     endif
   else ifeq ($(PKG_MODE),MESON)
-    ifeq ($(PKG_PACKAGE),HOST)
+    ifeq ($(PKG_DESTINATION),HOST)
       $(PKG)_BUILD_CMDS = $$(HOST_NINJA_BUILD_CMDS_DEFAULT)
     else
       $(PKG)_BUILD_CMDS = $$(TARGET_NINJA_BUILD_CMDS_DEFAULT)
     endif
   else ifeq ($(PKG_MODE),PYTHON)
-    ifeq ($(PKG_PACKAGE),HOST)
+    ifeq ($(PKG_DESTINATION),HOST)
       $(PKG)_BUILD_CMDS = $$(HOST_PYTHON_BUILD_CMDS_DEFAULT)
     else
       $(PKG)_BUILD_CMDS = $$(TARGET_PYTHON_BUILD_CMDS_DEFAULT)
     endif
   else ifeq ($(PKG_MODE),LUAROCKS)
-    ifeq ($(PKG_PACKAGE),HOST)
+    ifeq ($(PKG_DESTINATION),HOST)
       $(PKG)_BUILD_CMDS = $$(HOST_LUAROCKS_BUILD_CMDS_DEFAULT)
     else
       $(PKG)_BUILD_CMDS = $$(TARGET_LUAROCKS_BUILD_CMDS_DEFAULT)
@@ -304,25 +304,25 @@ endif
 # install commands
 ifndef $(PKG)_INSTALL_CMDS
   ifeq ($(PKG_MODE),$(filter $(PKG_MODE),AUTOTOOLS GENERIC KCONFIG))
-    ifeq ($(PKG_PACKAGE),HOST)
+    ifeq ($(PKG_DESTINATION),HOST)
       $(PKG)_INSTALL_CMDS = $$(HOST_MAKE_INSTALL_CMDS_DEFAULT)
     else
       $(PKG)_INSTALL_CMDS = $$(TARGET_MAKE_INSTALL_CMDS_DEFAULT)
     endif
   else ifeq ($(PKG_MODE),CMAKE)
-    ifeq ($(PKG_PACKAGE),HOST)
+    ifeq ($(PKG_DESTINATION),HOST)
       $(PKG)_INSTALL_CMDS = $$(HOST_CMAKE_INSTALL_CMDS_DEFAULT)
     else
       $(PKG)_INSTALL_CMDS = $$(TARGET_CMAKE_INSTALL_CMDS_DEFAULT)
     endif
   else ifeq ($(PKG_MODE),MESON)
-    ifeq ($(PKG_PACKAGE),HOST)
+    ifeq ($(PKG_DESTINATION),HOST)
       $(PKG)_INSTALL_CMDS = $$(HOST_NINJA_INSTALL_CMDS_DEFAULT)
     else
       $(PKG)_INSTALL_CMDS = $$(TARGET_NINJA_INSTALL_CMDS_DEFAULT)
     endif
   else ifeq ($(PKG_MODE),PYTHON)
-    ifeq ($(PKG_PACKAGE),HOST)
+    ifeq ($(PKG_DESTINATION),HOST)
       $(PKG)_INSTALL_CMDS = $$(HOST_PYTHON_INSTALL_CMDS_DEFAULT)
     else
       $(PKG)_INSTALL_CMDS = $$(TARGET_PYTHON_INSTALL_CMDS_DEFAULT)
@@ -406,13 +406,13 @@ ifeq ($(PKG_MODE),PYTHON)
     # host-python-installer itself, and its dependencies.
     $(PKG)_DEPENDENCIES += $$(if $$(filter $$(pkg),host-python-flit-core host-python-installer),,host-python-installer)
   endif
-  ifeq ($(PKG_PACKAGE),TARGET)
+  ifeq ($(PKG_DESTINATION),TARGET)
     $(PKG)_DEPENDENCIES += python3
   endif
 endif
 ifeq ($(PKG_MODE),LUAROCKS)
   $(PKG)_DEPENDENCIES += host-luarocks
-  ifeq ($(PKG_PACKAGE),TARGET)
+  ifeq ($(PKG_DESTINATION),TARGET)
     $(PKG)_DEPENDENCIES += lua
   endif
 endif
