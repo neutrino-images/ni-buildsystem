@@ -442,6 +442,30 @@ pkg-check-variables = $(call PKG_CHECK_VARIABLES)
 
 # -----------------------------------------------------------------------------
 
+# debug variables
+define PKG_DEBUG_VARIABLES
+	@echo "pkgname:         $(pkgname)"
+	@echo "pkg:             $(pkg)"
+	@echo "PKG:             $(PKG)"
+	@echo "pkg_parent:      $(pkg_parent)"
+	@echo "PKG_PARENT:      $(PKG_PARENT)"
+	@echo "PKG_DESTINATION: $(PKG_DESTINATION)"
+	@echo "PKG_MODE:        $(PKG_MODE)"
+	@echo "PKG_BUILD_DIR:   $(PKG_BUILD_DIR)"
+	@echo "PKG_FILES_DIR:   $(PKG_FILES_DIR)"
+	@echo "PKG_PATCHES_DIR: $(PKG_PATCHES_DIR)"
+	@$(call draw_line);
+	@echo "$(PKG)_VERSION:        $($(PKG)_VERSION)"
+	@echo "$(PKG)_DIR:            $($(PKG)_DIR)"
+	@echo "$(PKG)_SOURCE:         $($(PKG)_SOURCE)"
+	@echo "$(PKG)_SITE:           $($(PKG)_SITE)"
+	@echo "$(PKG)_SITE_METHOD:    $($(PKG)_SITE_METHOD)"
+	@echo "$(PKG)_DEPENDENCIES:   $($(PKG)_DEPENDENCIES)"
+	#false
+endef
+
+# -----------------------------------------------------------------------------
+
 pkg-mode = $(call UPPERCASE,$(subst -package,,$(subst host-,,$(0))))
 
 # -----------------------------------------------------------------------------
@@ -642,6 +666,7 @@ endef
 # prepare for build
 define PREPARE # (control-flag(s))
 	$(eval $(pkg-check-variables))
+	$(if $(VERBOSE),$(call PKG_DEBUG_VARIABLES))
 	$(call STARTUP)
 	$(if $($(PKG)_DEPENDENCIES),$(call DEPENDENCIES))
 	$(if $(filter $(1),$(PKG_NO_DOWNLOAD)),,$(call DOWNLOAD,$($(PKG)_SITE),$($(PKG)_SOURCE)))
