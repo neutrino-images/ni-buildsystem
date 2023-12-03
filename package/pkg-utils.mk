@@ -8,14 +8,16 @@
 pkgname = $(basename $(@F))
 
 pkg = $(call LOWERCASE,$(pkgname))
-PKG = $(call UPPERCASE,$(pkgname))
+PKG = $(call UPPERCASE,$(pkg))
 
-PKG_PARENT = $(subst HOST_,,$(PKG))
+pkg_parent = $(subst host-,,$(pkgname))
+PKG_PARENT = $(call UPPERCASE,$(pkg_parent))
+
 PKG_DESTINATION = $(if $(filter $(firstword $(subst -, ,$(pkg))),host),HOST,TARGET)
 
-PKG_BUILD_DIR = $(BUILD_DIR)/$($(PKG)_DIR)/$($(PKG)_SUBDIR)
-PKG_FILES_DIR = $(PACKAGE_DIR)/$(subst host-,,$(pkgname))/files
-PKG_PATCHES_DIR = $(PACKAGE_DIR)/$(subst host-,,$(pkgname))/patches
+PKG_BUILD_DIR = $(BUILD_DIR)/$($(PKG)_DIR)$(if $($(PKG)_SUBDIR),/$($(PKG)_SUBDIR))
+PKG_FILES_DIR = $(PACKAGE_DIR)/$(pkg_parent)/files
+PKG_PATCHES_DIR = $(PACKAGE_DIR)/$(pkg_parent)/patches
 
 # -----------------------------------------------------------------------------
 
