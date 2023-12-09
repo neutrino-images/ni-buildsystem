@@ -16,14 +16,25 @@ crosstools:
 	$(foreach boxseries,$(CROSSTOOL_BOXSERIES),\
 		make BOXSERIES=$(boxseries) crosstool$(sep))
 
-crosstools-renew:
+crosstools.renew:
 	$(foreach boxseries,$(CROSSTOOL_BOXSERIES),\
 		make BOXSERIES=$(boxseries) ccache-clean$(sep))
 	make host-clean
-	make static-base-clean
 	make cross-base-clean
 	make crosstools
 	make clean
+
+# -----------------------------------------------------------------------------
+
+CROSSTOOL_UPGRADECONFIG_BOXTYPES = \
+	armbox \
+	mipsbox
+
+crosstool.upgradeconfig: build-clean deps-clean crosstool-ng.upgradeconfig
+
+crosstools.upgradeconfig:
+	$(foreach boxtype,$(CROSSTOOL_UPGRADECONFIG_BOXTYPES),\
+		make BOXTYPE=$(boxtype) crosstool.upgradeconfig$(sep))
 
 ################################################################################
 #
