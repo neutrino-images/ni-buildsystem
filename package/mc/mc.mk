@@ -14,7 +14,7 @@ MC_DEPENDENCIES = glib2 ncurses
 MC_AUTORECONF = YES
 
 MC_CONF_OPTS = \
-	--disable-charset \
+	--enable-charset \
 	--disable-nls \
 	--disable-vfs-extfs \
 	--disable-vfs-fish \
