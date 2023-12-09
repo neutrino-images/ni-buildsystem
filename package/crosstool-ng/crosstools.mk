@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-CROSSTOOL_BOXSERIES = \
+CROSSTOOLS_BOXSERIES = \
 	hd1 hd2 \
 	hd5x hd6x \
 	vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse \
@@ -13,11 +13,11 @@ CROSSTOOL_BOXSERIES = \
 crosstool: build-clean deps-clean crosstool-ng crosstool-backup
 
 crosstools:
-	$(foreach boxseries,$(CROSSTOOL_BOXSERIES),\
+	$(foreach boxseries,$(CROSSTOOLS_BOXSERIES),\
 		make BOXSERIES=$(boxseries) crosstool$(sep))
 
 crosstools.renew:
-	$(foreach boxseries,$(CROSSTOOL_BOXSERIES),\
+	$(foreach boxseries,$(CROSSTOOLS_BOXSERIES),\
 		make BOXSERIES=$(boxseries) ccache-clean$(sep))
 	make host-clean
 	make cross-base-clean
@@ -26,14 +26,14 @@ crosstools.renew:
 
 # -----------------------------------------------------------------------------
 
-CROSSTOOL_UPGRADECONFIG_BOXTYPES = \
+CROSSTOOLS_UPGRADECONFIG_BOXTYPES = \
 	armbox \
 	mipsbox
 
 crosstool.upgradeconfig: build-clean deps-clean crosstool-ng.upgradeconfig
 
 crosstools.upgradeconfig:
-	$(foreach boxtype,$(CROSSTOOL_UPGRADECONFIG_BOXTYPES),\
+	$(foreach boxtype,$(CROSSTOOLS_UPGRADECONFIG_BOXTYPES),\
 		make BOXTYPE=$(boxtype) crosstool.upgradeconfig$(sep))
 
 ################################################################################
