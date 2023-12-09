@@ -42,7 +42,7 @@ crosstools.upgradeconfig:
 #
 ################################################################################
 
-CROSSTOOL_BACKUP = $(DL_DIR)/crosstool-ng-$(TARGET_ARCH)-$(TARGET_OS)-$(KERNEL_VERSION)-backup.tar.gz
+CROSSTOOL_BACKUP = $(DL_DIR)/crosstool-ng-$(CROSSTOOL_NG_VERSION)-$(TARGET_ARCH)-$(TARGET_OS)-$(KERNEL_VERSION)-backup.tar.gz
 
 $(CROSSTOOL_BACKUP):
 	@$(call draw_line);
