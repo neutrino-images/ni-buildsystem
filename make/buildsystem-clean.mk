@@ -4,7 +4,6 @@
 # -----------------------------------------------------------------------------
 
 build-clean:
-	-rm -rf $(BASE_DIR)/build_tmp
 	-rm -rf $(BUILD_DIR)
 
 cross-base-clean:
@@ -14,7 +13,6 @@ cross-clean:
 	-rm -rf $(CROSS_DIR)
 
 deps-clean:
-	-rm -rf $(BASE_DIR)/deps
 	-rm -rf $(DEPS_DIR)
 
 host-clean:
