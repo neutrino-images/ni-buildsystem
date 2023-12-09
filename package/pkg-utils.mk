@@ -443,7 +443,8 @@ pkg-check-variables = $(call PKG_CHECK_VARIABLES)
 # -----------------------------------------------------------------------------
 
 # debug variables
-define PKG_DEBUG_VARIABLES
+define PKG_DEBUG_VARIABLES # (control-flag(s))
+	@echo "control-flags:   $(1)"
 	@echo "pkgname:         $(pkgname)"
 	@echo "pkg:             $(pkg)"
 	@echo "PKG:             $(PKG)"
@@ -666,7 +667,7 @@ endef
 # prepare for build
 define PREPARE # (control-flag(s))
 	$(eval $(pkg-check-variables))
-	$(if $(VERBOSE),$(call PKG_DEBUG_VARIABLES))
+	$(if $(VERBOSE),$(call PKG_DEBUG_VARIABLES,$(1)))
 	$(call STARTUP)
 	$(if $($(PKG)_DEPENDENCIES),$(call DEPENDENCIES))
 	$(if $(filter $(1),$(PKG_NO_DOWNLOAD)),,$(call DOWNLOAD,$($(PKG)_SITE),$($(PKG)_SOURCE)))
