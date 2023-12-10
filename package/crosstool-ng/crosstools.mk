@@ -10,19 +10,17 @@ CROSSTOOLS_BOXSERIES = \
 	vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse \
 	vuduo
 
-crosstool: build-clean deps-clean crosstool-ng crosstool-backup
+crosstool: build-clean deps-clean crosstool-ng crosstool-backup clean
 
 crosstools:
 	$(foreach boxseries,$(CROSSTOOLS_BOXSERIES),\
 		make BOXSERIES=$(boxseries) crosstool$(sep))
 
+crosstool.renew: ccache-clean cross-clean crosstool
+
 crosstools.renew:
 	$(foreach boxseries,$(CROSSTOOLS_BOXSERIES),\
-		make BOXSERIES=$(boxseries) ccache-clean$(sep))
-	make host-clean
-	make cross-base-clean
-	make crosstools
-	make clean
+		make BOXSERIES=$(boxseries) crosstool.renew$(sep))
 
 # -----------------------------------------------------------------------------
 
