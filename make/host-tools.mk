@@ -38,6 +38,8 @@ host-tools: $(BUILD_DIR) $(HOST_DIR) $(HOST_DEPS_DIR) \
 	host-luarocks \
 	host-ccache
 
+host-tools.renew: host-clean host-tools clean
+
 # -----------------------------------------------------------------------------
 
 PKG_CONFIG_DEPENDENCIES = host-pkgconf
