@@ -4,20 +4,19 @@
 #
 ################################################################################
 
-MC_VERSION = 4.8.30
-MC_DIR = mc-$(MC_VERSION)
-MC_SOURCE = mc-$(MC_VERSION).tar.xz
-MC_SITE = http://ftp.midnight-commander.org
+MC_VERSION = 1541952
+MC_DIR = mc.git
+MC_SOURCE = mc.git
+MC_SITE = $(GITHUB)/MidnightCommander
+MC_SITE_METHOD = git
 
 MC_DEPENDENCIES = glib2 ncurses
-
-MC_AUTORECONF = YES
 
 MC_CONF_OPTS = \
 	--enable-charset \
 	--disable-nls \
 	--disable-vfs-extfs \
-	--disable-vfs-fish \
+	--disable-vfs-shell \
 	--disable-vfs-sfs \
 	--disable-vfs-sftp \
 	--with-screen=ncurses \
