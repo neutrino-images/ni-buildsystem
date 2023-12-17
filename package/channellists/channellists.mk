@@ -17,7 +17,7 @@ PHONY += channellists
 
 # -----------------------------------------------------------------------------
 
-MATZE_192_VERSION = 31.10.2023
+MATZE_192_VERSION = 17.12.2023
 MATZE_192_130_VERSION = $(MATZE_192_VERSION)
 
 matze-192 \
