@@ -9,8 +9,12 @@ LZO_DIR = lzo-$(LZO_VERSION)
 LZO_SOURCE = lzo-$(LZO_VERSION).tar.gz
 LZO_SITE = https://www.oberhumer.com/opensource/lzo/download
 
-LZO_CONF_OPTS = \
-	--docdir=$(REMOVE_docdir)
+LZO_SUPPORTS_IN_SOURCE_BUILD = NO
+
+define LZO_TARGET_CLEANUP
+	$(TARGET_RM) $(TARGET_libexecdir)/lzo
+endef
+LZO_TARGET_FINALIZE_HOOKS += LZO_TARGET_CLEANUP
 
 lzo: | $(TARGET_DIR)
-	$(call autotools-package)
+	$(call cmake-package)
