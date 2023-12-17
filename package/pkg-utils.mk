@@ -41,6 +41,13 @@ ifeq ($(PKG_DESTINATION),HOST)
   ifndef $(PKG)_SITE_METHOD
     $(PKG)_SITE_METHOD = $$($(PKG_PARENT)_SITE_METHOD)
   endif
+  ifeq ($(PKG_MODE),CMAKE)
+    ifndef $(PKG)_SUPPORTS_IN_SOURCE_BUILD
+      ifdef $(PKG_PARENT)_SUPPORTS_IN_SOURCE_BUILD
+        $(PKG)_SUPPORTS_IN_SOURCE_BUILD = $$($(PKG_PARENT)_SUPPORTS_IN_SOURCE_BUILD
+      endif
+    endif
+  endif
   ifeq ($(PKG_MODE),PYTHON)
     ifndef $(PKG)_SETUP_TYPE
       ifdef $(PKG_PARENT)_SETUP_TYPE
@@ -110,6 +117,10 @@ else ifeq ($$($(PKG)_CMAKE_BACKEND),ninja)
   $(PKG)_GENERATOR_PROGRAM = $$(HOST_NINJA_BINARY)
 else
   $$(error Invalid $(PKG)_CMAKE_BACKEND. Valid options are 'make' or 'ninja')
+endif
+
+ifndef $(PKG)_SUPPORTS_IN_SOURCE_BUILD
+  $(PKG)_SUPPORTS_IN_SOURCE_BUILD = YES
 endif
 
 # configure
