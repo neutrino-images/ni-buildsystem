@@ -4,12 +4,12 @@
 #
 ################################################################################
 
-NFS_UTILS_VERSION = $(if $(filter $(BOXSERIES),hd1),2.2.1,2.6.3)
+NFS_UTILS_VERSION = $(if $(filter $(BOXSERIES),hd1),2.2.1,2.6.2)
 NFS_UTILS_DIR = nfs-utils-$(NFS_UTILS_VERSION)
 NFS_UTILS_SOURCE = nfs-utils-$(NFS_UTILS_VERSION).tar.xz
 NFS_UTILS_SITE = $(KERNEL_MIRROR)/linux/utils/nfs-utils/$(NFS_UTILS_VERSION)
 
-NFS_UTILS_DEPENDENCIES = libtirpc rpcbind e2fsprogs libevent
+NFS_UTILS_DEPENDENCIES = libtirpc rpcbind e2fsprogs
 
 NFS_UTILS_AUTORECONF = YES
 
