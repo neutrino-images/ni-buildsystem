@@ -4,22 +4,16 @@
 #
 ################################################################################
 
-LIBSIGC_VERSION = 2.10.3
+LIBSIGC_VERSION_MAJOR = 2.12
+LIBSIGC_VERSION = $(LIBSIGC_VERSION_MAJOR).0
 LIBSIGC_DIR = libsigc++-$(LIBSIGC_VERSION)
 LIBSIGC_SOURCE = libsigc++-$(LIBSIGC_VERSION).tar.xz
-LIBSIGC_SITE = https://download.gnome.org/sources/libsigc++/$(basename $(LIBSIGC_VERSION))
+LIBSIGC_SITE = https://download.gnome.org/sources/libsigc++/$(LIBSIGC_VERSION_MAJOR)
 
 LIBSIGC_CONF_OPTS = \
-	--disable-benchmark \
-	--disable-documentation \
-	--disable-warnings \
-	--without-boost
-
-define LIBSIGC_INSTALL_HEADER
-	cp $(PKG_BUILD_DIR)/sigc++config.h $(TARGET_includedir)
-	ln -sf ./sigc++-2.0/sigc++ $(TARGET_includedir)/sigc++
-endef
-LIBSIGC_POST_INSTALL_HOOKS += LIBSIGC_INSTALL_HEADER
+	-Dbuild-examples=false \
+	-Dbuild-tests=false \
+	-Dvalidation=false
 
 libsigc: | $(TARGET_DIR)
-	$(call autotools-package)
+	$(call meson-package)
