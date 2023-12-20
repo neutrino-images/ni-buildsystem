@@ -11,8 +11,7 @@ BROTLI_SITE = $(call github,google,brotli,v$(BROTLI_VERSION))
 
 BROTLI_CONF_OPTS = \
 	-DBROTLI_DISABLE_TESTS=ON \
-	-DBROTLI_BUNDLED_MODE=OFF \
-	-DCMAKE_C_FLAGS="$(TARGET_CFLAGS)"
+	-DBROTLI_BUNDLED_MODE=OFF
 
 brotli: | $(TARGET_DIR)
 	$(call cmake-package)
