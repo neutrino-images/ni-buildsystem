@@ -114,7 +114,6 @@ rootfs-cleanup: $(ROOTFS_DIR)
 	rm -rf $(ROOTFS_DIR)$(includedir)
 	rm -rf $(ROOTFS_DIR)$(libdir)/pkgconfig
 	rm -rf $(ROOTFS_DIR)$(libdir)/cmake
-	rm -rf $(ROOTFS_DIR)$(libdir)/sigc++*
 	rm -rf $(ROOTFS_DIR)$(libdir)/glib-2.0
 	rm -f  $(ROOTFS_DIR)$(libdir)/libvorbisenc*
 	rm -rf $(ROOTFS_DIR)/.git
