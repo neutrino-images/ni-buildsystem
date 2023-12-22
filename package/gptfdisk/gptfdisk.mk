@@ -9,14 +9,29 @@ GPTFDISK_DIR = gptfdisk-$(GPTFDISK_VERSION)
 GPTFDISK_SOURCE = gptfdisk-$(GPTFDISK_VERSION).tar.gz
 GPTFDISK_SITE = https://sourceforge.net/projects/gptfdisk/files/gptfdisk/$(GPTFDISK_VERSION)
 
-GPTFDISK_DEPENDENCIES = popt e2fsprogs ncurses
+GPTFDISK_SBINARIES = gdisk sgdisk cgdisk
 
-GPTFDISK_SBINARIES = sgdisk
+GPTFDISK_DEPENDENCIES = util-linux
+GPTFDISK_LDLIBS += -luuid
+
+ifeq ($(findstring sgdisk,$(GPTFDISK_SBINARIES)),sgdisk)
+GPTFDISK_DEPENDENCIES += popt
+GPTFDISK_SGDISK_LDLIBS += `$(PKG_CONFIG) --libs popt`
+endif
+
+ifeq ($(findstring cgdisk,$(GPTFDISK_SBINARIES)),cgdisk)
+GPTFDISK_DEPENDENCIES += ncurses
+endif
+
+GPTFDISK_DEPENDENCIES += libiconv
+GPTFDISK_LDLIBS += -liconv
 
 GPTFDISK_MAKE_ENV = \
 	$(TARGET_CONFIGURE_ENV)
 
 GPTFDISK_MAKE_OPTS = \
+	LDLIBS="$(GPTFDISK_LDLIBS)" \
+	SGDISK_LDLIBS="$(GPTFDISK_SGDISK_LDLIBS)" \
 	$(GPTFDISK_SBINARIES)
 
 define GPTFDISK_INSTALL_CMDS
