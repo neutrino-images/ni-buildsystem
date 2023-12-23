@@ -32,8 +32,9 @@ mkdir -p /dev/pts
 mount -t devpts devpts /dev/pts
 mkdir -p /dev/shm/usb
 
-service partitions-by-name start
-service resizerootfs start
+/etc/init.d/fixup-gpt
+/etc/init.d/partitions-by-name
+/etc/init.d/resizerootfs
 
 # for nfsd
 mkdir -p /var/lib/nfs

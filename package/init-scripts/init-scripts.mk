@@ -29,6 +29,11 @@ ifeq ($(BOXTYPE),coolstream)
 	$(UPDATE-RC.D) $(@F) start 99 0 6 .
 endif
 
+$(TARGET_sysconfdir)/init.d/fixup-gpt:
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 e4hdultra protek4k hd60 hd61 multibox multiboxse))
+	$(INSTALL_EXEC) -D $(INIT_SCRIPTS_FILES_DIR)/fixup-gpt.init $(@)
+endif
+
 $(TARGET_sysconfdir)/init.d/fstab:
 	$(INSTALL_EXEC) -D $(INIT_SCRIPTS_FILES_DIR)/fstab.init $(@)
 	$(UPDATE-RC.D) $(@F) defaults 01 98
@@ -108,6 +113,7 @@ INIT_SCRIPTS_DEPENDENCIES = \
 	$(TARGET_sysconfdir)/init.d/camd_datefix \
 	$(TARGET_sysconfdir)/init.d/coredump \
 	$(TARGET_sysconfdir)/init.d/custom-poweroff \
+	$(TARGET_sysconfdir)/init.d/fixup-gpt \
 	$(TARGET_sysconfdir)/init.d/fstab \
 	$(TARGET_sysconfdir)/init.d/hostname \
 	$(TARGET_sysconfdir)/init.d/partitions-by-name \

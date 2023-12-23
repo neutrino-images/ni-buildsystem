@@ -5,13 +5,10 @@
 # Required-Stop:      $local_fs
 # Default-Start:      S
 # Default-Stop:
-# Short-Description:  Resizes once linuxrootfs and userdata to full partition size
+# Short-Description:  Resizes once linuxrootfs, userdata and storage to full partition size
 ### END INIT INFO
 
-if [ ! -f "/.resize-linuxrootfs" ] && [ -e "/dev/block/by-name/linuxrootfs" ]
-  then
-    echo "Fix GPT, Do not unplug power!..."
-    parted /dev/mmcblk0 print ok fix
+if [ ! -f "/.resize-linuxrootfs" ] && [ -e "/dev/block/by-name/linuxrootfs" ]; then
     echo "Resizing linuxrootfs partition, Do not unplug power!..."
     resize2fs /dev/block/by-name/linuxrootfs
     touch "/.resize-linuxrootfs"

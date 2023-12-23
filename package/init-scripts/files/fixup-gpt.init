@@ -1,0 +1,10 @@
+#!/bin/sh
+
+if [ ! -f /.fixup-gpt ]; then
+	echo "Fixup GPT. Do not unplug power! ..."
+	parted /dev/mmcblk0 print ok fix
+	touch /.fixup-gpt
+	reboot
+fi
+
+exit 0
