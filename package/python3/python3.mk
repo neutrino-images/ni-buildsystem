@@ -184,20 +184,19 @@ HOST_PYTHON3_CONF_ENV += \
 HOST_PYTHON3_CONF_OPTS += \
 	--without-ensurepip \
 	--without-cxx-main \
-	--disable-sqlite3 \
-	--disable-tk \
 	--with-expat=system \
-	--disable-curses \
-	--disable-codecs-cjk \
-	--disable-nis \
 	--enable-unicodedata \
-	--disable-test-modules \
+	--disable-bzip2 \
+	--disable-codecs-cjk \
+	--disable-curses \
 	--disable-idle3 \
-	--disable-uuid \
-	--disable-ossaudiodev
-
-HOST_PYTHON3_CONF_OPTS += --disable-bzip2
-HOST_PYTHON3_CONF_OPTS += --disable-openssl
+	--disable-nis \
+	--disable-openssl \
+	--disable-ossaudiodev \
+	--disable-sqlite3 \
+	--disable-test-modules \
+	--disable-tk \
+	--disable-uuid
 
 define HOST_PYTHON3_INSTALL_SYMLINK
 	ln -sf python3 $(HOST_DIR)/bin/python
