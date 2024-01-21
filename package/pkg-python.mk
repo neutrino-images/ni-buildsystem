@@ -22,8 +22,22 @@ HOST_PYTHON_PATH = $(HOST_PYTHON_LIB_DIR)
 
 # -----------------------------------------------------------------------------
 
+PKG_PYTHON_HOST_PLATFORM = $(TARGET_ARCH)-linux
+PKG_PYTHON_PROJECT_BASE = $(BUILD_DIR)/$(PYTHON3_DIR)
+
+# basename does not evaluate if a file exists, so we must check to ensure
+# the _sysconfigdata__linux_*.py file exists. The "|| true" is added to return
+# an empty string if the file does not exist.
+PKG_PYTHON_SYSCONFIGDATA_PATH = $(TARGET_PYTHON_LIB_DIR)/_sysconfigdata__linux_*.py
+PKG_PYTHON_SYSCONFIGDATA_NAME = `{ [ -e $(PKG_PYTHON_SYSCONFIGDATA_PATH) ] && basename $(PKG_PYTHON_SYSCONFIGDATA_PATH) .py; } || true`
+
 # Target python packages
 TARGET_PKG_PYTHON_ENV = \
+	_PYTHON_HOST_PLATFORM="$(PKG_PYTHON_HOST_PLATFORM)" \
+	_PYTHON_PROJECT_BASE="$(PKG_PYTHON_PROJECT_BASE)" \
+	_PYTHON_SYSCONFIGDATA_NAME="$(PKG_PYTHON_SYSCONFIGDATA_NAME)"
+
+TARGET_PKG_PYTHON_ENV += \
 	$(TARGET_CONFIGURE_ENV) \
 	LDSHARED="$(TARGET_CC) -shared" \
 	PYTHONPATH="$(TARGET_PYTHON_PATH)" \
