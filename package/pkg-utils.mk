@@ -405,8 +405,7 @@ ifeq ($(PKG_MODE),MESON)
   $(PKG)_DEPENDENCIES += host-meson
 endif
 ifeq ($(PKG_MODE),PYTHON)
-  # Add dependency on host-python3 at first
-  $(PKG)_DEPENDENCIES = host-python3 $($(PKG)_DEPENDENCIES)
+  $(PKG)_DEPENDENCIES += host-python3
   ifeq ($$($(PKG)_SETUP_TYPE),setuptools)
     $(PKG)_DEPENDENCIES += host-python-setuptools
   else ifeq ($$($(PKG)_SETUP_TYPE),$$(filter $$($(PKG)_SETUP_TYPE),flit pep517))
