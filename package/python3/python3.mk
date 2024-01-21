@@ -10,7 +10,7 @@ PYTHON3_DIR = Python-$(PYTHON3_VERSION)
 PYTHON3_SOURCE = Python-$(PYTHON3_VERSION).tar.xz
 PYTHON3_SITE = https://www.python.org/ftp/python/$(PYTHON3_VERSION)
 
-PYTHON3_DEPENDENCIES = libffi
+PYTHON3_DEPENDENCIES = libffi ncurses sqlite bzip2 xz zlib expat openssl
 
 # no cleanup
 PYTHON3_KEEP_BUILD_DIR = YES
@@ -56,46 +56,30 @@ endif
 PYTHON3_CONF_OPTS = \
 	--enable-shared \
 	--disable-static \
-	--without-ensurepip \
-	--without-cxx-main \
 	--with-build-python=$(HOST_PYTHON_BINARY) \
+	--with-expat=system \
+	--with-libmpdec=none \
+	--with-openssl=$(TARGET_prefix) \
 	--with-system-ffi \
-	--disable-pydoc \
-	--disable-test-modules \
-	--disable-tk \
-	--disable-nis \
+	--without-cxx-main \
+	--without-ensurepip \
+	--enable-unicodedata \
+	--disable-berkeleydb \
+	--disable-codecs-cjk \
 	--disable-idle3 \
-	--disable-pyc-build
-
-PYTHON3_CONF_OPTS += --disable-lib2to3
-PYTHON3_CONF_OPTS += --disable-berkeleydb
-PYTHON3_CONF_OPTS += --disable-readline
-
-PYTHON3_DEPENDENCIES += ncurses
-
-PYTHON3_CONF_OPTS += --with-libmpdec=none
-
-PYTHON3_DEPENDENCIES += expat
-PYTHON3_CONF_OPTS += --with-expat=system
-
-PYTHON3_DEPENDENCIES += sqlite
-
-PYTHON3_DEPENDENCIES += openssl
-PYTHON3_CONF_OPTS += --with-openssl=$(TARGET_prefix)
-
-PYTHON3_CONF_OPTS += --disable-codecs-cjk
-PYTHON3_CONF_OPTS += --enable-unicodedata
+	--disable-lib2to3 \
+	--disable-nis \
+	--disable-ossaudiodev \
+	--disable-pyc-build \
+	--disable-pydoc \
+	--disable-readline \
+	--disable-test-modules \
+	--disable-tk
 
 # Disable auto-detection of uuid.h (util-linux)
 # which would add _uuid module support, instead
 # default to the pure python implementation
 PYTHON3_CONF_OPTS += --disable-uuid
-
-PYTHON3_DEPENDENCIES += bzip2
-PYTHON3_DEPENDENCIES += xz
-PYTHON3_DEPENDENCIES += zlib
-
-PYTHON3_CONF_OPTS += --disable-ossaudiodev
 
 #
 # Remove useless files. In the config/ directory, only the Makefile
