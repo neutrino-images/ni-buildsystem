@@ -82,27 +82,6 @@ PYTHON3_CONF_OPTS = \
 PYTHON3_CONF_OPTS += --disable-uuid
 
 #
-# Remove useless files. In the config/ directory, only the Makefile
-# and the pyconfig.h files are needed at runtime.
-#
-define PYTHON3_REMOVE_USELESS_FILES
-	rm -f $(TARGET_bindir)/python3-config
-	rm -f $(TARGET_bindir)/python$(PYTHON3_VERSION_MAJOR)-config
-	rm -f $(TARGET_bindir)/python$(PYTHON3_VERSION_MAJOR)m-config
-	rm -f $(TARGET_bindir)/smtpd.py.*
-	rm -f $(PYTHON3_LIB_DIR)/distutils/command/wininst*.exe
-	for i in `find $(PYTHON3_LIB_DIR)/config-$(PYTHON3_VERSION_MAJOR)-*/ \
-		-type f -not -name Makefile` ; do \
-		rm -f $$i ; \
-	done
-	rm -rf $(PYTHON3_LIB_DIR)/__pycache__
-	rm -rf $(PYTHON3_LIB_DIR)/lib-dynload/sysconfigdata/__pycache__
-	rm -rf $(PYTHON3_LIB_DIR)/collections/__pycache__
-	rm -rf $(PYTHON3_LIB_DIR)/importlib/__pycache__
-endef
-PYTHON3_POST_INSTALL_HOOKS += PYTHON3_REMOVE_USELESS_FILES
-
-#
 # Make sure libpython gets stripped out on target
 #
 define PYTHON3_ENSURE_LIBPYTHON_STRIPPED
@@ -111,7 +90,7 @@ endef
 PYTHON3_POST_INSTALL_HOOKS += PYTHON3_ENSURE_LIBPYTHON_STRIPPED
 
 define PYTHON3_FIX_TIME
-	find $(PYTHON3_LIB_DIR) -name '*.py' -print0 | \
+	find $(TARGET_PYTHON_LIB_DIR) -name '*.py' -print0 | \
 		xargs -0 --no-run-if-empty touch -d @$(SOURCE_DATE_EPOCH)
 endef
 
@@ -123,15 +102,25 @@ define PYTHON3_CREATE_PYC_FILES
 		$(if $(VERBOSE),,-q) \
 		-s $(TARGET_DIR) \
 		-p / \
-		$(PYTHON3_LIB_DIR)
+		$(TARGET_PYTHON_LIB_DIR)
 endef
 PYTHON3_POST_INSTALL_HOOKS += PYTHON3_CREATE_PYC_FILES
 
-define PYTHON3_REMOVE_OPTIMIZED_PYC_FILES
-	find $(PYTHON3_LIB_DIR) -name '*.opt-1.pyc' -print0 -o -name '*.opt-2.pyc' -print0 | \
-		xargs -0 --no-run-if-empty rm -f
+#
+# Remove useless files.
+#
+define PYTHON3_REMOVE_USELESS_FILES
+	$(TARGET_RM) $(TARGET_bindir)/python3-config
+	$(TARGET_RM) $(TARGET_bindir)/python$(PYTHON3_VERSION_MAJOR)-config
+	$(TARGET_RM) $(TARGET_bindir)/smtpd.py.*
 endef
-PYTHON3_POST_INSTALL_HOOKS += PYTHON3_REMOVE_OPTIMIZED_PYC_FILES
+PYTHON3_TARGET_FINALIZE_HOOKS += PYTHON3_REMOVE_USELESS_FILES
+
+define PYTHON3_REMOVE_OPTIMIZED_PYC_FILES
+	find $(TARGET_PYTHON_LIB_DIR) -name '*.opt-1.pyc' -print0 -o -name '*.opt-2.pyc' -print0 | \
+		xargs -0 --no-run-if-empty $(TARGET_RM)
+endef
+PYTHON3_TARGET_FINALIZE_HOOKS += PYTHON3_REMOVE_OPTIMIZED_PYC_FILES
 
 define PYTHON3_INSTALL_SYMLINK
 	ln -sf python3 $(TARGET_bindir)/python
