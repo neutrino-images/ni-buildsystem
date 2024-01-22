@@ -63,6 +63,7 @@ PYTHON3_CONF_OPTS = \
 	--with-system-ffi \
 	--without-cxx-main \
 	--without-ensurepip \
+	--enable-optimizations \
 	--enable-unicodedata \
 	--disable-berkeleydb \
 	--disable-codecs-cjk \
@@ -70,7 +71,6 @@ PYTHON3_CONF_OPTS = \
 	--disable-lib2to3 \
 	--disable-nis \
 	--disable-ossaudiodev \
-	--disable-pyc-build \
 	--disable-pydoc \
 	--disable-readline \
 	--disable-test-modules \
@@ -87,45 +87,19 @@ PYTHON3_CONF_OPTS += --disable-uuid
 define PYTHON3_ENSURE_LIBPYTHON_STRIPPED
 	chmod u+w $(TARGET_libdir)/libpython$(PYTHON3_VERSION_MAJOR)*.so
 endef
-PYTHON3_POST_INSTALL_HOOKS += PYTHON3_ENSURE_LIBPYTHON_STRIPPED
-
-define PYTHON3_FIX_TIME
-	find $(TARGET_PYTHON_LIB_DIR) -name '*.py' -print0 | \
-		xargs -0 --no-run-if-empty touch -d @$(SOURCE_DATE_EPOCH)
-endef
-
-define PYTHON3_CREATE_PYC_FILES
-	$(PYTHON3_FIX_TIME)
-	PYTHONPATH="$(PYTHON_PATH)" \
-	$(HOST_PYTHON_BINARY) \
-		$(PKG_BUILD_DIR)/Lib/compileall.py \
-		$(if $(VERBOSE),,-q) \
-		-s $(TARGET_DIR) \
-		-p / \
-		$(TARGET_PYTHON_LIB_DIR)
-endef
-PYTHON3_POST_INSTALL_HOOKS += PYTHON3_CREATE_PYC_FILES
-
-#
-# Remove useless files.
-#
-define PYTHON3_REMOVE_USELESS_FILES
-	$(TARGET_RM) $(TARGET_bindir)/python3-config
-	$(TARGET_RM) $(TARGET_bindir)/python$(PYTHON3_VERSION_MAJOR)-config
-	$(TARGET_RM) $(TARGET_bindir)/smtpd.py.*
-endef
-PYTHON3_TARGET_FINALIZE_HOOKS += PYTHON3_REMOVE_USELESS_FILES
-
-define PYTHON3_REMOVE_OPTIMIZED_PYC_FILES
-	find $(TARGET_PYTHON_LIB_DIR) -name '*.opt-1.pyc' -print0 -o -name '*.opt-2.pyc' -print0 | \
-		xargs -0 --no-run-if-empty $(TARGET_RM)
-endef
-PYTHON3_TARGET_FINALIZE_HOOKS += PYTHON3_REMOVE_OPTIMIZED_PYC_FILES
+PYTHON3_TARGET_FINALIZE_HOOKS += PYTHON3_ENSURE_LIBPYTHON_STRIPPED
 
 define PYTHON3_INSTALL_SYMLINK
 	ln -sf python3 $(TARGET_bindir)/python
 endef
 PYTHON3_TARGET_FINALIZE_HOOKS += PYTHON3_INSTALL_SYMLINK
+
+define PYTHON3_TARGET_CLEANUP
+	$(TARGET_RM) $(TARGET_bindir)/python3-config
+	$(TARGET_RM) $(TARGET_bindir)/python$(PYTHON3_VERSION_MAJOR)-config
+	$(TARGET_RM) $(TARGET_bindir)/smtpd.py.*
+endef
+PYTHON3_TARGET_FINALIZE_HOOKS += PYTHON3_TARGET_CLEANUP
 
 python3: | $(TARGET_DIR)
 	$(call autotools-package)
