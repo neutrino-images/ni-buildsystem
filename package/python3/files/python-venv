@@ -1,0 +1,12 @@
+#!/bin/sh
+
+. /etc/init.d/globals
+
+if [ ! -e ~/venv ]; then
+	echo "Creating Python's virtual environment."
+	echo "This will take a few seconds ..."
+	python -m venv --system-site-packages ~/venv
+fi
+
+echo "Type 'source ~/venv/bin/activate' to activate Python's virtual environment."
+echo "To leave the virtual environment type 'deactivate' in the terminal."
