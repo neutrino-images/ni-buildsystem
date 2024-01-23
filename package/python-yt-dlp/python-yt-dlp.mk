@@ -9,7 +9,7 @@ PYTHON_YT_DLP_DIR = yt-dlp-$(PYTHON_YT_DLP_VERSION)
 PYTHON_YT_DLP_SOURCE = yt-dlp-$(PYTHON_YT_DLP_VERSION).tar.gz
 PYTHON_YT_DLP_SITE = https://files.pythonhosted.org/packages/source/y/yt-dlp
 
-PYTHON_YT_DLP_DEPENDENCIES = python3 python-brotli python-certifi python-websockets \
+PYTHON_YT_DLP_DEPENDENCIES = python-brotli python-certifi python-websockets \
 	python-requests python-mutagen python-pycryptodomex
 
 PYTHON_YT_DLP_SETUP_TYPE = setuptools
