@@ -109,7 +109,7 @@ PYTHON3_TARGET_FINALIZE_HOOKS += PYTHON3_TARGET_CLEANUP
 python3: | $(TARGET_DIR)
 	$(call autotools-package)
 
-# ------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 HOST_PYTHON3_DEPENDENCIES = host-expat host-zlib host-libffi
 

@@ -11,7 +11,7 @@ TARGET_PYTHON_INCLUDE_DIR = $(TARGET_includedir)/python$(PYTHON3_VERSION_MAJOR)
 TARGET_PYTHON_SITE_PACKAGES_DIR = $(TARGET_PYTHON_LIB_DIR)/site-packages
 TARGET_PYTHON_PATH = $(TARGET_PYTHON_LIB_DIR)
 
-# ------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 HOST_PYTHON_BINARY = $(HOST_DIR)/bin/python3
 
@@ -55,7 +55,7 @@ HOST_PKG_PYTHON_ENV = \
 	PYTHONPATH=$(HOST_PYTHON_PATH) \
 	PYTHONNOUSERSITE=1
 
-# ------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 # Target setuptools-based packages
 TARGET_PKG_PYTHON_SETUPTOOLS_ENV = \

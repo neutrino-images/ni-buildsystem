@@ -17,7 +17,7 @@ ZIP_CFLAGS = -I. -DUNIX
 # removed since it can't work for cross-compilation.
 ZIP_CFLAGS += -DUIDGID_NOT_16BIT
 
-# ------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 HOST_ZIP_DEPENDENCIES = host-bzip2
 

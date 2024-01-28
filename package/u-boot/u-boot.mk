@@ -9,7 +9,7 @@ U_BOOT_DIR = u-boot-$(U_BOOT_VERSION)
 U_BOOT_SOURCE = u-boot-$(U_BOOT_VERSION).tar.bz2
 U_BOOT_SITE = ftp://ftp.denx.de/pub/u-boot
 
-# ------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 HOST_MKIMAGE_BINARY = $(HOST_DIR)/bin/mkimage
 

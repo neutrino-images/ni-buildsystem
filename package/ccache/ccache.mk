@@ -12,7 +12,7 @@ CCACHE := $(shell which $(CCACHE) || type -p $(CCACHE) || echo ccache)
 CCACHE_DIR = $(HOME)/.ccache-$(call LOWERCASE,$(TARGET_VENDOR))-$(TARGET_ARCH)-$(TARGET_OS)-$(KERNEL_VERSION)
 export CCACHE_DIR
 
-# ------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 HOST_CCACHE_BINDIR = $(HOST_DIR)/bin
 
