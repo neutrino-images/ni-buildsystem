@@ -144,7 +144,7 @@ ifneq ($(DEBUG),yes)
 	@echo "The following warnings from strip are harmless!"
 	@$(call draw_line);
 	for dir in $(ROOTFS_STRIP_BINS); do \
-		find $(ROOTFS_DIR)$${dir} -type f -print0 | xargs -0 $(TARGET_STRIP) || true; \
+		find $(ROOTFS_DIR)$${dir} -type f -print0 | xargs -n 128 -0 $(TARGET_STRIP) || true; \
 	done
 	for dir in $(ROOTFS_STRIP_LIBS); do \
 		find $(ROOTFS_DIR)$${dir} \( \
@@ -153,7 +153,7 @@ ifneq ($(DEBUG),yes)
 				-path $(ROOTFS_DIR)/lib/libv3ddriver.so -o \
 				\
 				-path $(ROOTFS_DIR)/lib/modules \) -prune -o \
-		-type f -print0 | xargs -0 $(TARGET_STRIP) || true; \
+		-type f -print0 | xargs -n 128 -0 $(TARGET_STRIP) || true; \
 	done
   ifeq ($(BOXSERIES),hd2)
 	find $(ROOTFS_DIR)/lib/modules/$(KERNEL_VERSION)/kernel -type f -name '*.ko' | xargs -n 1 $(TARGET_OBJCOPY) --strip-unneeded
