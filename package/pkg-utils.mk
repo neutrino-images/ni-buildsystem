@@ -390,6 +390,11 @@ ifeq ($$($(PKG)_AUTORECONF),YES)
   $(PKG)_AUTORECONF_HOOKS += AUTORECONF_MESSAGE
   $(PKG)_AUTORECONF_HOOKS += $(PKG)_AUTORECONF_CMDS
 endif
+ifeq ($(PKG_MODE),PYTHON)
+  ifeq ($$($(PKG)_SETUP_TYPE),setuptools)
+    $(PKG)_POST_PATCH_HOOKS += PYTHON_SETUPTOOLS_CHECK_SETUP_PY
+  endif
+endif
 
 # auto-assign some dependencies
 ifndef $(PKG)_DEPENDENCIES
