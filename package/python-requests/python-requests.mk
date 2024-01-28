@@ -11,5 +11,11 @@ PYTHON_REQUESTS_SITE = https://files.pythonhosted.org/packages/source/r/requests
 
 PYTHON_REQUESTS_SETUP_TYPE = setuptools
 
+PYTHON_REQUESTS_DEPENDENCIES = \
+	python-certifi \
+	python-charset-normalizer \
+	python-idna \
+	python-urllib3
+
 python-requests: | $(TARGET_DIR)
 	$(call python-package)
