@@ -30,7 +30,7 @@ find-%:
 		{ $(call WARNING,"Warning",": required tool $$TOOL missing."); false; }
 
 bashcheck:
-	@test "$(subst /bin/,,$(shell readlink /bin/sh))" == "bash" || \
+	@test "$(findstring /bash,$(shell readlink -f /bin/sh))" == "/bash" || \
 		{ $(call WARNING,"Warning",": /bin/sh is not linked to bash"); false; }
 
 toolcheck: bashcheck $(TOOLCHECK)

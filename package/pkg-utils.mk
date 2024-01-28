@@ -690,7 +690,8 @@ endef
 # rewrite libtool libraries
 REWRITE_LIBTOOL_RULES = "\
 	s,^libdir=.*,libdir='$(1)',; \
-	s,\(^dependency_libs='\| \|-L\|^dependency_libs='\)/lib,\ $(1),g"
+	s,\(^dependency_libs='\| \|-L\|^dependency_libs='\)/lib,\ $(1),; \
+	/^dependency_libs=/s, /usr/lib/lib\([^ ]*\).la, -l\1,g; "
 
 REWRITE_LIBTOOL_TAG = rewritten=1
 
