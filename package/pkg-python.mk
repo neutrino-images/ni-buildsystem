@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-TARGET_PYTHON_INTERPRETER = $(bindir)/python
+TARGET_PYTHON_INTERPRETER = $(bindir)/python3
 
 TARGET_PYTHON_LIB_DIR = $(TARGET_libdir)/python$(PYTHON3_VERSION_MAJOR)
 TARGET_PYTHON_INCLUDE_DIR = $(TARGET_includedir)/python$(PYTHON3_VERSION_MAJOR)
@@ -94,7 +94,7 @@ TARGET_PKG_PYTHON_PEP517_ENV = \
 TARGET_PKG_PYTHON_PEP517_BUILD_OPTS =
 
 TARGET_PKG_PYTHON_PEP517_INSTALL_OPTS = \
-	--interpreter=/usr/bin/python \
+	--interpreter=/usr/bin/python3 \
 	--script-kind=posix \
 	--purelib=$(TARGET_PYTHON_SITE_PACKAGES_DIR) \
 	--headers=$(TARGET_PYTHON_INCLUDE_DIR) \
