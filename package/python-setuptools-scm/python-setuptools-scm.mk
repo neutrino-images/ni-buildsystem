@@ -13,10 +13,9 @@ PYTHON_SETUPTOOLS_SCM_DIR = setuptools-scm-$(PYTHON_SETUPTOOLS_SCM_VERSION)
 PYTHON_SETUPTOOLS_SCM_SOURCE = setuptools-scm-$(PYTHON_SETUPTOOLS_SCM_VERSION).tar.gz
 PYTHON_SETUPTOOLS_SCM_SITE = https://files.pythonhosted.org/packages/source/s/setuptools-scm
 
-PYTHON_SETUPTOOLS_SCM_SETUP_TYPE = setuptools
-#PYTHON_SETUPTOOLS_SCM_SETUP_TYPE = flit
-
 # -----------------------------------------------------------------------------
+
+HOST_PYTHON_SETUPTOOLS_SCM_SETUP_TYPE = pep517
 
 HOST_PYTHON_SETUPTOOLS_SCM_DEPENDENCIES = \
 	host-python-packaging \
