@@ -94,7 +94,7 @@ TARGET_PKG_PYTHON_PEP517_ENV = \
 TARGET_PKG_PYTHON_PEP517_BUILD_OPTS =
 
 TARGET_PKG_PYTHON_PEP517_INSTALL_OPTS = \
-	--interpreter=/usr/bin/python3 \
+	--interpreter=$(TARGET_PYTHON_INTERPRETER) \
 	--script-kind=posix \
 	--purelib=$(TARGET_PYTHON_SITE_PACKAGES_DIR) \
 	--headers=$(TARGET_PYTHON_INCLUDE_DIR) \
