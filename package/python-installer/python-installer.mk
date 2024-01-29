@@ -7,7 +7,7 @@
 PYTHON_INSTALLER_VERSION = 0.7.0
 PYTHON_INSTALLER_DIR = installer-$(PYTHON_INSTALLER_VERSION)
 PYTHON_INSTALLER_SOURCE = installer-$(PYTHON_INSTALLER_VERSION).tar.gz
-PYTHON_INSTALLER_SITE = https://files.pythonhosted.org/packages/source/i/installer
+PYTHON_INSTALLER_SITE = $(PYPI_MIRROR)/i/installer
 
 # -----------------------------------------------------------------------------
 

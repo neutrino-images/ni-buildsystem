@@ -7,7 +7,7 @@
 PYTHON_YT_DLP_VERSION = 2023.12.30
 PYTHON_YT_DLP_DIR = yt-dlp-$(PYTHON_YT_DLP_VERSION)
 PYTHON_YT_DLP_SOURCE = yt-dlp-$(PYTHON_YT_DLP_VERSION).tar.gz
-PYTHON_YT_DLP_SITE = https://files.pythonhosted.org/packages/source/y/yt-dlp
+PYTHON_YT_DLP_SITE = $(PYPI_MIRROR)/y/yt-dlp
 
 PYTHON_YT_DLP_DEPENDENCIES = python-brotli python-certifi python-websockets \
 	python-requests python-mutagen python-pycryptodomex

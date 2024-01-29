@@ -172,6 +172,7 @@ BITBUCKET_SSH		= git@bitbucket.org
 GNU_MIRROR		= http://ftp.gnu.org/pub/gnu
 KERNEL_MIRROR		= https://cdn.kernel.org/pub
 LUAROCKS_MIRROR		= http://rocks.moonscript.org
+PYPI_MIRROR		= https://files.pythonhosted.org/packages/source
 
 NI_GITHUB		= $(GITHUB)/neutrino-images
 NI_BITBUCKET		= $(BITBUCKET_SSH):neutrino-images
