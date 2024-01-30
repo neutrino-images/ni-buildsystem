@@ -15,10 +15,8 @@ PYTHON_YT_DLP_DEPENDENCIES = python-brotli python-certifi python-websockets \
 PYTHON_YT_DLP_SETUP_TYPE = setuptools
 
 define PYTHON_YT_DLP_TARGET_CLEANUP
-	$(TARGET_RM) $(TARGET_docdir)
-	$(TARGET_RM) $(TARGET_mandir)
-	$(TARGET_RM) $(TARGET_datarootdir)/fish
-	$(TARGET_RM) $(TARGET_datarootdir)/zsh
+	$(TARGET_RM) $(TARGET_docdir) $(TARGET_mandir)
+	$(TARGET_RM) $(addprefix $(TARGET_datarootdir)/,fish zsh)
 endef
 PYTHON_YT_DLP_TARGET_FINALIZE_HOOKS += PYTHON_YT_DLP_TARGET_CLEANUP
 
