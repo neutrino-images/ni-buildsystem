@@ -21,6 +21,7 @@ host-tools: $(BUILD_DIR) $(HOST_DIR) $(HOST_DEPS_DIR) \
 	host-m4 \
 	host-bison \
 	host-flex \
+	host-libtool \
 	host-gperf \
 	host-kmod \
 	host-bc \
