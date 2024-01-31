@@ -28,6 +28,14 @@ define FREETYPE_PATCH_MODULES_CFG
 endef
 FREETYPE_POST_PATCH_HOOKS += FREETYPE_PATCH_MODULES_CFG
 
+define FREETYPE_EXECUTE_AUTOTOOLS
+	$(CD) $(PKG_BUILD_DIR)/builds/unix; \
+		libtoolize --force --copy; \
+		aclocal -I .; \
+		autoconf
+endef
+FREETYPE_PRE_CONFIGURE_HOOKS += FREETYPE_EXECUTE_AUTOTOOLS
+
 define FREETYPE_LINKING_INCLUDEDIR
 	ln -sf freetype2 $(TARGET_includedir)/freetype
 endef
