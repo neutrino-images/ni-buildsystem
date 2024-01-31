@@ -17,6 +17,7 @@ TOOLCHECK += find-gettext
 TOOLCHECK += find-git
 TOOLCHECK += find-help2man
 TOOLCHECK += find-hg
+TOOLCHECK += find-libtool
 TOOLCHECK += find-lzma
 TOOLCHECK += find-makeinfo
 TOOLCHECK += find-pkg-config
