@@ -32,3 +32,15 @@ LIBXML2_TARGET_FINALIZE_HOOKS += LIBXML2_TARGET_CLEANUP
 
 libxml2: | $(TARGET_DIR)
 	$(call autotools-package)
+
+# ------------------------------------------------------------------------------
+
+HOST_XMLLINT_BINARY = $(HOST_DIR)/bin/xmllint
+
+HOST_LIBXML2_CONF_OPTS = \
+	--without-zlib \
+	--without-lzma \
+	--without-python
+
+host-libxml2: | $(HOST_DIR)
+	$(call host-autotools-package)

@@ -7,7 +7,7 @@
 CHANNELLISTS_SITE = $(NI_SERVER)/channellists
 CHANNELLISTS_MD5FILE = channellists.txt
 
-CHANNELLISTS_DEPENDENCIES = matze-192 matze-192-130
+CHANNELLISTS_DEPENDENCIES = host-libxml2 matze-192 matze-192-130
 
 channellists:
 	$(call virtual-package)
@@ -32,7 +32,7 @@ matze-192-130:
 	for file in *.xml; do \
 		$(SED) 's/[^[:print:]]//g' $$file; \
 		XMLLINT_INDENT="	" \
-		xmllint --format $$file > _$$file; \
+		$(HOST_XMLLINT_BINARY) --format $$file > _$$file; \
 		mv _$$file $$file; \
 	done
 	# sync sat-names with current satellites.xml
