@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-ZLIB_VERSION = 1.3
+ZLIB_VERSION = 1.3.1
 ZLIB_DIR = zlib-$(ZLIB_VERSION)
 ZLIB_SOURCE = zlib-$(ZLIB_VERSION).tar.xz
 ZLIB_SITE = https://zlib.net
