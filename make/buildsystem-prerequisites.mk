@@ -17,7 +17,6 @@ TOOLCHECK += find-git
 TOOLCHECK += find-hg
 TOOLCHECK += find-libtool
 TOOLCHECK += find-lzma
-TOOLCHECK += find-makeinfo
 TOOLCHECK += find-pkg-config
 TOOLCHECK += find-svn
 TOOLCHECK += find-tar
