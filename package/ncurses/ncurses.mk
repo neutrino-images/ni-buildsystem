@@ -79,3 +79,22 @@ NCURSES_TARGET_FINALIZE_HOOKS += NCURSES_TARGET_CLEANUP
 
 ncurses: | $(TARGET_DIR)
 	$(call autotools-package)
+
+# -----------------------------------------------------------------------------
+
+HOST_NCURSES_CONF_ENV = \
+	ac_cv_path_LDCONFIG=""
+
+HOST_NCURSES_CONF_OPTS = \
+	--with-shared \
+	--without-gpm \
+	--without-manpages \
+	--without-cxx \
+	--without-cxx-binding \
+	--without-ada \
+	--with-default-terminfo-dir=/usr/share/terminfo \
+	--disable-db-install \
+	--without-normal
+
+host-ncurses: | $(HOST_DIR)
+	$(call host-autotools-package)
