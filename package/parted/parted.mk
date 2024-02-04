@@ -32,6 +32,8 @@ parted: | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
+HOST_PARTED_DEPENDENCIES = host-util-linux
+
 HOST_PARTED_AUTORECONF = YES
 
 HOST_PARTED_CONF_OPTS = \

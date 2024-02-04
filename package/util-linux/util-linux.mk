@@ -140,3 +140,27 @@ endif
 
 util-linux: | $(TARGET_DIR)
 	$(call autotools-package)
+
+# -----------------------------------------------------------------------------
+
+# We don't want the host-python dependency
+HOST_UTIL_LINUX_CONF_OPTS = \
+	--without-systemd \
+	--with-systemdsystemunitdir=no \
+	--without-python
+
+# In the host version of util-linux, we only require libuuid and
+# libmount (plus libblkid as an indirect dependency of libmount).
+# So disable all of the programs.
+HOST_UTIL_LINUX_CONF_OPTS += \
+	--enable-libblkid \
+	--enable-libmount \
+	--enable-libuuid \
+	--without-libmagic \
+	--without-ncurses \
+	--without-ncursesw \
+	--without-tinfo \
+	--disable-all-programs
+
+host-util-linux: | $(HOST_DIR)
+	$(call host-autotools-package)
