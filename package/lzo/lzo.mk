@@ -18,3 +18,12 @@ LZO_TARGET_FINALIZE_HOOKS += LZO_TARGET_CLEANUP
 
 lzo: | $(TARGET_DIR)
 	$(call cmake-package)
+
+# -----------------------------------------------------------------------------
+
+HOST_LZO_CONF_OPTS += \
+	-DENABLE_SHARED=ON \
+	-DENABLE_STATIC=OFF
+
+host-lzo: | $(HOST_DIR)
+	$(call host-cmake-package)

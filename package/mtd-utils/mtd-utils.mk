@@ -49,6 +49,8 @@ mtd-utils: | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
+HOST_MTD_UTILS_DEPENDENCIES = host-lzo
+
 HOST_MTD_UTILS_CONF_ENV = \
 	ZLIB_CFLAGS=" " \
 	ZLIB_LIBS="-lz" \
