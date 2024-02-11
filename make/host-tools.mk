@@ -20,6 +20,7 @@ host-tools: $(BUILD_DIR) $(HOST_DIR) $(HOST_DEPS_DIR) \
 	$(PKG_CONFIG) \
 	host-help2man \
 	host-texinfo \
+	host-gtk-doc \
 	host-m4 \
 	host-bison \
 	host-flex \
