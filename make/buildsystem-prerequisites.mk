@@ -8,18 +8,18 @@ init: preqs crosstool bootstrap
 # -----------------------------------------------------------------------------
 
 TOOLCHECK  =
+TOOLCHECK += find-git
+TOOLCHECK += find-svn
+TOOLCHECK += find-hg
+TOOLCHECK += find-curl
+TOOLCHECK += find-tar
+TOOLCHECK += find-lzma
+TOOLCHECK += find-gcc
+TOOLCHECK += find-ccache
 TOOLCHECK += find-automake
 TOOLCHECK += find-autopoint
-TOOLCHECK += find-ccache
-TOOLCHECK += find-curl
-TOOLCHECK += find-gcc
-TOOLCHECK += find-git
-TOOLCHECK += find-hg
 TOOLCHECK += find-libtool
-TOOLCHECK += find-lzma
 TOOLCHECK += find-pkg-config
-TOOLCHECK += find-svn
-TOOLCHECK += find-tar
 TOOLCHECK += find-tic
 
 find-%:

@@ -3,10 +3,9 @@
 ## Für die Einrichtung unter Debian sind folgende Pakete nötig
 ```bash
 apt-get install \
-git subversion mercurial cvs automake build-essential ccache tar \
-autopoint libtool libtool-bin curl lzma \
-libglib2.0-dev libncurses5-dev libncursesw5-dev \
-libssl-dev libltdl-dev libcurl4-openssl-dev intltool
+git subversion mercurial cvs curl tar lzma intltool \
+build-essential ccache automake autopoint libtool libtool-bin libltdl-dev \
+libglib2.0-dev libncurses5-dev libncursesw5-dev libssl-dev libcurl4-openssl-dev
 ```
 
 ## 1) Buildsystem initialisieren
