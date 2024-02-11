@@ -33,6 +33,7 @@ endef
 PATCH = $(call TOOLFIND,patch) -p1 -i
 PATCH0 = $(call TOOLFIND,patch) -p0 -i
 SED = $(call TOOLFIND,sed) -i -e
+BC = $(call TOOLFIND,bc)
 
 CD = set -e; cd
 CHDIR = $(CD) $(BUILD_DIR)
@@ -43,8 +44,11 @@ REMOVE-RC.D = support/scripts/update-rc.d -f -r $(TARGET_DIR)
 TARGET_RM = support/scripts/target-remove.sh $(TARGET_DIR) $(REMOVE_DIR)
 PYINSTALLER = $(BASE_DIR)/support/scripts/pyinstaller.py
 
+# suppress 'command not found' until we have host-bc
+ifneq ($(BC),bc)
 AUTOCONF_VER = $(shell autoconf --version | head -1 | awk '{print $$4}')
-AUTOCONF_VER_ge_270 = $(shell echo $(AUTOCONF_VER) \>= 2.70 | bc)
+AUTOCONF_VER_ge_270 = $(shell echo $(AUTOCONF_VER) \>= 2.70 | $(BC))
+endif
 
 # -----------------------------------------------------------------------------
 
