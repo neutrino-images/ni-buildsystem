@@ -5,7 +5,7 @@
 apt-get install \
 git subversion mercurial cvs curl tar lzma intltool \
 build-essential ccache automake autopoint libtool libtool-bin libltdl-dev \
-libglib2.0-dev libncurses5-dev libncursesw5-dev libssl-dev libcurl4-openssl-dev
+libglib2.0-dev libssl-dev libcurl4-openssl-dev
 ```
 
 ## 1) Buildsystem initialisieren

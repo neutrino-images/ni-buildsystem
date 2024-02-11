@@ -21,6 +21,7 @@ host-tools: $(BUILD_DIR) $(HOST_DIR) $(HOST_DEPS_DIR) \
 	host-help2man \
 	host-texinfo \
 	host-gtk-doc \
+	host-ncurses \
 	host-m4 \
 	host-bison \
 	host-flex \
