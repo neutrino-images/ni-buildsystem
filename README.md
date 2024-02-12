@@ -3,7 +3,7 @@
 ## Für die Einrichtung unter Debian sind folgende Pakete nötig
 ```bash
 apt-get install \
-git subversion mercurial cvs curl tar lzma intltool \
+git subversion mercurial cvs curl tar lzma intltool gtk-doc-tools \
 build-essential ccache automake autopoint libtool libtool-bin libltdl-dev \
 libglib2.0-dev libssl-dev libcurl4-openssl-dev
 ```
