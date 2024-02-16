@@ -5,7 +5,7 @@
 ################################################################################
 
 CROSSTOOLS_BOXSERIES = \
-	hd1 hd2 \
+	hd2 \
 	hd5x hd6x \
 	vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse \
 	vuduo
