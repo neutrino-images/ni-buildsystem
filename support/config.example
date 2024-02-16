@@ -86,3 +86,8 @@ MAINTAINER = $(shell whoami)
 
 # NI administrator mode. Do not touch!
 #NI_ADMIN = true
+
+# -----------------------------------------------------------------------------
+
+# Github token to access our private repositories
+#GITHUB_TOKEN = 

@@ -165,6 +165,7 @@ include package/pkg-configuration.mk
 # -----------------------------------------------------------------------------
 
 GITHUB			= https://github.com
+GITHUB_WITH_TOKEN	= https://$(GITHUB_TOKEN)@github.com
 GITHUB_SSH		= git@github.com
 BITBUCKET		= https://bitbucket.org
 BITBUCKET_SSH		= git@bitbucket.org
@@ -175,6 +176,7 @@ LUAROCKS_MIRROR		= http://rocks.moonscript.org
 PYPI_MIRROR		= https://files.pythonhosted.org/packages/source
 
 NI_GITHUB		= $(GITHUB)/neutrino-images
+NI_GITHUB_WITH_TOKEN	= $(GITHUB_WITH_TOKEN)/neutrino-images
 NI_BITBUCKET		= $(BITBUCKET_SSH):neutrino-images
 
 NI_NEUTRINO		= ni-neutrino

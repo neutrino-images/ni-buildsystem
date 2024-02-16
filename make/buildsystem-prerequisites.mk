@@ -107,7 +107,7 @@ endif
 $(SOURCE_DIR)/$(NI_LIBCOOLSTREAM):
 ifeq ($(HAS_LIBCOOLSTREAM),yes)
 	$(CD) $(SOURCE_DIR); \
-		git clone $(NI_GITHUB)/$(@F).git
+		git clone $(NI_GITHUB_WITH_TOKEN)/$(@F).git
 endif
 
 # upstream for rebase
