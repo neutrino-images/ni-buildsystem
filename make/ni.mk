@@ -96,7 +96,7 @@ endif
 
 IMAGES_BOXMODELS =
 ifneq ($(DEBUG),yes)
-  #IMAGES_BOXMODELS += nevis
+  IMAGES_BOXMODELS += nevis
 endif
 IMAGES_BOXMODELS += apollo kronos kronos_v2
 IMAGES_BOXMODELS += hd51 bre2ze4k h7
