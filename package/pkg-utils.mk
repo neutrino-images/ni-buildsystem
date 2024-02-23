@@ -654,24 +654,24 @@ define APPLY_PATCHES # (patches or directory)
 	$(Q)( \
 	$(CD) $(BUILD_DIR)/$($(PKG)_DIR); \
 	for i in $(1) $(2); do \
-		if [ "$$i" == "$(PKG_PATCHES_DIR)" -a ! -d $$i ]; then \
-			continue; \
-		fi; \
-		if [ -d $$i ]; then \
-			v=; \
-			if [ -d $$i/$($(PKG)_VERSION) ]; then \
-				v="$($(PKG)_VERSION)/"; \
-			fi; \
-			for p in $(addprefix $$i/$$v,$(PATCHES)); do \
-				if [ -e $$p ]; then \
-					$(call MESSAGE,"Applying $${p#$(PKG_PATCHES_DIR)/} (*)"); \
-					$(PATCH) $$p; \
-				fi; \
-			done; \
-		else \
-			$(call MESSAGE,"Applying $${i#$(PKG_PATCHES_DIR)/}"); \
-			$(PATCH) $(PKG_PATCHES_DIR)/$$i; \
-		fi; \
+	  if [ "$$i" == "$(PKG_PATCHES_DIR)" -a ! -d $$i ]; then \
+	    continue; \
+	  fi; \
+	  if [ -d $$i ]; then \
+	    v=; \
+	    if [ -d $$i/$($(PKG)_VERSION) ]; then \
+	      v="$($(PKG)_VERSION)/"; \
+	    fi; \
+	    for p in $(addprefix $$i/$$v,$(PATCHES)); do \
+	      if [ -e $$p ]; then \
+	        $(call MESSAGE,"Applying $${p#$(PKG_PATCHES_DIR)/} (*)"); \
+	        $(PATCH) $$p; \
+	    fi; \
+	    done; \
+	  else \
+	    $(call MESSAGE,"Applying $${i#$(PKG_PATCHES_DIR)/}"); \
+	    $(PATCH) $(PKG_PATCHES_DIR)/$$i; \
+	  fi; \
 	done; \
 	)
 	$(foreach hook,$($(PKG)_POST_PATCH_HOOKS),$(call $(hook))$(sep))
