@@ -54,6 +54,11 @@ OSCAM_DEPENDENCIES += openssl
 OSCAM_CONF_OPTS += \
 	--enable WITH_SSL
 
+# enable streamrelay
+OSCAM_DEPENDENCIES += libdvbcsa
+OSCAM_CONF_OPTS += \
+	--enable MODULE_STREAMRELAY
+
 ifeq ($(TARGET_ARCH),arm)
 # enable/disable arm-neon
 OSCAM_CONF_OPTS += \
