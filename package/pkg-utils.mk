@@ -561,7 +561,7 @@ define DOWNLOAD # (site,source)
 	    $(GET_HG_SOURCE) $${DOWNLOAD_SITE}/$${DOWNLOAD_SOURCE} $(DL_DIR)/$${DOWNLOAD_SOURCE}; \
 	  ;; \
 	  svn) \
-	    $(GET_SVN_SOURCE) $${DOWNLOAD_SITE}/$${DOWNLOAD_SOURCE} $(DL_DIR)/$${DOWNLOAD_SOURCE}; \
+	    $(GET_SVN_SOURCE) $${DOWNLOAD_SITE} $(DL_DIR)/$${DOWNLOAD_SOURCE}; \
 	  ;; \
 	  curl) \
 	    $(CD) $(DL_DIR); \
