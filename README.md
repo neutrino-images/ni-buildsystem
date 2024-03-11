@@ -11,7 +11,7 @@ apt-get install curl wget
 apt-get install tar lzma zip unzip bzip2 gzip xz-utils
 ```
 ```bash
-apt-get install gawk grep sed findutils bc
+apt-get install gawk grep sed findutils bc ncurses-bin
 ```
 ```bash
 apt-get install build-essential ccache automake autoconf libtool libtool-bin

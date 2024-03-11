@@ -30,6 +30,7 @@ TOOLCHECK += find-grep
 TOOLCHECK += find-sed
 TOOLCHECK += find-find
 TOOLCHECK += find-bc
+TOOLCHECK += find-tput
 
 TOOLCHECK += find-g++
 TOOLCHECK += find-gcc

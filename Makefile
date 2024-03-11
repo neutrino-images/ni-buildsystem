@@ -53,7 +53,10 @@ endif
 # kconfig uses CONFIG_SHELL
 CONFIG_SHELL := $(SHELL)
 
-export SHELL CONFIG_SHELL Q KBUILD_VERBOSE
+# fix unknown terminal
+TERMINFO := /usr/lib/terminfo
+
+export SHELL CONFIG_SHELL Q KBUILD_VERBOSE TERMINFO
 
 # -----------------------------------------------------------------------------
 
