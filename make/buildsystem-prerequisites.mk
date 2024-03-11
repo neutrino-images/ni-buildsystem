@@ -18,6 +18,7 @@ TOOLCHECK += find-gtkdocize
 TOOLCHECK += find-gperf
 TOOLCHECK += find-bison
 TOOLCHECK += find-help2man
+TOOLCHECK += find-makeinfo
 TOOLCHECK += find-gcc
 TOOLCHECK += find-ccache
 TOOLCHECK += find-automake
