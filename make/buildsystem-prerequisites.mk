@@ -14,6 +14,7 @@ TOOLCHECK += find-hg
 TOOLCHECK += find-curl
 TOOLCHECK += find-tar
 TOOLCHECK += find-lzma
+TOOLCHECK += find-gtkdocize
 TOOLCHECK += find-gcc
 TOOLCHECK += find-ccache
 TOOLCHECK += find-automake

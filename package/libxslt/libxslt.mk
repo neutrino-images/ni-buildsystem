@@ -27,15 +27,3 @@ LIBXSLT_TARGET_FINALIZE_HOOKS += LIBXSLT_TARGET_CLEANUP
 
 libxslt: | $(TARGET_DIR)
 	$(call autotools-package)
-
-# -----------------------------------------------------------------------------
-
-HOST_LIBXSLT_DEPENDENCIES = host-libxml2
-
-HOST_LIBXSLT_CONF_OPTS = \
-	--without-debug \
-	--without-python \
-	--without-crypto
-
-host-libxslt: | $(HOST_DIR)
-	$(call host-autotools-package)
