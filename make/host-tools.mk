@@ -9,10 +9,7 @@ $(HOST_DEPS_DIR):
 
 # -----------------------------------------------------------------------------
 
-HOST_TOOLS_COMPRESSION = host-zip
-
 host-tools: $(BUILD_DIR) $(HOST_DIR) $(HOST_DEPS_DIR) \
-	$(HOST_TOOLS_COMPRESSION) \
 	host-cmake \
 	host-pkgconf \
 	$(PKG_CONFIG) \
