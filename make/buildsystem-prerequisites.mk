@@ -22,6 +22,7 @@ TOOLCHECK += find-makeinfo
 TOOLCHECK += find-flex
 TOOLCHECK += find-gettextize
 TOOLCHECK += find-patch
+TOOLCHECK += find-grep
 TOOLCHECK += find-gcc
 TOOLCHECK += find-ccache
 TOOLCHECK += find-automake
