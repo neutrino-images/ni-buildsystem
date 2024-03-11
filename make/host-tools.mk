@@ -20,7 +20,6 @@ host-tools: $(BUILD_DIR) $(HOST_DIR) $(HOST_DEPS_DIR) \
 	$(PKG_CONFIG) \
 	host-ncurses \
 	host-m4 \
-	host-flex \
 	host-kmod \
 	host-bc \
 	host-mtd-utils \
