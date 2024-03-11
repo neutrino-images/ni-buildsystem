@@ -16,6 +16,7 @@ TOOLCHECK += find-tar
 TOOLCHECK += find-lzma
 TOOLCHECK += find-gtkdocize
 TOOLCHECK += find-gperf
+TOOLCHECK += find-bison
 TOOLCHECK += find-gcc
 TOOLCHECK += find-ccache
 TOOLCHECK += find-automake
