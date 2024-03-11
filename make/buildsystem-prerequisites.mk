@@ -24,6 +24,7 @@ TOOLCHECK += find-gettextize
 TOOLCHECK += find-patch
 TOOLCHECK += find-grep
 TOOLCHECK += find-gawk
+TOOLCHECK += find-sed
 TOOLCHECK += find-gcc
 TOOLCHECK += find-ccache
 TOOLCHECK += find-automake

@@ -10,7 +10,7 @@ $(HOST_DEPS_DIR):
 # -----------------------------------------------------------------------------
 
 HOST_TOOLS_COMPRESSION = host-tar host-bzip2 host-gzip host-zip
-HOST_TOOLS_ESSENTIALS = host-findutils host-sed
+HOST_TOOLS_ESSENTIALS = host-findutils
 
 host-tools: $(BUILD_DIR) $(HOST_DIR) $(HOST_DEPS_DIR) \
 	$(HOST_TOOLS_COMPRESSION) \
