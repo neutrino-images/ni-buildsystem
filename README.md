@@ -4,7 +4,7 @@
 ```bash
 apt-get install \
 git subversion mercurial cvs curl tar gzip bzip2 lzma intltool gtk-doc-tools \
-gperf bison help2man texinfo flex gettext patch grep gawk sed findutils \
+gperf bison help2man texinfo flex gettext patch grep gawk sed findutils bc \
 build-essential ccache automake autopoint libtool libtool-bin libltdl-dev \
 libglib2.0-dev libssl-dev libcurl4-openssl-dev
 ```

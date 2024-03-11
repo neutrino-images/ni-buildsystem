@@ -19,7 +19,6 @@ host-tools: $(BUILD_DIR) $(HOST_DIR) $(HOST_DEPS_DIR) \
 	host-ncurses \
 	host-m4 \
 	host-kmod \
-	host-bc \
 	host-mtd-utils \
 	host-u-boot \
 	host-zic \

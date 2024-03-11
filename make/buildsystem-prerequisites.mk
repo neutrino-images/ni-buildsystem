@@ -28,6 +28,7 @@ TOOLCHECK += find-grep
 TOOLCHECK += find-gawk
 TOOLCHECK += find-sed
 TOOLCHECK += find-find
+TOOLCHECK += find-bc
 TOOLCHECK += find-gcc
 TOOLCHECK += find-ccache
 TOOLCHECK += find-automake
