@@ -13,6 +13,7 @@ TOOLCHECK += find-svn
 TOOLCHECK += find-hg
 TOOLCHECK += find-curl
 TOOLCHECK += find-tar
+TOOLCHECK += find-gzip
 TOOLCHECK += find-lzma
 TOOLCHECK += find-gtkdocize
 TOOLCHECK += find-gperf
