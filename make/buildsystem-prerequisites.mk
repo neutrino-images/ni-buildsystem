@@ -14,6 +14,7 @@ TOOLCHECK += find-hg
 TOOLCHECK += find-curl
 TOOLCHECK += find-tar
 TOOLCHECK += find-gzip
+TOOLCHECK += find-bzip2
 TOOLCHECK += find-lzma
 TOOLCHECK += find-gtkdocize
 TOOLCHECK += find-gperf

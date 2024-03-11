@@ -9,7 +9,7 @@ $(HOST_DEPS_DIR):
 
 # -----------------------------------------------------------------------------
 
-HOST_TOOLS_COMPRESSION = host-bzip2 host-zip
+HOST_TOOLS_COMPRESSION = host-zip
 
 host-tools: $(BUILD_DIR) $(HOST_DIR) $(HOST_DEPS_DIR) \
 	$(HOST_TOOLS_COMPRESSION) \
