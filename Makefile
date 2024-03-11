@@ -222,6 +222,7 @@ include make/buildsystem-bootstrap.mk
 include make/buildsystem-clean.mk
 include make/buildsystem-helpers.mk
 include make/buildsystem-prerequisites.mk
+include make/buildsystem-toolcheck.mk
 include make/buildsystem-update.mk
 include make/flash-updates.mk
 include make/flash-images.mk
