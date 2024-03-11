@@ -2,11 +2,29 @@
 
 ## Für die Einrichtung unter Debian sind folgende Pakete nötig
 ```bash
-apt-get install \
-git subversion mercurial cvs curl tar zip unzip gzip bzip2 lzma intltool \
-gtk-doc-tools gperf bison help2man texinfo flex gettext patch grep gawk sed \
-findutils bc build-essential ccache automake autopoint libtool libtool-bin \
-libltdl-dev libglib2.0-dev libssl-dev libcurl4-openssl-dev
+apt-get install git subversion mercurial cvs
+```
+```bash
+apt-get install curl wget
+```
+```bash
+apt-get install tar lzma zip unzip bzip2 gzip xz-utils
+```
+```bash
+apt-get install gawk grep sed findutils bc
+```
+```bash
+apt-get install build-essential ccache automake autoconf libtool libtool-bin
+```
+```bash
+apt-get install patch pkg-config gettext autopoint intltool gtk-doc-tools
+```
+```bash
+apt-get install gperf bison help2man texinfo flex libncurses-dev
+```
+```bash
+apt-get install libltdl-dev libglib2.0-dev libssl-dev libcurl4-openssl-dev
+
 ```
 
 ## 1) Buildsystem initialisieren

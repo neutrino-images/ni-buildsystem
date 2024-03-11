@@ -8,36 +8,49 @@ init: preqs crosstool bootstrap
 # -----------------------------------------------------------------------------
 
 TOOLCHECK  =
+
 TOOLCHECK += find-git
 TOOLCHECK += find-svn
 TOOLCHECK += find-hg
+TOOLCHECK += find-cvs
+
 TOOLCHECK += find-curl
+TOOLCHECK += find-wget
+
 TOOLCHECK += find-tar
+TOOLCHECK += find-lzma
 TOOLCHECK += find-zip
 TOOLCHECK += find-unzip
-TOOLCHECK += find-gzip
 TOOLCHECK += find-bzip2
-TOOLCHECK += find-lzma
+TOOLCHECK += find-gzip
+TOOLCHECK += find-xz
+
+TOOLCHECK += find-gawk
+TOOLCHECK += find-grep
+TOOLCHECK += find-sed
+TOOLCHECK += find-find
+TOOLCHECK += find-bc
+
+TOOLCHECK += find-g++
+TOOLCHECK += find-gcc
+TOOLCHECK += find-ccache
+TOOLCHECK += find-automake
+TOOLCHECK += find-autoconf
+TOOLCHECK += find-libtoolize
+TOOLCHECK += find-libtool
+
+TOOLCHECK += find-patch
+TOOLCHECK += find-pkg-config
+TOOLCHECK += find-gettextize
+TOOLCHECK += find-autopoint
+TOOLCHECK += find-intltoolize
 TOOLCHECK += find-gtkdocize
+
 TOOLCHECK += find-gperf
 TOOLCHECK += find-bison
 TOOLCHECK += find-help2man
 TOOLCHECK += find-makeinfo
 TOOLCHECK += find-flex
-TOOLCHECK += find-gettextize
-TOOLCHECK += find-patch
-TOOLCHECK += find-grep
-TOOLCHECK += find-gawk
-TOOLCHECK += find-sed
-TOOLCHECK += find-find
-TOOLCHECK += find-bc
-TOOLCHECK += find-gcc
-TOOLCHECK += find-ccache
-TOOLCHECK += find-automake
-TOOLCHECK += find-autopoint
-TOOLCHECK += find-libtool
-TOOLCHECK += find-pkg-config
-TOOLCHECK += find-tic
 
 find-%:
 	@TOOL=$(patsubst find-%,%,$(@)); which $$TOOL $(if $(VERBOSE),,>/dev/null) || \
