@@ -15,6 +15,7 @@ TOOLCHECK += find-curl
 TOOLCHECK += find-tar
 TOOLCHECK += find-lzma
 TOOLCHECK += find-gtkdocize
+TOOLCHECK += find-gperf
 TOOLCHECK += find-gcc
 TOOLCHECK += find-ccache
 TOOLCHECK += find-automake
