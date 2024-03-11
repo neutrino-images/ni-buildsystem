@@ -20,6 +20,7 @@ TOOLCHECK += find-bison
 TOOLCHECK += find-help2man
 TOOLCHECK += find-makeinfo
 TOOLCHECK += find-flex
+TOOLCHECK += find-gettextize
 TOOLCHECK += find-gcc
 TOOLCHECK += find-ccache
 TOOLCHECK += find-automake

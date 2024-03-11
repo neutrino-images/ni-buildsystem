@@ -26,8 +26,6 @@ dosfstools: | $(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 
-HOST_DOSFSTOOLS_DEPENDENCIES = host-gettext
-
 HOST_DOSFSTOOLS_AUTORECONF = YES
 
 HOST_DOSFSTOOLS_CONF_OPTS = \
