@@ -90,6 +90,11 @@ OSCAM_DEPENDENCIES += libusb
 OSCAM_MAKE_OPTS += \
 	USE_LIBUSB=1
 
+# static libdvbcsa
+OSCAM_MAKE_OPTS += \
+	$(if $(findstring libdvbcsa,$(OSCAM_DEPENDENCIES)),\
+		LIBDVBCSA_LIB=$(TARGET_libdir)/libdvbcsa.a)
+
 ifeq ($(BOXTYPE),coolstream)
 OSCAM_DEPENDENCIES += coolstream-libs
 
