@@ -9,15 +9,15 @@ HARFBUZZ_DIR = harfbuzz-$(HARFBUZZ_VERSION)
 HARFBUZZ_SOURCE = harfbuzz-$(HARFBUZZ_VERSION).tar.bz2
 HARFBUZZ_SITE = https://www.freedesktop.org/software/harfbuzz/release
 
-HARFBUZZ_DEPENDENCIES = fontconfig glib2 cairo freetype
+HARFBUZZ_DEPENDENCIES = freetype glib2
 
 HARFBUZZ_AUTORECONF = YES
 
 HARFBUZZ_CONF_OPTS = \
-	--with-cairo \
-	--with-fontconfig \
 	--with-freetype \
 	--with-glib \
+	--without-cairo \
+	--without-fontconfig \
 	--without-graphite2 \
 	--without-icu
 
