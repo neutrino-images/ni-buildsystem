@@ -1,0 +1,47 @@
+--- a/libavformat/hls.c
++++ b/libavformat/hls.c
+@@ -226,6 +226,8 @@
+     int http_persistent;
+     int http_multiple;
+     int http_seekable;
++    char *key_uri_replace_old;
++    char *key_uri_replace_new;
+     int seg_max_retry;
+     AVIOContext *playlist_pb;
+     HLSCryptoContext  crypto_ctx;
+@@ -1295,8 +1297,16 @@
+ 
+     if (seg->key_type == KEY_AES_128 || seg->key_type == KEY_SAMPLE_AES) {
+         if (strcmp(seg->key, pls->key_url)) {
++            char *key_url = NULL;
+             AVIOContext *pb = NULL;
+-            if (open_url(pls->parent, &pb, seg->key, &c->avio_opts, opts, NULL) == 0) {
++            if (NULL != c->key_uri_replace_old && \
++                NULL != c-> key_uri_replace_new && \
++                '\0' != c->key_uri_replace_old[0]) {
++                key_url = av_strireplace(seg->key, c->key_uri_replace_old, c->key_uri_replace_new);
++            } else {
++                key_url = seg->key;
++            }
++            if (open_url(pls->parent, &pb, key_url, &c->avio_opts, opts, NULL) == 0) {
+                 ret = avio_read(pb, pls->key, sizeof(pls->key));
+                 if (ret != sizeof(pls->key)) {
+                     av_log(pls->parent, AV_LOG_ERROR, "Unable to read key file %s\n",
+@@ -1308,6 +1318,8 @@
+                        seg->key);
+             }
+             av_strlcpy(pls->key_url, seg->key, sizeof(pls->key_url));
++            if (key_url != seg->key)
++                av_free(key_url);
+         }
+     }
+ 
+@@ -2579,6 +2591,8 @@
+         OFFSET(seg_format_opts), AV_OPT_TYPE_DICT, {.str = NULL}, 0, 0, FLAGS},
+     {"seg_max_retry", "Maximum number of times to reload a segment on error.",
+      OFFSET(seg_max_retry), AV_OPT_TYPE_INT, {.i64 = 0}, 0, INT_MAX, FLAGS},
++    { "key_uri_old", "allow to replace part of AES key uri - old", OFFSET(key_uri_replace_old), AV_OPT_TYPE_STRING, { .str = "" }, 0, 0, FLAGS },
++    { "key_uri_new", "allow to replace part of AES key uri - new", OFFSET(key_uri_replace_new), AV_OPT_TYPE_STRING, { .str = "" }, 0, 0, FLAGS },
+     {NULL}
+ };
+ 
