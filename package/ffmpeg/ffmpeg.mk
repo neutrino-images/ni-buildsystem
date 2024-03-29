@@ -4,5 +4,5 @@
 #
 ################################################################################
 
-ffmpeg: $(if $(filter $(BOXTYPE),coolstream),ffmpeg2,ffmpeg4)
+ffmpeg: $(if $(filter $(BOXTYPE),coolstream),ffmpeg2,ffmpeg6)
 	@$(call TOUCH)
