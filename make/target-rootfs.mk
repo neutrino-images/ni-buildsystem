@@ -115,11 +115,10 @@ rootfs-cleanup: $(ROOTFS_DIR)
 	rm -rf $(ROOTFS_DIR)$(libdir)/pkgconfig
 	rm -rf $(ROOTFS_DIR)$(libdir)/cmake
 	rm -rf $(ROOTFS_DIR)$(libdir)/glib-2.0
-	rm -f  $(ROOTFS_DIR)$(libdir)/libvorbisenc*
 	rm -rf $(ROOTFS_DIR)/.git
-  ifeq ($(BOXSERIES),hd1)
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),nevis kronos_v2))
 	rm -rf $(ROOTFS_DIR)$(datadir)/bash-completion
-  endif
+endif
 	find $(ROOTFS_DIR) -name .gitignore -type f -print0 | xargs --no-run-if-empty -0 rm -f
 	find $(ROOTFS_DIR) -name Makefile.am -type f -print0 | xargs --no-run-if-empty -0 rm -f
 	find $(ROOTFS_DIR)$(base_libdir) \( -name '*.a' -o -name '*.la' \) -print0 | xargs --no-run-if-empty -0 rm -f
