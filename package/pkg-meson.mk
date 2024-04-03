@@ -18,6 +18,7 @@ define MESON_CROSS_COMPILATION_CONF_HOOK # (dest dir)
 		echo "ar = '$(TARGET_AR)'"; \
 		echo "strip = '$(TARGET_STRIP)'"; \
 		echo "nm = '$(TARGET_NM)'"; \
+		echo "cmake = '$(HOST_CMAKE_BINARY)'"; \
 		echo "pkgconfig = '$(PKG_CONFIG)'"; \
 		echo ""; \
 		echo "[built-in options]"; \
@@ -26,11 +27,13 @@ define MESON_CROSS_COMPILATION_CONF_HOOK # (dest dir)
 		echo "cpp_args = '$(TARGET_CXXFLAGS)'"; \
 		echo "cpp_link_args = '$(TARGET_LDFLAGS)'"; \
 		echo "prefix = '$(prefix)'"; \
+		echo "cmake_prefix_path = '$(TARGET_libdir)/cmake'"; \
 		echo ""; \
 		echo "[properties]"; \
 		echo "needs_exe_wrapper = true"; \
 		echo "sys_root = '$(TARGET_DIR)'"; \
-		echo "pkg_config_libdir = '$(PKG_CONFIG_LIBDIR)'"; \
+		echo "pkg_config_libdir = '$(PKG_CONFIG_PATH)'"; \
+		echo "cmake_defaults = true"; \
 		echo ""; \
 		echo "[host_machine]"; \
 		echo "system = 'linux'"; \
