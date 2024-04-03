@@ -186,3 +186,28 @@ define host-cmake-package
 	$(if $(filter $(1),$(PKG_NO_INSTALL)),,$(call HOST_CMAKE_INSTALL))
 	$(call HOST_FOLLOWUP)
 endef
+
+################################################################################
+#
+# Generation of the CMake toolchain file
+#
+################################################################################
+
+CMAKE_SYSTEM_PROCESSOR = $(TARGET_ARCH)
+
+define HOST_CMAKE_TOOLCHAIN_FILE_HOOK
+	$(INSTALL) -d $(HOST_DIR)/share/buildsystem
+	$(Q)sed \
+		-e 's#@@HOST_DIR@@#$(call qstrip,$(HOST_DIR))#' \
+		-e 's#@@TARGET_DIR@@#$(call qstrip,$(TARGET_DIR))#' \
+		-e 's#@@TARGET_CFLAGS@@#$(call qstrip,$(TARGET_CFLAGS))#' \
+		-e 's#@@TARGET_CXXFLAGS@@#$(call qstrip,$(TARGET_CXXFLAGS))#' \
+		-e 's#@@TARGET_LDFLAGS@@#$(call qstrip,$(TARGET_LDFLAGS))#' \
+		-e 's#@@TARGET_CC@@#$(call qstrip,$(TARGET_CC))#' \
+		-e 's#@@TARGET_CXX@@#$(call qstrip,$(TARGET_CXX))#' \
+		-e 's#@@PKG_CONFIG_SYSROOT_DIR@@#$(call qstrip,$(PKG_CONFIG_SYSROOT_DIR))#' \
+		-e 's#@@CMAKE_SYSTEM_PROCESSOR@@#$(call qstrip,$(CMAKE_SYSTEM_PROCESSOR))#' \
+		-e 's#@@CMAKE_BUILD_TYPE@@#Release#' \
+		$(SUPPORT_DIR)/misc/cmake-toolchain.in \
+		> $(HOST_DIR)/share/buildsystem/cmake-toolchain
+endef
