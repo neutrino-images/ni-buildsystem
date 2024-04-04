@@ -11,8 +11,6 @@ HARFBUZZ_SITE = https://github.com/harfbuzz/harfbuzz/releases/download/$(HARFBUZ
 
 HARFBUZZ_DEPENDENCIES = freetype glib2
 
-HARFBUZZ_AUTORECONF = YES
-
 HARFBUZZ_CONF_OPTS = \
 	-Dgdi=disabled \
 	-Ddirectwrite=disabled \
