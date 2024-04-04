@@ -4,10 +4,11 @@
 #
 ################################################################################
 
-LIBXML2_VERSION = 2.11.5
+LIBXML2_VERSION_MAJOR = 2.12
+LIBXML2_VERSION = $(LIBXML2_VERSION_MAJOR).6
 LIBXML2_DIR = libxml2-$(LIBXML2_VERSION)
 LIBXML2_SOURCE = libxml2-$(LIBXML2_VERSION).tar.xz
-LIBXML2_SITE = https://download.gnome.org/sources/libxml2/$(basename $(LIBXML2_VERSION))
+LIBXML2_SITE = https://download.gnome.org/sources/libxml2/$(LIBXML2_VERSION_MAJOR)
 
 LIBXML2_CONFIG_SCRIPTS = xml2-config
 
