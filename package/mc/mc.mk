@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-MC_VERSION = 1541952
+MC_VERSION = tags/4.8.31
 MC_DIR = mc.git
 MC_SOURCE = mc.git
 MC_SITE = $(GITHUB)/MidnightCommander
