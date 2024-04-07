@@ -4,11 +4,11 @@
 #
 ################################################################################
 
-OSCAM_VERSION = HEAD
-OSCAM_DIR = oscam.svn
-OSCAM_SOURCE = oscam.svn
-OSCAM_SITE = https://svn.streamboard.tv/oscam/trunk
-OSCAM_SITE_METHOD = svn
+OSCAM_VERSION = master
+OSCAM_DIR = oscam.git
+OSCAM_SOURCE = oscam.git
+OSCAM_SITE = https://git.streamboard.tv/common
+OSCAM_SITE_METHOD = git
 
 OSCAM_KEEP_BUILD_DIR = YES
 
