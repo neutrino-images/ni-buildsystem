@@ -67,7 +67,7 @@ NEUTRINO_CONF_OPTS = \
 	--with-omdb-api-key="$(BS_PACKAGE_NEUTRINO_OMDB_API_KEY)" \
 	--with-tmdb-api-key="$(BS_PACKAGE_NEUTRINO_TMDB_API_KEY)" \
 	--with-shoutcast-dev-key="$(BS_PACKAGE_NEUTRINO_SHOUTCAST_DEV_KEY)" \
-	--with-youtube-dev-key="$(BS_PACKAGE_NEUTRINO_YOUTUBE_DEV_KEY)" \
+	--with-youtube-api-key="$(BS_PACKAGE_NEUTRINO_YOUTUBE_API_KEY)" \
 	--with-weather-api-key="$(BS_PACKAGE_NEUTRINO_WEATHER_API_KEY)" \
 	\
 	--with-target=cdk \
