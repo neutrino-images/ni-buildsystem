@@ -65,8 +65,8 @@ NEUTRINO_CONF_OPTS = \
 	--enable-pugixml \
 	\
 	--with-omdb-api-key="$(BS_PACKAGE_NEUTRINO_OMDB_API_KEY)" \
+	--with-tmdb-api-key="$(BS_PACKAGE_NEUTRINO_TMDB_API_KEY)" \
 	--with-shoutcast-dev-key="$(BS_PACKAGE_NEUTRINO_SHOUTCAST_DEV_KEY)" \
-	--with-tmdb-dev-key="$(BS_PACKAGE_NEUTRINO_TMDB_DEV_KEY)" \
 	--with-youtube-dev-key="$(BS_PACKAGE_NEUTRINO_YOUTUBE_DEV_KEY)" \
 	--with-weather-api-key="$(BS_PACKAGE_NEUTRINO_WEATHER_API_KEY)" \
 	\
