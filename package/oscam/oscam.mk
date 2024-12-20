@@ -51,7 +51,7 @@ OSCAM_CONF_OPTS = \
 # enable ssl
 OSCAM_DEPENDENCIES += openssl
 OSCAM_CONF_OPTS += \
-	--enable WITH_SSL
+	--disable WITH_SSL
 
 # enable streamrelay
 OSCAM_DEPENDENCIES += libdvbcsa
