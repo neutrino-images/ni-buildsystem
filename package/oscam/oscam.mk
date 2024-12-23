@@ -51,7 +51,7 @@ OSCAM_CONF_OPTS = \
 # enable ssl
 OSCAM_DEPENDENCIES += openssl
 OSCAM_CONF_OPTS += \
-	--disable WITH_SSL
+	--enable WITH_SSL
 
 # enable streamrelay
 OSCAM_DEPENDENCIES += libdvbcsa
@@ -79,6 +79,7 @@ OSCAM_MAKE_OPTS = \
 	CROSS=$(TARGET_CROSS) \
 	EXTRA_CC_OPTS="$(TARGET_OPTIMIZATION)" \
 	EXTRA_LDFLAGS="$(TARGET_LDFLAGS)" \
+	TOOLCHAIN_INC_DIR=$(TARGET_includedir) \
 	\
 	CONF_DIR=/var/tuxbox/config \
 	LIST_SMARGO_BIN=$($(PKG)_LIST_SMARGO_BIN) \
