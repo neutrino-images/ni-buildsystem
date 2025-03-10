@@ -7,7 +7,7 @@
 OSCAM_PATCHED_VERSION = master
 OSCAM_PATCHED_DIR = oscam-patched.git
 OSCAM_PATCHED_SOURCE = oscam-patched.git
-OSCAM_PATCHED_SITE = https://github.com/oscam-emu
+OSCAM_PATCHED_SITE = https://github.com/knicko007
 OSCAM_PATCHED_SITE_METHOD = git
 
 # inherit $(OSCAM_DEPENDENCIES) except oscam-emu
