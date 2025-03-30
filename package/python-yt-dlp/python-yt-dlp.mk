@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-PYTHON_YT_DLP_VERSION = 2025.2.19
+PYTHON_YT_DLP_VERSION = 2025.3.27
 PYTHON_YT_DLP_DIR = yt_dlp-$(PYTHON_YT_DLP_VERSION)
 PYTHON_YT_DLP_SOURCE = yt_dlp-$(PYTHON_YT_DLP_VERSION).tar.gz
 PYTHON_YT_DLP_SITE = $(PYPI_MIRROR)/y/yt-dlp
