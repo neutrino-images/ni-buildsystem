@@ -84,6 +84,7 @@ BASE_DIR     := $(CURDIR)
 DL_DIR        = $(BASE_DIR)/download
 BUILD_DIR     = $(BASE_DIR)/.build
 DEPS_DIR      = $(BASE_DIR)/.deps
+LOG_DIR       = $(BASE_DIR)/.log
 D             = $(DEPS_DIR)
 SOURCE_DIR   ?= $(BASE_DIR)/source
 MAKE_DIR      = $(BASE_DIR)/make
