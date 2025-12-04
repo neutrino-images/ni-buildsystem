@@ -1,0 +1,14 @@
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -3,6 +3,10 @@
+ AUTOMAKE_OPTIONS = foreign subdir-objects
+ 
+ ACLOCAL_AMFLAGS = -I m4
++
++# Alias required by AX_ENABLE_BUILDDIR / config-ml
++.PHONY: all-configured
++all-configured: all
+ 
+ SUBDIRS = include testsuite man
+ if BUILD_DOCS
+

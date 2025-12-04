@@ -23,7 +23,7 @@ diff --git a/configure.ac b/configure.ac
 index a7bf5ee..36cd0d4 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -469,6 +469,16 @@ esac
+@@ -234,6 +234,16 @@ esac
  AM_CONDITIONAL(FFI_EXEC_TRAMPOLINE_TABLE, test x$FFI_EXEC_TRAMPOLINE_TABLE = x1)
  AC_SUBST(FFI_EXEC_TRAMPOLINE_TABLE)
  

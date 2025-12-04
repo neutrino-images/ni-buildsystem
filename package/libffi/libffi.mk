@@ -13,7 +13,8 @@ LIBFFI_AUTORECONF = YES
 
 LIBFFI_CONF_OPTS = \
 	--datarootdir=$(REMOVE_datarootdir) \
-	$(if $(filter $(BOXSERIES),hd1),--enable-static --disable-shared)
+	$(if $(filter $(BOXSERIES),hd1),--enable-static --disable-shared) \
+	--disable-multi-os-directory
 
 libffi: | $(TARGET_DIR)
 	$(call autotools-package)

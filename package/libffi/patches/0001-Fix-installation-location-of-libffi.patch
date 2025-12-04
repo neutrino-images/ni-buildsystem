@@ -39,11 +39,9 @@ Signed-off-by: Jörg Krause <joerg.krause@embedded.rocks>
 
 diff --git a/Makefile.am b/Makefile.am
 index 0e40451..309474c 100644
---- a/Makefile.am
-+++ b/Makefile.am
-@@ -104,7 +104,7 @@ FLAGS_TO_PASS = $(AM_MAKEFLAGS)
- 
- MAKEOVERRIDES=
+@@ -34,7 +34,7 @@
+ pkgconfigdir = $(libdir)/pkgconfig
+ pkgconfig_DATA = libffi.pc
  
 -toolexeclib_LTLIBRARIES = libffi.la
 +lib_LTLIBRARIES = libffi.la
