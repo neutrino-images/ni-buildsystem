@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-PYTHON_LXML_VERSION = 5.1.0
+PYTHON_LXML_VERSION = 6.0.2
 PYTHON_LXML_DIR = lxml-$(PYTHON_LXML_VERSION)
 PYTHON_LXML_SOURCE = lxml-$(PYTHON_LXML_VERSION).tar.gz
 PYTHON_LXML_SITE = $(PYPI_MIRROR)/l/lxml
