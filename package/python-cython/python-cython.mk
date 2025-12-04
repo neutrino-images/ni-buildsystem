@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-PYTHON_CYTHON_VERSION = 0.29.36
+PYTHON_CYTHON_VERSION = 3.2.2
 PYTHON_CYTHON_DIR = Cython-$(PYTHON_CYTHON_VERSION)
 PYTHON_CYTHON_SOURCE = Cython-$(PYTHON_CYTHON_VERSION).tar.gz
 PYTHON_CYTHON_SITE = $(PYPI_MIRROR)/c/cython
