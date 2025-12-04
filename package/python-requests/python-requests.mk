@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-PYTHON_REQUESTS_VERSION = 2.31.0
+PYTHON_REQUESTS_VERSION = 2.32.5
 PYTHON_REQUESTS_DIR = requests-$(PYTHON_REQUESTS_VERSION)
 PYTHON_REQUESTS_SOURCE = requests-$(PYTHON_REQUESTS_VERSION).tar.gz
 PYTHON_REQUESTS_SITE = $(PYPI_MIRROR)/r/requests
