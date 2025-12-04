@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-PYTHON_WHEEL_VERSION = 0.42.0
+PYTHON_WHEEL_VERSION = 0.45.1
 PYTHON_WHEEL_DIR = wheel-$(PYTHON_WHEEL_VERSION)
 PYTHON_WHEEL_SOURCE = wheel-$(PYTHON_WHEEL_VERSION).tar.gz
 PYTHON_WHEEL_SITE = $(PYPI_MIRROR)/w/wheel
