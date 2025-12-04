@@ -21,7 +21,7 @@ diff --git a/configure.ac b/configure.ac
 index cce195ae..0c852434 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -52,6 +52,8 @@ dnl Checks for library functions.
+@@ -56,6 +56,8 @@ dnl Checks for library functions.
  AC_CHECK_FUNCS([uselocale])
  AC_CHECK_FUNCS([eaccess])
  
@@ -34,7 +34,7 @@ diff --git a/src/pcm/pcm_direct.c b/src/pcm/pcm_direct.c
 index 2b07eff9..4dc3ea26 100644
 --- a/src/pcm/pcm_direct.c
 +++ b/src/pcm/pcm_direct.c
-@@ -437,13 +437,21 @@ int snd_pcm_direct_server_create(snd_pcm_direct_t *dmix)
+@@ -442,13 +442,21 @@ int snd_pcm_direct_server_create(snd_pcm_direct_t *dmix)
  		close(dmix->server_fd);
  		return ret;
  	}
