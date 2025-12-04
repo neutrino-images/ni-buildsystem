@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-PYTHON_PIP_VERSION = 23.3.2
+PYTHON_PIP_VERSION = 25.3
 PYTHON_PIP_DIR = pip-$(PYTHON_PIP_VERSION)
 PYTHON_PIP_SOURCE = pip-$(PYTHON_PIP_VERSION).tar.gz
 PYTHON_PIP_SITE = $(PYPI_MIRROR)/p/pip
