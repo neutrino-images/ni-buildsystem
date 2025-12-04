@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-PYTHON_FLIT_CORE_VERSION = 3.9.0
+PYTHON_FLIT_CORE_VERSION = 3.12.0
 PYTHON_FLIT_CORE_DIR = flit_core-$(PYTHON_FLIT_CORE_VERSION)
 PYTHON_FLIT_CORE_SOURCE = flit_core-$(PYTHON_FLIT_CORE_VERSION).tar.gz
 PYTHON_FLIT_CORE_SITE = $(PYPI_MIRROR)/f/flit_core
