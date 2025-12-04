@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-PYTHON_HATCHLING_VERSION = 1.21.0
+PYTHON_HATCHLING_VERSION = 1.28.0
 PYTHON_HATCHLING_DIR = hatchling-$(PYTHON_HATCHLING_VERSION)
 PYTHON_HATCHLING_SOURCE = hatchling-$(PYTHON_HATCHLING_VERSION).tar.gz
 PYTHON_HATCHLING_SITE = $(PYPI_MIRROR)/h/hatchling
