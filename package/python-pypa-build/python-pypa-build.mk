@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-PYTHON_PYPA_BUILD_VERSION = 1.0.3
+PYTHON_PYPA_BUILD_VERSION = 1.3.0
 PYTHON_PYPA_BUILD_DIR = build-$(PYTHON_PYPA_BUILD_VERSION)
 PYTHON_PYPA_BUILD_SOURCE = build-$(PYTHON_PYPA_BUILD_VERSION).tar.gz
 PYTHON_PYPA_BUILD_SITE = $(PYPI_MIRROR)/b/build
