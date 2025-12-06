@@ -199,7 +199,7 @@ ifeq ($(PKG_MODE),PYTHON)
         $(PKG)_PYTHON_BASE_BUILD_CMD = ./setup.py build $(TARGET_PKG_PYTHON_SETUPTOOLS_BUILD_OPTS)
         $(PKG)_PYTHON_BASE_INSTALL_CMD = ./setup.py install $(TARGET_PKG_PYTHON_SETUPTOOLS_INSTALL_OPTS)
       endif
-    # flit, pep517
+    # flit, hatch, pep517
     else ifeq ($$($(PKG)_SETUP_TYPE),$$(filter $$($(PKG)_SETUP_TYPE),flit hatch pep517))
       ifeq ($(PKG_DESTINATION),HOST)
         $(PKG)_PYTHON_BASE_ENV = $(HOST_PKG_PYTHON_PEP517_ENV)
