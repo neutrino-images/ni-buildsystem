@@ -1,10 +1,11 @@
+diff --git a/main.c b/main.c
+index b32fd2b..8779bbe 100644
 --- a/main.c
 +++ b/main.c
-@@ -121,6 +121,36 @@
- 	return x->tv_sec < y->tv_sec;
+@@ -125,6 +125,36 @@ int timeval_subtract (struct timeval *result, struct timeval *x, struct timeval
  }
  #endif
-+
+ 
 +int proc_get(const char *path, char *value, const int len)
 +{
 +	int ret, ret2;
@@ -34,24 +35,25 @@
 +		sscanf(buf, "%x", &ret);
 +	return ret;
 +}
- 
++
  #define VIDEO_DEV "/dev/video"
  
-@@ -146,11 +176,12 @@
+ // dont change SPARE_RAM and DMA_BLOCKSIZE until you really know what you are doing !!!
+@@ -149,11 +179,12 @@ static const int yuv2rgbtable_bv[256] = {
  };
  
  void getvideo(unsigned char *video, int *xres, int *yres);
 -void getvideo2(unsigned char *video, int *xres, int *yres);
 +void getvideo2(unsigned char *video, int *xres, int *yres, int video_dev);
  void getosd(unsigned char *osd, int *xres, int *yres);
- void smooth_resize(const unsigned char *source, unsigned char *dest, int xsource, int ysource, int xdest, int ydest, int colors);
+ void smooth_resize(const unsigned char *source, unsigned char *dest, int xsource, int ysource, int xdest, int ydest, int colors); 
  void fast_resize(const unsigned char *source, unsigned char *dest, int xsource, int ysource, int xdest, int ydest, int colors);
  void (*resize)(const unsigned char *source, unsigned char *dest, int xsource, int ysource, int xdest, int ydest, int colors);
 +void combine_video(unsigned char *output, const unsigned char *input, int xres, int yres, int pip);
  void combine(unsigned char *output, const unsigned char *video, const unsigned char *osd, int vleft, int vtop, int vwidth, int vheight, int xres, int yres);
  
  #if !defined(__sh__)
-@@ -171,18 +202,18 @@
+@@ -268,12 +299,12 @@ static inline void clamp_rect(int *L,int *T,int *W,int *H,int outW,int outH)
  int main(int argc, char **argv)
  {
  	int xres_v,yres_v,xres_o,yres_o,xres,yres,aspect;
@@ -66,14 +68,16 @@
  	jpg_quality=50;
  	aspect=1;
  
- 	int dst_left = 0, dst_top = 0, dst_width = 0, dst_height = 0;
+@@ -286,7 +317,7 @@ int main(int argc, char **argv)
+ 	if (getenv("GRAB_AXIS_DEBUG") && *getenv("GRAB_AXIS_DEBUG"))
+ 		axis_debug = 1;
  
 -	unsigned char *video, *osd, *output;
 +	unsigned char *video, *video1, *video2, *video3, *osd, *output;
  	int output_bytes=3;
  
  	const char* filename = "/tmp/screenshot.bmp";
-@@ -612,7 +643,7 @@
+@@ -721,7 +752,7 @@ int main(int argc, char **argv)
  	}
  
  	// process command line
@@ -82,7 +86,7 @@
  	{
  		switch (c)
  		{
-@@ -634,6 +665,7 @@
+@@ -743,6 +774,7 @@ int main(int argc, char **argv)
  					"-p produce png files instead of bmp\n"
  					"-q Quiet mode, don't output debug messages\n"
  					"-s write to stdout instead of a file\n"
@@ -90,7 +94,7 @@
  					"-h this help screen\n\n"
  					"If no command is given the complete picture will be grabbed.\n"
  					"If no filename is given /tmp/screenshot.[bmp/jpg/png] will be used.\n");
-@@ -689,6 +721,14 @@
+@@ -798,6 +830,14 @@ int main(int argc, char **argv)
  			case 'n':
  				no_aspect=1;
  				break;
@@ -105,7 +109,7 @@
  		}
  	}
  	if (optind < argc) // filename
-@@ -699,7 +739,26 @@
+@@ -808,7 +848,26 @@ int main(int argc, char **argv)
  	if (stb_type == VULCAN || stb_type == PALLAS)
  		mallocsize=720*576;
  
@@ -132,35 +136,35 @@
  	osd = (unsigned char *)malloc(mallocsize*4);
  
  	if ((stb_type == VULCAN || stb_type == PALLAS) && width > 720)
-@@ -718,7 +775,26 @@
+@@ -827,7 +886,26 @@ int main(int argc, char **argv)
  			fprintf(stderr, "Grabbing Video ...\n");
  		if (stb_type == BRCM7366 || stb_type == BRCM7251 || stb_type == BRCM7252 || stb_type == BRCM7252S || stb_type == BRCM7444 || stb_type == BRCM72604VU || stb_type == BRCM7278 || stb_type == HISIL_ARM)
  		{
 -			getvideo2(video, &xres_v,&yres_v);
-+			getvideo2(video, &xres_v,&yres_v, 0);
++			getvideo2(video, &xres_v, &yres_v, 0);
 +			if (pips > 0)
 +			{
 +				memset(video, 0, xres_v * yres_v * 3);
-+				getvideo2(video1, &xres_v,&yres_v, 0);
++				getvideo2(video1, &xres_v, &yres_v, 0);
 +				combine_video(video, video1, xres_v, yres_v, 0);
 +				memset(video1, 0, xres_v * yres_v * 3);
-+				getvideo2(video1, &xres_v,&yres_v, 1);
++				getvideo2(video1, &xres_v, &yres_v, 1);
 +				combine_video(video, video1, xres_v, yres_v, 1);
 +			}
 +			if (pips > 1)
 +			{
-+				getvideo2(video2, &xres_v,&yres_v, 2);
++				getvideo2(video2, &xres_v, &yres_v, 2);
 +				combine_video(video, video2, xres_v, yres_v, 2);
 +			}
 +			if (pips > 2)
 +			{
-+				getvideo2(video3, &xres_v,&yres_v, 3);
++				getvideo2(video3, &xres_v, &yres_v, 3);
 +				combine_video(video, video3, xres_v, yres_v, 3);
 +			}
  		}
  		else
  		{
-@@ -739,41 +815,11 @@
+@@ -861,41 +939,11 @@ int main(int argc, char **argv)
  	}
  	else
  	{
@@ -207,28 +211,28 @@
  		if (dst_width == 720) dst_width = 0;
  		if (dst_height == 576) dst_height = 0;
  	}
-@@ -833,7 +879,7 @@
- 			resize(osd, output, xres_o, yres_o, xres, yres, 4);
+@@ -973,7 +1021,7 @@ int main(int argc, char **argv)
  			memcpy(osd, output, xres * yres * 4);
  		}
--		if (xres_v != dst_width || yres_v != dst_height)
-+		if ((xres_v != dst_width || yres_v != dst_height) && (pips == 0))
+ 
+-		if (xres_v != vbuf_w || yres_v != vbuf_h)
++		if ((xres_v != vbuf_w || yres_v != vbuf_h) && (pips == 0))
  		{
  			if (!quiet)
- 				fprintf(stderr, "Resizing Video to %d x %d ...\n", dst_width, dst_height);
-@@ -857,7 +903,10 @@
- 	{
- 		if (!quiet)
- 			fprintf(stderr, "Merge Video with Framebuffer ...\n");
--		combine(output, video, osd, dst_left, dst_top, dst_width ? dst_width : xres, dst_height ? dst_height : yres, xres, yres);
+ 				fprintf(stderr, "Resizing Video to %d x %d ...\n", vbuf_w, vbuf_h);
+@@ -998,7 +1046,10 @@ int main(int argc, char **argv)
+ 				fprintf(stderr, "[combine] dst=%d,%d %dx%d  vbuf=%dx%d  out=%dx%d\n", dst_left, dst_top, dst_width, dst_height, vbuf_w, vbuf_h, xres, yres);
+ 			}
+ 
+-			combine(output, video, osd, dst_left, dst_top, vbuf_w ? vbuf_w : xres, vbuf_h ? vbuf_h : yres, xres, yres);
 +			if (pips == 0)
-+				combine(output, video, osd, dst_left, dst_top, dst_width ? dst_width : xres, dst_height ? dst_height : yres, xres, yres);
++				combine(output, video, osd, dst_left, dst_top, vbuf_w ? vbuf_w : xres, vbuf_h ? vbuf_h : yres, xres, yres);
 +			else
 +				combine(output, video, osd, 0, 0, xres, yres, xres, yres);
  	}
  
- 	// resize to specific width ?
-@@ -1045,7 +1094,7 @@
+ post_merge:
+@@ -1187,7 +1238,7 @@ post_merge:
  
  // grabing the video picture
  
@@ -237,7 +241,7 @@
  {
  	char buf[256];
  	sprintf(buf, "/dev/dvb/adapter0/video%d", video_dev);
-@@ -1116,10 +1165,7 @@
+@@ -1262,10 +1313,7 @@ void getvideo(unsigned char *video, int *xres, int *yres)
  
  		munmap((void*)data, 100);
  
@@ -249,7 +253,7 @@
  
  		if (!adr || !adr2)
  		{
-@@ -1514,25 +1560,8 @@
+@@ -1733,25 +1781,8 @@ dmerr:
  		*xres=0;
  		*yres=0;
  
@@ -277,7 +281,7 @@
  
  		if((stride == 0) || (res == 0)) return;
  
-@@ -1685,24 +1714,8 @@
+@@ -1904,24 +1935,8 @@ dmerr:
  		*xres=0;
  		*yres=0;
  
@@ -304,7 +308,7 @@
  
  		//if stride and res are zero return (please note that stillpictures will not be captured)
  		if((stride == 0)&&(res == 0)) return;
-@@ -1929,24 +1942,8 @@
+@@ -2148,24 +2163,8 @@ dmerr:
  	else if (stb_type == XILLEON)
  	{
  		// grab xilleon pic from decoder memory
@@ -329,12 +333,12 @@
 +		stride = proc_get_hex("/proc/stb/vmpeg/0/xres");
 +		res = proc_get_hex("/proc/stb/vmpeg/0/yres");
  
- 		if(!(memory = (unsigned char*)mmap(0, 1920*1152*6, PROT_READ, MAP_SHARED, mem_fd, 0x6000000)))
+ 		if((memory = (unsigned char*)mmap(0, 1920*1152*6, PROT_READ, MAP_SHARED, mem_fd, 0x6000000)) == MAP_FAILED)
  		{
-@@ -2459,6 +2456,48 @@
- 		}
+@@ -2682,6 +2681,49 @@ void fast_resize(const unsigned char *source, unsigned char *dest, int xsource,
  	}
  }
+ 
 +// combining 2 videos
 +void combine_video(unsigned char *output, const unsigned char *input, int xres, int yres, int pip)
 +{
@@ -377,7 +381,7 @@
 +		}
 +	}
 +}
- 
++
  // combining pixmaps by using an alphamap
  void combine(unsigned char *output, const unsigned char *video, const unsigned char *osd, int vleft, int vtop, int vwidth, int vheight, int xres, int yres)
-
+ {
