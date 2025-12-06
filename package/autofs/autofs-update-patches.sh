@@ -1,7 +1,7 @@
 #!/bin/bash
 
-version=5.1.8
-url=https://mirrors.edge.kernel.org/pub/linux/daemons/autofs/v5/patches-5.1.9
+version=5.1.9
+url=https://mirrors.edge.kernel.org/pub/linux/daemons/autofs/v5/patches-5.2.0
 
 cd patches
 wget -N $url/patch_order_$version
