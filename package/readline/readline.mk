@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-READLINE_VERSION = 8.1.2
+READLINE_VERSION = 8.3
 READLINE_DIR = readline-$(READLINE_VERSION)
 READLINE_SOURCE = readline-$(READLINE_VERSION).tar.gz
 READLINE_SITE = $(GNU_MIRROR)/readline
@@ -18,7 +18,9 @@ READLINE_CONF_ENV = \
 READLINE_CONF_OPTS = \
 	--datarootdir=$(REMOVE_datarootdir) \
 	--disable-bracketed-paste-default \
-	--disable-install-examples
+	--disable-install-examples \
+	--with-curses \
+	--with-shared-termcap-library
 
 define READLINE_INSTALL_INPUTRC
 	$(INSTALL_DATA) -D $(PKG_FILES_DIR)/inputrc $(TARGET_sysconfdir)/inputrc
