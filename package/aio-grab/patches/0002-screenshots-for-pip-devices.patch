@@ -51,7 +51,7 @@
  void combine(unsigned char *output, const unsigned char *video, const unsigned char *osd, int vleft, int vtop, int vwidth, int vheight, int xres, int yres);
  
  #if !defined(__sh__)
-@@ -223,18 +254,18 @@
+@@ -171,18 +202,18 @@
  int main(int argc, char **argv)
  {
  	int xres_v,yres_v,xres_o,yres_o,xres,yres,aspect;
@@ -73,7 +73,7 @@
  	int output_bytes=3;
  
  	const char* filename = "/tmp/screenshot.bmp";
-@@ -669,7 +700,7 @@
+@@ -612,7 +643,7 @@
  	}
  
  	// process command line
@@ -82,7 +82,7 @@
  	{
  		switch (c)
  		{
-@@ -691,6 +722,7 @@
+@@ -634,6 +665,7 @@
  					"-p produce png files instead of bmp\n"
  					"-q Quiet mode, don't output debug messages\n"
  					"-s write to stdout instead of a file\n"
@@ -90,7 +90,7 @@
  					"-h this help screen\n\n"
  					"If no command is given the complete picture will be grabbed.\n"
  					"If no filename is given /tmp/screenshot.[bmp/jpg/png] will be used.\n");
-@@ -746,6 +778,14 @@
+@@ -689,6 +721,14 @@
  			case 'n':
  				no_aspect=1;
  				break;
@@ -105,10 +105,11 @@
  		}
  	}
  	if (optind < argc) // filename
-@@ -756,7 +796,24 @@
+@@ -699,7 +739,26 @@
  	if (stb_type == VULCAN || stb_type == PALLAS)
  		mallocsize=720*576;
  
++	/*
 +	if (pips == 0)
 +	{
 +		for (int p=1; p < 4; p++)
@@ -119,6 +120,7 @@
 +				pips = p;
 +		}
 +	}
++	*/
 +
  	video = (unsigned char *)malloc(mallocsize*3);
 +	if (pips > 0)
@@ -130,7 +132,7 @@
  	osd = (unsigned char *)malloc(mallocsize*4);
  
  	if ((stb_type == VULCAN || stb_type == PALLAS) && width > 720)
-@@ -775,7 +832,26 @@
+@@ -718,7 +775,26 @@
  			fprintf(stderr, "Grabbing Video ...\n");
  		if (stb_type == BRCM7366 || stb_type == BRCM7251 || stb_type == BRCM7252 || stb_type == BRCM7252S || stb_type == BRCM7444 || stb_type == BRCM72604VU || stb_type == BRCM7278 || stb_type == HISIL_ARM)
  		{
@@ -158,7 +160,7 @@
  		}
  		else
  		{
-@@ -796,41 +872,11 @@
+@@ -739,41 +815,11 @@
  	}
  	else
  	{
@@ -205,7 +207,7 @@
  		if (dst_width == 720) dst_width = 0;
  		if (dst_height == 576) dst_height = 0;
  	}
-@@ -890,7 +936,7 @@
+@@ -833,7 +879,7 @@
  			resize(osd, output, xres_o, yres_o, xres, yres, 4);
  			memcpy(osd, output, xres * yres * 4);
  		}
@@ -214,7 +216,7 @@
  		{
  			if (!quiet)
  				fprintf(stderr, "Resizing Video to %d x %d ...\n", dst_width, dst_height);
-@@ -914,7 +960,10 @@
+@@ -857,7 +903,10 @@
  	{
  		if (!quiet)
  			fprintf(stderr, "Merge Video with Framebuffer ...\n");
@@ -226,7 +228,7 @@
  	}
  
  	// resize to specific width ?
-@@ -1102,7 +1151,7 @@
+@@ -1045,7 +1094,7 @@
  
  // grabing the video picture
  
@@ -235,7 +237,7 @@
  {
  	char buf[256];
  	sprintf(buf, "/dev/dvb/adapter0/video%d", video_dev);
-@@ -1173,10 +1222,7 @@
+@@ -1116,10 +1165,7 @@
  
  		munmap((void*)data, 100);
  
@@ -247,7 +249,7 @@
  
  		if (!adr || !adr2)
  		{
-@@ -1644,25 +1690,8 @@
+@@ -1514,25 +1560,8 @@
  		*xres=0;
  		*yres=0;
  
@@ -275,7 +277,7 @@
  
  		if((stride == 0) || (res == 0)) return;
  
-@@ -1815,24 +1844,8 @@
+@@ -1685,24 +1714,8 @@
  		*xres=0;
  		*yres=0;
  
@@ -302,7 +304,7 @@
  
  		//if stride and res are zero return (please note that stillpictures will not be captured)
  		if((stride == 0)&&(res == 0)) return;
-@@ -2059,24 +2072,8 @@
+@@ -1929,24 +1942,8 @@
  	else if (stb_type == XILLEON)
  	{
  		// grab xilleon pic from decoder memory
@@ -327,9 +329,9 @@
 +		stride = proc_get_hex("/proc/stb/vmpeg/0/xres");
 +		res = proc_get_hex("/proc/stb/vmpeg/0/yres");
  
- 		if((memory = (unsigned char*)mmap(0, 1920*1152*6, PROT_READ, MAP_SHARED, mem_fd, 0x6000000)) == MAP_FAILED)
+ 		if(!(memory = (unsigned char*)mmap(0, 1920*1152*6, PROT_READ, MAP_SHARED, mem_fd, 0x6000000)))
  		{
-@@ -2589,6 +2586,48 @@
+@@ -2459,6 +2456,48 @@
  		}
  	}
  }
@@ -378,3 +380,4 @@
  
  // combining pixmaps by using an alphamap
  void combine(unsigned char *output, const unsigned char *video, const unsigned char *osd, int vleft, int vtop, int vwidth, int vheight, int xres, int yres)
+
