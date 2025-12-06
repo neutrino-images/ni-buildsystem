@@ -1,5 +1,5 @@
 diff --git a/main.c b/main.c
-index b32fd2b..8779bbe 100644
+index b32fd2b..e8aa9b9 100644
 --- a/main.c
 +++ b/main.c
 @@ -125,6 +125,36 @@ int timeval_subtract (struct timeval *result, struct timeval *x, struct timeval
@@ -164,45 +164,19 @@ index b32fd2b..8779bbe 100644
  		}
  		else
  		{
-@@ -861,41 +939,11 @@ int main(int argc, char **argv)
+@@ -861,6 +939,7 @@ int main(int argc, char **argv)
  	}
  	else
  	{
--		fp = fopen("/proc/stb/vmpeg/0/aspect", "r");
--		if (fp)
--		{
--			while (fgets(buf,sizeof(buf), fp))
--				sscanf(buf,"%x",&aspect);
--			fclose(fp);
--		}
--		fp = fopen("/proc/stb/vmpeg/0/dst_width", "r");
--		if (fp)
--		{
--			while (fgets(buf,sizeof(buf), fp))
--				sscanf(buf,"%x",&dst_width);
--			fclose(fp);
--		}
--		fp = fopen("/proc/stb/vmpeg/0/dst_height", "r");
--		if (fp)
--		{
--			while (fgets(buf,sizeof(buf), fp))
--				sscanf(buf,"%x",&dst_height);
--			fclose(fp);
--		}
--		fp = fopen("/proc/stb/vmpeg/0/dst_top", "r");
--		if (fp)
--		{
--			while (fgets(buf,sizeof(buf), fp))
--				sscanf(buf,"%x",&dst_top);
--			fclose(fp);
--		}
--		fp = fopen("/proc/stb/vmpeg/0/dst_left", "r");
--		if (fp)
--		{
--			while (fgets(buf,sizeof(buf), fp))
--				sscanf(buf,"%x",&dst_left);
--			fclose(fp);
--		}
++/*
+ 		fp = fopen("/proc/stb/vmpeg/0/aspect", "r");
+ 		if (fp)
+ 		{
+@@ -896,6 +975,12 @@ int main(int argc, char **argv)
+ 				sscanf(buf,"%x",&dst_left);
+ 			fclose(fp);
+ 		}
++*/
 +		aspect = proc_get_hex("/proc/stb/vmpeg/0/aspect");
 +		dst_width = proc_get_hex("/proc/stb/vmpeg/0/dst_width");
 +		dst_height = proc_get_hex("/proc/stb/vmpeg/0/dst_height");
@@ -211,7 +185,7 @@ index b32fd2b..8779bbe 100644
  		if (dst_width == 720) dst_width = 0;
  		if (dst_height == 576) dst_height = 0;
  	}
-@@ -973,7 +1021,7 @@ int main(int argc, char **argv)
+@@ -973,7 +1058,7 @@ int main(int argc, char **argv)
  			memcpy(osd, output, xres * yres * 4);
  		}
  
@@ -220,7 +194,7 @@ index b32fd2b..8779bbe 100644
  		{
  			if (!quiet)
  				fprintf(stderr, "Resizing Video to %d x %d ...\n", vbuf_w, vbuf_h);
-@@ -998,7 +1046,10 @@ int main(int argc, char **argv)
+@@ -998,7 +1083,10 @@ int main(int argc, char **argv)
  				fprintf(stderr, "[combine] dst=%d,%d %dx%d  vbuf=%dx%d  out=%dx%d\n", dst_left, dst_top, dst_width, dst_height, vbuf_w, vbuf_h, xres, yres);
  			}
  
@@ -232,7 +206,7 @@ index b32fd2b..8779bbe 100644
  	}
  
  post_merge:
-@@ -1187,7 +1238,7 @@ post_merge:
+@@ -1187,7 +1275,7 @@ post_merge:
  
  // grabing the video picture
  
@@ -241,101 +215,78 @@ index b32fd2b..8779bbe 100644
  {
  	char buf[256];
  	sprintf(buf, "/dev/dvb/adapter0/video%d", video_dev);
-@@ -1262,10 +1313,7 @@ void getvideo(unsigned char *video, int *xres, int *yres)
+@@ -1262,10 +1350,14 @@ void getvideo(unsigned char *video, int *xres, int *yres)
  
  		munmap((void*)data, 100);
  
--		fp=fopen("/proc/stb/vmpeg/0/yres","r");
--		while (fgets(buf,sizeof(buf),fp))
--			sscanf(buf,"%x",&res);
--		fclose(fp);
++/*
+ 		fp=fopen("/proc/stb/vmpeg/0/yres","r");
+ 		while (fgets(buf,sizeof(buf),fp))
+ 			sscanf(buf,"%x",&res);
+ 		fclose(fp);
++*/
++
 +		res = proc_get_hex("/proc/stb/vmpeg/0/yres");
  
  		if (!adr || !adr2)
  		{
-@@ -1733,25 +1781,8 @@ dmerr:
+@@ -1733,6 +1825,7 @@ dmerr:
  		*xres=0;
  		*yres=0;
  
--		fp = fopen("/proc/stb/vmpeg/0/xres","r");
--		if (fp)
--		{
--			while (fgets(buf,sizeof(buf),fp))
--			{
--				sscanf(buf,"%x",&stride);
--			}
--			fclose(fp);
--		}
--
--		fp = fopen("/proc/stb/vmpeg/0/yres","r");
--		if (fp)
--		{
--			while (fgets(buf,sizeof(buf),fp))
--			{
--				sscanf(buf,"%x",&res);
--			}
--			fclose(fp);
--		}
++/*
+ 		fp = fopen("/proc/stb/vmpeg/0/xres","r");
+ 		if (fp)
+ 		{
+@@ -1752,6 +1845,10 @@ dmerr:
+ 			}
+ 			fclose(fp);
+ 		}
++*/
++
 +		stride = proc_get_hex("/proc/stb/vmpeg/0/xres");
 +		res = proc_get_hex("/proc/stb/vmpeg/0/yres");
  
  		if((stride == 0) || (res == 0)) return;
  
-@@ -1904,24 +1935,8 @@ dmerr:
+@@ -1904,6 +2001,7 @@ dmerr:
  		*xres=0;
  		*yres=0;
  
--		fp = fopen("/proc/stb/vmpeg/0/xres","r");
--		if (fp)
--		{
--			while (fgets(buf,sizeof(buf),fp))
--			{
--				sscanf(buf,"%x",&stride);
--			}
--			fclose(fp);
--		}
--		fp = fopen("/proc/stb/vmpeg/0/yres","r");
--		if (fp)
--		{
--			while (fgets(buf,sizeof(buf),fp))
--			{
--				sscanf(buf,"%x",&res);
--			}
--			fclose(fp);
--		}
++/*
+ 		fp = fopen("/proc/stb/vmpeg/0/xres","r");
+ 		if (fp)
+ 		{
+@@ -1922,6 +2020,10 @@ dmerr:
+ 			}
+ 			fclose(fp);
+ 		}
++*/
++
 +		stride = proc_get_hex("/proc/stb/vmpeg/0/xres");
 +		res = proc_get_hex("/proc/stb/vmpeg/0/yres");
  
  		//if stride and res are zero return (please note that stillpictures will not be captured)
  		if((stride == 0)&&(res == 0)) return;
-@@ -2148,24 +2163,8 @@ dmerr:
+@@ -2148,6 +2250,7 @@ dmerr:
  	else if (stb_type == XILLEON)
  	{
  		// grab xilleon pic from decoder memory
--		fp = fopen("/proc/stb/vmpeg/0/xres","r");
--		if (fp)
--		{
--			while (fgets(buf,sizeof(buf),fp))
--			{
--				sscanf(buf,"%x",&stride);
--			}
--			fclose(fp);
--		}
--		fp = fopen("/proc/stb/vmpeg/0/yres","r");
--		if (fp)
--		{
--			while (fgets(buf,sizeof(buf),fp))
--			{
--				sscanf(buf,"%x",&res);
--			}
--			fclose(fp);
--		}
++/*
+ 		fp = fopen("/proc/stb/vmpeg/0/xres","r");
+ 		if (fp)
+ 		{
+@@ -2166,6 +2269,9 @@ dmerr:
+ 			}
+ 			fclose(fp);
+ 		}
++*/
 +		stride = proc_get_hex("/proc/stb/vmpeg/0/xres");
 +		res = proc_get_hex("/proc/stb/vmpeg/0/yres");
  
  		if((memory = (unsigned char*)mmap(0, 1920*1152*6, PROT_READ, MAP_SHARED, mem_fd, 0x6000000)) == MAP_FAILED)
  		{
-@@ -2682,6 +2681,49 @@ void fast_resize(const unsigned char *source, unsigned char *dest, int xsource,
+@@ -2682,6 +2788,49 @@ void fast_resize(const unsigned char *source, unsigned char *dest, int xsource,
  	}
  }
  
