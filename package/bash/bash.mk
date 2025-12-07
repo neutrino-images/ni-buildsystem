@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-BASH_VERSION = 5.0
+BASH_VERSION = 5.3
 BASH_DIR = bash-$(BASH_VERSION)
 BASH_SOURCE = bash-$(BASH_VERSION).tar.gz
 BASH_SITE = $(GNU_MIRROR)/bash
@@ -16,6 +16,7 @@ BASH_CONF_ENV += \
 	bash_cv_func_sigsetjmp=present \
 	bash_cv_printf_a_format=yes
 
+# We want the bash binary in /bin
 BASH_CONF_OPTS = \
 	--bindir=$(base_bindir) \
 	--datarootdir=$(REMOVE_datarootdir) \
@@ -27,7 +28,10 @@ define BASH_TARGET_CLEANUP
 endef
 BASH_TARGET_FINALIZE_HOOKS += BASH_TARGET_CLEANUP
 
+# Add /bin/bash to /etc/shells otherwise some login tools like dropbear
+# can reject the user connection. See man shells.
 define BASH_ADD_TO_SHELLS
+	test -d $(TARGET_sysconfdir) || $(INSTALL) -d $(TARGET_sysconfdir)
 	grep -qsE '^/bin/bash$$' $(TARGET_sysconfdir)/shells \
 		|| echo "/bin/bash" >> $(TARGET_sysconfdir)/shells
 endef
