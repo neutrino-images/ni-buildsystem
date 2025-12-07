@@ -4,12 +4,13 @@
 #
 ################################################################################
 
-FUSE_EXFAT_VERSION = 1.3.0
+FUSE_EXFAT_VERSION = 1.4.0
 FUSE_EXFAT_DIR = fuse-exfat-$(FUSE_EXFAT_VERSION)
 FUSE_EXFAT_SOURCE = fuse-exfat-$(FUSE_EXFAT_VERSION).tar.gz
 FUSE_EXFAT_SITE = https://github.com/relan/exfat/releases/download/v$(FUSE_EXFAT_VERSION)
 
 FUSE_EXFAT_DEPENDENCIES = libfuse
+#FUSE_EXFAT_DEPENDENCIES = libfuse3
 
 FUSE_EXFAT_AUTORECONF = YES
 
