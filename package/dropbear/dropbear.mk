@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-DROPBEAR_VERSION = 2022.83
+DROPBEAR_VERSION = 2025.88
 DROPBEAR_DIR = dropbear-$(DROPBEAR_VERSION)
 DROPBEAR_SOURCE = dropbear-$(DROPBEAR_VERSION).tar.bz2
 DROPBEAR_SITE = http://matt.ucc.asn.au/dropbear/releases
