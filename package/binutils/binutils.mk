@@ -4,9 +4,9 @@
 #
 ################################################################################
 
-BINUTILS_VERSION = 2.38
+BINUTILS_VERSION = 2.45
 BINUTILS_DIR = binutils-$(BINUTILS_VERSION)
-BINUTILS_SOURCE = binutils-$(BINUTILS_VERSION).tar.bz2
+BINUTILS_SOURCE = binutils-$(BINUTILS_VERSION).tar.xz
 BINUTILS_SITE = $(GNU_MIRROR)/binutils
 
 BINUTILS_CONF_OPTS = \
