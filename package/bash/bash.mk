@@ -4,7 +4,9 @@
 #
 ################################################################################
 
-BASH_VERSION = 5.3
+# version 5.0 for CST due to the imperfect implementation of getrandom(2),
+# which conflicts with uclibc. See bash-5.0/lib/sh/random.c
+BASH_VERSION = $(if $(filter $(BOXTYPE),coolstream),5.0,5.3)
 BASH_DIR = bash-$(BASH_VERSION)
 BASH_SOURCE = bash-$(BASH_VERSION).tar.gz
 BASH_SITE = $(GNU_MIRROR)/bash
@@ -21,6 +23,9 @@ BASH_CONF_OPTS = \
 	--bindir=$(base_bindir) \
 	--datarootdir=$(REMOVE_datarootdir) \
 	--without-bash-malloc
+
+# 'patch -p0' to apply official patches from $(BASH_SITE)
+BASH_PATCH_STRIP = 0
 
 define BASH_TARGET_CLEANUP
 	$(TARGET_RM) $(addprefix $(TARGET_libdir)/bash/, loadables.h Makefile.inc)
