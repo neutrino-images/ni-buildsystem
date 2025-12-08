@@ -204,6 +204,19 @@ all:
 # target for testing only. not useful otherwise
 everything: $(shell find package/*/*.mk -type f | cut -d'/' -f2 | sort | uniq)
 
+# print all present targets
+print-targets:
+	@sed -n 's/^\$$.D.\/\(.*\):.*/\1/p; s/^\([a-z].*\):\( \|$$\).*/\1/p;' \
+		`ls -1 Makefile` | \
+		sort -u | fold -s -w 79
+	@$(call draw_line)
+	@sed -n 's/^\$$.D.\/\(.*\):.*/\1/p; s/^\([a-z].*\):\( \|$$\).*/\1/p;' \
+		`ls -1 make/*.mk` | \
+		sort -u | fold -s -w 79
+	@$(call draw_line)
+	@sed -n 's/^\$$.D.\/\(.*\):.*/\1/p; s/^\([a-z].*\):\( \|$$\).*/\1/p;' \
+		`ls -1 package/*/*.mk` | \
+		sort -u | fold -s -w 79
 # -----------------------------------------------------------------------------
 
 -include config.local
@@ -247,7 +260,7 @@ include make/ni.mk
 	@echo $(PHONY)
 
 PHONY += local-files
-PHONY += printenv help all everything
+PHONY += printenv help all everything print-targets
 PHONY += .print-phony
 .PHONY: $(PHONY)
 
