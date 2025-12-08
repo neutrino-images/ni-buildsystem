@@ -81,6 +81,9 @@ endif
 ifndef $(PKG)_PATCH_CUSTOM
   $(PKG)_PATCH_CUSTOM =
 endif
+ifndef $(PKG)_PATCH_STRIP
+  $(PKG)_PATCH_STRIP = 1
+endif
 
 # common
 ifndef $(PKG)_ENV
@@ -479,6 +482,7 @@ define PKG_DEBUG_VARIABLES # (control-flag(s))
 	@echo "$(PKG)_SITE:           $($(PKG)_SITE)"
 	@echo "$(PKG)_SITE_METHOD:    $($(PKG)_SITE_METHOD)"
 	@echo "$(PKG)_DEPENDENCIES:   $($(PKG)_DEPENDENCIES)"
+	@echo "$(PKG)_PATCH_STRIP:    $($(PKG)_PATCH_STRIP)"
 	#false
 endef
 
@@ -656,6 +660,11 @@ define APPLY_PATCHES # (patches or directory)
 	$(Q)( \
 	$(CD) $(BUILD_DIR)/$($(PKG)_DIR); \
 	for i in $(1) $(2); do \
+	  if [ "$($(PKG)_PATCH_STRIP)" == "0" ]; then \
+	    patch="$(PATCH0)"; \
+	  else \
+	    patch="$(PATCH)"; \
+	  fi; \
 	  if [ "$$i" == "$(PKG_PATCHES_DIR)" -a ! -d $$i ]; then \
 	    continue; \
 	  fi; \
@@ -667,12 +676,12 @@ define APPLY_PATCHES # (patches or directory)
 	    for p in $(addprefix $$i/$$v,$(PATCHES)); do \
 	      if [ -e $$p ]; then \
 	        $(call MESSAGE,"Applying $${p#$(PKG_PATCHES_DIR)/} (*)"); \
-	        $(PATCH) $$p; \
+	        $$patch $$p; \
 	    fi; \
 	    done; \
 	  else \
 	    $(call MESSAGE,"Applying $${i#$(PKG_PATCHES_DIR)/}"); \
-	    $(PATCH) $(PKG_PATCHES_DIR)/$$i; \
+	    $$patch $(PKG_PATCHES_DIR)/$$i; \
 	  fi; \
 	done; \
 	)
