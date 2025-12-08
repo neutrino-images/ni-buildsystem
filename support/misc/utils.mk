@@ -195,13 +195,13 @@ define draw_line
 		cols=$(shell tput cols); \
 		length=$(shell echo $(1) | awk '{print length}'); \
 		case "$(3)" in \
-			*right)  let indent="length + 1" ;; \
+			*right)  let indent="length + 2" ;; \
 			*center) let indent="cols - (cols - length) / 2" ;; \
-			*left|*) let indent="cols" ;; \
+			*left|*) let indent="cols - 2" ;; \
 		esac; \
 		tput cub $$indent; \
 		test "$(2)" && printf $$(tput setaf $(2)); \
-		printf '$(1)'; \
+		printf '$(1) '; \
 		test "$(2)" && printf $$(tput sgr0); \
 	fi; \
 	echo
