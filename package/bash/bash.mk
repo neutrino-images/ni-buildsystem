@@ -16,14 +16,6 @@ BASH_CONF_ENV += \
 	bash_cv_func_sigsetjmp=present \
 	bash_cv_printf_a_format=yes
 
-# uClibc getrandom() fix
-ifeq ($(BOXTYPE),coolstream)
-ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd2))
-BASH_CONF_ENV += \
-	bash_cv_func_getrandom=yes
-endif
-endif
-
 # We want the bash binary in /bin
 BASH_CONF_OPTS = \
 	--bindir=$(base_bindir) \
