@@ -10,7 +10,6 @@ PYTHON_STREAMLINK_SOURCE = streamlink-$(PYTHON_STREAMLINK_VERSION).tar.gz
 PYTHON_STREAMLINK_SITE = $(PYPI_MIRROR)/s/streamlink
 
 PYTHON_STREAMLINK_DEPENDENCIES = \
-	host-python-hatch-fancy-pypi-readme \
 	python-attr \
 	python-attrs \
 	python-certifi \

@@ -595,8 +595,8 @@ define EXTRACT # (directory)
 	$(Q)( \
 	EXTRACT_DIR=$(1); \
 	if [ "$($(PKG)_EXTRACT_DIR)" ]; then \
-		EXTRACT_DIR=$(1)/$($(PKG)_EXTRACT_DIR); \
-		$(INSTALL) -d $${EXTRACT_DIR}; \
+	  EXTRACT_DIR=$(1)/$($(PKG)_EXTRACT_DIR); \
+	  $(INSTALL) -d $${EXTRACT_DIR}; \
 	fi; \
 	case "$($(PKG)_SITE_METHOD)" in \
 	  ni-git) \
