@@ -11,7 +11,7 @@ PYTHON_PYCOUNTRY_SITE = $(PYPI_MIRROR)/p/pycountry
 
 PYTHON_PYCOUNTRY_SETUP_TYPE = hatch
 
-#PYTHON_PYCOUNTRY_DEPENDENCIES = host-python-poetry-core
+PYTHON_PYCOUNTRY_DEPENDENCIES = host-python-poetry-core
 
 python-pycountry: | $(TARGET_DIR)
 	$(call python-package)
