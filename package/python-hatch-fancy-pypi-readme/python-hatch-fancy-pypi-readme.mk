@@ -11,6 +11,8 @@ PYTHON_HATCH_FANCY_PYPI_README_SITE = $(PYPI_MIRROR)/h/hatch-fancy-pypi-readme
 
 PYTHON_HATCH_FANCY_PYPI_README_SETUP_TYPE = hatch
 
+# -----------------------------------------------------------------------------
+
 HOST_PYTHON_HATCH_FANCY_PYPI_README_DEPENDENCIES = host-python-setuptools-scm
 
 host-python-hatch-fancy-pypi-readme: | $(HOST_DIR)

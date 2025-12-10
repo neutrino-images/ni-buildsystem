@@ -13,7 +13,9 @@ PYTHON_PYPA_BUILD_SITE = $(PYPI_MIRROR)/b/build
 
 HOST_PYTHON_PYPA_BUILD_SETUP_TYPE = flit-bootstrap
 
-HOST_PYTHON_PYPA_BUILD_DEPENDENCIES = host-python-packaging host-python-pyproject-hooks
+HOST_PYTHON_PYPA_BUILD_DEPENDENCIES = \
+	host-python-packaging \
+	host-python-pyproject-hooks
 
 host-python-pypa-build: | $(HOST_DIR)
 	$(call host-python-package)

@@ -11,6 +11,8 @@ PYTHON_HATCH_VCS_SITE = $(PYPI_MIRROR)/h/hatch-vcs
 
 PYTHON_HATCH_VCS_SETUP_TYPE = hatch
 
+# -----------------------------------------------------------------------------
+
 HOST_PYTHON_HATCH_VCS_DEPENDENCIES = host-python-setuptools-scm
 
 host-python-hatch-vcs: | $(HOST_DIR)

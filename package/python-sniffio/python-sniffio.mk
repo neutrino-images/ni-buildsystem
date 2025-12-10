@@ -11,7 +11,5 @@ PYTHON_SNIFFIO_SITE = $(PYPI_MIRROR)/s/sniffio
 
 PYTHON_SNIFFIO_SETUP_TYPE = setuptools
 
-# -----------------------------------------------------------------------------
-
 python-sniffio: | $(TARGET_DIR)
 	$(call python-package)

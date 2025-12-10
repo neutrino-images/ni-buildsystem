@@ -11,7 +11,5 @@ PYTHON_ATTR_SITE = $(PYPI_MIRROR)/a/attr
 
 PYTHON_ATTR_SETUP_TYPE = setuptools
 
-# -----------------------------------------------------------------------------
-
 python-attr: | $(TARGET_DIR)
 	$(call python-package)

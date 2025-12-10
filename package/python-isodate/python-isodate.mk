@@ -11,7 +11,5 @@ PYTHON_ISODATE_SITE = $(PYPI_MIRROR)/i/isodate
 
 PYTHON_ISODATE_SETUP_TYPE = setuptools
 
-# -----------------------------------------------------------------------------
-
 python-isodate: | $(TARGET_DIR)
 	$(call python-package)

@@ -11,7 +11,5 @@ PYTHON_OUTCOME_SITE = $(PYPI_MIRROR)/o/outcome
 
 PYTHON_OUTCOME_SETUP_TYPE = setuptools
 
-# -----------------------------------------------------------------------------
-
 python-outcome: | $(TARGET_DIR)
 	$(call python-package)

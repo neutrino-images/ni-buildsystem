@@ -11,7 +11,5 @@ PYTHON_SORTEDCONTAINERS_SITE = $(PYPI_MIRROR)/s/sortedcontainers
 
 PYTHON_SORTEDCONTAINERS_SETUP_TYPE = setuptools
 
-# -----------------------------------------------------------------------------
-
 python-sortedcontainers: | $(TARGET_DIR)
 	$(call python-package)
