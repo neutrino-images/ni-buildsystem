@@ -206,18 +206,8 @@ everything: $(shell find package/*/*.mk -type f | cut -d'/' -f2 | sort | uniq)
 
 # print all present targets
 print-targets:
-	@$(call draw_line, Makefile)
-	@sed -n 's/^\$$.D.\/\(.*\):.*/\1/p; s/^\([a-z].*\):\( \|$$\).*/\1/p;' \
-		`ls -1 Makefile` | \
-		sort -u | fold -s -w 79
-	@$(call draw_line, make/*.mk)
-	@sed -n 's/^\$$.D.\/\(.*\):.*/\1/p; s/^\([a-z].*\):\( \|$$\).*/\1/p;' \
-		`ls -1 make/*.mk` | \
-		sort -u | fold -s -w 79
-	@$(call draw_line, package/*/*.mk)
-	@sed -n 's/^\$$.D.\/\(.*\):.*/\1/p; s/^\([a-z].*\):\( \|$$\).*/\1/p;' \
-		`ls -1 package/*/*.mk` | \
-		sort -u | fold -s -w 79
+	@LC_ALL=C $(MAKE) -pRrq -f $(firstword $(MAKEFILE_LIST)) : 2>/dev/null | awk -v RS= -F: '/(^|\n)# Files(\n|$$)/,/(^|\n)# Finished Make data base/ {if ($$1 !~ "^[#.]") {print $$1}}' | sort | grep -E -v -e '^[^[:alnum:]]' -e '^$@$$'
+
 # -----------------------------------------------------------------------------
 
 -include config.local
