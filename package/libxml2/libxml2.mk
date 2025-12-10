@@ -16,9 +16,9 @@ LIBXML2_CONF_OPTS = \
 	--datarootdir=$(REMOVE_datarootdir) \
 	--enable-shared \
 	--disable-static \
+	--with-c14n \
 	--without-python \
 	--without-debug \
-	--without-c14n \
 	--without-legacy \
 	--without-catalog \
 	--without-docbook \
