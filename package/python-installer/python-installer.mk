@@ -9,9 +9,9 @@ PYTHON_INSTALLER_DIR = installer-$(PYTHON_INSTALLER_VERSION)
 PYTHON_INSTALLER_SOURCE = installer-$(PYTHON_INSTALLER_VERSION).tar.gz
 PYTHON_INSTALLER_SITE = $(PYPI_MIRROR)/i/installer
 
-# -----------------------------------------------------------------------------
+PYTHON_INSTALLER_SETUP_TYPE = flit-bootstrap
 
-HOST_PYTHON_INSTALLER_SETUP_TYPE = flit-bootstrap
+# -----------------------------------------------------------------------------
 
 HOST_PYTHON_INSTALLER_DEPENDENCIES = host-python-flit-core
 

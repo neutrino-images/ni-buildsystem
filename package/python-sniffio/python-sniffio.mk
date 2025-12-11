@@ -11,5 +11,7 @@ PYTHON_SNIFFIO_SITE = $(PYPI_MIRROR)/s/sniffio
 
 PYTHON_SNIFFIO_SETUP_TYPE = setuptools
 
+PYTHON_SNIFFIO_DEPENDENCIES = host-python-setuptools-scm
+
 python-sniffio: | $(TARGET_DIR)
 	$(call python-package)

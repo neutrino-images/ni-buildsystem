@@ -11,5 +11,11 @@ PYTHON_TRIO_SITE = $(PYPI_MIRROR)/t/trio
 
 PYTHON_TRIO_SETUP_TYPE = setuptools
 
+PYTHON_TRIO_DEPENDENCIES = \
+	python-attrs \
+	python-sortedcontainers \
+	python-idna \
+	python-outcome
+
 python-trio: | $(TARGET_DIR)
 	$(call python-package)

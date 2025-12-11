@@ -9,7 +9,7 @@ PYTHON_PIP_DIR = pip-$(PYTHON_PIP_VERSION)
 PYTHON_PIP_SOURCE = pip-$(PYTHON_PIP_VERSION).tar.gz
 PYTHON_PIP_SITE = $(PYPI_MIRROR)/p/pip
 
-PYTHON_PIP_SETUP_TYPE = setuptools
+PYTHON_PIP_SETUP_TYPE = flit
 
 python-pip: | $(TARGET_DIR)
 	$(call python-package)

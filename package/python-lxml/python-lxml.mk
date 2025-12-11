@@ -11,7 +11,7 @@ PYTHON_LXML_SITE = $(PYPI_MIRROR)/l/lxml
 
 PYTHON_LXML_SETUP_TYPE = setuptools
 
-PYTHON_LXML_DEPENDENCIES = libxml2 libxslt zlib host-python-cython
+PYTHON_LXML_DEPENDENCIES = host-python-cython libiconv libxml2 libxslt zlib
 
 # python-lxml needs these scripts in order to properly detect libxml2 and
 # libxslt compiler and linker flags
