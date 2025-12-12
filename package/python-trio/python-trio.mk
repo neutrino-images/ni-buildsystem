@@ -15,7 +15,8 @@ PYTHON_TRIO_DEPENDENCIES = \
 	python-attrs \
 	python-sortedcontainers \
 	python-idna \
-	python-outcome
+	python-outcome \
+	python-sniffio
 
 python-trio: | $(TARGET_DIR)
 	$(call python-package)
