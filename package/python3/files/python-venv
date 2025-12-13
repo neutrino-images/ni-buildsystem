@@ -2,11 +2,26 @@
 
 . /etc/init.d/globals
 
-if [ ! -e ~/venv ]; then
-	echo "Creating Python's virtual environment."
-	echo "This will take a few seconds ..."
-	python -m venv --system-site-packages ~/venv
-fi
+VENV="/var/root/venv"
 
-echo "Type 'source ~/venv/bin/activate' to activate Python's virtual environment."
-echo "To leave the virtual environment type 'deactivate' in the terminal."
+case "$1" in
+	create)
+		if [ ! -d ${VENV} ]; then
+			echo "Creating Python's virtual environment."
+			echo "This will take a few seconds ..."
+			python -m venv --system-site-packages ${VENV}
+		fi
+
+		# remove useless files from venv
+		rm -f ${VENV}/bin/activate.csh ${VENV}/bin/activate.fish ${VENV}/bin/Activate.ps1
+
+		echo "Type 'source ${VENV}/bin/activate' to activate Python's virtual environment."
+		echo "To leave the virtual environment type 'deactivate' in the terminal."
+	;;
+	remove)
+		rm -rf ${VENV}
+	;;
+	*)
+		echo "[$BASENAME] Usage: $0 {create|remove}"
+	;;
+esac
