@@ -11,5 +11,7 @@ PYTHON_TRIO_WEBSOCKET_SITE = $(PYPI_MIRROR)/t/trio-websocket
 
 PYTHON_TRIO_WEBSOCKET_SETUP_TYPE = setuptools
 
+PYTHON_TRIO_WEBSOCKET_DEPENDENCIES = python-wsproto
+
 python-trio-websocket: | $(TARGET_DIR)
 	$(call python-package)
