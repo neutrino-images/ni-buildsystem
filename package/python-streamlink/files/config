@@ -1,0 +1,27 @@
+# Logging
+loglevel info
+
+# FFmpeg
+ffmpeg-ffmpeg /usr/bin/ffmpeg
+ffmpeg-no-validation
+ffmpeg-fout mpegts
+ffmpeg-copy
+
+# Buffering
+ringbuffer-size 32M
+
+# HLS Stabilität
+hls-live-edge 6
+hls-playlist-reload-attempts 5
+#retry-streams 0
+player-continuous-http
+#hls-segment-stream-data
+hls-playlist-reload-time segment
+
+# Qualität
+default-stream 720p,2300k,3300k,best
+hls-audio-select de
+
+ipv4
+stream-sorting-excludes "<480p"
+stream-segment-threads 2

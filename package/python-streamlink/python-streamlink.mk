@@ -25,5 +25,10 @@ PYTHON_STREAMLINK_DEPENDENCIES = \
 	python-urllib3 \
 	python-websocket-client
 
+define PYTHON_STREAMLINK_INSTALL_CONFIG
+	$(INSTALL_DATA) -D $(PKG_FILES_DIR)/config $(TARGET_localstatedir)/root/.config/streamlink/config
+endef
+PYTHON_STREAMLINK_TARGET_FINALIZE_HOOKS += PYTHON_STREAMLINK_INSTALL_CONFIG
+
 python-streamlink: | $(TARGET_DIR)
 	$(call python-package)
