@@ -12,11 +12,13 @@ ringbuffer-size 32M
 
 # HLS Stabilität
 hls-live-edge 6
-hls-playlist-reload-attempts 5
+hls-playlist-reload-attempts 6
 #retry-streams 0
 player-continuous-http
-#hls-segment-stream-data
-hls-playlist-reload-time segment
+hls-segment-stream-data
+hls-playlist-reload-time default
+#hls-playlist-reload-time segment
+#hls-playlist-reload-time live-edge
 
 # Qualität
 default-stream 720p,2300k,3300k,best
@@ -24,4 +26,4 @@ hls-audio-select de
 
 ipv4
 stream-sorting-excludes "<480p"
-stream-segment-threads 2
+stream-segment-threads 8
