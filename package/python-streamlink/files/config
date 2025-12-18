@@ -1,29 +1,38 @@
 # Logging
-loglevel info
+loglevel=info
+#loglevel=debug
+#logfile=/tmp/streamlink.log
 
 # FFmpeg
-ffmpeg-ffmpeg /usr/bin/ffmpeg
+ffmpeg-ffmpeg=/usr/bin/ffmpeg
 ffmpeg-no-validation
-ffmpeg-fout mpegts
-ffmpeg-copy
+#ffmpeg-fout=mpegts
+#ffmpeg-copyts
+#ffmpeg-start-at-zero
 
 # Buffering
-ringbuffer-size 32M
+ringbuffer-size=32M
 
 # HLS Stabilität
-hls-live-edge 6
-hls-playlist-reload-attempts 6
-#retry-streams 0
+hls-live-edge=6
+hls-playlist-reload-attempts=6
+#retry-streams=0
+#retry-open=2
 player-continuous-http
-hls-segment-stream-data
-hls-playlist-reload-time default
-#hls-playlist-reload-time segment
-#hls-playlist-reload-time live-edge
+#hls-segment-stream-data
+#hls-playlist-reload-time=default
+hls-playlist-reload-time=segment
+#hls-playlist-reload-time=live-edge
 
 # Qualität
-default-stream 720p,2300k,3300k,best
-hls-audio-select de
+#default-stream=720p,2300k,3300k,best
+default-stream=1080,720p,480p
+hls-audio-select=de
 
 ipv4
-stream-sorting-excludes "<480p"
-stream-segment-threads 8
+stream-sorting-excludes <480p,2300k,3300k
+#stream-segment-attempts=4
+stream-segment-threads=6
+#stream-segment-timeout=8
+#stream-timeout=60
+
