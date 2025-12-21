@@ -4,11 +4,11 @@
 #
 ################################################################################
 
-DVB_APPS_VERSION = 3d43b28
-DVB_APPS_DIR = dvb-apps
-DVB_APPS_SOURCE = dvb-apps
-DVB_APPS_SITE = https://linuxtv.org/hg
-DVB_APPS_SITE_METHOD = hg
+DVB_APPS_VERSION = master
+DVB_APPS_DIR = dvb-apps.git
+DVB_APPS_SOURCE = dvb-apps.git
+DVB_APPS_SITE = https://github.com/tbsdtv
+DVB_APPS_SITE_METHOD = git
 
 DVB_APPS_DEPENDENCIES = kernel-headers libiconv
 
