@@ -317,6 +317,21 @@ FFMPEG6_CONF_OPTS = \
 	--enable-swresample \
 	--enable-hardcoded-tables
 
+# needed for ac3 5.1
+FFMPEG6_CONF_OPTS += \
+	--enable-encoder=ac3 \
+	--enable-encoder=ac3_fixed \
+	\
+	--enable-filter=amix \
+	--enable-filter=aresample \
+	--enable-filter=bass \
+	--enable-filter=channelmap \
+	--enable-filter=loudnorm \
+	--enable-filter=pan \
+	--enable-filter=surround \
+	--enable-filter=treble \
+	--enable-filter=volume
+
 ifeq ($(BS_PACKAGE_FFMPEG6_FFPLAY),y)
   FFMPEG6_DEPENDENCIES += sdl2
   FFMPEG6_CONF_OPTS += --enable-ffplay
