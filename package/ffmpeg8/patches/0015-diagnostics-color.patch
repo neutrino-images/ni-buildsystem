@@ -1,0 +1,10 @@
+--- a/configure.orig
++++ b/configure
+@@ -7771,7 +7760,6 @@
+     check_cflags -Werror=return-type
+     check_cflags -Werror=vla
+     check_cflags -Wformat
+-    check_cflags -fdiagnostics-color=auto
+     enabled extra_warnings || check_disable_warning -Wno-maybe-uninitialized
+     if enabled x86_32; then
+         case $target_os in

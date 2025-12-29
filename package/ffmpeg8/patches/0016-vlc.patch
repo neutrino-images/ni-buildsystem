@@ -1,0 +1,11 @@
+--- a/libavcodec/vlc.c
++++ a/libavcodec/vlc.c
+@@ -527,7 +527,7 @@
+     if (ret < 0)
+         return ret;
+ 
+-    multi->table = av_mallocz(sizeof(*multi->table) << nb_bits);
++    multi->table = av_malloc(sizeof(*multi->table) << nb_bits);
+     if (!multi->table)
+         goto fail;
+ 
