@@ -4,10 +4,10 @@
 #
 ################################################################################
 
-OPENSSL_VERSION = $(if $(filter $(BOXTYPE),coolstream),1.0.2u,1.1.1t)
+OPENSSL_VERSION = $(if $(filter $(BOXTYPE),coolstream),1.0.2u,1.1.1w)
 OPENSSL_DIR = openssl-$(OPENSSL_VERSION)
 OPENSSL_SOURCE = openssl-$(OPENSSL_VERSION).tar.gz
-OPENSSL_SITE = https://www.openssl.org/source
+OPENSSL_SITE = $(GITHUB)/openssl/openssl/releases/download/OpenSSL_$(subst .,_,$(OPENSSL_VERSION))
 
 ifeq ($(TARGET_ARCH),arm)
   OPENSSL_TARGET_ARCH = linux-armv4
