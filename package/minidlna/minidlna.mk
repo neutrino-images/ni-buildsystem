@@ -11,6 +11,9 @@ MINIDLNA_SITE = https://sourceforge.net/projects/minidlna/files/minidlna/$(MINID
 
 MINIDLNA_DEPENDENCIES = zlib sqlite libexif libjpeg-turbo libid3tag libogg libvorbis flac ffmpeg
 
+# Note: 0001-libav.h-fix-build-with-ffmpeg-7.0.patch is aligned to CST-build
+#       with ffmpeg's libavcodec version 56.60.100
+
 MINIDLNA_AUTORECONF = YES
 
 MINIDLNA_CONF_OPTS = \

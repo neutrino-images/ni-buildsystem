@@ -9,6 +9,13 @@ https://git.videolan.org/?p=ffmpeg.git;a=blob_plain;f=doc/APIchanges;hb=n7.0
 Upstream: https://sourceforge.net/p/minidlna/patches/204/
 
 Signed-off-by: Bernd Kuhls <bernd@kuhls.net>
+
+Note: See https://github.com/neutrino-images/ni-ffmpeg/blob/ni/ffmpeg/2.8/libavcodec/version.h#L31
+
+#define LIBAVCODEC_VERSION_MAJOR 56
+#define LIBAVCODEC_VERSION_MINOR 60
+#define LIBAVCODEC_VERSION_MICRO 100
+
 ---
  libav.h | 10 ++++++++++
  1 file changed, 10 insertions(+)
@@ -21,8 +28,8 @@ index b69752c..d5a3358 100644
  #define lav_codec_tag(s) s->codecpar->codec_tag
  #define lav_sample_rate(s) s->codecpar->sample_rate
  #define lav_bit_rate(s) s->codecpar->bit_rate
-+#if LIBAVCODEC_VERSION_MAJOR > 52 || \
-+    (LIBAVCODEC_VERSION_MAJOR >= 52 && LIBAVCODEC_VERSION_MINOR >= 113)
++#if LIBAVCODEC_VERSION_MAJOR > 56 || \
++    (LIBAVCODEC_VERSION_MAJOR >= 56 && LIBAVCODEC_VERSION_MINOR > 60)
 +#define lav_channels(s) s->codecpar->ch_layout.nb_channels
 +#else
  #define lav_channels(s) s->codecpar->channels
@@ -34,8 +41,8 @@ index b69752c..d5a3358 100644
  #define lav_codec_tag(s) s->codec->codec_tag
  #define lav_sample_rate(s) s->codec->sample_rate
  #define lav_bit_rate(s) s->codec->bit_rate
-+#if LIBAVCODEC_VERSION_MAJOR > 52 || \
-+    (LIBAVCODEC_VERSION_MAJOR >= 52 && LIBAVCODEC_VERSION_MINOR >= 113)
++#if LIBAVCODEC_VERSION_MAJOR > 56 || \
++    (LIBAVCODEC_VERSION_MAJOR >= 56 && LIBAVCODEC_VERSION_MINOR > 60)
 +#define lav_channels(s) s->codec->ch_layout.nb_channels
 +#else
  #define lav_channels(s) s->codec->channels
