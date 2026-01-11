@@ -7,7 +7,8 @@
 NTFS_3G_VERSION = 2022.10.3
 NTFS_3G_DIR = ntfs-3g_ntfsprogs-$(NTFS_3G_VERSION)
 NTFS_3G_SOURCE = ntfs-3g_ntfsprogs-$(NTFS_3G_VERSION).tgz
-NTFS_3G_SITE = https://tuxera.com/opensource
+#NTFS_3G_SITE = https://tuxera.com/opensource
+NTFS_3G_SITE = https://www.neutrino-images.de/neutrino-images/archives
 
 NTFS_3G_DEPENDENCIES = libfuse
 
