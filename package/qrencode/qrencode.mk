@@ -5,9 +5,9 @@
 ################################################################################
 
 QRENCODE_VERSION = 4.1.1
-QRENCODE_DIR = qrencode-$(QRENCODE_VERSION)
-QRENCODE_SOURCE = qrencode-$(QRENCODE_VERSION).tar.gz
-QRENCODE_SITE = https://fukuchi.org/works/qrencode
+QRENCODE_DIR = libqrencode-$(QRENCODE_VERSION)
+QRENCODE_SOURCE = libqrencode-$(QRENCODE_VERSION).tar.gz
+QRENCODE_SITE = $(call github,fukuchi,libqrencode,v$(QRENCODE_VERSION))
 
 # -----------------------------------------------------------------------------
 
