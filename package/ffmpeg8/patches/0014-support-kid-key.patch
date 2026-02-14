@@ -86,7 +86,7 @@ diff --git a/libavformat/mov.c b/libavformat/mov.c
 index 34ca8095c2..550bce86f5 100644
 --- a/libavformat/mov.c
 +++ b/libavformat/mov.c
-@@ -8071,19 +8071,62 @@
+@@ -8063,19 +8063,62 @@
      return 0;
  }
  
@@ -150,7 +150,7 @@ index 34ca8095c2..550bce86f5 100644
          if (ret < 0) {
              return ret;
          }
-@@ -8129,15 +8172,21 @@
+@@ -8121,15 +8164,21 @@
      int i, ret;
      int num_of_encrypted_blocks;
      uint8_t iv[16];
@@ -173,7 +173,7 @@ index 34ca8095c2..550bce86f5 100644
          if (ret < 0) {
              return ret;
          }
-@@ -8188,15 +8237,21 @@
+@@ -8180,15 +8229,21 @@
  {
      int i, ret, rem_bytes;
      uint8_t *data;
@@ -196,7 +196,7 @@ index 34ca8095c2..550bce86f5 100644
          if (ret < 0) {
              return ret;
          }
-@@ -8254,15 +8309,21 @@
+@@ -8246,15 +8301,21 @@
      int i, ret, rem_bytes;
      uint8_t iv[16];
      uint8_t *data;
@@ -219,7 +219,7 @@ index 34ca8095c2..550bce86f5 100644
          if (ret < 0) {
              return ret;
          }
-@@ -8409,7 +8470,7 @@
+@@ -8401,7 +8462,7 @@
              return AVERROR_INVALIDDATA;
          }
  
@@ -228,7 +228,7 @@ index 34ca8095c2..550bce86f5 100644
              return cenc_decrypt(mov, sc, encrypted_sample, pkt->data, pkt->size);
          } else {
              size_t size;
-@@ -10605,12 +10666,6 @@
+@@ -10597,12 +10658,6 @@
      MOVAtom atom = { AV_RL32("root") };
      int i;
  
@@ -241,7 +241,7 @@ index 34ca8095c2..550bce86f5 100644
      mov->fc = s;
      mov->trak_index = -1;
      mov->thmb_item_id = NULL;
-@@ -11496,7 +11551,8 @@
+@@ -11488,7 +11543,8 @@
          "Fixed key used for handling Audible AAX files", OFFSET(audible_fixed_key),
          AV_OPT_TYPE_BINARY, {.str="77214d4b196a87cd520045fd20a51d67"},
          .flags = AV_OPT_FLAG_DECODING_PARAM },
