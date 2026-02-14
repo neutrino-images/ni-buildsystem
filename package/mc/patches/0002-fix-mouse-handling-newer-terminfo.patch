@@ -1,6 +1,6 @@
 --- a/lib/tty/tty.c
 +++ b/lib/tty/tty.c
-@@ -407,7 +407,7 @@ tty_init_xterm_support (gboolean is_xter
+@@ -408,7 +408,7 @@
      if (xmouse_seq != NULL)
      {
          if (strcmp (xmouse_seq, ESC_STR "[<") == 0)
@@ -9,3 +9,4 @@
  
          xmouse_extended_seq = ESC_STR "[<";
      }
+

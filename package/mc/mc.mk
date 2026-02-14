@@ -4,13 +4,16 @@
 #
 ################################################################################
 
-MC_VERSION = tags/4.8.31
+MC_VERSION = tags/4.8.33
 MC_DIR = mc.git
 MC_SOURCE = mc.git
 MC_SITE = $(GITHUB)/MidnightCommander
 MC_SITE_METHOD = git
 
 MC_DEPENDENCIES = glib2 ncurses
+
+MC_CONF_ENV = \
+	CFLAGS="$(TARGET_CFLAGS) -std=c99"
 
 MC_CONF_OPTS = \
 	--enable-charset \
