@@ -629,7 +629,7 @@ define EXTRACT # (directory)
 	      ;; \
 	      *.src.rock) \
 	        $(CD) $${EXTRACT_DIR}; \
-		  $(HOST_LUAROCKS_BINARY) unpack --force $(DL_DIR)/$($(PKG)_SOURCE); \
+	          $(HOST_LUAROCKS_BINARY) unpack --force $(DL_DIR)/$($(PKG)_SOURCE); \
 	      ;; \
 	      *) \
 	        $(call WARNING,"Cannot extract $($(PKG)_SOURCE)"); \
