@@ -67,7 +67,7 @@ $(SOURCE_DIR)/$(NI_FFMPEG):
 		git clone $(NI_GITHUB)/$(@F).git
 ifeq ($(NI_ADMIN),true)
 	$(CD) $(@); \
-		git remote add upstream https://git.ffmpeg.org/ffmpeg.git; \
+		git remote add upstream $(GITHUB)/ffmpeg/ffmpeg.git; \
 		git fetch --all
 endif
 
