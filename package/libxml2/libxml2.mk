@@ -4,11 +4,13 @@
 #
 ################################################################################
 
-LIBXML2_VERSION_MAJOR = 2.12
-LIBXML2_VERSION = $(LIBXML2_VERSION_MAJOR).6
+LIBXML2_VERSION_MAJOR = 2.15
+LIBXML2_VERSION = $(LIBXML2_VERSION_MAJOR).1
 LIBXML2_DIR = libxml2-$(LIBXML2_VERSION)
 LIBXML2_SOURCE = libxml2-$(LIBXML2_VERSION).tar.xz
 LIBXML2_SITE = https://download.gnome.org/sources/libxml2/$(LIBXML2_VERSION_MAJOR)
+
+LIBXML2_DEPENDENCIES = zlib
 
 LIBXML2_CONFIG_SCRIPTS = xml2-config
 
@@ -17,6 +19,7 @@ LIBXML2_CONF_OPTS = \
 	--enable-shared \
 	--disable-static \
 	--with-c14n \
+	--with-zlib=$(TARGET_prefix) \
 	--without-python \
 	--without-debug \
 	--without-legacy \
