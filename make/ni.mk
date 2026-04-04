@@ -78,6 +78,7 @@ ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd2 hd5x hd6x vusolo4k vuduo4k vuduo4ks
 	$(MAKE) python-pip
 	$(MAKE) python-streamlink
 	$(MAKE) python-yt-dlp
+	$(MAKE) strace
   endif
   ifeq ($(DEBUG),yes)
 	$(MAKE) strace
