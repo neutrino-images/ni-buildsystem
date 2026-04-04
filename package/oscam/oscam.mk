@@ -58,6 +58,11 @@ OSCAM_DEPENDENCIES += libdvbcsa
 OSCAM_CONF_OPTS += \
 	--enable MODULE_STREAMRELAY
 
+# enable extended control word
+#OSCAM_DEPENDENCIES += libdvbcsa
+OSCAM_CONF_OPTS += \
+	--enable WITH_EXTENDED_CW
+
 ifeq ($(TARGET_ARCH),arm)
 # enable/disable arm-neon
 OSCAM_CONF_OPTS += \
