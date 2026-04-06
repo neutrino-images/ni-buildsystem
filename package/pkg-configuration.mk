@@ -19,8 +19,12 @@ BS_PACKAGE_FFMPEG4_FFPROBE ?= y
 # ncurses: build wide-character libraries
 BS_PACKAGE_NCURSES_WCHAR ?= y
 
+# libstb-hal: branch
+ifeq ($(BS_PACKAGE_LIBSTB_HAL_BRANCH),$(empty))
+BS_PACKAGE_LIBSTB_HAL_BRANCH = master
+endif
+
 # neutrino: branch
-BS_PACKAGE_NEUTRINO_BRANCH ?= $(NEUTRINO_BRANCH)
 ifeq ($(BS_PACKAGE_NEUTRINO_BRANCH),$(empty))
 BS_PACKAGE_NEUTRINO_BRANCH = master
 endif

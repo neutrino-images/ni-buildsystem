@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-LIBSTB_HAL_VERSION = master
+LIBSTB_HAL_VERSION = $(BS_PACKAGE_LIBSTB_HAL_BRANCH)
 LIBSTB_HAL_DIR = $(NI_LIBSTB_HAL)
 LIBSTB_HAL_SOURCE = $(NI_LIBSTB_HAL)
 LIBSTB_HAL_SITE = https://github.com/neutrino-images

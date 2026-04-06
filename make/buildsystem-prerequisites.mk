@@ -133,6 +133,7 @@ endif
 ifneq ($(KERNEL_BRANCH),$(empty))
 	$(CD) $(SOURCE_DIR)/$(NI_LINUX_KERNEL); git checkout $(KERNEL_BRANCH)
 endif
+	$(CD) $(SOURCE_DIR)/$(NI_LIBSTB_HAL); git checkout $(BS_PACKAGE_LIBSTB_HAL_BRANCH)
 	$(CD) $(SOURCE_DIR)/$(NI_NEUTRINO); git checkout $(BS_PACKAGE_NEUTRINO_BRANCH)
 
 # -----------------------------------------------------------------------------

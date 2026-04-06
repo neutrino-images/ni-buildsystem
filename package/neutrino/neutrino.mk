@@ -133,6 +133,13 @@ else
   NEUTRINO_CONF_OPTS += --enable-flac
 endif
 
+ifeq ($(BS_PACKAGE_NEUTRINO_SOFTCSA),y)
+  ifneq ($(BOXTYPE),coolstream)
+    NEUTRINO_DEPENDENCIES += libdvbcsa
+    NEUTRINO_CONF_OPTS += --enable-softcsa
+  endif
+endif
+
 define NEUTRINO_AUTOGEN_SH
 	$(PKG_BUILD_DIR)/autogen.sh
 endef
