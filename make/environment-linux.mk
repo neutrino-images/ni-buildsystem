@@ -3,6 +3,9 @@
 #
 # -----------------------------------------------------------------------------
 
+KERNEL_BRANCH = $(empty)
+KERNEL_DTB = $(empty)
+
 ifeq ($(BOXMODEL),nevis)
   KERNEL_VERSION = 2.6.34.13
   KERNEL_DIR = linux-$(KERNEL_VERSION)
@@ -10,7 +13,6 @@ ifeq ($(BOXMODEL),nevis)
   KERNEL_SITE = $(empty)
 
   KERNEL_BRANCH = ni/linux-2.6.34.15
-  KERNEL_DTB = $(empty)
 
 else ifeq ($(BOXMODEL),$(filter $(BOXMODEL),apollo shiner kronos kronos_v2))
   KERNEL_VERSION = 3.10.93
@@ -33,7 +35,6 @@ else ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 e4hdultra protek4k)
   KERNEL_SOURCE = linux-$(KERNEL_VERSION)-arm.tar.gz
   KERNEL_SITE = http://downloads.mutant-digital.net
 
-  KERNEL_BRANCH = $(empty)
   KERNEL_DTB = $(KERNEL_OBJ_DIR)/arch/$(TARGET_ARCH)/boot/dts/bcm7445-bcm97445svmb.dtb
 ifeq ($(BOXMODEL),$(filter $(BOXMODEL),e4hdultra protek4k))
   KERNEL_CONFIG = $(PKG_FILES_DIR)/kernel-hd5x-e4hdultra.defconfig
@@ -50,7 +51,6 @@ else ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd60))
   KERNEL_SOURCE = linux-$(KERNEL_VERSION)-$(KERNEL_DATE)-arm.tar.gz
   KERNEL_SITE = http://source.mynonpublic.com/gfutures
 
-  KERNEL_BRANCH = $(empty)
   KERNEL_DTB = $(KERNEL_OBJ_DIR)/arch/$(TARGET_ARCH)/boot/dts/hi3798mv200.dtb
   KERNEL_CONFIG = $(PKG_FILES_DIR)/kernel-hd6x.defconfig
 
@@ -63,7 +63,6 @@ else ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd61))
   KERNEL_SOURCE = linux-$(KERNEL_VERSION)-$(KERNEL_DATE)-arm.tar.gz
   KERNEL_SITE = http://source.mynonpublic.com/gfutures
 
-  KERNEL_BRANCH = $(empty)
   KERNEL_DTB = $(KERNEL_OBJ_DIR)/arch/$(TARGET_ARCH)/boot/dts/hi3798mv200.dtb
   KERNEL_CONFIG = $(PKG_FILES_DIR)/kernel-hd6x.defconfig
 
@@ -76,7 +75,6 @@ else ifeq ($(BOXMODEL),$(filter $(BOXMODEL),multibox multiboxse))
   KERNEL_SOURCE = linux-$(KERNEL_VERSION)-$(KERNEL_DATE)-arm.tar.gz
   KERNEL_SITE = http://source.mynonpublic.com/maxytec
 
-  KERNEL_BRANCH = $(empty)
   KERNEL_DTB = $(KERNEL_OBJ_DIR)/arch/$(TARGET_ARCH)/boot/dts/hi3798mv200.dtb
   KERNEL_CONFIG = $(PKG_FILES_DIR)/kernel-hd6x.defconfig
 
@@ -88,9 +86,6 @@ else ifeq ($(BOXMODEL),vusolo4k)
   KERNEL_SOURCE = stblinux-3.14-1.8.tar.bz2
   KERNEL_SITE = http://code.vuplus.com/download/release/kernel
 
-  KERNEL_BRANCH = $(empty)
-  KERNEL_DTB = $(empty)
-
   BOOT_PARTITION = 1
 
 else ifeq ($(BOXMODEL),vuduo4k)
@@ -98,9 +93,6 @@ else ifeq ($(BOXMODEL),vuduo4k)
   KERNEL_DIR = linux
   KERNEL_SOURCE = stblinux-4.1-1.17.tar.bz2
   KERNEL_SITE = http://code.vuplus.com/download/release/kernel
-
-  KERNEL_BRANCH = $(empty)
-  KERNEL_DTB = $(empty)
 
   BOOT_PARTITION = 6
 
@@ -110,9 +102,6 @@ else ifeq ($(BOXMODEL),vuduo4kse)
   KERNEL_SOURCE = stblinux-4.1-1.17.tar.bz2
   KERNEL_SITE = http://code.vuplus.com/download/release/kernel
 
-  KERNEL_BRANCH = $(empty)
-  KERNEL_DTB = $(empty)
-
   BOOT_PARTITION = 6
 
 else ifeq ($(BOXMODEL),vuultimo4k)
@@ -120,9 +109,6 @@ else ifeq ($(BOXMODEL),vuultimo4k)
   KERNEL_DIR = linux
   KERNEL_SOURCE = stblinux-3.14-1.12.tar.bz2
   KERNEL_SITE = http://code.vuplus.com/download/release/kernel
-
-  KERNEL_BRANCH = $(empty)
-  KERNEL_DTB = $(empty)
 
   BOOT_PARTITION = 1
 
@@ -132,9 +118,6 @@ else ifeq ($(BOXMODEL),vuzero4k)
   KERNEL_SOURCE = stblinux-4.1-1.9.tar.bz2
   KERNEL_SITE = http://code.vuplus.com/download/release/kernel
 
-  KERNEL_BRANCH = $(empty)
-  KERNEL_DTB = $(empty)
-
   BOOT_PARTITION = 4
 
 else ifeq ($(BOXMODEL),vuuno4k)
@@ -142,9 +125,6 @@ else ifeq ($(BOXMODEL),vuuno4k)
   KERNEL_DIR = linux
   KERNEL_SOURCE = stblinux-3.14-1.12.tar.bz2
   KERNEL_SITE = http://code.vuplus.com/download/release/kernel
-
-  KERNEL_BRANCH = $(empty)
-  KERNEL_DTB = $(empty)
 
   BOOT_PARTITION = 1
 
@@ -154,9 +134,6 @@ else ifeq ($(BOXMODEL),vuuno4kse)
   KERNEL_SOURCE = stblinux-4.1-1.9.tar.bz2
   KERNEL_SITE = http://code.vuplus.com/download/release/kernel
 
-  KERNEL_BRANCH = $(empty)
-  KERNEL_DTB = $(empty)
-
   BOOT_PARTITION = 1
 
 else ifeq ($(BOXMODEL),vuduo)
@@ -164,9 +141,6 @@ else ifeq ($(BOXMODEL),vuduo)
   KERNEL_DIR = linux
   KERNEL_SOURCE = stblinux-$(KERNEL_VERSION).tar.bz2
   KERNEL_SITE = http://code.vuplus.com/download/release/kernel
-
-  KERNEL_BRANCH = $(empty)
-  KERNEL_DTB = $(empty)
 
 endif
 
