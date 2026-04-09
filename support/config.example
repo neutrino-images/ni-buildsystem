@@ -62,11 +62,9 @@ MAINTAINER = $(shell whoami)
 # Neutrino uses PIP
 #BS_PACKAGE_NEUTRINO_PIP = y
 
-# Neutrino uses SoftCSA (software descrambling for CSA-ALT channels, requires OSCam)
-# Only for armbox/mipsbox, not coolstream
+# Neutrino uses SoftCSA (software descrambling for CSA-ALT channels)
+# requires OSCam; only for armbox/mipsbox, not coolstream
 #BS_PACKAGE_NEUTRINO_SOFTCSA = y
-#BS_PACKAGE_LIBSTB_HAL_BRANCH = softcsa-dev
-#BS_PACKAGE_NEUTRINO_BRANCH = softcsa-dev
 
 # Neutrino API keys
 #BS_PACKAGE_NEUTRINO_OMDB_API_KEY =
