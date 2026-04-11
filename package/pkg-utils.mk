@@ -677,8 +677,11 @@ define APPLY_PATCHES # (patches or directory)
 	      if [ -e $$p ]; then \
 	        $(call MESSAGE,"Applying $${p#$(PKG_PATCHES_DIR)/} (*)"); \
 	        $$patch $$p; \
-	    fi; \
+	      fi; \
 	    done; \
+	  elif [ -f $$i ]; then \
+	    $(call MESSAGE,"Applying $$i"); \
+	    $$patch $$i; \
 	  else \
 	    $(call MESSAGE,"Applying $${i#$(PKG_PATCHES_DIR)/}"); \
 	    $$patch $(PKG_PATCHES_DIR)/$$i; \
