@@ -10,8 +10,8 @@ OSCAM_SMOD_SOURCE = oscam-smod.git
 OSCAM_SMOD_SITE = https://github.com/schimmelreiter
 OSCAM_SMOD_SITE_METHOD = git
 
-# inherit $(OSCAM_DEPENDENCIES) except oscam-emu
-OSCAM_SMOD_DEPENDENCIES = $(subst oscam-emu,,$(OSCAM_DEPENDENCIES))
+# inherit $(OSCAM_DEPENDENCIES) except oscam-emu-patch
+OSCAM_SMOD_DEPENDENCIES = $(subst oscam-emu-patch,,$(OSCAM_DEPENDENCIES))
 
 OSCAM_SMOD_KEEP_BUILD_DIR = $(OSCAM_KEEP_BUILD_DIR)
 

@@ -113,15 +113,10 @@ OSCAM_MAKE_OPTS += \
 endif
 endif
 
-# apply oscam-emu patch with OSCAM_EMU=yes
-ifeq ($(OSCAM_EMU),yes)
-OSCAM_DEPENDENCIES += oscam-emu
-
-define OSCAM_EMU_APPLY_PATCH
-	$(CD) $(PKG_BUILD_DIR); \
-		$(PATCH0) $(DL_DIR)/$(OSCAM_EMU_SOURCE)/$(OSCAM_EMU_PATCH_FILE)
-endef
-OSCAM_PRE_PATCH_HOOKS += OSCAM_EMU_APPLY_PATCH
+# apply oscam-emu-patch with OSCAM_EMU_PATCH=yes
+ifeq ($(OSCAM_EMU_PATCH),yes)
+OSCAM_DEPENDENCIES += oscam-emu-patch
+OSCAM_PATCH_CUSTOM = $(DL_DIR)/$(OSCAM_EMU_PATCH_SOURCE)/$(OSCAM_EMU_PATCH_FILE)
 endif
 
 ifeq ($(BOXMODEL),$(filter $(BOXMODEL),kronos kronos_v2))

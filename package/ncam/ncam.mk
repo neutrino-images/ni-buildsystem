@@ -10,8 +10,8 @@ NCAM_SOURCE = ncam.git
 NCAM_SITE = https://github.com/fairbird
 NCAM_SITE_METHOD = git
 
-# inherit $(OSCAM_DEPENDENCIES) except oscam-emu
-NCAM_DEPENDENCIES = $(subst oscam-emu,,$(OSCAM_DEPENDENCIES))
+# inherit $(OSCAM_DEPENDENCIES) except oscam-emu-patch
+NCAM_DEPENDENCIES = $(subst oscam-emu-patch,,$(OSCAM_DEPENDENCIES))
 
 NCAM_KEEP_BUILD_DIR = $(OSCAM_KEEP_BUILD_DIR)
 
