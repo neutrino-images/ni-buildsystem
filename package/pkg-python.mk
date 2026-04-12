@@ -155,7 +155,7 @@ define python-package
 	$(call PREPARE,$(1))
 	$(if $(filter $(1),$(PKG_NO_BUILD)),,$(call TARGET_PYTHON_BUILD))
 	$(if $(filter $(1),$(PKG_NO_INSTALL)),,$(call TARGET_PYTHON_INSTALL))
-	$(call TARGET_FOLLOWUP,$(1))
+	$(call FOLLOWUP,$(1))
 endef
 
 # -----------------------------------------------------------------------------
@@ -195,5 +195,5 @@ define host-python-package
 	$(call PREPARE,$(1))
 	$(if $(filter $(1),$(PKG_NO_BUILD)),,$(call HOST_PYTHON_BUILD))
 	$(if $(filter $(1),$(PKG_NO_INSTALL)),,$(call HOST_PYTHON_INSTALL))
-	$(call HOST_FOLLOWUP,$(1))
+	$(call FOLLOWUP,$(1))
 endef

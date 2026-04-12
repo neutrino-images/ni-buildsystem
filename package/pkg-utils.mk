@@ -762,25 +762,23 @@ endef
 # -----------------------------------------------------------------------------
 
 # follow-up build
-define HOST_FOLLOWUP # (control-flag(s))
+define FOLLOWUP # (control-flag(s))
 	@$(call MESSAGE,"Follow-up build $(pkgname)")
 	$(foreach hook,$($(PKG)_PRE_FOLLOWUP_HOOKS),$(call $(hook))$(sep))
 	$(Q)$(if $(filter $($(PKG)_KEEP_BUILD_DIR),NO),$(call CLEANUP))
-	$(foreach hook,$($(PKG)_HOST_FINALIZE_HOOKS),$(call $(hook))$(sep))
+	$(if $(filter $(PKG_DESTINATION),HOST),$(call HOST_FOLLOWUP),$(call TARGET_FOLLOWUP))
 	$(foreach hook,$($(PKG)_POST_FOLLOWUP_HOOKS),$(call $(hook))$(sep))
 	$(Q)$(if $(filter $(1),$(PKG_NO_TOUCH)),,$(call TOUCH))
 	$(Q)$(call ENDUP)
 endef
 
-define TARGET_FOLLOWUP # (control-flag(s))
-	@$(call MESSAGE,"Follow-up build $(pkgname)")
-	$(foreach hook,$($(PKG)_PRE_FOLLOWUP_HOOKS),$(call $(hook))$(sep))
-	$(Q)$(if $(filter $($(PKG)_KEEP_BUILD_DIR),NO),$(call CLEANUP))
+define HOST_FOLLOWUP
+	$(foreach hook,$($(PKG)_HOST_FINALIZE_HOOKS),$(call $(hook))$(sep))
+endef
+
+define TARGET_FOLLOWUP
 	$(Q)$(call REWRITE_CONFIG_SCRIPTS)
 	$(Q)$(call REWRITE_LIBTOOL)
 	$(if $(filter $(BS_INIT_SYSV),y),$($(PKG)_INSTALL_INIT_SYSV))
 	$(foreach hook,$($(PKG)_TARGET_FINALIZE_HOOKS),$(call $(hook))$(sep))
-	$(foreach hook,$($(PKG)_POST_FOLLOWUP_HOOKS),$(call $(hook))$(sep))
-	$(Q)$(if $(filter $(1),$(PKG_NO_TOUCH)),,$(call TOUCH))
-	$(Q)$(call ENDUP)
 endef

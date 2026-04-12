@@ -47,5 +47,5 @@ define luke-package
 	$(if $($(PKG)_CONFIGURE_CMDS),$(call LUKE_CONFIGURE))
 	$(if $(filter $(1),$(PKG_NO_BUILD)),,$(call LUKE_BUILD))
 	$(if $(filter $(1),$(PKG_NO_INSTALL)),,$(call LUKE_INSTALL))
-	$(call TARGET_FOLLOWUP,$(1))
+	$(call FOLLOWUP,$(1))
 endef

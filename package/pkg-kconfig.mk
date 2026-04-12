@@ -38,5 +38,5 @@ define kconfig-package
 	$(call PREPARE,$(1))
 	$(if $(filter $(1),$(PKG_NO_BUILD)),,$(call TARGET_MAKE_BUILD))
 	$(if $(filter $(1),$(PKG_NO_INSTALL)),,$(call TARGET_MAKE_INSTALL))
-	$(call TARGET_FOLLOWUP,$(1))
+	$(call FOLLOWUP,$(1))
 endef
