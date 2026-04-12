@@ -50,7 +50,7 @@ define generic-package
 	$(if $($(PKG)_CONFIGURE_CMDS),$(call TARGET_MAKE_CONFIGURE))
 	$(if $(filter $(1),$(PKG_NO_BUILD)),,$(call TARGET_MAKE_BUILD))
 	$(if $(filter $(1),$(PKG_NO_INSTALL)),,$(call TARGET_MAKE_INSTALL))
-	$(call TARGET_FOLLOWUP)
+	$(call TARGET_FOLLOWUP,$(1))
 endef
 
 # -----------------------------------------------------------------------------
@@ -105,5 +105,5 @@ define host-generic-package
 	$(if $($(PKG)_CONFIGURE_CMDS),$(call HOST_MAKE_CONFIGURE))
 	$(if $(filter $(1),$(PKG_NO_BUILD)),,$(call HOST_MAKE_BUILD))
 	$(if $(filter $(1),$(PKG_NO_INSTALL)),,$(call HOST_MAKE_INSTALL))
-	$(call HOST_FOLLOWUP)
+	$(call HOST_FOLLOWUP,$(1))
 endef

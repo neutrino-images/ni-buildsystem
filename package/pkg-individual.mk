@@ -15,7 +15,7 @@ define individual-package
 	$(eval PKG_MODE = $(pkg-mode))
 	$(call PREPARE,$(1))
 	$(if $($(PKG)_INDIVIDUAL_HOOKS),$(call INDIVIDUAL_HOOKS))
-	$(call TARGET_FOLLOWUP)
+	$(call TARGET_FOLLOWUP,$(1))
 endef
 
 # -----------------------------------------------------------------------------
@@ -24,5 +24,5 @@ define host-individual-package
 	$(eval PKG_MODE = $(pkg-mode))
 	$(call PREPARE,$(1))
 	$(if $($(PKG)_INDIVIDUAL_HOOKS),$(call INDIVIDUAL_HOOKS))
-	$(call HOST_FOLLOWUP)
+	$(call HOST_FOLLOWUP,$(1))
 endef

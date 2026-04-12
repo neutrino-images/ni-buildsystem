@@ -499,6 +499,7 @@ PKG_NO_PATCHES = pkg-no-patches
 PKG_NO_CONFIGURE = pkg-no-configure
 PKG_NO_BUILD = pkg-no-build
 PKG_NO_INSTALL = pkg-no-install
+PKG_NO_TOUCH = pkg-no-touch
 
 # -----------------------------------------------------------------------------
 
@@ -761,17 +762,17 @@ endef
 # -----------------------------------------------------------------------------
 
 # follow-up build
-define HOST_FOLLOWUP
+define HOST_FOLLOWUP # (control-flag(s))
 	@$(call MESSAGE,"Follow-up build $(pkgname)")
 	$(foreach hook,$($(PKG)_PRE_FOLLOWUP_HOOKS),$(call $(hook))$(sep))
 	$(Q)$(if $(filter $($(PKG)_KEEP_BUILD_DIR),NO),$(call CLEANUP))
 	$(foreach hook,$($(PKG)_HOST_FINALIZE_HOOKS),$(call $(hook))$(sep))
 	$(foreach hook,$($(PKG)_POST_FOLLOWUP_HOOKS),$(call $(hook))$(sep))
-	$(Q)$(call TOUCH)
+	$(Q)$(if $(filter $(1),$(PKG_NO_TOUCH)),,$(call TOUCH))
 	$(Q)$(call ENDUP)
 endef
 
-define TARGET_FOLLOWUP
+define TARGET_FOLLOWUP # (control-flag(s))
 	@$(call MESSAGE,"Follow-up build $(pkgname)")
 	$(foreach hook,$($(PKG)_PRE_FOLLOWUP_HOOKS),$(call $(hook))$(sep))
 	$(Q)$(if $(filter $($(PKG)_KEEP_BUILD_DIR),NO),$(call CLEANUP))
@@ -780,6 +781,6 @@ define TARGET_FOLLOWUP
 	$(if $(filter $(BS_INIT_SYSV),y),$($(PKG)_INSTALL_INIT_SYSV))
 	$(foreach hook,$($(PKG)_TARGET_FINALIZE_HOOKS),$(call $(hook))$(sep))
 	$(foreach hook,$($(PKG)_POST_FOLLOWUP_HOOKS),$(call $(hook))$(sep))
-	$(Q)$(call TOUCH)
+	$(Q)$(if $(filter $(1),$(PKG_NO_TOUCH)),,$(call TOUCH))
 	$(Q)$(call ENDUP)
 endef

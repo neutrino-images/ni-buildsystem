@@ -108,7 +108,7 @@ define cmake-package
 	$(if $(filter $(1),$(PKG_NO_CONFIGURE)),,$(call TARGET_CMAKE_CONFIGURE))
 	$(if $(filter $(1),$(PKG_NO_BUILD)),,$(call TARGET_CMAKE_BUILD))
 	$(if $(filter $(1),$(PKG_NO_INSTALL)),,$(call TARGET_CMAKE_INSTALL))
-	$(call TARGET_FOLLOWUP)
+	$(call TARGET_FOLLOWUP,$(1))
 endef
 
 # -----------------------------------------------------------------------------
@@ -184,7 +184,7 @@ define host-cmake-package
 	$(if $(filter $(1),$(PKG_NO_CONFIGURE)),,$(call HOST_CMAKE_CONFIGURE))
 	$(if $(filter $(1),$(PKG_NO_BUILD)),,$(call HOST_CMAKE_BUILD))
 	$(if $(filter $(1),$(PKG_NO_INSTALL)),,$(call HOST_CMAKE_INSTALL))
-	$(call HOST_FOLLOWUP)
+	$(call HOST_FOLLOWUP,$(1))
 endef
 
 ################################################################################

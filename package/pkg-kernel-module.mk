@@ -66,7 +66,7 @@ define kernel-module
 	$(if $(filter $(1),$(PKG_NO_BUILD)),,$(call KERNEL_MODULE_BUILD))
 	$(if $(filter $(1),$(PKG_NO_INSTALL)),,$(call KERNEL_MODULE_INSTALL))
 	$(Q)$(call LINUX_RUN_DEPMOD)
-	$(call TARGET_FOLLOWUP)
+	$(call TARGET_FOLLOWUP,$(1))
 endef
 
 # -----------------------------------------------------------------------------

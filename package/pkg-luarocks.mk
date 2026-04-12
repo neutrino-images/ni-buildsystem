@@ -38,7 +38,7 @@ define luarocks-package
 	$(eval PKG_MODE = $(pkg-mode))
 	$(call PREPARE,$(1))
 	$(if $(filter $(1),$(PKG_NO_BUILD)),,$(call TARGET_LUAROCKS_BUILD))
-	$(call TARGET_FOLLOWUP)
+	$(call TARGET_FOLLOWUP,$(1))
 endef
 
 # -----------------------------------------------------------------------------
@@ -72,5 +72,5 @@ define host-luarocks-package
 	$(eval PKG_MODE = $(pkg-mode))
 	$(call PREPARE,$(1))
 	$(if $(filter $(1),$(PKG_NO_BUILD)),,$(call HOST_LUAROCKS_BUILD))
-	$(call HOST_FOLLOWUP)
+	$(call HOST_FOLLOWUP,$(1))
 endef

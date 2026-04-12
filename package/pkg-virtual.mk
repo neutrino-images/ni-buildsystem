@@ -7,11 +7,11 @@
 ################################################################################
 
 define virtual-package
-	$(call individual-package,$(PKG_NO_DOWNLOAD) $(PKG_NO_EXTRACT) $(PKG_NO_PATCHES))
+	$(call individual-package,$(1) $(PKG_NO_DOWNLOAD) $(PKG_NO_EXTRACT) $(PKG_NO_PATCHES))
 endef
 
 # -----------------------------------------------------------------------------
 
 define host-virtual-package
-	$(call host-individual-package,$(PKG_NO_DOWNLOAD) $(PKG_NO_EXTRACT) $(PKG_NO_PATCHES))
+	$(call host-individual-package,$(1) $(PKG_NO_DOWNLOAD) $(PKG_NO_EXTRACT) $(PKG_NO_PATCHES))
 endef
