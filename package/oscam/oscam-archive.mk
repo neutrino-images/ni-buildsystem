@@ -16,4 +16,4 @@ endef
 OSCAM_ARCHIVE_INDIVIDUAL_HOOKS += OSCAM_ARCHIVE_COMPRESS
 
 oscam-archive: | $(TARGET_DIR)
-	$(call virtual-package)
+	$(call virtual-package,$(PKG_NO_TOUCH))
