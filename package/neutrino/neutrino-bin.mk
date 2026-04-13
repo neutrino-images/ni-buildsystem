@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-NEUTRINO_BIN_DEPENDENCIES = neutrino-clean
+NEUTRINO_BIN_DEPENDENCIES = libstb-hal-clean neutrino-clean
 
 define NEUTRINO_BIN_BUILD
 	$(MAKE) neutrino NEUTRINO_PKG_FLAGS="$(PKG_NO_DOWNLOAD) $(PKG_NO_INSTALL)"
