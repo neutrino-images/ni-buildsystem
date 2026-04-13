@@ -13,6 +13,7 @@ NEUTRINO_SITE_METHOD = ni-git
 NEUTRINO_DEPENDENCIES = ffmpeg freetype giflib libcurl libdvbsi fribidi \
 	libjpeg-turbo libsigc lua ntp openssl openthreads pugixml zlib
 
+NEUTRINO_SRC_DIR = $(SOURCE_DIR)/$(NEUTRINO_DIR)
 NEUTRINO_OBJ_DIR = $(BUILD_DIR)/$(NEUTRINO_DIR)-obj
 NEUTRINO_CONFIG_STATUS = $(wildcard $(NEUTRINO_OBJ_DIR)/config.status)
 
@@ -141,15 +142,16 @@ ifeq ($(BS_PACKAGE_NEUTRINO_SOFTCSA),y)
 endif
 
 define NEUTRINO_AUTOGEN_SH
-	$(PKG_BUILD_DIR)/autogen.sh
+	$(INSTALL) -d $(NEUTRINO_OBJ_DIR)
+	$(CD) $(NEUTRINO_OBJ_DIR); \
+		$(NEUTRINO_SRC_DIR)/autogen.sh
 endef
 NEUTRINO_PRE_CONFIGURE_HOOKS += NEUTRINO_AUTOGEN_SH
 
 define NEUTRINO_CONFIGURE_CMDS
-	$(INSTALL) -d $(NEUTRINO_OBJ_DIR)
 	$(CD) $(NEUTRINO_OBJ_DIR); \
 		$($(PKG)_CONF_ENV) \
-		$(PKG_BUILD_DIR)/configure \
+		$(NEUTRINO_SRC_DIR)/configure \
 			$($(PKG)_CONF_OPTS)
 endef
 
@@ -175,4 +177,4 @@ NEUTRINO_PRE_UNINSTALL_HOOKS += NEUTRINO_UNINSTALL_STARTSCRIPT
 NEUTRINO_PKG_FLAGS ?=
 
 neutrino: | $(TARGET_DIR)
-	$(call autotools-package,$(if $(NEUTRINO_CONFIG_STATUS),$(PKG_NO_CONFIGURE)) $(call qstrip,$(NEUTRINO_PKG_FLAGS)))
+	$(call autotools-package,$(PKG_NO_EXTRACT) $(PKG_NO_PATCHES) $(if $(NEUTRINO_CONFIG_STATUS),$(PKG_NO_CONFIGURE)) $(call qstrip,$(NEUTRINO_PKG_FLAGS)))
