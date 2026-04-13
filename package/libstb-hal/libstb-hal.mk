@@ -62,5 +62,8 @@ define LIBSTB_HAL_INSTALL_CMDS
 	$(MAKE) -C $(LIBSTB_HAL_OBJ_DIR) install DESTDIR=$(NEUTRINO_INST_DIR)
 endef
 
+# needed to build neutrino-bin target only
+LIBSTB_HAL_PKG_FLAGS ?=
+
 libstb-hal: | $(TARGET_DIR)
-	$(call autotools-package,$(PKG_NO_EXTRACT) $(PKG_NO_PATCHES) $(if $(LIBSTB_HAL_MISSING),$(if $(LIBSTB_HAL_CONFIG_STATUS),$(PKG_NO_CONFIGURE))))
+	$(call autotools-package,$(PKG_NO_EXTRACT) $(PKG_NO_PATCHES) $(if $(LIBSTB_HAL_MISSING),$(if $(LIBSTB_HAL_CONFIG_STATUS),$(PKG_NO_CONFIGURE))) $(call qstrip,$(LIBSTB_HAL_PKG_FLAGS)))
