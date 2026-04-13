@@ -12,6 +12,7 @@ LIBSTB_HAL_SITE_METHOD = ni-git
 
 LIBSTB_HAL_DEPENDENCIES = ffmpeg openthreads
 
+LIBSTB_HAL_SRC_DIR = $(SOURCE_DIR)/$(LIBSTB_HAL_DIR)
 LIBSTB_HAL_OBJ_DIR = $(BUILD_DIR)/$(LIBSTB_HAL_DIR)-obj
 LIBSTB_HAL_CONFIG_STATUS = $(wildcard $(LIBSTB_HAL_OBJ_DIR)/config.status)
 
@@ -38,15 +39,16 @@ else
 endif
 
 define LIBSTB_HAL_AUTOGEN_SH
-	$(PKG_BUILD_DIR)/autogen.sh
+	$(INSTALL) -d $(LIBSTB_HAL_OBJ_DIR)
+	$(CD) $(LIBSTB_HAL_OBJ_DIR); \
+		$(LIBSTB_HAL_SRC_DIR)/autogen.sh
 endef
 LIBSTB_HAL_PRE_CONFIGURE_HOOKS += LIBSTB_HAL_AUTOGEN_SH
 
 define LIBSTB_HAL_CONFIGURE_CMDS
-	$(INSTALL) -d $(LIBSTB_HAL_OBJ_DIR)
 	$(CD) $(LIBSTB_HAL_OBJ_DIR); \
 		$($(PKG)_CONF_ENV) \
-		$(PKG_BUILD_DIR)/configure \
+		$(LIBSTB_HAL_SRC_DIR)/configure \
 			$($(PKG)_CONF_OPTS)
 endef
 
@@ -59,4 +61,4 @@ define LIBSTB_HAL_INSTALL_CMDS
 endef
 
 libstb-hal: | $(TARGET_DIR)
-	$(call autotools-package,$(if $(LIBSTB_HAL_CONFIG_STATUS),$(PKG_NO_CONFIGURE)))
+	$(call autotools-package,$(PKG_NO_EXTRACT) $(PKG_NO_PATCHES) $(if $(LIBSTB_HAL_CONFIG_STATUS),$(PKG_NO_CONFIGURE)))
