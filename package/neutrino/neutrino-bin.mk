@@ -4,8 +4,10 @@
 #
 ################################################################################
 
+NEUTRINO_BIN_DEPENDENCIES = neutrino-clean
+
 define NEUTRINO_BIN_BUILD
-	$(MAKE) neutrino-clean neutrino NEUTRINO_PKG_FLAGS="$(PKG_NO_DOWNLOAD) $(PKG_NO_INSTALL)"
+	$(MAKE) neutrino NEUTRINO_PKG_FLAGS="$(PKG_NO_DOWNLOAD) $(PKG_NO_INSTALL)"
 endef
 NEUTRINO_BIN_INDIVIDUAL_HOOKS += NEUTRINO_BIN_BUILD
 
@@ -22,7 +24,4 @@ NEUTRINO_BIN_TARGET_FINALIZE_HOOKS += NEUTRINO_BIN_STRIP
 endif
 
 neutrino-bin: | $(TARGET_DIR)
-	$(call virtual-package)
-
-# force build
-PHONY += neutrino-bin
+	$(call virtual-package,$(PKG_NO_TOUCH))
