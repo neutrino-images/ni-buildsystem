@@ -36,7 +36,7 @@ BS_PACKAGE_NEUTRINO_AUDIODEC_FFMPEG ?= y
 BS_PACKAGE_NEUTRINO_PIP ?= y
 
 # neutrino: use softcsa
-BS_PACKAGE_NEUTRINO_SOFTCSA ?= n
+BS_PACKAGE_NEUTRINO_SOFTCSA ?= y
 
 # neutrino: omdb api key
 ifeq ($(BS_PACKAGE_NEUTRINO_OMDB_API_KEY),$(empty))
