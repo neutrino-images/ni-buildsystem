@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-LIBARCHIVE_VERSION = 3.6.1
+LIBARCHIVE_VERSION = 3.8.7
 LIBARCHIVE_DIR = libarchive-$(LIBARCHIVE_VERSION)
 LIBARCHIVE_SOURCE = libarchive-$(LIBARCHIVE_VERSION).tar.gz
 LIBARCHIVE_SITE = https://www.libarchive.org/downloads
