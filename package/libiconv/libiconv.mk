@@ -4,13 +4,10 @@
 #
 ################################################################################
 
-LIBICONV_VERSION = 1.17
+LIBICONV_VERSION = 1.19
 LIBICONV_DIR = libiconv-$(LIBICONV_VERSION)
 LIBICONV_SOURCE = libiconv-$(LIBICONV_VERSION).tar.gz
 LIBICONV_SITE = $(GNU_MIRROR)/libiconv
-
-LIBICONV_CONF_ENV = \
-	CPPFLAGS="$(TARGET_CPPFLAGS) -fPIC"
 
 LIBICONV_CONF_OPTS = \
 	--datarootdir=$(REMOVE_datarootdir) \
