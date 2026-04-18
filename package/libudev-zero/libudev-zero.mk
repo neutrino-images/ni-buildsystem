@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-LIBUDEV_ZERO_VERSION = 1.0.1
+LIBUDEV_ZERO_VERSION = 1.0.3
 LIBUDEV_ZERO_DIR = libudev-zero-$(LIBUDEV_ZERO_VERSION)
 LIBUDEV_ZERO_SOURCE = libudev-zero-$(LIBUDEV_ZERO_VERSION).tar.gz
 LIBUDEV_ZERO_SITE = $(call github,illiliti,libudev-zero,$(LIBUDEV_ZERO_VERSION))
