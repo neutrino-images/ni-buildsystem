@@ -4,14 +4,14 @@
 #
 ################################################################################
 
-NTP_VERSION = 4.2.8p15
+NTP_VERSION = 4.2.8p18
 NTP_DIR = ntp-$(NTP_VERSION)
 NTP_SOURCE = ntp-$(NTP_VERSION).tar.gz
 NTP_SITE = https://www.eecis.udel.edu/~ntp/ntp_spool/ntp4/ntp-$(basename $(NTP_VERSION))
 
-NTP_DEPENDENCIES = openssl
+NTP_DEPENDENCIES = libevent openssl
 
-# 0002-ntp-syscalls-fallback.patch
+# 0001-ntp-syscalls-fallback.patch
 NTP_AUTORECONF = YES
 
 NTP_CONF_ENV = \
@@ -23,13 +23,16 @@ NTP_CONF_OPTS = \
 	--datadir=$(REMOVE_datadir) \
 	--libexecdir=$(REMOVE_libexecdir) \
 	--docdir=$(REMOVE_docdir) \
+	--program-transform-name=s,,, \
 	--disable-ATOM \
 	--disable-SHM \
 	--disable-tickadj \
 	--disable-debugging \
 	--disable-linuxcaps \
+	--disable-local-libevent \
 	--with-shared \
-	--with-crypto --enable-openssl-random \
+	--with-crypto --enable-openssl-random --enable-verbose-ssl \
+	--with-hardenfile=linux \
 	--with-yielding-select=yes \
 	--without-sntp \
 	--without-ntpsnmpd \
