@@ -4,6 +4,9 @@
 # -----------------------------------------------------------------------------
 
 build-clean:
+	# the build of the following targets is different; let's clean this too
+	$(foreach target,libstb-hal neutrino neutrino-plugins,\
+		-make $(target).clean-all$(sep))
 	-rm -rf $(BUILD_DIR)
 
 cross-base-clean:
