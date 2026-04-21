@@ -25,12 +25,12 @@ hls-playlist-reload-time=segment
 #hls-playlist-reload-time=live-edge
 
 # Qualität
-#default-stream=720p,2300k,3300k,best
-default-stream=1080,720p,480p
+default-stream=1080p,720p,3300k,3100k,2100k,best
+#default-stream=1080,720p,480p
 hls-audio-select=de
 
 ipv4
-stream-sorting-excludes <480p,2300k,3300k
+stream-sorting-excludes <480p,1500k,2300k
 #stream-segment-attempts=4
 stream-segment-threads=6
 #stream-segment-timeout=8
