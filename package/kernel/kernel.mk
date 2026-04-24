@@ -3,7 +3,7 @@
 #
 # -----------------------------------------------------------------------------
 
-# arm hd51/bre2ze4k/h7
+# arm hd51/bre2ze4k/h7/e4hdultra/protek4k
 GFUTURES_4_10_PATCH = \
 	gfutures/4_10_0001-export_pmpoweroffprepare.patch \
 	gfutures/4_10_0002-TBS-fixes-for-4.10-kernel.patch \
@@ -19,6 +19,9 @@ GFUTURES_4_10_PATCH = \
 	gfutures/4_10_dvbs2x.patch \
 	gfutures/4_10_reserve_dvb_adapter_0.patch \
 	gfutures/4_10_t230c2.patch
+
+GFUTURES_4_10_PATCH += \
+	gfutures/kernel-dvb-core-section-callback-uaf-guard.patch
 
 # arm hd60/hd61/multibox/multiboxse
 GFUTURES_4_4_PATCH = \
