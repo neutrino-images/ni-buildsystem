@@ -21,7 +21,7 @@ GFUTURES_4_10_PATCH = \
 	gfutures/4_10_t230c2.patch
 
 GFUTURES_4_10_PATCH += \
-	gfutures/kernel-dvb-core-section-callback-uaf-guard.patch
+	gfutures/linux-4.10.12-dvb-core-section-callback-uaf-guard.patch
 
 # arm hd60/hd61/multibox/multiboxse
 GFUTURES_4_4_PATCH = \
