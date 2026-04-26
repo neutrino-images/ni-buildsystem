@@ -1,0 +1,150 @@
+--- a/drivers/media/dvb-core/dmxdev.c
++++ b/drivers/media/dvb-core/dmxdev.c
+@@ -44,6 +44,12 @@
+ 	ssize_t free;
+ 
+ 	if (!len)
++		return 0;
++	/* Out-of-tree dispatchers can pass NULL src with non-zero len
++	 * when they split a section across two buffers and the second
++	 * half was never populated. Treat as a no-op rather than feed
++	 * NULL into the ringbuffer memcpy. */
++	if (!src)
+ 		return 0;
+ 	if (!buf->data)
+ 		return 0;
+@@ -358,16 +364,40 @@
+ 				       const u8 *buffer2, size_t buffer2_len,
+ 				       struct dmx_section_filter *filter)
+ {
+-	struct dmxdev_filter *dmxdevfilter = filter->priv;
++	struct dmxdev_filter *dmxdevfilter;
++	struct dmxdev *dev;
+ 	int ret;
+ 
+-	if (dmxdevfilter->buffer.error) {
+-		wake_up(&dmxdevfilter->buffer.queue);
++	/* filter itself is never expected NULL, but belt and braces, the
++	 * out-of-tree dispatcher has surprised us before. */
++	if (!filter)
+ 		return 0;
++
++	/* READ_ONCE forces the deref to stay where we wrote it. Without it
++	 * -Os hoists the load of filter->priv over the NULL check, turning
++	 * the guard into a no-op in the generated code. */
++	dmxdevfilter = READ_ONCE(filter->priv);
++	if (!dmxdevfilter)
++		return 0;
++
++	dev = READ_ONCE(dmxdevfilter->dev);
++	if (!dev)
++		return 0;
++
++	spin_lock(&dev->lock);
++
++	/* Back-pointer check under lock. If an out-of-tree driver has
++	 * recycled the dmx_section_filter slot between our READ_ONCE and
++	 * the lock acquire, filter.sec no longer points back at this
++	 * filter and the dispatch belongs to a freed/replaced session. */
++	if (dmxdevfilter->state != DMXDEV_STATE_GO ||
++	    dmxdevfilter->filter.sec != filter) {
++		spin_unlock(&dev->lock);
++		return 0;
+ 	}
+-	spin_lock(&dmxdevfilter->dev->lock);
+-	if (dmxdevfilter->state != DMXDEV_STATE_GO) {
+-		spin_unlock(&dmxdevfilter->dev->lock);
++	if (dmxdevfilter->buffer.error) {
++		spin_unlock(&dev->lock);
++		wake_up(&dmxdevfilter->buffer.queue);
+ 		return 0;
+ 	}
+ 	del_timer(&dmxdevfilter->timer);
+@@ -382,7 +412,7 @@
+ 		dmxdevfilter->buffer.error = ret;
+ 	if (dmxdevfilter->params.sec.flags & DMX_ONESHOT)
+ 		dmxdevfilter->state = DMXDEV_STATE_DONE;
+-	spin_unlock(&dmxdevfilter->dev->lock);
++	spin_unlock(&dev->lock);
+ 	wake_up(&dmxdevfilter->buffer.queue);
+ 	return 0;
+ }
+@@ -391,13 +421,54 @@
+ 				  const u8 *buffer2, size_t buffer2_len,
+ 				  struct dmx_ts_feed *feed)
+ {
+-	struct dmxdev_filter *dmxdevfilter = feed->priv;
++	struct dmxdev_filter *dmxdevfilter;
++	struct dmxdev *dev;
+ 	struct dvb_ringbuffer *buffer;
+ 	int ret;
+ 
+-	spin_lock(&dmxdevfilter->dev->lock);
++	/* Same guard pattern as dvb_dmxdev_section_callback. Out-of-tree
++	 * dispatchers can deliver a callback after release_ts_feed has
++	 * returned, with feed->priv cleared or the filter slot recycled. */
++	if (!feed)
++		return 0;
++
++	dmxdevfilter = READ_ONCE(feed->priv);
++	if (!dmxdevfilter)
++		return 0;
++
++	dev = READ_ONCE(dmxdevfilter->dev);
++	if (!dev)
++		return 0;
++
++	spin_lock(&dev->lock);
++
++	if (dmxdevfilter->state != DMXDEV_STATE_GO) {
++		spin_unlock(&dev->lock);
++		return 0;
++	}
++
++	/* Walk the feed list under lock and confirm one of our dmxdev_feed
++	 * entries still points back at this dmx_ts_feed. filter_stop sets
++	 * f->ts = NULL per entry after release_ts_feed, so a late dispatch
++	 * from a recycled slot finds no match and is dropped. */
++	{
++		struct dmxdev_feed *f;
++		bool match = false;
++
++		list_for_each_entry(f, &dmxdevfilter->feed.ts, next) {
++			if (READ_ONCE(f->ts) == feed) {
++				match = true;
++				break;
++			}
++		}
++		if (!match) {
++			spin_unlock(&dev->lock);
++			return 0;
++		}
++	}
++
+ 	if (dmxdevfilter->params.pes.output == DMX_OUT_DECODER) {
+-		spin_unlock(&dmxdevfilter->dev->lock);
++		spin_unlock(&dev->lock);
+ 		return 0;
+ 	}
+ 
+@@ -405,9 +476,9 @@
+ 	    || dmxdevfilter->params.pes.output == DMX_OUT_TSDEMUX_TAP)
+ 		buffer = &dmxdevfilter->buffer;
+ 	else
+-		buffer = &dmxdevfilter->dev->dvr_buffer;
++		buffer = &dev->dvr_buffer;
+ 	if (buffer->error) {
+-		spin_unlock(&dmxdevfilter->dev->lock);
++		spin_unlock(&dev->lock);
+ 		wake_up(&buffer->queue);
+ 		return 0;
+ 	}
+@@ -416,7 +487,7 @@
+ 		ret = dvb_dmxdev_buffer_write(buffer, buffer2, buffer2_len);
+ 	if (ret < 0)
+ 		buffer->error = ret;
+-	spin_unlock(&dmxdevfilter->dev->lock);
++	spin_unlock(&dev->lock);
+ 	wake_up(&buffer->queue);
+ 	return 0;
+ }

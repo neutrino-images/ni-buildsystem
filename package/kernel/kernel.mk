@@ -42,6 +42,9 @@ GFUTURES_4_4_PATCH = \
 	gfutures/0015-Backport_minimal_compiler_attributes_h_to_support_GCC_9.patch \
 	gfutures/0016-mn88472_reset_stream_ID_reg_if_no_PLP_given.patch
 
+GFUTURES_4_4_PATCH += \
+	gfutures/linux-4.4.35-dvb-core-section-callback-uaf-guard.patch
+
 # arm vuduo
 VUPLUS_3_9_PATCH = \
 	vuplus/3_9_0001-rt2800usb-add-support-for-rt55xx.patch \
