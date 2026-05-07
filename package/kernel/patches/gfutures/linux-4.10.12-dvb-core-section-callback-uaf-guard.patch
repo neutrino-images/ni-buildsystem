@@ -1,8 +1,29 @@
 diff --git a/drivers/media/dvb-core/dmxdev.c b/drivers/media/dvb-core/dmxdev.c
-index 2abcb413..82827fab 100644
+index 2abcb413..a162bfa5 100644
 --- a/drivers/media/dvb-core/dmxdev.c
 +++ b/drivers/media/dvb-core/dmxdev.c
-@@ -51,6 +51,12 @@ static int dvb_dmxdev_buffer_write(struct dvb_ringbuffer *buf,
+@@ -31,8 +31,20 @@
+ #include <linux/ioctl.h>
+ #include <linux/wait.h>
+ #include <linux/uaccess.h>
++#include <asm/page.h>
+ #include "dmxdev.h"
+ 
++/* Out-of-tree dispatchers occasionally leave feed->priv or filter->priv
++ * holding a non-NULL but invalid value when the filter slot is freed
++ * without clearing the back-link. The READ_ONCE + NULL guard is not
++ * enough on its own; chasing the next pointer (->dev) faults on values
++ * like 0x0b000000 that just happen to be non-zero. Reject anything
++ * outside kernel address space before the deref. */
++static inline bool dvb_dmxdev_is_kernel_ptr(const void *p)
++{
++	return (unsigned long)p >= PAGE_OFFSET;
++}
++
+ static int debug;
+ 
+ module_param(debug, int, 0644);
+@@ -51,6 +63,12 @@ static int dvb_dmxdev_buffer_write(struct dvb_ringbuffer *buf,
  
  	if (!len)
  		return 0;
@@ -15,7 +36,7 @@ index 2abcb413..82827fab 100644
  	if (!buf->data)
  		return 0;
  
-@@ -364,16 +370,40 @@ static int dvb_dmxdev_section_callback(const u8 *buffer1, size_t buffer1_len,
+@@ -364,16 +382,40 @@ static int dvb_dmxdev_section_callback(const u8 *buffer1, size_t buffer1_len,
  				       const u8 *buffer2, size_t buffer2_len,
  				       struct dmx_section_filter *filter)
  {
@@ -35,11 +56,11 @@ index 2abcb413..82827fab 100644
 +	 * -Os hoists the load of filter->priv over the NULL check, turning
 +	 * the guard into a no-op in the generated code. */
 +	dmxdevfilter = READ_ONCE(filter->priv);
-+	if (!dmxdevfilter)
++	if (!dmxdevfilter || !dvb_dmxdev_is_kernel_ptr(dmxdevfilter))
 +		return 0;
 +
 +	dev = READ_ONCE(dmxdevfilter->dev);
-+	if (!dev)
++	if (!dev || !dvb_dmxdev_is_kernel_ptr(dev))
 +		return 0;
 +
 +	spin_lock(&dev->lock);
@@ -62,7 +83,7 @@ index 2abcb413..82827fab 100644
  		return 0;
  	}
  	del_timer(&dmxdevfilter->timer);
-@@ -388,7 +418,7 @@ static int dvb_dmxdev_section_callback(const u8 *buffer1, size_t buffer1_len,
+@@ -388,7 +430,7 @@ static int dvb_dmxdev_section_callback(const u8 *buffer1, size_t buffer1_len,
  		dmxdevfilter->buffer.error = ret;
  	if (dmxdevfilter->params.sec.flags & DMX_ONESHOT)
  		dmxdevfilter->state = DMXDEV_STATE_DONE;
@@ -71,7 +92,7 @@ index 2abcb413..82827fab 100644
  	wake_up(&dmxdevfilter->buffer.queue);
  	return 0;
  }
-@@ -397,13 +427,54 @@ static int dvb_dmxdev_ts_callback(const u8 *buffer1, size_t buffer1_len,
+@@ -397,13 +439,54 @@ static int dvb_dmxdev_ts_callback(const u8 *buffer1, size_t buffer1_len,
  				  const u8 *buffer2, size_t buffer2_len,
  				  struct dmx_ts_feed *feed)
  {
@@ -89,11 +110,11 @@ index 2abcb413..82827fab 100644
 +		return 0;
 +
 +	dmxdevfilter = READ_ONCE(feed->priv);
-+	if (!dmxdevfilter)
++	if (!dmxdevfilter || !dvb_dmxdev_is_kernel_ptr(dmxdevfilter))
 +		return 0;
 +
 +	dev = READ_ONCE(dmxdevfilter->dev);
-+	if (!dev)
++	if (!dev || !dvb_dmxdev_is_kernel_ptr(dev))
 +		return 0;
 +
 +	spin_lock(&dev->lock);
@@ -129,7 +150,7 @@ index 2abcb413..82827fab 100644
  		return 0;
  	}
  
-@@ -411,14 +482,14 @@ static int dvb_dmxdev_ts_callback(const u8 *buffer1, size_t buffer1_len,
+@@ -411,14 +494,14 @@ static int dvb_dmxdev_ts_callback(const u8 *buffer1, size_t buffer1_len,
  	    || dmxdevfilter->params.pes.output == DMX_OUT_TSDEMUX_TAP)
  		buffer = &dmxdevfilter->buffer;
  	else
@@ -147,7 +168,7 @@ index 2abcb413..82827fab 100644
  		wake_up(&buffer->queue);
  		return dvb_ringbuffer_free(buffer);
  	}
-@@ -427,7 +498,7 @@ static int dvb_dmxdev_ts_callback(const u8 *buffer1, size_t buffer1_len,
+@@ -427,7 +510,7 @@ static int dvb_dmxdev_ts_callback(const u8 *buffer1, size_t buffer1_len,
  		ret = dvb_dmxdev_buffer_write(buffer, buffer2, buffer2_len);
  	if (ret < 0)
  		buffer->error = ret;
