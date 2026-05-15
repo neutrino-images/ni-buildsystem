@@ -1,0 +1,12 @@
+diff --git a/support/version b/support/version
+index 5d99544ec..c94317880 100755
+--- a/support/version
++++ b/support/version
+@@ -29,6 +29,7 @@ else
+   esac
+ fi
+ 
++VER="${VER%-dirty}"
+ # Output
+ if [ -z "$FILE" ]; then
+   echo $VER
