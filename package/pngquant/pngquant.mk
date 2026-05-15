@@ -20,8 +20,7 @@ HOST_PNGQUANT_CONF_ENV = \
 
 HOST_PNGQUANT_CONF_OPTS = \
 	--prefix=$(HOST_DIR) \
-	--without-lcms2 \
-	--disable-sse
+	--without-lcms2
 
 define HOST_PNGQUANT_CONFIGURE_CMDS
 	$(CD) $(PKG_BUILD_DIR); \
