@@ -4,10 +4,11 @@
 #
 ################################################################################
 
-TVHEADEND_VERSION = 37453bc3fe5f9e10f3428ebb1abdc613f8b07186
-TVHEADEND_DIR = tvheadend-$(TVHEADEND_VERSION)
-TVHEADEND_SOURCE = tvheadend-$(TVHEADEND_VERSION).tar.gz
-TVHEADEND_SITE = $(call github,tvheadend,tvheadend,$(TVHEADEND_VERSION))
+TVHEADEND_VERSION = master
+TVHEADEND_DIR = tvheadend.git
+TVHEADEND_SOURCE = tvheadend.git
+TVHEADEND_SITE = https://github.com/tvheadend
+TVHEADEND_SITE_METHOD = git
 
 TVHEADEND_DEPENDENCIES = \
 	host-python3 \
@@ -15,11 +16,10 @@ TVHEADEND_DEPENDENCIES = \
 	libiconv \
 	openssl
 
-# FIXME: cortex-a15 is hardcoded; needs buildsystem reworks
 TVHEADEND_CONF_OPTS = \
 	--prefix=$(prefix) \
 	--arch="$(TARGET_ARCH)" \
-	--cpu="cortex-a15" \
+	--cpu="$(TARGET_CPU)" \
 	--nowerror \
 	--python="$(HOST_PYTHON_BINARY)" \
 	--disable-dbus-1 \
@@ -46,6 +46,7 @@ TVHEADEND_CONF_OPTS = \
 	--enable-iptv \
 	--enable-satip_client \
 	--enable-satip_server \
+	--enable-linuxdvb \
 	--enable-timeshift
 
 TVHEADEND_DEPENDENCIES += host-pngquant
@@ -56,6 +57,9 @@ TVHEADEND_CONF_OPTS += --enable-libav
 
 TVHEADEND_DEPENDENCIES += libdvbcsa
 TVHEADEND_CONF_OPTS += --enable-tvhcsa
+
+TVHEADEND_DEPENDENCIES += zlib
+TVHEADEND_CONF_OPTS += --enable-zlib
 
 # The tvheadend build system expects the transponder data to be present inside
 # its source tree. To prevent a download initiated by the build system just
@@ -81,10 +85,9 @@ define TVHEADEND_FIX_PNGQUANT_PATH
 endef
 TVHEADEND_POST_CONFIGURE_HOOKS += TVHEADEND_FIX_PNGQUANT_PATH
 
-# Remove documentation and source files that are not needed because we
-# use the bundled web interface version.
+# Remove source files. We use the bundled web interface version.
 define TVHEADEND_TARGET_CLEANUP
-	$(TARGET_RM) $(TARGET_datarootdir)/tvheadend/{docs,src}
+	$(TARGET_RM) $(TARGET_datarootdir)/tvheadend/src
 endef
 TVHEADEND_TARGET_FINALIZE_HOOKS += TVHEADEND_TARGET_CLEANUP
 
