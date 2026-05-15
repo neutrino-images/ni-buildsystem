@@ -85,6 +85,27 @@ define TVHEADEND_FIX_PNGQUANT_PATH
 endef
 TVHEADEND_POST_CONFIGURE_HOOKS += TVHEADEND_FIX_PNGQUANT_PATH
 
+define TVHEADEND_ADD_USER
+	rm -f $(TARGET_sysconfdir)/passwd
+	-make $(TARGET_sysconfdir)/passwd
+	echo "tvheadend:*:101:101::/home/tvheadend:/bin/false" >> $(TARGET_sysconfdir)/passwd
+endef
+TVHEADEND_TARGET_FINALIZE_HOOKS += TVHEADEND_ADD_USER
+
+define TVHEADEND_ADD_GROUP
+	rm -f $(TARGET_sysconfdir)/group
+	-make $(TARGET_sysconfdir)/group
+	echo "tvheadend:x:101:tvheadend" >> $(TARGET_sysconfdir)/group
+endef
+TVHEADEND_TARGET_FINALIZE_HOOKS += TVHEADEND_ADD_GROUP
+
+define TVHEADEND_ADD_HOME
+	$(INSTALL) -d $(TARGET_DIR)/home/tvheadend
+	#chown tvheadend:tvheadend $(TARGET_DIR)/home/tvheadend
+	#chmod 0700 $(TARGET_DIR)/home/tvheadend
+endef
+TVHEADEND_TARGET_FINALIZE_HOOKS += TVHEADEND_ADD_HOME
+
 # Remove source files. We use the bundled web interface version.
 define TVHEADEND_TARGET_CLEANUP
 	$(TARGET_RM) $(TARGET_datarootdir)/tvheadend/src
