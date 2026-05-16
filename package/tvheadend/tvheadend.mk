@@ -91,5 +91,10 @@ define TVHEADEND_TARGET_CLEANUP
 endef
 TVHEADEND_TARGET_FINALIZE_HOOKS += TVHEADEND_TARGET_CLEANUP
 
+define TVHEADEND_INSTALL_INIT_SYSV
+	$(INSTALL_DATA) -D $(PKG_FILES_DIR)/tvheadend.default $(TARGET_sysconfdir)/default/tvheadend
+	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/tvheadend.init $(TARGET_sysconfdir)/init.d/tvheadend
+endef
+
 tvheadend: | $(TARGET_DIR)
 	$(call generic-package)
