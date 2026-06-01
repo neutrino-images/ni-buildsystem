@@ -1,0 +1,19 @@
+#!/bin/sh
+
+version_file=configure.ac
+ver_major=$(date '+%Y')
+ver_minor=$(date '+%m')
+
+sed -i \
+	-e "s|^define(ver_major,.*)|define(ver_major, ${ver_major})|" \
+	-e "s|^define(ver_minor,.*)|define(ver_minor, ${ver_minor})|" \
+	${version_file}
+
+if ! git diff HEAD --quiet -- ${version_file}; then
+	git add ${version_file}
+	git commit -m "- ${version_file}: change version to ${ver_major}.${ver_minor}"
+	git tag NI-${ver_major}.${ver_minor} $(git rev-parse HEAD)
+	echo Version changed, will abort.
+	echo Run \"git push\" again and run \"git push origin NI-${ver_major}.${ver_minor}\".
+	exit 1
+fi
