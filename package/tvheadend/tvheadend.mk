@@ -85,6 +85,8 @@ define TVHEADEND_FIX_PNGQUANT_PATH
 endef
 TVHEADEND_POST_CONFIGURE_HOOKS += TVHEADEND_FIX_PNGQUANT_PATH
 
+TVHEADEND_MAKE_ENV = LANGUAGES="de en_US en_GB"
+
 # Remove source files. We use the bundled web interface version.
 define TVHEADEND_TARGET_CLEANUP
 	$(TARGET_RM) $(TARGET_datarootdir)/tvheadend/src
