@@ -22,7 +22,7 @@ ARGS="-f -s"
 [ "${TVH_DEBUG}" = "1"  ] && ARGS="${ARGS} -s"
 
 # If first run, start in wizard mode
-if [ -z "$(ls -1 ${HOME}/.config/hts/accesscontrol/ 2>/dev/null)" ]; then
+if [ -z "$(ls -1 /var/root/.config/hts/accesscontrol/ 2>/dev/null)" ]; then
 	ARGS="${ARGS} -C"
 fi
 
