@@ -60,6 +60,7 @@ endif
 	$(CD) $(SOURCE_DIR)/$(NI_OPENTHREADS); git pull
 	$(CD) $(SOURCE_DIR)/$(NI_RTMPDUMP); git pull
 	$(CD) $(SOURCE_DIR)/$(NI_STREAMRIPPER); git pull
+	make install-git-hooks
 	make checkout-branches
 
 update: update-self update-ni-sources

@@ -7,7 +7,7 @@ init: preqs crosstool bootstrap
 
 # -----------------------------------------------------------------------------
 
-preqs: download ni-sources checkout-branches
+preqs: download ni-sources install-git-hooks checkout-branches
 
 $(CCACHE):
 	@$(call draw_line);
@@ -125,6 +125,19 @@ ni-sources: $(SOURCE_DIR) \
 	$(SOURCE_DIR)/$(NI_OPENTHREADS) \
 	$(SOURCE_DIR)/$(NI_RTMPDUMP) \
 	$(SOURCE_DIR)/$(NI_STREAMRIPPER)
+
+install-git-hooks:
+ifeq ($(NI_ADMIN),true)
+	@if ! diff -q support/git-hooks/$(NI_LIBSTB_HAL)-pre-push $(SOURCE_DIR)/$(NI_LIBSTB_HAL)/.git/hooks/pre-push; then \
+		$(INSTALL_EXEC) support/git-hooks/$(NI_LIBSTB_HAL)-pre-push $(SOURCE_DIR)/$(NI_LIBSTB_HAL)/.git/hooks/pre-push; \
+	fi
+	@if ! diff -q support/git-hooks/$(NI_NEUTRINO)-pre-push $(SOURCE_DIR)/$(NI_NEUTRINO)/.git/hooks/pre-push; then \
+		$(INSTALL_EXEC) support/git-hooks/$(NI_NEUTRINO)-pre-push $(SOURCE_DIR)/$(NI_NEUTRINO)/.git/hooks/pre-push; \
+	fi
+	@if ! diff -q support/git-hooks/$(NI_NEUTRINO_PLUGINS)-pre-push $(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS)/.git/hooks/pre-push; then \
+		$(INSTALL_EXEC) support/git-hooks/$(NI_NEUTRINO_PLUGINS)-pre-push $(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS)/.git/hooks/pre-push; \
+	fi
+endif
 
 checkout-branches:
 ifneq ($(KERNEL_BRANCH),$(empty))
