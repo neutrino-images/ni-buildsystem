@@ -128,13 +128,16 @@ ni-sources: $(SOURCE_DIR) \
 
 install-git-hooks:
 ifeq ($(NI_ADMIN),true)
-	@if ! diff -q support/git-hooks/$(NI_LIBSTB_HAL)-pre-push $(SOURCE_DIR)/$(NI_LIBSTB_HAL)/.git/hooks/pre-push; then \
+	@if ! diff -q support/git-hooks/ni-buildsystem-pre-push .git/hooks/pre-push; then \
+		$(INSTALL_EXEC) support/git-hooks/ni-buildsystem-pre-push .git/hooks/pre-push; \
+	fi
+	@if ! diff -q support/git-hooks/ni-libstb-hal-pre-push $(SOURCE_DIR)/$(NI_LIBSTB_HAL)/.git/hooks/pre-push; then \
 		$(INSTALL_EXEC) support/git-hooks/$(NI_LIBSTB_HAL)-pre-push $(SOURCE_DIR)/$(NI_LIBSTB_HAL)/.git/hooks/pre-push; \
 	fi
-	@if ! diff -q support/git-hooks/$(NI_NEUTRINO)-pre-push $(SOURCE_DIR)/$(NI_NEUTRINO)/.git/hooks/pre-push; then \
+	@if ! diff -q support/git-hooks/ni-neutrino-pre-push $(SOURCE_DIR)/$(NI_NEUTRINO)/.git/hooks/pre-push; then \
 		$(INSTALL_EXEC) support/git-hooks/$(NI_NEUTRINO)-pre-push $(SOURCE_DIR)/$(NI_NEUTRINO)/.git/hooks/pre-push; \
 	fi
-	@if ! diff -q support/git-hooks/$(NI_NEUTRINO_PLUGINS)-pre-push $(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS)/.git/hooks/pre-push; then \
+	@if ! diff -q support/git-hooks/ni-neutrino-plugins-pre-push $(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS)/.git/hooks/pre-push; then \
 		$(INSTALL_EXEC) support/git-hooks/$(NI_NEUTRINO_PLUGINS)-pre-push $(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS)/.git/hooks/pre-push; \
 	fi
 endif
