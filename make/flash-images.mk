@@ -84,7 +84,7 @@ endif
 
 # -----------------------------------------------------------------------------
 
-flash-image-coolstream: IMAGE_DATE=$(shell cat $(ROOTFS_DIR)/.version | grep "^version=" | cut -d= -f2 | cut -c 5-)
+flash-image-coolstream: IMAGE_DATE=$(shell cat $(ROOTFS_DIR)/.version | grep "^version=" | cut -d= -f2 | cut -c 8-)
 flash-image-coolstream: | $(IMAGE_DIR)
 	make devtable
 	mkfs.jffs2 -e $(ERASE_SIZE) $(MKFSFLAGS) -o $(IMAGE_DIR)/$(IMAGE_NAME).img
@@ -122,7 +122,7 @@ endif
 
 # -----------------------------------------------------------------------------
 
-flash-image-hd5x: IMAGE_DATE=$(shell cat $(ROOTFS_DIR)/.version | grep "^version=" | cut -d= -f2 | cut -c 5-)
+flash-image-hd5x: IMAGE_DATE=$(shell cat $(ROOTFS_DIR)/.version | grep "^version=" | cut -d= -f2 | cut -c 8-)
 flash-image-hd5x: | $(IMAGE_DIR)
 	rm -rf $(IMAGE_BUILD_DIR)
 	$(INSTALL) -d $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)
@@ -306,7 +306,7 @@ endif
 
 # -----------------------------------------------------------------------------
 
-flash-image-hd6x: IMAGE_DATE=$(shell cat $(ROOTFS_DIR)/.version | grep "^version=" | cut -d= -f2 | cut -c 5-)
+flash-image-hd6x: IMAGE_DATE=$(shell cat $(ROOTFS_DIR)/.version | grep "^version=" | cut -d= -f2 | cut -c 8-)
 flash-image-hd6x: | $(IMAGE_DIR)
 	rm -rf $(IMAGE_BUILD_DIR)
 	$(INSTALL) -d $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)
@@ -546,7 +546,7 @@ flash-image-hd6x-single: | $(IMAGE_DIR)
 # -----------------------------------------------------------------------------
 
 # armbox vu+
-flash-image-vuplus: IMAGE_DATE=$(shell cat $(ROOTFS_DIR)/.version | grep "^version=" | cut -d= -f2 | cut -c 5-)
+flash-image-vuplus: IMAGE_DATE=$(shell cat $(ROOTFS_DIR)/.version | grep "^version=" | cut -d= -f2 | cut -c 8-)
 flash-image-vuplus: | $(IMAGE_DIR)
 	rm -rf $(IMAGE_BUILD_DIR)
 	$(INSTALL) -d $(IMAGE_BUILD_DIR)/$(IMAGE_SUBDIR)
