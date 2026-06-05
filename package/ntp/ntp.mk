@@ -19,11 +19,6 @@ NTP_CONF_ENV = \
 	POSIX_SHELL=/bin/sh
 
 NTP_CONF_OPTS = \
-	--bindir=$(REMOVE_bindir) \
-	--datadir=$(REMOVE_datadir) \
-	--libexecdir=$(REMOVE_libexecdir) \
-	--docdir=$(REMOVE_docdir) \
-	--sbindir=$(sbindir) \
 	--program-transform-name=s,,, \
 	--disable-ATOM \
 	--disable-SHM \
@@ -39,10 +34,9 @@ NTP_CONF_OPTS = \
 	--without-ntpsnmpd \
 	--without-lineeditlibs
 
-define NTP_TARGET_CLEANUP
-	$(TARGET_RM) $(addprefix $(TARGET_sbindir)/,calc_tickadj ntp-keygen ntp-wait ntpd ntptime tickadj update-leap)
+define NTP_INSTALL_CMDS
+	$(INSTALL_EXEC) -D $(PKG_BUILD_DIR)/ntpdate/ntpdate $(TARGET_sbindir)/ntpdate
 endef
-NTP_TARGET_FINALIZE_HOOKS += NTP_TARGET_CLEANUP
 
 define NTP_INSTALL_NTPDATE_INIT
 	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/ntpdate.init $(TARGET_sysconfdir)/init.d/ntpdate
