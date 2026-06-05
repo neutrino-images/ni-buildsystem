@@ -23,6 +23,7 @@ NTP_CONF_OPTS = \
 	--datadir=$(REMOVE_datadir) \
 	--libexecdir=$(REMOVE_libexecdir) \
 	--docdir=$(REMOVE_docdir) \
+	--sbindir=$(sbindir) \
 	--program-transform-name=s,,, \
 	--disable-ATOM \
 	--disable-SHM \
