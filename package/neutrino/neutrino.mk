@@ -10,8 +10,8 @@ NEUTRINO_SOURCE = $(NI_NEUTRINO)
 NEUTRINO_SITE = https://github.com/neutrino-images
 NEUTRINO_SITE_METHOD = ni-git
 
-NEUTRINO_DEPENDENCIES = ffmpeg freetype giflib libcurl libdvbsi fribidi \
-	libjpeg-turbo libsigc lua ntp openssl openthreads pugixml zlib
+NEUTRINO_DEPENDENCIES = ffmpeg freetype libcurl libdvbsi libjpeg-turbo libsigc \
+	openssl openthreads zlib
 
 NEUTRINO_SRC_DIR = $(SOURCE_DIR)/$(NEUTRINO_DIR)
 NEUTRINO_OBJ_DIR = $(BUILD_DIR)/$(NEUTRINO_DIR)-obj
@@ -61,11 +61,7 @@ NEUTRINO_CONF_OPTS = \
 	--enable-maintainer-mode \
 	\
 	--enable-freesatepg \
-	--enable-fribidi \
-	--enable-giflib \
-	--enable-lua \
 	--enable-mdev \
-	--enable-pugixml \
 	\
 	--with-omdb-api-key="$(BS_PACKAGE_NEUTRINO_OMDB_API_KEY)" \
 	--with-tmdb-api-key="$(BS_PACKAGE_NEUTRINO_TMDB_API_KEY)" \
@@ -116,8 +112,20 @@ else
 
 endif
 
+NEUTRINO_DEPENDENCIES += fribidi
+NEUTRINO_CONF_OPTS += --enable-fribidi
+
+NEUTRINO_DEPENDENCIES += giflib
+NEUTRINO_CONF_OPTS += --enable-giflib
+
 NEUTRINO_DEPENDENCIES += lcd4linux
 NEUTRINO_CONF_OPTS += --enable-lcd4linux
+
+NEUTRINO_DEPENDENCIES += lua
+NEUTRINO_CONF_OPTS += --enable-lua
+
+NEUTRINO_DEPENDENCIES += pugixml
+NEUTRINO_CONF_OPTS += --enable-pugixml
 
 ifeq ($(BS_PACKAGE_NEUTRINO_PIP),y)
   NEUTRINO_CONF_OPTS += --enable-pip

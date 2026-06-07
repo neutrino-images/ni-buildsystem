@@ -13,6 +13,7 @@ ni-image:
 	$(MAKE) doscam-webif-skin
 	$(MAKE) logo-addon
 	make fbshot
+	$(MAKE) ntp
 	$(MAKE) tzdata
 	$(MAKE) smartmontools
 	$(MAKE) sg3_utils
