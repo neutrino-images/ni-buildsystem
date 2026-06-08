@@ -14,6 +14,7 @@ ni-image:
 	$(MAKE) logo-addon
 	make fbshot
 	$(MAKE) ntp
+	$(MAKE) chrony
 	$(MAKE) tzdata
 	$(MAKE) smartmontools
 	$(MAKE) sg3_utils
