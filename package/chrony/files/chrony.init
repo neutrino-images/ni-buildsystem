@@ -3,14 +3,34 @@
 . /etc/init.d/functions
 . /etc/init.d/globals
 
+start() {
+	chronyd -U
+
+	# add ntpserver from neutrino.conf
+	ntpserver=$(get_setting network_ntpserver)
+	chronyc add server ${ntpserver:-0.de.pool.ntp.org} prefer iburst
+}
+
+stop() {
+	chronyc shutdown
+}
+
+restart() {
+	stop
+	start
+}
+
 case "$1" in
 	start)
-		chronyd -u
+		start
 	;;
 	stop)
-		chronyc shutdown
+		stop
+	;;
+	restart)
+		restart
 	;;
 	*)
-		echo "[$BASENAME] Usage: $0 {start|stop}"
+		echo "[$BASENAME] Usage: $0 {start|stop|restart}"
 	;;
 esac
