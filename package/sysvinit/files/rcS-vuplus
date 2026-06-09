@@ -80,7 +80,7 @@ service mdev start
 
 # fire up network/wlan
 service network start
-service ntpdate start
+service chrony start
 
 # say hi to everyone
 oled -b 5

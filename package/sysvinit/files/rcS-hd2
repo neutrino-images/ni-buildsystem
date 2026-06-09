@@ -149,7 +149,7 @@ ln -sf /dev/cs_ir /dev/input/input0
 
 # fire up network/wlan
 service network start
-service ntpdate start
+service chrony start
 
 # say hi to everyone
 dt -ls01

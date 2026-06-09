@@ -82,7 +82,7 @@ service mdev start
 
 # fire up network/wlan
 service network start
-service ntpdate start
+service chrony start
 
 # say hi to everyone
 display_msg "Booting... NI"

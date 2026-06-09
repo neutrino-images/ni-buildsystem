@@ -132,7 +132,7 @@ load_module rt2870sta.ko
 
 # fire up network/wlan
 service network start
-service ntpdate start
+service chrony start
 
 # load rest of modules
 load_module cifs.ko
