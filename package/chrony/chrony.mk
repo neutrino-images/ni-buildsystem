@@ -27,7 +27,6 @@ CHRONY_TARGET_FINALIZE_HOOKS += CHRONY_INSTALL_CHRONY_CONF
 
 define CHRONY_INSTALL_INIT_SYSV
 	$(INSTALL_EXEC) -D $(PKG_FILES_DIR)/chrony.init $(TARGET_sysconfdir)/init.d/chrony
-	$(UPDATE-RC.D) chrony defaults 75 25
 endef
 
 chrony: | $(TARGET_DIR)
