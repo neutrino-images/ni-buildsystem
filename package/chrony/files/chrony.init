@@ -3,16 +3,33 @@
 . /etc/init.d/functions
 . /etc/init.d/globals
 
+chronyd=$(which chronyd)
+chronyc=$(which chronyc)
+
+conf=/etc/chrony.conf
+pool=$(grep ^pool $conf | cut -d" " -f2)
+
 start() {
-	chronyd -U
+	printf "[$BASENAME] Starting ... "
+	$chronyd -U
+	if [ $? -eq 0 ]; then
+		echo "OK"
+	else
+		echo "FAIL"
+	fi
 
 	# add ntpserver from neutrino.conf
 	ntpserver=$(get_setting network_ntpserver)
-	chronyc add server ${ntpserver:-0.de.pool.ntp.org} prefer iburst
+	ntpserver=${ntpserver:-0.de.pool.ntp.org}
+	if [ "$pool" != "$ntpserver" ]; then
+		printf "[$BASENAME] Add pool $ntpserver ... "
+		$chronyc add pool $ntpserver iburst prefer
+	fi
 }
 
 stop() {
-	chronyc shutdown
+	printf "[$BASENAME] Shutdown ... "
+	$chronyc shutdown
 }
 
 restart() {
