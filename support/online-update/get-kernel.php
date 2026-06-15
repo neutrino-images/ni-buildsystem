@@ -10,8 +10,8 @@ $boxseries = trim($_GET["boxseries"]);
 $boxmodel = trim($_GET["boxmodel"]);
 
 $kernel_suffix = "";
-$image_version = "???"; # wildcard for version (e.g. 320)
-$image_date = "????????????"; # wildcard for date (e.g. 201601012359)
+$image_version = "??????"; # wildcard for version (e.g. 202606)
+$image_date = "????????????"; # wildcard for date (e.g. 202606235959)
 $image_type = "nightly";
 
 # convert strings to lower case

@@ -168,9 +168,5 @@ $file = $directory . "/update-" . $boxtype_sc . "-" . $boxmodel . ".txt";
 if (file_exists($file))
 	$result .= file_get_contents($file, true);
 
-#$file = "plugins/pr-auto-timer.txt";
-#if (file_exists($file))
-#	$result .= file_get_contents($file, true);
-
 echo $result;
 ?>
