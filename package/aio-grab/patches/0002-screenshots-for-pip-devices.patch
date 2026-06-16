@@ -1,8 +1,8 @@
 diff --git a/main.c b/main.c
-index 58c7bef..007f770 100644
+index 4108cc0..2cdc67f 100644
 --- a/main.c
 +++ b/main.c
-@@ -125,6 +125,36 @@ int timeval_subtract (struct timeval *result, struct timeval *x, struct timeval
+@@ -129,6 +129,36 @@ int timeval_subtract (struct timeval *result, struct timeval *x, struct timeval
  }
  #endif
  
@@ -39,9 +39,9 @@ index 58c7bef..007f770 100644
  #define VIDEO_DEV "/dev/video"
  
  // dont change SPARE_RAM and DMA_BLOCKSIZE until you really know what you are doing !!!
-@@ -149,11 +179,12 @@ static const int yuv2rgbtable_bv[256] = {
- };
- 
+@@ -156,11 +186,12 @@ void getvideo_hisi(unsigned char *video, int *xres, int *yres);
+ static int hisi_uses_chip_backend(void);
+ static int hisi_uses_composited_snapshot(void);
  void getvideo(unsigned char *video, int *xres, int *yres);
 -void getvideo2(unsigned char *video, int *xres, int *yres);
 +void getvideo2(unsigned char *video, int *xres, int *yres, int video_dev);
@@ -53,10 +53,10 @@ index 58c7bef..007f770 100644
  void combine(unsigned char *output, const unsigned char *video, const unsigned char *osd, int vleft, int vtop, int vwidth, int vheight, int xres, int yres);
  
  #if !defined(__sh__)
-@@ -268,12 +299,12 @@ static inline void clamp_rect(int *L,int *T,int *W,int *H,int outW,int outH)
+@@ -287,12 +318,12 @@ static inline void clamp_rect(int *L,int *T,int *W,int *H,int outW,int outH)
  int main(int argc, char **argv)
  {
- 	int xres_v,yres_v,xres_o,yres_o,xres,yres,aspect;
+ 	int xres_v = 0, yres_v = 0, xres_o = 0, yres_o = 0, xres = 0, yres = 0, aspect;
 -	int c,osd_only,video_only,use_osd_res,width,use_png,use_jpg,jpg_quality,no_aspect,use_letterbox;
 +	int c,osd_only,video_only,use_osd_res,width,use_png,use_jpg,jpg_quality,no_aspect,use_letterbox,pips;
  
@@ -68,16 +68,16 @@ index 58c7bef..007f770 100644
  	jpg_quality=50;
  	aspect=1;
  
-@@ -286,7 +317,7 @@ int main(int argc, char **argv)
+@@ -305,7 +336,7 @@ int main(int argc, char **argv)
  	if (getenv("GRAB_AXIS_DEBUG") && *getenv("GRAB_AXIS_DEBUG"))
  		axis_debug = 1;
  
 -	unsigned char *video, *osd, *output;
 +	unsigned char *video, *video1, *video2, *video3, *osd, *output;
  	int output_bytes=3;
+ 	int hisi_composited_all = 0;
  
- 	const char* filename = "/tmp/screenshot.bmp";
-@@ -721,7 +752,7 @@ int main(int argc, char **argv)
+@@ -766,7 +797,7 @@ int main(int argc, char **argv)
  	}
  
  	// process command line
@@ -86,7 +86,7 @@ index 58c7bef..007f770 100644
  	{
  		switch (c)
  		{
-@@ -743,6 +774,7 @@ int main(int argc, char **argv)
+@@ -788,6 +819,7 @@ int main(int argc, char **argv)
  					"-p produce png files instead of bmp\n"
  					"-q Quiet mode, don't output debug messages\n"
  					"-s write to stdout instead of a file\n"
@@ -94,7 +94,7 @@ index 58c7bef..007f770 100644
  					"-h this help screen\n\n"
  					"If no command is given the complete picture will be grabbed.\n"
  					"If no filename is given /tmp/screenshot.[bmp/jpg/png] will be used.\n");
-@@ -801,6 +833,14 @@ int main(int argc, char **argv)
+@@ -846,6 +878,14 @@ int main(int argc, char **argv)
  			case 'n':
  				no_aspect=1;
  				break;
@@ -109,7 +109,7 @@ index 58c7bef..007f770 100644
  		}
  	}
  	if (optind < argc) // filename
-@@ -813,7 +853,26 @@ int main(int argc, char **argv)
+@@ -858,7 +898,26 @@ int main(int argc, char **argv)
  	else if (stb_type == VULCAN || stb_type == PALLAS)
  		mallocsize = 720U * 576U;
  
@@ -136,7 +136,7 @@ index 58c7bef..007f770 100644
  	osd = (unsigned char *)malloc(mallocsize * 4U);
  
  	if ((stb_type == VULCAN || stb_type == PALLAS) && width > 720)
-@@ -841,7 +900,26 @@ int main(int argc, char **argv)
+@@ -905,7 +964,26 @@ int main(int argc, char **argv)
  			fprintf(stderr, "Grabbing Video ...\n");
  		if (stb_type == BRCM7366 || stb_type == BRCM7251 || stb_type == BRCM7252 || stb_type == BRCM7252S || stb_type == BRCM7444 || stb_type == BRCM72604VU || stb_type == BRCM7278 || stb_type == HISIL_ARM)
  		{
@@ -162,9 +162,9 @@ index 58c7bef..007f770 100644
 +				combine_video(video, video3, xres_v, yres_v, 3);
 +			}
  		}
- 		else
+ 		else if (hisi_uses_chip_backend())
  		{
-@@ -875,6 +953,7 @@ int main(int argc, char **argv)
+@@ -965,6 +1043,7 @@ int main(int argc, char **argv)
  	}
  	else
  	{
@@ -172,7 +172,7 @@ index 58c7bef..007f770 100644
  		fp = fopen("/proc/stb/vmpeg/0/aspect", "r");
  		if (fp)
  		{
-@@ -910,6 +989,12 @@ int main(int argc, char **argv)
+@@ -1000,6 +1079,12 @@ int main(int argc, char **argv)
  				sscanf(buf,"%x",&dst_left);
  			fclose(fp);
  		}
@@ -185,7 +185,7 @@ index 58c7bef..007f770 100644
  		if (dst_width == 720) dst_width = 0;
  		if (dst_height == 576) dst_height = 0;
  	}
-@@ -987,7 +1072,7 @@ int main(int argc, char **argv)
+@@ -1082,7 +1167,7 @@ int main(int argc, char **argv)
  			memcpy(osd, output, xres * yres * 4);
  		}
  
@@ -194,7 +194,7 @@ index 58c7bef..007f770 100644
  		{
  			if (!quiet)
  				fprintf(stderr, "Resizing Video to %d x %d ...\n", vbuf_w, vbuf_h);
-@@ -1012,7 +1097,10 @@ int main(int argc, char **argv)
+@@ -1107,7 +1192,10 @@ int main(int argc, char **argv)
  				fprintf(stderr, "[combine] dst=%d,%d %dx%d  vbuf=%dx%d  out=%dx%d\n", dst_left, dst_top, dst_width, dst_height, vbuf_w, vbuf_h, xres, yres);
  			}
  
@@ -206,7 +206,7 @@ index 58c7bef..007f770 100644
  	}
  
  post_merge:
-@@ -1201,7 +1289,7 @@ post_merge:
+@@ -2379,7 +2467,7 @@ void getvideo_hisi(unsigned char *video, int *xres, int *yres)
  
  // grabing the video picture
  
@@ -215,7 +215,7 @@ index 58c7bef..007f770 100644
  {
  	char buf[256];
  	sprintf(buf, "/dev/dvb/adapter0/video%d", video_dev);
-@@ -1276,10 +1364,14 @@ void getvideo(unsigned char *video, int *xres, int *yres)
+@@ -2454,10 +2542,14 @@ void getvideo(unsigned char *video, int *xres, int *yres)
  
  		munmap((void*)data, 100);
  
@@ -230,7 +230,7 @@ index 58c7bef..007f770 100644
  
  		if (!adr || !adr2)
  		{
-@@ -1774,6 +1866,7 @@ dmerr:
+@@ -2952,6 +3044,7 @@ dmerr:
  		*xres=0;
  		*yres=0;
  
@@ -238,7 +238,7 @@ index 58c7bef..007f770 100644
  		fp = fopen("/proc/stb/vmpeg/0/xres","r");
  		if (fp)
  		{
-@@ -1793,6 +1886,10 @@ dmerr:
+@@ -2971,6 +3064,10 @@ dmerr:
  			}
  			fclose(fp);
  		}
@@ -249,7 +249,7 @@ index 58c7bef..007f770 100644
  
  		if((stride == 0) || (res == 0)) return;
  
-@@ -1945,6 +2042,7 @@ dmerr:
+@@ -3123,6 +3220,7 @@ dmerr:
  		*xres=0;
  		*yres=0;
  
@@ -257,7 +257,7 @@ index 58c7bef..007f770 100644
  		fp = fopen("/proc/stb/vmpeg/0/xres","r");
  		if (fp)
  		{
-@@ -1963,6 +2061,10 @@ dmerr:
+@@ -3141,6 +3239,10 @@ dmerr:
  			}
  			fclose(fp);
  		}
@@ -268,7 +268,7 @@ index 58c7bef..007f770 100644
  
  		//if stride and res are zero return (please note that stillpictures will not be captured)
  		if((stride == 0)&&(res == 0)) return;
-@@ -2189,6 +2291,7 @@ dmerr:
+@@ -3367,6 +3469,7 @@ dmerr:
  	else if (stb_type == XILLEON)
  	{
  		// grab xilleon pic from decoder memory
@@ -276,7 +276,7 @@ index 58c7bef..007f770 100644
  		fp = fopen("/proc/stb/vmpeg/0/xres","r");
  		if (fp)
  		{
-@@ -2207,6 +2310,9 @@ dmerr:
+@@ -3385,6 +3488,9 @@ dmerr:
  			}
  			fclose(fp);
  		}
@@ -286,8 +286,8 @@ index 58c7bef..007f770 100644
  
  		if((memory = (unsigned char*)mmap(0, 1920*1152*6, PROT_READ, MAP_SHARED, mem_fd, 0x6000000)) == MAP_FAILED)
  		{
-@@ -2759,6 +2865,49 @@ void fast_resize(const unsigned char *source, unsigned char *dest, int xsource,
- 	}
+@@ -3937,6 +4043,49 @@ void fast_resize(const unsigned char *source, unsigned char *dest, int xsource,
+     }
  }
  
 +// combining 2 videos
