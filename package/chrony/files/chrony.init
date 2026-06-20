@@ -7,7 +7,7 @@ chronyd=$(which chronyd)
 chronyc=$(which chronyc)
 
 conf=/etc/chrony.conf
-pool=$(grep ^pool $conf | cut -d" " -f2)
+pool=$(grep -m1 ^pool $conf | cut -d" " -f2)
 
 start() {
 	printf "[$BASENAME] Starting ... "
