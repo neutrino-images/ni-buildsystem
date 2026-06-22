@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-WGET2_VERSION = 2.0.1
+WGET2_VERSION = 2.2.1
 WGET2_DIR = wget2-$(WGET2_VERSION)
 WGET2_SOURCE = wget2-$(WGET2_VERSION).tar.gz
 WGET2_SITE = $(GNU_MIRROR)/wget
