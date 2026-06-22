@@ -89,6 +89,9 @@ endif
 	make autofs
 	make sysconfdir
 	make init-scripts
+ifneq ($(BS_PACKAGES_OWN),)
+	$(MAKE) $(BS_PACKAGES_OWN)
+endif
 ifeq ($(PERSONALIZE),yes)
 	make personalize
 endif
