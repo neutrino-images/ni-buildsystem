@@ -41,8 +41,10 @@ symbolic-links: | $(TARGET_DIR)
 		rm -rf root; ln -sf /var/root root; \
 		rm -rf run; ln -sf /var/run run; \
 		rm -rf share; ln -sf /usr/share share
+	$(INSTALL) -d $(TARGET_localstatedir)
 	$(CD) $(TARGET_localstatedir); \
 		rm -rf tmp; ln -sf /tmp tmp
+	$(INSTALL) -d $(TARGET_sysconfdir)
 	$(CD) $(TARGET_sysconfdir); \
 		rm -rf mtab; ln -sf /proc/mounts mtab
 ifeq ($(PERSISTENT_VAR_PARTITION),yes)
@@ -143,16 +145,19 @@ ifneq ($(DEBUG),yes)
 	@echo "The following warnings from strip are harmless!"
 	@$(call draw_line);
 	for dir in $(ROOTFS_STRIP_BINS); do \
-		find $(ROOTFS_DIR)$${dir} -type f -print0 | xargs -n 128 -0 $(TARGET_STRIP) || true; \
+		$(INSTALL) -d $(ROOTFS_DIR)$${dir}; \
+		find $(ROOTFS_DIR)$${dir} \
+			-type f -print0 | xargs -n 128 -0 $(TARGET_STRIP) || true; \
 	done
 	for dir in $(ROOTFS_STRIP_LIBS); do \
+		$(INSTALL) -d $(ROOTFS_DIR)$${dir}; \
 		find $(ROOTFS_DIR)$${dir} \( \
 				-path $(ROOTFS_DIR)/lib/libnexus.so -o \
 				-path $(ROOTFS_DIR)/lib/libnxpl.so -o \
 				-path $(ROOTFS_DIR)/lib/libv3ddriver.so -o \
 				\
 				-path $(ROOTFS_DIR)/lib/modules \) -prune -o \
-		-type f -print0 | xargs -n 128 -0 $(TARGET_STRIP) || true; \
+			-type f -print0 | xargs -n 128 -0 $(TARGET_STRIP) || true; \
 	done
   ifeq ($(BOXSERIES),hd2)
 	find $(ROOTFS_DIR)/lib/modules/$(KERNEL_VERSION)/kernel -type f -name '*.ko' | xargs -n 1 $(TARGET_OBJCOPY) --strip-unneeded
