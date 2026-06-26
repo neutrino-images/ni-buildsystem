@@ -6,8 +6,14 @@
 chronyd=$(which chronyd)
 chronyc=$(which chronyc)
 
-conf=/etc/chrony.conf
-pool=$(grep -m1 ^pool $conf | cut -d" " -f2)
+fragment_conf=/etc/chrony.d/neutrino-ntpserver.conf
+if [ ! -e $fragment_conf ]; then
+	mkdir -p $(dirname $fragment_conf)
+	# add ntpserver from neutrino.conf
+	ntpserver=$(get_setting network_ntpserver)
+	ntpserver=${ntpserver:-0.de.pool.ntp.org}
+	echo -e "# managed by neutrino; do not edit\npool $ntpserver iburst prefer" > $fragment_conf
+fi
 
 start() {
 	printf "[$BASENAME] Starting ... "
@@ -16,14 +22,6 @@ start() {
 		echo "OK"
 	else
 		echo "FAIL"
-	fi
-
-	# add ntpserver from neutrino.conf
-	ntpserver=$(get_setting network_ntpserver)
-	ntpserver=${ntpserver:-0.de.pool.ntp.org}
-	if [ "$pool" != "$ntpserver" ]; then
-		printf "[$BASENAME] Add pool $ntpserver ... "
-		$chronyc add pool $ntpserver iburst prefer
 	fi
 }
 
