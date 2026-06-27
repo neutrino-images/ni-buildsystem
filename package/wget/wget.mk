@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-WGET_VERSION = 1.25.0
+WGET_VERSION = $(if $(filter $(BOXTYPE),coolstream),1.21.3,1.25.0)
 WGET_DIR = wget-$(WGET_VERSION)
 WGET_SOURCE = wget-$(WGET_VERSION).tar.gz
 WGET_SITE = $(GNU_MIRROR)/wget
