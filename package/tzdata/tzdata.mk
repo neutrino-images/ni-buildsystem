@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-TZDATA_VERSION = 2023c
+TZDATA_VERSION = 2026b
 TZDATA_DIR = tzdata$(TZDATA_VERSION)
 TZDATA_SOURCE = tzdata$(TZDATA_VERSION).tar.gz
 TZDATA_SITE = https://data.iana.org/time-zones/releases
@@ -40,6 +40,7 @@ TZDATA_LOCALTIME = CET
 ETC_LOCALTIME = $(if $(filter $(PERSISTENT_VAR_PARTITION),yes),/var/etc/localtime,/etc/localtime)
 
 define TZDATA_INSTALL_ETC_LOCALTIME
+	$(INSTALL) -d $$(dirname $(TARGET_DIR)$(ETC_LOCALTIME))
 	ln -sf $(datadir)/zoneinfo/$(TZDATA_LOCALTIME) $(TARGET_DIR)$(ETC_LOCALTIME)
 endef
 TZDATA_TARGET_FINALIZE_HOOKS += TZDATA_INSTALL_ETC_LOCALTIME
