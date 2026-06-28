@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-WPA_SUPPLICANT_VERSION = $(if $(filter $(BOXTYPE),coolstream),0.7.3,2.10)
+WPA_SUPPLICANT_VERSION = $(if $(filter $(BOXTYPE),coolstream),0.7.3,2.11)
 WPA_SUPPLICANT_DIR = wpa_supplicant-$(WPA_SUPPLICANT_VERSION)
 WPA_SUPPLICANT_SOURCE = wpa_supplicant-$(WPA_SUPPLICANT_VERSION).tar.gz
 WPA_SUPPLICANT_SITE = https://w1.fi/releases
