@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-ZIC_VERSION = 2023c
+ZIC_VERSION = 2026b
 ZIC_DIR = tzcode$(ZIC_VERSION)
 ZIC_SOURCE = tzcode$(ZIC_VERSION).tar.gz
 ZIC_SITE = https://data.iana.org/time-zones/releases
@@ -23,6 +23,7 @@ endef
 
 define HOST_ZIC_INSTALL_CMDS
 	$(INSTALL_EXEC) -D $(PKG_BUILD_DIR)/zic $(HOST_ZIC_BINARY)
+	$(INSTALL_DATA) -D $(PKG_BUILD_DIR)/tzfile.h $(HOST_DIR)/include/tzfile.h
 endef
 
 host-zic: | $(HOST_DIR)
