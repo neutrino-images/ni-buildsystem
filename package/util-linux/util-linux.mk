@@ -11,7 +11,7 @@ else ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd2))
 UTIL_LINUX_VERSION_MAJOR = 2.38
 UTIL_LINUX_VERSION_MINOR = .1
 else
-UTIL_LINUX_VERSION_MAJOR = 2.39
+UTIL_LINUX_VERSION_MAJOR = 2.42
 UTIL_LINUX_VERSION_MINOR = .2
 endif
 
@@ -24,15 +24,17 @@ UTIL_LINUX_DEPENDENCIES = ncurses zlib
 
 #UTIL_LINUX_AUTORECONF = YES
 
+# only sbin/{blkdiscard,blkid} and its bash-completions are needed
 define UTIL_LINUX_TARGET_CLEANUP
 	$(TARGET_RM) $(addprefix $(TARGET_base_bindir)/,dmesg findmnt lsblk lsfd pipesz)
 	$(TARGET_RM) $(addprefix $(TARGET_base_sbindir)/,blkzone blockdev cfdisk chcpu ctrlaltdel fdisk findfs fsck fsfreeze fstrim mkfs mkswap sfdisk swaplabel swapoff swapon)
-	$(TARGET_RM) $(addprefix $(TARGET_bindir)/,choom col colcrt colrm column fadvise fincore flock getopt hexdump ipcmk irqtop isosize linux32 linux64 look lscpu lsipc lslocks lsns mcookie namei prlimit renice rev script scriptlive scriptreplay setarch setsid uname26 uuidgen uuidparse whereis)
+	$(TARGET_RM) $(addprefix $(TARGET_bindir)/,choom col colcrt colrm column fadvise fincore flock getopt hexdump ipcmk irqtop isosize linux32 linux64 look lsclocks lscpu lsipc lslocks lsns mcookie namei prlimit renice rev script scriptlive scriptreplay setarch setpgid setsid uname26 uuidgen uuidparse whereis)
 	$(TARGET_RM) $(addprefix $(TARGET_sbindir)/,ldattach readprofile rtcwake uuidd)
-	$(TARGET_RM) $(addprefix $(TARGET_datadir)/bash-completion/completions/,blkzone blockdev cfdisk chcpu col colcrt colrm column ctrlaltdel dmesg fadvise fdisk fincore findfs findmnt flock fsck fsfreeze fstrim getopt hexdump ipcmk irqtop isosize ldattach look lsblk lscpu lsipc lslocks lsns mcookie mkfs mkswap namei pipesz prlimit readprofile renice rev rtcwake script scriptlive scriptreplay setarch setsid sfdisk swaplabel swapoff swapon uuidd uuidgen uuidparse whereis)
+	$(TARGET_RM) $(addprefix $(TARGET_datadir)/bash-completion/completions/,blkzone blockdev cfdisk chcpu choom col colcrt colrm column ctrlaltdel dmesg fadvise fdisk fincore findfs findmnt flock fsck fsfreeze fstrim getopt hexdump ipcmk irqtop isosize ldattach look lsblk lsclocks lscpu lsipc lslocks lsns mcookie mkfs mkswap namei pipesz prlimit readprofile renice rev rtcwake script scriptlive scriptreplay setarch setpgid setsid sfdisk swaplabel swapoff swapon uuidd uuidgen uuidparse whereis)
 endef
 UTIL_LINUX_TARGET_FINALIZE_HOOKS += UTIL_LINUX_TARGET_CLEANUP
 
+# --disable-all-programs doesn't work for us
 UTIL_LINUX_CONF_OPTS = \
 	--includedir=$(includedir) \
 	--libdir=$(libdir) \
@@ -41,12 +43,16 @@ UTIL_LINUX_CONF_OPTS = \
 	--disable-gtk-doc \
 	\
 	--disable-agetty \
+	--disable-bits \
 	--disable-bfs \
 	--disable-cal \
 	--disable-chfn-chsh \
 	--disable-chmem \
+	--disable-copyfilerange \
 	--disable-cramfs \
 	--disable-eject \
+	--disable-enosys \
+	--disable-exch \
 	--disable-fallocate \
 	--disable-fdformat \
 	--disable-fsck \
