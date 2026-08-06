@@ -3,7 +3,13 @@
 . /etc/init.d/globals
 . /etc/init.d/functions
 
-# Neutrino's exit codes
+# Neutrino's exit action file
+ACTION_FILE="${NEUTRINO_EXIT_ACTION_FILE:-/tmp/neutrino.exit-action}"
+
+export NEUTRINO_EXIT_CODES=posix
+#export NEUTRINO_EXIT_CODES=legacy
+
+# Neutrino's legacy exit codes
 ERROR=-1
 NORMAL=0
 SHUTDOWN=1
@@ -22,7 +28,7 @@ esac
 
 do_cleanup() {
 	# remove files created by neutrino
-	rm -f /tmp/.timer
+	rm -f /tmp/.timer "$ACTION_FILE"
 }
 
 do_shutdown() {
@@ -48,22 +54,42 @@ while true; do
 	fi
 
 	neutrino; RET=$?
-	LOGINFO "Neutrino exited with exit code $RET"
+	LOGINFO "Neutrino exited with exit code $RET (NEUTRINO_EXIT_CODES=$NEUTRINO_EXIT_CODES)"
 
-	if [ $RET -eq $NORMAL ]; then
-		# do nothing
-		break
-	elif [ $RET -eq $SHUTDOWN ]; then
-		do_shutdown
-		break
-	elif [ $RET -eq $REBOOT ]; then
-		do_cleanup
-		do_reboot
-		break
-	elif [ $RET -eq $RESTART ]; then
-		do_restart
-		continue
+	ACTION=""
+	if [ -r "$ACTION_FILE" ]; then
+		read -r ACTION < "$ACTION_FILE"
+		rm -f "$ACTION_FILE"
 	fi
+
+	if [ -z "$ACTION" ]; then
+		case "$RET" in
+			0) ACTION=none ;;
+			1) ACTION=poweroff ;;
+			2) ACTION=reboot ;;
+			3) ACTION=restart ;;
+		esac
+	fi
+	LOGINFO "Neutrino's exit action is \"$ACTION\""
+
+	case "$ACTION" in
+		none)
+			# do nothing
+			break
+		;;
+		poweroff)
+			do_shutdown
+			break
+		;;
+		reboot)
+			do_reboot
+			break
+		;;
+		restart)
+			do_restart
+			continue
+		;;
+	esac
 
 	display_msg "NEUTRINO: $RET"
 
