@@ -12,7 +12,7 @@ export NEUTRINO_EXIT_CODES=posix
 # Neutrino's legacy exit codes
 ERROR=-1
 NORMAL=0
-SHUTDOWN=1
+POWEROFF=1
 REBOOT=2
 RESTART=3
 
@@ -31,8 +31,8 @@ do_cleanup() {
 	rm -f /tmp/.timer "$ACTION_FILE"
 }
 
-do_shutdown() {
-	display_msg "N: SHUTDOWN"
+do_poweroff() {
+	display_msg "N: POWEROFF"
 	poweroff
 }
 
@@ -63,11 +63,13 @@ while true; do
 	fi
 
 	if [ -z "$ACTION" ]; then
+		# legacy fallback: the exit code carries the action
 		case "$RET" in
-			0) ACTION=none ;;
-			1) ACTION=poweroff ;;
-			2) ACTION=reboot ;;
-			3) ACTION=restart ;;
+			$NORMAL)	ACTION=none ;;
+			$POWEROFF)	ACTION=poweroff ;;
+			$REBOOT)	ACTION=reboot ;;
+			$RESTART)	ACTION=restart ;;
+			*)		ACTION=panic ;;
 		esac
 	fi
 	LOGINFO "Neutrino's exit action is \"$ACTION\""
@@ -78,7 +80,7 @@ while true; do
 			break
 		;;
 		poweroff)
-			do_shutdown
+			do_poweroff
 			break
 		;;
 		reboot)
@@ -89,9 +91,16 @@ while true; do
 			do_restart
 			continue
 		;;
+		panic)
+			# continue the script
+		;;
+		*)
+			# ignore unknown exit action
+			break
+		;;
 	esac
 
-	display_msg "NEUTRINO: $RET"
+	display_msg "N: PANIC $RET"
 
 	# report errors on external display
 	if [ -e /tmp/.lcd-* -a -e /tmp/lcd ]; then
