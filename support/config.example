@@ -78,6 +78,11 @@ MAINTAINER = $(shell whoami)
 
 # -----------------------------------------------------------------------------
 
+# Package configure options
+#BS_PACKAGE_<PKG>_CONF_OPTS = --enable-care --disable-warranty
+
+# -----------------------------------------------------------------------------
+
 # use lastest VU+ drivers
 #BS_PACKAGE_VUPLUS_DRIVERS_LATEST = y
 
