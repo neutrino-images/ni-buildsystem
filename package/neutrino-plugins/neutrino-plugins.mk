@@ -49,17 +49,18 @@ endif
 
 NEUTRINO_PLUGINS_CONF_OPTS += \
 	--disable-ard_mediathek \
+	--disable-filmon \
+	--disable-heizoelpreise \
 	--disable-logoupdater \
 	--disable-logoview \
 	--disable-mountpointmanagement \
-	--disable-filmon \
+	--disable-plutotv \
+	--disable-rakutentv \
 	--disable-stbup
 
 ifeq ($(BOXTYPE),coolstream)
   ifeq ($(BOXSERIES),hd1)
     NEUTRINO_PLUGINS_CONF_OPTS += \
-	--disable-plutotv \
-	--disable-rakutentv \
 	--disable-spiegel_tv_doc \
 	--disable-sysinfo \
 	--disable-tierwelt_tv
