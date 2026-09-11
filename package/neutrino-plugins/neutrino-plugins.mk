@@ -56,8 +56,7 @@ NEUTRINO_PLUGINS_CONF_OPTS += \
 	--disable-mountpointmanagement \
 	--disable-plutotv \
 	--disable-rakutentv \
-	--disable-stbup \
-	--disable-zdfhbbtv
+	--disable-stbup
 
 ifeq ($(BOXTYPE),coolstream)
   ifeq ($(BOXSERIES),hd1)
