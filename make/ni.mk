@@ -52,6 +52,7 @@ ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd2 hd5x hd6x vusolo4k vuduo4k vuduo4ks
 	$(MAKE) openssh
 	$(MAKE) ethtool
 	$(MAKE) f2fs-tools
+	$(MAKE) davfs2
   ifneq ($(BOXMODEL),kronos_v2)
 	$(MAKE) links
 	$(MAKE) bash
