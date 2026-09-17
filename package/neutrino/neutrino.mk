@@ -131,6 +131,31 @@ ifeq ($(BS_PACKAGE_NEUTRINO_PIP),y)
   NEUTRINO_CONF_OPTS += --enable-pip
 endif
 
+ifeq ($(BS_PACKAGE_NEUTRINO_API_DOC),y)
+  NEUTRINO_DEPENDENCIES += swagger-ui
+else
+  NEUTRINO_CONF_OPTS += --disable-api-doc
+endif
+
+ifeq ($(BS_PACKAGE_NEUTRINO_NI_WEB),y)
+  NEUTRINO_DEPENDENCIES += libmicrohttpd
+  NEUTRINO_DEPENDENCIES += preact htm preact-router
+  ifeq ($(BS_PACKAGE_NEUTRINO_WEB_PLAYER),y)
+    # no browser decodes Layer II or AC-3 and this ffmpeg builds no AAC
+    # encoder, so a coolstream cannot feed a demuxer
+    ifneq ($(BOXTYPE),coolstream)
+      NEUTRINO_DEPENDENCIES += mpegts-js
+    endif
+    NEUTRINO_DEPENDENCIES += hls-js
+  endif
+else
+  NEUTRINO_CONF_OPTS += --disable-ni-web
+endif
+
+ifneq ($(BS_PACKAGE_NEUTRINO_HANDSET_PICTURES),y)
+  NEUTRINO_CONF_OPTS += --disable-handset-pictures
+endif
+
 ifeq ($(BS_PACKAGE_NEUTRINO_AUDIODEC_FFMPEG),y)
   NEUTRINO_CONF_OPTS += --enable-ffmpegdec
 else

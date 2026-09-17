@@ -66,6 +66,23 @@ MAINTAINER = $(shell whoami)
 # requires OSCam; only for armbox/mipsbox, not coolstream
 #BS_PACKAGE_NEUTRINO_SOFTCSA = y
 
+# The three below default to n on a box short of flash, to y everywhere else
+
+# Neutrino ships the Swagger UI docs page (~426 kB)
+#BS_PACKAGE_NEUTRINO_API_DOC = y
+
+# Neutrino ships the libraries a browser needs to play what the box sends
+# (~177 kB); off, the player screen offers the stream to an outside player
+#BS_PACKAGE_NEUTRINO_WEB_PLAYER = y
+
+# Neutrino ships the handset photographs (28 to 134 kB)
+# off, the remote control screen draws the keys instead
+#BS_PACKAGE_NEUTRINO_HANDSET_PICTURES = y
+
+# Neutrino ships the new web interface (~9 kB)
+# off, the pages and the server that answers them are both left out
+#BS_PACKAGE_NEUTRINO_NI_WEB = y
+
 # Neutrino API keys
 #BS_PACKAGE_NEUTRINO_OMDB_API_KEY =
 #BS_PACKAGE_NEUTRINO_TMDB_API_KEY =

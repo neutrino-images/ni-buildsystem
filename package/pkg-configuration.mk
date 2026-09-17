@@ -38,6 +38,37 @@ BS_PACKAGE_NEUTRINO_PIP ?= y
 # neutrino: use softcsa
 BS_PACKAGE_NEUTRINO_SOFTCSA ?= y
 
+# boxes with no room in the root filesystem for the web interface extras
+NI_SHORT_OF_FLASH = nevis
+
+ifeq ($(BOXMODEL),$(filter $(BOXMODEL),$(NI_SHORT_OF_FLASH)))
+  NI_TIGHT = y
+endif
+
+# neutrino: ship the swagger-ui docs page and the descriptions it reads
+ifeq ($(NI_TIGHT),y)
+  BS_PACKAGE_NEUTRINO_API_DOC ?= n
+else
+  BS_PACKAGE_NEUTRINO_API_DOC ?= y
+endif
+
+# neutrino: ship the libraries a browser needs to play what the box sends
+ifeq ($(NI_TIGHT),y)
+  BS_PACKAGE_NEUTRINO_WEB_PLAYER ?= n
+else
+  BS_PACKAGE_NEUTRINO_WEB_PLAYER ?= y
+endif
+
+# neutrino: ship the handset photographs
+ifeq ($(NI_TIGHT),y)
+  BS_PACKAGE_NEUTRINO_HANDSET_PICTURES ?= n
+else
+  BS_PACKAGE_NEUTRINO_HANDSET_PICTURES ?= y
+endif
+
+# neutrino: ship the new web interface
+BS_PACKAGE_NEUTRINO_NI_WEB ?= y
+
 # neutrino: omdb api key
 ifeq ($(BS_PACKAGE_NEUTRINO_OMDB_API_KEY),$(empty))
 BS_PACKAGE_NEUTRINO_OMDB_API_KEY = 20711f9e
