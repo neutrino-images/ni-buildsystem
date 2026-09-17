@@ -6,6 +6,7 @@
 
 SHARE_FLEX	= $(TARGET_datadir)/tuxbox/neutrino/flex
 SHARE_ICONS	= $(TARGET_datadir)/tuxbox/neutrino/icons
+SHARE_HTTPD	= $(TARGET_datadir)/tuxbox/neutrino/httpd
 SHARE_LOGOS	= $(TARGET_datadir)/tuxbox/neutrino/icons/logo
 SHARE_PLUGINS	= $(TARGET_datadir)/tuxbox/neutrino/plugins
 SHARE_THEMES	= $(TARGET_datadir)/tuxbox/neutrino/themes
@@ -16,6 +17,7 @@ VAR_PLUGINS	= $(TARGET_localstatedir)/tuxbox/plugins
 
 $(SHARE_FLEX) \
 $(SHARE_ICONS) \
+$(SHARE_HTTPD) \
 $(SHARE_LOGOS) \
 $(SHARE_PLUGINS) \
 $(SHARE_THEMES) \
