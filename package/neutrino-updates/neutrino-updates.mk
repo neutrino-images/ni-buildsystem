@@ -4,25 +4,6 @@
 #
 ################################################################################
 
-BOXSERIES_UPDATE = hd2 hd5x hd6x vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse vuduo
-ifneq ($(DEBUG),yes)
-	BOXSERIES_UPDATE += hd1
-endif
-
-neutrino-updates:
-	for boxseries in $(BOXSERIES_UPDATE); do \
-		$(MAKE) BOXSERIES=$${boxseries} clean neutrino-update || exit; \
-	done;
-	make clean
-
-neutrino-full-updates:
-	for boxseries in $(BOXSERIES_UPDATE); do \
-		$(MAKE) BOXSERIES=$${boxseries} clean neutrino-full-update || exit; \
-	done;
-	make clean
-
-# -----------------------------------------------------------------------------
-
 neutrino-update: neutrino-clean
 	$(MAKE) u-init
 	echo "killall start_neutrino neutrino; sleep 5"	>> $(PREINSTALL_SH)
@@ -32,6 +13,8 @@ neutrino-update: neutrino-clean
 	$(INSTALL_EXEC) -D $(TARGET_bindir)/neutrino $(UPDATE_INST_DIR)$(bindir)/neutrino
 	$(INSTALL_DATA) -D $(TARGET_datadir)/tuxbox/neutrino/locale/deutsch.locale $(UPDATE_INST_DIR)$(datadir)/tuxbox/neutrino/locale/deutsch.locale
 	$(INSTALL_DATA) -D $(TARGET_datadir)/tuxbox/neutrino/locale/english.locale $(UPDATE_INST_DIR)$(datadir)/tuxbox/neutrino/locale/english.locale
+	$(INSTALL) -d $(UPDATE_INST_DIR)$(datadir)/tuxbox/neutrino/httpd
+	$(INSTALL_COPY) $(TARGET_datadir)/tuxbox/neutrino/httpd/ni-web $(UPDATE_INST_DIR)$(datadir)/tuxbox/neutrino/httpd
 ifneq ($(DEBUG),yes)
 	find $(UPDATE_INST_DIR)$(bindir) -type f ! -name *.sh -print0 | xargs -0 $(TARGET_STRIP) || true
 endif
@@ -41,7 +24,7 @@ endif
 			UPDATE_NAME=$(UPDATE_PREFIX)-$(UPDATE_SUFFIX) \
 			UPDATE_DESC="Neutrino [$(BOXTYPE_SC)][$(BOXSERIES)] Update \(simple\)"
 
-neutrino-full-update: neutrino-clean
+neutrino-update-full: neutrino-clean
 	$(MAKE) u-init
 	echo "killall start_neutrino neutrino; sleep 5"	>> $(PREINSTALL_SH)
 	echo "sync; reboot"				>> $(POSTINSTALL_SH)
