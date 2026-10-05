@@ -69,6 +69,13 @@ endif
 # neutrino: ship the new web interface
 BS_PACKAGE_NEUTRINO_NI_WEB ?= y
 
+# neutrino: let AI clients reach the box over MCP with OAuth
+ifeq ($(NI_TIGHT),y)
+  BS_PACKAGE_NEUTRINO_MCP ?= n
+else
+  BS_PACKAGE_NEUTRINO_MCP ?= y
+endif
+
 # neutrino: omdb api key
 ifeq ($(BS_PACKAGE_NEUTRINO_OMDB_API_KEY),$(empty))
 BS_PACKAGE_NEUTRINO_OMDB_API_KEY = 20711f9e

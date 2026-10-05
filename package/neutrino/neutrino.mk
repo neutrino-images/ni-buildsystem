@@ -152,6 +152,11 @@ else
   NEUTRINO_CONF_OPTS += --disable-ni-web
 endif
 
+# outside the web server block, so configure refuses it without one
+ifeq ($(BS_PACKAGE_NEUTRINO_MCP),y)
+  NEUTRINO_CONF_OPTS += --enable-mcp
+endif
+
 ifneq ($(BS_PACKAGE_NEUTRINO_HANDSET_PICTURES),y)
   NEUTRINO_CONF_OPTS += --disable-handset-pictures
 endif
