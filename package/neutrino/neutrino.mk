@@ -155,6 +155,8 @@ endif
 # outside the web server block, so configure refuses it without one
 ifeq ($(BS_PACKAGE_NEUTRINO_MCP),y)
   NEUTRINO_CONF_OPTS += --enable-mcp
+  # the QR code the KI area draws for two-factor sign-in
+  NEUTRINO_DEPENDENCIES += qrcode-generator
 endif
 
 ifneq ($(BS_PACKAGE_NEUTRINO_HANDSET_PICTURES),y)
