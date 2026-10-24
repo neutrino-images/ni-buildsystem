@@ -50,7 +50,6 @@ endif
 NEUTRINO_PLUGINS_CONF_OPTS += \
 	--disable-ard_mediathek \
 	--disable-filmon \
-	--disable-heizoelpreise \
 	--disable-logoupdater \
 	--disable-logoview \
 	--disable-mountpointmanagement \
