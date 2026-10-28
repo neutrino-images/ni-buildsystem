@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-PYTHON_PYCOUNTRY_VERSION = 24.6.1
+PYTHON_PYCOUNTRY_VERSION = 26.2.16
 PYTHON_PYCOUNTRY_DIR = pycountry-$(PYTHON_PYCOUNTRY_VERSION)
 PYTHON_PYCOUNTRY_SOURCE = pycountry-$(PYTHON_PYCOUNTRY_VERSION).tar.gz
 PYTHON_PYCOUNTRY_SITE = $(PYPI_MIRROR)/p/pycountry
