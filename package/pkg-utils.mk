@@ -67,6 +67,23 @@ ifeq ($(PKG_DESTINATION),HOST)
       endif
     endif
   endif
+  ifeq ($(PKG_MODE),GOLANG)
+    ifndef $(PKG)_SUBDIR
+      ifdef $(PKG_PARENT)_SUBDIR
+        $(PKG)_SUBDIR = $$($(PKG_PARENT)_SUBDIR)
+      endif
+    endif
+    ifndef $(PKG)_GOMOD
+      ifdef $(PKG_PARENT)_GOMOD
+        $(PKG)_GOMOD = $$($(PKG_PARENT)_GOMOD)
+      endif
+    endif
+    ifndef $(PKG)_BUILD_TARGETS
+      ifdef $(PKG_PARENT)_BUILD_TARGETS
+        $(PKG)_BUILD_TARGETS = $$($(PKG_PARENT)_BUILD_TARGETS)
+      endif
+    endif
+  endif
 endif
 
 # extract
@@ -171,6 +188,8 @@ ifndef $(PKG)_CONFIGURE_CMDS
     $(PKG)_CONFIGURE_CMDS =
   else ifeq ($(PKG_MODE),WAF)
     $(PKG)_CONFIGURE_CMDS = $$(WAF_CONFIGURE_CMDS_DEFAULT)
+  else ifeq ($(PKG_MODE),GOLANG)
+    $(PKG)_CONFIGURE_CMDS = $$(GOLANG_CONFIGURE_CMDS_DEFAULT)
   else
     $(PKG)_CONFIGURE_CMDS = echo "$(PKG_NO_CONFIGURE)"
   endif
@@ -242,6 +261,61 @@ ifeq ($(PKG_MODE),LUAROCKS)
   endif
 endif
 
+# golang
+ifeq ($(PKG_MODE),GOLANG)
+  ifndef $(PKG)_GOMOD
+    ifneq ($$(filter $$($(PKG)_SITE_METHOD),git ni-git hg),)
+      $(PKG)_GOMOD = $$(call golang-module-path,$$($(PKG)_SITE)/$$($(PKG)_SOURCE))
+    else
+      $(PKG)_GOMOD = $$(call golang-module-path,$$($(PKG)_SITE))
+    endif
+  endif
+  ifndef $(PKG)_GO_CGO
+    $(PKG)_GO_CGO = NO
+  endif
+  ifndef $(PKG)_GO_ENV
+    $(PKG)_GO_ENV =
+  endif
+  ifndef $(PKG)_LDFLAGS
+    $(PKG)_LDFLAGS =
+  endif
+  ifndef $(PKG)_EXTLDFLAGS
+    $(PKG)_EXTLDFLAGS =
+  endif
+  ifndef $(PKG)_TAGS
+    $(PKG)_TAGS =
+  endif
+  ifndef $(PKG)_BUILD_TARGETS
+    $(PKG)_BUILD_TARGETS = .
+  endif
+  # If the build target is just ".", then we assume the binary to be
+  # produced is named after the package. If however, a build target has
+  # been specified, we assume that the binaries to be produced are named
+  # after each build target building them.
+  ifeq ($$($(PKG)_BUILD_TARGETS),.)
+    ifndef $(PKG)_BIN_NAME
+      $(PKG)_BIN_NAME = $(pkg_parent)
+    endif
+    ifndef $(PKG)_INSTALL_BINS
+      $(PKG)_INSTALL_BINS = $$($(PKG)_BIN_NAME)
+    endif
+  else ifeq ($$(words $$($(PKG)_BUILD_TARGETS)),1)
+    ifndef $(PKG)_BIN_NAME
+      $(PKG)_BIN_NAME = $$(notdir $$($(PKG)_BUILD_TARGETS))
+    endif
+    ifndef $(PKG)_INSTALL_BINS
+      $(PKG)_INSTALL_BINS = $$($(PKG)_BIN_NAME)
+    endif
+  else
+    ifneq ($$($(PKG)_BIN_NAME),)
+      $$(error $(PKG)_BIN_NAME is set while there are multiple targets in $(PKG)_BUILD_TARGETS)
+    endif
+    ifndef $(PKG)_INSTALL_BINS
+      $(PKG)_INSTALL_BINS = $$(notdir $$($(PKG)_BUILD_TARGETS))
+    endif
+  endif
+endif
+
 # common
 ifndef $(PKG)_BUILD_ENV
   $(PKG)_BUILD_ENV =
@@ -288,6 +362,12 @@ ifndef $(PKG)_BUILD_CMDS
     $(PKG)_BUILD_CMDS = $$(LUKE_BUILD_CMDS_DEFAULT)
   else ifeq ($(PKG_MODE),WAF)
     $(PKG)_BUILD_CMDS = $$(WAF_BUILD_CMDS_DEFAULT)
+  else ifeq ($(PKG_MODE),GOLANG)
+    ifeq ($(PKG_DESTINATION),HOST)
+      $(PKG)_BUILD_CMDS = $$(HOST_GOLANG_BUILD_CMDS_DEFAULT)
+    else
+      $(PKG)_BUILD_CMDS = $$(TARGET_GOLANG_BUILD_CMDS_DEFAULT)
+    endif
   else
     $(PKG)_BUILD_CMDS = echo "$(PKG_NO_BUILD)"
   endif
@@ -351,6 +431,12 @@ ifndef $(PKG)_INSTALL_CMDS
     $(PKG)_INSTALL_CMDS = $$(LUKE_INSTALL_CMDS_DEFAULT)
   else ifeq ($(PKG_MODE),WAF)
     $(PKG)_INSTALL_CMDS = $$(WAF_INSTALL_CMDS_DEFAULT)
+  else ifeq ($(PKG_MODE),GOLANG)
+    ifeq ($(PKG_DESTINATION),HOST)
+      $(PKG)_INSTALL_CMDS = $$(HOST_GOLANG_INSTALL_CMDS_DEFAULT)
+    else
+      $(PKG)_INSTALL_CMDS = $$(TARGET_GOLANG_INSTALL_CMDS_DEFAULT)
+    endif
   else
     $(PKG)_INSTALL_CMDS = echo "$(PKG_NO_INSTALL)"
   endif
@@ -451,6 +537,9 @@ ifeq ($(PKG_MODE),WAF)
   ifeq ($$($(PKG)_NEEDS_EXTERNAL_WAF),YES)
     $(PKG)_DEPENDENCIES += host-waf
   endif
+endif
+ifeq ($(PKG_MODE),GOLANG)
+  $(PKG)_DEPENDENCIES += host-go
 endif
 
 # cleanup
