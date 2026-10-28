@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-PYTHON_INSTALLER_VERSION = 0.7.0
+PYTHON_INSTALLER_VERSION = 1.1.0
 PYTHON_INSTALLER_DIR = installer-$(PYTHON_INSTALLER_VERSION)
 PYTHON_INSTALLER_SOURCE = installer-$(PYTHON_INSTALLER_VERSION).tar.gz
 PYTHON_INSTALLER_SITE = $(PYPI_MIRROR)/i/installer
