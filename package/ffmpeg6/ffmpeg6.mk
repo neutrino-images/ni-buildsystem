@@ -366,7 +366,6 @@ else ifeq ($(TARGET_ARCH),mips)
 	--disable-loongson3 \
 	--disable-mmi \
 	--disable-msa \
-	--disable-msa2 \
 	--disable-neon \
 	--disable-vfp \
 	\
