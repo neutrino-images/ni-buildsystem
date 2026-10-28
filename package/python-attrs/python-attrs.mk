@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-PYTHON_ATTRS_VERSION = 25.4.0
+PYTHON_ATTRS_VERSION = 26.1.0
 PYTHON_ATTRS_DIR = attrs-$(PYTHON_ATTRS_VERSION)
 PYTHON_ATTRS_SOURCE = attrs-$(PYTHON_ATTRS_VERSION).tar.gz
 PYTHON_ATTRS_SITE = $(PYPI_MIRROR)/a/attrs
