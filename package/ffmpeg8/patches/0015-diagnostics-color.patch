@@ -1,10 +1,12 @@
---- a/configure.orig
+diff --git a/configure b/configure
+index 2101a2b..04a9a19 100755
+--- a/configure
 +++ b/configure
-@@ -7771,7 +7760,6 @@
-     check_cflags -Werror=return-type
-     check_cflags -Werror=vla
-     check_cflags -Wformat
--    check_cflags -fdiagnostics-color=auto
+@@ -8060,7 +8060,6 @@ elif enabled gcc; then
+     check_allcflags -Werror=return-type
+     check_allcflags -Werror=vla
+     check_allcflags -Wformat
+-    check_allcflags -fdiagnostics-color=auto
      enabled extra_warnings || check_disable_warning -Wno-maybe-uninitialized
      if enabled x86_32; then
          case $target_os in

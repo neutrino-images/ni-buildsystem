@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-FFMPEG8_VERSION = 8.0.1
+FFMPEG8_VERSION = 8.1.3
 FFMPEG8_DIR = ffmpeg-$(FFMPEG8_VERSION)
 FFMPEG8_SOURCE = ffmpeg-$(FFMPEG8_VERSION).tar.xz
 FFMPEG8_SITE = http://www.ffmpeg.org/releases
