@@ -6,9 +6,12 @@
 # Debug image
 DEBUG ?= no
 
+# Personalized image, see 'make personalized-image'
+PERSONALIZE ?= no
+
 # Versioning
-GITTAG = $(shell git tag -l --sort=version:refname "NI-*" | tail -n1)
-GITREV = $(shell git rev-list $(GITTAG)..HEAD --count)
+GITTAG = $(call lazy-once,GITTAG,$$(shell git tag -l --sort=version:refname "NI-*" | tail -n1))
+GITREV = $(call lazy-once,GITREV,$$(shell git rev-list $(GITTAG)..HEAD --count))
 
 # *Must* be a four-digit number, the year (YYYY)
 IMAGE_VERSION_MAJOR = 2026
@@ -19,7 +22,8 @@ IMAGE_VERSION_MICRO = $(GITREV)
 IMAGE_VERSION = $(IMAGE_VERSION_MAJOR).$(IMAGE_VERSION_MINOR).$(IMAGE_VERSION_MICRO)
 
 # Release date
-IMAGE_DATE = $(shell date +%Y%m%d%H%M)
+# fixed on first use, so all names and files of one make run match
+IMAGE_DATE = $(call lazy-once,IMAGE_DATE,$$(shell date +%Y%m%d%H%M))
 
 # Image names
 IMAGE_PREFIX = ni$(IMAGE_VERSION_MAJOR)$(IMAGE_VERSION_MINOR)-$(IMAGE_DATE)

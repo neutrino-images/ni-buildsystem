@@ -35,5 +35,5 @@ define CORTEX_STRINGS_PATCH_MAKEFILE
 endef
 CORTEX_STRINGS_POST_PATCH_HOOKS += CORTEX_STRINGS_PATCH_MAKEFILE
 
-cortex-strings: | $(STATIC_DIR)
+cortex-strings: | $(TARGET_DIR)
 	$(call autotools-package)

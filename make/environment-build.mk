@@ -76,6 +76,8 @@ else ifeq ($(BOXSERIES),$(filter $(BOXSERIES),vuduo))
   TARGET_EXTRA_LDFLAGS   =
   CXX11_ABI              =
 
+else
+  $(error BOXSERIES '$(BOXSERIES)' has no target configuration)
 endif
 
 # -----------------------------------------------------------------------------

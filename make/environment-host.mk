@@ -51,5 +51,12 @@ HOSTNM := $(shell which $(HOSTNM) || type -p $(HOSTNM) || echo nm)
 HOSTOBJCOPY := $(shell which $(HOSTOBJCOPY) || type -p $(HOSTOBJCOPY) || echo objcopy)
 HOSTRANLIB := $(shell which $(HOSTRANLIB) || type -p $(HOSTRANLIB) || echo ranlib)
 
+# needs to be known before make/buildsystem-prerequisites.mk uses it as
+# a rule target
+ifndef CCACHE
+CCACHE := ccache
+endif
+CCACHE := $(shell which $(CCACHE) || type -p $(CCACHE) || echo ccache)
+
 export HOSTAR HOSTAS HOSTCC HOSTCXX HOSTLD
 export HOSTCC_NOCCACHE HOSTCXX_NOCCACHE

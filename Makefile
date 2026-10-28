@@ -48,6 +48,7 @@ endif
 export VERBOSE
 else
   Q = @
+  VERBOSE ?=
 endif
 
 # kconfig uses CONFIG_SHELL
@@ -65,8 +66,7 @@ default: all
 
 local-files: config.local Makefile.local local-scripts
 
-# workaround unset variables at first start
-config.local: $(eval BOXMODEL=hd51)
+config.local:
 	@clear
 	@echo ""
 	@echo "    ###   ###  ###"
@@ -93,6 +93,7 @@ config.local: $(eval BOXMODEL=hd51)
 	@echo "  21)  WWIO BRE2ZE4K"
 	@echo "  31)  Air Digital Zgemma H7"
 	@echo "  35)  AXAS E4HD 4K Ultra"
+	@echo "  36)  Protek 4K UHD"
 	@echo "  41)  VU+ Solo 4k"
 	@echo "  42)  VU+ Duo 4k"
 	@echo "  43)  VU+ Duo 4k SE"
@@ -118,6 +119,7 @@ config.local: $(eval BOXMODEL=hd51)
 		21)	boxmodel=bre2ze4k;; \
 		31)	boxmodel=h7;; \
 		35)	boxmodel=e4hdultra;; \
+		36)	boxmodel=protek4k;; \
 		41)	boxmodel=vusolo4k;; \
 		42)	boxmodel=vuduo4k;; \
 		43)	boxmodel=vuduo4kse;; \
@@ -212,6 +214,16 @@ print-targets:
 
 -include config.local
 
+# at least one of these is given by config.local or the command line
+BOXSERIES ?=
+BOXFAMILY ?=
+BOXMODEL ?=
+
+# fallback for the first start, i.e. without config.local
+ifeq ($(BOXSERIES)$(BOXFAMILY)$(BOXMODEL),)
+  BOXMODEL = hd51
+endif
+
 include package/Makefile.in
 
 include make/environment-box.mk
@@ -221,6 +233,14 @@ include make/environment-image.mk
 include make/environment-update.mk
 
 -include internal/internal.mk
+
+# defaults for the variables usually set by internal/internal.mk or
+# config.local; they make sure these variables are always defined
+NI_ADMIN ?= false
+HAS_INTERNALS ?= no
+NI_INTERNALS ?= internal
+HAS_LIBCOOLSTREAM ?= no
+NI_LIBCOOLSTREAM ?= $(empty)
 
 include make/buildsystem-bootstrap.mk
 include make/buildsystem-clean.mk

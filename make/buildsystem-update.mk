@@ -131,14 +131,6 @@ REPOSITORIES = \
 	$(SOURCE_DIR)/$(NI_RTMPDUMP) \
 	$(SOURCE_DIR)/$(NI_STREAMRIPPER)
 
-URL_OLD = $(BITBUCKET_SSH):neutrino-images
-URL_NEW = $(if $(filter $(USE_SSH),y),$(GITHUB_SSH):neutrino-images,$(GITHUB)/neutrino-images)
-
-switch-url:
-	for repo in $(REPOSITORIES); do \
-		$(SED) 's|url = $(URL_OLD)|url = $(URL_NEW)|' $$repo/.git/config; \
-	done
-
 # -----------------------------------------------------------------------------
 
 PHONY += update-self

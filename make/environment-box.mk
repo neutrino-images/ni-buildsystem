@@ -94,7 +94,7 @@ ifneq ($(BOXSERIES),)
     BOXFAMILY = bcm7335
     BOXMODEL = vuduo
   else
-    $(error $(BOXTYPE) BOXSERIES $(BOXSERIES) not supported)
+    $(error BOXSERIES '$(BOXSERIES)' not supported)
   endif
 
 # assign by given BOXFAMILY
@@ -139,16 +139,12 @@ else ifneq ($(BOXFAMILY),)
     BOXTYPE = armbox
     BOXSERIES = vuzero4k
     BOXMODEL = vuzero4k
-  else ifeq ($(BOXFAMILY),bcm7252s)
-    BOXTYPE = armbox
-    BOXSERIES = vuuno4kse
-    BOXMODEL = vuuno4kse
   else ifeq ($(BOXFAMILY),bcm7335)
     BOXTYPE = mipsbox
     BOXSERIES = vuduo
     BOXMODEL = vuduo
   else
-    $(error $(BOXTYPE) BOXFAMILY $(BOXFAMILY) not supported)
+    $(error BOXFAMILY '$(BOXFAMILY)' not supported)
   endif
 
 # assign by given BOXMODEL
@@ -210,7 +206,7 @@ else ifneq ($(BOXMODEL),)
     BOXSERIES = vuduo
     BOXFAMILY = bcm7335
   else
-    $(error $(BOXTYPE) BOXMODEL $(BOXMODEL) not supported)
+    $(error BOXMODEL '$(BOXMODEL)' not supported)
   endif
 
 endif
@@ -223,6 +219,8 @@ else ifeq ($(BOXTYPE),armbox)
   BOXTYPE_SC = arm
 else ifeq ($(BOXTYPE),mipsbox)
   BOXTYPE_SC = mips
+else
+  $(error BOXTYPE '$(BOXTYPE)' not supported)
 endif
 
 # -----------------------------------------------------------------------------

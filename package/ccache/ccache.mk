@@ -4,10 +4,7 @@
 #
 ################################################################################
 
-ifndef CCACHE
-CCACHE := ccache
-endif
-CCACHE := $(shell which $(CCACHE) || type -p $(CCACHE) || echo ccache)
+# CCACHE is set in make/environment-host.mk
 
 CCACHE_DIR = $(HOME)/.ccache-$(call LOWERCASE,$(TARGET_VENDOR))-$(TARGET_ARCH)-$(TARGET_OS)-$(KERNEL_VERSION)
 export CCACHE_DIR

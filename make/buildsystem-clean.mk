@@ -66,4 +66,3 @@ PHONY += all-clean
 PHONY += clean
 PHONY += distclean
 PHONY += clean-all
-PHONY += %-clean

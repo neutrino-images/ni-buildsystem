@@ -83,7 +83,31 @@ crosscheck:
 
 # -----------------------------------------------------------------------------
 
-PHONY += find-%
+# -----------------------------------------------------------------------------
+
+# check that parsing the makefiles uses no undefined variable, for all boxes
+# (BOXSERIES or BOXFAMILY in config.local would win over BOXMODEL; so set
+# only BOXMODEL there)
+varcheck:
+	@rc=0; \
+	for boxmodel in $(BOXMODELS); do \
+		output=$$(LC_ALL=C $(MAKE) -n --warn-undefined-variables \
+			BOXMODEL=$$boxmodel .print-phony 2>&1 >/dev/null); \
+		problems=$$(echo "$$output" | grep -e "warning: undefined variable" -e "\*\*\*" | sort -u); \
+		if [ -n "$$problems" ]; then \
+			$(call WARNING,"$$boxmodel",":"); \
+			echo "$$problems"; \
+			rc=1; \
+		fi; \
+	done; \
+	if [ $$rc -eq 0 ]; then \
+		$(call SUCCESS,"varcheck",": No undefined variables."); \
+	fi; \
+	exit $$rc
+
+# -----------------------------------------------------------------------------
+
 PHONY += toolcheck
 PHONY += bashcheck
 PHONY += crosscheck
+PHONY += varcheck

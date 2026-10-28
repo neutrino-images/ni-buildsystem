@@ -62,6 +62,11 @@ endef
 $(eval $(call caseconvert-helper,UPPERCASE,$(join $(addsuffix :,$([LOWER])),$([UPPER]))))
 $(eval $(call caseconvert-helper,LOWERCASE,$(join $(addsuffix :,$([UPPER])),$([LOWER]))))
 
+# Evaluate a recursively expanded variable only once, on first use,
+# and keep the result; e.g. for expensive or time dependent $(shell ...)
+# calls:  FOO = $(call lazy-once,FOO,$$(shell date))
+lazy-once = $(eval $(1) := $(2))$($(1))
+
 # Reverse the orders of words in a list. Again, inspired by the gmsl
 # 'reverse' macro.
 reverse = $(if $(1),$(call reverse,$(wordlist 2,$(words $(1)),$(1))) $(firstword $(1)))

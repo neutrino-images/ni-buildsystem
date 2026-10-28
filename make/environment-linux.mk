@@ -5,6 +5,10 @@
 
 KERNEL_BRANCH = $(empty)
 KERNEL_DTB = $(empty)
+KERNEL_DATE = $(empty)
+
+# only used by boxes with an eMMC boot partition (see mdev)
+BOOT_PARTITION = $(empty)
 
 ifeq ($(BOXMODEL),nevis)
   KERNEL_VERSION = 2.6.34.13
@@ -142,6 +146,8 @@ else ifeq ($(BOXMODEL),vuduo)
   KERNEL_SOURCE = stblinux-$(KERNEL_VERSION).tar.bz2
   KERNEL_SITE = http://code.vuplus.com/download/release/kernel
 
+else
+  $(error BOXMODEL '$(BOXMODEL)' has no kernel configuration)
 endif
 
 KERNEL_PATCH = $($(call UPPERCASE,$(BOXMODEL))_PATCH)

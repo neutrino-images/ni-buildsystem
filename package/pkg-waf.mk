@@ -22,7 +22,7 @@ WAF_CONFIGURE_OPTS = \
 define WAF_CONFIGURE_CMDS_DEFAULT
 	$(CD) $(PKG_BUILD_DIR); \
 		$(TARGET_CONFIGURE_ENV) $($(PKG)_CONF_ENV) \
-		$(HOST_PYTHON3_BINARY) $($(PKG)_WAF) \
+		$(HOST_PYTHON_BINARY) $($(PKG)_WAF) \
 			configure $(WAF_CONFIGURE_OPTS) \
 			$($(PKG)_CONF_OPTS) \
 			$($(PKG)_WAF_OPTS)
@@ -38,7 +38,7 @@ endef
 define WAF_BUILD_CMDS_DEFAULT
 	$(CD) $(PKG_BUILD_DIR); \
 		$(TARGET_MAKE_ENV) $($(PKG)_MAKE_ENV) \
-		$(HOST_PYTHON3_BINARY) $($(PKG)_WAF) \
+		$(HOST_PYTHON_BINARY) $($(PKG)_WAF) \
 			build $(WAF_OPTS) \
 			$($(PKG)_BUILD_OPTS) \
 			$($(PKG)_WAF_OPTS)
@@ -54,7 +54,7 @@ endef
 define WAF_INSTALL_CMDS_DEFAULT
 	$(CD) $(PKG_BUILD_DIR); \
 		$(TARGET_MAKE_ENV) $($(PKG)_MAKE_ENV) \
-		$(HOST_PYTHON3_BINARY) $($(PKG)_WAF) \
+		$(HOST_PYTHON_BINARY) $($(PKG)_WAF) \
 			install --destdir=$(TARGET_DIR) \
 			$($(PKG)_INSTALL_OPTS) \
 			$($(PKG)_WAF_OPTS)

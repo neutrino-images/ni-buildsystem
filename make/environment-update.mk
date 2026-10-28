@@ -12,7 +12,7 @@ POSTINSTALL_SH	= $(UPDATE_CTRL_DIR)/postinstall.sh
 PREINSTALL_SH	= $(UPDATE_CTRL_DIR)/preinstall.sh
 
 # defaults for Neutrino-Update
-UPDATE_DATE	= $(shell date +%Y%m%d%H%M)
+UPDATE_DATE	= $(call lazy-once,UPDATE_DATE,$$(shell date +%Y%m%d%H%M))
 UPDATE_VERSION_MAJOR = $(IMAGE_VERSION_MAJOR)
 UPDATE_VERSION_MINOR = $(IMAGE_VERSION_MINOR)
 UPDATE_VERSION	= $(IMAGE_VERSION)

@@ -44,7 +44,7 @@ ifeq ($(PKG_DESTINATION),HOST)
   ifeq ($(PKG_MODE),CMAKE)
     ifndef $(PKG)_SUPPORTS_IN_SOURCE_BUILD
       ifdef $(PKG_PARENT)_SUPPORTS_IN_SOURCE_BUILD
-        $(PKG)_SUPPORTS_IN_SOURCE_BUILD = $$($(PKG_PARENT)_SUPPORTS_IN_SOURCE_BUILD
+        $(PKG)_SUPPORTS_IN_SOURCE_BUILD = $$($(PKG_PARENT)_SUPPORTS_IN_SOURCE_BUILD)
       endif
     endif
   endif
@@ -122,8 +122,10 @@ else
   $$(error Invalid $(PKG)_CMAKE_BACKEND. Valid options are 'make' or 'ninja')
 endif
 
+# out-of-source build by default; this is what all cmake packages
+# effectively used so far
 ifndef $(PKG)_SUPPORTS_IN_SOURCE_BUILD
-  $(PKG)_SUPPORTS_IN_SOURCE_BUILD = YES
+  $(PKG)_SUPPORTS_IN_SOURCE_BUILD = NO
 endif
 
 # configure
@@ -489,6 +491,9 @@ endef
 # -----------------------------------------------------------------------------
 
 pkg-mode = $(call UPPERCASE,$(subst -package,,$(subst host-,,$(0))))
+
+# set by the *-package macros when the recipe is expanded
+PKG_MODE = $(empty)
 
 # -----------------------------------------------------------------------------
 

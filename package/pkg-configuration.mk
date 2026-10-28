@@ -20,11 +20,13 @@ BS_PACKAGE_FFMPEG_FFPROBE ?= y
 BS_PACKAGE_NCURSES_WCHAR ?= y
 
 # libstb-hal: branch
+BS_PACKAGE_LIBSTB_HAL_BRANCH ?=
 ifeq ($(BS_PACKAGE_LIBSTB_HAL_BRANCH),$(empty))
 BS_PACKAGE_LIBSTB_HAL_BRANCH = master
 endif
 
 # neutrino: branch
+BS_PACKAGE_NEUTRINO_BRANCH ?=
 ifeq ($(BS_PACKAGE_NEUTRINO_BRANCH),$(empty))
 BS_PACKAGE_NEUTRINO_BRANCH = master
 endif
@@ -41,9 +43,7 @@ BS_PACKAGE_NEUTRINO_SOFTCSA ?= y
 # boxes with no room in the root filesystem for the web interface extras
 NI_SHORT_OF_FLASH = nevis
 
-ifeq ($(BOXMODEL),$(filter $(BOXMODEL),$(NI_SHORT_OF_FLASH)))
-  NI_TIGHT = y
-endif
+NI_TIGHT = $(if $(filter $(BOXMODEL),$(NI_SHORT_OF_FLASH)),y,n)
 
 # neutrino: ship the swagger-ui docs page and the descriptions it reads
 ifeq ($(NI_TIGHT),y)
@@ -77,29 +77,36 @@ else
 endif
 
 # neutrino: omdb api key
+BS_PACKAGE_NEUTRINO_OMDB_API_KEY ?=
 ifeq ($(BS_PACKAGE_NEUTRINO_OMDB_API_KEY),$(empty))
 BS_PACKAGE_NEUTRINO_OMDB_API_KEY = 20711f9e
 endif
 
 # neutrino: tmdb api key
+BS_PACKAGE_NEUTRINO_TMDB_API_KEY ?=
 ifeq ($(BS_PACKAGE_NEUTRINO_TMDB_API_KEY),$(empty))
 BS_PACKAGE_NEUTRINO_TMDB_API_KEY = 7270f1b571c4ecbb5b204ddb7f8939b1
 endif
 
 # neutrino: shoutcast developer id
+BS_PACKAGE_NEUTRINO_SHOUTCAST_DEV_ID ?=
 ifeq ($(BS_PACKAGE_NEUTRINO_SHOUTCAST_DEV_ID),$(empty))
 BS_PACKAGE_NEUTRINO_SHOUTCAST_DEV_ID = fa1669MuiRPorUBw
 endif
 
 # neutrino: youtube api key
+BS_PACKAGE_NEUTRINO_YOUTUBE_API_KEY ?=
 ifeq ($(BS_PACKAGE_NEUTRINO_YOUTUBE_API_KEY),$(empty))
 BS_PACKAGE_NEUTRINO_YOUTUBE_API_KEY = AIzaSyBLdZe7M3rpNMZqSj-3IEvjbb2hATWJIdM
 endif
 
-# neutrino: weather api key
-#ifeq ($(BS_PACKAGE_NEUTRINO_WEATHER_API_KEY),$(empty))
-#BS_PACKAGE_NEUTRINO_WEATHER_API_KEY =
-#endif
+# neutrino: weather api key; no default key available
+BS_PACKAGE_NEUTRINO_WEATHER_API_KEY ?=
 
 # vu+ drivers: use latest version
 BS_PACKAGE_VUPLUS_DRIVERS_LATEST ?= n
+
+# -----------------------------------------------------------------------------
+
+# image: add own packages
+BS_PACKAGES_OWN ?=
