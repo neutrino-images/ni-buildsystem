@@ -10,7 +10,8 @@ PYTHON3_DIR = Python-$(PYTHON3_VERSION)
 PYTHON3_SOURCE = Python-$(PYTHON3_VERSION).tar.xz
 PYTHON3_SITE = https://www.python.org/ftp/python/$(PYTHON3_VERSION)
 
-PYTHON3_DEPENDENCIES = libffi ncurses sqlite bzip2 xz zlib expat openssl
+PYTHON3_DEPENDENCIES = host-python3 \
+	libffi ncurses sqlite bzip2 xz zlib expat openssl
 
 # no cleanup
 PYTHON3_KEEP_BUILD_DIR = YES
@@ -88,7 +89,6 @@ PYTHON3_CONF_OPTS = \
 	--with-openssl=$(TARGET_prefix) \
 	--without-ensurepip \
 	--without-readline \
-	--enable-optimizations \
 	--disable-idle3 \
 	--disable-pydoc \
 	--disable-test-modules \
