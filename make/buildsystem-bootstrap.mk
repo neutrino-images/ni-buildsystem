@@ -3,6 +3,39 @@
 #
 # -----------------------------------------------------------------------------
 
+# marks the box the build directories were bootstrapped for
+BOXMODEL_STAMP = $(BUILD_DIR)/.$(BOXTYPE)-$(BOXMODEL)
+
+# Refuse to build for another box than the one $(BUILD_DIR) was
+# bootstrapped for; $(DEPS_DIR) and $(TARGET_DIR) would mix both boxes.
+# Only checked in the top level make and not for cleaning, information
+# and source handling targets, nor for 'make images', which cleans per box.
+BOXMODEL_CHECK_SKIP_GOALS = \
+	help printenv print-targets .print-phony local-files \
+	toolcheck bashcheck crosscheck varcheck \
+	init preqs download ni-sources update update-% switch-url \
+	crosstool crosstools crosstool.% crosstools.% \
+	images ni-images
+
+BS_IGNORE_BOXMODEL_CHECK ?= n
+
+ifeq ($(MAKELEVEL)-$(BS_IGNORE_BOXMODEL_CHECK),0-n)
+  ifneq ($(MAKECMDGOALS),)
+    ifeq ($(findstring clean,$(MAKECMDGOALS))$(filter $(BOXMODEL_CHECK_SKIP_GOALS),$(MAKECMDGOALS)),)
+      BOXMODEL_STAMPS_FOREIGN := $(filter-out $(BOXMODEL_STAMP),\
+	$(wildcard $(addprefix $(BUILD_DIR)/.,$(addsuffix -*,coolstream armbox mipsbox))))
+      ifneq ($(BOXMODEL_STAMPS_FOREIGN),)
+        $(info )
+        $(info The build directories were bootstrapped for '$(subst $(BUILD_DIR)/.,,$(BOXMODEL_STAMPS_FOREIGN))',)
+        $(info but BOXMODEL is '$(BOXMODEL)'. Run 'make clean' first, or set)
+        $(info BS_IGNORE_BOXMODEL_CHECK=y if you know what you are doing.)
+        $(info )
+        $(error BOXMODEL changed without 'make clean')
+      endif
+    endif
+  endif
+endif
+
 # buildsystem related
 BOOTSTRAP  = $(CROSS_DIR)
 BOOTSTRAP += $(DEPS_DIR)
@@ -27,7 +60,7 @@ endif
 # -----------------------------------------------------------------------------
 
 bootstrap: $(BOOTSTRAP)
-	@touch $(BUILD_DIR)/.$(BOXTYPE)-$(BOXMODEL)
+	@touch $(BOXMODEL_STAMP)
 	@$(call draw_line);
 	@$(call SUCCESS,"Bootstrapped for $(TARGET_BOX)")
 	@$(call draw_line);
