@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-PYTHON_ZSTD_VERSION = 1.5.7.2
+PYTHON_ZSTD_VERSION = 1.5.7.3
 PYTHON_ZSTD_DIR = zstd-$(PYTHON_ZSTD_VERSION)
 PYTHON_ZSTD_SOURCE = zstd-$(PYTHON_ZSTD_VERSION).tar.gz
 PYTHON_ZSTD_SITE = $(PYPI_MIRROR)/z/zstd
