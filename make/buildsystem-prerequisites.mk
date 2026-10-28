@@ -31,7 +31,7 @@ $(SOURCE_DIR):
 $(GENERIC_PC):
 	git clone $(NI_GITHUB)/$(NI_BUILDSYSTEM_GENERIC_PC).git $(GENERIC_PC)
 
-$(SOURCE_DIR)/$(NI_NEUTRINO):
+$(SOURCE_DIR)/$(NI_NEUTRINO): | $(SOURCE_DIR)
 	$(CD) $(SOURCE_DIR); \
 		git clone $(NI_GITHUB)/$(@F).git
 ifeq ($(NI_ADMIN),true)
@@ -43,7 +43,7 @@ ifeq ($(NI_ADMIN),true)
 		git fetch --all
 endif
 
-$(SOURCE_DIR)/$(NI_LIBSTB_HAL):
+$(SOURCE_DIR)/$(NI_LIBSTB_HAL): | $(SOURCE_DIR)
 	$(CD) $(SOURCE_DIR); \
 		git clone $(NI_GITHUB)/$(@F).git
 ifeq ($(NI_ADMIN),true)
@@ -56,13 +56,13 @@ ifeq ($(NI_ADMIN),true)
 endif
 
 ifeq ($(HAS_LIBCOOLSTREAM),yes)
-$(SOURCE_DIR)/$(NI_LIBCOOLSTREAM):
+$(SOURCE_DIR)/$(NI_LIBCOOLSTREAM): | $(SOURCE_DIR)
 	$(CD) $(SOURCE_DIR); \
 		git clone $(NI_GITHUB_WITH_TOKEN)/$(@F).git
 endif
 
 # upstream for rebase
-$(SOURCE_DIR)/$(NI_FFMPEG):
+$(SOURCE_DIR)/$(NI_FFMPEG): | $(SOURCE_DIR)
 	$(CD) $(SOURCE_DIR); \
 		git clone $(NI_GITHUB)/$(@F).git
 ifeq ($(NI_ADMIN),true)
@@ -73,7 +73,7 @@ endif
 
 # upstream for rebase
 # torvalds for cherry-picking
-$(SOURCE_DIR)/$(NI_LINUX_KERNEL):
+$(SOURCE_DIR)/$(NI_LINUX_KERNEL): | $(SOURCE_DIR)
 	$(CD) $(SOURCE_DIR); \
 		git clone $(NI_GITHUB)/$(@F).git
 ifeq ($(NI_ADMIN),true)
@@ -84,7 +84,7 @@ ifeq ($(NI_ADMIN),true)
 endif
 
 # upstream for rebase
-$(SOURCE_DIR)/$(NI_OFGWRITE):
+$(SOURCE_DIR)/$(NI_OFGWRITE): | $(SOURCE_DIR)
 	$(CD) $(SOURCE_DIR); \
 		git clone $(NI_GITHUB)/$(@F).git
 ifeq ($(NI_ADMIN),true)
@@ -94,7 +94,7 @@ ifeq ($(NI_ADMIN),true)
 endif
 
 # upstream for rebase
-$(SOURCE_DIR)/$(NI_RTMPDUMP):
+$(SOURCE_DIR)/$(NI_RTMPDUMP): | $(SOURCE_DIR)
 	$(CD) $(SOURCE_DIR); \
 		git clone $(NI_GITHUB)/$(@F).git
 ifeq ($(NI_ADMIN),true)
@@ -107,7 +107,7 @@ $(SOURCE_DIR)/$(NI_DRIVERS_BIN) \
 $(SOURCE_DIR)/$(NI_LOGO_STUFF) \
 $(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS) \
 $(SOURCE_DIR)/$(NI_OPENTHREADS) \
-$(SOURCE_DIR)/$(NI_STREAMRIPPER):
+$(SOURCE_DIR)/$(NI_STREAMRIPPER): | $(SOURCE_DIR)
 	$(CD) $(SOURCE_DIR); \
 		git clone $(NI_GITHUB)/$(@F).git
 
