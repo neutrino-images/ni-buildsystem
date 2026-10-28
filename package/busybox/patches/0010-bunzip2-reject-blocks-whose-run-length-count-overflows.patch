@@ -1,0 +1,57 @@
+From 14f6b6b580a4c5a64029ea77ef4dbeca7ebdfd8f Mon Sep 17 00:00:00 2001
+From: Denys Vlasenko <vda.linux@googlemail.com>
+Date: Fri, 2 Oct 2026 00:25:33 +0200
+Subject: [PATCH] bunzip2: reject blocks whose run-length count overflows
+
+Based ob the patch by Matt Turner <mattst88@gmail.com>:
+> get_next_block() accumulates a run length in the unsigned 32-bit runCnt:
+>
+>         runCnt += (runPos << nextSym);
+>
+> A crafted stream with a long enough RUNA/RUNB sequence can drive runCnt
+> up to ~2^32. Once it is that large, the existing guard
+>
+>         if (dbufCount + runCnt > bd->dbufSize)
+>
+> is bypassed: dbufCount + runCnt overflows the unsigned addition and
+> wraps to a small value, so the check passes. The following
+> byteCount[tmp_byte] += runCnt then overflows byteCount[] (an int) to a
+> negative value. The inverse Burrows-Wheeler sort loop computes negative
+> cumulative offsets from it and writes before the start of dbuf[], an
+> out-of-bounds heap write (confirmed with AddressSanitizer as a write 48
+> bytes before the dbuf allocation).
+
+function                                             old     new   delta
+get_next_block                                      1452    1458      +6
+
+Signed-off-by: Denys Vlasenko <vda.linux@googlemail.com>
+
+Upstream: https://git.busybox.net/busybox/commit/?id=14f6b6b580a4c5a64029ea77ef4dbeca7ebdfd8f
+---
+ archival/libarchive/decompress_bunzip2.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
+
+diff --git a/archival/libarchive/decompress_bunzip2.c b/archival/libarchive/decompress_bunzip2.c
+index 4a2b668aacd5..4cb790868bf1 100644
+--- a/archival/libarchive/decompress_bunzip2.c
++++ b/archival/libarchive/decompress_bunzip2.c
+@@ -463,13 +463,12 @@ static int get_next_block(bunzip_data *bd)
+ 			   symbols, but a run of length 0 doesn't mean anything in this
+ 			   context).  Thus space is saved. */
+ 			runCnt += (runPos << nextSym); /* +runPos if RUNA; +2*runPos if RUNB */
+-//The 32-bit overflow of runCnt wasn't yet seen, but probably can happen.
+-//This would be the fix (catches too large count way before it can overflow):
+-//			if (runCnt > bd->dbufSize) {
+-//				dbg("runCnt:%u > dbufSize:%u RETVAL_DATA_ERROR",
+-//						runCnt, bd->dbufSize);
+-//				return RETVAL_DATA_ERROR;
+-//			}
++			/* Catch 32-bit overflow (we have an example .bz2 file) */
++			if ((int)runCnt < 0) {
++				dbg("runCnt:%u > dbufSize:%u RETVAL_DATA_ERROR",
++						runCnt, bd->dbufSize);
++				return RETVAL_DATA_ERROR;
++			}
+ 			if (runPos < bd->dbufSize) runPos <<= 1;
+ 			goto end_of_huffman_loop;
+ 		}

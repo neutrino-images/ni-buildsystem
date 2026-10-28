@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-BUSYBOX_VERSION = 1.36.1
+BUSYBOX_VERSION = 1.38.0
 BUSYBOX_DIR = busybox-$(BUSYBOX_VERSION)
 BUSYBOX_SOURCE = busybox-$(BUSYBOX_VERSION).tar.bz2
 BUSYBOX_SITE = https://busybox.net/downloads
