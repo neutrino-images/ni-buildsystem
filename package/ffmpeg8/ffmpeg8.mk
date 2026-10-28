@@ -332,7 +332,7 @@ FFMPEG8_CONF_OPTS += \
 	--enable-filter=treble \
 	--enable-filter=volume
 
-ifeq ($(BS_PACKAGE_FFMPEG8_FFPLAY),y)
+ifeq ($(BS_PACKAGE_FFMPEG_FFPLAY),y)
   FFMPEG8_DEPENDENCIES += sdl2
   FFMPEG8_CONF_OPTS += --enable-ffplay
   FFMPEG8_CONF_ENV += SDL_CONFIG=$(HOST_DIR)/bin/sdl2-config
@@ -340,7 +340,7 @@ else
   FFMPEG8_CONF_OPTS += --disable-ffplay
 endif
 
-ifeq ($(BS_PACKAGE_FFMPEG8_FFPROBE),y)
+ifeq ($(BS_PACKAGE_FFMPEG_FFPROBE),y)
   FFMPEG8_CONF_OPTS += --enable-ffprobe
 else
   FFMPEG8_CONF_OPTS += --disable-ffprobe

@@ -332,7 +332,7 @@ FFMPEG6_CONF_OPTS += \
 	--enable-filter=treble \
 	--enable-filter=volume
 
-ifeq ($(BS_PACKAGE_FFMPEG6_FFPLAY),y)
+ifeq ($(BS_PACKAGE_FFMPEG_FFPLAY),y)
   FFMPEG6_DEPENDENCIES += sdl2
   FFMPEG6_CONF_OPTS += --enable-ffplay
   FFMPEG6_CONF_ENV += SDL_CONFIG=$(HOST_DIR)/bin/sdl2-config
@@ -340,7 +340,7 @@ else
   FFMPEG6_CONF_OPTS += --disable-ffplay
 endif
 
-ifeq ($(BS_PACKAGE_FFMPEG6_FFPROBE),y)
+ifeq ($(BS_PACKAGE_FFMPEG_FFPROBE),y)
   FFMPEG6_CONF_OPTS += --enable-ffprobe
 else
   FFMPEG6_CONF_OPTS += --disable-ffprobe
