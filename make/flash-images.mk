@@ -60,45 +60,45 @@ endef
 
 flash-image:
 ifeq ($(BOXMODEL),$(filter $(BOXMODEL),nevis kronos kronos_v2))
-	make flash-image-coolstream ERASE_SIZE=0x20000
+	$(MAKE) flash-image-coolstream ERASE_SIZE=0x20000
 endif
 ifeq ($(BOXMODEL),$(filter $(BOXMODEL),apollo shiner))
-	make flash-image-coolstream ERASE_SIZE=0x40000 IMAGE_SUFFIX=$(BOXTYPE_SC)-apollo BOXNAME="Tank"
-	make flash-image-coolstream ERASE_SIZE=0x20000 IMAGE_SUFFIX=$(BOXTYPE_SC)-shiner BOXNAME="Trinity"
+	$(MAKE) flash-image-coolstream ERASE_SIZE=0x40000 IMAGE_SUFFIX=$(BOXTYPE_SC)-apollo BOXNAME="Tank"
+	$(MAKE) flash-image-coolstream ERASE_SIZE=0x20000 IMAGE_SUFFIX=$(BOXTYPE_SC)-shiner BOXNAME="Trinity"
 endif
 ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 e4hdultra protek4k))
-	make flash-image-hd5x
-	make flash-image-hd5x-multi
+	$(MAKE) flash-image-hd5x
+	$(MAKE) flash-image-hd5x-multi
   ifeq ($(BOXMODEL),$(filter $(BOXMODEL),e4hdultra))
-	make flash-image-hd5x-multi FLASH_SIZE=8gb IMAGE_SUFFIX=$(IMAGE_SUFFIX)_8gb
+	$(MAKE) flash-image-hd5x-multi FLASH_SIZE=8gb IMAGE_SUFFIX=$(IMAGE_SUFFIX)_8gb
   endif
 endif
 ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd60 hd61 multibox multiboxse))
-	make flash-image-hd6x
-	make flash-image-hd6x-single
+	$(MAKE) flash-image-hd6x
+	$(MAKE) flash-image-hd6x-single
 endif
 ifeq ($(BOXMODEL),$(filter $(BOXMODEL),vusolo4k vuduo4k vuduo4kse vuultimo4k vuzero4k vuuno4k vuuno4kse))
-	make flash-image-vuplus
-	make flash-image-vuplus-multi
+	$(MAKE) flash-image-vuplus
+	$(MAKE) flash-image-vuplus-multi
 endif
 ifeq ($(BOXMODEL),$(filter $(BOXMODEL),vuduo))
-	make flash-image-vuduo
+	$(MAKE) flash-image-vuduo
 endif
 
 # -----------------------------------------------------------------------------
 
 flash-image-coolstream: IMAGE_DATE=$(shell cat $(ROOTFS_DIR)/.version | grep "^version=" | cut -d= -f2 | cut -c 8-)
 flash-image-coolstream: | $(IMAGE_DIR)
-	make devtable
+	$(MAKE) devtable
 	mkfs.jffs2 -e $(ERASE_SIZE) $(MKFSFLAGS) -o $(IMAGE_DIR)/$(IMAGE_NAME).img
-	make devtable-remove
+	$(MAKE) devtable-remove
 ifeq ($(IMAGE_SUMMARIZE),yes)
 	sumtool -e $(ERASE_SIZE) $(SUMFLAGS) -i $(IMAGE_DIR)/$(IMAGE_NAME).img -o $(IMAGE_DIR)/$(IMAGE_NAME)-sum.img
 	rm -f $(IMAGE_DIR)/$(IMAGE_NAME).img
 	mv $(IMAGE_DIR)/$(IMAGE_NAME)-sum.img $(IMAGE_DIR)/$(IMAGE_NAME).img
 endif
 	$(call create_md5file,$(IMAGE_NAME).img)
-	make check-image-size IMAGE_TO_CHECK=$(IMAGE_DIR)/$(IMAGE_NAME).img
+	$(MAKE) check-image-size IMAGE_TO_CHECK=$(IMAGE_DIR)/$(IMAGE_NAME).img
 
 # -----------------------------------------------------------------------------
 

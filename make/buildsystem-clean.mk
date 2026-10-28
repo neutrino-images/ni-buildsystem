@@ -6,7 +6,7 @@
 build-clean:
 	# the build of the following targets is different; let's clean this too
 	$(foreach target,libstb-hal neutrino neutrino-plugins,\
-		-make $(target).distclean$(sep))
+		-$(MAKE) $(target).distclean$(sep))
 	-rm -rf $(BUILD_DIR)
 
 cross-base-clean:
@@ -39,7 +39,7 @@ rebuild-clean: host-bin-config-clean target-clean deps-clean build-clean checkou
 all-clean: rebuild-clean staging-clean host-clean
 	@$(call WARNING,"Any other key then CTRL-C will now remove CROSS_BASE")
 	@read
-	make cross-base-clean
+	$(MAKE) cross-base-clean
 
 clean: rebuild-clean bootstrap
 

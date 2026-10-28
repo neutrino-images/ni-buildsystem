@@ -5,7 +5,7 @@
 
 target-finish: .version update.urls symbolic-links
 ifeq ($(BOXTYPE),armbox)
-	make e2-multiboot
+	$(MAKE) e2-multiboot
 endif
 
 # -----------------------------------------------------------------------------
@@ -95,7 +95,7 @@ endif
 
 rootfs: target-finish $(ROOTFS_DIR) rootfs-cleanup rootfs-strip
 ifeq ($(BOXTYPE),coolstream)
-	make rootfs-tarball
+	$(MAKE) rootfs-tarball
 endif
 
 # -----------------------------------------------------------------------------

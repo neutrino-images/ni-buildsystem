@@ -166,10 +166,10 @@ printenv:
 	@echo ""
 	@echo "'make help' lists useful targets."
 	@echo ""
-	@make --no-print-directory toolcheck
-	@make --no-print-directory crosscheck
-	@make -i -s $(TARGET_DIR)
-	@if ! LANG=C make -n preqs|grep -q "Nothing to be done"; then \
+	@$(MAKE) --no-print-directory toolcheck
+	@$(MAKE) --no-print-directory crosscheck
+	@$(MAKE) -i -s $(TARGET_DIR)
+	@if ! LANG=C $(MAKE) -n preqs|grep -q "Nothing to be done"; then \
 		echo; \
 		echo "Your next target to do is probably 'make preqs'"; \
 	fi

@@ -16,7 +16,7 @@ update-neutrino:
 	$(CD) $(SOURCE_DIR)/$(NI_NEUTRINO); \
 		git checkout ni/coolstream; git pull; \
 		git checkout master; git pull
-	make checkout-branches
+	$(MAKE) checkout-branches
 
 update-remotes:
 ifeq ($(NI_ADMIN),true)
@@ -42,8 +42,8 @@ endif
 update-ni-force:
 	#rm -rf $(SOURCE_DIR)/$(NI_LINUX_KERNEL)
 	rm -rf $(SOURCE_DIR)/$(NI_FFMPEG)
-	make ni-sources
-	make update-ni-sources
+	$(MAKE) ni-sources
+	$(MAKE) update-ni-sources
 
 update-ni-sources: ni-sources update-neutrino
 	$(CD) $(BASE_DIR)/$(GENERIC_PC); git pull
@@ -60,8 +60,8 @@ endif
 	$(CD) $(SOURCE_DIR)/$(NI_OPENTHREADS); git pull
 	$(CD) $(SOURCE_DIR)/$(NI_RTMPDUMP); git pull
 	$(CD) $(SOURCE_DIR)/$(NI_STREAMRIPPER); git pull
-	make install-git-hooks
-	make checkout-branches
+	$(MAKE) install-git-hooks
+	$(MAKE) checkout-branches
 
 update: update-self update-ni-sources
 

@@ -14,13 +14,13 @@ crosstool: build-clean deps-clean crosstool-ng crosstool-backup clean
 
 crosstools:
 	$(foreach boxseries,$(CROSSTOOLS_BOXSERIES),\
-		make BOXSERIES=$(boxseries) crosstool$(sep))
+		$(MAKE) BOXSERIES=$(boxseries) crosstool$(sep))
 
 crosstool.renew: ccache-clean cross-clean crosstool
 
 crosstools.renew:
 	$(foreach boxseries,$(CROSSTOOLS_BOXSERIES),\
-		make BOXSERIES=$(boxseries) crosstool.renew$(sep))
+		$(MAKE) BOXSERIES=$(boxseries) crosstool.renew$(sep))
 
 # -----------------------------------------------------------------------------
 
@@ -32,7 +32,7 @@ crosstool.upgradeconfig: build-clean deps-clean crosstool-ng.upgradeconfig
 
 crosstools.upgradeconfig:
 	$(foreach boxtype,$(CROSSTOOLS_UPGRADECONFIG_BOXTYPES),\
-		make BOXTYPE=$(boxtype) crosstool.upgradeconfig$(sep))
+		$(MAKE) BOXTYPE=$(boxtype) crosstool.upgradeconfig$(sep))
 
 ################################################################################
 #

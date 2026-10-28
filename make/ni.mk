@@ -12,13 +12,13 @@ ni-image:
 	$(MAKE) neutrino-plugins
 	$(MAKE) doscam-webif-skin
 	$(MAKE) logo-addon
-	make fbshot
+	$(MAKE) fbshot
 	$(MAKE) chrony
 	$(MAKE) tzdata
 	$(MAKE) smartmontools
 	$(MAKE) sg3_utils
 	$(MAKE) nano
-	make hd-idle
+	$(MAKE) hd-idle
 	$(MAKE) hdparm
 	$(MAKE) nfs-utils
 	$(MAKE) e2fsprogs
@@ -29,10 +29,10 @@ ni-image:
 	#make djmount
 	$(MAKE) ushare
 	$(MAKE) xupnpd
-	make inadyn
-	make samba
+	$(MAKE) inadyn
+	$(MAKE) samba
 	$(MAKE) vsftpd
-	make dropbear
+	$(MAKE) dropbear
 	$(MAKE) busybox
 	$(MAKE) sysvinit
 	$(MAKE) coreutils
@@ -87,18 +87,18 @@ ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd2 hd5x hd6x vusolo4k vuduo4k vuduo4ks
 	$(MAKE) gdb
   endif
 endif
-	make autofs
-	make sysconfdir
-	make init-scripts
+	$(MAKE) autofs
+	$(MAKE) sysconfdir
+	$(MAKE) init-scripts
 ifneq ($(BS_PACKAGES_OWN),)
 	$(MAKE) $(BS_PACKAGES_OWN)
 endif
 ifeq ($(PERSONALIZE),yes)
-	make personalize
+	$(MAKE) personalize
 endif
-	make rootfs
-	make flash-image
-	@make done
+	$(MAKE) rootfs
+	$(MAKE) flash-image
+	@$(MAKE) done
 
 # -----------------------------------------------------------------------------
 
@@ -120,10 +120,10 @@ ni-images:
 	for boxmodel in $(IMAGES_BOXMODELS); do \
 		$(MAKE) BOXMODEL=$${boxmodel} clean image || true; \
 	done;
-	make clean
+	$(MAKE) clean
 
 personalized-image:
-	make image PERSONALIZE=yes
+	$(MAKE) image PERSONALIZE=yes
 
 # -----------------------------------------------------------------------------
 
