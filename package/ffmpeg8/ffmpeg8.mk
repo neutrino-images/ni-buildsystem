@@ -113,6 +113,7 @@ FFMPEG8_CONF_OPTS = \
 	--disable-decoders \
 	--enable-decoder=aac \
 	--enable-decoder=aac_latm \
+	--enable-decoder=ac4 \
 	--enable-decoder=adpcm_ct \
 	--enable-decoder=adpcm_g722 \
 	--enable-decoder=adpcm_g726 \
