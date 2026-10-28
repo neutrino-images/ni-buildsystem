@@ -48,11 +48,6 @@ OSCAM_CONF_OPTS = \
 	CARDREADER_SC8IN1 \
 	CARDREADER_SMARGO
 
-# enable ssl
-OSCAM_DEPENDENCIES += openssl
-OSCAM_CONF_OPTS += \
-	--enable WITH_SSL
-
 # enable streamrelay
 OSCAM_DEPENDENCIES += libdvbcsa
 OSCAM_CONF_OPTS += \
@@ -89,6 +84,11 @@ OSCAM_MAKE_OPTS = \
 	CONF_DIR=/var/tuxbox/config \
 	LIST_SMARGO_BIN=$($(PKG)_LIST_SMARGO_BIN) \
 	OSCAM_BIN=$($(PKG)_OSCAM_BIN)
+
+# enable ssl
+OSCAM_DEPENDENCIES += openssl
+OSCAM_MAKE_OPTS += \
+	USE_SSL=1
 
 # enable libusb
 OSCAM_DEPENDENCIES += libusb
