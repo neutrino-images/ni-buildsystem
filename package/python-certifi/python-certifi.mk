@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-PYTHON_CERTIFI_VERSION = 2025.11.12
+PYTHON_CERTIFI_VERSION = 2026.10.23
 PYTHON_CERTIFI_DIR = certifi-$(PYTHON_CERTIFI_VERSION)
 PYTHON_CERTIFI_SOURCE = certifi-$(PYTHON_CERTIFI_VERSION).tar.gz
 PYTHON_CERTIFI_SITE = $(PYPI_MIRROR)/c/certifi
