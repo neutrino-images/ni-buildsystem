@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-PYTHON_WEBSOCKET_CLIENT_VERSION = 1.9.0
+PYTHON_WEBSOCKET_CLIENT_VERSION = 1.10.0
 PYTHON_WEBSOCKET_CLIENT_DIR = websocket_client-$(PYTHON_WEBSOCKET_CLIENT_VERSION)
 PYTHON_WEBSOCKET_CLIENT_SOURCE = websocket_client-$(PYTHON_WEBSOCKET_CLIENT_VERSION).tar.gz
 PYTHON_WEBSOCKET_CLIENT_SITE = $(PYPI_MIRROR)/w/websocket-client
