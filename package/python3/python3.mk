@@ -4,8 +4,8 @@
 #
 ################################################################################
 
-PYTHON3_VERSION_MAJOR = 3.11
-PYTHON3_VERSION = $(PYTHON3_VERSION_MAJOR).5
+PYTHON3_VERSION_MAJOR = 3.14
+PYTHON3_VERSION = $(PYTHON3_VERSION_MAJOR).10
 PYTHON3_DIR = Python-$(PYTHON3_VERSION)
 PYTHON3_SOURCE = Python-$(PYTHON3_VERSION).tar.xz
 PYTHON3_SITE = https://www.python.org/ftp/python/$(PYTHON3_VERSION)
@@ -26,14 +26,10 @@ PYTHON3_PRE_CONFIGURE_HOOKS += PYTHON3_AUTOCONF
 
 PYTHON3_CONF_ENV = \
 	ac_cv_have_long_long_format=yes \
+	ac_cv_buggy_getaddrinfo=no \
 	ac_cv_file__dev_ptmx=yes \
 	ac_cv_file__dev_ptc=yes \
 	ac_cv_working_tzset=yes
-
-# Make python believe we don't have 'hg', so that it doesn't try to
-# communicate over the network during the build.
-PYTHON3_CONF_ENV += \
-	ac_cv_prog_HAS_HG=/bin/false
 
 # GCC is always compliant with IEEE754
 ifeq ($(TARGET_ENDIAN),"little")
@@ -53,33 +49,50 @@ PYTHON3_CONF_ENV += \
 endif
 endif
 
+# Since Python 3.12 most of the former --disable-<module> options are
+# gone. Modules are disabled through the py_cv_module_<name>=n/a cache
+# variables instead.
+
+# no berkeleydb
+PYTHON3_CONF_ENV += \
+	py_cv_module__dbm=n/a
+
+# no CJK codecs
+PYTHON3_CONF_ENV += \
+	py_cv_module__codecs_cn=n/a \
+	py_cv_module__codecs_hk=n/a \
+	py_cv_module__codecs_iso2022=n/a \
+	py_cv_module__codecs_jp=n/a \
+	py_cv_module__codecs_kr=n/a \
+	py_cv_module__codecs_tw=n/a
+
+# no decimal (needs mpdecimal)
+PYTHON3_CONF_ENV += \
+	py_cv_module__decimal=n/a
+
+# Disable auto-detection of uuid.h (util-linux)
+# which would add _uuid module support, instead
+# default to the pure python implementation
+PYTHON3_CONF_ENV += \
+	py_cv_module__uuid=n/a
+
+# no zstd (new in Python 3.14, needs libzstd)
+PYTHON3_CONF_ENV += \
+	py_cv_module__zstd=n/a
+
 PYTHON3_CONF_OPTS = \
 	--enable-shared \
 	--disable-static \
 	--with-build-python=$(HOST_PYTHON_BINARY) \
 	--with-expat=system \
-	--with-libmpdec=none \
 	--with-openssl=$(TARGET_prefix) \
-	--with-system-ffi \
-	--without-cxx-main \
 	--without-ensurepip \
+	--without-readline \
 	--enable-optimizations \
-	--enable-unicodedata \
-	--disable-berkeleydb \
-	--disable-codecs-cjk \
 	--disable-idle3 \
-	--disable-lib2to3 \
-	--disable-nis \
-	--disable-ossaudiodev \
 	--disable-pydoc \
-	--disable-readline \
 	--disable-test-modules \
 	--disable-tk
-
-# Disable auto-detection of uuid.h (util-linux)
-# which would add _uuid module support, instead
-# default to the pure python implementation
-PYTHON3_CONF_OPTS += --disable-uuid
 
 #
 # Make sure libpython gets stripped out on target
@@ -102,7 +115,6 @@ PYTHON3_TARGET_FINALIZE_HOOKS += PYTHON3_INSTALL_PYTHON_VENV
 define PYTHON3_TARGET_CLEANUP
 	$(TARGET_RM) $(TARGET_bindir)/python3-config
 	$(TARGET_RM) $(TARGET_bindir)/python$(PYTHON3_VERSION_MAJOR)-config
-	$(TARGET_RM) $(TARGET_bindir)/smtpd.py.*
 endef
 PYTHON3_TARGET_FINALIZE_HOOKS += PYTHON3_TARGET_CLEANUP
 
@@ -128,27 +140,27 @@ HOST_PYTHON3_PRE_CONFIGURE_HOOKS += HOST_PYTHON3_AUTOCONF
 HOST_PYTHON3_CONF_ENV = \
 	LDFLAGS="$(HOST_LDFLAGS) -Wl,--enable-new-dtags"
 
-# Make python believe we don't have 'hg', so that it doesn't try to
-# communicate over the network during the build.
 HOST_PYTHON3_CONF_ENV += \
-	ac_cv_prog_HAS_HG=/bin/false
+	py_cv_module__bz2=n/a \
+	py_cv_module__codecs_cn=n/a \
+	py_cv_module__codecs_hk=n/a \
+	py_cv_module__codecs_iso2022=n/a \
+	py_cv_module__codecs_jp=n/a \
+	py_cv_module__codecs_kr=n/a \
+	py_cv_module__codecs_tw=n/a \
+	py_cv_module__hashlib=n/a \
+	py_cv_module__ssl=n/a \
+	py_cv_module__uuid=n/a \
+	py_cv_module__zstd=n/a
 
 HOST_PYTHON3_CONF_OPTS += \
 	--without-ensurepip \
-	--without-cxx-main \
 	--with-expat=system \
-	--enable-unicodedata \
-	--disable-bzip2 \
-	--disable-codecs-cjk \
 	--disable-curses \
 	--disable-idle3 \
-	--disable-nis \
-	--disable-openssl \
-	--disable-ossaudiodev \
 	--disable-sqlite3 \
 	--disable-test-modules \
-	--disable-tk \
-	--disable-uuid
+	--disable-tk
 
 define HOST_PYTHON3_INSTALL_SYMLINK
 	ln -sf python3 $(HOST_DIR)/bin/python

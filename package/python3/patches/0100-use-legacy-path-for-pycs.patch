@@ -1,6 +1,24 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: vanhofen <vanhofen@gmx.de>
+Date: Mon, 26 Oct 2026 22:40:21 +0100
+Subject: [PATCH] Use legacy path for pycs
+
+Store bytecode next to its source (module.pyc instead of
+__pycache__/module.cpython-3xx.opt-1.pyc) and always use
+optimization level 1, so that a .pyc-only target installation
+keeps working.
+
+Refreshed for Python 3.14.
+---
+ Lib/importlib/_bootstrap_external.py | 6 +++---
+ Python/initconfig.c                  | 6 +++---
+ 2 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/Lib/importlib/_bootstrap_external.py b/Lib/importlib/_bootstrap_external.py
+index 20cb27c..1e5040c 100644
 --- a/Lib/importlib/_bootstrap_external.py
 +++ b/Lib/importlib/_bootstrap_external.py
-@@ -465,13 +465,13 @@ def cache_from_source(path, debug_override=None, *, optimization=None):
+@@ -267,13 +267,13 @@ def cache_from_source(path, debug_override=None, *, optimization=None):
      tag = sys.implementation.cache_tag
      if tag is None:
          raise NotImplementedError('sys.implementation.cache_tag is None')
@@ -15,8 +33,8 @@
 +    optimization = ''
      if optimization != '':
          if not optimization.isalnum():
-             raise ValueError('{!r} is not alphanumeric'.format(optimization))
-@@ -502,7 +502,7 @@ def cache_from_source(path, debug_override=None, *, optimization=None):
+             raise ValueError(f'{optimization!r} is not alphanumeric')
+@@ -304,7 +304,7 @@ def cache_from_source(path, debug_override=None, *, optimization=None):
              head.lstrip(path_separators),
              filename,
          )
@@ -25,9 +43,11 @@
  
  
  def source_from_cache(path):
+diff --git a/Python/initconfig.c b/Python/initconfig.c
+index ff10320..c6636c1 100644
 --- a/Python/initconfig.c
 +++ b/Python/initconfig.c
-@@ -754,7 +754,7 @@ _PyConfig_InitCompatConfig(PyConfig *config)
+@@ -1049,7 +1049,7 @@ _PyConfig_InitCompatConfig(PyConfig *config)
      config->warn_default_encoding = 0;
      config->inspect = -1;
      config->interactive = -1;
@@ -36,7 +56,7 @@
      config->parser_debug= -1;
      config->write_bytecode = -1;
      config->verbose = -1;
-@@ -796,7 +796,7 @@ config_init_defaults(PyConfig *config)
+@@ -1102,7 +1102,7 @@ config_init_defaults(PyConfig *config)
      config->bytes_warning = 0;
      config->inspect = 0;
      config->interactive = 0;
@@ -45,8 +65,8 @@
      config->parser_debug= 0;
      config->write_bytecode = 1;
      config->verbose = 0;
-@@ -2412,7 +2412,7 @@ config_parse_cmdline(PyConfig *config, PyWideStringList *warnoptions,
-         /* case 'J': reserved for Jython */
+@@ -3014,7 +3014,7 @@ config_parse_cmdline(PyConfig *config, PyWideStringList *warnoptions,
+             break;
  
          case 'O':
 -            config->optimization_level++;
