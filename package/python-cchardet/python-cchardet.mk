@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-PYTHON_CCHARDET_VERSION = 2.1.7
+PYTHON_CCHARDET_VERSION = 2.4.0
 PYTHON_CCHARDET_DIR = cchardet-$(PYTHON_CCHARDET_VERSION)
 PYTHON_CCHARDET_SOURCE = cchardet-$(PYTHON_CCHARDET_VERSION).tar.gz
 PYTHON_CCHARDET_SITE = $(PYPI_MIRROR)/c/cchardet
