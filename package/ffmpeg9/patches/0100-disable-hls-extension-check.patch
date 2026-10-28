@@ -1,0 +1,22 @@
+diff --git a/libavformat/hls.c b/libavformat/hls.c
+index eec2515..da68831 100644
+--- a/libavformat/hls.c
++++ b/libavformat/hls.c
+@@ -737,6 +737,7 @@ static int open_url(AVFormatContext *s, AVIOContext **pb, const char *url,
+ 
+ static int test_segment(AVFormatContext *s, const AVInputFormat *in_fmt, struct playlist *pls, struct segment *seg)
+ {
++#if 0
+     HLSContext *c = s->priv_data;
+     int matchA = 3;
+     int matchF = 0;
+@@ -778,7 +779,9 @@ static int test_segment(AVFormatContext *s, const AVInputFormat *in_fmt, struct
+             return AVERROR_INVALIDDATA;
+         }
+     }
++#endif
+ 
++    /* Disable all HLS segment extension checks - accept every URL */
+     return 0;
+ }
+ 
