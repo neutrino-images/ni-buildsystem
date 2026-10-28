@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-PYTHON_MUTAGEN_VERSION = 1.47.0
+PYTHON_MUTAGEN_VERSION = 1.48.1
 PYTHON_MUTAGEN_DIR = mutagen-$(PYTHON_MUTAGEN_VERSION)
 PYTHON_MUTAGEN_SOURCE = mutagen-$(PYTHON_MUTAGEN_VERSION).tar.gz
 PYTHON_MUTAGEN_SITE = $(PYPI_MIRROR)/m/mutagen
