@@ -75,10 +75,6 @@ MAINTAINER = $(shell whoami)
 # (~177 kB); off, the player screen offers the stream to an outside player
 #BS_PACKAGE_NEUTRINO_WEB_PLAYER = y
 
-# Neutrino ships the handset photographs (28 to 134 kB)
-# off, the remote control screen draws the keys instead
-#BS_PACKAGE_NEUTRINO_HANDSET_PICTURES = y
-
 # Neutrino lets AI clients reach the box over MCP with OAuth
 # needs BS_PACKAGE_NEUTRINO_NI_WEB
 #BS_PACKAGE_NEUTRINO_MCP = y

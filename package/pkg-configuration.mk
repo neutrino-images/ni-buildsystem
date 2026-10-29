@@ -59,13 +59,6 @@ else
   BS_PACKAGE_NEUTRINO_WEB_PLAYER ?= y
 endif
 
-# neutrino: ship the handset photographs
-ifeq ($(NI_TIGHT),y)
-  BS_PACKAGE_NEUTRINO_HANDSET_PICTURES ?= n
-else
-  BS_PACKAGE_NEUTRINO_HANDSET_PICTURES ?= y
-endif
-
 # neutrino: ship the new web interface
 BS_PACKAGE_NEUTRINO_NI_WEB ?= y
 

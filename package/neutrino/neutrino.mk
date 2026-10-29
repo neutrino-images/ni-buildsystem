@@ -159,10 +159,6 @@ ifeq ($(BS_PACKAGE_NEUTRINO_MCP),y)
   NEUTRINO_DEPENDENCIES += qrcode-generator
 endif
 
-ifneq ($(BS_PACKAGE_NEUTRINO_HANDSET_PICTURES),y)
-  NEUTRINO_CONF_OPTS += --disable-handset-pictures
-endif
-
 ifeq ($(BS_PACKAGE_NEUTRINO_AUDIODEC_FFMPEG),y)
   NEUTRINO_CONF_OPTS += --enable-ffmpegdec
 else
