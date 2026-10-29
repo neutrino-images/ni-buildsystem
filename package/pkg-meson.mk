@@ -35,6 +35,7 @@ define MESON_CROSS_COMPILATION_CONF_HOOK # (dest dir)
 		echo "sys_root = '$(TARGET_DIR)'"; \
 		echo "pkg_config_libdir = '$(PKG_CONFIG_PATH)'"; \
 		echo "cmake_defaults = true"; \
+		$(foreach property,$($(PKG)_MESON_EXTRA_PROPERTIES),echo "$(property)";) \
 		echo ""; \
 		echo "[host_machine]"; \
 		echo "system = 'linux'"; \
