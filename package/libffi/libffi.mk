@@ -4,17 +4,22 @@
 #
 ################################################################################
 
-LIBFFI_VERSION = 3.4.2
+LIBFFI_VERSION = 3.8.0
 LIBFFI_DIR = libffi-$(LIBFFI_VERSION)
 LIBFFI_SOURCE = libffi-$(LIBFFI_VERSION).tar.gz
 LIBFFI_SITE = https://github.com/libffi/libffi/releases/download/v$(LIBFFI_VERSION)
 
+# We're patching configure.ac
 LIBFFI_AUTORECONF = YES
 
 LIBFFI_CONF_OPTS = \
 	--datarootdir=$(REMOVE_datarootdir) \
 	$(if $(filter $(BOXSERIES),hd1),--enable-static --disable-shared) \
 	--disable-multi-os-directory
+
+# The static exec trampolines is enabled by default since
+# libffi 3.4.2. However it doesn't work with gobject-introspection.
+LIBFFI_CONF_OPTS += --disable-exec-static-tramp
 
 libffi: | $(TARGET_DIR)
 	$(call autotools-package)
