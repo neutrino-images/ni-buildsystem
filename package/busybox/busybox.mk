@@ -4,7 +4,8 @@
 #
 ################################################################################
 
-BUSYBOX_VERSION = 1.38.0
+# version 1.36.1 for CST, because a newer version shows strange behaviour on hd2
+BUSYBOX_VERSION = $(if $(filter $(BOXTYPE),coolstream),1.36.1,1.38.0)
 BUSYBOX_DIR = busybox-$(BUSYBOX_VERSION)
 BUSYBOX_SOURCE = busybox-$(BUSYBOX_VERSION).tar.bz2
 BUSYBOX_SITE = https://busybox.net/downloads
@@ -39,7 +40,7 @@ BUSYBOX_MAKE_OPTS = \
 	EXTRA_LDFLAGS="$(TARGET_LDFLAGS)" \
 	CONFIG_PREFIX="$(TARGET_DIR)"
 
-BUSYBOX_CONFIG = $(PKG_FILES_DIR)/busybox-minimal.config
+BUSYBOX_CONFIG = $(PKG_FILES_DIR)/busybox-minimal$(if $(filter $(BOXTYPE),coolstream),-coolstream).config
 BUSYBOX_BUILD_CONFIG = $(PKG_BUILD_DIR)/$($(PKG)_KCONFIG_FILE)
 
 define BUSYBOX_INSTALL_CONFIG
