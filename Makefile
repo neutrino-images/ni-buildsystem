@@ -224,23 +224,16 @@ ifeq ($(BOXSERIES)$(BOXFAMILY)$(BOXMODEL),)
   BOXMODEL = hd51
 endif
 
-include package/Makefile.in
-
 include make/environment-box.mk
 include make/environment-linux.mk
 include make/environment-build.mk
 include make/environment-image.mk
 include make/environment-update.mk
 
+include make/environment-internal.mk
 -include internal/internal.mk
 
-# defaults for the variables usually set by internal/internal.mk or
-# config.local; they make sure these variables are always defined
-NI_ADMIN ?= false
-HAS_INTERNALS ?= no
-NI_INTERNALS ?= internal
-HAS_LIBCOOLSTREAM ?= no
-NI_LIBCOOLSTREAM ?= $(empty)
+include package/Makefile.in
 
 include make/buildsystem-bootstrap.mk
 include make/buildsystem-clean.mk
