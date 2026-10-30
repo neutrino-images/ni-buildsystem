@@ -49,6 +49,8 @@ BOOTSTRAP += host-tools
 BOOTSTRAP += target-dir
 BOOTSTRAP += libs-cross
 
+# hd2 links every target package against cortex-strings (see
+# CORTEX_STRINGS_LDFLAG), so it must exist before the first one is built.
 ifeq ($(BOXSERIES),$(filter $(BOXSERIES),hd2))
   BOOTSTRAP += cortex-strings
 endif

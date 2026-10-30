@@ -31,6 +31,8 @@ ifeq ($(BOXSERIES),hd1)
 
 else ifeq ($(BOXSERIES),hd2)
   DRIVERS_BIN_DIR        = $(BOXTYPE)/$(BOXFAMILY)
+  # link the optimized string routines of cortex-strings into every binary;
+  # uClibc-ng has less optimized ones (see package/cortex-strings)
   CORTEX_STRINGS_LDFLAG  = -lcortex-strings
   GNU_TARGET_NAME        = arm-cortex-linux-uclibcgnueabi
   TARGET_OPTIMIZATION    = -O2
@@ -117,6 +119,8 @@ HOST_LDFLAGS   += -L$(HOST_DIR)/lib -Wl,-rpath,$(HOST_DIR)/lib
 TARGET_CFLAGS   = -pipe $(TARGET_OPTIMIZATION) $(TARGET_DEBUGGING) $(TARGET_ABI) $(TARGET_EXTRA_CFLAGS) $(CXX11_ABI) -I$(TARGET_includedir)
 TARGET_CPPFLAGS = $(TARGET_CFLAGS)
 TARGET_CXXFLAGS = $(TARGET_CFLAGS)
+# CORTEX_STRINGS_LDFLAG first, so the linker resolves memcpy, strlen, ...
+# from libcortex-strings.a before it gets to the C library (hd2 only)
 TARGET_LDFLAGS  = $(CORTEX_STRINGS_LDFLAG) $(TARGET_EXTRA_LDFLAGS)
 TARGET_LDFLAGS += -L$(TARGET_base_libdir) -L$(TARGET_libdir)
 TARGET_LDFLAGS += -Wl,-rpath,$(TARGET_base_libdir),-rpath,$(TARGET_libdir)

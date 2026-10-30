@@ -29,6 +29,8 @@ else
 endif
 NEUTRINO_CFLAGS += -Wno-psabi
 
+# neutrino uses own LDFLAGS instead of TARGET_LDFLAGS,
+# so add CORTEX_STRINGS_LDFLAG here too; first, as in TARGET_LDFLAGS (hd2 only)
 NEUTRINO_LDFLAGS  = $(CORTEX_STRINGS_LDFLAG)
 NEUTRINO_LDFLAGS += -L$(TARGET_base_libdir) -L$(TARGET_libdir)
 NEUTRINO_LDFLAGS += -Wl,-rpath,$(TARGET_libdir) -Wl,-rpath-link,$(TARGET_libdir)
