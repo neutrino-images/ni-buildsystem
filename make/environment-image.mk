@@ -16,7 +16,7 @@ GITREV = $(call lazy-once,GITREV,$$(shell git rev-list $(GITTAG)..HEAD --count))
 # *Must* be a four-digit number, the year (YYYY)
 IMAGE_VERSION_MAJOR = 2026
 # *Must* be a two-digit number, the month (MM)
-IMAGE_VERSION_MINOR = 10
+IMAGE_VERSION_MINOR = 11
 IMAGE_VERSION_MICRO = $(GITREV)
 
 IMAGE_VERSION = $(IMAGE_VERSION_MAJOR).$(IMAGE_VERSION_MINOR).$(IMAGE_VERSION_MICRO)
