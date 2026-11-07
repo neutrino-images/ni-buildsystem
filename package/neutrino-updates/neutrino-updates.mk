@@ -4,10 +4,16 @@
 #
 ################################################################################
 
-neutrino-update: neutrino-clean
-	$(MAKE) u-init
+NEUTRINO_UPDATE_DEPENDENCIES = libstb-hal-clean neutrino-clean
+
+neutrino-update-scripts:
+	echo "test -d /tmp/lcd/ && echo 'Updating STB ...' > /tmp/lcd/goodbye" >> $(PREINSTALL_SH)
 	echo "killall start_neutrino neutrino; sleep 5"	>> $(PREINSTALL_SH)
 	echo "sync; reboot"				>> $(POSTINSTALL_SH)
+
+neutrino-update: $(NEUTRINO_UPDATE_DEPENDENCIES)
+	$(MAKE) u-init
+	$(MAKE) neutrino-update-scripts
 	$(MAKE) neutrino
 	$(INSTALL_EXEC) -D $(TARGET_sysconfdir)/init.d/start_neutrino $(UPDATE_INST_DIR)$(sysconfdir)/init.d/start_neutrino
 	$(INSTALL_EXEC) -D $(TARGET_bindir)/neutrino $(UPDATE_INST_DIR)$(bindir)/neutrino
@@ -24,10 +30,9 @@ endif
 			UPDATE_NAME=$(UPDATE_PREFIX)-$(UPDATE_SUFFIX) \
 			UPDATE_DESC="Neutrino [$(BOXTYPE_SC)][$(BOXSERIES)] Update \(simple\)"
 
-neutrino-update-full: neutrino-clean
+neutrino-update-full: $(NEUTRINO_UPDATE_DEPENDENCIES)
 	$(MAKE) u-init
-	echo "killall start_neutrino neutrino; sleep 5"	>> $(PREINSTALL_SH)
-	echo "sync; reboot"				>> $(POSTINSTALL_SH)
+	$(MAKE) neutrino-update-scripts
 	$(MAKE) neutrino NEUTRINO_INST_DIR=$(UPDATE_INST_DIR)
 	$(INSTALL_EXEC) -D $(TARGET_sysconfdir)/init.d/start_neutrino $(UPDATE_INST_DIR)$(sysconfdir)/init.d/start_neutrino
 ifneq ($(DEBUG),yes)
