@@ -12,7 +12,7 @@ SWAGGER_UI_SITE    = https://registry.npmjs.org/swagger-ui-dist/-
 # npm archives all unpack to package/, so each needs a directory of its own
 SWAGGER_UI_EXTRACT_DIR = $(SWAGGER_UI_DIR)
 
-SWAGGER_UI_TARGET_DIR = $(SHARE_HTTPD)/ni-web/swagger/vendor
+SWAGGER_UI_TARGET_DIR = $(SHARE_HTTPD)/swagger/vendor
 # stored compressed: the server inflates for a caller that took none
 define SWAGGER_UI_INSTALL
 	$(INSTALL) -d $(SWAGGER_UI_TARGET_DIR)

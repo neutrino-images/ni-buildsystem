@@ -13,7 +13,7 @@ QRCODE_GENERATOR_SITE = https://registry.npmjs.org/qrcode-generator/-
 # npm archives all unpack to package/, so each needs a directory of its own
 QRCODE_GENERATOR_EXTRACT_DIR = $(QRCODE_GENERATOR_DIR)
 
-QRCODE_GENERATOR_TARGET_DIR = $(SHARE_HTTPD)/ni-web/vendor
+QRCODE_GENERATOR_TARGET_DIR = $(SHARE_HTTPD)/vendor
 # qrcode.mjs, not qrcode.js (UMD, no export)
 define QRCODE_GENERATOR_INSTALL
 	$(INSTALL) -d $(QRCODE_GENERATOR_TARGET_DIR)

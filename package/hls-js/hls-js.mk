@@ -14,7 +14,7 @@ HLS_JS_SITE    = https://registry.npmjs.org/hls.js/-
 # npm archives all unpack to package/, so each needs a directory of its own
 HLS_JS_EXTRACT_DIR = $(HLS_JS_DIR)
 
-HLS_JS_TARGET_DIR = $(SHARE_HTTPD)/ni-web/vendor
+HLS_JS_TARGET_DIR = $(SHARE_HTTPD)/vendor
 # the light build drops alternate audio, subtitles and encrypted media,
 # none of which these lists carry, and saves 65 kB packed; .mjs and not
 # the .js of the same name, a UMD bundle a module tag gets nothing from

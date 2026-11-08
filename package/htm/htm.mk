@@ -12,7 +12,7 @@ HTM_SITE    = https://registry.npmjs.org/htm/-
 # npm archives all unpack to package/, so each needs a directory of its own
 HTM_EXTRACT_DIR = $(HTM_DIR)
 
-HTM_TARGET_DIR = $(SHARE_HTTPD)/ni-web/vendor
+HTM_TARGET_DIR = $(SHARE_HTTPD)/vendor
 define HTM_INSTALL
 	$(INSTALL) -d $(HTM_TARGET_DIR)
 	sed -e '/^\/\/# sourceMappingURL=/d' \

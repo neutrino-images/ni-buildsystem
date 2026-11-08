@@ -12,7 +12,7 @@ PREACT_SITE    = https://registry.npmjs.org/preact/-
 # npm archives all unpack to package/, so each needs a directory of its own
 PREACT_EXTRACT_DIR = $(PREACT_DIR)
 
-PREACT_TARGET_DIR = $(SHARE_HTTPD)/ni-web/vendor
+PREACT_TARGET_DIR = $(SHARE_HTTPD)/vendor
 # preact.module.js and not preact.min.module.js: the minified one exports
 # nothing and assigns to self.preact instead
 # hooks imports the bare name "preact", which no browser resolves without

@@ -12,7 +12,7 @@ MPEGTS_JS_SITE    = https://registry.npmjs.org/mpegts.js/-
 # npm archives all unpack to package/, so each needs a directory of its own
 MPEGTS_JS_EXTRACT_DIR = $(MPEGTS_JS_DIR)
 
-MPEGTS_JS_TARGET_DIR = $(SHARE_HTTPD)/ni-web/vendor
+MPEGTS_JS_TARGET_DIR = $(SHARE_HTTPD)/vendor
 # UMD, so the page loads it with a script element when somebody presses play
 define MPEGTS_JS_INSTALL
 	$(INSTALL) -d $(MPEGTS_JS_TARGET_DIR)

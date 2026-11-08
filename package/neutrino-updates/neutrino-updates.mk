@@ -20,7 +20,7 @@ neutrino-update: $(NEUTRINO_UPDATE_DEPENDENCIES)
 	$(INSTALL_DATA) -D $(TARGET_datadir)/tuxbox/neutrino/locale/deutsch.locale $(UPDATE_INST_DIR)$(datadir)/tuxbox/neutrino/locale/deutsch.locale
 	$(INSTALL_DATA) -D $(TARGET_datadir)/tuxbox/neutrino/locale/english.locale $(UPDATE_INST_DIR)$(datadir)/tuxbox/neutrino/locale/english.locale
 	$(INSTALL) -d $(UPDATE_INST_DIR)$(datadir)/tuxbox/neutrino/httpd
-	$(INSTALL_COPY) $(TARGET_datadir)/tuxbox/neutrino/httpd/ni-web $(UPDATE_INST_DIR)$(datadir)/tuxbox/neutrino/httpd
+	$(INSTALL_COPY) $(TARGET_datadir)/tuxbox/neutrino/httpd/* $(UPDATE_INST_DIR)$(datadir)/tuxbox/neutrino/httpd
 ifneq ($(DEBUG),yes)
 	find $(UPDATE_INST_DIR)$(bindir) -type f ! -name *.sh -print0 | xargs -0 $(TARGET_STRIP) || true
 endif

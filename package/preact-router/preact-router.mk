@@ -12,7 +12,7 @@ PREACT_ROUTER_SITE    = https://registry.npmjs.org/preact-router/-
 # npm archives all unpack to package/, so each needs a directory of its own
 PREACT_ROUTER_EXTRACT_DIR = $(PREACT_ROUTER_DIR)
 
-PREACT_ROUTER_TARGETDIR = $(SHARE_HTTPD)/ni-web/vendor
+PREACT_ROUTER_TARGETDIR = $(SHARE_HTTPD)/vendor
 # the closing quote in each pattern is what keeps the two names apart, not
 # their order: without it the shorter one eats the prefix of the longer
 define PREACT_ROUTER_INSTALL
