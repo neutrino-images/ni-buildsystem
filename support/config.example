@@ -83,6 +83,12 @@ MAINTAINER = $(shell whoami)
 # off, the pages and the server that answers them are both left out
 #BS_PACKAGE_NEUTRINO_NI_WEB = y
 
+# Neutrino installs the web interface minified (~280 kB less), by esbuild,
+# which is built for the host with Go first; y on a box short of flash, n
+# everywhere else, where the pages stay readable on the box
+# needs BS_PACKAGE_NEUTRINO_NI_WEB
+#BS_PACKAGE_NEUTRINO_WEB_STRIP = n
+
 # Neutrino API keys
 #BS_PACKAGE_NEUTRINO_OMDB_API_KEY =
 #BS_PACKAGE_NEUTRINO_TMDB_API_KEY =

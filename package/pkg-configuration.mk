@@ -62,6 +62,13 @@ endif
 # neutrino: ship the new web interface
 BS_PACKAGE_NEUTRINO_NI_WEB ?= y
 
+# neutrino: install the web interface minified (builds host-esbuild)
+ifeq ($(NI_TIGHT),y)
+  BS_PACKAGE_NEUTRINO_WEB_STRIP ?= y
+else
+  BS_PACKAGE_NEUTRINO_WEB_STRIP ?= n
+endif
+
 # neutrino: let AI clients reach the box over MCP with OAuth
 ifeq ($(NI_TIGHT),y)
   BS_PACKAGE_NEUTRINO_MCP ?= n

@@ -150,6 +150,12 @@ ifeq ($(BS_PACKAGE_NEUTRINO_NI_WEB),y)
     endif
     NEUTRINO_DEPENDENCIES += hls-js
   endif
+  ifeq ($(BS_PACKAGE_NEUTRINO_WEB_STRIP),y)
+    # its JavaScript and CSS minified at install time, by esbuild
+    NEUTRINO_DEPENDENCIES += host-esbuild
+    NEUTRINO_CONF_OPTS += --enable-web-strip
+    NEUTRINO_CONF_ENV += ESBUILD=$(HOST_ESBUILD_BINARY)
+  endif
 else
   NEUTRINO_CONF_OPTS += --disable-ni-web
 endif
