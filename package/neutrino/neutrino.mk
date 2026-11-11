@@ -104,6 +104,9 @@ else
   NEUTRINO_DEPENDENCIES += graphlcd-base
   NEUTRINO_CONF_OPTS += --enable-graphlcd
 
+  NEUTRINO_DEPENDENCIES += python3
+  NEUTRINO_CONF_OPTS += --enable-python
+
   ifeq ($(BOXTYPE),armbox)
     #NEUTRINO_CONF_OPTS += --disable-arm-acc
   endif
