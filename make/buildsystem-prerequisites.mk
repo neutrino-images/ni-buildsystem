@@ -105,6 +105,7 @@ endif
 
 $(SOURCE_DIR)/$(NI_DRIVERS_BIN) \
 $(SOURCE_DIR)/$(NI_LOGO_STUFF) \
+$(SOURCE_DIR)/$(NI_NEUTRINO_MEDIATHEK_BACKEND) \
 $(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS) \
 $(SOURCE_DIR)/$(NI_OPENTHREADS) \
 $(SOURCE_DIR)/$(NI_STREAMRIPPER): | $(SOURCE_DIR)
@@ -120,6 +121,7 @@ ni-sources: $(SOURCE_DIR) \
 	$(SOURCE_DIR)/$(NI_LINUX_KERNEL) \
 	$(SOURCE_DIR)/$(NI_LOGO_STUFF) \
 	$(SOURCE_DIR)/$(NI_NEUTRINO) \
+	$(SOURCE_DIR)/$(NI_NEUTRINO_MEDIATHEK_BACKEND) \
 	$(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS) \
 	$(SOURCE_DIR)/$(NI_OFGWRITE) \
 	$(SOURCE_DIR)/$(NI_OPENTHREADS) \
@@ -140,6 +142,9 @@ ifeq ($(NI_ADMIN),true)
 	@if ! diff -q support/git-hooks/ni-neutrino-plugins-pre-push $(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS)/.git/hooks/pre-push; then \
 		$(INSTALL_EXEC) support/git-hooks/$(NI_NEUTRINO_PLUGINS)-pre-push $(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS)/.git/hooks/pre-push; \
 	fi
+	# this repo versions its hook itself in .git-hooks
+	$(CD) $(SOURCE_DIR)/$(NI_NEUTRINO_MEDIATHEK_BACKEND); \
+		git config core.hooksPath .git-hooks
 endif
 
 checkout-branches:

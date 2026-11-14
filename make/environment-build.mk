@@ -196,6 +196,7 @@ NI_FFMPEG		= ni-ffmpeg
 NI_LIBSTB_HAL		= ni-libstb-hal
 NI_LINUX_KERNEL		= ni-linux-kernel
 NI_LOGO_STUFF		= ni-logo-stuff
+NI_NEUTRINO_MEDIATHEK_BACKEND = ni-neutrino-mediathek-backend
 NI_OFGWRITE		= ni-ofgwrite
 NI_OPENTHREADS		= ni-openthreads
 NI_RTMPDUMP		= ni-rtmpdump

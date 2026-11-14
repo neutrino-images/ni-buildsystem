@@ -35,6 +35,9 @@ ifeq ($(NI_ADMIN),true)
 		git checkout master; \
 		git fetch --all; \
 		./update-tuxbox-remotes.sh
+	$(CD) $(SOURCE_DIR)/$(NI_NEUTRINO_MEDIATHEK_BACKEND); \
+		git checkout master; \
+		./update-tuxbox-remotes.sh
 endif
 
 # rebase of ffmpeg/kernel repos forces us to force push into git repo
@@ -55,6 +58,7 @@ endif
 	$(CD) $(SOURCE_DIR)/$(NI_LIBSTB_HAL); git pull
 	$(CD) $(SOURCE_DIR)/$(NI_LINUX_KERNEL); git pull --all
 	$(CD) $(SOURCE_DIR)/$(NI_LOGO_STUFF); git pull
+	$(CD) $(SOURCE_DIR)/$(NI_NEUTRINO_MEDIATHEK_BACKEND); git pull
 	$(CD) $(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS); git pull
 	$(CD) $(SOURCE_DIR)/$(NI_OFGWRITE); git pull
 	$(CD) $(SOURCE_DIR)/$(NI_OPENTHREADS); git pull
@@ -83,6 +87,7 @@ endif
 	$(CD) $(SOURCE_DIR)/$(NI_LINUX_KERNEL); git push --all
 	$(CD) $(SOURCE_DIR)/$(NI_LOGO_STUFF); git push
 	$(CD) $(SOURCE_DIR)/$(NI_NEUTRINO); git push --all
+	$(CD) $(SOURCE_DIR)/$(NI_NEUTRINO_MEDIATHEK_BACKEND); git push
 	$(CD) $(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS); git push
 	$(CD) $(SOURCE_DIR)/$(NI_OFGWRITE); git push
 	$(CD) $(SOURCE_DIR)/$(NI_OPENTHREADS); git push
@@ -104,6 +109,7 @@ endif
 	$(CD) $(SOURCE_DIR)/$(NI_LINUX_KERNEL); git status -s -b
 	$(CD) $(SOURCE_DIR)/$(NI_LOGO_STUFF); git status -s -b
 	$(CD) $(SOURCE_DIR)/$(NI_NEUTRINO); git status -s -b
+	$(CD) $(SOURCE_DIR)/$(NI_NEUTRINO_MEDIATHEK_BACKEND); git status -s -b
 	$(CD) $(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS); git status -s -b
 	$(CD) $(SOURCE_DIR)/$(NI_OFGWRITE); git status -s -b
 	$(CD) $(SOURCE_DIR)/$(NI_OPENTHREADS); git status -s -b
@@ -125,6 +131,7 @@ REPOSITORIES = \
 	$(SOURCE_DIR)/$(NI_LINUX_KERNEL) \
 	$(SOURCE_DIR)/$(NI_LOGO_STUFF) \
 	$(SOURCE_DIR)/$(NI_NEUTRINO) \
+	$(SOURCE_DIR)/$(NI_NEUTRINO_MEDIATHEK_BACKEND) \
 	$(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS) \
 	$(SOURCE_DIR)/$(NI_OFGWRITE) \
 	$(SOURCE_DIR)/$(NI_OPENTHREADS) \
