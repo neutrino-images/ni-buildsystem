@@ -16,6 +16,12 @@ update-neutrino:
 	$(CD) $(SOURCE_DIR)/$(NI_NEUTRINO); \
 		git checkout ni/coolstream; git pull; \
 		git checkout master; git pull
+ifeq ($(BS_PACKAGE_NEUTRINO_FLAVOUR),tangos)
+	$(CD) $(SOURCE_DIR)/$(TANGOS_NEUTRINO); git pull
+endif
+ifeq ($(BS_PACKAGE_NEUTRINO_FLAVOUR),tuxbox)
+	$(CD) $(SOURCE_DIR)/$(TUXBOX_NEUTRINO); git pull
+endif
 	$(MAKE) checkout-branches
 
 update-remotes:
@@ -115,6 +121,12 @@ endif
 	$(CD) $(SOURCE_DIR)/$(NI_OPENTHREADS); git status -s -b
 	$(CD) $(SOURCE_DIR)/$(NI_RTMPDUMP); git status -s -b
 	$(CD) $(SOURCE_DIR)/$(NI_STREAMRIPPER); git status -s -b
+ifeq ($(BS_PACKAGE_NEUTRINO_FLAVOUR),tangos)
+	$(CD) $(SOURCE_DIR)/$(TANGOS_NEUTRINO); git status -s -b
+endif
+ifeq ($(BS_PACKAGE_NEUTRINO_FLAVOUR),tuxbox)
+	$(CD) $(SOURCE_DIR)/$(TUXBOX_NEUTRINO); git status -s -b
+endif
 
 # -----------------------------------------------------------------------------
 
@@ -137,6 +149,15 @@ REPOSITORIES = \
 	$(SOURCE_DIR)/$(NI_OPENTHREADS) \
 	$(SOURCE_DIR)/$(NI_RTMPDUMP) \
 	$(SOURCE_DIR)/$(NI_STREAMRIPPER)
+
+ifeq ($(BS_PACKAGE_NEUTRINO_FLAVOUR),tangos)
+REPOSITORIES += \
+	$(SOURCE_DIR)/$(TANGOS_NEUTRINO)
+endif
+ifeq ($(BS_PACKAGE_NEUTRINO_FLAVOUR),tuxbox)
+REPOSITORIES += \
+	$(SOURCE_DIR)/$(TUXBOX_NEUTRINO)
+endif
 
 # -----------------------------------------------------------------------------
 

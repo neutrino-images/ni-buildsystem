@@ -34,7 +34,7 @@ NEUTRINO_PLUGINS_CONF_OPTS = \
 	--with-lua-libdir=$(libdir)/lua/$(LUA_ABIVERSION) \
 	--with-lua-datadir=$(datadir)/lua/$(LUA_ABIVERSION) \
 	\
-	--with-neutrino-source=$(SOURCE_DIR)/$(NI_NEUTRINO) \
+	--with-neutrino-source=$(SOURCE_DIR)/$(NEUTRINO_FLAVOUR) \
 	--with-neutrino-build=$(NEUTRINO_BUILD_DIR) \
 	\
 	--with-target=cdk \

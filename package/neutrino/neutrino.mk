@@ -5,9 +5,15 @@
 ################################################################################
 
 NEUTRINO_VERSION = $(BS_PACKAGE_NEUTRINO_BRANCH)
-NEUTRINO_DIR = $(NI_NEUTRINO)
-NEUTRINO_SOURCE = $(NI_NEUTRINO)
+NEUTRINO_DIR = $(NEUTRINO_FLAVOUR)
+NEUTRINO_SOURCE = $(NEUTRINO_FLAVOUR)
+ifeq ($(BS_PACKAGE_NEUTRINO_FLAVOUR),ni)
 NEUTRINO_SITE = https://github.com/neutrino-images
+else ifeq ($(BS_PACKAGE_NEUTRINO_FLAVOUR),tangos)
+NEUTRINO_SITE = $(TANGOS_GITHUB)
+else ifeq ($(BS_PACKAGE_NEUTRINO_FLAVOUR),tuxbox)
+NEUTRINO_SITE = $(TUXBOX_GITHUB)
+endif
 NEUTRINO_SITE_METHOD = ni-git
 
 NEUTRINO_DEPENDENCIES = ffmpeg freetype libcurl libdvbsi libjpeg-turbo libsigc \
@@ -104,8 +110,11 @@ else
   NEUTRINO_DEPENDENCIES += graphlcd-base
   NEUTRINO_CONF_OPTS += --enable-graphlcd
 
-  NEUTRINO_DEPENDENCIES += python3
-  NEUTRINO_CONF_OPTS += --enable-python
+  # tuxbox-neutrino has no Python API
+  ifneq ($(filter $(BS_PACKAGE_NEUTRINO_FLAVOUR),ni tangos),)
+    NEUTRINO_DEPENDENCIES += python3
+    NEUTRINO_CONF_OPTS += --enable-python
+  endif
 
   ifeq ($(BOXTYPE),armbox)
     #NEUTRINO_CONF_OPTS += --disable-arm-acc
@@ -136,40 +145,6 @@ ifeq ($(BS_PACKAGE_NEUTRINO_PIP),y)
   NEUTRINO_CONF_OPTS += --enable-pip
 endif
 
-ifeq ($(BS_PACKAGE_NEUTRINO_API_DOC),y)
-  NEUTRINO_DEPENDENCIES += swagger-ui
-else
-  NEUTRINO_CONF_OPTS += --disable-api-doc
-endif
-
-ifeq ($(BS_PACKAGE_NEUTRINO_NI_WEB),y)
-  NEUTRINO_DEPENDENCIES += libmicrohttpd
-  NEUTRINO_DEPENDENCIES += preact htm preact-router
-  ifeq ($(BS_PACKAGE_NEUTRINO_WEB_PLAYER),y)
-    # no browser decodes Layer II or AC-3 and this ffmpeg builds no AAC
-    # encoder, so a coolstream cannot feed a demuxer
-    ifneq ($(BOXTYPE),coolstream)
-      NEUTRINO_DEPENDENCIES += mpegts-js
-    endif
-    NEUTRINO_DEPENDENCIES += hls-js
-  endif
-  ifeq ($(BS_PACKAGE_NEUTRINO_WEB_STRIP),y)
-    # its JavaScript and CSS minified at install time, by esbuild
-    NEUTRINO_DEPENDENCIES += host-esbuild
-    NEUTRINO_CONF_OPTS += --enable-web-strip
-    NEUTRINO_CONF_ENV += ESBUILD=$(HOST_ESBUILD_BINARY)
-  endif
-else
-  NEUTRINO_CONF_OPTS += --disable-ni-web
-endif
-
-# outside the web server block, so configure refuses it without one
-ifeq ($(BS_PACKAGE_NEUTRINO_MCP),y)
-  NEUTRINO_CONF_OPTS += --enable-mcp
-  # the QR code the KI area draws for two-factor sign-in
-  NEUTRINO_DEPENDENCIES += qrcode-generator
-endif
-
 ifeq ($(BS_PACKAGE_NEUTRINO_AUDIODEC_FFMPEG),y)
   NEUTRINO_CONF_OPTS += --enable-ffmpegdec
 else
@@ -183,11 +158,66 @@ else
   NEUTRINO_CONF_OPTS += --enable-flac
 endif
 
-ifeq ($(BS_PACKAGE_NEUTRINO_SOFTCSA),y)
-  ifneq ($(BOXTYPE),coolstream)
-    NEUTRINO_DEPENDENCIES += libdvbcsa
-    NEUTRINO_CONF_OPTS += --enable-softcsa
+# what only ni-neutrino and its fork tangos-ni have: the web interface and
+# API docs, MCP, PythonAPI (above) and SoftCSA; tuxbox-neutrino brings its
+# own web interface
+ifneq ($(filter $(BS_PACKAGE_NEUTRINO_FLAVOUR),ni tangos),)
+
+  ifeq ($(BS_PACKAGE_NEUTRINO_API_DOC),y)
+    NEUTRINO_DEPENDENCIES += swagger-ui
+  else
+    NEUTRINO_CONF_OPTS += --disable-api-doc
   endif
+
+  ifeq ($(BS_PACKAGE_NEUTRINO_NI_WEB),y)
+    NEUTRINO_DEPENDENCIES += libmicrohttpd
+    NEUTRINO_DEPENDENCIES += preact htm preact-router
+    ifeq ($(BS_PACKAGE_NEUTRINO_WEB_PLAYER),y)
+      # no browser decodes Layer II or AC-3 and this ffmpeg builds no AAC
+      # encoder, so a coolstream cannot feed a demuxer
+      ifneq ($(BOXTYPE),coolstream)
+        NEUTRINO_DEPENDENCIES += mpegts-js
+      endif
+      NEUTRINO_DEPENDENCIES += hls-js
+    endif
+    ifeq ($(BS_PACKAGE_NEUTRINO_WEB_STRIP),y)
+      # its JavaScript and CSS minified at install time, by esbuild
+      NEUTRINO_DEPENDENCIES += host-esbuild
+      NEUTRINO_CONF_OPTS += --enable-web-strip
+      NEUTRINO_CONF_ENV += ESBUILD=$(HOST_ESBUILD_BINARY)
+    endif
+  else
+    NEUTRINO_CONF_OPTS += --disable-ni-web
+  endif
+
+  # outside the web server block, so configure refuses it without one
+  ifeq ($(BS_PACKAGE_NEUTRINO_MCP),y)
+    NEUTRINO_CONF_OPTS += --enable-mcp
+    # the QR code the KI area draws for two-factor sign-in
+    NEUTRINO_DEPENDENCIES += qrcode-generator
+  endif
+
+  ifeq ($(BS_PACKAGE_NEUTRINO_SOFTCSA),y)
+    ifneq ($(BOXTYPE),coolstream)
+      NEUTRINO_DEPENDENCIES += libdvbcsa
+      NEUTRINO_CONF_OPTS += --enable-softcsa
+    endif
+  endif
+
+endif
+
+# what tuxbox-neutrino needs on top
+ifeq ($(BS_PACKAGE_NEUTRINO_FLAVOUR),tuxbox)
+
+  # its configure asks for libpng, and on coolstream for libbluray
+  NEUTRINO_DEPENDENCIES += libpng
+  ifeq ($(BOXTYPE),coolstream)
+    NEUTRINO_DEPENDENCIES += libbluray
+  endif
+
+  # its configure would take luajit over lua, were luajit in the target
+  NEUTRINO_CONF_OPTS += --with-lua-provider=lua
+
 endif
 
 define NEUTRINO_AUTOGEN_SH
@@ -225,5 +255,8 @@ NEUTRINO_PRE_UNINSTALL_HOOKS += NEUTRINO_UNINSTALL_STARTSCRIPT
 # needed to build neutrino-bin target only
 NEUTRINO_PKG_FLAGS ?=
 
-neutrino: | $(TARGET_DIR)
+# source/ names tangos-ni and tuxbox's neutrino by their flavour, not as the
+# repos are, so the download could not clone them; the rules for them in
+# buildsystem-prerequisites.mk do, before neutrino is built
+neutrino: | $(TARGET_DIR) $(if $(filter-out ni,$(BS_PACKAGE_NEUTRINO_FLAVOUR)),$(SOURCE_DIR)/$(NEUTRINO_FLAVOUR))
 	$(call autotools-package,$(PKG_NO_EXTRACT) $(PKG_NO_PATCHES) $(if $(NEUTRINO_MISSING),$(if $(NEUTRINO_CONFIG_STATUS),$(PKG_NO_CONFIGURE))) $(call qstrip,$(NEUTRINO_PKG_FLAGS)))

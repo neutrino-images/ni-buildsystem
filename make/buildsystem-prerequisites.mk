@@ -55,6 +55,16 @@ ifeq ($(NI_ADMIN),true)
 		git fetch --all
 endif
 
+# for BS_PACKAGE_NEUTRINO_FLAVOUR = tangos
+$(SOURCE_DIR)/$(TANGOS_NEUTRINO): | $(SOURCE_DIR)
+	$(CD) $(SOURCE_DIR); \
+		git clone $(TANGOS_GITHUB)/$(TANGOS_NEUTRINO_REPO).git $(@F)
+
+# for BS_PACKAGE_NEUTRINO_FLAVOUR = tuxbox
+$(SOURCE_DIR)/$(TUXBOX_NEUTRINO): | $(SOURCE_DIR)
+	$(CD) $(SOURCE_DIR); \
+		git clone $(TUXBOX_GITHUB)/$(TUXBOX_NEUTRINO_REPO).git $(@F)
+
 ifeq ($(HAS_LIBCOOLSTREAM),yes)
 $(SOURCE_DIR)/$(NI_LIBCOOLSTREAM): | $(SOURCE_DIR)
 	$(CD) $(SOURCE_DIR); \
@@ -126,7 +136,9 @@ ni-sources: $(SOURCE_DIR) \
 	$(SOURCE_DIR)/$(NI_OFGWRITE) \
 	$(SOURCE_DIR)/$(NI_OPENTHREADS) \
 	$(SOURCE_DIR)/$(NI_RTMPDUMP) \
-	$(SOURCE_DIR)/$(NI_STREAMRIPPER)
+	$(SOURCE_DIR)/$(NI_STREAMRIPPER) \
+	$(if $(filter tangos,$(BS_PACKAGE_NEUTRINO_FLAVOUR)),$(SOURCE_DIR)/$(TANGOS_NEUTRINO)) \
+	$(if $(filter tuxbox,$(BS_PACKAGE_NEUTRINO_FLAVOUR)),$(SOURCE_DIR)/$(TUXBOX_NEUTRINO))
 
 install-git-hooks:
 ifeq ($(NI_ADMIN),true)
@@ -155,7 +167,7 @@ ifneq ($(BS_PACKAGE_FFMPEG2_BRANCH),$(empty))
 	$(CD) $(SOURCE_DIR)/$(NI_FFMPEG); git checkout $(BS_PACKAGE_FFMPEG2_BRANCH)
 endif
 	$(CD) $(SOURCE_DIR)/$(NI_LIBSTB_HAL); git checkout $(BS_PACKAGE_LIBSTB_HAL_BRANCH)
-	$(CD) $(SOURCE_DIR)/$(NI_NEUTRINO); git checkout $(BS_PACKAGE_NEUTRINO_BRANCH)
+	$(CD) $(SOURCE_DIR)/$(NEUTRINO_FLAVOUR); git checkout $(BS_PACKAGE_NEUTRINO_BRANCH)
 
 # -----------------------------------------------------------------------------
 

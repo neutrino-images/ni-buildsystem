@@ -19,6 +19,15 @@ BS_PACKAGE_FFMPEG_FFPROBE ?= y
 # ncurses: build wide-character libraries
 BS_PACKAGE_NCURSES_WCHAR ?= y
 
+# neutrino: which neutrino to build
+#  ni     - ni-neutrino from neutrino-images
+#  tangos - tangos-ni from TangoCash, a fork of ni-neutrino
+#  tuxbox - neutrino from tuxbox-neutrino
+BS_PACKAGE_NEUTRINO_FLAVOUR ?= ni
+ifeq ($(filter $(BS_PACKAGE_NEUTRINO_FLAVOUR),ni tangos tuxbox),)
+  $(error BS_PACKAGE_NEUTRINO_FLAVOUR must be ni, tangos or tuxbox, not '$(BS_PACKAGE_NEUTRINO_FLAVOUR)')
+endif
+
 # libstb-hal: branch
 BS_PACKAGE_LIBSTB_HAL_BRANCH ?=
 ifeq ($(BS_PACKAGE_LIBSTB_HAL_BRANCH),$(empty))

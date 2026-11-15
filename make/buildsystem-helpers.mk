@@ -93,7 +93,7 @@ endef
 
 changelogs:
 	$(call make-changelog) > $(STAGING_DIR)/changelog-buildsystem
-	$(CD) $(SOURCE_DIR)/$(NI_NEUTRINO); \
+	$(CD) $(SOURCE_DIR)/$(NEUTRINO_FLAVOUR); \
 		$(call make-changelog) > $(STAGING_DIR)/changelog-neutrino
 	$(CD) $(SOURCE_DIR)/$(NI_LIBSTB_HAL); \
 		$(call make-changelog) > $(STAGING_DIR)/changelog-libstb-hal
