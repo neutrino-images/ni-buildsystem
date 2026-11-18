@@ -36,9 +36,9 @@ $(SOURCE_DIR)/$(NI_NEUTRINO): | $(SOURCE_DIR)
 		git clone $(NI_GITHUB)/$(@F).git
 ifeq ($(NI_ADMIN),true)
 	$(CD) $(@); \
-		git remote add tango  $(GITHUB)/tangocash/tc-neutrino.git; \
-		git remote add tuxbox $(GITHUB)/tuxbox-neutrino/neutrino.git; \
-		git remote add ddt    $(GITHUB)/duckbox-developers/neutrino-ddt.git; \
+		git remote add --no-tags tango  $(GITHUB)/tangocash/tc-neutrino.git; \
+		git remote add --no-tags tuxbox $(GITHUB)/tuxbox-neutrino/neutrino.git; \
+		git remote add --no-tags ddt    $(GITHUB)/duckbox-developers/neutrino-ddt.git; \
 		git fetch --all
 endif
 
@@ -47,9 +47,9 @@ $(SOURCE_DIR)/$(NI_LIBSTB_HAL): | $(SOURCE_DIR)
 		git clone $(NI_GITHUB)/$(@F).git
 ifeq ($(NI_ADMIN),true)
 	$(CD) $(@); \
-		git remote add tango  $(GITHUB)/tangocash/tc-libstb-hal.git; \
-		git remote add tuxbox $(GITHUB)/tuxbox-neutrino/libstb-hal.git; \
-		git remote add ddt    $(GITHUB)/duckbox-developers/libstb-hal-ddt.git; \
+		git remote add --no-tags tango  $(GITHUB)/tangocash/tc-libstb-hal.git; \
+		git remote add --no-tags tuxbox $(GITHUB)/tuxbox-neutrino/libstb-hal.git; \
+		git remote add --no-tags ddt    $(GITHUB)/duckbox-developers/libstb-hal-ddt.git; \
 		git fetch --all
 endif
 
