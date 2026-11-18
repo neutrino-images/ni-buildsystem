@@ -202,11 +202,10 @@ NI_OPENTHREADS		= ni-openthreads
 NI_RTMPDUMP		= ni-rtmpdump
 NI_STREAMRIPPER		= ni-streamripper
 
-# for BS_PACKAGE_NEUTRINO_FLAVOUR = tc; in source/ by its flavour
+# for BS_PACKAGE_NEUTRINO_FLAVOUR = tc; named as the repo is
 TC_GITHUB		= $(GITHUB)/TangoCash
 
 TC_NEUTRINO		= tc-neutrino
-TC_NEUTRINO_REPO	= tc-neutrino
 
 # for BS_PACKAGE_NEUTRINO_FLAVOUR = tuxbox; in source/ by its flavour
 TUXBOX_GITHUB		= $(GITHUB)/tuxbox-neutrino

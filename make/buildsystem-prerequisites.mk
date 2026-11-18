@@ -56,7 +56,7 @@ endif
 # for BS_PACKAGE_NEUTRINO_FLAVOUR = tc
 $(SOURCE_DIR)/$(TC_NEUTRINO): | $(SOURCE_DIR)
 	$(CD) $(SOURCE_DIR); \
-		git clone $(TC_GITHUB)/$(TC_NEUTRINO_REPO).git $(@F)
+		git clone $(TC_GITHUB)/$(@F).git
 
 # for BS_PACKAGE_NEUTRINO_FLAVOUR = tuxbox
 $(SOURCE_DIR)/$(TUXBOX_NEUTRINO): | $(SOURCE_DIR)

@@ -255,8 +255,8 @@ NEUTRINO_PRE_UNINSTALL_HOOKS += NEUTRINO_UNINSTALL_STARTSCRIPT
 # needed to build neutrino-bin target only
 NEUTRINO_PKG_FLAGS ?=
 
-# source/ names tc-neutrino and tuxbox-neutrino by their flavour, not as the
-# repos are, so the download could not clone them; the rules for them in
-# buildsystem-prerequisites.mk do, before neutrino is built
+# source/ names tuxbox-neutrino by its flavour, not as the repo is, so the
+# download could not clone it; the rule for it in buildsystem-prerequisites.mk
+# does, before neutrino is built (tc-neutrino waits for its rule as well)
 neutrino: | $(TARGET_DIR) $(if $(filter-out ni,$(BS_PACKAGE_NEUTRINO_FLAVOUR)),$(SOURCE_DIR)/$(NEUTRINO_FLAVOUR))
 	$(call autotools-package,$(PKG_NO_EXTRACT) $(PKG_NO_PATCHES) $(if $(NEUTRINO_MISSING),$(if $(NEUTRINO_CONFIG_STATUS),$(PKG_NO_CONFIGURE))) $(call qstrip,$(NEUTRINO_PKG_FLAGS)))
