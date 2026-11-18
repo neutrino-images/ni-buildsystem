@@ -64,7 +64,7 @@ endif
 bootstrap: $(BOOTSTRAP)
 	@touch $(BOXMODEL_STAMP)
 	@$(call draw_line);
-	@$(call SUCCESS,"Bootstrapped for $(TARGET_BOX)")
+	@$(call SUCCESS,"Bootstrapped for $(TARGET_BOX) with $(NEUTRINO_FLAVOUR)")
 	@$(call draw_line);
 
 # -----------------------------------------------------------------------------
