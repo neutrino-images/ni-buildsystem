@@ -9,8 +9,8 @@ NEUTRINO_DIR = $(NEUTRINO_FLAVOUR)
 NEUTRINO_SOURCE = $(NEUTRINO_FLAVOUR)
 ifeq ($(BS_PACKAGE_NEUTRINO_FLAVOUR),ni)
 NEUTRINO_SITE = https://github.com/neutrino-images
-else ifeq ($(BS_PACKAGE_NEUTRINO_FLAVOUR),tangos)
-NEUTRINO_SITE = $(TANGOS_GITHUB)
+else ifeq ($(BS_PACKAGE_NEUTRINO_FLAVOUR),tc)
+NEUTRINO_SITE = $(TC_GITHUB)
 else ifeq ($(BS_PACKAGE_NEUTRINO_FLAVOUR),tuxbox)
 NEUTRINO_SITE = $(TUXBOX_GITHUB)
 endif
@@ -111,7 +111,7 @@ else
   NEUTRINO_CONF_OPTS += --enable-graphlcd
 
   # tuxbox-neutrino has no Python API
-  ifneq ($(filter $(BS_PACKAGE_NEUTRINO_FLAVOUR),ni tangos),)
+  ifneq ($(filter $(BS_PACKAGE_NEUTRINO_FLAVOUR),ni tc),)
     NEUTRINO_DEPENDENCIES += python3
     NEUTRINO_CONF_OPTS += --enable-python
   endif
@@ -158,10 +158,10 @@ else
   NEUTRINO_CONF_OPTS += --enable-flac
 endif
 
-# what only ni-neutrino and its fork tangos-ni have: the web interface and
+# what only ni-neutrino and its fork tc-neutrino have: the web interface and
 # API docs, MCP, PythonAPI (above) and SoftCSA; tuxbox-neutrino brings its
 # own web interface
-ifneq ($(filter $(BS_PACKAGE_NEUTRINO_FLAVOUR),ni tangos),)
+ifneq ($(filter $(BS_PACKAGE_NEUTRINO_FLAVOUR),ni tc),)
 
   ifeq ($(BS_PACKAGE_NEUTRINO_API_DOC),y)
     NEUTRINO_DEPENDENCIES += swagger-ui
@@ -255,7 +255,7 @@ NEUTRINO_PRE_UNINSTALL_HOOKS += NEUTRINO_UNINSTALL_STARTSCRIPT
 # needed to build neutrino-bin target only
 NEUTRINO_PKG_FLAGS ?=
 
-# source/ names tangos-ni and tuxbox's neutrino by their flavour, not as the
+# source/ names tc-neutrino and tuxbox-neutrino by their flavour, not as the
 # repos are, so the download could not clone them; the rules for them in
 # buildsystem-prerequisites.mk do, before neutrino is built
 neutrino: | $(TARGET_DIR) $(if $(filter-out ni,$(BS_PACKAGE_NEUTRINO_FLAVOUR)),$(SOURCE_DIR)/$(NEUTRINO_FLAVOUR))

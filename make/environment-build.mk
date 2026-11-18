@@ -202,11 +202,11 @@ NI_OPENTHREADS		= ni-openthreads
 NI_RTMPDUMP		= ni-rtmpdump
 NI_STREAMRIPPER		= ni-streamripper
 
-# for BS_PACKAGE_NEUTRINO_FLAVOUR = tangos; in source/ by its flavour
-TANGOS_GITHUB		= $(GITHUB)/TangoCash
+# for BS_PACKAGE_NEUTRINO_FLAVOUR = tc; in source/ by its flavour
+TC_GITHUB		= $(GITHUB)/TangoCash
 
-TANGOS_NEUTRINO		= tangos-neutrino
-TANGOS_NEUTRINO_REPO	= tangos-ni
+TC_NEUTRINO		= tc-neutrino
+TC_NEUTRINO_REPO	= tc-neutrino
 
 # for BS_PACKAGE_NEUTRINO_FLAVOUR = tuxbox; in source/ by its flavour
 TUXBOX_GITHUB		= $(GITHUB)/tuxbox-neutrino
@@ -217,8 +217,8 @@ TUXBOX_NEUTRINO_REPO	= neutrino
 # the neutrino in source/ that is built, by BS_PACKAGE_NEUTRINO_FLAVOUR
 ifeq ($(BS_PACKAGE_NEUTRINO_FLAVOUR),ni)
   NEUTRINO_FLAVOUR	= $(NI_NEUTRINO)
-else ifeq ($(BS_PACKAGE_NEUTRINO_FLAVOUR),tangos)
-  NEUTRINO_FLAVOUR	= $(TANGOS_NEUTRINO)
+else ifeq ($(BS_PACKAGE_NEUTRINO_FLAVOUR),tc)
+  NEUTRINO_FLAVOUR	= $(TC_NEUTRINO)
 else ifeq ($(BS_PACKAGE_NEUTRINO_FLAVOUR),tuxbox)
   NEUTRINO_FLAVOUR	= $(TUXBOX_NEUTRINO)
 endif

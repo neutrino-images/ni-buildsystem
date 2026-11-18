@@ -58,11 +58,8 @@ MAINTAINER = $(shell whoami)
 
 # Neutrino to build, always with ni-libstb-hal
 #  ni     - ni-neutrino from neutrino-images
-#  tangos - tangos-ni from TangoCash, a fork of ni-neutrino; all the
-#           ni-neutrino settings apply
-#  tuxbox - neutrino from tuxbox-neutrino; leaves out what only ni-neutrino
-#           has: its web interface, API docs, MCP, PythonAPI and SoftCSA
-#           (the settings for these do nothing then)
+#  tc     - tc-neutrino from TangoCash; a fork of ni-neutrino
+#  tuxbox - tuxbox-neutrino from Tuxbox
 #BS_PACKAGE_NEUTRINO_FLAVOUR = ni
 
 # Neutrino branch

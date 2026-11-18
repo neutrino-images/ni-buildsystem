@@ -20,12 +20,9 @@ BS_PACKAGE_FFMPEG_FFPROBE ?= y
 BS_PACKAGE_NCURSES_WCHAR ?= y
 
 # neutrino: which neutrino to build
-#  ni     - ni-neutrino from neutrino-images
-#  tangos - tangos-ni from TangoCash, a fork of ni-neutrino
-#  tuxbox - neutrino from tuxbox-neutrino
 BS_PACKAGE_NEUTRINO_FLAVOUR ?= ni
-ifeq ($(filter $(BS_PACKAGE_NEUTRINO_FLAVOUR),ni tangos tuxbox),)
-  $(error BS_PACKAGE_NEUTRINO_FLAVOUR must be ni, tangos or tuxbox, not '$(BS_PACKAGE_NEUTRINO_FLAVOUR)')
+ifeq ($(filter $(BS_PACKAGE_NEUTRINO_FLAVOUR),ni tc tuxbox),)
+  $(error BS_PACKAGE_NEUTRINO_FLAVOUR must be ni, tc or tuxbox, not '$(BS_PACKAGE_NEUTRINO_FLAVOUR)')
 endif
 
 # libstb-hal: branch
