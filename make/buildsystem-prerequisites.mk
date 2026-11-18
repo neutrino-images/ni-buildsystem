@@ -159,7 +159,9 @@ ifeq ($(NI_ADMIN),true)
 		git config core.hooksPath .git-hooks
 endif
 
-checkout-branches:
+# with BS_PACKAGE_NEUTRINO_FLAVOUR changed, its neutrino may not be cloned yet;
+# make clean comes here before anything else would clone it
+checkout-branches: | $(SOURCE_DIR)/$(NEUTRINO_FLAVOUR)
 ifneq ($(KERNEL_BRANCH),$(empty))
 	$(CD) $(SOURCE_DIR)/$(NI_LINUX_KERNEL); git checkout $(KERNEL_BRANCH)
 endif
