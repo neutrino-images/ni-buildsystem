@@ -262,7 +262,7 @@ include $(sort $(wildcard package/*/*.mk))
 BS_REBUILD_ON_MK_CHANGE ?= y
 ifeq ($(BS_REBUILD_ON_MK_CHANGE),y)
 # value of $(1) if it is defined; no warning with --warn-undefined-variables
-pkg-mk-dependencies = $(if $(filter-out undefined,$(origin $(1))),$($(1)))
+pkg-mk-dependencies = $(if $(filter-out $(origin $(1)),undefined),$($(1)))
 PKG_MK_PREREQUISITES := $(shell grep -H -o -E '^(host-)?[a-z0-9][a-z0-9._+-]*:' package/*/*.mk | \
 	awk -F: '{ split($$1, d, "/"); if ($$2 == d[2] || $$2 == "host-" d[2]) print $$2 "|" $$1 }')
 $(foreach p,$(PKG_MK_PREREQUISITES),\

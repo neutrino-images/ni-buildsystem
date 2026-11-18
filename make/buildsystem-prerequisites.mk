@@ -7,7 +7,7 @@ init: preqs crosstool bootstrap
 
 # -----------------------------------------------------------------------------
 
-preqs: download ni-sources $(if $(filter-out ni,$(BS_PACKAGE_NEUTRINO_FLAVOUR)),flavour-sources) install-git-hooks checkout-branches
+preqs: download ni-sources $(if $(filter-out $(BS_PACKAGE_NEUTRINO_FLAVOUR),ni),flavour-sources) install-git-hooks checkout-branches
 
 $(CCACHE):
 	@$(call draw_line);
@@ -129,7 +129,7 @@ ni-sources: $(SOURCE_DIR) \
 	$(GENERIC_PC) \
 	$(SOURCE_DIR)/$(NI_DRIVERS_BIN) \
 	$(SOURCE_DIR)/$(NI_FFMPEG) \
-	$(if $(filter yes,$(HAS_LIBCOOLSTREAM)),$(SOURCE_DIR)/$(NI_LIBCOOLSTREAM)) \
+	$(if $(filter $(HAS_LIBCOOLSTREAM),yes),$(SOURCE_DIR)/$(NI_LIBCOOLSTREAM)) \
 	$(SOURCE_DIR)/$(NI_LIBSTB_HAL) \
 	$(SOURCE_DIR)/$(NI_LINUX_KERNEL) \
 	$(SOURCE_DIR)/$(NI_LOGO_STUFF) \
@@ -167,7 +167,7 @@ endif
 
 # with BS_PACKAGE_NEUTRINO_FLAVOUR changed, its neutrino and libstb-hal may not
 # be cloned yet; make clean comes here before anything else would clone them
-checkout-branches: | $(if $(filter-out ni,$(BS_PACKAGE_NEUTRINO_FLAVOUR)),flavour-sources)
+checkout-branches: | $(if $(filter-out $(BS_PACKAGE_NEUTRINO_FLAVOUR),ni),flavour-sources)
 ifneq ($(KERNEL_BRANCH),$(empty))
 	$(CD) $(SOURCE_DIR)/$(NI_LINUX_KERNEL); git checkout $(KERNEL_BRANCH)
 endif

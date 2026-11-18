@@ -74,5 +74,5 @@ LIBSTB_HAL_PKG_FLAGS ?=
 # source/ names tuxbox-libstb-hal by its flavour, not as the repo is, so the
 # download could not clone it; the rule for it in buildsystem-prerequisites.mk
 # does, before libstb-hal is built (tc-libstb-hal waits for its rule as well)
-libstb-hal: | $(TARGET_DIR) $(if $(filter-out ni,$(BS_PACKAGE_NEUTRINO_FLAVOUR)),$(SOURCE_DIR)/$(LIBSTB_HAL_FLAVOUR))
+libstb-hal: | $(TARGET_DIR) $(if $(filter-out $(BS_PACKAGE_NEUTRINO_FLAVOUR),ni),$(SOURCE_DIR)/$(LIBSTB_HAL_FLAVOUR))
 	$(call autotools-package,$(PKG_NO_EXTRACT) $(PKG_NO_PATCHES) $(if $(LIBSTB_HAL_MISSING),$(if $(LIBSTB_HAL_CONFIG_STATUS),$(PKG_NO_CONFIGURE))) $(call qstrip,$(LIBSTB_HAL_PKG_FLAGS)))
