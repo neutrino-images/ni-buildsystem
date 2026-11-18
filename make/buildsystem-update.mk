@@ -17,9 +17,11 @@ update-neutrino:
 		git checkout ni/coolstream; git pull; \
 		git checkout master; git pull
 ifeq ($(BS_PACKAGE_NEUTRINO_FLAVOUR),tc)
+	$(CD) $(SOURCE_DIR)/$(TC_LIBSTB_HAL); git pull
 	$(CD) $(SOURCE_DIR)/$(TC_NEUTRINO); git pull
 endif
 ifeq ($(BS_PACKAGE_NEUTRINO_FLAVOUR),tuxbox)
+	$(CD) $(SOURCE_DIR)/$(TUXBOX_LIBSTB_HAL); git pull
 	$(CD) $(SOURCE_DIR)/$(TUXBOX_NEUTRINO); git pull
 endif
 	$(MAKE) checkout-branches
@@ -122,9 +124,11 @@ endif
 	$(CD) $(SOURCE_DIR)/$(NI_RTMPDUMP); git status -s -b
 	$(CD) $(SOURCE_DIR)/$(NI_STREAMRIPPER); git status -s -b
 ifeq ($(BS_PACKAGE_NEUTRINO_FLAVOUR),tc)
+	$(CD) $(SOURCE_DIR)/$(TC_LIBSTB_HAL); git status -s -b
 	$(CD) $(SOURCE_DIR)/$(TC_NEUTRINO); git status -s -b
 endif
 ifeq ($(BS_PACKAGE_NEUTRINO_FLAVOUR),tuxbox)
+	$(CD) $(SOURCE_DIR)/$(TUXBOX_LIBSTB_HAL); git status -s -b
 	$(CD) $(SOURCE_DIR)/$(TUXBOX_NEUTRINO); git status -s -b
 endif
 
@@ -152,10 +156,12 @@ REPOSITORIES = \
 
 ifeq ($(BS_PACKAGE_NEUTRINO_FLAVOUR),tc)
 REPOSITORIES += \
+	$(SOURCE_DIR)/$(TC_LIBSTB_HAL) \
 	$(SOURCE_DIR)/$(TC_NEUTRINO)
 endif
 ifeq ($(BS_PACKAGE_NEUTRINO_FLAVOUR),tuxbox)
 REPOSITORIES += \
+	$(SOURCE_DIR)/$(TUXBOX_LIBSTB_HAL) \
 	$(SOURCE_DIR)/$(TUXBOX_NEUTRINO)
 endif
 

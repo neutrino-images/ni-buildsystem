@@ -5,9 +5,15 @@
 ################################################################################
 
 LIBSTB_HAL_VERSION = $(BS_PACKAGE_LIBSTB_HAL_BRANCH)
-LIBSTB_HAL_DIR = $(NI_LIBSTB_HAL)
-LIBSTB_HAL_SOURCE = $(NI_LIBSTB_HAL)
+LIBSTB_HAL_DIR = $(LIBSTB_HAL_FLAVOUR)
+LIBSTB_HAL_SOURCE = $(LIBSTB_HAL_FLAVOUR)
+ifeq ($(BS_PACKAGE_NEUTRINO_FLAVOUR),ni)
 LIBSTB_HAL_SITE = https://github.com/neutrino-images
+else ifeq ($(BS_PACKAGE_NEUTRINO_FLAVOUR),tc)
+LIBSTB_HAL_SITE = $(TC_GITHUB)
+else ifeq ($(BS_PACKAGE_NEUTRINO_FLAVOUR),tuxbox)
+LIBSTB_HAL_SITE = $(TUXBOX_GITHUB)
+endif
 LIBSTB_HAL_SITE_METHOD = ni-git
 
 LIBSTB_HAL_DEPENDENCIES = ffmpeg openthreads
@@ -65,5 +71,8 @@ endef
 # needed to build neutrino-bin target only
 LIBSTB_HAL_PKG_FLAGS ?=
 
-libstb-hal: | $(TARGET_DIR)
+# source/ names tuxbox-libstb-hal by its flavour, not as the repo is, so the
+# download could not clone it; the rule for it in buildsystem-prerequisites.mk
+# does, before libstb-hal is built (tc-libstb-hal waits for its rule as well)
+libstb-hal: | $(TARGET_DIR) $(if $(filter-out ni,$(BS_PACKAGE_NEUTRINO_FLAVOUR)),$(SOURCE_DIR)/$(LIBSTB_HAL_FLAVOUR))
 	$(call autotools-package,$(PKG_NO_EXTRACT) $(PKG_NO_PATCHES) $(if $(LIBSTB_HAL_MISSING),$(if $(LIBSTB_HAL_CONFIG_STATUS),$(PKG_NO_CONFIGURE))) $(call qstrip,$(LIBSTB_HAL_PKG_FLAGS)))

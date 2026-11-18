@@ -7,7 +7,7 @@ init: preqs crosstool bootstrap
 
 # -----------------------------------------------------------------------------
 
-preqs: download ni-sources install-git-hooks checkout-branches
+preqs: download ni-sources $(if $(filter-out ni,$(BS_PACKAGE_NEUTRINO_FLAVOUR)),flavour-sources) install-git-hooks checkout-branches
 
 $(CCACHE):
 	@$(call draw_line);
@@ -54,7 +54,8 @@ ifeq ($(NI_ADMIN),true)
 endif
 
 # for BS_PACKAGE_NEUTRINO_FLAVOUR = tc
-$(SOURCE_DIR)/$(TC_NEUTRINO): | $(SOURCE_DIR)
+$(SOURCE_DIR)/$(TC_NEUTRINO) \
+$(SOURCE_DIR)/$(TC_LIBSTB_HAL): | $(SOURCE_DIR)
 	$(CD) $(SOURCE_DIR); \
 		git clone $(TC_GITHUB)/$(@F).git
 
@@ -62,6 +63,10 @@ $(SOURCE_DIR)/$(TC_NEUTRINO): | $(SOURCE_DIR)
 $(SOURCE_DIR)/$(TUXBOX_NEUTRINO): | $(SOURCE_DIR)
 	$(CD) $(SOURCE_DIR); \
 		git clone $(TUXBOX_GITHUB)/$(TUXBOX_NEUTRINO_REPO).git $(@F)
+
+$(SOURCE_DIR)/$(TUXBOX_LIBSTB_HAL): | $(SOURCE_DIR)
+	$(CD) $(SOURCE_DIR); \
+		git clone $(TUXBOX_GITHUB)/$(TUXBOX_LIBSTB_HAL_REPO).git $(@F)
 
 ifeq ($(HAS_LIBCOOLSTREAM),yes)
 $(SOURCE_DIR)/$(NI_LIBCOOLSTREAM): | $(SOURCE_DIR)
@@ -134,9 +139,12 @@ ni-sources: $(SOURCE_DIR) \
 	$(SOURCE_DIR)/$(NI_OFGWRITE) \
 	$(SOURCE_DIR)/$(NI_OPENTHREADS) \
 	$(SOURCE_DIR)/$(NI_RTMPDUMP) \
-	$(SOURCE_DIR)/$(NI_STREAMRIPPER) \
-	$(if $(filter tc,$(BS_PACKAGE_NEUTRINO_FLAVOUR)),$(SOURCE_DIR)/$(TC_NEUTRINO)) \
-	$(if $(filter tuxbox,$(BS_PACKAGE_NEUTRINO_FLAVOUR)),$(SOURCE_DIR)/$(TUXBOX_NEUTRINO))
+	$(SOURCE_DIR)/$(NI_STREAMRIPPER)
+
+# the libstb-hal and neutrino of BS_PACKAGE_NEUTRINO_FLAVOUR
+flavour-sources: \
+	$(SOURCE_DIR)/$(LIBSTB_HAL_FLAVOUR) \
+	$(SOURCE_DIR)/$(NEUTRINO_FLAVOUR)
 
 install-git-hooks:
 ifeq ($(NI_ADMIN),true)
@@ -157,16 +165,16 @@ ifeq ($(NI_ADMIN),true)
 		git config core.hooksPath .git-hooks
 endif
 
-# with BS_PACKAGE_NEUTRINO_FLAVOUR changed, its neutrino may not be cloned yet;
-# make clean comes here before anything else would clone it
-checkout-branches: | $(SOURCE_DIR)/$(NEUTRINO_FLAVOUR)
+# with BS_PACKAGE_NEUTRINO_FLAVOUR changed, its neutrino and libstb-hal may not
+# be cloned yet; make clean comes here before anything else would clone them
+checkout-branches: | $(if $(filter-out ni,$(BS_PACKAGE_NEUTRINO_FLAVOUR)),flavour-sources)
 ifneq ($(KERNEL_BRANCH),$(empty))
 	$(CD) $(SOURCE_DIR)/$(NI_LINUX_KERNEL); git checkout $(KERNEL_BRANCH)
 endif
 ifneq ($(BS_PACKAGE_FFMPEG2_BRANCH),$(empty))
 	$(CD) $(SOURCE_DIR)/$(NI_FFMPEG); git checkout $(BS_PACKAGE_FFMPEG2_BRANCH)
 endif
-	$(CD) $(SOURCE_DIR)/$(NI_LIBSTB_HAL); git checkout $(BS_PACKAGE_LIBSTB_HAL_BRANCH)
+	$(CD) $(SOURCE_DIR)/$(LIBSTB_HAL_FLAVOUR); git checkout $(BS_PACKAGE_LIBSTB_HAL_BRANCH)
 	$(CD) $(SOURCE_DIR)/$(NEUTRINO_FLAVOUR); git checkout $(BS_PACKAGE_NEUTRINO_BRANCH)
 
 # -----------------------------------------------------------------------------
@@ -174,3 +182,4 @@ endif
 PHONY += init
 PHONY += preqs
 PHONY += ni-sources
+PHONY += flavour-sources

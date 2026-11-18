@@ -56,10 +56,10 @@ MAINTAINER = $(shell whoami)
 
 # -----------------------------------------------------------------------------
 
-# Neutrino to build, always with ni-libstb-hal
-#  ni     - ni-neutrino from neutrino-images
-#  tc     - tc-neutrino from TangoCash; a fork of ni-neutrino
-#  tuxbox - tuxbox-neutrino from Tuxbox
+# Neutrino to build, with its libstb-hal
+#  ni     - ni-neutrino and ni-libstb-hal from neutrino-images
+#  tc     - tc-neutrino and tc-libstb-hal from TangoCash; forks of the NI ones
+#  tuxbox - tuxbox-neutrino and tuxbox-libstb-hal from Tuxbox
 #BS_PACKAGE_NEUTRINO_FLAVOUR = ni
 
 # Neutrino branch

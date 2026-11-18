@@ -25,10 +25,14 @@ ifeq ($(filter $(BS_PACKAGE_NEUTRINO_FLAVOUR),ni tc tuxbox),)
   $(error BS_PACKAGE_NEUTRINO_FLAVOUR must be ni, tc or tuxbox, not '$(BS_PACKAGE_NEUTRINO_FLAVOUR)')
 endif
 
-# libstb-hal: branch
+# libstb-hal: branch; tuxbox develops its libstb-hal on mpx, its master is old
 BS_PACKAGE_LIBSTB_HAL_BRANCH ?=
 ifeq ($(BS_PACKAGE_LIBSTB_HAL_BRANCH),$(empty))
-BS_PACKAGE_LIBSTB_HAL_BRANCH = master
+  ifeq ($(BS_PACKAGE_NEUTRINO_FLAVOUR),tuxbox)
+    BS_PACKAGE_LIBSTB_HAL_BRANCH = mpx
+  else
+    BS_PACKAGE_LIBSTB_HAL_BRANCH = master
+  endif
 endif
 
 # neutrino: branch

@@ -206,18 +206,25 @@ NI_STREAMRIPPER		= ni-streamripper
 TC_GITHUB		= $(GITHUB)/TangoCash
 
 TC_NEUTRINO		= tc-neutrino
+TC_LIBSTB_HAL		= tc-libstb-hal
 
 # for BS_PACKAGE_NEUTRINO_FLAVOUR = tuxbox; in source/ by its flavour
 TUXBOX_GITHUB		= $(GITHUB)/tuxbox-neutrino
 
 TUXBOX_NEUTRINO		= tuxbox-neutrino
 TUXBOX_NEUTRINO_REPO	= neutrino
+TUXBOX_LIBSTB_HAL	= tuxbox-libstb-hal
+TUXBOX_LIBSTB_HAL_REPO	= libstb-hal
 
-# the neutrino in source/ that is built, by BS_PACKAGE_NEUTRINO_FLAVOUR
+# the neutrino and libstb-hal in source/ that are built, by
+# BS_PACKAGE_NEUTRINO_FLAVOUR
 ifeq ($(BS_PACKAGE_NEUTRINO_FLAVOUR),ni)
   NEUTRINO_FLAVOUR	= $(NI_NEUTRINO)
+  LIBSTB_HAL_FLAVOUR	= $(NI_LIBSTB_HAL)
 else ifeq ($(BS_PACKAGE_NEUTRINO_FLAVOUR),tc)
   NEUTRINO_FLAVOUR	= $(TC_NEUTRINO)
+  LIBSTB_HAL_FLAVOUR	= $(TC_LIBSTB_HAL)
 else ifeq ($(BS_PACKAGE_NEUTRINO_FLAVOUR),tuxbox)
   NEUTRINO_FLAVOUR	= $(TUXBOX_NEUTRINO)
+  LIBSTB_HAL_FLAVOUR	= $(TUXBOX_LIBSTB_HAL)
 endif

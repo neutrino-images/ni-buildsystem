@@ -104,7 +104,7 @@ ifeq ($(BOXTYPE),coolstream)
 else
   NEUTRINO_DEPENDENCIES += libstb-hal
   NEUTRINO_CONF_OPTS += \
-	--with-stb-hal-includes=$(SOURCE_DIR)/$(NI_LIBSTB_HAL)/include \
+	--with-stb-hal-includes=$(SOURCE_DIR)/$(LIBSTB_HAL_FLAVOUR)/include \
 	--with-stb-hal-build=$(LIBSTB_HAL_OBJ_DIR)
 
   NEUTRINO_DEPENDENCIES += graphlcd-base
