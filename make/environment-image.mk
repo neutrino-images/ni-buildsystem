@@ -25,8 +25,8 @@ IMAGE_VERSION = $(IMAGE_VERSION_MAJOR).$(IMAGE_VERSION_MINOR).$(IMAGE_VERSION_MI
 # fixed on first use, so all names and files of one make run match
 IMAGE_DATE = $(call lazy-once,IMAGE_DATE,$$(shell date +%Y%m%d%H%M))
 
-# Image names
-IMAGE_PREFIX = ni$(IMAGE_VERSION_MAJOR)$(IMAGE_VERSION_MINOR)-$(IMAGE_DATE)
+# Image names; the flavour goes into the prefix
+IMAGE_PREFIX = ni$(IMAGE_VERSION_MAJOR)$(IMAGE_VERSION_MINOR)$(NEUTRINO_FLAVOUR_TAG)-$(IMAGE_DATE)
 IMAGE_SUFFIX = $(BOXTYPE_SC)-$(BOXMODEL)
 IMAGE_NAME   = $(IMAGE_PREFIX)-$(IMAGE_SUFFIX)
 
@@ -73,13 +73,13 @@ ifeq ($(BUILD_DOW)-$(IMAGE_SNAPSHOT),6-nightly)
 endif
 
 ifeq ($(BOXTYPE),$(filter $(BOXTYPE),coolstream))
-  IMAGE_DESC ="$(BOXNAME) [$(IMAGE_SUFFIX)][$(BOXSERIES)] $(shell echo $(BUILD_DAY) $(IMAGE_SNAPSHOT) | sed 's/.*/\u&/')"
+  IMAGE_DESC ="$(BOXNAME) [$(IMAGE_SUFFIX)][$(BOXSERIES)]$(NEUTRINO_FLAVOUR_DESC) $(shell echo $(BUILD_DAY) $(IMAGE_SNAPSHOT) | sed 's/.*/\u&/')"
 else
-  IMAGE_DESC ="$(BOXNAME) [$(IMAGE_SUFFIX)] $(shell echo $(BUILD_DAY) $(IMAGE_SNAPSHOT) | sed 's/.*/\u&/')"
+  IMAGE_DESC ="$(BOXNAME) [$(IMAGE_SUFFIX)]$(NEUTRINO_FLAVOUR_DESC) $(shell echo $(BUILD_DAY) $(IMAGE_SNAPSHOT) | sed 's/.*/\u&/')"
 endif
 
 IMAGE_SITE = $(NI_SERVER)/$(NI_SUBDIR)
-IMAGE_MD5FILE = $(IMAGE_SNAPSHOT)-$(IMAGE_SUFFIX).txt
+IMAGE_MD5FILE = $(IMAGE_SNAPSHOT)-$(IMAGE_SUFFIX)$(NEUTRINO_FLAVOUR_TAG).txt
 
 ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 hd60 hd61 multibox multiboxse))
   IMAGE_LAYOUT = subdirboot

@@ -228,3 +228,12 @@ else ifeq ($(BS_PACKAGE_NEUTRINO_FLAVOUR),tuxbox)
   NEUTRINO_FLAVOUR	= $(TUXBOX_NEUTRINO)
   LIBSTB_HAL_FLAVOUR	= $(TUXBOX_LIBSTB_HAL)
 endif
+
+# images and updates with another neutrino than ni-neutrino name it
+ifeq ($(BS_PACKAGE_NEUTRINO_FLAVOUR),ni)
+  NEUTRINO_FLAVOUR_TAG	= $(empty)
+  NEUTRINO_FLAVOUR_DESC	= $(empty)
+else
+  NEUTRINO_FLAVOUR_TAG	= -$(BS_PACKAGE_NEUTRINO_FLAVOUR)
+  NEUTRINO_FLAVOUR_DESC	= [$(BS_PACKAGE_NEUTRINO_FLAVOUR)]
+endif

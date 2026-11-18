@@ -13,7 +13,7 @@ endif
 .version: $(TARGET_DIR)/.version
 $(TARGET_DIR)/.version: | $(TARGET_DIR)
 	echo "distro=NI"							 > $(@)
-	echo "imagename=NI \o/ Neutrino-Image"					>> $(@)
+	echo "imagename=NI \o/ Neutrino-Image$(if $(NEUTRINO_FLAVOUR_DESC), $(NEUTRINO_FLAVOUR_DESC))" >> $(@)
 	echo "imagedescription=$(IMAGE_DESC)"					>> $(@)
 	echo "imageversion=$(IMAGE_VERSION)"					>> $(@)
 	echo "version=$(IMAGE_VERSION_STRING)"			 		>> $(@)
@@ -25,13 +25,28 @@ $(TARGET_DIR)/.version: | $(TARGET_DIR)
 ifeq ($(BOXTYPE),$(filter $(BOXTYPE),armbox mipsbox))
 	echo "imagedir=$(IMAGE_SUBDIR)"						>> $(@)
 endif
+# Image info shows gui as GUI;
+# neutrino and libstb-hal tell which of their states the image holds
+ifneq ($(BS_PACKAGE_NEUTRINO_FLAVOUR),ni)
+	echo "gui=$(NEUTRINO_FLAVOUR) $$(git -C $(SOURCE_DIR)/$(NEUTRINO_FLAVOUR) describe --always --tags)"	>> $(@)
+	echo "neutrino=$(NEUTRINO_FLAVOUR) $$(git -C $(SOURCE_DIR)/$(NEUTRINO_FLAVOUR) describe --always --long --tags)"	>> $(@)
+	echo "libstb-hal=$(LIBSTB_HAL_FLAVOUR) $$(git -C $(SOURCE_DIR)/$(LIBSTB_HAL_FLAVOUR) describe --always --long --tags)"	>> $(@)
+endif
 
 # -----------------------------------------------------------------------------
 
 update.urls: $(TARGET_localstatedir)/etc/update.urls
+# update.php offers ni images and updates only, and cannot tell a flavour
+# from what the box sends; an online update would bring back an image with
+# ni-neutrino. So an image of another flavour gets an empty update.urls,
+# and is updated by a local update alone.
 $(TARGET_localstatedir)/etc/update.urls: | $(TARGET_DIR)
+ifeq ($(BS_PACKAGE_NEUTRINO_FLAVOUR),ni)
 	echo "$(NI_SERVER)/update.php"				 > $(@)
 	echo "$(CHANNELLISTS_SITE)/$(CHANNELLISTS_MD5FILE)"	>> $(@)
+else
+	: > $(@)
+endif
 
 # -----------------------------------------------------------------------------
 
@@ -62,7 +77,7 @@ e2-multiboot: .version | $(TARGET_DIR)
 	echo -e "#!/bin/sh\necho Nope!" > $(TARGET_bindir)/enigma2
 	chmod 0755 $(TARGET_bindir)/enigma2
 	#
-	echo -e "NI $(IMAGE_VERSION) \\\n \\\l\n" > $(TARGET_sysconfdir)/issue
+	echo -e "NI $(IMAGE_VERSION)$(if $(NEUTRINO_FLAVOUR_DESC), $(NEUTRINO_FLAVOUR_DESC)) \\\n \\\l\n" > $(TARGET_sysconfdir)/issue
 	#
 	$(INSTALL) -d $(TARGET_datadir)
 	touch $(TARGET_datadir)/bootlogo.mvi
