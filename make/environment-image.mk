@@ -25,10 +25,10 @@ IMAGE_VERSION = $(IMAGE_VERSION_MAJOR).$(IMAGE_VERSION_MINOR).$(IMAGE_VERSION_MI
 # fixed on first use, so all names and files of one make run match
 IMAGE_DATE = $(call lazy-once,IMAGE_DATE,$$(shell date +%Y%m%d%H%M))
 
-# Image names; the flavour goes into the prefix
-IMAGE_PREFIX = ni$(IMAGE_VERSION_MAJOR)$(IMAGE_VERSION_MINOR)$(NEUTRINO_FLAVOUR_TAG)-$(IMAGE_DATE)
+# Image names; the neutrino of a flavour goes behind the suffix
+IMAGE_PREFIX = ni$(IMAGE_VERSION_MAJOR)$(IMAGE_VERSION_MINOR)-$(IMAGE_DATE)
 IMAGE_SUFFIX = $(BOXTYPE_SC)-$(BOXMODEL)
-IMAGE_NAME   = $(IMAGE_PREFIX)-$(IMAGE_SUFFIX)
+IMAGE_NAME   = $(IMAGE_PREFIX)-$(IMAGE_SUFFIX)$(NEUTRINO_FLAVOUR_TAG)
 
 # Image type
 # Release    = 0

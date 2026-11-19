@@ -27,8 +27,8 @@ endif
 	$(MAKE) u-update-bin \
 			UPDATE_DATE=$(shell date +%Y%m%d%H%M) \
 			UPDATE_MD5FILE=$(UPDATE_MD5FILE_BOXSERIES) \
-			UPDATE_NAME=$(UPDATE_PREFIX)-$(UPDATE_SUFFIX) \
-			UPDATE_DESC="$(if $(NEUTRINO_FLAVOUR_TAG),$(NEUTRINO_FLAVOUR),Neutrino) [$(BOXTYPE_SC)][$(BOXSERIES)] Update \(simple\)"
+			UPDATE_NAME=$(UPDATE_NAME) \
+			UPDATE_DESC="$(call qstrip,$(UPDATE_DESC)) \(simple\)"
 
 neutrino-update-full: $(NEUTRINO_UPDATE_DEPENDENCIES)
 	$(MAKE) u-init
@@ -45,5 +45,5 @@ endif
 	$(MAKE) u-update-bin \
 			UPDATE_DATE=$(shell date +%Y%m%d%H%M) \
 			UPDATE_MD5FILE=$(UPDATE_MD5FILE_BOXSERIES) \
-			UPDATE_NAME=$(UPDATE_PREFIX)-$(UPDATE_SUFFIX)-full \
-			UPDATE_DESC="$(if $(NEUTRINO_FLAVOUR_TAG),$(NEUTRINO_FLAVOUR),Neutrino) [$(BOXTYPE_SC)][$(BOXSERIES)] Update \(full\)"
+			UPDATE_NAME=$(UPDATE_NAME)-full \
+			UPDATE_DESC="$(call qstrip,$(UPDATE_DESC)) \(full\)"
