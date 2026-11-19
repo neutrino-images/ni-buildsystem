@@ -11,10 +11,8 @@ ifeq ($(HAS_INTERNALS),yes)
 endif
 
 update-neutrino:
-	# upgly :(
 	export GIT_MERGE_AUTOEDIT=no; \
 	$(CD) $(SOURCE_DIR)/$(NI_NEUTRINO); \
-		git checkout ni/coolstream; git pull; \
 		git checkout master; git pull
 ifeq ($(BS_PACKAGE_NEUTRINO_FLAVOUR),tc)
 	$(CD) $(SOURCE_DIR)/$(TC_LIBSTB_HAL); git pull
