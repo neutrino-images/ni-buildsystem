@@ -8,7 +8,7 @@ neutrino-initial-settings: matze-192
 	$(REMOVE)/initial
 	$(MKDIR)/initial
 	$(CHDIR)/initial; \
-		tar -xf $(STAGING_DIR)/updates/matze-192.bin; \
+		tar -xf $(UPDATE_DIR)/matze-192.bin; \
 		cp temp_inst/inst/var/tuxbox/config/zapit/* $(SOURCE_DIR)/$(NI_NEUTRINO)/data/initial/
 	P192=$$(grep -m 1 "position=\"192\"" $(SOURCE_DIR)/$(NI_NEUTRINO)/data/config/satellites.xml); \
 	P192=$$(echo $$P192); \

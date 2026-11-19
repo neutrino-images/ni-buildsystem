@@ -230,10 +230,14 @@ else ifeq ($(BS_PACKAGE_NEUTRINO_FLAVOUR),tuxbox)
 endif
 
 # images and updates with another neutrino than ni-neutrino name it
+# and keep them apart in staging/
 ifeq ($(BS_PACKAGE_NEUTRINO_FLAVOUR),ni)
   NEUTRINO_FLAVOUR_TAG	= $(empty)
   NEUTRINO_FLAVOUR_DESC	= $(empty)
 else
   NEUTRINO_FLAVOUR_TAG	= -$(NEUTRINO_FLAVOUR)
   NEUTRINO_FLAVOUR_DESC	= [$(BS_PACKAGE_NEUTRINO_FLAVOUR)]
+
+  IMAGE_DIR     := $(IMAGE_DIR)/$(NEUTRINO_FLAVOUR)
+  UPDATE_DIR    := $(UPDATE_DIR)/$(NEUTRINO_FLAVOUR)
 endif
