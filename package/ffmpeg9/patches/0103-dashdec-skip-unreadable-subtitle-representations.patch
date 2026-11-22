@@ -1,0 +1,44 @@
+dashdec: skip unreadable subtitle representations instead of failing
+
+A subtitle AdaptationSet that cannot be probed (e.g. a plain WebVTT
+file while the webvtt demuxer is disabled) made avformat_open_input()
+fail for the whole presentation. Drop such a representation with a
+warning and keep the audio/video streams.
+
+--- a/libavformat/dashdec.c
++++ b/libavformat/dashdec.c
+@@ -2231,6 +2231,8 @@ static int dash_read_header(AVFormatContext *s)
+         c->is_init_section_common_subtitle = is_common_init_section_exist(c->subtitles, c->n_subtitles);
+ 
+     for (i = 0; i < c->n_subtitles; i++) {
++        unsigned int nb_streams_before = s->nb_streams;
++
+         rep = c->subtitles[i];
+         if (i > 0 && c->is_init_section_common_subtitle) {
+             ret = copy_init_section(rep, c->subtitles[0]);
+@@ -2240,10 +2242,22 @@ static int dash_read_header(AVFormatContext *s)
+         rep->stream_index = stream_index;
+         ret = open_demux_for_component(s, rep);
+ 
+-        if (ret)
++        /* An unreadable subtitle track (e.g. a plain .vtt file without a
++         * WebVTT demuxer) must not fail the whole presentation: drop it.
++         * Only possible while it has not added an AVStream yet. */
++        if (ret == AVERROR(ENOMEM) || ret == AVERROR_EXIT ||
++            (ret < 0 && s->nb_streams != nb_streams_before))
+             return ret;
+-        if (rep->ctx->nb_streams == 0)
+-            return AVERROR_PATCHWELCOME;
++        if (ret < 0 || !rep->ctx || rep->ctx->nb_streams == 0) {
++            av_log(s, AV_LOG_WARNING, "Skipping unreadable subtitle representation '%s'\n",
++                   rep->id ? rep->id : "?");
++            free_representation(rep);
++            memmove(&c->subtitles[i], &c->subtitles[i + 1],
++                    (c->n_subtitles - i - 1) * sizeof(*c->subtitles));
++            c->n_subtitles--;
++            i--;
++            continue;
++        }
+         stream_index += rep->ctx->nb_streams;
+     }
+ 

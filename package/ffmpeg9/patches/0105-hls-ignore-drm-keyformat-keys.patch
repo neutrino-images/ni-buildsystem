@@ -1,0 +1,45 @@
+hls: ignore EXT-X-KEY tags with a DRM KEYFORMAT
+
+Only KEYFORMAT="identity" (the default) names a key file the client
+fetches itself. Multi-DRM playlists list Widevine (data: pssh) and
+FairPlay (skd://) keys side by side; hls.c used the last tag and tried
+to open the skd:// URI as key file, failing every segment. Keys of DRM
+key formats come from the DRM system via the fMP4 demuxer's
+decryption_key(s) options, so skip those tags.
+
+--- a/libavformat/hls.c
++++ b/libavformat/hls.c
+@@ -423,6 +423,7 @@ struct key_info {
+      char uri[MAX_URL_SIZE];
+      char method[11];
+      char iv[35];
++     char keyformat[64];
+ };
+ 
+ static void handle_key_args(void *context, const char *key,
+@@ -438,6 +439,9 @@ static void handle_key_args(void *context, const char *key,
+     } else if (!strncmp(key, "IV=", key_len)) {
+         *dest     =        info->iv;
+         *dest_len = sizeof(info->iv);
++    } else if (!strncmp(key, "KEYFORMAT=", key_len)) {
++        *dest     =        info->keyformat;
++        *dest_len = sizeof(info->keyformat);
+     }
+ }
+ 
+@@ -907,6 +911,15 @@ static int parse_playlist(HLSContext *c, const char *url,
+         } else if (av_strstart(line, "#EXT-X-KEY:", &ptr)) {
+             struct key_info info = {{0}};
+             ff_parse_key_value(ptr, handle_key_args, &info);
++            /* Only KEYFORMAT="identity" (the default) carries a key we can
++             * fetch ourselves. Other formats (Widevine, FairPlay, PlayReady)
++             * are delivered by a DRM system, which hands the content keys to
++             * the fMP4 demuxer (decryption_key(s)); fetching e.g. an skd://
++             * URI as key file only fails. Ignore such tags. */
++            if (info.keyformat[0] && strcmp(info.keyformat, "identity")) {
++                av_log(c->ctx, AV_LOG_VERBOSE, "Ignoring EXT-X-KEY with KEYFORMAT=%s\n", info.keyformat);
++                continue;
++            }
+             key_type = KEY_NONE;
+             has_iv = 0;
+             if (!strcmp(info.method, "AES-128"))

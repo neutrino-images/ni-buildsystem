@@ -1,0 +1,61 @@
+dashdec: honour Period@start for live SegmentTemplate@duration streams
+
+Server-side stitched VOD-as-live streams use availabilityStartTime=1970
+with a Period starting at the current wall-clock time and numbering
+restarting at startNumber there. dashdec computed the segment number
+from 1970, so every fragment 404ed.
+
+--- a/libavformat/dashdec.c
++++ b/libavformat/dashdec.c
+@@ -1442,6 +1442,19 @@ cleanup:
+     return ret;
+ }
+ 
++/* Seconds since the start of the (single) live Period on the wall clock.
++ * Server-side stitched streams (VOD-as-live, ad insertion) put the Period
++ * at a huge offset from availabilityStartTime=1970 and restart numbering
++ * at startNumber there; without this the segment number is computed from
++ * 1970 and every fragment request 404s. */
++static uint64_t live_period_elapsed(DASHContext *c, uint64_t delay)
++{
++    uint64_t now = get_current_time_in_sec();
++    uint64_t start = c->availability_start_time + c->period_start + delay;
++
++    return now > start ? now - start : 0;
++}
++
+ static int64_t calc_cur_seg_no(AVFormatContext *s, struct representation *pls)
+ {
+     DASHContext *c = s->priv_data;
+@@ -1460,7 +1473,10 @@ static int64_t calc_cur_seg_no(AVFormatContext *s, struct representation *pls)
+                 num = pls->first_seq_no;
+         } else if (pls->fragment_duration){
+             av_log(s, AV_LOG_TRACE, "in fragment_duration mode fragment_timescale = %"PRId64", presentation_timeoffset = %"PRId64"\n", pls->fragment_timescale, pls->presentation_timeoffset);
+-            if (pls->presentation_timeoffset) {
++            if (c->period_start > 0) {
++                uint64_t delay = c->suggested_presentation_delay ? c->suggested_presentation_delay : c->min_buffer_time;
++                num = pls->first_seq_no + (live_period_elapsed(c, delay) * pls->fragment_timescale) / pls->fragment_duration;
++            } else if (pls->presentation_timeoffset) {
+                 num = pls->first_seq_no + ((get_current_time_in_sec() - c->availability_start_time) * pls->fragment_timescale) / pls->fragment_duration - c->min_buffer_time;
+             } else if (c->publish_time > 0 && !c->availability_start_time) {
+                 if (c->min_buffer_time) {
+@@ -1485,7 +1501,9 @@ static int64_t calc_min_seg_no(AVFormatContext *s, struct representation *pls)
+     DASHContext *c = s->priv_data;
+     int64_t num = 0;
+ 
+-    if (c->is_live && pls->fragment_duration) {
++    if (c->is_live && pls->fragment_duration && c->period_start > 0) {
++        num = pls->first_seq_no + (live_period_elapsed(c, c->time_shift_buffer_depth) * pls->fragment_timescale) / pls->fragment_duration;
++    } else if (c->is_live && pls->fragment_duration) {
+         av_log(s, AV_LOG_TRACE, "in live mode\n");
+         num = pls->first_seq_no + (((get_current_time_in_sec() - c->availability_start_time) - c->time_shift_buffer_depth) * pls->fragment_timescale) / pls->fragment_duration;
+     } else {
+@@ -1510,6 +1528,8 @@ static int64_t calc_max_seg_no(struct representation *pls, DASHContext *c)
+                 num += pls->timelines[i]->repeat;
+             }
+         }
++    } else if (c->is_live && pls->fragment_duration && c->period_start > 0) {
++        num = pls->first_seq_no + (live_period_elapsed(c, 0) * pls->fragment_timescale) / pls->fragment_duration;
+     } else if (c->is_live && pls->fragment_duration) {
+         num = pls->first_seq_no + (((get_current_time_in_sec() - c->availability_start_time)) * pls->fragment_timescale)  / pls->fragment_duration;
+     } else if (pls->fragment_duration) {

@@ -1,0 +1,50 @@
+mov: accept an empty saiz (no auxiliary info) instead of failing
+
+Bento4 mp4encrypt --method MPEG-CBCS writes saiz with default size 0
+and sample count 0 for audio tracks that use a constant IV from tenc
+and no subsamples, plus a saio with one entry. mov_read_saiz() rejected
+that as invalid, so the whole file failed to open. Treat it as "no
+auxiliary info": samples use the default encryption settings, and the
+matching saio is ignored.
+
+--- a/libavformat/isom.h
++++ b/libavformat/isom.h
+@@ -140,6 +140,7 @@ typedef struct MOVEncryptionIndex {
+     uint8_t auxiliary_info_default_size;
+     uint64_t* auxiliary_offsets;  ///< Absolute seek position
+     size_t auxiliary_offsets_count;
++    int auxiliary_info_empty;     ///< saiz declared no aux info (size 0, count 0)
+ } MOVEncryptionIndex;
+ 
+ typedef struct MOVFragmentStreamInfo {
+--- a/libavformat/mov.c
++++ b/libavformat/mov.c
+@@ -7946,6 +7946,16 @@ static int mov_read_saiz(MOVContext *c, AVIOContext *pb, MOVAtom atom)
+     encryption_index->auxiliary_info_default_size = avio_r8(pb);
+     sample_count = avio_rb32(pb);
+ 
++    if (encryption_index->auxiliary_info_default_size == 0 && sample_count == 0) {
++        /* No auxiliary info at all, e.g. 'cbcs' audio with a constant IV from
++         * 'tenc' and no subsamples (Bento4 mp4encrypt): samples use the default
++         * encryption settings. Drop a matching 'saio' as well. */
++        encryption_index->auxiliary_info_empty = 1;
++        av_freep(&encryption_index->auxiliary_offsets);
++        encryption_index->auxiliary_offsets_count = 0;
++        return 0;
++    }
++
+     if (encryption_index->auxiliary_info_default_size == 0) {
+         if (sample_count == 0)
+             return AVERROR_INVALIDDATA;
+@@ -7993,6 +8003,11 @@ static int mov_read_saio(MOVContext *c, AVIOContext *pb, MOVAtom atom)
+         return 0;
+     }
+ 
++    if (encryption_index->auxiliary_info_empty) {
++        av_log(c->fc, AV_LOG_DEBUG, "Ignoring saio for empty saiz\n");
++        return 0;
++    }
++
+     if (encryption_index->auxiliary_offsets_count) {
+         av_log(c->fc, AV_LOG_ERROR, "Duplicate saio atom\n");
+         return AVERROR_INVALIDDATA;

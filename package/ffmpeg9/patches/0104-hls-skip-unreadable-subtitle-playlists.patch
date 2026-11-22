@@ -1,0 +1,42 @@
+hls: skip unreadable subtitle playlists instead of failing
+
+hls.c probes subtitle renditions as WebVTT; without the webvtt demuxer
+(or with fMP4 text tracks such as .cmft) the probe failed and
+avformat_open_input() gave up on the whole presentation. Leave such a
+subtitle playlist without streams and keep audio/video.
+
+--- a/libavformat/hls.c
++++ b/libavformat/hls.c
+@@ -2497,10 +2497,19 @@ static int hls_read_header(AVFormatContext *s)
+                 * so avformat_close_input shouldn't be called. If
+                 * avformat_open_input fails below, it frees and zeros the
+                 * context, so it doesn't need any special treatment like this. */
+-                av_log(s, AV_LOG_ERROR, "Error when loading first segment '%s'\n", url);
++                av_log(s, pls->is_subtitle ? AV_LOG_WARNING : AV_LOG_ERROR,
++                       "Error when loading first segment '%s'\n", url);
+                 avformat_free_context(pls->ctx);
+                 pls->ctx = NULL;
+                 av_free(url);
++                /* An unreadable subtitle rendition (e.g. no webvtt demuxer
++                 * built in, or fMP4 text tracks) must not fail the whole
++                 * presentation: leave it without streams, never needed. */
++                if (pls->is_subtitle && ret != AVERROR(ENOMEM) && ret != AVERROR_EXIT) {
++                    av_log(s, AV_LOG_WARNING, "Skipping unreadable subtitle playlist %d\n", i);
++                    pls->needed = 0;
++                    continue;
++                }
+                 return ret;
+             }
+             av_free(url);
+@@ -2533,6 +2542,11 @@ static int hls_read_header(AVFormatContext *s)
+ 
+         ret = avformat_open_input(&pls->ctx, pls->segments[0]->url, in_fmt, &options);
+         av_dict_free(&options);
++        if (ret < 0 && pls->is_subtitle && ret != AVERROR(ENOMEM) && ret != AVERROR_EXIT) {
++            av_log(s, AV_LOG_WARNING, "Skipping unreadable subtitle playlist %d\n", i);
++            pls->needed = 0;
++            continue;
++        }
+         if (ret < 0)
+             return ret;
+ 
