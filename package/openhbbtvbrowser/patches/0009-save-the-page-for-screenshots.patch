@@ -1,0 +1,118 @@
+From: Claude Code <noreply@anthropic.com>
+Subject: [PATCH] save the page for screenshots
+
+The page is shown on an EGL plane the screenshot of the receiver cannot
+read. A FIFO /tmp/openhbbtvbrowser.cmd takes requests; "screenshot" writes
+the window with its transparency to /tmp/openhbbtvbrowser.screen
+("HBBS", width, height, BGRA rows) for neutrino to lay over its picture.
+---
+diff --git a/browserwindow.cpp b/browserwindow.cpp
+index d28f71c..ea74fdd 100644
+--- a/browserwindow.cpp
++++ b/browserwindow.cpp
+@@ -3,6 +3,18 @@
+ #include "webpage.h"
+ #include "webview.h"
+ #include <QWebEngineProfile>
++#if defined(EMBEDDED_BUILD)
++#include <QCoreApplication>
++#include <QFile>
++#include <QImage>
++#include <QPixmap>
++#include <QSocketNotifier>
++#include <QtEndian>
++#include <errno.h>
++#include <fcntl.h>
++#include <sys/stat.h>
++#include <unistd.h>
++#endif
+ #if defined(HAVE_NATIVE_PLAYER)
+ #include "nativeplayer.h"
+ #include <QCoreApplication>
+@@ -26,6 +38,9 @@ BrowserWindow::BrowserWindow(QWidget *parent, Qt::WindowFlags flags)
+     m_webView->show();
+ 
+     setCentralWidget(m_webView);
++#if defined(EMBEDDED_BUILD)
++    setupCommands();
++#endif
+ 
+     connect(m_webView, &WebView::broadcastPlay, this, &BrowserWindow::broadcastPlay);
+     connect(m_webView, &WebView::broadcastStop, this, &BrowserWindow::broadcastStop);
+@@ -77,3 +92,55 @@ void BrowserWindow::setupNativePlayer(QWebEnginePage *page)
+     connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit, player, &NativePlayer::stop);
+ }
+ #endif
++
++#if defined(EMBEDDED_BUILD)
++// requests from the receiver, one per line, e.g. "screenshot": neutrino's
++// screenshot has no access to the EGL plane the page is shown on
++static const char *commandFifo = "/tmp/openhbbtvbrowser.cmd";
++static const char *screenFile = "/tmp/openhbbtvbrowser.screen";
++
++void BrowserWindow::setupCommands()
++{
++    m_commandFd = -1;
++    ::unlink(commandFifo);
++    if (::mkfifo(commandFifo, 0600) < 0)
++        return;
++    // read-write: no end of file when a writer goes away
++    m_commandFd = ::open(commandFifo, O_RDWR | O_NONBLOCK | O_CLOEXEC);
++    if (m_commandFd < 0)
++        return;
++    auto notifier = new QSocketNotifier(m_commandFd, QSocketNotifier::Read, this);
++    connect(notifier, &QSocketNotifier::activated, this, &BrowserWindow::readCommand);
++    // without a reader neutrino's open fails at once
++    connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit, []() { ::unlink(commandFifo); });
++}
++
++void BrowserWindow::readCommand()
++{
++    char buf[256];
++    ssize_t n;
++    QByteArray commands;
++    while ((n = ::read(m_commandFd, buf, sizeof(buf))) > 0)
++        commands.append(buf, int(n));
++    if (commands.contains("screenshot"))
++        saveScreen();
++}
++
++// the page as shown, with its transparency: "HBBS", width, height (32 bit
++// little endian each), then BGRA rows (QImage::Format_ARGB32, not premultiplied)
++void BrowserWindow::saveScreen()
++{
++    QImage image = grab().toImage().convertToFormat(QImage::Format_ARGB32);
++    const QString tmp = QString::fromLatin1(screenFile) + QStringLiteral(".tmp");
++    QFile file(tmp);
++    if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate))
++        return;
++    quint32 header[3] = { qToLittleEndian(quint32(0x53424248)), qToLittleEndian(quint32(image.width())),
++                          qToLittleEndian(quint32(image.height())) };
++    file.write(reinterpret_cast<const char *>(header), sizeof(header));
++    for (int y = 0; y < image.height(); ++y)
++        file.write(reinterpret_cast<const char *>(image.constScanLine(y)), image.width() * 4);
++    file.close();
++    ::rename(QFile::encodeName(tmp).constData(), screenFile);
++}
++#endif
+diff --git a/browserwindow.h b/browserwindow.h
+index 9dabd1c..bde5cf3 100644
+--- a/browserwindow.h
++++ b/browserwindow.h
+@@ -18,8 +18,16 @@ public:
+ protected Q_SLOTS:
+     void broadcastPlay();
+     void broadcastStop();
++#if defined(EMBEDDED_BUILD)
++    void readCommand();
++#endif
+ 
+ private:
++#if defined(EMBEDDED_BUILD)
++    void setupCommands();
++    void saveScreen();
++    int m_commandFd;
++#endif
+ #if defined(HAVE_NATIVE_PLAYER)
+     void setupNativePlayer(QWebEnginePage *page);
+ #endif

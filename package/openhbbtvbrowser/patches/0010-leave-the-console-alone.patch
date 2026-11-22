@@ -1,0 +1,22 @@
+From: Claude Code <noreply@anthropic.com>
+Subject: [PATCH] leave the console alone
+
+On quitting, Qt's VT handler switches the text cursor of the console
+back on (a blinking cursor top left over neutrino's OSD) and sets
+screen blanking to 15 minutes. neutrino owns the console.
+---
+diff --git a/main.cpp b/main.cpp
+index 6fb7006..ef44522 100644
+--- a/main.cpp
++++ b/main.cpp
+@@ -64,6 +64,10 @@ int main(int argc, char *argv[])
+         qputenv("QT_QPA_EGLFS_WIDTH", "1280");
+     if (qgetenv("QT_QPA_EGLFS_HEIGHT").isNull())
+         qputenv("QT_QPA_EGLFS_HEIGHT", "720");
++    // neutrino owns the console: Qt would switch its text cursor back on and
++    // set up screen blanking when the browser quits
++    if (qgetenv("QT_QPA_PRESERVE_CONSOLE_STATE").isNull())
++        qputenv("QT_QPA_PRESERVE_CONSOLE_STATE", "1");
+     // the browser runs as root, where chromium refuses its sandbox
+     if (qgetenv("QTWEBENGINE_DISABLE_SANDBOX").isNull())
+         qputenv("QTWEBENGINE_DISABLE_SANDBOX", "1");
