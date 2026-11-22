@@ -1,0 +1,73 @@
+--- a/libavformat/http.c
++++ b/libavformat/http.c
+@@ -120,6 +120,9 @@
+     int compressed;
+     z_stream inflate_stream;
+     uint8_t *inflate_buffer;
++    int auto_gzip_checked;
++    uint8_t auto_gzip_seed[2];
++    int auto_gzip_seed_len;
+ #endif /* CONFIG_ZLIB */
+     AVDictionary *chained_options;
+     /* -1 = try to send if applicable, 0 = always disabled, 1 = always enabled */
+@@ -1672,6 +1675,8 @@
+     s->end_header       = 0;
+ #if CONFIG_ZLIB
+     s->compressed       = 0;
++    s->auto_gzip_checked = 0;
++    s->auto_gzip_seed_len = 0;
+ #endif
+     if (post && !s->post_data && !send_expect_100) {
+         /* Pretend that it did work. We didn't read any header yet, since
+@@ -1845,6 +1850,51 @@
+     }
+ 
+ #if CONFIG_ZLIB
++    if (!s->compressed && !s->auto_gzip_checked) {
++        uint8_t magic[2];
++        int n = http_buf_read(h, magic, 2);
++
++        s->auto_gzip_checked = 1;
++        if (n == 2 && magic[0] == 0x1f && magic[1] == 0x8b) {
++            /* Some CDN edges gzip the body without declaring Content-Encoding:
++             * ffmpeg would then hand raw gzip bytes to the demuxer, which fails
++             * with AVERROR_INVALIDDATA. Detect the gzip magic on the first body
++             * read and enable the inflate path for it. */
++            av_log(h, AV_LOG_WARNING, "auto-detected gzip response body without Content-Encoding, enabling decompression\n");
++            if (inflateInit2(&s->inflate_stream, 32 + 15) == Z_OK &&
++                (s->inflate_buffer = av_malloc(DECOMPRESS_BUF_SIZE)) != NULL) {
++                memcpy(s->inflate_buffer, magic, 2);
++                /* Top up so the first inflate call has a real stream to process. */
++                int topup = http_buf_read(h, s->inflate_buffer + 2, DECOMPRESS_BUF_SIZE - 2);
++
++                if (topup >= 0) {
++                    s->inflate_stream.next_in = s->inflate_buffer;
++                    s->inflate_stream.avail_in = 2 + topup;
++                    s->compressed = 1;
++                } else {
++                    inflateEnd(&s->inflate_stream);
++                    av_freep(&s->inflate_buffer);
++                }
++            }
++        }
++        if (!s->compressed && n > 0) {
++            int keep = FFMIN(n, (int)sizeof(s->auto_gzip_seed));
++
++            memcpy(s->auto_gzip_seed, magic, keep);
++            s->auto_gzip_seed_len = keep;
++        }
++    }
++
++    /* Hand back the sniffed bytes first (not gzip) so the stream stays in order. */
++    if (s->auto_gzip_seed_len) {
++        int n = FFMIN(size, s->auto_gzip_seed_len);
++
++        memcpy(buf, s->auto_gzip_seed, n);
++        memmove(s->auto_gzip_seed, s->auto_gzip_seed + n, s->auto_gzip_seed_len - n);
++        s->auto_gzip_seed_len -= n;
++        return n;
++    }
++
+     if (s->compressed)
+         return http_buf_read_compressed(h, buf, size);
+ #endif /* CONFIG_ZLIB */

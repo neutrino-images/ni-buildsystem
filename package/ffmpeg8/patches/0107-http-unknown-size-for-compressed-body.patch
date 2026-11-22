@@ -1,0 +1,28 @@
+http: report an unknown size for a compressed body
+
+With Content-Encoding: gzip the Content-Length is the compressed size,
+but http_read() returns the inflated data. hls.c sizes the init section
+buffer from avio_size(), so it read only the first Content-Length bytes
+of the inflated moov (e.g. 925 of 1602 bytes) and the
+mov demuxer failed with "timescale not set". Return ENOSYS for
+AVSEEK_SIZE while the body is compressed.
+
+--- a/libavformat/http.c
++++ b/libavformat/http.c
+@@ -2151,8 +2151,15 @@
+     AVDictionary *options = NULL;
+     uint8_t discard[4096];
+ 
+-    if (whence == AVSEEK_SIZE)
++    if (whence == AVSEEK_SIZE) {
++        /* Content-Length is the size of the compressed body, not of what
++         * http_read() returns after inflating it: report the size as unknown,
++         * otherwise readers that size their buffer from avio_size() (e.g. the
++         * hls/dash init section) truncate the data. */
++        if (s->compressed)
++            return AVERROR(ENOSYS);
+         return s->filesize;
++    }
+     else if ((s->filesize == UINT64_MAX && whence == SEEK_END))
+         return AVERROR(ENOSYS);
+ 
