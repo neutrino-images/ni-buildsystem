@@ -1,0 +1,22 @@
+#!/bin/sh
+#
+# Chromium passes the Qt sysroot (the target tree) as --sysroot. That tree
+# holds the headers and libraries of the packages, but not the C library,
+# which lives in the toolchain's own sysroot. Replace --sysroot so the
+# compiler keeps its built-in one, and search the target tree after it
+# (some targets, e.g. alsa, rely on the sysroot instead of pkg-config).
+#
+n=$#
+while [ $n -gt 0 ]; do
+	a=$1
+	shift
+	n=$((n - 1))
+	case "$a" in
+		--sysroot=*)
+			r=${a#--sysroot=}
+			set -- "$@" -idirafter "$r/usr/include" -L"$r/usr/lib" -Wl,-rpath-link,"$r/usr/lib"
+			;;
+		*) set -- "$@" "$a" ;;
+	esac
+done
+exec @COMPILER@ "$@"

@@ -1,0 +1,19 @@
+From: Claude Code <noreply@anthropic.com>
+Subject: [PATCH] eglfs_nxpl: stretch the window to the display
+
+A window smaller than the video mode, e.g. 1280x720 for HbbTV, is then
+scaled to the whole screen instead of covering its top left corner.
+---
+--- a/src/plugins/platforms/eglfs/deviceintegration/eglfs_nxpl/qeglfsnxplintegration.cpp
++++ b/src/plugins/platforms/eglfs/deviceintegration/eglfs_nxpl/qeglfsnxplintegration.cpp
+@@ -44,7 +44,9 @@
+ 	win_info.y = 0;
+ 	win_info.width = size.width();
+ 	win_info.height = size.height();
+-	win_info.stretch = false;
++	/* scale the window to the display: HbbTV applications are made for a
++	   1280x720 window (QT_QPA_EGLFS_WIDTH/HEIGHT), whatever the video mode */
++	win_info.stretch = true;
+ 	win_info.clientID = 0;
+ 	win_info.zOrder = 0;
+ 

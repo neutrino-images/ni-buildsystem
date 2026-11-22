@@ -1,0 +1,40 @@
+From: Claude Code <noreply@anthropic.com>
+Subject: [PATCH] midi: do not use the alsa backend
+
+The embedded alsa-lib is built without rawmidi and hwdep.
+---
+--- a/src/3rdparty/chromium/media/midi/BUILD.gn
++++ b/src/3rdparty/chromium/media/midi/BUILD.gn
+@@ -22,9 +22,13 @@
+ import("//build/config/deprecated_default_sources_assignment_filter.gni")
+ set_sources_assignment_filter(deprecated_default_sources_assignment_filter)
+ 
++# The embedded alsa-lib is built without rawmidi and hwdep, which the ALSA
++# MIDI backend needs; use the stub instead.
++use_alsa_midi = false
++
+ # Common configuration for targets in the media/midi directory.
+ config("midi_config") {
+-  if (use_alsa && use_udev) {
++  if (use_alsa_midi && use_udev) {
+     defines = [
+       "USE_ALSA",
+       "USE_UDEV",
+@@ -161,7 +165,7 @@
+     }
+   }
+ 
+-  if (use_alsa && use_udev) {
++  if (use_alsa_midi && use_udev) {
+     deps += [
+       "//crypto",
+       "//crypto:platform",
+@@ -218,7 +222,7 @@
+     frameworks = [ "CoreMIDI.framework" ]
+   }
+ 
+-  if (use_alsa && use_udev) {
++  if (use_alsa_midi && use_udev) {
+     sources += [ "midi_manager_alsa_unittest.cc" ]
+   }
+ 

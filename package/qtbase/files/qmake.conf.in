@@ -1,0 +1,36 @@
+# Device profile of the buildsystem: compiler, flags and EGL setup come
+# from qtbase.mk through -device-option.
+
+include(../common/linux_device_pre.conf)
+
+QMAKE_CC                = $${CROSS_COMPILE}gcc
+QMAKE_CXX               = $${CROSS_COMPILE}g++
+
+QMAKE_CFLAGS           += $${NI_CFLAGS}
+QMAKE_CXXFLAGS         += $${NI_CXXFLAGS}
+QMAKE_LFLAGS           += $${NI_LDFLAGS}
+# only our own optimisation flags
+QMAKE_CFLAGS_OPTIMIZE       =
+QMAKE_CFLAGS_OPTIMIZE_DEBUG =
+QMAKE_CFLAGS_OPTIMIZE_FULL  =
+QMAKE_CFLAGS_OPTIMIZE_SIZE  =
+QMAKE_CFLAGS_DEBUG =
+QMAKE_CXXFLAGS_DEBUG =
+QMAKE_CFLAGS_RELEASE =
+QMAKE_CXXFLAGS_RELEASE =
+CONFIG                 += nostrip
+
+QMAKE_LIBS             += -lrt -lpthread -ldl
+QMAKE_CFLAGS_ISYSTEM   =
+
+# binary GLES driver without X11: generic EGL native types
+QMAKE_INCDIR_EGL        = $${NI_INCDIR}
+QMAKE_LIBS_EGL          = -lEGL
+QMAKE_INCDIR_OPENGL_ES2 = $${NI_INCDIR}
+QMAKE_LIBS_OPENGL_ES2   = -lGLESv2 -lEGL
+QMAKE_CFLAGS_EGL        = -DEGL_NO_X11 -DMESA_EGL_NO_X11_HEADERS -DQT_EGL_NO_X11
+
+@EGLFS_DEVICE@
+
+include(../common/linux_device_post.conf)
+load(qt_config)
