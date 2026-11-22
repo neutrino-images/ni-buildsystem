@@ -256,15 +256,16 @@ include $(sort $(wildcard package/*/*.mk))
 # Rebuild a package if its makefile (version, options, hooks, ...) changed
 # after the package's stamp in $(DEPS_DIR) or $(HOST_DEPS_DIR) was written.
 # Only packages whose target <pkg> or host-<pkg> is defined in
-# package/<pkg>/*.mk are covered; packages depending on it are not rebuilt.
+# package/<pkg>/*.mk or package/<group>/<pkg>/*.mk are covered; packages
+# depending on it are not rebuilt.
 # The package's <PKG>_DEPENDENCIES are added as order-only prerequisites,
 # so make also checks them, e.g. host-libffi when building host-python3.
 BS_REBUILD_ON_MK_CHANGE ?= y
 ifeq ($(BS_REBUILD_ON_MK_CHANGE),y)
 # value of $(1) if it is defined; no warning with --warn-undefined-variables
 pkg-mk-dependencies = $(if $(filter-out $(origin $(1)),undefined),$($(1)))
-PKG_MK_PREREQUISITES := $(shell grep -H -o -E '^(host-)?[a-z0-9][a-z0-9._+-]*:' package/*/*.mk | \
-	awk -F: '{ split($$1, d, "/"); if ($$2 == d[2] || $$2 == "host-" d[2]) print $$2 "|" $$1 }')
+PKG_MK_PREREQUISITES := $(shell grep -H -o -E '^(host-)?[a-z0-9][a-z0-9._+-]*:' package/*/*.mk package/*/*/*.mk 2>/dev/null | \
+	awk -F: '{ n = split($$1, d, "/"); if ($$2 == d[n-1] || $$2 == "host-" d[n-1]) print $$2 "|" $$1 }')
 $(foreach p,$(PKG_MK_PREREQUISITES),\
 	$(eval $(word 1,$(subst |, ,$(p))): $(word 2,$(subst |, ,$(p))) | \
 		$(call pkg-mk-dependencies,$(call UPPERCASE,$(word 1,$(subst |, ,$(p))))_DEPENDENCIES)))
