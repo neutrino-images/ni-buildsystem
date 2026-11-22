@@ -4,7 +4,7 @@ Subject: [PATCH] play video on the hardware decoders
 Software decoding in chromium is too slow on the receiver, and drawing
 the frames crashes in the GL driver. <video> elements with plain media
 URLs, and with them the OIPF A/V objects of the polyfill, are handed to
-neutrino instead (control API zapto?hbbtv...), which plays them on its
+neutrino instead (API /api/v1/hbbtv), which plays them on its
 decoders; the picture appears on the video plane below the page. Not in
 the browser process: the GL driver also crashes when one process draws
 with it and uses a decoder at once.
@@ -557,17 +557,45 @@ index 41e5d84..40cad58 100644
              this.dashPlayer = Object(dashjs__WEBPACK_IMPORTED_MODULE_0__["MediaPlayer"])().create();
              this.dashPlayer.initialize(this.videoElement, originalDataAttribute, true);
          } else {
+diff --git a/openhbbtvbrowser.pro b/openhbbtvbrowser.pro
+index 523118f..bd059f9 100644
+--- a/openhbbtvbrowser.pro
++++ b/openhbbtvbrowser.pro
+@@ -21,3 +21,11 @@ SOURCES += \
+     webview.cpp
+ 
+ RESOURCES += openhbbtvbrowser.qrc
++
++# <video> on the hardware decoders: neutrino plays, see nativeplayer.h
++cross_compile {
++    DEFINES += HAVE_NATIVE_PLAYER
++    QT += webchannel
++    HEADERS += nativeplayer.h
++    SOURCES += nativeplayer.cpp
++}
+diff --git a/openhbbtvbrowser.qrc b/openhbbtvbrowser.qrc
+index 1b3a803..7be5302 100644
+--- a/openhbbtvbrowser.qrc
++++ b/openhbbtvbrowser.qrc
+@@ -2,5 +2,6 @@
+     <qresource prefix="/">
+         <file alias="hbbtv_polyfill.js">js/hbbtv_polyfill.js</file>
+         <file alias="xmlhttprequest_quirks.js">js/xmlhttprequest_quirks.js</file>
++        <file alias="hbbtv_nativevideo.js">js/hbbtv_nativevideo.js</file>
+     </qresource>
+ </RCC>
 diff --git a/nativeplayer.cpp b/nativeplayer.cpp
 new file mode 100644
-index 0000000..4a7c79e
+index 0000000..660dde0
 --- /dev/null
 +++ b/nativeplayer.cpp
-@@ -0,0 +1,141 @@
+@@ -0,0 +1,156 @@
 +#include "nativeplayer.h"
 +
 +#include <QByteArray>
 +#include <QDebug>
-+#include <QUrl>
++#include <QJsonDocument>
++#include <QJsonObject>
 +
 +#include <arpa/inet.h>
 +#include <netinet/in.h>
@@ -576,13 +604,14 @@ index 0000000..4a7c79e
 +#include <sys/time.h>
 +#include <unistd.h>
 +
-+// neutrino's control API on this receiver; returns the body, or a null array
-+static QByteArray controlApi(const QByteArray &query)
++// neutrino's API on this receiver (/api/v1/hbbtv, answers the box itself);
++// returns the body of a 2xx answer, or a null array
++static QByteArray api(const char *method, const QByteArray &path, const QJsonObject &body = QJsonObject())
 +{
-+    QByteArray body;
++    QByteArray answer;
 +    int fd = socket(AF_INET, SOCK_STREAM, 0);
 +    if (fd < 0)
-+        return body;
++        return answer;
 +    struct timeval tv = { 5, 0 };
 +    setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
 +    setsockopt(fd, SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(tv));
@@ -591,7 +620,15 @@ index 0000000..4a7c79e
 +    addr.sin_port = htons(80);
 +    addr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
 +    if (::connect(fd, reinterpret_cast<struct sockaddr *>(&addr), sizeof(addr)) == 0) {
-+        QByteArray request = "GET /control/zapto?" + query + " HTTP/1.0\r\nHost: 127.0.0.1\r\n\r\n";
++        const QByteArray content = body.isEmpty() ? QByteArray() : QJsonDocument(body).toJson(QJsonDocument::Compact);
++        QByteArray request = QByteArray(method) + " /api/v1/hbbtv" + path + " HTTP/1.0\r\nHost: 127.0.0.1\r\n";
++        // the token the plugin starting the browser drew, scoped to these routes
++        static const QByteArray token = qgetenv("HBBTV_TOKEN");
++        if (!token.isEmpty())
++            request += "Authorization: Bearer " + token + "\r\n";
++        if (!content.isEmpty())
++            request += "Content-Type: application/json\r\n";
++        request += "Content-Length: " + QByteArray::number(content.size()) + "\r\n\r\n" + content;
 +        if (::write(fd, request.constData(), request.size()) == request.size()) {
 +            QByteArray response;
 +            char buf[1024];
@@ -599,12 +636,14 @@ index 0000000..4a7c79e
 +            while ((n = ::read(fd, buf, sizeof(buf))) > 0)
 +                response.append(buf, int(n));
 +            int split = response.indexOf("\r\n\r\n");
-+            if (response.contains(" 200 ") && split >= 0)
-+                body = response.mid(split + 4).trimmed();
++            if (response.startsWith("HTTP/1.") && response.mid(9, 1) == "2" && split >= 0)
++                answer = response.mid(split + 4).trimmed();
++            else
++                qDebug() << "[native]" << method << path << response.left(response.indexOf("\r\n"));
 +        }
 +    }
 +    ::close(fd);
-+    return body;
++    return answer;
 +}
 +
 +NativePlayer::NativePlayer(QObject *parent)
@@ -625,8 +664,10 @@ index 0000000..4a7c79e
 +{
 +    stop();
 +    qDebug() << "[native] play" << url << startMs;
-+    QByteArray query = "hbbtvplay&url=" + QUrl::toPercentEncoding(url) + "&start=" + QByteArray::number(startMs);
-+    if (controlApi(query).isNull()) {
++    QJsonObject body;
++    body.insert(QStringLiteral("url"), url);
++    body.insert(QStringLiteral("start"), startMs);
++    if (api("POST", "/play", body).isNull()) {
 +        Q_EMIT stateChanged(QStringLiteral("error"), QStringLiteral("player not available"));
 +        return;
 +    }
@@ -640,12 +681,12 @@ index 0000000..4a7c79e
 +{
 +    if (!m_active)
 +        return;
-+    const QList<QByteArray> status = controlApi("hbbtvstatus").split(' ');
-+    if (status.size() < 3)
++    const QJsonObject status = QJsonDocument::fromJson(api("GET", "")).object();
++    if (!status.contains(QStringLiteral("state")))
 +        return;
-+    const QString state = QString::fromLatin1(status.at(0));
-+    const int position = status.at(1).toInt();
-+    const int duration = status.at(2).toInt();
++    const QString state = status.value(QStringLiteral("state")).toString();
++    const int position = status.value(QStringLiteral("position")).toInt();
++    const int duration = status.value(QStringLiteral("duration")).toInt();
 +
 +    if (state == QLatin1String("ended") || state == QLatin1String("error") || state == QLatin1String("idle")) {
 +        finish(state == QLatin1String("idle") ? QStringLiteral("ended") : state);
@@ -665,27 +706,28 @@ index 0000000..4a7c79e
 +void NativePlayer::pause()
 +{
 +    if (m_active)
-+        controlApi("hbbtvpause");
++        api("POST", "/pause");
 +}
 +
 +void NativePlayer::resume()
 +{
 +    if (m_active)
-+        controlApi("hbbtvresume");
++        api("POST", "/resume");
 +}
 +
 +void NativePlayer::seek(int positionMs)
 +{
 +    if (m_active)
-+        controlApi("hbbtvseek&pos=" + QByteArray::number(positionMs));
++        api("POST", "/seek", QJsonObject { { QStringLiteral("position"), positionMs } });
 +}
 +
 +void NativePlayer::setWindow(int x, int y, int width, int height, int pageWidth, int pageHeight)
 +{
 +    if (m_active)
-+        controlApi("hbbtvwindow&x=" + QByteArray::number(x) + "&y=" + QByteArray::number(y)
-+                   + "&w=" + QByteArray::number(width) + "&h=" + QByteArray::number(height)
-+                   + "&pw=" + QByteArray::number(pageWidth) + "&ph=" + QByteArray::number(pageHeight));
++        api("POST", "/window", QJsonObject {
++            { QStringLiteral("x"), x }, { QStringLiteral("y"), y },
++            { QStringLiteral("width"), width }, { QStringLiteral("height"), height },
++            { QStringLiteral("page_width"), pageWidth }, { QStringLiteral("page_height"), pageHeight } });
 +}
 +
 +void NativePlayer::stop()
@@ -700,13 +742,13 @@ index 0000000..4a7c79e
 +    m_active = false;
 +    m_state.clear();
 +    // also after the end: neutrino gets live TV back with the stop
-+    controlApi("hbbtvstop");
++    api("POST", "/stop");
 +    qDebug() << "[native]" << state << info;
 +    Q_EMIT stateChanged(state, info);
 +}
 diff --git a/nativeplayer.h b/nativeplayer.h
 new file mode 100644
-index 0000000..ed8801d
+index 0000000..ba54ae8
 --- /dev/null
 +++ b/nativeplayer.h
 @@ -0,0 +1,46 @@
@@ -719,7 +761,7 @@ index 0000000..ed8801d
 +
 +// plays <video> sources on the hardware decoders of the receiver instead of
 +// decoding them in software in chromium: neutrino plays the stream (control
-+// API zapto?hbbtv...), the picture appears on the video plane below the
++// API /api/v1/hbbtv), the picture appears on the video plane below the
 +// transparent page. Not in this process: the GL driver of the receiver
 +// crashes when one process draws with it and uses a decoder at once.
 +class NativePlayer : public QObject
@@ -756,30 +798,3 @@ index 0000000..ed8801d
 +};
 +
 +#endif // NATIVEPLAYER_H
-diff --git a/openhbbtvbrowser.pro b/openhbbtvbrowser.pro
-index 523118f..bd059f9 100644
---- a/openhbbtvbrowser.pro
-+++ b/openhbbtvbrowser.pro
-@@ -21,3 +21,11 @@ SOURCES += \
-     webview.cpp
- 
- RESOURCES += openhbbtvbrowser.qrc
-+
-+# <video> on the hardware decoders: neutrino plays, see nativeplayer.h
-+cross_compile {
-+    DEFINES += HAVE_NATIVE_PLAYER
-+    QT += webchannel
-+    HEADERS += nativeplayer.h
-+    SOURCES += nativeplayer.cpp
-+}
-diff --git a/openhbbtvbrowser.qrc b/openhbbtvbrowser.qrc
-index 1b3a803..7be5302 100644
---- a/openhbbtvbrowser.qrc
-+++ b/openhbbtvbrowser.qrc
-@@ -2,5 +2,6 @@
-     <qresource prefix="/">
-         <file alias="hbbtv_polyfill.js">js/hbbtv_polyfill.js</file>
-         <file alias="xmlhttprequest_quirks.js">js/xmlhttprequest_quirks.js</file>
-+        <file alias="hbbtv_nativevideo.js">js/hbbtv_nativevideo.js</file>
-     </qresource>
- </RCC>

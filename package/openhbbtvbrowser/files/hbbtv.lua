@@ -80,11 +80,19 @@ local function startBrowser(ait, app)
 		cmd = cmd .. " --onid " .. ait.onid .. " --tsid " .. ait.tsid .. " --sid " .. ait.sid
 	end
 	print("[hbbtv] " .. cmd)
+	-- the browser drives the media of its pages through neutrino's API: a
+	-- token good for that only, for as long as a web session (not logged)
+	local token = n.HbbtvToken and n:HbbtvToken()
+	if token then
+		cmd = "HBBTV_TOKEN=" .. token .. " " .. cmd
+	end
 	-- blocks until the browser quits (MENU or POWER on the remote)
 	os.execute(cmd .. " > " .. LOG_FILE .. " 2>&1")
 	-- neutrino plays the videos of the application; stop one the browser
 	-- left behind, which also brings live TV back (no-op otherwise)
-	os.execute("wget -q -O /dev/null 'http://127.0.0.1/control/zapto?hbbtvstop'")
+	os.execute("wget -q -O /dev/null --post-data ''"
+		.. (token and (" --header 'Authorization: Bearer " .. token .. "'") or "")
+		.. " 'http://127.0.0.1/api/v1/hbbtv/stop'")
 	drainInput()
 end
 
