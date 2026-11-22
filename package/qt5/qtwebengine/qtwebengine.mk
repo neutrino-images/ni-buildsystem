@@ -5,15 +5,52 @@
 ################################################################################
 
 QTWEBENGINE_VERSION = $(QT5_VERSION)
-QTWEBENGINE_DIR = qtwebengine-everywhere-src-$(QTWEBENGINE_VERSION)
-QTWEBENGINE_SOURCE = qtwebengine-everywhere-opensource-src-$(QTWEBENGINE_VERSION).tar.xz
-QTWEBENGINE_SITE = $(QT5_SITE)
+QTWEBENGINE_DIR = qtwebengine-v$(QTWEBENGINE_VERSION)-lts
+QTWEBENGINE_SOURCE = qtwebengine-v$(QTWEBENGINE_VERSION)-lts.tar.bz2
+QTWEBENGINE_SITE = $(QT5_SITE)/qtwebengine/-/archive/v$(QTWEBENGINE_VERSION)-lts
 
-# host: python 2.7 (host-python2), nodejs, gperf, bison, flex, ninja, the
+# src/3rdparty is a submodule, the archive of the tag lacks it: chromium
+# (and gn) of KDE's branch, the commit buildroot uses for 5.15.19
+QTWEBENGINE_CHROMIUM_VERSION = 6d29e9cfcfffa7632cc3858ceaf8940677ba9c91
+QTWEBENGINE_CHROMIUM_SOURCE = qtwebengine-chromium-$(QTWEBENGINE_CHROMIUM_VERSION).tar.bz2
+QTWEBENGINE_CHROMIUM_SITE = $(QT5_SITE)/qtwebengine-chromium/-/archive/$(QTWEBENGINE_CHROMIUM_VERSION)
+
+# the catapult of that chromium is python 2 only; a later one runs with
+# python 3 (as buildroot)
+QTWEBENGINE_CATAPULT_VERSION = 7534569f99827c0ed4df818254ba7daca4606bca
+QTWEBENGINE_CATAPULT_SOURCE = qt5webengine-chromium-catapult-$(QTWEBENGINE_CATAPULT_VERSION).tar.gz
+QTWEBENGINE_CATAPULT_SITE = https://chromium.googlesource.com/catapult/+archive
+
+define QTWEBENGINE_DOWNLOAD_CHROMIUM
+	if [ ! -f $(DL_DIR)/$(QTWEBENGINE_CHROMIUM_SOURCE) ]; then \
+		$(GET_ARCHIVE) $(DL_DIR) $(QTWEBENGINE_CHROMIUM_SITE)/$(QTWEBENGINE_CHROMIUM_SOURCE); \
+	fi
+	if [ ! -f $(DL_DIR)/$(QTWEBENGINE_CATAPULT_SOURCE) ]; then \
+		wget --no-check-certificate -t3 -T60 -O $(DL_DIR)/$(QTWEBENGINE_CATAPULT_SOURCE).part \
+			$(QTWEBENGINE_CATAPULT_SITE)/$(QTWEBENGINE_CATAPULT_VERSION).tar.gz && \
+		mv $(DL_DIR)/$(QTWEBENGINE_CATAPULT_SOURCE).part $(DL_DIR)/$(QTWEBENGINE_CATAPULT_SOURCE); \
+	fi
+endef
+QTWEBENGINE_PRE_DOWNLOAD_HOOKS += QTWEBENGINE_DOWNLOAD_CHROMIUM
+
+# before the patches, they touch chromium too
+define QTWEBENGINE_EXTRACT_CHROMIUM
+	rm -rf $(PKG_BUILD_DIR)/src/3rdparty
+	$(INSTALL) -d $(PKG_BUILD_DIR)/src/3rdparty
+	tar -C $(PKG_BUILD_DIR)/src/3rdparty --strip-components=1 \
+		-xjf $(DL_DIR)/$(QTWEBENGINE_CHROMIUM_SOURCE)
+	rm -rf $(PKG_BUILD_DIR)/src/3rdparty/chromium/third_party/catapult
+	$(INSTALL) -d $(PKG_BUILD_DIR)/src/3rdparty/chromium/third_party/catapult
+	tar -C $(PKG_BUILD_DIR)/src/3rdparty/chromium/third_party/catapult \
+		-xzf $(DL_DIR)/$(QTWEBENGINE_CATAPULT_SOURCE)
+endef
+QTWEBENGINE_PRE_PATCH_HOOKS += QTWEBENGINE_EXTRACT_CHROMIUM
+
+# host: python 3 (host-python3), nodejs, gperf, bison, flex, ninja, the
 # host dev packages of the README and a 32-bit capable g++ (g++-multilib)
 # for the v8 snapshot of 32-bit ARM
 QTWEBENGINE_DEPENDENCIES = \
-	host-python2 \
+	host-python3 \
 	qtdeclarative qtwebchannel \
 	nss dbus ffmpeg opus libwebp alsa-lib \
 	fontconfig freetype harfbuzz libpng libjpeg-turbo zlib
@@ -26,7 +63,8 @@ QTWEBENGINE_WRAP_DIR = $(PKG_BUILD_DIR)/cross-wrapper
 
 # the wrappers carry the target compiler names and come first in PATH, so
 # only the target toolchain goes through them, the host one does not;
-# python2 there is what configure looks for
+# python2, python3 and python are searched in that order by configure:
+# the host python 3 is found first (no python2 on the host)
 QTWEBENGINE_ENV = \
 	PATH=$(QTWEBENGINE_WRAP_DIR):$(PATH) \
 	PKG_CONFIG="$(PKG_CONFIG)" \
@@ -38,7 +76,7 @@ QTWEBENGINE_ENV = \
 # CC_host/CXX_host: host compiler of the host and gn toolchains (the
 # host toolchain patch takes them from qmake, as OE passes them)
 QTWEBENGINE_QMAKE_OPTS = \
-	QMAKE_PYTHON2=$(HOST_PYTHON2_BINARY) \
+	QMAKE_PYTHON2=$(HOST_PYTHON_BINARY) \
 	CC_host=gcc \
 	CXX_host=g++ \
 	-- \
@@ -82,7 +120,8 @@ define QTWEBENGINE_CROSS_WRAPPER
 		chmod 755 $(QTWEBENGINE_WRAP_DIR)/$$c; \
 	done
 	$(INSTALL_EXEC) $(PKG_FILES_DIR)/host-pkg-config.in $(QTWEBENGINE_WRAP_DIR)/host-pkg-config
-	ln -sf $(HOST_PYTHON2_BINARY) $(QTWEBENGINE_WRAP_DIR)/python2
+	ln -sf $(HOST_PYTHON_BINARY) $(QTWEBENGINE_WRAP_DIR)/python3
+	ln -sf $(HOST_PYTHON_BINARY) $(QTWEBENGINE_WRAP_DIR)/python
 endef
 QTWEBENGINE_PRE_CONFIGURE_HOOKS += QTWEBENGINE_CROSS_WRAPPER
 
@@ -110,6 +149,8 @@ define QTWEBENGINE_INSTALL_CMDS
 	$(CD) $(PKG_BUILD_DIR); \
 		$(QTWEBENGINE_ENV) $(MAKE) install
 endef
+
+QTWEBENGINE_PRE_CONFIGURE_HOOKS += QT5_SYNC_QT_HEADERS
 
 qtwebengine: | $(TARGET_DIR)
 	$(call generic-package)

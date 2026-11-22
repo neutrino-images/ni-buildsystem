@@ -4,10 +4,11 @@
 #
 ################################################################################
 
-QTBASE_VERSION = $(QT5_VERSION)
-QTBASE_DIR = qtbase-everywhere-src-$(QTBASE_VERSION)
-QTBASE_SOURCE = qtbase-everywhere-opensource-src-$(QTBASE_VERSION).tar.xz
-QTBASE_SITE = $(QT5_SITE)
+# the 5.15.19 LTS state of KDE's branch (as buildroot)
+QTBASE_VERSION = fbed962c3195ab3952fa54d40e012ad1a4fdc42b
+QTBASE_DIR = qtbase-$(QTBASE_VERSION)
+QTBASE_SOURCE = qtbase-$(QTBASE_VERSION).tar.bz2
+QTBASE_SITE = $(QT5_SITE)/qtbase/-/archive/$(QTBASE_VERSION)
 
 QTBASE_DEPENDENCIES = zlib openssl freetype fontconfig harfbuzz libpng libjpeg-turbo
 
@@ -23,6 +24,8 @@ endif
 
 QTBASE_MKSPEC_DIR = $(PKG_BUILD_DIR)/mkspecs/devices/linux-nibuild-g++
 
+# -no-libudev: the image runs mdev; libudev-zero (there for chromium) makes
+# the udev device discovery of evdev/eglfs crash at start (pthread_join)
 QTBASE_CONF_OPTS = \
 	-v \
 	-prefix $(prefix) \
@@ -45,6 +48,7 @@ QTBASE_CONF_OPTS = \
 	-nomake tests -nomake examples \
 	-no-iconv -no-icu -no-dbus -no-glib -no-cups -no-gtk \
 	-no-journald -no-syslog -no-zstd -no-tslib -no-libinput \
+	-no-libudev \
 	-no-xcb -no-kms -no-gbm -no-directfb -no-feature-vulkan \
 	-system-zlib -qt-pcre -system-freetype -system-harfbuzz \
 	-system-libpng -system-libjpeg -fontconfig \
@@ -69,6 +73,8 @@ define QTBASE_INSTALL_CMDS
 	$(CD) $(PKG_BUILD_DIR); \
 		$(TARGET_MAKE_ENV) $(MAKE) install
 endef
+
+QTBASE_PRE_CONFIGURE_HOOKS += QT5_SYNC_QT_HEADERS
 
 qtbase: | $(TARGET_DIR)
 	$(call generic-package)
