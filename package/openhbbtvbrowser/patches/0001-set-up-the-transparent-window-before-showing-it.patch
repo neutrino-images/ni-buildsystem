@@ -1,0 +1,23 @@
+From: Claude Code <noreply@anthropic.com>
+Subject: [PATCH] set up the transparent window before showing it
+
+On eglfs the window surface and the backing store are created when the
+window is shown. With the attributes set afterwards the backing store is
+opaque and covers the video: the screen stays black around the page.
+---
+--- a/main.cpp
++++ b/main.cpp
+@@ -137,10 +137,12 @@
+ 
+     auto window = new BrowserWindow();
+ #if defined(EMBEDDED_BUILD)
+-    window->showFullScreen();
++    // before the window is shown: on eglfs the surface and the backing
++    // store are created on show, an opaque backing store hides the video
+     window->setWindowFlags(Qt::FramelessWindowHint);
+     window->setAttribute(Qt::WA_TranslucentBackground);
+     window->setStyleSheet("background: transparent;");
++    window->showFullScreen();
+ #else
+     window->resize(1280, 720);
+ #endif

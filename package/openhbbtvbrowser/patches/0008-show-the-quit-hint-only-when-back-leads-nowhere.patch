@@ -1,0 +1,82 @@
+From: Claude Code <noreply@anthropic.com>
+Subject: [PATCH] show the quit hint only when back leads nowhere
+
+HbbTV applications are single pages without a history, so the hint came
+up on almost every back. Back goes to the application first (handled if
+it cancels the key), then to the browser history; only with neither the
+hint appears, and it names the key that quits: MENU.
+---
+diff --git a/webview.cpp b/webview.cpp
+index 05996c5..02a9541 100644
+--- a/webview.cpp
++++ b/webview.cpp
+@@ -14,7 +14,7 @@ WebView::WebView(QWidget *parent)
+ {
+     QScreen *screen = QGuiApplication::primaryScreen();
+     QRect screenGeometry = screen->geometry();
+-    m_quitMsg->setText("Press Power Key to Quit");
++    m_quitMsg->setText("Press MENU to quit");
+     m_quitMsg->setGeometry(0, 0, 480, 120);
+     m_quitMsg->setAlignment(Qt::AlignCenter);
+     m_quitMsg->setStyleSheet("background: black; color: white; font: 24pt;");
+@@ -134,21 +134,9 @@ void WebView::setScriptDebugging(const QString &scriptDebugging)
+ 
+ void WebView::sendKeyEvent(const int &keyCode)
+ {
+-    if (keyCode == VirtualKey::VK_BACK) {
+-        if (!page()->history()->canGoBack()) {
+-            if (!m_quitMsgStatus) {
+-                m_quitMsg->show();
+-                m_quitMsgStatus = 1;
+-            } else {
+-                m_quitMsg->hide();
+-                m_quitMsgStatus = 0;
+-            }
+-        }
+-    } else {
+-        if (m_quitMsgStatus) {
+-            m_quitMsg->hide();
+-            m_quitMsgStatus = 0;
+-        }
++    if (keyCode != VirtualKey::VK_BACK && m_quitMsgStatus) {
++        m_quitMsg->hide();
++        m_quitMsgStatus = 0;
+     }
+ 
+     QMetaEnum metaEnum = QMetaEnum::fromType<VirtualKey::VirtualKeyType>();
+@@ -163,7 +151,7 @@ void WebView::sendKeyEvent(const int &keyCode)
+                                     "    delete keyEvent.keyCode;"
+                                     "    Object.defineProperty(keyEvent, 'keyCode', { value: window['%2'] });"
+                                     "  }"
+-                                    "  document.activeElement.dispatchEvent(keyEvent);"
++                                    "  var handled = !document.activeElement.dispatchEvent(keyEvent);"
+                                     "  if (%1 == 13) {"
+                                     "    var mouseEvent = new MouseEvent('click', {"
+                                     "      bubbles : true,"
+@@ -171,9 +159,24 @@ void WebView::sendKeyEvent(const int &keyCode)
+                                     "    });"
+                                     "    document.activeElement.dispatchEvent(mouseEvent);"
+                                     "  }"
+-                                    ""
++                                    "  return handled;"
+                                     "})();").arg(keyCode).arg(metaEnum.valueToKey(keyCode));
+-    page()->runJavaScript(s);
++    if (keyCode != VirtualKey::VK_BACK) {
++        page()->runJavaScript(s);
++        return;
++    }
++    // back: the application's own (it cancels the key), else the history of
++    // the browser; only with neither left the hint how to quit
++    page()->runJavaScript(s, [this](const QVariant &handled) {
++        if (handled.toBool())
++            return;
++        if (page()->history()->canGoBack()) {
++            page()->triggerAction(QWebEnginePage::Back);
++            return;
++        }
++        m_quitMsgStatus = !m_quitMsgStatus;
++        m_quitMsg->setVisible(m_quitMsgStatus);
++    });
+ }
+ 
+ void WebView::titleChanged(const QString &title)

@@ -1,0 +1,21 @@
+From: Claude Code <noreply@anthropic.com>
+Subject: [PATCH] default to a 1280x720 window
+
+At 1920x1080 the browser zooms every page to 150%, and applications that
+scale themselves to the window end up larger than the screen.
+---
+--- a/main.cpp
++++ b/main.cpp
+@@ -58,6 +58,12 @@
+         qputenv("QT_QPA_PLATFORM", "eglfs");
+     if (qgetenv("QT_QPA_EGLFS_HIDECURSOR").isNull())
+         qputenv("QT_QPA_EGLFS_HIDECURSOR", "1");
++    // HbbTV applications are made for 1280x720; the window is stretched to
++    // the display (eglfs_nxpl), the page needs no zoom
++    if (qgetenv("QT_QPA_EGLFS_WIDTH").isNull())
++        qputenv("QT_QPA_EGLFS_WIDTH", "1280");
++    if (qgetenv("QT_QPA_EGLFS_HEIGHT").isNull())
++        qputenv("QT_QPA_EGLFS_HEIGHT", "720");
+     // the browser runs as root, where chromium refuses its sandbox
+     if (qgetenv("QTWEBENGINE_DISABLE_SANDBOX").isNull())
+         qputenv("QTWEBENGINE_DISABLE_SANDBOX", "1");

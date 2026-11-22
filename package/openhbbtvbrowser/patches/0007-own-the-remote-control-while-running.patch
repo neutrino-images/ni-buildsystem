@@ -1,0 +1,85 @@
+From: Claude Code <noreply@anthropic.com>
+Subject: [PATCH] own the remote control while running
+
+Grab the input devices: otherwise neutrino queues every key pressed in
+the browser and acts on them once the browser has quit. Map the media
+keys of the hd51 remote too: one play/pause key (alternating VK_PAUSE
+and VK_PLAY), KEY_FORWARD for fast forward, next and previous, KEY_HOME as back.
+---
+diff --git a/browsercontrol.cpp b/browsercontrol.cpp
+index 562d345..73352df 100644
+--- a/browsercontrol.cpp
++++ b/browsercontrol.cpp
+@@ -13,9 +13,17 @@
+ 
+ RemoteController::RemoteController(const QString &device)
+     : m_muteToggle(false)
++    , m_pauseNext(true)
+ {
+     m_fd = ::open(device.toLocal8Bit().constData(), O_RDONLY, 0);
+     if (m_fd >= 0) {
++        // the keys are the browser's while it runs: without the grab neutrino
++        // queues them and acts on them once the browser has quit
++#ifndef EVIOCGRAB
++#define EVIOCGRAB _IOW('E', 0x90, int)
++#endif
++        if (::ioctl(m_fd, EVIOCGRAB, 1) < 0)
++            qErrnoWarning("Cannot grab input device '%ls'", qUtf16Printable(device));
+         m_notify = new QSocketNotifier(m_fd, QSocketNotifier::Read, this);
+         connect(m_notify, &QSocketNotifier::activated, this, &RemoteController::readKeycode);
+     } else {
+@@ -73,6 +81,7 @@ void RemoteController::readKeycode()
+             case KEY_RIGHT:         vk = VirtualKey::VK_RIGHT; break;
+             case KEY_DOWN:          vk = VirtualKey::VK_DOWN; break;
+             case KEY_OK:            vk = VirtualKey::VK_ENTER; break;
++            case KEY_HOME:          [[fallthrough]];
+             case KEY_EXIT:          vk = VirtualKey::VK_BACK; break;
+             case KEY_0:             vk = VirtualKey::VK_0; break;
+             case KEY_1:             vk = VirtualKey::VK_1; break;
+@@ -84,10 +93,18 @@ void RemoteController::readKeycode()
+             case KEY_7:             vk = VirtualKey::VK_7; break;
+             case KEY_8:             vk = VirtualKey::VK_8; break;
+             case KEY_9:             vk = VirtualKey::VK_9; break;
+-            case KEY_PAUSE:         vk = VirtualKey::VK_PAUSE; break;
+-            case KEY_PLAY:          vk = VirtualKey::VK_PLAY; break;
++            case KEY_PAUSE:         vk = VirtualKey::VK_PAUSE; m_pauseNext = false; break;
++            case KEY_PLAY:          vk = VirtualKey::VK_PLAY; m_pauseNext = true; break;
+             case KEY_STOP:          vk = VirtualKey::VK_STOP; break;
+-            case KEY_FASTFORWARD:   vk = VirtualKey::VK_FAST_FWD; break;
++            case KEY_FASTFORWARD:   [[fallthrough]];
++            case KEY_FORWARD:       vk = VirtualKey::VK_FAST_FWD; break;
++            case KEY_PLAYPAUSE:
++                // applications know VK_PLAY and VK_PAUSE (both in the HbbTV key set)
++                vk = m_pauseNext ? VirtualKey::VK_PAUSE : VirtualKey::VK_PLAY;
++                m_pauseNext = !m_pauseNext;
++                break;
++            case KEY_NEXT:          vk = VirtualKey::VK_NEXT; break;
++            case KEY_PREVIOUS:      vk = VirtualKey::VK_PREV; break;
+             case KEY_REWIND:        vk = VirtualKey::VK_REWIND; break;
+             case KEY_MUTE:          vk = VirtualKey::VK_MUTE; break;
+             case KEY_VOLUMEDOWN:    vk = VirtualKey::VK_VOLUME_DOWN; break;
+diff --git a/browsercontrol.h b/browsercontrol.h
+index 5e86dbd..4d33d31 100644
+--- a/browsercontrol.h
++++ b/browsercontrol.h
+@@ -42,6 +42,12 @@ struct input_event {
+ #define KEY_EXIT		174
+ #define KEY_PLAY		207
+ #define KEY_FASTFORWARD	208
++// the hd51 remote: one play/pause key, forward is KEY_FORWARD
++#define KEY_HOME		102
++#define KEY_FORWARD		159
++#define KEY_PLAYPAUSE	164
++#define KEY_NEXT		407
++#define KEY_PREVIOUS	412
+ #define KEY_OK			0x160
+ #define KEY_INFO		0x166
+ #define KEY_SUBTITLE	0x172
+@@ -74,6 +80,7 @@ private:
+     int m_fd;
+     QSocketNotifier *m_notify;
+     bool m_muteToggle;
++    bool m_pauseNext;
+ };
+ 
+ #endif

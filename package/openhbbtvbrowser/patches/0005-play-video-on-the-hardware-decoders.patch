@@ -1,0 +1,785 @@
+From: Claude Code <noreply@anthropic.com>
+Subject: [PATCH] play video on the hardware decoders
+
+Software decoding in chromium is too slow on the receiver, and drawing
+the frames crashes in the GL driver. <video> elements with plain media
+URLs, and with them the OIPF A/V objects of the polyfill, are handed to
+neutrino instead (control API zapto?hbbtv...), which plays them on its
+decoders; the picture appears on the video plane below the page. Not in
+the browser process: the GL driver also crashes when one process draws
+with it and uses a decoder at once.
+---
+diff --git a/browserwindow.cpp b/browserwindow.cpp
+index c64c220..d28f71c 100644
+--- a/browserwindow.cpp
++++ b/browserwindow.cpp
+@@ -3,6 +3,15 @@
+ #include "webpage.h"
+ #include "webview.h"
+ #include <QWebEngineProfile>
++#if defined(HAVE_NATIVE_PLAYER)
++#include "nativeplayer.h"
++#include <QCoreApplication>
++#include <QDebug>
++#include <QFile>
++#include <QWebChannel>
++#include <QWebEngineScript>
++#include <QWebEngineScriptCollection>
++#endif
+ 
+ BrowserWindow::BrowserWindow(QWidget *parent, Qt::WindowFlags flags)
+     : QMainWindow(parent, flags)
+@@ -11,6 +20,9 @@ BrowserWindow::BrowserWindow(QWidget *parent, Qt::WindowFlags flags)
+ {
+     WebPage *page = new WebPage(QWebEngineProfile::defaultProfile(), m_webView);
+     m_webView->setPage(page);
++#if defined(HAVE_NATIVE_PLAYER)
++    setupNativePlayer(page);
++#endif
+     m_webView->show();
+ 
+     setCentralWidget(m_webView);
+@@ -33,3 +45,35 @@ void BrowserWindow::broadcastStop()
+ {
+     m_commandClient->writeCommand(CommandClient::CommandBroadcastStop);
+ }
++
++#if defined(HAVE_NATIVE_PLAYER)
++static void injectScript(QWebEnginePage *page, const QString &name, const QString &file)
++{
++    QFile f(file);
++    if (!f.open(QIODevice::ReadOnly)) {
++        qWarning() << "[native] script not found:" << file;
++        return;
++    }
++    QWebEngineScript script;
++    script.setName(name);
++    script.setSourceCode(QString::fromUtf8(f.readAll()));
++    script.setInjectionPoint(QWebEngineScript::DocumentCreation);
++    script.setRunsOnSubFrames(false);
++    script.setWorldId(QWebEngineScript::MainWorld);
++    page->scripts().insert(script);
++}
++
++// <video> on the hardware decoders, see nativeplayer.h
++void BrowserWindow::setupNativePlayer(QWebEnginePage *page)
++{
++    auto player = new NativePlayer(this);
++    auto channel = new QWebChannel(page);
++    channel->registerObject(QStringLiteral("hbbtvPlayer"), player);
++    page->setWebChannel(channel);
++    // before the polyfill, which builds its OIPF players on <video>
++    injectScript(page, QStringLiteral("qwebchannel"), QStringLiteral(":/qtwebchannel/qwebchannel.js"));
++    injectScript(page, QStringLiteral("hbbtv_nativevideo"), QStringLiteral(":/hbbtv_nativevideo.js"));
++    connect(page, &QWebEnginePage::loadStarted, player, &NativePlayer::stop);
++    connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit, player, &NativePlayer::stop);
++}
++#endif
+diff --git a/browserwindow.h b/browserwindow.h
+index 66d7222..9dabd1c 100644
+--- a/browserwindow.h
++++ b/browserwindow.h
+@@ -4,6 +4,7 @@
+ #include <QMainWindow>
+ 
+ class CommandClient;
++class QWebEnginePage;
+ class WebView;
+ 
+ class BrowserWindow : public QMainWindow
+@@ -19,6 +20,9 @@ protected Q_SLOTS:
+     void broadcastStop();
+ 
+ private:
++#if defined(HAVE_NATIVE_PLAYER)
++    void setupNativePlayer(QWebEnginePage *page);
++#endif
+     CommandClient *m_commandClient;
+     WebView *m_webView;
+ };
+diff --git a/js/hbbtv_nativevideo.js b/js/hbbtv_nativevideo.js
+new file mode 100644
+index 0000000..3bd8f1a
+--- /dev/null
++++ b/js/hbbtv_nativevideo.js
+@@ -0,0 +1,440 @@
++/*
++ * <video> playback on the hardware decoders of the receiver.
++ *
++ * Plain media URLs (mp4, HLS, DASH) set on a video element are not loaded by
++ * chromium but handed to the native player (QWebChannel object hbbtvPlayer);
++ * the element emulates the HTMLMediaElement state and events from its reports.
++ * The picture appears on the video plane below the transparent page.
++ * blob: sources (MediaSource players) stay with chromium.
++ */
++(function () {
++    if (window.__hbbtvNativeVideo)
++        return;
++    window.__hbbtvNativeVideo = true;
++    window.HBBTV_NATIVE_VIDEO = true;
++
++    var player = null;
++    var queue = [];
++    var active = null;
++
++    function log(msg) {
++        window.HBBTV_POLYFILL_DEBUG && console.log('hbbtv-native: ' + msg);
++    }
++
++    function call(fn, args) {
++        if (player)
++            player[fn].apply(player, args || []);
++        else
++            queue.push([fn, args]);
++    }
++
++    function connect() {
++        if (typeof QWebChannel === 'undefined' || !window.qt || !qt.webChannelTransport)
++            return setTimeout(connect, 50);
++        new QWebChannel(qt.webChannelTransport, function (channel) {
++            player = channel.objects.hbbtvPlayer;
++            player.stateChanged.connect(onState);
++            player.positionChanged.connect(onPosition);
++            queue.splice(0).forEach(function (c) { player[c[0]].apply(player, c[1] || []); });
++        });
++    }
++    connect();
++
++    if (window.MediaSource) {
++        var origAdd = MediaSource.prototype.addSourceBuffer;
++        MediaSource.prototype.addSourceBuffer = function (type) {
++            log('MediaSource.addSourceBuffer ' + type);
++            return origAdd.call(this, type);
++        };
++    }
++
++    var M = HTMLMediaElement.prototype;
++    var V = HTMLVideoElement.prototype;
++    var orig = {
++        play: M.play,
++        pause: M.pause,
++        load: M.load
++    };
++    ['src', 'currentTime', 'duration', 'paused', 'ended', 'readyState', 'networkState', 'playbackRate', 'error',
++     'videoWidth', 'videoHeight', 'buffered', 'seekable'].forEach(function (p) {
++        orig[p] = Object.getOwnPropertyDescriptor(M, p);
++    });
++
++    function state(el) {
++        if (!el.__native)
++            el.__native = { src: '', paused: true, ended: false, time: 0, duration: NaN, ready: 0, rate: 1, error: null, started: false, seeking: false };
++        return el.__native;
++    }
++
++    function absolute(url) {
++        try { return new URL(url, document.baseURI).href; } catch (e) { return url; }
++    }
++
++    function nativeUrl(url) {
++        return !!url && /^https?:/i.test(url);
++    }
++
++    function sourceOf(el) {
++        var s = state(el).src || el.getAttribute('src');
++        if (!s) {
++            var source = el.querySelector('source');
++            if (source)
++                s = source.getAttribute('src');
++        }
++        return s ? absolute(s) : '';
++    }
++
++    function managed(el) {
++        return nativeUrl(sourceOf(el));
++    }
++
++    function fire(el, type) {
++        el.dispatchEvent(new Event(type));
++    }
++
++    function reset(el) {
++        var s = state(el);
++        s.paused = true; s.ended = false; s.time = 0; s.duration = NaN;
++        s.ready = 0; s.error = null; s.started = false; s.seeking = false;
++    }
++
++    // the picture lies below the whole page: while it plays, nothing may
++    // paint over its place from below - the element and everything holding
++    // it, and whatever lies behind it, which a browser drawing the video
++    // itself would cover anyway. What lies in front of it stays.
++    var punched = [];
++    var punchedDepth = 0;
++    var punchCount = 0;
++    function depth(el) {
++        var n = 0;
++        for (var node = el; node; node = node.parentElement)
++            n++;
++        return n;
++    }
++    function setStyle(node, prop, value) {
++        if (!node.style)
++            return;
++        node.__punch = node.__punch || {};
++        if (node.__punch[prop])
++            return;
++        node.__punch[prop] = true;
++        punched.push([node, prop, node.style.getPropertyValue(prop), node.style.getPropertyPriority(prop)]);
++        node.style.setProperty(prop, value, 'important');
++    }
++    var punchedFull = false;
++    function fullscreen(el) {
++        var r = el.getBoundingClientRect();
++        return r.width >= window.innerWidth * 0.9 && r.height >= window.innerHeight * 0.9;
++    }
++    function punch(el) {
++        punchedDepth = depth(el);
++        punchedFull = fullscreen(el);
++        for (var node = el; node; node = node.parentElement)
++            setStyle(node, 'background', 'transparent');
++        var r = el.getBoundingClientRect();
++        if (r.width <= 0 || r.height <= 0)
++            return;
++        // elementsFromPoint skips elements without pointer events
++        var pe = [el.style.getPropertyValue('pointer-events'), el.style.getPropertyPriority('pointer-events')];
++        el.style.setProperty('pointer-events', 'auto', 'important');
++        [0.1, 0.5, 0.9].forEach(function (fx) {
++            [0.1, 0.5, 0.9].forEach(function (fy) {
++                var stack = document.elementsFromPoint(r.left + r.width * fx, r.top + r.height * fy);
++                var i = stack.indexOf(el);
++                if (i < 0)
++                    return;
++                var front = stack.slice(0, i);
++                stack.slice(i + 1).forEach(function (e) {
++                    if (e.contains(el))
++                        return;
++                    // covered by a full screen video: hidden, unless it holds
++                    // something shown in front of the video (then only
++                    // see-through); next to a video in a window - its button,
++                    // the tiles around it - only see-through
++                    if (!punchedFull || front.some(function (f) { return e.contains(f); }))
++                        setStyle(e, 'background', 'transparent');
++                    else
++                        setStyle(e, 'visibility', 'hidden');
++                });
++            });
++        });
++        if (pe[0])
++            el.style.setProperty('pointer-events', pe[0], pe[1]);
++        else
++            el.style.removeProperty('pointer-events');
++    }
++    // the polyfill sets src before it puts the element into the page, and
++    // applications rebuild theirs: punch again when the element moved and
++    // every few seconds
++    function repunch(el) {
++        if (fullscreen(el) !== punchedFull) {
++            unpunch();
++            punch(el);
++        } else if (depth(el) !== punchedDepth || ++punchCount % 4 === 0) {
++            punch(el);
++        }
++    }
++    function unpunch() {
++        punchedDepth = 0;
++        punched.splice(0).forEach(function (p) {
++            if (p[2])
++                p[0].style.setProperty(p[1], p[2], p[3]);
++            else
++                p[0].style.removeProperty(p[1]);
++            delete p[0].__punch;
++        });
++    }
++
++    function stopElement(el) {
++        if (active === el) {
++            unpunch();
++            log('stop ' + new Error().stack.split('\n').slice(2, 5).join(' | '));
++            active = null;
++            call('stop');
++        }
++        state(el).started = false;
++    }
++
++    function startElement(el) {
++        var s = state(el);
++        if (active && active !== el)
++            stopElement(active);
++        active = el;
++        unpunch();
++        punch(el);
++        s.paused = false;
++        s.ended = false;
++        s.started = true;
++        log('play ' + sourceOf(el));
++        fire(el, 'play');
++        call('play', [sourceOf(el), Math.round(s.time * 1000)]);
++        lastWindow = '';
++        updateWindow();
++    }
++
++    Object.defineProperty(V, 'src', {
++        configurable: true,
++        get: function () {
++            return state(this).src || orig.src.get.call(this);
++        },
++        set: function (value) {
++            var url = value ? absolute(String(value)) : '';
++            log('src = ' + url);
++            if (nativeUrl(url)) {
++                stopElement(this);
++                reset(this);
++                state(this).src = url;
++                fire(this, 'emptied');
++                if (this.autoplay)
++                    startElement(this);
++            } else {
++                if (value)
++                    log('chromium src = ' + String(value).substring(0, 80));
++                if (state(this).src)
++                    stopElement(this);
++                state(this).src = '';
++                orig.src.set.call(this, value);
++            }
++        }
++    });
++
++    V.play = function () {
++        if (!managed(this)) {
++            log('chromium play() ' + (this.currentSrc || this.getAttribute('src') || '(no src)'));
++            return orig.play.call(this);
++        }
++        log('play()');
++        var s = state(this);
++        if (active === this && s.started) {
++            if (s.paused) {
++                s.paused = false;
++                call('resume');
++                fire(this, 'play');
++            }
++        } else {
++            startElement(this);
++        }
++        return Promise.resolve();
++    };
++
++    V.pause = function () {
++        if (!managed(this))
++            return orig.pause.call(this);
++        log('pause()');
++        var s = state(this);
++        if (!s.paused) {
++            s.paused = true;
++            if (active === this)
++                call('pause');
++            fire(this, 'pause');
++        }
++    };
++
++    V.load = function () {
++        if (!managed(this))
++            return orig.load.call(this);
++        log('load()');
++        stopElement(this);
++        reset(this);
++        fire(this, 'emptied');
++        if (this.autoplay)
++            startElement(this);
++    };
++
++    Object.defineProperty(V, 'currentTime', {
++        configurable: true,
++        get: function () {
++            return managed(this) ? state(this).time : orig.currentTime.get.call(this);
++        },
++        set: function (value) {
++            if (!managed(this))
++                return orig.currentTime.set.call(this, value);
++            var s = state(this);
++            log('currentTime = ' + value);
++            s.time = Number(value) || 0;
++            if (active === this && s.started) {
++                s.seeking = true;
++                fire(this, 'seeking');
++                call('seek', [Math.round(s.time * 1000)]);
++            }
++        }
++    });
++
++    function readOnly(name, value) {
++        Object.defineProperty(V, name, {
++            configurable: true,
++            get: function () {
++                return managed(this) ? value(state(this)) : orig[name].get.call(this);
++            }
++        });
++    }
++    readOnly('duration', function (s) { return s.duration; });
++    readOnly('paused', function (s) { return s.paused; });
++    readOnly('ended', function (s) { return s.ended; });
++    readOnly('readyState', function (s) { return s.ready; });
++    readOnly('networkState', function (s) { return s.started ? 2 : 1; });
++    readOnly('error', function (s) { return s.error; });
++    // players look at these before they trust a stream; the decoder output is
++    // not known here, report an HD picture once playing
++    readOnly('videoWidth', function (s) { return s.ready ? 1280 : 0; });
++    readOnly('videoHeight', function (s) { return s.ready ? 720 : 0; });
++    function ranges(s) {
++        var end = isFinite(s.duration) ? s.duration : s.time;
++        var n = s.ready ? 1 : 0;
++        return {
++            length: n,
++            start: function (i) { if (i >= n) throw new DOMException('IndexSizeError'); return 0; },
++            end: function (i) { if (i >= n) throw new DOMException('IndexSizeError'); return end; }
++        };
++    }
++    readOnly('buffered', ranges);
++    readOnly('seekable', ranges);
++
++    Object.defineProperty(V, 'playbackRate', {
++        configurable: true,
++        get: function () {
++            return managed(this) ? state(this).rate : orig.playbackRate.get.call(this);
++        },
++        set: function (value) {
++            if (!managed(this))
++                return orig.playbackRate.set.call(this, value);
++            state(this).rate = Number(value);
++            fire(this, 'ratechange');
++        }
++    });
++
++    // the hardware picture follows the element on the page
++    var lastWindow = '';
++    function updateWindow() {
++        var el = active;
++        if (!el)
++            return;
++        var r = el.getBoundingClientRect();
++        var vw = window.innerWidth, vh = window.innerHeight;
++        var x = Math.max(0, Math.round(r.left)), y = Math.max(0, Math.round(r.top));
++        var w = Math.round(Math.min(r.right, vw)) - x, h = Math.round(Math.min(r.bottom, vh)) - y;
++        var key = [x, y, w, h, vw, vh].join(',');
++        if (key === lastWindow)
++            return;
++        lastWindow = key;
++        log('window ' + key);
++        call('setWindow', [x, y, w, h, vw, vh]);
++    }
++    window.addEventListener('resize', updateWindow);
++
++    function onState(name, info) {
++        var el = active;
++        if (!el)
++            return;
++        var s = state(el);
++        log('state ' + name + ' ' + info);
++        if (name === 'playing') {
++            if (s.ready < 4) {
++                s.ready = 4;
++                ['loadstart', 'loadedmetadata', 'loadeddata', 'canplay', 'canplaythrough'].forEach(function (t) { fire(el, t); });
++            }
++            s.paused = false;
++            repunch(el);
++            updateWindow();
++            fire(el, 'playing');
++        } else if (name === 'ended') {
++            active = null;
++            unpunch();
++            s.started = false;
++            s.paused = true;
++            s.ended = true;
++            fire(el, 'pause');
++            fire(el, 'ended');
++        } else if (name === 'error') {
++            active = null;
++            unpunch();
++            s.started = false;
++            s.paused = true;
++            s.error = { code: 4, message: info, MEDIA_ERR_SRC_NOT_SUPPORTED: 4 };
++            fire(el, 'error');
++        }
++    }
++
++    function onPosition(positionMs, durationMs) {
++        var el = active;
++        if (!el)
++            return;
++        var s = state(el);
++        s.time = positionMs / 1000;
++        var duration = durationMs > 0 ? durationMs / 1000 : Infinity;
++        if (duration !== s.duration) {
++            s.duration = duration;
++            fire(el, 'durationchange');
++        }
++        if (s.seeking) {
++            s.seeking = false;
++            fire(el, 'seeked');
++        }
++        fire(el, 'timeupdate');
++        repunch(el);
++        updateWindow();
++    }
++
++    // a removed element stops its playback
++    new MutationObserver(function (mutations) {
++        if (!active)
++            return;
++        mutations.forEach(function (m) {
++            m.removedNodes.forEach(function (node) {
++                if (active && (node === active || (node.contains && node.contains(active))))
++                    stopElement(active);
++            });
++        });
++    }).observe(document, { childList: true, subtree: true });
++
++    // the hardware picture lies below the page: keep video elements see-through
++    function transparentVideo() {
++        var style = document.createElement('style');
++        style.textContent = 'video { background: transparent !important; }';
++        (document.head || document.documentElement).appendChild(style);
++    }
++    if (document.readyState === 'loading')
++        document.addEventListener('DOMContentLoaded', transparentVideo);
++    else
++        transparentVideo();
++})();
+diff --git a/js/hbbtv_polyfill.js b/js/hbbtv_polyfill.js
+index 41e5d84..40cad58 100644
+--- a/js/hbbtv_polyfill.js
++++ b/js/hbbtv_polyfill.js
+@@ -29955,7 +29955,8 @@ class OipfAVControlMapper {
+ 
+         this.dashPlayer;
+         // user dash.js to init player
+-        if (this.isDashVideo) {
++        // with native playback the receiver plays the MPD itself
++        if (this.isDashVideo && !window.HBBTV_NATIVE_VIDEO) {
+             this.dashPlayer = Object(dashjs__WEBPACK_IMPORTED_MODULE_0__["MediaPlayer"])().create();
+             this.dashPlayer.initialize(this.videoElement, originalDataAttribute, true);
+         } else {
+diff --git a/nativeplayer.cpp b/nativeplayer.cpp
+new file mode 100644
+index 0000000..4a7c79e
+--- /dev/null
++++ b/nativeplayer.cpp
+@@ -0,0 +1,141 @@
++#include "nativeplayer.h"
++
++#include <QByteArray>
++#include <QDebug>
++#include <QUrl>
++
++#include <arpa/inet.h>
++#include <netinet/in.h>
++#include <string.h>
++#include <sys/socket.h>
++#include <sys/time.h>
++#include <unistd.h>
++
++// neutrino's control API on this receiver; returns the body, or a null array
++static QByteArray controlApi(const QByteArray &query)
++{
++    QByteArray body;
++    int fd = socket(AF_INET, SOCK_STREAM, 0);
++    if (fd < 0)
++        return body;
++    struct timeval tv = { 5, 0 };
++    setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
++    setsockopt(fd, SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(tv));
++    struct sockaddr_in addr = {};
++    addr.sin_family = AF_INET;
++    addr.sin_port = htons(80);
++    addr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
++    if (::connect(fd, reinterpret_cast<struct sockaddr *>(&addr), sizeof(addr)) == 0) {
++        QByteArray request = "GET /control/zapto?" + query + " HTTP/1.0\r\nHost: 127.0.0.1\r\n\r\n";
++        if (::write(fd, request.constData(), request.size()) == request.size()) {
++            QByteArray response;
++            char buf[1024];
++            ssize_t n;
++            while ((n = ::read(fd, buf, sizeof(buf))) > 0)
++                response.append(buf, int(n));
++            int split = response.indexOf("\r\n\r\n");
++            if (response.contains(" 200 ") && split >= 0)
++                body = response.mid(split + 4).trimmed();
++        }
++    }
++    ::close(fd);
++    return body;
++}
++
++NativePlayer::NativePlayer(QObject *parent)
++    : QObject(parent)
++    , m_active(false)
++    , m_lastPosition(-1)
++{
++    m_timer.setInterval(500);
++    connect(&m_timer, &QTimer::timeout, this, &NativePlayer::poll);
++}
++
++NativePlayer::~NativePlayer()
++{
++    stop();
++}
++
++void NativePlayer::play(const QString &url, int startMs)
++{
++    stop();
++    qDebug() << "[native] play" << url << startMs;
++    QByteArray query = "hbbtvplay&url=" + QUrl::toPercentEncoding(url) + "&start=" + QByteArray::number(startMs);
++    if (controlApi(query).isNull()) {
++        Q_EMIT stateChanged(QStringLiteral("error"), QStringLiteral("player not available"));
++        return;
++    }
++    m_active = true;
++    m_state = QStringLiteral("starting");
++    m_lastPosition = -1;
++    m_timer.start();
++}
++
++void NativePlayer::poll()
++{
++    if (!m_active)
++        return;
++    const QList<QByteArray> status = controlApi("hbbtvstatus").split(' ');
++    if (status.size() < 3)
++        return;
++    const QString state = QString::fromLatin1(status.at(0));
++    const int position = status.at(1).toInt();
++    const int duration = status.at(2).toInt();
++
++    if (state == QLatin1String("ended") || state == QLatin1String("error") || state == QLatin1String("idle")) {
++        finish(state == QLatin1String("idle") ? QStringLiteral("ended") : state);
++        return;
++    }
++    if (state != m_state) {
++        m_state = state;
++        if (state == QLatin1String("playing") || state == QLatin1String("paused"))
++            Q_EMIT stateChanged(state, QString());
++    }
++    if (state != QLatin1String("starting") && position != m_lastPosition) {
++        m_lastPosition = position;
++        Q_EMIT positionChanged(position, duration);
++    }
++}
++
++void NativePlayer::pause()
++{
++    if (m_active)
++        controlApi("hbbtvpause");
++}
++
++void NativePlayer::resume()
++{
++    if (m_active)
++        controlApi("hbbtvresume");
++}
++
++void NativePlayer::seek(int positionMs)
++{
++    if (m_active)
++        controlApi("hbbtvseek&pos=" + QByteArray::number(positionMs));
++}
++
++void NativePlayer::setWindow(int x, int y, int width, int height, int pageWidth, int pageHeight)
++{
++    if (m_active)
++        controlApi("hbbtvwindow&x=" + QByteArray::number(x) + "&y=" + QByteArray::number(y)
++                   + "&w=" + QByteArray::number(width) + "&h=" + QByteArray::number(height)
++                   + "&pw=" + QByteArray::number(pageWidth) + "&ph=" + QByteArray::number(pageHeight));
++}
++
++void NativePlayer::stop()
++{
++    if (m_active)
++        finish(QStringLiteral("stopped"));
++}
++
++void NativePlayer::finish(const QString &state, const QString &info)
++{
++    m_timer.stop();
++    m_active = false;
++    m_state.clear();
++    // also after the end: neutrino gets live TV back with the stop
++    controlApi("hbbtvstop");
++    qDebug() << "[native]" << state << info;
++    Q_EMIT stateChanged(state, info);
++}
+diff --git a/nativeplayer.h b/nativeplayer.h
+new file mode 100644
+index 0000000..ed8801d
+--- /dev/null
++++ b/nativeplayer.h
+@@ -0,0 +1,46 @@
++#ifndef NATIVEPLAYER_H
++#define NATIVEPLAYER_H
++
++#include <QObject>
++#include <QString>
++#include <QTimer>
++
++// plays <video> sources on the hardware decoders of the receiver instead of
++// decoding them in software in chromium: neutrino plays the stream (control
++// API zapto?hbbtv...), the picture appears on the video plane below the
++// transparent page. Not in this process: the GL driver of the receiver
++// crashes when one process draws with it and uses a decoder at once.
++class NativePlayer : public QObject
++{
++    Q_OBJECT
++
++public:
++    explicit NativePlayer(QObject *parent = nullptr);
++    ~NativePlayer();
++
++    Q_INVOKABLE void play(const QString &url, int startMs);
++    Q_INVOKABLE void pause();
++    Q_INVOKABLE void resume();
++    Q_INVOKABLE void seek(int positionMs);
++    Q_INVOKABLE void stop();
++    // where the page shows the video; the hardware picture follows it
++    Q_INVOKABLE void setWindow(int x, int y, int width, int height, int pageWidth, int pageHeight);
++
++Q_SIGNALS:
++    // "playing", "paused", "ended", "error", "stopped"
++    void stateChanged(const QString &state, const QString &info);
++    void positionChanged(int positionMs, int durationMs);
++
++private Q_SLOTS:
++    void poll();
++
++private:
++    void finish(const QString &state, const QString &info = QString());
++
++    QTimer m_timer;
++    bool m_active;
++    QString m_state;
++    int m_lastPosition;
++};
++
++#endif // NATIVEPLAYER_H
+diff --git a/openhbbtvbrowser.pro b/openhbbtvbrowser.pro
+index 523118f..bd059f9 100644
+--- a/openhbbtvbrowser.pro
++++ b/openhbbtvbrowser.pro
+@@ -21,3 +21,11 @@ SOURCES += \
+     webview.cpp
+ 
+ RESOURCES += openhbbtvbrowser.qrc
++
++# <video> on the hardware decoders: neutrino plays, see nativeplayer.h
++cross_compile {
++    DEFINES += HAVE_NATIVE_PLAYER
++    QT += webchannel
++    HEADERS += nativeplayer.h
++    SOURCES += nativeplayer.cpp
++}
+diff --git a/openhbbtvbrowser.qrc b/openhbbtvbrowser.qrc
+index 1b3a803..7be5302 100644
+--- a/openhbbtvbrowser.qrc
++++ b/openhbbtvbrowser.qrc
+@@ -2,5 +2,6 @@
+     <qresource prefix="/">
+         <file alias="hbbtv_polyfill.js">js/hbbtv_polyfill.js</file>
+         <file alias="xmlhttprequest_quirks.js">js/xmlhttprequest_quirks.js</file>
++        <file alias="hbbtv_nativevideo.js">js/hbbtv_nativevideo.js</file>
+     </qresource>
+ </RCC>

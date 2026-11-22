@@ -1,0 +1,18 @@
+From: Claude Code <noreply@anthropic.com>
+Subject: [PATCH] disable the chromium sandbox
+
+The browser runs as root on the receiver, where chromium refuses to
+start with its sandbox; the --no-sandbox argument does not reach it.
+---
+--- a/main.cpp
++++ b/main.cpp
+@@ -58,6 +58,9 @@
+         qputenv("QT_QPA_PLATFORM", "eglfs");
+     if (qgetenv("QT_QPA_EGLFS_HIDECURSOR").isNull())
+         qputenv("QT_QPA_EGLFS_HIDECURSOR", "1");
++    // the browser runs as root, where chromium refuses its sandbox
++    if (qgetenv("QTWEBENGINE_DISABLE_SANDBOX").isNull())
++        qputenv("QTWEBENGINE_DISABLE_SANDBOX", "1");
+ #endif
+ 
+     QCoreApplication::setOrganizationName(QLatin1String("Qt"));

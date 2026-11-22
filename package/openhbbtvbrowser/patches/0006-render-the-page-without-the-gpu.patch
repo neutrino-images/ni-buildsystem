@@ -1,0 +1,24 @@
+From: Claude Code <noreply@anthropic.com>
+Subject: [PATCH] render the page without the GPU
+
+On the receiver chromium's GPU rendering crashes the GL driver with the
+effects some applications use (ZDF, a few seconds after its video
+starts); rendered in software the page is shown through Qt only.
+---
+diff --git a/main.cpp b/main.cpp
+index 32ff26c..6fb7006 100644
+--- a/main.cpp
++++ b/main.cpp
+@@ -67,6 +67,12 @@ int main(int argc, char *argv[])
+     // the browser runs as root, where chromium refuses its sandbox
+     if (qgetenv("QTWEBENGINE_DISABLE_SANDBOX").isNull())
+         qputenv("QTWEBENGINE_DISABLE_SANDBOX", "1");
++    // chromium's GPU rendering crashes the GL driver of the receiver with
++    // the effects of some applications (ZDF when its video starts); the
++    // page is rendered in software and only shown through Qt
++    QByteArray chromiumFlags = qgetenv("QTWEBENGINE_CHROMIUM_FLAGS");
++    if (!chromiumFlags.split(' ').contains("--disable-gpu"))
++        qputenv("QTWEBENGINE_CHROMIUM_FLAGS", (chromiumFlags + " --disable-gpu").trimmed());
+ #endif
+ 
+     QCoreApplication::setOrganizationName(QLatin1String("Qt"));
