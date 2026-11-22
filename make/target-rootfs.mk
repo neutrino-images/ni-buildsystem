@@ -10,6 +10,12 @@ endif
 
 # -----------------------------------------------------------------------------
 
+# strip bins and libs directly in TARGET_DIR
+target-strip: | $(TARGET_DIR)
+	$(MAKE) strip STRIP_DIR=$(TARGET_DIR)
+
+# -----------------------------------------------------------------------------
+
 .version: $(TARGET_DIR)/.version
 $(TARGET_DIR)/.version: | $(TARGET_DIR)
 	echo "distro=NI"							 > $(@)
@@ -144,42 +150,9 @@ endif
 
 # -----------------------------------------------------------------------------
 
-ROOTFS_STRIP_BINS  = $(base_bindir)
-ROOTFS_STRIP_BINS += $(base_sbindir)
-ROOTFS_STRIP_BINS += $(bindir)
-ROOTFS_STRIP_BINS += $(sbindir)
-ROOTFS_STRIP_BINS += $(libexecdir)
-ROOTFS_STRIP_BINS += /usr/share/tuxbox/neutrino/plugins
-
-ROOTFS_STRIP_LIBS  = $(base_libdir)
-ROOTFS_STRIP_LIBS += $(libdir)
-
 # strip bins and libs in root filesystem
 rootfs-strip: $(ROOTFS_DIR)
-ifneq ($(DEBUG),yes)
-	@$(call draw_line);
-	@echo "The following warnings from strip are harmless!"
-	@$(call draw_line);
-	for dir in $(ROOTFS_STRIP_BINS); do \
-		$(INSTALL) -d $(ROOTFS_DIR)$${dir}; \
-		find $(ROOTFS_DIR)$${dir} \
-			-type f -print0 | xargs -n 128 -0 $(TARGET_STRIP) || true; \
-	done
-	for dir in $(ROOTFS_STRIP_LIBS); do \
-		$(INSTALL) -d $(ROOTFS_DIR)$${dir}; \
-		find $(ROOTFS_DIR)$${dir} \( \
-				-path $(ROOTFS_DIR)/lib/libnexus.so -o \
-				-path $(ROOTFS_DIR)/lib/libnxpl.so -o \
-				-path $(ROOTFS_DIR)/lib/libv3ddriver.so -o \
-				\
-				-path $(ROOTFS_DIR)/lib/modules \) -prune -o \
-			-type f -print0 | xargs -n 128 -0 $(TARGET_STRIP) || true; \
-	done
-  ifeq ($(BOXSERIES),hd2)
-	find $(ROOTFS_DIR)/lib/modules/$(KERNEL_VERSION)/kernel -type f -name '*.ko' | xargs -n 1 $(TARGET_OBJCOPY) --strip-unneeded
-  endif
-	@$(call MESSAGE,"After strip: $$(du -sh $(ROOTFS_DIR))")
-endif
+	$(MAKE) strip STRIP_DIR=$(ROOTFS_DIR)
 
 # -----------------------------------------------------------------------------
 
@@ -203,7 +176,59 @@ endif
 
 # -----------------------------------------------------------------------------
 
+# strip is internal; it is called by rootfs-strip and target-strip only
+ifeq ($(MAKELEVEL),0)
+  ifneq ($(filter $(MAKECMDGOALS),strip),)
+    $(error Do not call 'make strip' directly; use 'make rootfs-strip' or 'make target-strip')
+  endif
+endif
+
+STRIP_BINS  = $(base_bindir)
+STRIP_BINS += $(base_sbindir)
+STRIP_BINS += $(bindir)
+STRIP_BINS += $(sbindir)
+STRIP_BINS += $(libexecdir)
+STRIP_BINS += /usr/share/tuxbox/neutrino/plugins
+
+STRIP_LIBS  = $(base_libdir)
+STRIP_LIBS += $(libdir)
+
+# directory to strip; ROOTFS_DIR by default
+STRIP_DIR ?= $(ROOTFS_DIR)
+
+# strip bins and libs in STRIP_DIR
+strip:
+	@test -d $(STRIP_DIR) || \
+		{ echo "STRIP_DIR $(STRIP_DIR) does not exist"; false; }
+ifneq ($(DEBUG),yes)
+	@$(call draw_line);
+	@echo "The following warnings from strip are harmless!"
+	@$(call draw_line);
+	for dir in $(STRIP_BINS); do \
+		$(INSTALL) -d $(STRIP_DIR)$${dir}; \
+		find $(STRIP_DIR)$${dir} \
+			-type f -print0 | xargs -n 128 -0 $(TARGET_STRIP) || true; \
+	done
+	for dir in $(STRIP_LIBS); do \
+		$(INSTALL) -d $(STRIP_DIR)$${dir}; \
+		find $(STRIP_DIR)$${dir} \( \
+				-path $(STRIP_DIR)/lib/libnexus.so -o \
+				-path $(STRIP_DIR)/lib/libnxpl.so -o \
+				-path $(STRIP_DIR)/lib/libv3ddriver.so -o \
+				\
+				-path $(STRIP_DIR)/lib/modules \) -prune -o \
+			-type f -print0 | xargs -n 128 -0 $(TARGET_STRIP) || true; \
+	done
+  ifeq ($(BOXSERIES),hd2)
+	find $(STRIP_DIR)/lib/modules/$(KERNEL_VERSION)/kernel -type f -name '*.ko' | xargs -n 1 $(TARGET_OBJCOPY) --strip-unneeded
+  endif
+	@$(call MESSAGE,"After strip: $$(du -sh $(STRIP_DIR))")
+endif
+
+# -----------------------------------------------------------------------------
+
 PHONY += target-finish
+PHONY += target-strip
 PHONY += .version $(TARGET_DIR)/.version
 PHONY += update.urls $(TARGET_localstatedir)/etc/update.urls
 PHONY += symbolic-links
@@ -214,3 +239,5 @@ PHONY += rootfs
 PHONY += $(ROOTFS_DIR)
 PHONY += rootfs-cleanup
 PHONY += rootfs-strip
+
+PHONY += strip
