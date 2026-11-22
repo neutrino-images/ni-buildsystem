@@ -1,0 +1,23 @@
+From: Claude Code <noreply@anthropic.com>
+Subject: [PATCH] read every input device
+
+The remote control is not always /dev/input/event0: on the hd51 it is
+event1, so no key reached the browser and it could not even be quit.
+---
+--- a/main.cpp
++++ b/main.cpp
+@@ -159,8 +159,12 @@
+     window->show();
+ 
+ #if defined(EMBEDDED_BUILD)
+-    auto remote = new RemoteController();
+-    QObject::connect(remote, &RemoteController::activate, window->webView(), &WebView::sendKeyEvent);
++    // the remote is not always event0 (hd51: event1), read every input device
++    const QStringList inputs = QDir(QStringLiteral("/dev/input")).entryList(QStringList() << QStringLiteral("event*"), QDir::System);
++    for (const QString &input : inputs) {
++        auto remote = new RemoteController(QStringLiteral("/dev/input/") + input);
++        QObject::connect(remote, &RemoteController::activate, window->webView(), &WebView::sendKeyEvent);
++    }
+ #else
+     auto filter = new WindowEventFilter();
+     app.installEventFilter(filter);
