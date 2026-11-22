@@ -148,6 +148,7 @@ ROOTFS_STRIP_BINS  = $(base_bindir)
 ROOTFS_STRIP_BINS += $(base_sbindir)
 ROOTFS_STRIP_BINS += $(bindir)
 ROOTFS_STRIP_BINS += $(sbindir)
+ROOTFS_STRIP_BINS += $(libexecdir)
 ROOTFS_STRIP_BINS += /usr/share/tuxbox/neutrino/plugins
 
 ROOTFS_STRIP_LIBS  = $(base_libdir)
