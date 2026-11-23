@@ -14,5 +14,10 @@ AIO_GRAB_DEPENDENCIES = zlib libpng libjpeg-turbo
 
 AIO_GRAB_AUTORECONF = YES
 
+# main.c dlopen()s the HiSilicon runtime libraries; Makefile.am does not
+# link libdl, which glibc 2.28 keeps out of libc
+AIO_GRAB_CONF_ENV += \
+	LIBS="-ldl"
+
 aio-grab: | $(TARGET_DIR)
 	$(call autotools-package)
