@@ -144,8 +144,8 @@ ifeq ($(BOXMODEL),$(filter $(BOXMODEL),nevis kronos_v2))
 endif
 	find $(ROOTFS_DIR) -name .gitignore -type f -print0 | xargs --no-run-if-empty -0 rm -f
 	find $(ROOTFS_DIR) -name Makefile.am -type f -print0 | xargs --no-run-if-empty -0 rm -f
-	find $(ROOTFS_DIR)$(base_libdir) \( -name '*.a' -o -name '*.la' \) -print0 | xargs --no-run-if-empty -0 rm -f
-	find $(ROOTFS_DIR)$(libdir) \( -name '*.a' -o -name '*.la' \) -print0 | xargs --no-run-if-empty -0 rm -f
+	find $(ROOTFS_DIR)$(base_libdir) \( -name '*.a' -o -name '*.la' -o -name '*.prl' \) -print0 | xargs --no-run-if-empty -0 rm -f
+	find $(ROOTFS_DIR)$(libdir) \( -name '*.a' -o -name '*.la' -o -name '*.prl' \) -print0 | xargs --no-run-if-empty -0 rm -f
 	@$(call MESSAGE,"After cleanup: $$(du -sh $(ROOTFS_DIR))")
 
 # -----------------------------------------------------------------------------
