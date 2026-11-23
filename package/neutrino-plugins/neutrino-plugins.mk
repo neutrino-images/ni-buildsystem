@@ -68,7 +68,7 @@ ifeq ($(BOXTYPE),coolstream)
 	--disable-showiframe \
 	--disable-stb_startup \
 	--disable-imgbackup \
-	--disable-replay \
+	--disable-replay-lua \
 	--disable-rcu_switcher
 endif
 
