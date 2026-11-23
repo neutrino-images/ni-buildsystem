@@ -20,12 +20,16 @@ LIBOPENSSL_CONF_OPTS = \
 	--prefix=$(prefix) \
 	--openssldir=$(sysconfdir)/ssl
 
+# no-async: its jobs (only for engines) use getcontext/setcontext, which
+# do not link statically with the toolchain's glibc 2.28 (_rtld_global_ro);
+# ofgwrite links libcrypto statically
 LIBOPENSSL_CONF_OPTS += \
 	$(LIBOPENSSL_TARGET_ARCH) \
 	shared \
 	threads \
 	no-hw \
 	no-engine \
+	no-async \
 	no-sse2 \
 	no-tests \
 	no-fuzz-afl \
