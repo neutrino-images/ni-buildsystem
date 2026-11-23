@@ -106,6 +106,7 @@ UTIL_LINUX_CONF_OPTS = \
 	--disable-wipefs \
 	--disable-write \
 	--disable-zramctl \
+	--disable-year2038 \
 	\
 	--disable-makeinstall-chown \
 	--disable-makeinstall-setuid \
