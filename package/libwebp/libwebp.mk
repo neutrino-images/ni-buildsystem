@@ -25,3 +25,18 @@ LIBWEBP_CONF_OPTS = \
 
 libwebp: | $(TARGET_DIR)
 	$(call autotools-package)
+
+# -----------------------------------------------------------------------------
+
+HOST_LIBWEBP_CONF_OPTS = \
+	--enable-libwebpmux \
+	--enable-libwebpdemux \
+	--disable-gl \
+	--disable-sdl \
+	--disable-png \
+	--disable-jpeg \
+	--disable-tiff \
+	--disable-gif
+
+host-libwebp: | $(HOST_DIR)
+	$(call host-autotools-package)
