@@ -14,3 +14,8 @@ SQLITE_CONF_OPTS = \
 
 sqlite: | $(TARGET_DIR)
 	$(call autotools-package)
+
+# -----------------------------------------------------------------------------
+
+host-sqlite: | $(HOST_DIR)
+	$(call host-autotools-package)
