@@ -26,3 +26,17 @@ LIBJPEG_TURBO_TARGET_FINALIZE_HOOKS += LIBJPEG_TURBO_TARGET_CLEANUP
 
 libjpeg-turbo: | $(TARGET_DIR)
 	$(call cmake-package)
+
+# -----------------------------------------------------------------------------
+
+HOST_LIBJPEG_TURBO_CONF_OPTS = \
+	-DCMAKE_INSTALL_LIBDIR=lib \
+	-DWITH_SIMD=OFF \
+	-DWITH_JAVA=OFF \
+	-DWITH_TURBOJPEG=OFF \
+	-DWITH_JPEG8=80
+
+HOST_LIBJPEG_TURBO_CMAKE_BACKEND = ninja
+
+host-libjpeg-turbo: | $(HOST_DIR)
+	$(call host-cmake-package)
