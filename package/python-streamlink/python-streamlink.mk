@@ -9,10 +9,13 @@ PYTHON_STREAMLINK_DIR = streamlink-$(PYTHON_STREAMLINK_VERSION)
 PYTHON_STREAMLINK_SOURCE = streamlink-$(PYTHON_STREAMLINK_VERSION).tar.gz
 PYTHON_STREAMLINK_SITE = $(PYPI_MIRROR)/s/streamlink
 
-PYTHON_STREAMLINK_SETUP_TYPE = setuptools
+# pep517, not setuptools: only a wheel brings the RECORD file, which
+# streamlink checks its _plugins.json against. Without it every Streamlink()
+# session runs all plugin modules instead of loading the one it needs.
+PYTHON_STREAMLINK_SETUP_TYPE = pep517
 
 PYTHON_STREAMLINK_DEPENDENCIES = \
-	host-python-wheel \
+	host-python-setuptools \
 	python-certifi \
 	python-isodate \
 	python-lxml \
