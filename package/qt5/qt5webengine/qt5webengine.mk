@@ -17,12 +17,13 @@ define QT5WEBENGINE_COPY_CHROMIUM
 endef
 QT5WEBENGINE_POST_PATCH_HOOKS += QT5WEBENGINE_COPY_CHROMIUM
 
-# host: python 3 (host-python3), the system libraries for the host
-# toolchain of chromium (host-nss, host-libwebp, ..., as in Buildroot),
-# nodejs, gperf, bison, flex, ninja, the host dev packages of the README
-# and a 32-bit capable g++ (g++-multilib) for the v8 snapshot of 32-bit ARM
+# host: python 3 (host-python3), node (host-nodejs), ninja (host-ninja),
+# the system libraries for the host toolchain of chromium (host-nss,
+# host-libwebp, ..., as in Buildroot), gperf, bison, flex, the host dev
+# packages of the README and a 32-bit capable g++ (g++-multilib) for the
+# v8 snapshot of 32-bit ARM
 QT5WEBENGINE_DEPENDENCIES = \
-	host-python3 \
+	host-python3 host-nodejs host-ninja \
 	host-nss host-libwebp host-freetype host-harfbuzz \
 	host-libjpeg-turbo host-libpng host-zlib \
 	qt5declarative qt5webchannel qt5webengine-chromium \
@@ -39,6 +40,8 @@ QT5WEBENGINE_WRAP_DIR = $(PKG_BUILD_DIR)/cross-wrapper
 # only the target toolchain goes through them, the host one does not;
 # configure would take a python2 of the build host first, so
 # -webengine-python-version selects python3, the one in the wrapper dir;
+# configure and chromium look for nodejs before node in all of PATH, so
+# both names in the wrapper dir point to the node of host-nodejs;
 # host/include and host/lib for the host toolchain: libjpeg comes in
 # without pkg-config, and the rpath lets host tools find the libraries
 # when they run (chromium's pkg-config.py passes on only -I, -L and -l)
@@ -103,6 +106,8 @@ define QT5WEBENGINE_CROSS_WRAPPER
 	chmod 755 $(QT5WEBENGINE_WRAP_DIR)/host-pkg-config
 	ln -sf $(HOST_PYTHON_BINARY) $(QT5WEBENGINE_WRAP_DIR)/python3
 	ln -sf $(HOST_PYTHON_BINARY) $(QT5WEBENGINE_WRAP_DIR)/python
+	ln -sf $(HOST_DIR)/bin/node $(QT5WEBENGINE_WRAP_DIR)/nodejs
+	ln -sf $(HOST_DIR)/bin/node $(QT5WEBENGINE_WRAP_DIR)/node
 endef
 QT5WEBENGINE_PRE_CONFIGURE_HOOKS += QT5WEBENGINE_CROSS_WRAPPER
 
