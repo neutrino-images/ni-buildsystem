@@ -77,6 +77,12 @@ ifeq ($(shell getconf LONG_BIT),64)
 HOST_NSS_BUILD_VARS += USE_64=1
 endif
 
+# no configure, and nss ignores CFLAGS from the environment: host/include
+# (sqlite3.h, ...) goes into the Linux part of coreconf, as for the target
+define HOST_NSS_CONFIGURE_CMDS
+	echo 'OS_CFLAGS += $(HOST_CPPFLAGS)' >> $(PKG_BUILD_DIR)/nss/coreconf/Linux.mk
+endef
+
 # -j1: the sub-makes print jobserver warnings into $(SUB_SHLOBJS)
 define HOST_NSS_BUILD_CMDS
 	$(HOST_CONFIGURE_ENV) $(MAKE) -j1 -C $(PKG_BUILD_DIR)/nss coreconf $(HOST_NSS_BUILD_VARS)
