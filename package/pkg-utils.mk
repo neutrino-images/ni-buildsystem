@@ -17,7 +17,7 @@ PKG_DESTINATION = $(if $(filter $(firstword $(subst -, ,$(pkg))),host),HOST,TARG
 
 PKG_BUILD_DIR = $(BUILD_DIR)/$($(PKG)_DIR)$(if $($(PKG)_SUBDIR),/$($(PKG)_SUBDIR))
 # package/<pkg>, or package/<group>/<pkg> for packages kept in a group
-# directory (e.g. package/qt5/qtbase, included by package/qt5/qt5.mk)
+# directory (e.g. package/qt5/qt5base, included by package/qt5/qt5.mk)
 PKG_PACKAGE_DIR = $(or $(wildcard $(PACKAGE_DIR)/$(pkg_parent)),$(firstword $(wildcard $(PACKAGE_DIR)/*/$(pkg_parent))),$(PACKAGE_DIR)/$(pkg_parent))
 PKG_FILES_DIR = $(PKG_PACKAGE_DIR)/files
 PKG_PATCHES_DIR = $(PKG_PACKAGE_DIR)/patches

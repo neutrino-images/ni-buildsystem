@@ -1,68 +1,68 @@
 ################################################################################
 #
-# qtwebengine
+# qt5webengine
 #
 ################################################################################
 
-QTWEBENGINE_VERSION = $(QT5_VERSION)
-QTWEBENGINE_DIR = qtwebengine-v$(QTWEBENGINE_VERSION)-lts
-QTWEBENGINE_SOURCE = qtwebengine-v$(QTWEBENGINE_VERSION)-lts.tar.bz2
-QTWEBENGINE_SITE = $(QT5_SITE)/qtwebengine/-/archive/v$(QTWEBENGINE_VERSION)-lts
+QT5WEBENGINE_VERSION = $(QT5_VERSION)
+QT5WEBENGINE_DIR = qtwebengine-v$(QT5WEBENGINE_VERSION)-lts
+QT5WEBENGINE_SOURCE = qtwebengine-v$(QT5WEBENGINE_VERSION)-lts.tar.bz2
+QT5WEBENGINE_SITE = $(QT5_SITE)/qtwebengine/-/archive/v$(QT5WEBENGINE_VERSION)-lts
 
 # src/3rdparty is a submodule, the archive of the tag lacks it: chromium
 # (and gn) of KDE's branch, the commit buildroot uses for 5.15.19
-QTWEBENGINE_CHROMIUM_VERSION = 6d29e9cfcfffa7632cc3858ceaf8940677ba9c91
-QTWEBENGINE_CHROMIUM_SOURCE = qtwebengine-chromium-$(QTWEBENGINE_CHROMIUM_VERSION).tar.bz2
-QTWEBENGINE_CHROMIUM_SITE = $(QT5_SITE)/qtwebengine-chromium/-/archive/$(QTWEBENGINE_CHROMIUM_VERSION)
+QT5WEBENGINE_CHROMIUM_VERSION = 6d29e9cfcfffa7632cc3858ceaf8940677ba9c91
+QT5WEBENGINE_CHROMIUM_SOURCE = qtwebengine-chromium-$(QT5WEBENGINE_CHROMIUM_VERSION).tar.bz2
+QT5WEBENGINE_CHROMIUM_SITE = $(QT5_SITE)/qtwebengine-chromium/-/archive/$(QT5WEBENGINE_CHROMIUM_VERSION)
 
 # the catapult of that chromium is python 2 only; a later one runs with
 # python 3 (as buildroot)
-QTWEBENGINE_CATAPULT_VERSION = 7534569f99827c0ed4df818254ba7daca4606bca
-QTWEBENGINE_CATAPULT_SOURCE = qt5webengine-chromium-catapult-$(QTWEBENGINE_CATAPULT_VERSION).tar.gz
-QTWEBENGINE_CATAPULT_SITE = https://chromium.googlesource.com/catapult/+archive
+QT5WEBENGINE_CATAPULT_VERSION = 7534569f99827c0ed4df818254ba7daca4606bca
+QT5WEBENGINE_CATAPULT_SOURCE = qt5webengine-chromium-catapult-$(QT5WEBENGINE_CATAPULT_VERSION).tar.gz
+QT5WEBENGINE_CATAPULT_SITE = https://chromium.googlesource.com/catapult/+archive
 
-define QTWEBENGINE_DOWNLOAD_CHROMIUM
-	if [ ! -f $(DL_DIR)/$(QTWEBENGINE_CHROMIUM_SOURCE) ]; then \
-		$(GET_ARCHIVE) $(DL_DIR) $(QTWEBENGINE_CHROMIUM_SITE)/$(QTWEBENGINE_CHROMIUM_SOURCE); \
+define QT5WEBENGINE_DOWNLOAD_CHROMIUM
+	if [ ! -f $(DL_DIR)/$(QT5WEBENGINE_CHROMIUM_SOURCE) ]; then \
+		$(GET_ARCHIVE) $(DL_DIR) $(QT5WEBENGINE_CHROMIUM_SITE)/$(QT5WEBENGINE_CHROMIUM_SOURCE); \
 	fi
-	if [ ! -f $(DL_DIR)/$(QTWEBENGINE_CATAPULT_SOURCE) ]; then \
-		wget --no-check-certificate -t3 -T60 -O $(DL_DIR)/$(QTWEBENGINE_CATAPULT_SOURCE).part \
-			$(QTWEBENGINE_CATAPULT_SITE)/$(QTWEBENGINE_CATAPULT_VERSION).tar.gz && \
-		mv $(DL_DIR)/$(QTWEBENGINE_CATAPULT_SOURCE).part $(DL_DIR)/$(QTWEBENGINE_CATAPULT_SOURCE); \
+	if [ ! -f $(DL_DIR)/$(QT5WEBENGINE_CATAPULT_SOURCE) ]; then \
+		wget --no-check-certificate -t3 -T60 -O $(DL_DIR)/$(QT5WEBENGINE_CATAPULT_SOURCE).part \
+			$(QT5WEBENGINE_CATAPULT_SITE)/$(QT5WEBENGINE_CATAPULT_VERSION).tar.gz && \
+		mv $(DL_DIR)/$(QT5WEBENGINE_CATAPULT_SOURCE).part $(DL_DIR)/$(QT5WEBENGINE_CATAPULT_SOURCE); \
 	fi
 endef
-QTWEBENGINE_PRE_DOWNLOAD_HOOKS += QTWEBENGINE_DOWNLOAD_CHROMIUM
+QT5WEBENGINE_PRE_DOWNLOAD_HOOKS += QT5WEBENGINE_DOWNLOAD_CHROMIUM
 
 # before the patches, they touch chromium too
-define QTWEBENGINE_EXTRACT_CHROMIUM
+define QT5WEBENGINE_EXTRACT_CHROMIUM
 	rm -rf $(PKG_BUILD_DIR)/src/3rdparty
 	$(INSTALL) -d $(PKG_BUILD_DIR)/src/3rdparty
 	tar -C $(PKG_BUILD_DIR)/src/3rdparty --strip-components=1 \
-		-xjf $(DL_DIR)/$(QTWEBENGINE_CHROMIUM_SOURCE)
+		-xjf $(DL_DIR)/$(QT5WEBENGINE_CHROMIUM_SOURCE)
 	rm -rf $(PKG_BUILD_DIR)/src/3rdparty/chromium/third_party/catapult
 	$(INSTALL) -d $(PKG_BUILD_DIR)/src/3rdparty/chromium/third_party/catapult
 	tar -C $(PKG_BUILD_DIR)/src/3rdparty/chromium/third_party/catapult \
-		-xzf $(DL_DIR)/$(QTWEBENGINE_CATAPULT_SOURCE)
+		-xzf $(DL_DIR)/$(QT5WEBENGINE_CATAPULT_SOURCE)
 endef
-QTWEBENGINE_PRE_PATCH_HOOKS += QTWEBENGINE_EXTRACT_CHROMIUM
+QT5WEBENGINE_PRE_PATCH_HOOKS += QT5WEBENGINE_EXTRACT_CHROMIUM
 
 # host: python 3 (host-python3), the system libraries for the host
 # toolchain of chromium (host-nss, host-libwebp, ..., as in Buildroot),
 # nodejs, gperf, bison, flex, ninja, the host dev packages of the README
 # and a 32-bit capable g++ (g++-multilib) for the v8 snapshot of 32-bit ARM
-QTWEBENGINE_DEPENDENCIES = \
+QT5WEBENGINE_DEPENDENCIES = \
 	host-python3 \
 	host-nss host-libwebp host-freetype host-harfbuzz \
 	host-libjpeg-turbo host-libpng host-zlib \
-	qtdeclarative qtwebchannel \
+	qt5declarative qt5webchannel \
 	nss dbus ffmpeg opus libwebp alsa-lib \
 	fontconfig freetype harfbuzz libpng libjpeg-turbo zlib
 
 # chromium dlopen()s libudev.so.1 and stops (CHECK) without it; the image
 # runs mdev, so use the daemonless libudev
-QTWEBENGINE_DEPENDENCIES += libudev-zero
+QT5WEBENGINE_DEPENDENCIES += libudev-zero
 
-QTWEBENGINE_WRAP_DIR = $(PKG_BUILD_DIR)/cross-wrapper
+QT5WEBENGINE_WRAP_DIR = $(PKG_BUILD_DIR)/cross-wrapper
 
 # the wrappers carry the target compiler names and come first in PATH, so
 # only the target toolchain goes through them, the host one does not;
@@ -71,19 +71,19 @@ QTWEBENGINE_WRAP_DIR = $(PKG_BUILD_DIR)/cross-wrapper
 # host/include and host/lib for the host toolchain: libjpeg comes in
 # without pkg-config, and the rpath lets host tools find the libraries
 # when they run (chromium's pkg-config.py passes on only -I, -L and -l)
-QTWEBENGINE_ENV = \
-	PATH=$(QTWEBENGINE_WRAP_DIR):$(PATH) \
+QT5WEBENGINE_ENV = \
+	PATH=$(QT5WEBENGINE_WRAP_DIR):$(PATH) \
 	PKG_CONFIG="$(PKG_CONFIG)" \
 	PKG_CONFIG_LIBDIR="$(PKG_CONFIG_PATH)" \
 	PKG_CONFIG_SYSROOT_DIR="$(PKG_CONFIG_SYSROOT_DIR)" \
-	GN_PKG_CONFIG_HOST=$(QTWEBENGINE_WRAP_DIR)/host-pkg-config \
+	GN_PKG_CONFIG_HOST=$(QT5WEBENGINE_WRAP_DIR)/host-pkg-config \
 	GN_HOST_TOOLCHAIN_EXTRA_CPPFLAGS="-I$(HOST_DIR)/include" \
 	GN_HOST_TOOLCHAIN_EXTRA_LDFLAGS="-L$(HOST_DIR)/lib -Wl,-rpath,$(HOST_DIR)/lib" \
 	NINJAFLAGS="-j$(shell nproc)"
 
 # CC_host/CXX_host: host compiler of the host and gn toolchains (the
 # host toolchain patch takes them from qmake, as OE passes them)
-QTWEBENGINE_QMAKE_OPTS = \
+QT5WEBENGINE_QMAKE_OPTS = \
 	QMAKE_PYTHON2=$(HOST_PYTHON_BINARY) \
 	CC_host=gcc \
 	CXX_host=g++ \
@@ -122,45 +122,45 @@ QTWEBENGINE_QMAKE_OPTS = \
 	-no-feature-webengine-extensions \
 	-no-feature-build-qtpdf
 
-define QTWEBENGINE_CROSS_WRAPPER
-	$(INSTALL) -d $(QTWEBENGINE_WRAP_DIR)
+define QT5WEBENGINE_CROSS_WRAPPER
+	$(INSTALL) -d $(QT5WEBENGINE_WRAP_DIR)
 	for c in $(TARGET_CC) $(TARGET_CXX); do \
-		sed "s|@COMPILER@|$(CROSS_DIR)/bin/$$c|" $(PKG_FILES_DIR)/cross-wrapper.in > $(QTWEBENGINE_WRAP_DIR)/$$c; \
-		chmod 755 $(QTWEBENGINE_WRAP_DIR)/$$c; \
+		sed "s|@COMPILER@|$(CROSS_DIR)/bin/$$c|" $(PKG_FILES_DIR)/cross-wrapper.in > $(QT5WEBENGINE_WRAP_DIR)/$$c; \
+		chmod 755 $(QT5WEBENGINE_WRAP_DIR)/$$c; \
 	done
-	sed "s|@HOST_DIR@|$(HOST_DIR)|" $(PKG_FILES_DIR)/host-pkg-config.in > $(QTWEBENGINE_WRAP_DIR)/host-pkg-config
-	chmod 755 $(QTWEBENGINE_WRAP_DIR)/host-pkg-config
-	ln -sf $(HOST_PYTHON_BINARY) $(QTWEBENGINE_WRAP_DIR)/python3
-	ln -sf $(HOST_PYTHON_BINARY) $(QTWEBENGINE_WRAP_DIR)/python
+	sed "s|@HOST_DIR@|$(HOST_DIR)|" $(PKG_FILES_DIR)/host-pkg-config.in > $(QT5WEBENGINE_WRAP_DIR)/host-pkg-config
+	chmod 755 $(QT5WEBENGINE_WRAP_DIR)/host-pkg-config
+	ln -sf $(HOST_PYTHON_BINARY) $(QT5WEBENGINE_WRAP_DIR)/python3
+	ln -sf $(HOST_PYTHON_BINARY) $(QT5WEBENGINE_WRAP_DIR)/python
 endef
-QTWEBENGINE_PRE_CONFIGURE_HOOKS += QTWEBENGINE_CROSS_WRAPPER
+QT5WEBENGINE_PRE_CONFIGURE_HOOKS += QT5WEBENGINE_CROSS_WRAPPER
 
-define QTWEBENGINE_CONFIGURE_CMDS
+define QT5WEBENGINE_CONFIGURE_CMDS
 	$(CD) $(PKG_BUILD_DIR); \
-		$(QTWEBENGINE_ENV) $(QT5_QMAKE) $(QTWEBENGINE_QMAKE_OPTS)
+		$(QT5WEBENGINE_ENV) $(QT5_QMAKE) $(QT5WEBENGINE_QMAKE_OPTS)
 endef
 
 # configure only warns when a host tool (nodejs, g++-multilib, ...) is
 # missing and then builds an empty module; stop here instead
-define QTWEBENGINE_CHECK_CORE
+define QT5WEBENGINE_CHECK_CORE
 	if [ ! -e $(PKG_BUILD_DIR)/lib/libQt5WebEngineCore.so.5 ]; then \
-		echo "qtwebengine: QtWebEngineCore was not built, see 'will not be built' above"; \
+		echo "qt5webengine: QtWebEngineCore was not built, see 'will not be built' above"; \
 		exit 1; \
 	fi
 endef
-QTWEBENGINE_POST_BUILD_HOOKS += QTWEBENGINE_CHECK_CORE
+QT5WEBENGINE_POST_BUILD_HOOKS += QT5WEBENGINE_CHECK_CORE
 
-define QTWEBENGINE_BUILD_CMDS
+define QT5WEBENGINE_BUILD_CMDS
 	$(CD) $(PKG_BUILD_DIR); \
-		$(QTWEBENGINE_ENV) $(MAKE)
+		$(QT5WEBENGINE_ENV) $(MAKE)
 endef
 
-define QTWEBENGINE_INSTALL_CMDS
+define QT5WEBENGINE_INSTALL_CMDS
 	$(CD) $(PKG_BUILD_DIR); \
-		$(QTWEBENGINE_ENV) $(MAKE) install
+		$(QT5WEBENGINE_ENV) $(MAKE) install
 endef
 
-QTWEBENGINE_PRE_CONFIGURE_HOOKS += QT5_SYNC_QT_HEADERS
+QT5WEBENGINE_PRE_CONFIGURE_HOOKS += QT5_SYNC_QT_HEADERS
 
-qtwebengine: | $(TARGET_DIR)
+qt5webengine: | $(TARGET_DIR)
 	$(call generic-package)

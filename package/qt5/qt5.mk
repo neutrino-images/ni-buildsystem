@@ -7,7 +7,7 @@
 QT5_VERSION_MAJOR = 5.15
 QT5_VERSION = $(QT5_VERSION_MAJOR).19
 # the 5.15 LTS branches KDE maintains: newer than the last tarballs of
-# download.qt.io (5.15.16), and only there qtwebengine builds with python 3
+# download.qt.io (5.15.16), and only there qt5webengine builds with python 3
 QT5_SITE = https://invent.kde.org/qt/qt
 
 # these are git snapshots, not release tarballs: the forwarding headers
@@ -19,11 +19,11 @@ define QT5_SYNC_QT_HEADERS
 	touch $(PKG_BUILD_DIR)/.git
 endef
 
-# qmake of the cross build of qtbase, a host tool
+# qmake of the cross build of qt5base, a host tool
 QT5_QMAKE = $(HOST_DIR)/bin/qmake
 
 # a Qt module or application built with that qmake; make install puts it
-# into the target tree, the sysroot qtbase was configured with
+# into the target tree, the sysroot qt5base was configured with
 define QT5_QMAKE_CONFIGURE_CMDS
 	$(CD) $(PKG_BUILD_DIR); \
 		$(TARGET_MAKE_ENV) $(QT5_QMAKE) $($(PKG)_QMAKE_OPTS)

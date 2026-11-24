@@ -10,7 +10,7 @@ OPENHBBTVBROWSER_SOURCE = openhbbtvbrowser.git
 OPENHBBTVBROWSER_SITE = https://github.com/oe-alliance
 OPENHBBTVBROWSER_SITE_METHOD = git
 
-OPENHBBTVBROWSER_DEPENDENCIES = qtwebengine
+OPENHBBTVBROWSER_DEPENDENCIES = qt5webengine
 
 # cross_compile turns on EMBEDDED_BUILD (remote control input, no desktop)
 OPENHBBTVBROWSER_QMAKE_OPTS = CONFIG+=cross_compile
