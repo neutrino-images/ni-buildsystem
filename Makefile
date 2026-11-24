@@ -204,7 +204,7 @@ all:
 	@echo "'make all' is not a valid target."
 
 # target for testing only. not useful otherwise
-everything: $(shell find package/*/*.mk -type f | cut -d'/' -f2 | sort | uniq)
+everything: $(shell find package/*/*.mk package/*/*/*.mk -type f | awk -F/ '{ n = $$NF; sub(/\.mk$$/, "", n); if (n == $$(NF-1) && n != "qt5") print n }' | sort | uniq)
 
 # print all present targets
 print-targets:
