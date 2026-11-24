@@ -9,6 +9,9 @@ NSPR_DIR = nspr-$(NSPR_VERSION)
 NSPR_SOURCE = nspr-$(NSPR_VERSION).tar.gz
 NSPR_SITE = https://ftp.mozilla.org/pub/mozilla.org/nspr/releases/v$(NSPR_VERSION)/src
 
+# configure lives in the nspr/ subdirectory
+NSPR_SUBDIR = nspr
+
 NSPR_CONF_OPTS = \
 	--build=$(GNU_HOST_NAME) \
 	--host=$(GNU_TARGET_NAME) \
@@ -16,9 +19,9 @@ NSPR_CONF_OPTS = \
 	--prefix=$(prefix) \
 	--disable-64bit
 
-# configure lives in the nspr/ subdirectory; the shared libraries only
+# the shared libraries only
 define NSPR_CONFIGURE_CMDS
-	$(CD) $(PKG_BUILD_DIR)/nspr; \
+	$(CD) $(PKG_BUILD_DIR); \
 		$(TARGET_CONFIGURE_ENVIRONMENT) \
 		CFLAGS="$(TARGET_CFLAGS)" LDFLAGS="$(TARGET_LDFLAGS)" \
 		HOST_CC="gcc" HOST_CFLAGS="-g -O2" HOST_LDFLAGS="-lc" \
@@ -26,19 +29,17 @@ define NSPR_CONFIGURE_CMDS
 endef
 
 define NSPR_BUILD_CMDS
-	$(MAKE) -C $(PKG_BUILD_DIR)/nspr LIBRARY=
+	$(MAKE) -C $(PKG_BUILD_DIR) LIBRARY=
 endef
 
 define NSPR_INSTALL_CMDS
-	$(MAKE) -C $(PKG_BUILD_DIR)/nspr LIBRARY= DESTDIR=$(TARGET_DIR) install
+	$(MAKE) -C $(PKG_BUILD_DIR) LIBRARY= DESTDIR=$(TARGET_DIR) install
 endef
 
 nspr: | $(TARGET_DIR)
 	$(call generic-package)
 
 # -----------------------------------------------------------------------------
-
-HOST_NSPR_SUBDIR = nspr
 
 ifeq ($(shell getconf LONG_BIT),64)
 HOST_NSPR_CONF_OPTS = --enable-64bit
