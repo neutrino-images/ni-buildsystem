@@ -51,3 +51,48 @@ endef
 
 nss: | $(TARGET_DIR)
 	$(call generic-package)
+
+# -----------------------------------------------------------------------------
+
+HOST_NSS_DEPENDENCIES = host-nspr host-sqlite host-zlib
+
+HOST_NSS_BUILD_VARS = \
+	MOZILLA_CLIENT=1 \
+	NSPR_INCLUDE_DIR=$(HOST_DIR)/include/nspr \
+	NSPR_LIB_DIR=$(HOST_DIR)/lib \
+	NS_USE_GCC=1 \
+	NSS_DISABLE_GTESTS=1 \
+	NSS_USE_SYSTEM_SQLITE=1 \
+	SQLITE_INCLUDE_DIR=$(HOST_DIR)/include \
+	SQLITE_LIB_DIR=$(HOST_DIR)/lib \
+	ZLIB_INCLUDE_DIR=$(HOST_DIR)/include \
+	NSS_ENABLE_WERROR=0 \
+	FREEBL_NO_DEPEND=1 \
+	RPATH=-Wl,-rpath,$(HOST_DIR)/lib \
+	SOURCE_MD_DIR=$(NSS_DISTDIR) \
+	DIST=$(NSS_DISTDIR) \
+	CHECKLOC=
+
+ifeq ($(shell getconf LONG_BIT),64)
+HOST_NSS_BUILD_VARS += USE_64=1
+endif
+
+# -j1: the sub-makes print jobserver warnings into $(SUB_SHLOBJS)
+define HOST_NSS_BUILD_CMDS
+	$(HOST_CONFIGURE_ENV) $(MAKE) -j1 -C $(PKG_BUILD_DIR)/nss coreconf $(HOST_NSS_BUILD_VARS)
+	$(HOST_CONFIGURE_ENV) $(MAKE) -j1 -C $(PKG_BUILD_DIR)/nss lib/dbm all $(HOST_NSS_BUILD_VARS)
+endef
+
+define HOST_NSS_INSTALL_CMDS
+	$(INSTALL) -d $(HOST_DIR)/lib/pkgconfig $(HOST_DIR)/include/nss
+	$(INSTALL) -m 755 -t $(HOST_DIR)/lib $(NSS_DISTDIR)/lib/*.so
+	$(INSTALL) -m 644 -t $(HOST_DIR)/include/nss $(NSS_DISTDIR)/public/nss/*
+	$(INSTALL) -m 644 -t $(HOST_DIR)/lib $(NSS_DISTDIR)/lib/*.a
+	sed -e 's|@VERSION@|$(NSS_VERSION)|g' \
+		-e 's|^prefix=.*|prefix=$(HOST_DIR)|' \
+		-e 's|^Libs: -L$${libdir}|Libs: -L$${libdir} -Wl,-rpath,$${libdir}|' \
+		$(PKG_FILES_DIR)/nss.pc.in > $(HOST_DIR)/lib/pkgconfig/nss.pc
+endef
+
+host-nss: | $(HOST_DIR)
+	$(call host-generic-package)
