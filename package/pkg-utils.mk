@@ -44,6 +44,11 @@ ifeq ($(PKG_DESTINATION),HOST)
   ifndef $(PKG)_SITE_METHOD
     $(PKG)_SITE_METHOD = $$($(PKG_PARENT)_SITE_METHOD)
   endif
+  ifndef $(PKG)_SUBDIR
+    ifdef $(PKG_PARENT)_SUBDIR
+      $(PKG)_SUBDIR = $$($(PKG_PARENT)_SUBDIR)
+    endif
+  endif
   ifeq ($(PKG_MODE),CMAKE)
     ifndef $(PKG)_SUPPORTS_IN_SOURCE_BUILD
       ifdef $(PKG_PARENT)_SUPPORTS_IN_SOURCE_BUILD
@@ -64,18 +69,8 @@ ifeq ($(PKG_DESTINATION),HOST)
         $(PKG)_ROCKSPEC = $$($(PKG_PARENT)_ROCKSPEC)
       endif
     endif
-    ifndef $(PKG)_SUBDIR
-      ifdef $(PKG_PARENT)_SUBDIR
-        $(PKG)_SUBDIR = $$($(PKG_PARENT)_SUBDIR)
-      endif
-    endif
   endif
   ifeq ($(PKG_MODE),GOLANG)
-    ifndef $(PKG)_SUBDIR
-      ifdef $(PKG_PARENT)_SUBDIR
-        $(PKG)_SUBDIR = $$($(PKG_PARENT)_SUBDIR)
-      endif
-    endif
     ifndef $(PKG)_GOMOD
       ifdef $(PKG_PARENT)_GOMOD
         $(PKG)_GOMOD = $$($(PKG_PARENT)_GOMOD)
