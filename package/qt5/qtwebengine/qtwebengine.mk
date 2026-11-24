@@ -66,8 +66,8 @@ QTWEBENGINE_WRAP_DIR = $(PKG_BUILD_DIR)/cross-wrapper
 
 # the wrappers carry the target compiler names and come first in PATH, so
 # only the target toolchain goes through them, the host one does not;
-# python2, python3 and python are searched in that order by configure:
-# the host python 3 is found first (no python2 on the host);
+# configure would take a python2 of the build host first, so
+# -webengine-python-version selects python3, the one in the wrapper dir;
 # host/include and host/lib for the host toolchain: libjpeg comes in
 # without pkg-config, and the rpath lets host tools find the libraries
 # when they run (chromium's pkg-config.py passes on only -I, -L and -l)
@@ -88,6 +88,7 @@ QTWEBENGINE_QMAKE_OPTS = \
 	CC_host=gcc \
 	CXX_host=g++ \
 	-- \
+	-webengine-python-version python3 \
 	-feature-webengine-embedded-build \
 	-feature-webengine-system-ninja \
 	-no-feature-webengine-system-gn \
