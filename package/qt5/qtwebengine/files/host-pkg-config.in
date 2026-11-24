@@ -1,7 +1,9 @@
 #!/bin/sh
 #
 # pkg-config for the host side of the chromium build (host tools linking
-# against the host's nss, ...): the target pkg-config settings of the build
-# environment must not leak into it.
+# against nss, ...): the target pkg-config settings of the build
+# environment must not leak into it. host/lib/pkgconfig comes first, so
+# nss, libwebp, ... are those of the host packages; what is not there
+# comes from the build host.
 #
-exec env -u PKG_CONFIG_LIBDIR -u PKG_CONFIG_PATH -u PKG_CONFIG_SYSROOT_DIR /usr/bin/pkg-config "$@"
+exec env -u PKG_CONFIG_LIBDIR -u PKG_CONFIG_SYSROOT_DIR PKG_CONFIG_PATH=@HOST_DIR@/lib/pkgconfig /usr/bin/pkg-config "$@"

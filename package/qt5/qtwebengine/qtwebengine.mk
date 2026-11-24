@@ -46,11 +46,14 @@ define QTWEBENGINE_EXTRACT_CHROMIUM
 endef
 QTWEBENGINE_PRE_PATCH_HOOKS += QTWEBENGINE_EXTRACT_CHROMIUM
 
-# host: python 3 (host-python3), nodejs, gperf, bison, flex, ninja, the
-# host dev packages of the README and a 32-bit capable g++ (g++-multilib)
-# for the v8 snapshot of 32-bit ARM
+# host: python 3 (host-python3), the system libraries for the host
+# toolchain of chromium (host-nss, host-libwebp, ..., as in Buildroot),
+# nodejs, gperf, bison, flex, ninja, the host dev packages of the README
+# and a 32-bit capable g++ (g++-multilib) for the v8 snapshot of 32-bit ARM
 QTWEBENGINE_DEPENDENCIES = \
 	host-python3 \
+	host-nss host-libwebp host-freetype host-harfbuzz \
+	host-libjpeg-turbo host-libpng host-zlib \
 	qtdeclarative qtwebchannel \
 	nss dbus ffmpeg opus libwebp alsa-lib \
 	fontconfig freetype harfbuzz libpng libjpeg-turbo zlib
@@ -64,13 +67,18 @@ QTWEBENGINE_WRAP_DIR = $(PKG_BUILD_DIR)/cross-wrapper
 # the wrappers carry the target compiler names and come first in PATH, so
 # only the target toolchain goes through them, the host one does not;
 # python2, python3 and python are searched in that order by configure:
-# the host python 3 is found first (no python2 on the host)
+# the host python 3 is found first (no python2 on the host);
+# host/include and host/lib for the host toolchain: libjpeg comes in
+# without pkg-config, and the rpath lets host tools find the libraries
+# when they run (chromium's pkg-config.py passes on only -I, -L and -l)
 QTWEBENGINE_ENV = \
 	PATH=$(QTWEBENGINE_WRAP_DIR):$(PATH) \
 	PKG_CONFIG="$(PKG_CONFIG)" \
 	PKG_CONFIG_LIBDIR="$(PKG_CONFIG_PATH)" \
 	PKG_CONFIG_SYSROOT_DIR="$(PKG_CONFIG_SYSROOT_DIR)" \
 	GN_PKG_CONFIG_HOST=$(QTWEBENGINE_WRAP_DIR)/host-pkg-config \
+	GN_HOST_TOOLCHAIN_EXTRA_CPPFLAGS="-I$(HOST_DIR)/include" \
+	GN_HOST_TOOLCHAIN_EXTRA_LDFLAGS="-L$(HOST_DIR)/lib -Wl,-rpath,$(HOST_DIR)/lib" \
 	NINJAFLAGS="-j$(shell nproc)"
 
 # CC_host/CXX_host: host compiler of the host and gn toolchains (the
@@ -119,7 +127,8 @@ define QTWEBENGINE_CROSS_WRAPPER
 		sed "s|@COMPILER@|$(CROSS_DIR)/bin/$$c|" $(PKG_FILES_DIR)/cross-wrapper.in > $(QTWEBENGINE_WRAP_DIR)/$$c; \
 		chmod 755 $(QTWEBENGINE_WRAP_DIR)/$$c; \
 	done
-	$(INSTALL_EXEC) $(PKG_FILES_DIR)/host-pkg-config.in $(QTWEBENGINE_WRAP_DIR)/host-pkg-config
+	sed "s|@HOST_DIR@|$(HOST_DIR)|" $(PKG_FILES_DIR)/host-pkg-config.in > $(QTWEBENGINE_WRAP_DIR)/host-pkg-config
+	chmod 755 $(QTWEBENGINE_WRAP_DIR)/host-pkg-config
 	ln -sf $(HOST_PYTHON_BINARY) $(QTWEBENGINE_WRAP_DIR)/python3
 	ln -sf $(HOST_PYTHON_BINARY) $(QTWEBENGINE_WRAP_DIR)/python
 endef
