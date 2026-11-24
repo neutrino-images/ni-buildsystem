@@ -66,7 +66,8 @@ QT5WEBENGINE_NINJA_JOBS ?= $(shell \
 	[ $$mem -lt $$cpus ] && echo $$mem || echo $$cpus)
 
 # CC_host/CXX_host: host compiler of the host and gn toolchains (the
-# host toolchain patch takes them from qmake, as OE passes them)
+# host toolchain patch takes them from qmake, as OE passes them); gcc and
+# g++ in the wrapper directory add -w
 QT5WEBENGINE_QMAKE_OPTS = \
 	QMAKE_PYTHON2=$(HOST_PYTHON_BINARY) \
 	CC_host=gcc \
@@ -112,6 +113,7 @@ define QT5WEBENGINE_CROSS_WRAPPER
 		sed "s|@COMPILER@|$(CROSS_DIR)/bin/$$c|" $(PKG_FILES_DIR)/cross-wrapper.in > $(QT5WEBENGINE_WRAP_DIR)/$$c; \
 		chmod 755 $(QT5WEBENGINE_WRAP_DIR)/$$c; \
 	done
+	$(call QT5_HOST_COMPILER_WRAPPERS,$(QT5WEBENGINE_WRAP_DIR))
 	sed "s|@HOST_DIR@|$(HOST_DIR)|" $(PKG_FILES_DIR)/host-pkg-config.in > $(QT5WEBENGINE_WRAP_DIR)/host-pkg-config
 	chmod 755 $(QT5WEBENGINE_WRAP_DIR)/host-pkg-config
 	ln -sf $(HOST_PYTHON_BINARY) $(QT5WEBENGINE_WRAP_DIR)/python3

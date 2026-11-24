@@ -6,6 +6,10 @@
 # compiler keeps its built-in one, and search the target tree after it
 # (some targets, e.g. alsa, rely on the sysroot instead of pkg-config).
 #
+# -w: no compiler warnings in the build output (thousands from chromium),
+# errors only; -Wno-psabi: neither the ARM ABI notes ("parameter passing
+# ... changed in GCC 7.1"), which -w lets through.
+#
 n=$#
 while [ $n -gt 0 ]; do
 	a=$1
@@ -19,4 +23,4 @@ while [ $n -gt 0 ]; do
 		*) set -- "$@" "$a" ;;
 	esac
 done
-exec @COMPILER@ "$@"
+exec @COMPILER@ -w -Wno-psabi "$@"

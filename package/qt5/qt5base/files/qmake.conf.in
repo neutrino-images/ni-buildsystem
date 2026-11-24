@@ -9,6 +9,11 @@ QMAKE_CXX               = $${CROSS_COMPILE}g++
 QMAKE_CFLAGS           += $${NI_CFLAGS}
 QMAKE_CXXFLAGS         += $${NI_CXXFLAGS}
 QMAKE_LFLAGS           += $${NI_LDFLAGS}
+# no compiler warnings in the build output, errors only; -Wno-psabi: neither
+# the ARM ABI notes ("parameter passing ... changed in GCC 7.1"), which -w
+# lets through
+QMAKE_CFLAGS           += -w -Wno-psabi
+QMAKE_CXXFLAGS         += -w -Wno-psabi
 # only our own optimisation flags
 QMAKE_CFLAGS_OPTIMIZE       =
 QMAKE_CFLAGS_OPTIMIZE_DEBUG =

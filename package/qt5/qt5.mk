@@ -34,5 +34,23 @@ define QT5_QMAKE_INSTALL_CMDS
 		$(TARGET_MAKE_ENV) $(MAKE) install
 endef
 
+# gcc/g++ wrappers adding -w into a directory put first in PATH, for what is
+# built with the host compiler (qtbase's qmake and bootstrap tools,
+# chromium's host toolchains): warnings stay out of the output, errors not.
+# They call the system compiler by its path; a gcc/g++ in PATH that is a
+# ccache link is kept as "ccache <compiler>" (ccache called through the link
+# would look up gcc/g++ in PATH, find the wrapper and loop)
+define QT5_HOST_COMPILER_WRAPPERS # (directory)
+	$(INSTALL) -d $(1)
+	for c in gcc g++; do \
+		real=$$(PATH=/usr/local/bin:/usr/bin:/bin command -v $$c); \
+		case "$$(readlink -f "$$(command -v $$c)")" in \
+			*/ccache) real="$$(readlink -f "$$(command -v $$c)") $$real" ;; \
+		esac; \
+		sed "s|@COMPILER@|$$real|" $(PACKAGE_DIR)/qt5/host-wrapper.in > $(1)/$$c; \
+		chmod 755 $(1)/$$c; \
+	done
+endef
+
 # the modules: package/qt5/<module>
 include $(sort $(wildcard package/qt5/*/*.mk))

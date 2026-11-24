@@ -1,0 +1,6 @@
+#!/bin/sh
+#
+# Host gcc/g++ for the Qt 5 builds (qtbase host tools, chromium host and v8
+# snapshot toolchains): no compiler warnings in the output, errors only.
+#
+exec @COMPILER@ -w "$@"
