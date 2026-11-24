@@ -43,6 +43,7 @@ define HD6X_LIBGLES_INSTALL_FILES
 	$(INSTALL_COPY) $(PKG_BUILD_DIR)/* $(TARGET_libdir)
 	$(foreach pc,egl.pc glesv1_cm.pc glesv2.pc,\
 		$(INSTALL_DATA) $(PKG_FILES_DIR)/$(pc) $(TARGET_libdir)/pkgconfig$(sep))
+	$(INSTALL_DATA) -D $(PKG_FILES_DIR)/fbdev_window.h $(TARGET_includedir)/EGL/fbdev_window.h
 endef
 HD6X_LIBGLES_INDIVIDUAL_HOOKS += HD6X_LIBGLES_INSTALL_FILES
 

@@ -17,6 +17,14 @@ ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd51 bre2ze4k h7 e4hdultra protek4k))
 QT5BASE_DEPENDENCIES += hd5x-libgles khronos-headers
 QT5BASE_EGLFS_DEVICE = EGLFS_DEVICE_INTEGRATION = eglfs_nxpl
 QT5BASE_GL_OPTS = -opengl es2 -eglfs -feature-eglfs_nxpl -qpa eglfs
+# EGL/GLES through the Mali fbdev driver of the HiSilicon boxes (eglfs_mali);
+# the driver comes without headers, the Khronos ones go with it (as Mesa's
+# in oe-alliance), and hd6x-libgles adds the fbdev_window.h of the driver
+else ifeq ($(BOXMODEL),$(filter $(BOXMODEL),hd60 hd61 multibox multiboxse))
+QT5BASE_DEPENDENCIES += hd6x-libgles khronos-headers
+QT5BASE_EGLFS_DEVICE = EGLFS_DEVICE_INTEGRATION = eglfs_mali
+# (eglfs_nxpl, our patch, is on wherever eglfs is: it needs libnexus)
+QT5BASE_GL_OPTS = -opengl es2 -eglfs -feature-eglfs_mali -no-feature-eglfs_nxpl -qpa eglfs
 else
 QT5BASE_EGLFS_DEVICE =
 QT5BASE_GL_OPTS = -no-opengl -no-eglfs -qpa linuxfb
