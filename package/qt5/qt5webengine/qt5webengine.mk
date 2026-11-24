@@ -9,42 +9,13 @@ QT5WEBENGINE_DIR = qtwebengine-v$(QT5WEBENGINE_VERSION)-lts
 QT5WEBENGINE_SOURCE = qtwebengine-v$(QT5WEBENGINE_VERSION)-lts.tar.bz2
 QT5WEBENGINE_SITE = $(QT5_SITE)/qtwebengine/-/archive/v$(QT5WEBENGINE_VERSION)-lts
 
-# src/3rdparty is a submodule, the archive of the tag lacks it: chromium
-# (and gn) of KDE's branch, the commit buildroot uses for 5.15.19
-QT5WEBENGINE_CHROMIUM_VERSION = 6d29e9cfcfffa7632cc3858ceaf8940677ba9c91
-QT5WEBENGINE_CHROMIUM_SOURCE = qtwebengine-chromium-$(QT5WEBENGINE_CHROMIUM_VERSION).tar.bz2
-QT5WEBENGINE_CHROMIUM_SITE = $(QT5_SITE)/qtwebengine-chromium/-/archive/$(QT5WEBENGINE_CHROMIUM_VERSION)
-
-# the catapult of that chromium is python 2 only; a later one runs with
-# python 3 (as buildroot)
-QT5WEBENGINE_CATAPULT_VERSION = 7534569f99827c0ed4df818254ba7daca4606bca
-QT5WEBENGINE_CATAPULT_SOURCE = qt5webengine-chromium-catapult-$(QT5WEBENGINE_CATAPULT_VERSION).tar.gz
-QT5WEBENGINE_CATAPULT_SITE = https://chromium.googlesource.com/catapult/+archive
-
-define QT5WEBENGINE_DOWNLOAD_CHROMIUM
-	if [ ! -f $(DL_DIR)/$(QT5WEBENGINE_CHROMIUM_SOURCE) ]; then \
-		$(GET_ARCHIVE) $(DL_DIR) $(QT5WEBENGINE_CHROMIUM_SITE)/$(QT5WEBENGINE_CHROMIUM_SOURCE); \
-	fi
-	if [ ! -f $(DL_DIR)/$(QT5WEBENGINE_CATAPULT_SOURCE) ]; then \
-		wget --no-check-certificate -t3 -T60 -O $(DL_DIR)/$(QT5WEBENGINE_CATAPULT_SOURCE).part \
-			$(QT5WEBENGINE_CATAPULT_SITE)/$(QT5WEBENGINE_CATAPULT_VERSION).tar.gz && \
-		mv $(DL_DIR)/$(QT5WEBENGINE_CATAPULT_SOURCE).part $(DL_DIR)/$(QT5WEBENGINE_CATAPULT_SOURCE); \
-	fi
-endef
-QT5WEBENGINE_PRE_DOWNLOAD_HOOKS += QT5WEBENGINE_DOWNLOAD_CHROMIUM
-
-# before the patches, they touch chromium too
-define QT5WEBENGINE_EXTRACT_CHROMIUM
+# src/3rdparty is a submodule the archive of the tag lacks: chromium,
+# unpacked and patched by qt5webengine-chromium (as in Buildroot)
+define QT5WEBENGINE_COPY_CHROMIUM
 	rm -rf $(PKG_BUILD_DIR)/src/3rdparty
-	$(INSTALL) -d $(PKG_BUILD_DIR)/src/3rdparty
-	tar -C $(PKG_BUILD_DIR)/src/3rdparty --strip-components=1 \
-		-xjf $(DL_DIR)/$(QT5WEBENGINE_CHROMIUM_SOURCE)
-	rm -rf $(PKG_BUILD_DIR)/src/3rdparty/chromium/third_party/catapult
-	$(INSTALL) -d $(PKG_BUILD_DIR)/src/3rdparty/chromium/third_party/catapult
-	tar -C $(PKG_BUILD_DIR)/src/3rdparty/chromium/third_party/catapult \
-		-xzf $(DL_DIR)/$(QT5WEBENGINE_CATAPULT_SOURCE)
+	cp -a $(BUILD_DIR)/$(QT5WEBENGINE_CHROMIUM_DIR) $(PKG_BUILD_DIR)/src/3rdparty
 endef
-QT5WEBENGINE_PRE_PATCH_HOOKS += QT5WEBENGINE_EXTRACT_CHROMIUM
+QT5WEBENGINE_POST_PATCH_HOOKS += QT5WEBENGINE_COPY_CHROMIUM
 
 # host: python 3 (host-python3), the system libraries for the host
 # toolchain of chromium (host-nss, host-libwebp, ..., as in Buildroot),
@@ -54,7 +25,7 @@ QT5WEBENGINE_DEPENDENCIES = \
 	host-python3 \
 	host-nss host-libwebp host-freetype host-harfbuzz \
 	host-libjpeg-turbo host-libpng host-zlib \
-	qt5declarative qt5webchannel \
+	qt5declarative qt5webchannel qt5webengine-chromium \
 	nss dbus ffmpeg opus libwebp alsa-lib \
 	fontconfig freetype harfbuzz libpng libjpeg-turbo zlib
 
