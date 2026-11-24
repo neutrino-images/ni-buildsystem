@@ -111,6 +111,25 @@ define QT5WEBENGINE_CROSS_WRAPPER
 endef
 QT5WEBENGINE_PRE_CONFIGURE_HOOKS += QT5WEBENGINE_CROSS_WRAPPER
 
+# the v8 snapshot of 32-bit targets is built for the 32-bit variant of
+# the host (toolchain v8_snapshot, g++ -m32); configure does not check
+# that, and without g++-multilib the build stops hours later, so check
+# here that g++ -m32 compiles, links and runs a C++ program
+ifeq ($(shell uname -m),x86_64)
+define QT5WEBENGINE_CHECK_M32
+	printf '#include <cstddef>\n#include <string>\nint main() { return std::string("v8").size() == 2 ? 0 : 1; }\n' \
+		> $(PKG_BUILD_DIR)/check-m32.cpp
+	if ! g++ -m32 -o $(PKG_BUILD_DIR)/check-m32 $(PKG_BUILD_DIR)/check-m32.cpp || \
+	   ! $(PKG_BUILD_DIR)/check-m32; then \
+		echo "qt5webengine: 'g++ -m32' does not work, but the v8 snapshot needs it;"; \
+		echo "qt5webengine: install g++-multilib (Debian, Ubuntu) or its equivalent"; \
+		exit 1; \
+	fi
+	rm -f $(PKG_BUILD_DIR)/check-m32 $(PKG_BUILD_DIR)/check-m32.cpp
+endef
+QT5WEBENGINE_PRE_CONFIGURE_HOOKS += QT5WEBENGINE_CHECK_M32
+endif
+
 define QT5WEBENGINE_CONFIGURE_CMDS
 	$(CD) $(PKG_BUILD_DIR); \
 		$(QT5WEBENGINE_ENV) $(QT5_QMAKE) $(QT5WEBENGINE_QMAKE_OPTS)
