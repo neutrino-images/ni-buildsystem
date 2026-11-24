@@ -48,3 +48,16 @@ FREETYPE_TARGET_FINALIZE_HOOKS += FREETYPE_TARGET_CLEANUP
 
 freetype: | $(TARGET_DIR)
 	$(call autotools-package)
+
+# -----------------------------------------------------------------------------
+
+HOST_FREETYPE_CONF_OPTS = \
+	--enable-freetype-config \
+	--without-brotli \
+	--without-bzip2 \
+	--without-harfbuzz \
+	--without-png \
+	--without-zlib
+
+host-freetype: | $(HOST_DIR)
+	$(call host-autotools-package)
