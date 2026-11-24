@@ -35,3 +35,22 @@ endef
 
 nspr: | $(TARGET_DIR)
 	$(call generic-package)
+
+# -----------------------------------------------------------------------------
+
+HOST_NSPR_SUBDIR = nspr
+
+ifeq ($(shell getconf LONG_BIT),64)
+HOST_NSPR_CONF_OPTS = --enable-64bit
+else
+HOST_NSPR_CONF_OPTS = --disable-64bit
+endif
+
+HOST_NSPR_MAKE_OPTS = LIBRARY=
+
+define HOST_NSPR_INSTALL_CMDS
+	$(MAKE) -C $(PKG_BUILD_DIR) LIBRARY= install
+endef
+
+host-nspr: | $(HOST_DIR)
+	$(call host-autotools-package)
