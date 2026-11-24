@@ -23,8 +23,10 @@ FREETYPE_CONF_OPTS = \
 	--without-bzip2 \
 	--without-harfbuzz
 
+# font modules not needed; cff stays for the webfonts of the browser,
+# except on the coolstream boxes, which have no browser
 define FREETYPE_PATCH_MODULES_CFG
-	$(SED) '/^FONT_MODULES += \(type1\|cid\|pfr\|type42\|pcf\|bdf\|winfonts\)/d' $(PKG_BUILD_DIR)/modules.cfg
+	$(SED) '/^FONT_MODULES += \(type1\|cid\|pfr\|type42\|pcf\|bdf\|winfonts$(if $(filter $(BOXTYPE),coolstream),\|cff)\)/d' $(PKG_BUILD_DIR)/modules.cfg
 endef
 FREETYPE_POST_PATCH_HOOKS += FREETYPE_PATCH_MODULES_CFG
 
