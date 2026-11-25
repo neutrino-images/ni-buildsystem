@@ -7,8 +7,8 @@ if [ -d "/usr/local/bin" ]; then
 	PATH="/usr/local/bin:$PATH"
 fi
 
-# add neutrino's luaplugindir to PATH
-PATH=$PATH:/usr/share/tuxbox/neutrino/luaplugins
+# add neutrino's directories for luaclient and pyclient scripts to PATH
+PATH=$PATH:/usr/share/tuxbox/neutrino/client-scripts/luaclient:/usr/share/tuxbox/neutrino/client-scripts/pyclient
 
 if [ -z "$PS1" ]; then
 	if [ "`id -u`" -eq 0 ]; then
