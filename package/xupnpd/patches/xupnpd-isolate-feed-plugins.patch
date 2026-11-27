@@ -1,0 +1,52 @@
+From 768ad2fa136de182a584e2df7683ef9f40b984ca Mon Sep 17 00:00:00 2001
+From: vanhofen <vanhofen@gmx.de>
+Date: Fri, 27 Nov 2026 18:16:11 +0100
+Subject: [PATCH] xupnpd: one failing feed plugin no longer hides the other
+ feeds
+
+All feeds are updated one after another in one child process, and the
+reload that makes their playlists visible was only sent at the end.
+An error in one plugin ended the process before that, so no feed was
+shown, not even those already written.
+
+Each plugin now runs under pcall; an error is printed and the next
+feed is updated. A feed that was updated is reloaded at once, so it
+does not wait for the downloads of all the feeds after it.
+---
+ src/xupnpd_main.lua | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
+
+diff --git a/src/xupnpd_main.lua b/src/xupnpd_main.lua
+index 6e7b213..fabca7c 100644
+--- a/src/xupnpd_main.lua
++++ b/src/xupnpd_main.lua
+@@ -85,17 +85,21 @@ dofile('xupnpd_ssdp.lua')
+ dofile('xupnpd_http.lua')
+ 
+ -- download feeds from external sources (child process)
++-- One plugin that fails (an error, a site that changed) must not keep the
++-- others' playlists from being read, and the ones that are ready are read at
++-- once rather than after every other feed has been downloaded.
+ function update_feeds_async()
+-    local num=0
+     for i,j in ipairs(feeds) do
+         local plugin=plugins[ j[1] ]
+         if plugin and plugin.disabled~=true and plugin.updatefeed then
+-            if plugin.updatefeed(j[2],j[3])==true then num=num+1 end
++            local ok,rc=pcall(plugin.updatefeed,j[2],j[3])
++            if not ok then
++                if cfg.debug>0 then print('feed \''..tostring(j[2])..'\' ('..j[1]..') failed: '..tostring(rc)) end
++            elseif rc==true then
++                core.sendevent('reload')
++            end
+         end
+     end
+-
+-    if num>0 then core.sendevent('reload') end
+-
+ end
+ 
+ -- spawn child process for feeds downloading
+-- 
+2.43.0
+
