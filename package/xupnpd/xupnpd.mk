@@ -29,8 +29,13 @@ define XUPNPD_INSTALL_CMDS
 	$(INSTALL_COPY) $(PKG_BUILD_DIR)/{plugins,profiles,ui,www,*.lua} $(TARGET_datadir)/xupnpd/
 endef
 
+# YouTube and Vimeo no longer work: YouTube took away the player data
+# youtube_get_video_url() reads, so no video plays, and Vimeo has turned
+# off the Simple API (vimeo.com/api/v2) its feeds come from.
 define XUPNPD_TARGET_CLEANUP
 	$(TARGET_RM) $(TARGET_datadir)/xupnpd/plugins/staff/xupnpd_18plus.lua
+	$(TARGET_RM) $(TARGET_datadir)/xupnpd/plugins/xupnpd_vimeo.lua
+	$(TARGET_RM) $(TARGET_datadir)/xupnpd/plugins/xupnpd_youtube.lua
 endef
 XUPNPD_TARGET_FINALIZE_HOOKS += XUPNPD_TARGET_CLEANUP
 
@@ -38,8 +43,6 @@ define XUPNPD_INSTALL_PLUGINS
 	$(INSTALL_DATA) -D $(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS)/scripts-lua/xupnpd/xupnpd_18plus.lua $(TARGET_datadir)/xupnpd/plugins/
 	$(INSTALL_DATA) -D $(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS)/scripts-lua/xupnpd/xupnpd_cczwei.lua $(TARGET_datadir)/xupnpd/plugins/
 	$(INSTALL_DATA) -D $(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS)/scripts-lua/xupnpd/xupnpd_neutrino.lua $(TARGET_datadir)/xupnpd/plugins/
-	$(INSTALL_DATA) -D $(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS)/scripts-lua/xupnpd/xupnpd_vimeo.lua $(TARGET_datadir)/xupnpd/plugins/
-	$(INSTALL_DATA) -D $(SOURCE_DIR)/$(NI_NEUTRINO_PLUGINS)/scripts-lua/xupnpd/xupnpd_youtube.lua $(TARGET_datadir)/xupnpd/plugins/
 endef
 XUPNPD_TARGET_FINALIZE_HOOKS += XUPNPD_INSTALL_PLUGINS
 
